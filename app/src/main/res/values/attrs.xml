@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+
+    <!-- Declare custom theme attributes that allow changing which styles are
+         used for button bars depending on the API level.
+         ?android:attr/buttonBarStyle is new as of API 11 so this is
+         necessary to support previous API levels. -->
+    <declare-styleable name="ButtonBarContainerTheme">
+        <attr name="metaButtonBarStyle" format="reference" />
+        <attr name="metaButtonBarButtonStyle" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="StepView">
+        <attr name="todoPointRadius" format="dimension" />
+        <attr name="donePointRadius" format="dimension" />
+        <attr name="todoColor" format="color|reference" />
+        <attr name="doneColor" format="color|reference" />
+        <attr name="todoTextColor" format="color|reference" />
+        <attr name="doneTextColor" format="color|reference" />
+        <attr name="todoLineLength" format="dimension" />
+        <attr name="lineStrokeWidth" format="dimension" />
+        <attr name="textMargin" format="dimension" />
+        <attr name="textFontSize" format="dimension" />
+        <attr name="pointStart" format="dimension" />
+        <attr name="lable" format="reference" />
+        <attr name="step" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="CircularProgressView">
+        <attr name="cpv_text_prefix" format="string" />
+        <attr name="cpv_text_suffix" format="string" />
+        <attr name="cpv_progress" format="integer" />
+        <attr name="cpv_circle_color" format="color" />
+        <attr name="cpv_background_circle_color" format="color" />
+        <attr name="cpv_text_color" format="color" />
+        <attr name="cpv_text_size" format="integer" />
+        <attr name="cpv_circle_width" format="dimension" />
+        <attr name="cpv_background_circle_width" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="SelectableItem">
+        <attr name="title" format="string" />
+        <attr name="remind_text" format="string" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="index"
+            type="int" />
+
+        <variable
+            name="word"
+            type="androidx.databinding.ObservableField&lt;String>" />
+    </data>
+
+    <FrameLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/word_index"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:text="@{String.valueOf(index+1)}"
+            tools:text="1"
+            android:textColor="@color/white40"
+            android:textSize="9sp" />
+
+        <com.keystone.cold.mnemonic.AutoCompleteInput
+            android:id="@+id/input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:singleLine="true"
+            android:textSize="13sp"
+            tools:text="abandon"
+            android:completionThreshold="1"
+            android:digits="abcdefghijklmnopqrstuvwxyz"
+            android:inputType="textNoSuggestions"
+            android:maxLength="8"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:tag="@{index + 1}"
+            android:focusableInTouchMode="true"
+            android:selectAllOnFocus="true"
+            android:text="@={word}"
+            android:dropDownHeight="100dp"
+            android:letterSpacing="0.1"
+            android:background="@drawable/inset_drawable" />
+
+    </FrameLayout>
+</layout>

@@ -1,0 +1,835 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_main.xml"
+    app:startDestination="@id/assetListFragment">
+
+    <fragment
+        android:id="@+id/assetListFragment"
+        android:name="com.keystone.cold.ui.fragment.main.AssetListFragment"
+        android:label="AssetListFragment"
+        tools:layout="@layout/asset_list_fragment">
+        <action
+            android:id="@+id/action_to_scan"
+            app:destination="@id/QRCodeScanFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_to_aboutFragment"
+            app:destination="@id/aboutFragment" />
+        <action
+            android:id="@+id/action_to_manageCoinFragment"
+            app:destination="@id/manageCoinFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_to_settingFragment"
+            app:destination="@id/settingFragment" />
+
+        <action
+            android:id="@+id/action_to_txnListFragment"
+            app:destination="@id/txnListFragment" />
+
+        <action
+            android:id="@+id/action_to_assetFragment"
+            app:destination="@id/assetFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/QRCodeScanFragment"
+        android:name="com.keystone.cold.ui.fragment.main.QRCodeScanFragment"
+        android:label="QRCodeScanFragment"
+        tools:layout="@layout/qrcode_scan_fragment">
+        <action
+            android:id="@+id/action_to_txConfirmFragment"
+            app:destination="@id/txConfirmFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
+            app:popUpTo="@id/assetListFragment"
+            app:popUpToInclusive="false" />
+
+        <action
+            android:id="@+id/action_to_polkadotTxConfirm"
+            app:destination="@id/polkadotTxConfirm"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
+            app:popUpTo="@id/assetListFragment"
+            app:popUpToInclusive="false" />
+
+        <action
+            android:id="@+id/action_to_ElectrumTxConfirmFragment"
+            app:destination="@id/electrumTxConfirmFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
+            app:popUpTo="@id/assetListFragment"
+            app:popUpToInclusive="false" />
+
+        <action
+            android:id="@+id/action_to_xrpTxConfirmFragment"
+            app:destination="@id/xummTxConfirmFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
+
+        <action
+            android:id="@+id/action_to_ethTxConfirmFragment"
+            app:destination="@id/ethTxConfirmFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_to_ethSignMessageFragment"
+            app:destination="@id/ethSignMessageFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
+
+        <action
+            android:id="@+id/action_QRCodeScan_to_result"
+            app:destination="@id/webAuthResultFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/polkadotTxConfirm"
+        android:name="com.keystone.cold.ui.fragment.main.polkadot.PolkadotTxConfirm"
+        tools:layout="@layout/eth_tx_confirm"
+        android:label="ethTxConfirmFragment" >
+        <action
+            android:id="@id/action_to_broadcastTxFragment"
+            app:destination="@id/broadcastTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/polkadotTxFragment"
+        android:name="com.keystone.cold.ui.fragment.main.polkadot.PolkadotTxFragment"
+        tools:layout="@layout/eth_tx_confirm"
+        android:label="ethTxConfirmFragment" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/ethSignMessageFragment"
+        android:name="com.keystone.cold.ui.fragment.main.EthSignMessageFragment"
+        android:label="ethSignMessageFragment" >
+        <action
+            android:id="@+id/action_to_ethBroadcastTxFragment"
+            app:destination="@id/ethBroadcastTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/ethTxConfirmFragment"
+        android:name="com.keystone.cold.ui.fragment.main.EthTxConfirmFragment"
+        tools:layout="@layout/eth_tx_confirm"
+        android:label="ethTxConfirmFragment" >
+        <action
+            android:id="@+id/action_to_ethBroadcastTxFragment"
+            app:destination="@id/ethBroadcastTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
+    </fragment>
+    <fragment
+        android:id="@+id/ethBroadcastTxFragment"
+        android:name="com.keystone.cold.ui.fragment.main.EthBroadcastTxFragment"
+        android:label="ethBroadcastTxFragment" >
+        <action
+            android:id="@+id/action_to_home"
+            app:destination="@id/assetListFragment"
+            app:popUpTo="@id/assetListFragment"
+            app:popUpToInclusive="false"
+            app:launchSingleTop="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ethTxFragment"
+        android:name="com.keystone.cold.ui.fragment.main.EthTxFragment"
+        android:label="ethTxFragment" />
+
+    <fragment
+        android:id="@+id/xummTxConfirmFragment"
+        android:name="com.keystone.cold.ui.fragment.main.xumm.XummTxConfirmFragment"
+        android:label="XrpTxConfirmFragment"
+        tools:layout="@layout/pattern_lock_fragment">
+        <action
+            android:id="@+id/action_to_broadcastXummTxFragment"
+            app:destination="@id/broadcastXummTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/broadcastXummTxFragment"
+        tools:layout="@layout/broadcast_tx_fragment"
+        android:name="com.keystone.cold.ui.fragment.main.xumm.XummBroadcastTxFragment"
+        android:label="XummBroadcastTxFragment">
+        <action
+            android:id="@+id/action_to_home"
+            app:destination="@id/assetListFragment"
+            app:popUpTo="@id/assetListFragment"
+            app:popUpToInclusive="false"
+            app:launchSingleTop="true" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/patternLockFragment"
+        android:name="com.keystone.cold.ui.fragment.PatternLockFragment"
+        android:label="PatterLockFragment"
+        tools:layout="@layout/pattern_lock_fragment">
+        <action
+            android:id="@+id/action_unlock_to_assetList"
+            app:destination="@id/assetListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.keystone.cold.ui.fragment.AboutFragment"
+        tools:layout="@layout/about_fragment"
+        android:label="AboutFragment" />
+    <fragment
+        android:id="@+id/manageCoinFragment"
+        android:name="com.keystone.cold.ui.fragment.main.ManageCoinFragment"
+        tools:layout="@layout/asset_fragment"
+        android:label="ManageCoinFragment">
+        <action
+            android:id="@id/action_to_home"
+            app:destination="@id/assetListFragment"
+            app:popUpTo="@id/assetListFragment"
+            app:popUpToInclusive="false"
+            app:launchSingleTop="true" />
+
+        <action
+            android:id="@id/action_to_selectMnomenicCountFragment"
+            app:destination="@id/selectMnomenicCountFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/selectMnomenicCountFragment"
+        android:name="com.keystone.cold.ui.fragment.setup.SelectMnomenicCountFragment"
+        android:label="SelectMnomenicCountFragment"
+        tools:layout="@layout/select_mnemonic_count">
+        <action
+            android:id="@+id/action_to_mnemonicInputFragment"
+            app:destination="@id/mnemonicInputFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
+    </fragment>
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.keystone.cold.ui.fragment.setting.SettingFragment"
+        tools:layout="@layout/setting_fragment"
+        android:label="SettingFragment">
+        <action
+            android:id="@+id/action_to_licenseFragment"
+            app:destination="@id/licenseFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_to_versionFragment"
+            app:destination="@id/versionFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_to_systemSettingFragment"
+            app:destination="@id/systemSettingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_to_fingerprintSettingFragment"
+            app:destination="@id/fingerprintSettingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_to_fingerprintGuideFragment"
+            app:destination="@id/fingerprintGuideFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_to_setPatternUnlock"
+            app:destination="@id/setPatternUnlockFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_to_change_password"
+            app:destination="@id/setPasswordFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_setting_to_setupVaultFragment"
+            app:destination="@id/setupVaultFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_settingFragment_to_whiteListFragment"
+            app:destination="@id/white_list_navigation"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_settingFragment_to_passphraseFragment"
+            app:destination="@id/passphraseFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/syncFragment"
+        android:name="com.keystone.cold.ui.fragment.SyncFragment"
+        tools:layout="@layout/sync_fragment"
+        android:label="SyncFragment" />
+
+    <fragment
+        android:id="@+id/chooseWatchWalletFragment"
+        android:name="com.keystone.cold.ui.fragment.setup.ChooseWatchWalletFragment"
+        android:label="ChooseWatchWalletFragment" >
+
+
+        <action
+            android:id="@id/action_to_manageCoinFragment"
+            app:destination="@id/manageCoinFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
+        <action
+            android:id="@id/action_to_selectMnomenicCountFragment"
+            app:destination="@id/selectMnomenicCountFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/txnListFragment"
+        android:name="com.keystone.cold.ui.fragment.main.electrum.ElectrumTxnListFragment"
+        tools:layout="@layout/txn_list"
+        android:label="ElectrumTxnListFragment" >
+        <action
+            android:id="@id/action_to_ElectrumTxConfirmFragment"
+            app:destination="@id/electrumTxConfirmFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/mnemonicInputFragment"
+        android:name="com.keystone.cold.ui.fragment.setup.MnemonicInputFragment"
+        tools:layout="@layout/mnemonic_input_fragment"
+        android:label="MnemonicInputFragment" />
+    <fragment
+        android:id="@+id/assetFragment"
+        android:name="com.keystone.cold.ui.fragment.main.AssetFragment"
+        tools:layout="@layout/asset_fragment"
+        android:label="AssetFragment">
+        <action
+            android:id="@+id/action_to_receiveCoinFragment"
+            app:destination="@id/receiveCoinFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_to_txFragment"
+            app:destination="@id/txFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_to_xummTxFragment"
+            app:destination="@id/xummTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_to_ethTxFragment"
+            app:destination="@id/ethTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_to_polkadotTxFragment"
+            app:destination="@id/polkadotTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_to_electrumTxFragment"
+            app:destination="@id/electrumTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action android:id="@+id/action_to_electrum_guide"
+            app:destination="@id/electrumGuideFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action android:id="@+id/action_to_QRCodeScanFragment"
+            app:destination="@id/QRCodeScanFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/electrumGuideFragment"
+        android:name="com.keystone.cold.ui.fragment.main.electrum.ElectrumGuideFragment"
+        tools:layout="@layout/electrum_export_guide"
+        android:label="ElectrumGuideFragment">
+        <action android:id="@+id/export_electrum_ypub"
+            app:destination="@id/electrumExportFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/syncWatchWalletGuide"
+        android:name="com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide"
+        tools:layout="@layout/sync_watch_wallet_guide"
+        android:label="SyncWatchWalletGuide">
+    </fragment>
+
+    <fragment
+        android:id="@+id/electrumExportFragment"
+        android:name="com.keystone.cold.ui.fragment.main.electrum.ElectrumExportFragment"
+        tools:layout="@layout/electrum_export"
+        android:label="ElectrumExportFragment">
+    </fragment>
+    <fragment
+        android:id="@+id/txConfirmFragment"
+        tools:layout="@layout/tx_confirm_fragment"
+        android:name="com.keystone.cold.ui.fragment.main.TxConfirmFragment"
+        android:label="TxConfirmFragment">
+        <action
+            android:id="@+id/action_to_broadcastTxFragment"
+            app:destination="@id/broadcastTxFragment" />
+
+        <action
+            android:id="@id/action_to_home"
+            app:destination="@id/assetListFragment"
+            app:popUpTo="@id/assetListFragment"
+            app:popUpToInclusive="false"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@id/action_to_txFragment"
+            app:destination="@id/txFragment"/>
+        <action
+            android:id="@id/action_to_electrumTxFragment"
+            app:destination="@id/electrumTxFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/electrumTxConfirmFragment"
+        tools:layout="@layout/tx_confirm_fragment"
+        android:name="com.keystone.cold.ui.fragment.main.electrum.ElectrumTxConfirmFragment"
+        android:label="TxConfirmFragment">
+        <action
+            android:id="@+id/action_to_broadcastElectrumTxFragment"
+            app:destination="@id/broadcastElectrumTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
+
+        <action
+            android:id="@id/action_to_home"
+            app:destination="@id/assetListFragment"
+            app:popUpTo="@id/assetListFragment"
+            app:popUpToInclusive="false"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@id/action_to_txFragment"
+            app:destination="@id/txFragment" />
+        <action
+            android:id="@id/action_to_electrumTxFragment"
+            app:destination="@id/electrumTxFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/broadcastTxFragment"
+        tools:layout="@layout/broadcast_tx_fragment"
+        android:name="com.keystone.cold.ui.fragment.main.BroadcastTxFragment"
+        android:label="BroadcastTxFragment">
+        <action
+            android:id="@+id/action_to_home"
+            app:destination="@id/assetListFragment"
+            app:popUpTo="@id/assetListFragment"
+            app:popUpToInclusive="false"
+            app:launchSingleTop="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/broadcastElectrumTxFragment"
+        tools:layout="@layout/broadcast_electrum_tx_fragment"
+        android:name="com.keystone.cold.ui.fragment.main.electrum.ElectrumBroadcastTxFragment"
+        android:label="ElectrumBroadcastTxFragment">
+        <action
+            android:id="@+id/action_to_home"
+            app:destination="@id/assetListFragment"
+            app:popUpTo="@id/assetListFragment"
+            app:popUpToInclusive="false"
+            app:launchSingleTop="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/receiveCoinFragment"
+        tools:layout="@layout/receive_fragment"
+        android:name="com.keystone.cold.ui.fragment.main.ReceiveCoinFragment"
+        android:label="ReceiveCoinFragment" >
+        <action
+            android:id="@+id/action_to_sparkTokenClaimGuide"
+            app:destination="@id/sparkTokenClaimGuide"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
+    </fragment>
+    <fragment
+        android:id="@+id/licenseFragment"
+        tools:layout="@layout/privacy_policy"
+        android:name="com.keystone.cold.ui.fragment.setting.LicenseFragment"
+        android:label="PrivacyPolicyFragment" />
+    <fragment
+        android:id="@+id/versionFragment"
+        tools:layout="@layout/version"
+        android:name="com.keystone.cold.ui.fragment.setting.VersionFragment"
+        android:label="VersionFragment" />
+    <fragment
+        android:id="@+id/verifyMnemonicFragment"
+        tools:layout="@layout/verify_mnemonic"
+        android:name="com.keystone.cold.ui.fragment.unlock.VerifyMnemonicFragment"
+        android:label="VerifyMnemonicFragment">
+        <action
+            android:id="@+id/action_to_setPasswordFragment"
+            app:destination="@id/setPasswordFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
+            app:popUpTo="@id/verifyMnemonicFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/systemSettingFragment"
+        tools:layout="@layout/system_setting"
+        android:name="com.keystone.cold.ui.fragment.setting.SystemSettingFragment"
+        android:label="SystemSettingFragment">
+        <action
+            android:id="@+id/action_to_languagePreferenceFragment"
+            app:destination="@id/languagePreferenceFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_to_screenOffPreferenceFragment"
+            app:destination="@id/screenOffPreferenceFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_to_brightnessSettingFragment"
+            app:destination="@id/brightnessSettingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/fingerprintSettingFragment"
+        tools:layout="@layout/fingerprint_setting"
+        android:name="com.keystone.cold.ui.fragment.setting.FingerprintSettingFragment"
+        android:label="FingerprintPreferenceFragment">
+
+        <action
+            android:id="@+id/action_to_fingerprintManage"
+            app:destination="@id/fingerprintManageFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@id/action_to_fingerprintEnrollFragment"
+            app:destination="@id/fingerprintEnrollFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/languagePreferenceFragment"
+        tools:layout="@layout/list_preference"
+        android:name="com.keystone.cold.ui.fragment.setting.LanguagePreferenceFragment"
+        android:label="ListPreferenceFragment" />
+    <fragment
+        android:id="@+id/screenOffPreferenceFragment"
+        tools:layout="@layout/list_preference"
+        android:name="com.keystone.cold.ui.fragment.setting.ScreenOffPreferenceFragment"
+        android:label="ScreenOffPreferenceFragment" />
+    <fragment
+        android:id="@+id/brightnessSettingFragment"
+        tools:layout="@layout/brightness_setting"
+        android:name="com.keystone.cold.ui.fragment.setting.BrightnessSettingFragment"
+        android:label="BrightnessSettingFragment" />
+    <action
+        android:id="@+id/action_to_patterLockFragment"
+        app:destination="@id/patternLockFragment"
+        app:popUpTo="@id/patternLockFragment"
+        app:popUpToInclusive="false"
+        app:launchSingleTop="true" />
+    <fragment
+        android:id="@+id/txFragment"
+        tools:layout="@layout/tx"
+        android:name="com.keystone.cold.ui.fragment.main.TxFragment"
+        android:label="TxFragment" />
+    <fragment
+        android:id="@+id/electrumTxFragment"
+        tools:layout="@layout/electrum_tx"
+        android:name="com.keystone.cold.ui.fragment.main.electrum.ElectrumTxFragment"
+        android:label="ElectrumTxFragment" />
+    <fragment
+        android:id="@+id/setPatternUnlockFragment"
+        tools:layout="@layout/set_pattern_unlock"
+        android:name="com.keystone.cold.ui.fragment.setup.SetPatternUnlockFragment"
+        android:label="SetPatternUnlockFragment" />
+
+    <fragment
+        android:id="@+id/setPasswordFragment"
+        android:name="com.keystone.cold.ui.fragment.setup.SetPasswordFragment"
+        android:label="SetPasswordFragment"
+        tools:layout="@layout/set_password" />
+    <fragment
+        android:id="@+id/setupVaultFragment"
+        tools:layout="@layout/setup_vault"
+        android:name="com.keystone.cold.ui.fragment.setup.SetupVaultFragment"
+        android:label="SetupVaultFragment" />
+    <fragment
+        android:id="@id/webAuthResultFragment"
+        tools:layout="@layout/web_auth_result"
+        android:name="com.keystone.cold.ui.fragment.setup.WebAuthResultFragment"
+        android:label="WebAuthResultFragment">
+        <action
+            android:id="@+id/action_auth_to_home"
+            app:destination="@id/assetListFragment"
+            app:popUpTo="@id/assetListFragment"
+            app:popUpToInclusive="false"
+            app:launchSingleTop="true" />
+    </fragment>
+    <include app:graph="@navigation/nav_graph_white_list" />
+    <fragment
+        android:id="@+id/fingerprintGuideFragment"
+        android:name="com.keystone.cold.ui.fragment.setting.FingerprintGuideFragment"
+        android:label="FingerprintGuide"
+        tools:layout="@layout/fingerprint_guide">
+        <action
+            android:id="@+id/action_to_fingerprintEnrollFragment"
+            app:destination="@id/fingerprintEnrollFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
+            app:popUpTo="@id/fingerprintGuideFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/fingerprintEnrollFragment"
+        android:name="com.keystone.cold.ui.fragment.setting.FingerprintEnrollFragment"
+        android:label="FingerprintEnrollFragment"
+        tools:layout="@layout/fingerprint_enroll">
+        <action
+            android:id="@+id/action_enroll_to_fingerprintSettingFragment"
+            app:destination="@id/fingerprintSettingFragment"
+            app:popUpTo="@id/settingFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fingerprintManageFragment"
+        android:name="com.keystone.cold.ui.fragment.setting.FingerprintManageFragment"
+        android:label="FingerprintManageFragment"
+        tools:layout="@layout/fingerprint_manage" />
+
+    <fragment
+        android:id="@+id/passphraseFragment"
+        android:name="com.keystone.cold.ui.fragment.PassphraseFragment"
+        android:label="passphraseFragment"
+        tools:layout="@layout/passphrase">
+        <action
+            android:id="@id/action_to_manageCoinFragment"
+            app:destination="@id/manageCoinFragment"
+            app:popUpTo="@id/assetListFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/preImportFragment"
+        android:name="com.keystone.cold.ui.fragment.setup.PreImportFragment"
+        android:label="PreImportShardingFragment"
+        tools:layout="@layout/pre_import_sharding">
+        <action
+            android:id="@+id/action_to_selectMnomenicCountFragment"
+            app:destination="@id/selectMnemonicCount"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/selectMnemonicCount"
+        android:name="com.keystone.cold.ui.fragment.setup.SelectMnomenicCountFragment"
+        android:label="SelectMnomenicCountFragment"
+        tools:layout="@layout/select_mnemonic_count">
+        <action
+            android:id="@+id/action_to_verifyMnemonic"
+            app:destination="@id/verifyMnemonicFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/xummTxFragment"
+        android:name="com.keystone.cold.ui.fragment.main.xumm.XummTxFragment"
+        android:label="XummTxFragment"
+        tools:layout="@layout/xumm_tx">
+    </fragment>
+
+    <fragment
+        android:id="@+id/sparkTokenClaimGuide"
+        android:name="com.keystone.cold.ui.fragment.main.xumm.SparkTokenClaimGuide"
+        android:label="SparkTokenClaimGuide"
+        >
+        <action
+            android:id="@+id/action_to_sparkTokenAddress"
+            app:destination="@id/sparkTokenAddress"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/sparkTokenAddress"
+        android:name="com.keystone.cold.ui.fragment.main.xumm.SparkTokenAddress"
+        android:label="SparkTokenAddress">
+        <action
+            android:id="@id/action_to_scan"
+            app:destination="@id/QRCodeScanFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <!--global action-->
+    <action
+        android:id="@+id/action_to_preImportFragment"
+        app:destination="@id/preImportFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_syncFragment"
+        app:destination="@id/syncFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right"/>
+
+    <action
+        android:id="@+id/action_to_syncWatchWalletGuide"
+        app:destination="@id/syncWatchWalletGuide"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right"
+        />
+
+</navigation>

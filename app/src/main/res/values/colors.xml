@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#00CDC3</color>
+    <color name="text">#FFFFFF</color>
+    <color name="text_wrong">#DF1E44</color>
+
+    <color name="preview_mask">#7f000000</color>
+    <color name="white">#ffffff</color>
+    <color name="menu_select">@color/white</color>
+    <color name="menu_unselect">#ff858593</color>
+    <color name="icon_select">#ff00cdc3</color>
+    <color name="divider">#0dffffff</color>
+
+    <color name="stepview_todo_color">#333333</color>
+    <color name="stepview_done_color">@color/colorAccent</color>
+    <color name="stepview_todo_text_color">@color/white40</color>
+    <color name="white40">#66ffffff</color>
+    <color name="stepview_done_text_color">@color/white</color>
+    <color name="black">#000000</color>
+    <color name="id_color">#FF874B</color>
+    <color name="red">#ff0000</color>
+</resources>

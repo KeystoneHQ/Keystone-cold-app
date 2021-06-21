@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        1
+
+        <variable
+            name="viewModel"
+            type="com.keystone.cold.viewmodel.SetupVaultViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:navigationIcon="@drawable/arrow_left"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/set_pattern"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                tools:text="@string/set_pattern" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <include
+            android:id="@+id/divider"
+            layout="@layout/divider" />
+
+        <com.keystone.cold.ui.views.StepView
+            android:id="@+id/step"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34dp"
+            android:visibility="gone"
+            app:step="2" />
+
+
+        <TextView
+            android:id="@+id/hint"
+            android:layout_marginTop="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pattern_unlock_hint"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pattern_lock_hide_track"
+            android:textColor="@color/white40"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/hint1"
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pattern_lock_hint"
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp" />
+
+        <com.andrognito.patternlockview.PatternLockView
+            android:id="@+id/lock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            app:aspectRatio="square"
+            app:aspectRatioEnabled="true"
+            app:correctStateColor="@color/colorAccent"
+            app:dotAnimationDuration="150"
+            app:dotCount="3"
+            app:dotNormalSize="14dp"
+            app:dotSelectedSize="20dp"
+            app:normalStateColor="@color/white"
+            app:pathWidth="2dp"
+            app:wrongStateColor="#ff0000" />
+
+        <Button
+            android:id="@+id/skip"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginVertical="16dp"
+            android:background="?attr/selectableItemBackground"
+            android:text="@string/skip"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</layout>

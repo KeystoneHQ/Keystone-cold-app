@@ -1,0 +1,41 @@
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+
+    <dimen name="mnemonic_input_text_size">13sp</dimen>
+    <dimen name="battery_power_border_radius">0.5dp</dimen>
+    <dimen name="battery_power_margin_left_top">2dp</dimen>
+    <dimen name="battery_power_width">20dp</dimen>
+    <dimen name="battery_power_height">8dp</dimen>
+
+    <dimen name="toolBarHeight">48dp</dimen>
+
+    <dimen name="stepview_todo_point_radius">4dp</dimen>
+    <dimen name="stepview_done_point_radius">6dp</dimen>
+    <dimen name="stepview_line_stroke_width">2dp</dimen>
+    <dimen name="stepview_text_size">10sp</dimen>
+    <dimen name="stepview_text_margin">9dp</dimen>
+    <dimen name="stepview_point_margin">36dp</dimen>
+
+    <dimen name="default_circle_width">20dp</dimen>
+    <dimen name="default_circle_background_width">5dp</dimen>
+
+    <dimen name="default_badge_size">10dp</dimen>
+
+</resources>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.keystone.cold.viewmodel.SetupVaultViewModel" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:navigationIcon="@drawable/arrow_left"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/select_mnemonic_count"
+                android:textColor="@android:color/white"
+                android:textSize="15sp" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <include layout="@layout/divider" />
+
+        <LinearLayout
+            android:id="@+id/normal_mnemonic_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="22dp"
+            android:orientation="horizontal">
+
+            <com.keystone.cold.ui.views.CheckableTextView
+                android:id="@+id/count_12"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="@drawable/mnemonic_count_bg"
+                android:checked="@{safeUnbox(viewModel.mnemonicCount)==12}"
+                android:gravity="center"
+                android:onClick="@{()->viewModel.setMnemonicCount(12)}"
+                android:text="12"
+                android:textColor="@color/mnemonic_color"
+                android:textSize="15sp" />
+
+            <androidx.legacy.widget.Space
+                android:layout_width="12dp"
+                android:layout_height="match_parent" />
+
+            <com.keystone.cold.ui.views.CheckableTextView
+                android:id="@+id/count_18"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="@drawable/mnemonic_count_bg"
+                android:checked="@{safeUnbox(viewModel.mnemonicCount)==18}"
+                android:gravity="center"
+                android:onClick="@{()->viewModel.setMnemonicCount(18)}"
+                android:text="18"
+                android:textColor="@color/mnemonic_color"
+                android:textSize="15sp" />
+
+            <androidx.legacy.widget.Space
+                android:layout_width="12dp"
+                android:layout_height="match_parent" />
+
+            <com.keystone.cold.ui.views.CheckableTextView
+                android:id="@+id/count_24"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="@drawable/mnemonic_count_bg"
+                android:checked="@{safeUnbox(viewModel.mnemonicCount)==24}"
+                android:gravity="center"
+                android:onClick="@{()->viewModel.setMnemonicCount(24)}"
+                android:text="24"
+                android:textColor="@color/mnemonic_color"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sharding_mnemonic_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="22dp"
+            android:orientation="horizontal">
+
+            <com.keystone.cold.ui.views.CheckableTextView
+                android:id="@+id/count_20"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="@drawable/mnemonic_count_bg"
+                android:checked="@{safeUnbox(viewModel.mnemonicCount)==20}"
+                android:gravity="center"
+                android:onClick="@{()->viewModel.setMnemonicCount(20)}"
+                android:text="20"
+                android:textColor="@color/mnemonic_color"
+                android:textSize="15sp" />
+
+            <androidx.legacy.widget.Space
+                android:layout_width="12dp"
+                android:layout_height="match_parent" />
+
+            <com.keystone.cold.ui.views.CheckableTextView
+                android:id="@+id/count_33"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="@drawable/mnemonic_count_bg"
+                android:checked="@{safeUnbox(viewModel.mnemonicCount)==33}"
+                android:gravity="center"
+                android:onClick="@{()->viewModel.setMnemonicCount(33)}"
+                android:text="33"
+                android:textColor="@color/mnemonic_color"
+                android:textSize="15sp" />
+
+            <androidx.legacy.widget.Space
+                android:layout_width="12dp"
+                android:layout_height="match_parent" />
+
+            <com.keystone.cold.ui.views.CheckableTextView
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="@drawable/mnemonic_count_bg"
+                android:checked="@{safeUnbox(viewModel.mnemonicCount)==24}"
+                android:gravity="center"
+                android:onClick="@{()->viewModel.setMnemonicCount(24)}"
+                android:text="24"
+                android:textColor="@color/mnemonic_color"
+                android:textSize="15sp"
+                android:visibility="invisible"/>
+
+        </LinearLayout>
+
+
+        <androidx.legacy.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/next"
+            style="@style/AcceptButton"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="36dp"
+            android:text="@string/next" />
+    </LinearLayout>
+</layout>

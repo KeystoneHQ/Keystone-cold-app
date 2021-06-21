@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_main.xml"
+    app:startDestination="@id/bootLogoFragment">
+
+
+    <fragment
+        android:id="@+id/bootLogoFragment"
+        android:name="com.keystone.cold.ui.fragment.BootLogoFragment"
+        android:label="BootLogoFragment"
+        tools:layout="@layout/boot_logo">
+        <action
+            android:id="@+id/action_splash_to_setupLanguage"
+            app:destination="@id/setupLanguageFragment" />
+        <action
+            android:id="@+id/action_splash_to_securityCheck"
+            app:destination="@id/securityCheckFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/setupLanguageFragment"
+        android:name="com.keystone.cold.ui.fragment.setup.SetupLanguageFragment"
+        android:label="SetupLanguageFragment"
+        tools:layout="@layout/setup_language">
+        <action
+            android:id="@+id/action_setupLanguage_to_securityCheck"
+            app:destination="@id/securityCheckFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/securityCheckFragment"
+        android:name="com.keystone.cold.ui.fragment.SecurityCheckFragment"
+        android:label="SecurityCheckFragment"
+        tools:layout="@layout/security_check">
+        <action
+            android:id="@+id/action_to_attackWarning"
+            app:destination="@id/attackWarningFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/attackWarningFragment"
+        android:name="com.keystone.cold.ui.fragment.AttackWarningFragment"
+        android:label="AttackWarningFragment"
+        tools:layout="@layout/attack_warning" />
+</navigation>

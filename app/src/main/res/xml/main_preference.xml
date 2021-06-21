@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.keystone.cold.ui.preference.SimplePreference
+        android:key="setting_passphrase"
+        android:title="@string/set_passphrase" />
+
+    <com.keystone.cold.ui.preference.SimplePreference
+        android:key="setting_change_pwd"
+        android:title="@string/change_password" />
+
+    <com.keystone.cold.ui.preference.SimplePreference
+        android:key="setting_fingerprint"
+        android:title="@string/fingerprint_settings" />
+
+    <com.keystone.cold.ui.preference.SwitchPreference
+        android:key="setting_pattern_unlock"
+        android:persistent="true"
+        android:title="@string/set_pattern" />
+    <com.keystone.cold.ui.preference.SimplePreference
+        android:key="setting_mnemonic_entry"
+        android:title="@string/create_import_vault" />
+
+    <com.keystone.cold.ui.preference.SimplePreference
+        android:key="setting_check_mnemonic"
+        android:title="@string/check_mnemonic" />
+    <com.keystone.cold.ui.preference.SimplePreference
+        android:key="setting_factory_reset"
+        android:title="@string/factory_reset" />
+    <com.keystone.cold.ui.preference.SimplePreference
+        android:key="setting_system"
+        android:title="@string/system_settings" />
+
+    <com.keystone.cold.ui.preference.SimplePreference
+        android:key="setting_white_list"
+        android:title="@string/white_list" />
+
+    <com.keystone.cold.ui.preference.SimplePreference
+        android:key="setting_safety_instruction"
+        android:title="@string/safety_instruction" />
+
+<!--    <com.keystone.cold.ui.preference.SimplePreference-->
+<!--        android:key="setting_license"-->
+<!--        android:title="@string/setting_license" />-->
+
+<!--    <com.keystone.cold.ui.preference.SimplePreference-->
+<!--        android:key="setting_privacy_policy"-->
+<!--        android:title="@string/privacy_policy" />-->
+
+
+    <com.keystone.cold.ui.preference.SimplePreference
+        android:key="setting_version"
+        android:title="@string/version" />
+
+</androidx.preference.PreferenceScreen>

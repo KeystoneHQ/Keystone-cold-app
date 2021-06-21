@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.keystone.cold.R" />
+
+        <variable
+            name="drawerItem"
+            type="com.keystone.cold.ui.views.DrawerAdapter.DrawerItem" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:background='@{drawerItem.select? @drawable/drawer_item_bg:null}'>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:tint="@{drawerItem.select?@color/icon_select:@color/menu_unselect}"
+            android:src="@{drawerItem.iconRes}"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_toEndOf="@id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="13dp"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@{drawerItem.select?@color/menu_select:@color/menu_unselect}"
+            app:title="@{drawerItem}" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"
+            android:layout_alignStart="@id/text"
+            app:visibleGone="@{!drawerItem.select}"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+</layout>

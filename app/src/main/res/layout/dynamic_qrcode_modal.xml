@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="530dp"
+        android:background="#ffffff"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+            <ImageView
+                android:id="@+id/close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|top"
+                android:padding="18dp"
+                android:src="@drawable/close"
+                android:tint="@color/black"
+                tools:ignore="ContentDescription" />
+            <com.keystone.cold.ui.views.SpanedTextView
+                android:id="@+id/switch_capacity"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="40dp"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:drawableEnd="@drawable/arrow_right"
+                android:drawableTint="@color/colorAccent"
+                tools:text="@string/qrcode_capacity"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|top"
+                android:padding="18dp"
+                android:src="@drawable/close"
+                android:tint="@color/black"
+                android:visibility="invisible"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_marginTop="60dp">
+            <include
+                android:id="@+id/qrcode_layout"
+                layout="@layout/dynamic_qrcode" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="30dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="136dp"
+            android:gravity="center_horizontal"
+            android:textSize="12sp"
+            android:text="@string/adjust_qr_capacity" />
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="100dp"
+            android:max="100"
+            android:maxHeight="6dp"
+            android:min="0"
+            android:minHeight="6dp"
+            android:padding="12dp"
+            android:progressDrawable="@drawable/seekbar_light"
+            android:thumb="@drawable/seekbar_thumb_light" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="85dp"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-" />
+
+            <androidx.legacy.widget.Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/animate_controller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginHorizontal="12dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/prev"
+                style="@style/AcceptButton"
+                android:layout_width="0dp"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1"
+                android:background="#EBF0F5"
+                android:textColor="@color/colorAccent"
+                android:text="@string/previous_one"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/pause"
+                style="@style/AcceptButton"
+                android:layout_width="0dp"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1"
+                android:src="@drawable/pause"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/next"
+                style="@style/AcceptButton"
+                android:layout_width="0dp"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1"
+                android:background="#EBF0F5"
+                android:textColor="@color/colorAccent"
+                android:text="@string/next_one"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+    </FrameLayout>
+</layout>

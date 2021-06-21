@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.keystone.cold.ui.preference.SimplePreference
+        android:key="setting_language"
+        android:title="@string/setting_language" />
+
+    <com.keystone.cold.ui.preference.SimplePreference
+        android:key="setting_brightness"
+        android:title="@string/setting_brightness" />
+
+    <com.keystone.cold.ui.preference.SimplePreference
+        android:key="setting_screen_off_time"
+        android:defaultValue="30000"
+        android:persistent="true"
+        android:title="@string/setting_screen_off_time" />
+
+    <com.keystone.cold.ui.preference.SwitchPreference
+        android:key="setting_vibrator"
+        android:persistent="true"
+        android:defaultValue="true"
+        android:title="@string/setting_vibrator" />
+
+    <com.keystone.cold.ui.preference.SimplePreference
+        android:key="setting_format_sd_card"
+        android:defaultValue="30000"
+        android:title="@string/format_sdcard_title" />
+
+</androidx.preference.PreferenceScreen>

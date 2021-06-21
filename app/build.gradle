@@ -1,0 +1,316 @@
+/*
+ * Copyright (c) 2021 Keystone
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import groovy.xml.XmlUtil
+
+import java.security.MessageDigest
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.protobuf'
+
+/**
+ * Set this to true to create two separate APKs instead of one:
+ *   - An APK that only works on ARM devices
+ *   - An APK that only works on x86 devices
+ * The advantage is the size of the APK is reduced by about 4MB.
+ * Upload all the APKs to the Play Store and people will download
+ * the correct one based on the CPU architecture of their device.
+ */
+def enableSeparateBuildPerCPUArchitecture = false
+
+/**
+ * Run Proguard to shrink the Java bytecode in release builds.
+ */
+def enableProguardInReleaseBuilds = true
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+
+    def (mIsVaultRelease, mVersionNumber, mVersionName) = getVersionProperties()
+    println("start to build ${mVersionName}")
+    println("start to build ${getGitHash()}")
+
+    defaultConfig {
+        applicationId "com.keystone.cold"
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode mVersionNumber
+        versionName mVersionName
+        ndk {
+            abiFilters "armeabi-v7a"
+        }
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+        resConfigs "en", "zh-rCN"
+    }
+
+
+    splits {
+        abi {
+            reset()
+            enable enableSeparateBuildPerCPUArchitecture
+            universalApk false  // If true, also generate a universal APK
+            include "armeabi-v7a", "x86"
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    signingConfigs {
+        vault_v2 {
+            def key = getReleaseKeystore()
+            storeFile key.store
+            storePassword key.storePassword
+            keyAlias key.alias
+            keyPassword key.keyPassword
+        }
+    }
+
+    buildTypes {
+        release {
+            debuggable false
+            minifyEnabled enableProguardInReleaseBuilds
+            shrinkResources enableProguardInReleaseBuilds
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+            proguardFiles 'proguard-rules.pro'
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/ASL-2.0.txt'
+        pickFirst 'draftv4/schema'
+        pickFirst 'draftv3/schema'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LGPL-3.0.txt'
+        exclude 'tables/**'
+        exclude '**/*.proto'
+        exclude 'org/**'
+        exclude '**/*.txt'
+        exclude 'jni/**'
+        exclude 'solidity/**'
+    }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+
+    flavorDimensions 'machine'
+
+    productFlavors {
+        vault_v2 {
+            dimension 'machine'
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
+            manifestPlaceholders = ["sharedUserId": 'android.uid.system']
+            buildConfigField "String", "GIT_HASH", "\"${getGitHash()}\""
+            buildConfigField "String", "UPDATE_PUBLIC_KEY", "\"308201a2300d06092a864886f70d01010105000382018f003082018a0282018100b21be9690c3da4c7d52dbe01d73369644369e395ae4a3475472a2b94e9fc91d8c3644cfd4ce81bde4dd29676c51cc1a968de596108e62449fbbf577dfb90a177ec2f0893367a608ac0387d2df4ec3cf77f420d18b3e0cf181ff8df8734935e54d0a7f53a095a8f68eff12bf0c923650843e1905a879029e975361cdca8c352176164a3f2fed9319d078d802d5f6639a8410a6a1e677655e6d7589038deceda9a963fae15b2ee2b93a6ee30ee6e455084d555e9ad0443d8a3f43c2fd1a00f7ade9711dd1d9bf2312af90904007d385f5e49dbb1f51e54472bba73eb810801f25c610c70a547950e9ee57c3d1ca9cf44bb79f5ef43338f0ab05e49cc42d10d2b0f911aa50b6c60dba3760bb8fdd8f7cc1bda4bd06c7553727f8e18de19e78a4e6251da9828315eb6a9e8d9bc506246ed0210b935eedbb15430c46213ec977541f15a1b574c64003746915a5100e8da4e0e022553230a0f569746bd38fc8819f8a1a60c61aa6587fd7bbcfccae464bf9a933464bf8639070c0d04af67652a1f2fc70203010001\""
+            buildConfigField "String", "WEB_AUTH_R1_PUBLIC_KEY", "\"0437fcd35007cdd2b4e695514e9d9f059dd55919cc77bfe5f3a85276fac12c5883c7874c68e20859e9b70582e58347b5e97e75f4fbc50d71197ea27df416efa63c\""
+            signingConfig signingConfigs.vault_v2
+        }
+    }
+    if (mIsVaultRelease) {
+        afterEvaluate {
+            task copyRelease(type: Copy) {
+                from "${buildDir}/outputs/apk/vault_v2/release"
+                into "${rootDir}/releases/${mVersionNumber}"
+                include '*.apk'
+            }
+
+            task archiveMapping(type: Zip) {
+                from "${buildDir}/outputs/mapping/vault_v2/release"
+                destinationDir file("${rootDir}/releases/${mVersionNumber}")
+                include '*'
+                archiveName "mapping_${mVersionNumber}.zip"
+            }
+
+            assembleVault_v2Release.finalizedBy(copyRelease, archiveMapping)
+        }
+
+        this.gradle.buildFinished {
+            def apkPath = "${rootDir}/releases/${mVersionNumber}/app-vault_v2-release.apk"
+            def apk = file(apkPath)
+            exec {
+                commandLine 'mv', apkPath,
+                        "${rootDir}/releases/${mVersionNumber}/app_${mVersionNumber}_V${mVersionName}_${getGitHash()}_${calcSha1(apk)}.apk"
+            }
+        }
+    }
+    sourceSets {
+        main {
+            proto {
+                srcDir 'src/main/protos'
+            }
+        }
+    }
+}
+
+dependencies {
+    compileOnly files('libs/cvos.jar')
+    implementation 'com.sparrowwallet:hummingbird:1.5.5'
+    implementation 'androidx.appcompat:appcompat:1.3.0-beta01'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.navigation:navigation-fragment:2.2.0-rc04'
+    implementation 'androidx.navigation:navigation-ui:2.2.0-rc04'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    implementation 'androidx.room:room-runtime:2.1.0'
+    implementation "androidx.preference:preference:1.1.0"
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.protobuf:protobuf-java:3.7.1'
+    implementation 'com.google.zxing:core:3.3.3'
+    implementation 'com.googlecode.protobuf-java-format:protobuf-java-format:1.4'
+    implementation 'com.madgag.spongycastle:core:1.58.0.0@jar'
+    implementation 'com.yanzhenjie:permission:2.0.0-rc4'
+    implementation 'cn.carbswang.android:NumberPickerView:1.2.0'
+    implementation 'com.andrognito.patternlockview:patternlockview:1.0.0'
+    implementation 'com.allenliu.badgeview:library:1.1.1'
+    implementation 'net.lingala.zip4j:zip4j:1.3.2@jar'
+    implementation 'com.wei.android.lib:fingerprintidentify:1.2.6'
+    implementation 'com.github.donkingliang:ConsecutiveScroller:2.5.0'
+
+    implementation 'com.github.CoboVault:shamir-secret:0.03-alpha'
+    annotationProcessor 'androidx.room:room-compiler:2.1.0'
+
+    implementation project(':encryption-core')
+    implementation project(path: ':coinlib')
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.json:json:20140107'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'junit:junit:4.12'
+
+}
+
+preBuild {
+    doLast {
+        def imlFile = file(project.name + ".iml")
+        println 'Change ' + project.name + '.iml order'
+        try {
+            def parsedXml = (new XmlParser()).parse(imlFile)
+            def jdkNode = parsedXml.component[1].orderEntry.find { it.'@type' == 'jdk' }
+            parsedXml.component[1].remove(jdkNode)
+            def sdkString = "Android API " + android.compileSdkVersion.substring("android-".length()) + " Platform"
+            //noinspection GroovyResultOfObjectAllocationIgnored
+            new Node(parsedXml.component[1], 'orderEntry', ['type': 'jdk', 'jdkName': sdkString, 'jdkType': 'Android SDK'])
+            XmlUtil.serialize(parsedXml, new FileOutputStream(imlFile))
+        } catch (FileNotFoundException ignored) {
+            // nop, iml not found
+        }
+    }
+}
+
+task copyDownloadableDepsToLibs(type: Copy) {
+    from configurations.compile
+    into 'libs'
+}
+
+def getVersionProperties() {
+    def versionPropsFile = file('version.properties')
+    def versionProps = new Properties()
+
+    if (versionPropsFile.exists()) {
+        if (versionPropsFile.canRead()) {
+            versionProps.load(new FileInputStream(versionPropsFile))
+        } else {
+            throw new GradleException("could not read version.properties!")
+        }
+    }
+
+    def versionMajor = versionProps.getProperty('major', '0').toInteger()
+    def versionMinor = versionProps.getProperty('minor', '0').toInteger()
+    def versionPatch = versionProps.getProperty('patch', '0').toInteger()
+    def isVaultRelease = false
+
+    gradle.startParameter.taskNames.each {
+        if (it.contains("assembleVaultRelease") || it.contains("assembleVault_v2Release")) {
+            isVaultRelease = true
+            return
+        }
+    }
+
+    def versionNumber = versionMajor * 10000 + versionMinor * 100 + versionPatch
+    def versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
+
+    return [isVaultRelease, versionNumber, versionName]
+}
+
+def getReleaseKeystore() {
+
+    def keystoreDir = new File(rootDir, "keystores")
+    if (!keystoreDir.exists()) {
+        throw new FileNotFoundException("could not find ${keystoreDir}")
+    }
+
+    def keystorePropsFile = new File(keystoreDir, "v2.properties")
+    if (!keystorePropsFile.exists()) {
+        throw new FileNotFoundException("could not find ${keystorePropsFile}")
+    }
+
+    def keystoreProps = new Properties()
+    keystoreProps.load(new FileInputStream(keystorePropsFile))
+
+    def keystoreFile = new File(keystoreDir, keystoreProps['key.store'])
+    if (!keystoreFile.exists()) {
+        throw new FileNotFoundException("could not find ${keystoreFile}")
+    }
+
+    return [
+            store        : keystoreFile,
+            alias        : keystoreProps['key.alias'],
+            storePassword: keystoreProps['key.store.password'],
+            keyPassword  : keystoreProps['key.alias.password']
+    ].asImmutable()
+}
+
+def getGitHash() {
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short=40', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
+static def calcSha1(file) {
+    MessageDigest md = MessageDigest.getInstance("SHA-1")
+    file.eachByte 4096, { bytes, size ->
+        md.update(bytes, 0, size)
+    }
+    return md.digest().collect { String.format "%02x", it }.join()
+}
+
+protobuf {
+
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.7.1'
+    }
+
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                remove java
+            }
+            task.builtins {
+                java {}
+            }
+        }
+    }
+}

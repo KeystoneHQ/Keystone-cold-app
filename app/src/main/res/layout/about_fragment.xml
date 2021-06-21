@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.keystone.cold.viewmodel.AboutViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:navigationIcon="@drawable/menu"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="15sp"
+                android:textColor="@android:color/white"
+                android:text="@string/title_about" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <include layout="@layout/divider" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/logo"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="36dp"
+                    android:src="@drawable/about_logo" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="36dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp"
+                    android:text="@string/about_message" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:textColor="@color/white"
+                    android:gravity="center_horizontal"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp"
+                    android:text="@string/current_device_info" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:textColor="@color/white40"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="4dp"
+                    android:text="@{@string/device_info(viewModel.sn,viewModel.appVersion,viewModel.firmwareAppVersion,viewModel.sysVersion)}" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:textColor="@color/white"
+                    android:gravity="center_horizontal"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp"
+                    android:text="@string/contact_us" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:textColor="@color/white40"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="4dp"
+                    android:text="@string/contact_info" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:textColor="@color/colorAccent"
+                    android:gravity="center_horizontal"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="5dp"
+                    android:text="@string/keep_mnemonic_hint" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_margin="16dp"
+                    android:textColor="@color/white40"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:text="@string/www_keystone_com" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</layout>

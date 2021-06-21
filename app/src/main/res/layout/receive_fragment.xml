@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="coinCode"
+            type="String" />
+
+        <variable
+            name="displayName"
+            type="String" />
+
+        <variable
+            name="addressName"
+            type="String" />
+
+        <variable
+            name="address"
+            type="String" />
+        <variable
+            name="path"
+            type="String" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:navigationIcon="@drawable/arrow_left"
+                app:popupTheme="@style/AppTheme.PopupOverlay">
+
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@{@string/receive_coin(displayName)}"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp" />
+            </androidx.appcompat.widget.Toolbar>
+
+            <TextView
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginEnd="16dp"
+                android:gravity="center"
+                android:paddingHorizontal="5dp"
+                android:text="@string/sync_xrp"
+                android:textAllCaps="false"
+                android:textColor="@color/colorAccent"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="28dp"
+            app:icon="@{coinCode}"
+            tools:src="@drawable/coin_btc"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@{addressName}"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            tools:text="BTC-1" />
+
+        <TextView
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center_horizontal"
+            android:lineSpacingExtra="5dp"
+            android:text="@{address}"
+            android:textColor="@color/white40"
+            android:textSize="12sp"
+            tools:text="19zhQ 2rKq Xm5r y1pj Co83 JbBK 5zUr bdKgc" />
+        <TextView
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center_horizontal"
+            android:lineSpacingExtra="5dp"
+            android:text="@{'('+path+')'}"
+            android:textColor="@color/white40"
+            android:textSize="12sp"
+            tools:text="m/49'/0'/0'" />
+
+        <com.keystone.cold.ui.views.qrcode.QrCodeView
+            android:id="@+id/qrcode"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_marginHorizontal="34dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            android:padding="5dp"
+            android:keepScreenOn="true">
+
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"
+                tools:ignore="ContentDescription" />
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="visible" />
+        </com.keystone.cold.ui.views.qrcode.QrCodeView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:gravity="center_horizontal"
+            android:layout_marginHorizontal="20dp"
+            android:lineSpacingExtra="7dp"
+            android:text="@{@string/receive_warning(displayName)}"
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+</layout>

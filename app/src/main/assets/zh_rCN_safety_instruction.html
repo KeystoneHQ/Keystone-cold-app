@@ -1,0 +1,41 @@
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+<strong>1.</strong>铠石钱包采用分层确定性协议的解决方案，创建钱包将通过加密芯片生成单一随机助记词及主私钥，并由此主私钥生成树状结构储存多组私钥和公钥，管理不同币种。用户也可以导入已有的遵循 BIP39 协议的助记词钱包到本钱包使用。
+
+<strong>2.</strong>用户的助记词及主私钥经过加密后，保存于铠石钱包安全芯片内，钱包生成助记词后，请仔细抄写备份。
+
+<strong>3.</strong>主私钥对铠石钱包内的数字资产拥有绝对控制权，一旦丢失，用户将永远无法恢复其中的资产。
+
+<strong>4.</strong>初次创建钱包时生成的助记词，为用户找回主私钥的唯一途径，请务必牢记并妥善保存。建议使用铠石助记板备份，增加安全性。
+
+<strong>5.</strong>如果铠石钱包遗失或损坏，可通过助记词在任何支持 BIP39 协议的设备或软件上恢复原铠石钱包内的全部数字资产。
+
+<strong>6.</strong>铠石钱包支持创建基于密语的隐藏钱包。用户在创建隐藏钱包后，其对应的密语不可修改。如果密语（或原助记词）遗忘，隐藏钱包将无法恢复，其中存储的资产也将无法取回。
+
+<strong>7.</strong>除助记词和密语外，用户在使用铠石钱包过程中还会接触其他三类密码：
+<strong>a.</strong>系统密码：用于解除屏幕锁定，签名和进入密语钱包。
+<strong>b.</strong>手势密码：仅用于解除屏幕锁定，可以通过系统密码修改手势密码。
+<strong>c.</strong>指纹密码（仅限专业版）：用于解除屏幕锁定，签名和进入密语钱包。可以通过系统密码修改指纹密码。
+
+<strong>8.</strong>如手势密码连续12次输入错误，可通过系统密码解锁屏幕；如系统密码连续5次输入错误，钱包将恢复出厂设置。一旦恢复出厂设置，用户只能通过导入助记词恢复。如果同时遗忘助记词和系统密码，资产将无法找回。
+
+<strong>9.</strong>为保护您的数字资产安全，铠石钱包设计有多重安全验证及防护措施，当官网校验失败（详细使用请参见快速向导）或系统提示铠石钱包被攻击时，请勿继续使用该设备以防供应链攻击。
+
+<strong>10.</strong>为保护您的数字资产安全，铠石钱包专业版设计有拆机自毁机制，一旦拆机，安全芯片内的助记词及主私钥即被清空，以此确保您的资产安全。防拆电路有效工作年限为2年，防拆电路失效后不影响用户正常使用设备，但会降低设备安全性，建议用户适时更换新设备。
+</html>

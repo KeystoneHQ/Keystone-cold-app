@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_unlock.xml"
+    app:startDestination="@id/patternLockFragment">
+
+    <fragment
+        android:id="@id/patternLockFragment"
+        android:name="com.keystone.cold.ui.fragment.PatternLockFragment"
+        tools:layout="@layout/pattern_lock_fragment"
+        android:label="PatternLockFragment">
+        <action
+            android:id="@+id/action_to_passwordLockFragment"
+            app:destination="@id/passwordLockFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/passwordLockFragment"
+        android:name="com.keystone.cold.ui.fragment.PasswordLockFragment"
+        tools:layout="@layout/password_unlock"
+        android:label="PasswordLockFragment">
+        <action
+            android:id="@+id/action_resetpassword_verifyMnemonic"
+            app:destination="@id/preImportFragment" />
+    </fragment>
+    <fragment
+        android:id="@id/verifyMnemonicFragment"
+        android:name="com.keystone.cold.ui.fragment.unlock.VerifyMnemonicFragment"
+        tools:layout="@layout/verify_mnemonic"
+        android:label="VerifyMnemonicFragment">
+        <action
+            android:id="@+id/action_to_setPasswordFragment"
+            app:destination="@id/setPasswordFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
+            app:popUpTo="@id/verifyMnemonicFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/preImportFragment"
+        android:name="com.keystone.cold.ui.fragment.setup.PreImportFragment"
+        android:label="PreImportShardingFragment"
+        tools:layout="@layout/pre_import_sharding">
+        <action
+            android:id="@+id/action_to_selectMnomenicCountFragment"
+            app:destination="@id/selectMnemonicCount"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/selectMnemonicCount"
+        android:name="com.keystone.cold.ui.fragment.setup.SelectMnomenicCountFragment"
+        android:label="SelectMnomenicCountFragment"
+        tools:layout="@layout/select_mnemonic_count">
+        <action
+            android:id="@id/action_to_verifyMnemonic"
+            app:destination="@id/verifyMnemonicFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/setPasswordFragment"
+        android:name="com.keystone.cold.ui.fragment.setup.SetPasswordFragment"
+        tools:layout="@layout/set_password"
+        android:label="SetPasswordFragment"/>
+    <fragment
+        android:id="@+id/fingerprintLockFragment"
+        android:name="com.keystone.cold.ui.fragment.FingerprintLockFragment"
+        android:label="FingerprintLockFragment"
+        tools:layout="@layout/fingerprint_lock_fragment">
+        <action
+            android:id="@+id/action_fingerprint_to_patternLockFragment"
+            app:destination="@id/patternLockFragment" />
+        <action
+            android:id="@+id/action_fingerprint_to_passwordLockFragment"
+            app:destination="@id/passwordLockFragment" />
+    </fragment>
+</navigation>

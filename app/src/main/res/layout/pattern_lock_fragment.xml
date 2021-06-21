@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="15sp"
+                android:textColor="@android:color/white"
+                android:text="@string/pattern_lock" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <include
+            android:layout_below="@id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            layout="@layout/divider" />
+
+        <TextView
+            android:id="@+id/hint"
+            android:layout_below="@id/toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:textSize="15sp"
+            android:layout_marginTop="40dp"
+            android:textColor="@android:color/white"
+            android:text="@string/pattern_lock_hint" />
+
+        <com.andrognito.patternlockview.PatternLockView
+            android:id="@+id/lock_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/hint"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="35dp"
+            app:aspectRatio="square"
+            app:aspectRatioEnabled="true"
+            app:correctStateColor="@color/colorAccent"
+            app:dotAnimationDuration="150"
+            app:dotCount="3"
+            app:dotNormalSize="14dp"
+            app:dotSelectedSize="20dp"
+            app:normalStateColor="@color/white"
+            app:pathWidth="2dp"
+            app:wrongStateColor="#ff0000" />
+
+        <TextView
+            android:id="@+id/switch_to_password"
+            android:layout_below="@id/lock_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:layout_marginBottom="40dp"
+            android:paddingHorizontal="20dp"
+            android:textColor="@color/colorAccent"
+            android:text="@string/switch_to_password" />
+
+    </RelativeLayout>
+</layout>

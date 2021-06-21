@@ -1,0 +1,570 @@
+<!--
+  ~
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+    <string name="app_name">Keystone</string>
+    <string name="action_scan_qr_code">Scan QR Code</string>
+    <string name="drawer_menu_my_vault">My Keystone</string>
+    <string name="drawer_menu_add_remove">Add / Hide Assets</string>
+    <string name="drawer_menu_sync">Watch-only Wallet</string>
+    <string name="drawer_menu_setting">Settings</string>
+    <string name="drawer_menu_about">About Keystone</string>
+    <string name="title_about">About Keystone</string>
+    <string name="title_setting">Settings</string>
+    <string name="title_sync">Sync Keystone Mobile</string>
+    <string name="add_remove_coin">Add / Hide Assets</string>
+    <string name="scan">Scan QR Code</string>
+    <string name="scan_hint">Align QR Code within frame to scan</string>
+    <string name="pattern_lock">Pattern Unlock</string>
+    <string name="pattern_lock_hint">Please draw an unlock pattern</string>
+    <string name="switch_to_password">Switch to password unlock</string>
+    <string name="www_keystone_com" translatable="false">www.keyst.one</string>
+    <string name="device_info">Serial Number: %s \n   Firmware Version：%s\n SE Firmware Version: %s\n System Version：%s </string>
+    <string name="addr" translatable="false">addr.</string>
+    <string name="asset_list_empty">Please go to Menu - Add / Hide Assets to add assets you need</string>
+    <string name="mnemonic_hint1">"The recovery phrase is used to restore your wallet. Use a Keystone Tablet to record your 24 recovery phrase words and store them securely."</string>
+    <string name="mnemonic_hint2">Do not share your recovery phrase with anyone or take a picture of it. If it is lost or stolen, all assets are irretrievable.</string>
+    <string name="saved">Recovery Phrase Saved</string>
+    <string name="tab_my_pubkey">My PubKey</string>
+    <string name="tab_transaction_history">SIGNATURES</string>
+
+    <string-array name="step_label">
+        <item>Authentication</item>
+        <item>Set Password</item>
+        <item>Create Wallet</item>
+        <item>Watch-only Wallet</item>
+        <item>Complete</item>
+    </string-array>
+    <string name="create_addr">Create %s Address</string>
+    <string name="signing_hint">Signing…</string>
+    <string name="scan_progress">Please continue scanning: %s</string>
+    <string name="eos_hint">Here is your %s public key （safe to share）</string>
+    <string name="eos_pubkey">Public Key：\n%s</string>
+    <string name="receive_warning">This address is only for %s, other digital assets sent to the above address will be lost.</string>
+    <string name="receive_coin">Receive %s</string>
+    <string name="version_update_hint"><![CDATA[Please visit: <font color="#00cdc3">https://keyst.one/fw<font/> to check for firmware updates. If you are not using the latest firmware, download it from the official Keystone website and save it on a microSD card (FAT32 format). Transfer the file to your device as shown in the image below. (MicroSD card not included with purchase.)]]></string>
+    <string name="version">Version </string>
+    <string name="setting_language">Language</string>
+    <string name="setting_vibrator">Vibrate On / Off</string>
+    <string name="setting_brightness">Screen Brightness</string>
+    <string name="setting_screen_off_time">Screen Timeout Length</string>
+
+    <string-array name="language_entries" translatable="false">
+        <item>English</item>
+        <item>中文</item>
+    </string-array>
+
+    <string-array name="language_values" translatable="false">
+        <item>en</item>
+        <item>zh_rCN</item>
+    </string-array>
+
+    <string-array name="screen_off_entries">
+        <item>15 secs</item>
+        <item>30 secs</item>
+        <item>1 min</item>
+        <item>2 mins</item>
+        <item>5 mins</item>
+        <item>10 mins</item>
+    </string-array>
+
+    <string-array name="screen_off_values" translatable="false">
+        <item>15000</item>
+        <item>30000</item>
+        <item>60000</item>
+        <item>120000</item>
+        <item>300000</item>
+        <item>600000</item>
+    </string-array>
+
+    <string name="tab_my_address">ADDRESSES</string>
+    <string name="web_auth1"><![CDATA[1. Please visit <font color="#00cdc3">https://keyst.one/auth<font/>]]></string>
+    <string name="web_auth2"><![CDATA[2. Click on <font color="#00cdc3">\"Scan QR Code\" <font/>below and scan the QR code displayed on the website]]></string>
+    <string name="web_auth3">3. Enter the code displayed on your Keystone on the official website for authentication;</string>
+    <string name="web_auth4">4. If authentication fails, do not use your device as it may have been compromised</string>
+    <string name="skip">Skip</string>
+    <string name="read_confirm"><![CDATA[I\'ve read and agreed to the <font color="#00cdc3"><u>\"Terms of Service\"</u><font/>, and  <font color="#00cdc3"><u>\"Privacy Policy\"</u><font/> ]]></string>
+    <string name="create_vault_hint"><![CDATA[1.Touch <font color="#00cdc3">\"Create Wallet\"<font/> to generate a new Wallet.]]></string>
+    <string name="import_vault_hint"><![CDATA[2.Touch <font color="#00cdc3">\"Import Wallet\"<font/> to import an existing HD wallet.]]></string>
+    <string name="license">Terms of Service</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="input_mnemonic_hint">Please enter your %d-word recovery phrase in the table below.</string>
+    <string name="input_mnemonic">Enter Recovery Phrase</string>
+    <string name="pwd_again_hint">Confirm password</string>
+    <string name="pwd_hint">Please enter your password</string>
+    <string name="password_verify_wrong">Passwords do not match.</string>
+    <string name="passphrase_not_match">Passphrase do not match.</string>
+    <string name="password_input_wrong">Must include upper and lower case letters and numbers.</string>
+    <string name="mnemonic_hint"><![CDATA[Important Information: <br>1. The recovery phrase is the only way retrieve your assets. Please use record your recovery phrase carefully and store in a safe location.  <br><br>2. Do not take photos of your recovery phrase or store on a device connected to the Internet. Do not share the recovery phrase with others.  <br><br>3. Visit <font color="#00cdc3">https://keyst.one/kt<font/> to purchase a Keystone Tablet to store your recovery phrase with a higher degree of security.]]></string>
+    <string name="generate_mnemonic">Generate Recovery Phrase</string>
+    <string name="next">Next</string>
+    <string name="and">And</string>
+    <string name="import_vault">Import Wallet</string>
+    <string name="create_vault">Create Wallet</string>
+    <string name="confirm_mnemonic">Confirm Recovery Phrase</string>
+    <string name="confirm_input_mnemonic_hint">Please enter your %d-word recovery phrase in the table below.</string>
+    <string name="complete">Done</string>
+    <string name="password_verify_too_short">Too short</string>
+    <string name="sync_hint2"><![CDATA[Download Keystone Mobile:<br><font color="#00cdc3"><u>https://keyst.one/app</u><font/><br>]]></string>
+    <string name="sync_hint1"><![CDATA[Scan <font color="#00cdc3">QR Code<font/> with Keystone Mobile]]></string>
+    <string name="wrong_mnemonic_please_check">recovery phrase incorrect, please try again.</string>
+    <string name="dots_not_enough">Please connect at least 4 dots.</string>
+    <string name="input_pattern_again">Please draw again to confirm.</string>
+    <string name="two_pattern_not_match">Pattern does not match, please draw again.</string>
+    <string name="set_pattern_complete">Pattern recorded</string>
+    <string name="retry_times_hint">Incorrect password, you have %d attempts remaining.</string>
+    <string name="too_many_pattern_attempts">Too many incorrect attempts, \n try password unlock.</string>
+    <string name="wrong_pattern_hint">Incorrect pattern, please try again.</string>
+    <string name="factory_reset_hint">All data will be erased. This cannot be undone.</string>
+    <string name="factory_reset_title">Wipe Device</string>
+    <string name="password_modal_title">Please enter password.</string>
+    <string name="passphrase_hint3">Passphrases cannot exceed 128 characters. Can consist of upper and lower case letters, digits, symbols, spaces. Case Sensitive.</string>
+    <string name="passphrase_hint2">Enter a Passphrase (case sensitive)</string>
+    <string name="passphrase_hint_agian">Enter Passphrase Again</string>
+    <string name="passphrase_hint1">Important Information:\n1. When a Hidden Wallet is created, its Passphrase cannot be changed. If the Passphrase is lost or forgotten, the Hidden Wallet and all its assets will be irretrievable. Record and store the Passphrase securely before creating a Hidden Wallet \n2. Keep the Passphrase field blank to enter the default Wallet</string>
+    <string name="passphrase_hint">Please Input a Passphrase</string>
+    <string name="passphrase_title">Passphrase Wallet</string>
+    <string name="passphrase_confirm_modal_title">Switch from Current Wallet</string>
+    <string name="passphrase_confirm_modal_hint">Confirm to switch from current Wallet to new Wallet. You may return to any Wallet by entering its correct Passphrase. Note that the Passphrase for the default HD wallet is blank</string>
+    <string name="password_error_hint">Incorrect password, you have %d chances left.</string>
+    <string name="verify_mnemonic_hint">Please enter your %d-word recovery phrase in the table below.</string>
+    <string name="delete_white_list_hint">Confirm to delete White List Address:%s？</string>
+    <string name="invalid_qrcode">Invalid QR code!</string>
+    <string name="title_activity_test" translatable="false">TestActivity</string>
+    <string name="attack_warning">To protect your assets, all information has been erased from your Keystone. Please stop using this device and contact Customer Service immediately.\n  Status Code:%s</string>
+    <string name="verify_mnemonic">Verify Recovery Phrase</string>
+    <string name="set_pattern">Set Pattern Lock</string>
+    <string name="system_settings">System Settings</string>
+    <string name="white_list">White List</string>
+    <string name="create_import_vault">Create/Import Wallet</string>
+    <string name="safety_instruction">Security Manual</string>
+    <string name="setting_license">Terms of Service</string>
+    <string name="factory_reset">Wipe Device</string>
+    <string name="updatable">Update Now</string>
+    <string name="password_input_hint">Please enter password</string>
+    <string name="password">Password</string>
+    <string name="confirm">Confirm</string>
+    <string name="wrong_password_retry_hint">Password incorrect, please try again</string>
+    <string name="Update">Update</string>
+    <string name="draw_pattern_again">Please draw again to confirm</string>
+    <string name="scan_to_auth">Scan QR Code</string>
+    <string name="signing_history">Signing Details</string>
+    <string name="add_coins">Add Cryptocurrency</string>
+    <string name="not_in_whitelist_reject">Receiving address unauthorized, transaction declined!</string>
+    <string name="invalid_mnemonic">Recovery phrase is incorrect, please try again.</string>
+    <string name="scan_permission_denied">Scan Permission denied</string>
+    <string name="wrong_mnemonic">Recovery phrase incorrect</string>
+    <string name="too_many_passphrase">Can only have up to 5 passphrase</string>
+    <string name="about_message">Keystone is an air-gapped hardware wallet that uses completely transparent QR code data transmissions so you can verify what goes in and out of it. Our Secure Element performs true random number generation (TRNG) to ensure your private keys come from real, physical sources of entropy. All transaction signing occurs entirely within the Secure Element, which has state of the art defenses to protect you in the event that an attacker has physical access to your device. </string>
+    <string name="amount_hint">Set Amount</string>
+    <string name="setup_wallet_hint1">Thanks for choosing Keystone!</string>
+    <string name="change_password">Change Password</string>
+    <string name="self_checking">Security verification in progress…</string>
+    <string name="text_create_address_main_text">Select number of Addresses</string>
+    <string name="address_name_hint">Addresses may not be deleted once created. Please choose a name you will be able to recognize.</string>
+    <string name="add_white_list">Add White List</string>
+    <string name="search">Search</string>
+    <string name="cancel">Cancel</string>
+    <string name="device_under_attack">This device is no longer safe to use!</string>
+    <string name="power_off">Power Off</string>
+    <string name="create_new_address">Create Address</string>
+    <string name="screen_brightness_hint">Slide to adjust the screen brightness</string>
+    <string name="broadcast_tx">Broadcast Transaction</string>
+    <string name="please_broadcast_with_hot">Scan QR code with %s to broadcast the transaction to the blockchain</string>
+    <string name="please_confirm">Please Confirm</string>
+    <string name="know">I Understand</string>
+    <string name="creating_vault_hint">Creating Wallet, please keep screen on.</string>
+    <string name="delete_white_list">Delete White List</string>
+    <string name="self_check_under_disassemble">Someone has attempted to hack your device!</string>
+    <string name="self_check_alert_content">Your device has been attacked and may have been compromised. By continuing to use this device, you are risking the disclosure of sensitive information and loss of your assets. We strongly recommend you erase all personal information on the device and contact Customer Service immediately.</string>
+    <string name="web_auth_scan_agian">Scan Again</string>
+    <string name="clean_data_and_power_off">Clear Data and Power off</string>
+    <string name="generate_mnemonic_hint">Once a Wallet is created, the recovery phrase will not be displayed again!</string>
+    <string name="sign_success">Signing Success</string>
+    <string name="sign_fail">Signing Failed</string>
+    <string name="manage_white_list_hint">Users only can send assets to the addresses stored on the white list. While the white list is empty, all transactions are prohibited.</string>
+    <string name="password_unlock">Password Unlock</string>
+    <string name="forget_password">Forgot password?</string>
+    <string name="unlock">Unlock</string>
+    <string name="eos_pubkey_sign_only">1. If you have generated an address from your Pub Key, you can send and receive funds on Keystone mobile, and your account information will be automatically synchronized when you sign in with this device.\n2. If you haven’t generated an address, you can invite a friend with %s to scan this Pub Key and generate an address.</string>
+    <string name="secret_modal_title">Please check your surroundings</string>
+    <string name="secret_modal_msg">Anyone with your recovery phrase has full access to your cryptocurrency. Please make sure there are no onlookers or cameras when you record your recovery phrase.</string>
+    <string name="select_mnemonic_count">Recovery Phrase Length</string>
+    <string name="set_password">Set Password</string>
+    <string name="text_password_required">Must contain at least 10 characters and include upper and lower case letters and digits. Symbols are allowed. Case sensitive.</string>
+    <string name="guide_completed_title">Congratulations! \nSetup is now complete!</string>
+    <string name="guide_completed_remind"><![CDATA[You can create Passphrase(Hidden Wallet) or reset your password in Settings. \n Read the enclosed Quick Guide or visit our website to learn more: <br> <font color="#00cdc3"><u>https://keyst.one</u><font/>]]></string>
+    <string name="tx_from">From</string>
+    <string name="tx_to">To</string>
+    <string name="tx_fee">Fee</string>
+    <string name="tx_memo">Memo</string>
+    <string name="tx_confirm">Verify Fingerprint</string>
+    <string name="tx_confirm_title">Confirm Transaction Details</string>
+    <string name="sign">Sign</string>
+    <string name="find_password">Forgot Password</string>
+    <string name="update_hint">Only install firmware upgrades downloaded from the official Keystone website.</string>
+    <string name="web_auth">Web Authentication</string>
+    <string name="web_auth_code">Your device authentication code is</string>
+    <string name="Success">Success</string>
+    <string name="fail">Failed</string>
+    <string name="verify_way">Please Select verification method</string>
+    <string name="verify_way_sharding">Verify Sharding</string>
+    <string name="verify_way_mnemonic">Verify Recovery Phrase</string>
+    <string name="tx_id">Transaction ID</string>
+    <string name="mnemonic_save_hint">The recovery phrase is the only way to retrieve your assets and password. If it is lost, your assets are irretrievable and the device may be locked! (The recovery phrase will not be displayed again after initialization of the device.)</string>
+    <string name="verify_code_hint">Please input the verification code into the official website\'s Web Authentication page to have your device authenticated.</string>
+    <string name="update_alert_boot_low_battery_message">Device power level needs to be above %s to ensure the upgrade is successful. Current battery level is %s, please replace or charge the battery.</string>
+    <string name="update">Update</string>
+    <string name="new_version_hint_message">A new version %s is available for update. Compare the following sha256 with the sha256 of your download package on the official website, ensure that they are consistent, then click "Update Now"</string>
+    <string name="updating">Updating…</string>
+    <string name="update_now">Update Now</string>
+    <string name="delete_fingerprint">Delete Fingerprint</string>
+    <string name="rename_fingerprint">Rename</string>
+    <string name="confirm_delete">Confirm Deletion</string>
+    <string name="fingerprint_rename_subtitle">Change Fingerprint Name</string>
+    <string name="enroll_complete_hint">%s Fingerprint registered.</string>
+    <string name="unsupported_qrcode">Invalid QR Code! Please check and retry.</string>
+    <string name="unsupported_coin">Unsupported Cryptocurrency</string>
+    <string name="xfp_not_match">Hot end and cold end do not match. Please check that they been correctly bound.</string>
+    <string name="incorrect_qrcode">Invalid QR Code</string>
+    <string name="incorrect_tx_data">Invalid Transaction Data</string>
+    <string name="invalid_webauth_qrcode_hint">Invalid QR Code. Please follow the instruction to scan the correct QR Code to complete authentication.</string>
+    <string name="hint">Tips</string>
+    <string name="enlarge_qrcode">Difficulty scanning? Tap the QR code to adjust.</string>
+    <string name="enroll_fingerprint">Fingerprint Registration</string>
+    <string name="enroll_fingerprint_hint">Place your finger on the fingerprint sensing area and remove it when you feel a vibration. Repeat until enrolling process is fully complete.</string>
+    <string name="complete_enroll">Done</string>
+    <string name="modify_fingerprint_name">Edit Name</string>
+    <string name="fingerprint_settings">Fingerprint Settings</string>
+    <string name="enroll_fingerprint_hint1">Place your finger on the fingerprint sensing area and press slightly.</string>
+    <string name="fingerprint_use_hint">Fingerprint can be used to sign transactions or unlock device.</string>
+    <string name="fingerprint_start_enroll">Start Registration</string>
+    <string name="delete">Delete</string>
+    <string name="rename">Rename</string>
+    <string name="fingerprint_unlock">Fingerprint Unlock</string>
+    <string name="verify_fingerprint_hint">Verify Fingerprint</string>
+    <string name="add_fingerprint">+Add Fingerprint</string>
+    <string name="search_coin_no_result_hint">No Results</string>
+    <string name="verify_fingerprint_to_sign">Verify fingerprint to sign transaction.</string>
+    <string name="switch_to_fingerprint_sign"><![CDATA[Switch to Password >]]></string>
+    <string name="use_fingerprint_unlock">Unlock Device</string>
+    <string name="use_fingerprint_sign">Sign Transactions</string>
+    <string name="serialno">Serial Number: %s</string>
+    <string name="receive_address">To %d</string>
+    <string name="sync_in_progress">Sync in Progress</string>
+    <string name="scan_failed">Scan Failed</string>
+    <string name="version_not_match">Mobile app version does not match. Please update firmware and mobile app to the latest.</string>
+    <string name="reset_hint">Wrong Password. This device will be wiped.</string>
+    <string name="set_passphrase">Passphrase Wallet</string>
+    <string name="tx_list_empty">No Result\nPlease input the keywords of Signature</string>
+    <string name="address_list_empty">No Result\nPlease input address or the keywords of name</string>
+    <string name="tag">Memo</string>
+    <string name="confirm_to_verify_mnemonic">Next Step</string>
+    <string name="pattern_unlock_hint">Pattern password is used to unlock the wallet</string>
+    <string name="new_version_footer_hint">You can also go to [Menu > Settings > Version] and touch "Update Now" later.</string>
+    <string name="factory_reset_warning">All data will be erased. Please confirm whether to continue</string>
+    <string-array name="create_vault_step">
+        <item>"Creating Wallet…"</item>
+        <item>"Security verification in progress…"</item>
+        <item>"Encrypting Wallet…"</item>
+        <item>"Secure Element verification in progress…"</item>
+        <item>"Writing Secure Element…"</item>
+    </string-array>
+    <string name="export_to_electrum">Create Watch-Only Wallet in Electrum</string>
+    <string name="export_to_electrum_guide">1. Open Electrum and create a new wallet. \n2. Choose "Standard wallet". \n3. Choose "Use a master key". \n4. Touch "Show Master Public Key" below then click the camera icon in the "Create keystore from a master key" window in Electrum to scan the QR code that displays on Keystone.
+ \n5. Set a password. \n6. Enter the watch-only wallet.</string>
+    <string name="export_xpub">Show Master Public Key</string>
+    <string name="export_to_electrum_guide_hint">How to create a watch-only wallet in Electrum:</string>
+    <string name="send_address">From %d</string>
+    <string name="input">Input %d</string>
+    <string name="output">Output %d</string>
+    <string name="export_success">Export Successful</string>
+    <string name="read_sdcard">MicroSD card</string>
+    <string name="no_sdcard">MicroSD Card Not Found</string>
+    <string name="no_sdcard_hint">Please make sure you have inserted a FAT32 format microSD card</string>
+    <string name="no_unsigned_txn">File Not Found</string>
+    <string name="no_unsigned_txn_hint">Please make sure the file you wish to sign was successfully saved to your microSD card.</string>
+    <string name="electrum_broadcast_guide">How to Broadcast</string>
+    <string name="electrum_broadcast_action_guide">In Electrum, go to Tools > Load Transaction > From QR Code\n\nDifficulty scanning? You can export the signed transaction data as a file using a microSD card and broadcast the transaction from a file with Electrum.</string>
+    <string name="electrum_decode_txn_fail">Read Error</string>
+    <string name="electrum_import_xpub_guide_title">How to scan QR code</string>
+    <string name="electrum_import_xpub_action_guide">1. Open Electrumand and create a new wallet.\n2. Choose "Standard wallet".\n3. Choose "Use a master key". \n4. Click the camera icon in the "Create keystore from a master key" window in Electrum to scan the QR code that displays on Keystone.\n\nDifficulty scanning? You can also export the master public key file using a microSD card.</string>
+    <string name="error_txn_file">Unable to read file, please try importing again.</string>
+    <string name="export_signed_txn">Export File to Broadcast</string>
+    <string name="electrum_import_signed_txn">In Electrum, go to Tools > Load Transaction > From File to open the file. </string>
+    <string name="insert_sdcard_hint">Please make sure you have inserted a FAT32 format microSD card.</string>
+    <string name="electrum_import_xpub_action">Open when inputting your master public key on Electrum.</string>
+    <string name="transaction_source_label">Wallet</string>
+    <string name="use_electrum_to_broadcast">Scan the QR code with Electrum to broadcast</string>
+    <string name="transaction_from_electrum">This transaction is from Electrum</string>
+    <string name="add_address">Add Address</string>
+    <string name="use_electrum_scan_xpub">Scan master public key using Electrum</string>
+    <string name="export_signed_txn_file">Export Signed File</string>
+    <string name="export_signed_txn_action_guide">How to broadcast with Electrum:\nIn Electrum, go to Tools > Load Transaction > From File. Open the file, and click "Broadcast".</string>
+    <string name="export">Export</string>
+    <string name="export_xpub_text_file">Export Master Public Key File</string>
+    <string name="file_name_label">File name:</string>
+    <string name="master_xpub">Master Public Key (Nested SegWit)</string>
+    <string name="electrum_qrcode_hint"><![CDATA[Difficulty scanning?Tap the QR code to enlarge<br>or <u>touch here to export via microSD.</u>]]></string>
+    <string name="scan_electrum_hint">Difficulty scanning? You can import pending transactions from Electrum using a microSD card (Menu > MicroSD Card).</string>
+    <string name="sign_txn_in_sdcard">Unsigned Transaction Files</string>
+    <string name="master_pubkey_not_match">Transaction not recognized. Your Keystone has not been successfully paired with the watch-only wallet.</string>
+    <string name="change">Change</string>
+    <string name="electrum_compatibility">Electrum Watch-Only Wallet</string>
+    <string name="identification_failed">Identification Failed</string>
+    <string name="from_electrum">From Electrum</string>
+    <string name="update_failed">Update failed</string>
+    <string name="contact_keystone_service">contact us: support@keyst.one\n Status Code:%s</string>
+    <string name="keep_rolling">Keep it Rolling</string>
+    <string name="confirm_rolling">Generate</string>
+    <string name="rolling_hint_less_than_99">You have rolled %d times. We recommend you roll 99 times for 256-bit <entropy class=""></entropy></string>
+    <string name="rolling_hint_less_than_50">You have rolled %d times. You need at least 50 rolls to generate a recovery phrase.</string>
+    <string name="rolling_not_enough">Keep it Rolling</string>
+    <string name="dice_rolls">Dice Rolls</string>
+    <string name="dice_roll_guide"><![CDATA[How to use dice to generate keys:<br><br> 1. Roll the dice at least 50 times. Roll 99 times to obtain 256-bit entropy (recommended). There is no limit to the number of rolls you can use.<br>2. We recommend you use <font color="#00cdc3">casino dice<font/> to increase the entropy of each dice throw.]]></string>
+    <string name="start">Start</string>
+    <string name="pattern_lock_hide_track">To prevent peeping, track will be hidden when unlocked</string>
+    <string name="abnormal_tx">Abnormal Transaction</string>
+    <string name="fee_attack_warning">Detect that the transaction is risky and cannot be signed. You can go to: https// for details, or contact us: support@keyst.one</string>
+    <string name="already_signed">You have signed the transaction, can broadcast the transaction directly</string>
+    <string name="contact_info">Twitter: @KeystoneWallet\nEmail：support@keyst.one</string>
+    <string name="keep_mnemonic_hint">*Keystone will never ask for your Recovery Phrase under any circumstances, please be sure to keep your Recovery Phrase and don’t disclose them to anyone</string>
+    <string name="contact_us">Contact US</string>
+    <string name="current_device_info">Equipment Info</string>
+    <string name="switch_passphrase">Enter Passphrase Wallet</string>
+    <string name="check_mnemonic">Recovery Phrase Check</string>
+    <string name="check_failed">Check Failed</string>
+    <string name="check_mnemonic_failed">The entered recovery phrase does not match the one in the Keystone. Do not reset the device until a valid backup was verified.</string>
+    <string name="invalid_mnemonic_hint">You have entered an invalid recovery phrase, please try again.</string>
+    <string name="check_successful">Check Successful</string>
+    <string name="check_successful_hint">The entered recovery phrase matched the one in the Keystone.</string>
+    <string name="notice">Error</string>
+    <string name="notice1">Notice</string>
+    <string name="default_vault_notice">You have successfully upgraded to the latest version. To protect your assets, the Wallet automatically resets to the default wallet every time the device is restarted. (Also when it upgrades, shuts down or is restarted.)</string>
+    <string name="switching_to_main_vault">Entering the default wallet, please keep screen on.</string>
+    <string name="add_polkadot_hint">You need to enter the recovery phrase of this wallet when adding %s.For details, please visit: https://keyst.one/%s</string>
+    <string name="add_later">Not Add</string>
+    <string name="comfirm_add">Confirm Add</string>
+    <string name="mnemonic_not_match">The entered recovery phrase does not match the one in the Keystone. Please try again.</string>
+    <string name="adding_dot_hint">Adding %s, please keep screen on</string>
+    <string name="dot_tip">Tip</string>
+    <string name="shading_guide"><![CDATA[
+    1. You have built <font color="#00cdc3">%1$d<font/>/<font color="#00cdc3">%2$d<font/> Shamir Backup. It\'s a Shamir Backup with <font color="#00cdc3">%3$d<font/> shares and you need <font color="#00cdc3">%4$d<font/> shares at least to recovery your wallet.<br><br>
+    2. Next you will need to confirm each share. If all the shares are kept by a different person, please confirm that each confirmation is performed by the specific person.<br> <br>
+    3. Please don\'t take photos of the shares, or store it online. Don\'t share it to anyone else or you risk losing your funds.
+    ]]></string>
+    <string name="generate_sharding_sequence">share #%d(Total %d)</string>
+    <string name="generate_shading_hint">Please confirm you are the custodian of the share #%d</string>
+    <string name="cancel_create_sharding">Cancel</string>
+    <string name="input_sharding_mnemonic_hint"><![CDATA[Please enter the recovery phrase for <font color="#00cdc3">share #%d<font/> in the form below]]></string>
+    <string name="verify_pass">Verify Successful</string>
+    <string name="verify_sharding_pass_hint">The recovery phrase of this share was verified successfully, now proceed to the next share. Touch confirm and hand over to the second share custodian who keeps share number #%d.</string>
+    <string name="sharding_no">share #%d</string>
+    <string name="reset_password">Password Reset</string>
+    <string name="first_sharding_hint">The first share enter successfully, %d more shares needed to enter.</string>
+    <string name="cancel_import_sharding">Cancel Enter</string>
+    <string name="continue_import_sharding">Keep Entering</string>
+    <string name="sharding_repeat">Share already entered, please enter a different share.</string>
+    <string name="sharding_id_not_match">You have entered a share from another Shamir Backup.</string>
+    <string name="confirm_cancel_import_sharding">Confirm Cancel</string>
+    <string name="continue_create_sharding">Keep Entering</string>
+    <string name="invalid_shard">Recovery phrase incorrect, please check.</string>
+    <string name="ask_confirm_cancel_import_sharding">Cancel import wallet？</string>
+    <string name="ask_confirm_cancel_create_sharding">Cancel create wallet？</string>
+    <string name="ask_confirm_cancel_check_sharding">Cancel recovery phrase check?</string>
+    <string name="ask_confirm_cancel_enter_sharding">Cancel recovery phrase enter?</string>
+    <string name="cancel_import_sharding_notice">The confirmed share will be lost after cancelling. Are you sure you want to cancel?</string>
+    <string name="next_sharding">Next share</string>
+    <string name="not_support_multi_group_sharding">You have entered  Super Shamir (two-level configuration of Shamir Backup), Keystone doesn’t support it currently.</string>
+    <string name="total_sharding_count">Number of shares</string>
+    <string name="sharding_threshold">Threshold</string>
+    <string name="confirm_cancel_create_sharding_title">Cancel create wallet？</string>
+    <string name="confirm_cancel_create_sharding">The confirmed share will be lost after cancelling. Are you sure you want to cancel?</string>
+    <string name="choose_check_type">Select Way of Checking</string>
+    <string name="choose_import_type">Select Way of Importing</string>
+    <string name="check_bip39_phrase">Check the Wallet with Single Backup</string>
+    <string name="check_slip39_phrase">Check the Wallet with Shamir Backup</string>
+    <string name="import_bip39_phrase">Import a Wallet with Single Backup</string>
+    <string name="import_slip39_phrase">Import a Wallet with Shamir Backup</string>
+    <string name="enter_bip39_phrase">Enter Generic Recovery Phrase</string>
+    <string name="enter_slip39_phrase">Enter Shamir Backup</string>
+    <string name="reset_password_by_phrase">Reset password via recovery phrase</string>
+    <string name="shamir_backup">Shamir Backup</string>
+    <string name="generate_slip39_phrase">Create a Wallet with Shamir Backup</string>
+    <string name="generate_bip39_phrase">Create a Wallet with Single Backup</string>
+    <string name="shard_setting">Setting</string>
+    <string name="previous_one">Previous</string>
+    <string name="next_one">Next</string>
+    <string name="opration_failed">Operation Failed</string>
+    <string name="reboot_hint">Please restart or contact us at support@keyst.one\n Status Code:%s</string>
+    <string name="reboot">Restart</string>
+    <string name="clear_and_power_off">Erase all Information and Power off</string>
+    <string name="abnormal_state_hint">It is recommended that you wipe the device and then reset it.Repeated retries failed, you can contact us：support@keyst.one\n  Status Code:%s</string>
+    <string name="abnormal_state_title">Abnormal State</string>
+
+    <string-array name="watch_wallet_list">
+        <item>Keystone App</item>
+        <item>Polkadot.js</item>-->
+        <item>XRP Toolkit</item>
+        <item>Keystone Ethereum Extension</item>
+    </string-array>
+
+    <string-array name="watch_wallet_list_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="watch_wallet_summury" >
+        <item>8 main chains including BTC, ETH, etc</item>
+        <item>DOT、KSM</item>
+        <item>XRP</item>
+        <item>ETH</item>
+    </string-array>
+    <string name="choose_watch_only_wallet">Watch-only Wallet</string>
+    <string name="sync_later">Export Later</string>
+    <string name="sync_watch_wallet">Sync Watch-Only Wallet</string>
+    <string name="sync_keystone_wallet_guide_title">How to bind Keystone App：</string>
+    <string name="sync_xumm_guide_title">How to create a Read only account in XUMM：</string>
+    <string name="sync_xrp_toolkit_guide_title">How to create a watch-only account in XRP Toolkit：</string>
+    <string name="sync_polkadotjs_wallet_guide_title">How to create a %s watch-only wallet in Polkadot.js：</string>
+    <string name="sync_metamask_guide_title">How to create a watch-only wallet in Keystone Ethereum Extension：</string>
+
+    <string name="sync_keystone_wallet_guide_text"><![CDATA[
+        1. Open Keystone Mobile and add new wallet<br>
+        2. Choose "Hardware Wallet" and touch "Bind" button<br>
+        3. Touch "Display QR Code" below then scan the QR Code with Keystone App<br><br>
+        <font color="#535353">Download Keystone App：<font/><br>
+        <font color="#00cdc3">https://keyst.one/app<font/>
+    ]]></string>
+    <string name="sync_polkadot_js_guide_text"><![CDATA[
+        1. Open Polkadot.js and choose <font color="#00cdc3">%s<font/><br>
+        2. Click "<font color="#00cdc3">Accounts<font/>" and choose "<font color="#00cdc3">Accounts<font/>"<br>
+        3. Click "<font color="#00cdc3">Add via Qr<font/>"<br>
+        4. Scan the QR Code that displays on Keystone<br>
+    ]]></string>
+    <string name="sync_xumm_guide_text"><![CDATA[
+        1. Open XUMM and create a new account.<br>
+        2. Choose "Import existing account"<br>
+        3. Choose "Read only" and touch "Next"<br>
+        4. Scan the QR Code of address that displays on Keystone<br>
+        <font color="#00cdc3">The first address (m/44\'/144\’/0\’/0/0) is generated by default. If you want to sync other addresses, you can add addresses after entering the wallet and scan the address with XUMM<font/><br>
+        5. Touch "Next" and enter the Read only account<br>
+    ]]></string>
+
+    <string name="sync_xrp_toolkit_guide_text"><![CDATA[
+        1. Open XRP Toolkit, click "Connect Wallet"<br>
+        2. Select "Keystone Device"<br>
+        3. Click "Scan Keystone" in XRP Toolkit<br>
+        4. Tap the button below and scan the QR code<br>
+    ]]></string>
+    <string name="sync_metamask_guide_text"><![CDATA[
+        1. Go to <font color="#00cdc3">https://keyst.one/mm<font/> install Keystone Ethereum Extension according to the tutorial<br>
+        2. Enter Keystone Ethereum Extension, click "Get Started" and set password<br>
+        3. Scan the QR Code of wallet that displays on Keystone<br>
+        4. Enter watch-only wallet<br>
+    ]]></string>
+    <string name="sync_keystone_guide_button_text">Display QR Code</string>
+    <string name="sync_xumm_guide_button_text">Display QR Code of Address</string>
+    <string name="sync_xrp_toolkit_guide_button_text">Display QR Code</string>
+    <string name="sync_polkadot_js_guide_button_text">Display QR Code of %s</string>
+    <string name="sync_metamask_guide_button_text">Display QR Code</string>
+    <string name="sync_polkadot_hint">Hint：\nOn Polkadot.js, you need to create watch-only wallets for DOT and KSM separately.</string>
+    <string name="sync_with_keystone_vault">Scan the QR code using Keystone App</string>
+    <string name="sync_with_xumm">Scan the QR code using XUMM</string>
+    <string name="sync_with_xrp_toolkit">Scan the QR code using XRP Toolkit</string>
+    <string name="sync_with_metamask">Scan the QR Code using Keystone Ethereum Extension</string>
+    <string name="sync_with_polkadot_js">Scan the QR code using Polkadot.js</string>
+    <string name="broadcast_xrp_toolkit_hint">Scan QR code with XRP Toolkit</string>
+    <string name="sync_first_xrp_accout">The first address is generated by default. If you want to sync other addresses, you can add addresses after entering the wallet.</string>
+    <string name="sync_xrp">Pair App</string>
+    <string name="unresolve_tx">Unresolved Transaction</string>
+    <string name="unresolve_tx_hint">The transaction cannot be resolved. Only the QR code generated by %s is scanned under the current watch-only wallet.</string>
+    <string name="account_not_match">Non-current wallet transactions</string>
+    <string name="account_not_match_detail">This transaction does not belong to the current wallet, please check the transaction information.</string>
+    <string name="simple">Simple</string>
+    <string name="raw">Raw</string>
+    <string name="spark_token_claim_guide"><![CDATA[
+    1. Open <font color="#00cdc3">XRP Toolkit<font/><br>
+    2. In the menu bar, go to <font color="#00cdc3">Account<font/> and select the <font color="#00cdc3">Properties<font/> menu item<br>
+    3. Look at the Account Properties page for the <font color="#00cdc3">Message Key<font/> section<br>
+    4. Click the small <font color="#00cdc3">QR code icon<font/> in the Message Key field<br>
+    5. Scan the Message Key QR Code that displays on Keystone<br>
+    6. Click the <font color="#00cdc3">Update<font/> button<br>
+    7. Sign the transaction
+    ]]></string>
+    <string name="spark_token_prepare_title">Prepare for claiming your Spark tokens：</string>
+    <string name="claim_spark_token_button">Display QR Code of Message Key</string>
+    <string name="spark_token_title">Message Key</string>
+    <string name="claim_spark">Claim Spark</string>
+    <string name="claim_spark_button_text">Scan the QR Code of XRP Toolkit</string>
+    <string name="pair_app">Pair App</string>
+    <string name="unknown_substrate_chain_title">This currency is not currently supported</string>
+    <string name="unknown_substrate_chain_content">Polkadot.js watch-only does not support this currency</string>
+    <string name="unsupported_polka_tx_type_title">Unresolved Transaction</string>
+    <string name="unsupported_polka_tx_type_content">This transaction types are not currently supported.</string>
+    <string name="enable_dot_for_polkadotjs">You need to enter the recovery phrase of this wallet when switch watch-only wallet to polkadot.js. For details, please visit: https://keyst.one/dot</string>
+    <string name="not_switch">Not Now</string>
+    <string name="confirm_switch">Confirm</string>
+    <string name="keep_screen_on">Please keep screen on</string>
+    <string name="sync">Sync</string>
+    <string name="qrcode_capacity">QR Code Density：%s </string>
+    <string name="qr_capacity_high">High</string>
+    <string name="qr_capacity_mid">Medium</string>
+    <string name="qr_capacity_low">Low</string>
+    <string name="adjust_qr_capacity">Difficulty scanning, you can adjust the size of the QR Code or lower the density of the QR Code</string>
+
+    <string name="create_mnemonic_guide_content"><![CDATA[
+        1. Touch "Fill in your 23 words" button below<br>
+        2. Select the first 23 from the official list of 2048 words and fill in<br>
+        3. Keystone will calculate the 24th word<br>
+        4. Back up your Recovery Phrase<br>
+    ]]>
+    </string>
+    <string name="create_mnemonic_web_guide">The official list of 2048 words and more details, please visit: https://keyst.one/24th</string>
+    <string name="fill_23_words">Fill in your 23 words</string>
+    <string name="last_word_hint"><![CDATA[
+        You 24th word: <font color="#00cdc3">%s<font/>
+    ]]></string>
+    <string name="please_input_23_words">Fill in your first 23 words</string>
+    <string name="calculate_24th_word">Calculate the 24th Word</string>
+    <string name="create_23_word">Create your own 24 words Recovery Phrase</string>
+    <string name="create_23_word_title">Create your Recovery Phrase</string>
+    <string name="mnemonic_backuped">I have my Recovery phrase</string>
+    <string name="metamask_install_hint">You must disable ALL other instances of MetaMask on ALL open browsers when using Keystone Ethereum Extension. If you have another instance running, it will interfere with requests to your Keystone and you will get unexpected behavior.</string>
+    <string name="testnet">Testnet</string>
+    <string name="inconsistent_address">Inconsistent with "From" address</string>
+    <string name="calc_mnemonic_warning">You have triggered an advanced function of "Create your Recovery Phrase". Please make sure that you fully understand the dangers of this feature before proceeding to generate a recovery phrase with it. Your funds might get compromised if you fail to do so. Proceed at your own risk!</string>
+    <string name="calc_mnemonic_warning_checkbox">I fully understand entropy, BIP39, private key generation and other related material to generate my recovery phrase.</string>
+    <string name="note">DANGER!</string>
+    <string name="select_last_word_hint">Please choose one of the following words as the 24th word</string>
+    <string name="please_insert_sdcard">Please make sure you have inserted a microSD card</string>
+    <string name="confirm_format">Are you SURE ?</string>
+    <string name="format_sd_card_hint">This operation will erase all files in the MicroSD Card and format the card into FAT32 format. Please back up the important files before formatting.</string>
+    <string name="format_sdcard_title">Format Card</string>
+    <string name="format_sdcard_hint">You need to format the current microSD card to FAT32 format first, otherwise the files cannot be read/exported.</string>
+    <string name="format_sdcard_hint1">Hint: This operation will erase all files in the MicroSD Card. Please back up the important files before formatting.</string>
+    <string name="format_now">Format Now</string>
+    <string name="format_sdcard_hint2">You can also go to Menu > Setting > System Setting > Format Card</string>
+    <string name="format_success">Formatted successfully</string>
+    <string name="format_failed">Format Failed</string>
+    <string name="retry_format">Is it reformatted?</string>
+    <string name="retry">Retry</string>
+    <string name="formatting">Formatting…</string>
+</resources>

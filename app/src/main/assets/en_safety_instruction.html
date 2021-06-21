@@ -1,0 +1,44 @@
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+<strong>CAUTION:</strong>
+<strong>Read this section before using your device.</strong>
+
+<strong>1.</strong> Keystone is a hierarchical deterministic (HD) hardware wallet complaint with BIP 32/39/44. It uses a Secure Element for true random number generation (TRNG), from which a master private key is derived. The master private key can be used to manage virtually unlimited pairs of private and public keys for different cryptocurrencies. Users can also import an existing recovery phrase into the Keystone.
+
+<strong>2.</strong> The master private key is encrypted and securely stored within the Secure Element. You will need to carefully write down the recovery phrase when it is generated during Keystone initialization.
+
+<strong>3.</strong> The recovery phrase enables final ownership of all digital assets under the master private key in the Keystone. If it is  lost or forgotten, all assets will be irretrievable.
+
+<strong>4.</strong> After recording your recovery phrase upon initialization of the device, store it in a secure location and consider using Keystone Tablet to give it a high degree of permanence.
+
+<strong>5.</strong> If the device is lost or broken, all digital assets under the master private key can be recovered with the recovery phrase on any device or software that supports the BIP 39 protocol.
+
+<strong>6.</strong> The Hidden Wallet feature allows you to create separate, concealed wallets that can be accessed with Passphrases. Once a Hidden Wallet is created, its Passphrase cannot be changed. If the Passphrase (and/or recovery phrase) is forgotten or lost, the Hidden Wallet and all of its assets will be irretrievable.
+
+<strong>7.</strong> In addition to the recovery phrase and Passphrase, there is a system password, pattern unlock, and fingerprint sensor (Keystone Pro only):
+<strong>a.</strong> System password unlocks screen, signs transactions and enter Passphrase Wallet.
+<strong>b.</strong> Pattern unlock unlocks screen and may be used to reset the system password.
+<strong>c.</strong> Fingerprint sensor unlocks screen, signs transactions and enter Passphrase Wallet. It may be used to reset the system password.
+
+<strong>8.</strong> After 12 incorrect pattern unlock attempts, users will be required to unlock with the system password. After 5 incorrect system password attempts, the device will be wiped. If your device is wiped, your Keystone can only be restored with the recovery phrase. The system password also can only be reset by entering the recovery phrase. If both the system password and recovery phrase are lost, all assets will be irretrievable. This is a preventative measure against theft.
+
+<strong>9.</strong> Do not use the device if Web Authentication on the official website fails or if the system warns that the device may have been tampered with. Keystone implements these measures to protect you from supply chain attacks.
+
+<strong>10.</strong> The Keystone Pro is equipped with an anti-tampering self-destruct mechanism. If the device is disassembled, the recovery phrase and master seed will automatically be wiped from the Secure Element. Due to hardware constraints, it is not guaranteed this mechanism will function as intended beyond 2 years of operation. Keystone Pro will remain operational, but this security mechanism may not. We recommend replacing your device after 2 years.
+</html>

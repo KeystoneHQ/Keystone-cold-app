@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/white_list_navigation"
+    app:startDestination="@id/whiteListFragment">
+    <fragment
+        android:id="@+id/whiteListFragment"
+        android:name="com.keystone.cold.ui.fragment.whitelist.WhiteListFragment"
+        android:label="WhiteListFragment"
+        tools:layout="@layout/white_list">
+        <action
+            android:id="@+id/white_list_to_verify_mnemonic"
+            app:destination="@id/verifyMnemonicFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/verifyMnemonicFragment"
+        android:name="com.keystone.cold.ui.fragment.unlock.VerifyMnemonicFragment"
+        android:label="VerifyMnemonicFragment"
+        tools:layout="@layout/verify_mnemonic">
+        <action
+            android:id="@+id/action_to_manageWhiteList"
+            app:destination="@id/manageWhiteList"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
+            app:popUpTo="@id/whiteListFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/manageWhiteList"
+        android:name="com.keystone.cold.ui.fragment.whitelist.ManageWhiteListFragment"
+        android:label="ManageWhiteList"
+        tools:layout="@layout/manage_white_list">
+        <action
+            android:id="@+id/add_white_list"
+            app:destination="@id/addWhiteListFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@id/QRCodeScanFragment"
+        android:name="com.keystone.cold.ui.fragment.main.QRCodeScanFragment"
+        android:label="QRCodeScanFragment"
+        tools:layout="@layout/qrcode_scan_fragment" />
+    <fragment
+        android:id="@+id/addWhiteListFragment"
+        android:name="com.keystone.cold.ui.fragment.whitelist.AddWhiteListFragment"
+        android:label="AddWhiteListFragment"
+        tools:layout="@layout/add_white_list">
+        <action
+            android:id="@+id/add_white_list_scan"
+            app:destination="@id/QRCodeScanFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+</navigation>
