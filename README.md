@@ -31,7 +31,7 @@ The hardware wallet application was programmed with Java language. The transacti
 
 ## Clone
 
-    git clone git@github.com/KeystoneHQ/Keystone-cold-app.git --recursive
+    git clone git@github.com:KeystoneHQ/Keystone-cold-app.git --recursive
 
 ## Build
     cd Keystone-cold-app
