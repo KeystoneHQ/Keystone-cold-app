@@ -73,5 +73,7 @@ lint/tmp/
 
 .DS_Store
 
+keystores
+
 !keystores/test.properties
 !keystores/testKeystore.jks
