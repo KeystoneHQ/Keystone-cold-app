@@ -29,8 +29,10 @@ import com.keystone.coinlib.interfaces.Coin;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.utils.Coins;
+import com.keystone.coinlib.v8.ScriptLoader;
 
 import org.bouncycastle.util.encoders.Hex;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.web3j.abi.FunctionEncoder;
@@ -49,6 +51,7 @@ import org.web3j.rlp.RlpEncoder;
 import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpType;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -61,6 +64,7 @@ import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
 import static org.web3j.crypto.TransactionEncoder.asRlpValues;
 
 public class EthImpl implements Coin {
+    public static final String ABI_JSON_SDCARD_PATH = "contracts" + File.separator + "ethereum";
 
     private final int chainId;
 
@@ -109,7 +113,7 @@ public class EthImpl implements Coin {
         return RawTransaction.createTransaction(nonce, gasPrice, gasLimit, to, value, data);
     }
 
-    public static JSONObject decodeRawTransaction(String txHex) {
+    public static JSONObject decodeRawTransaction(String txHex, Callback callback) {
         JSONObject metaData = new JSONObject();
         try {
             RawTransaction rawTx = TransactionDecoder.decode(txHex);
@@ -128,7 +132,11 @@ public class EthImpl implements Coin {
 
             if (!TextUtils.isEmpty(abiFile)) {
                 abi = readAsset("abi/" + abiFile);
-                contractName = abiFile.replace(".json","");
+                contractName = abiFile.replace(".json", "");
+            } else {
+                abi = readAbiFromTFCard(rawTx.getTo(), callback);
+                contractName = contractNameFromTFCard(rawTx.getTo());
+                contractName = "SwTest";
             }
 
             if (TextUtils.isEmpty(abi)) {
@@ -162,10 +170,46 @@ public class EthImpl implements Coin {
         return metaData;
     }
 
+    private static String contractNameFromTFCard(String to) {
+        String result = null;
+        try {
+            String contentFromSdCard = ScriptLoader.getContentFromSdCard(ABI_JSON_SDCARD_PATH, to);
+            if (!TextUtils.isEmpty(contentFromSdCard)) {
+                JSONObject sdCardJsonObject = new JSONObject(contentFromSdCard);
+                result = sdCardJsonObject.optString("name");
+                if (TextUtils.isEmpty(result)) {
+                    result = "";
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private static String readAbiFromTFCard(String to, Callback callback) {
+        String result = null;
+        try {
+            String contentFromSdCard = ScriptLoader.getContentFromSdCard(ABI_JSON_SDCARD_PATH, to);
+            if (!TextUtils.isEmpty(contentFromSdCard)) {
+                JSONObject sdCardJsonObject = new JSONObject(contentFromSdCard);
+                JSONObject output = sdCardJsonObject.getJSONObject("output");
+                JSONArray abi = output.getJSONArray("abi");
+                result = abi.toString();
+                if (result != null && callback != null) {
+                    callback.fromTFCard();
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public static String getSignature(String signedHex) {
         SignedRawTransaction signedTx = (SignedRawTransaction) TransactionDecoder.decode(signedHex);
         Sign.SignatureData signatureData = signedTx.getSignatureData();
-        byte[] signatureBytes = concat(concat(signatureData.getR(),signatureData.getS()),signatureData.getV());
+        byte[] signatureBytes = concat(concat(signatureData.getR(), signatureData.getS()), signatureData.getV());
         return Hex.toHexString(signatureBytes);
     }
 
@@ -203,7 +247,7 @@ public class EthImpl implements Coin {
         return encodeSignedTransaction(transaction, signatureData);
     }
 
-    public Sign.SignatureData getSignatureData(String  signature) {
+    public Sign.SignatureData getSignatureData(String signature) {
         if (TextUtils.isEmpty(signature)) return null;
         byte[] r = Hex.decode(signature.substring(0, 64));
         byte[] s = Hex.decode(signature.substring(64, 128));
@@ -240,7 +284,7 @@ public class EthImpl implements Coin {
             byte[] messageHash = new StructuredDataEncoder(message).hashStructuredData();
             String signature = signer.sign(Hex.toHexString(messageHash));
             Sign.SignatureData signatureData = getSignatureData(signature);
-            byte[] sigBytes = concat(concat(signatureData.getR(),signatureData.getS()),signatureData.getV());
+            byte[] sigBytes = concat(concat(signatureData.getR(), signatureData.getS()), signatureData.getV());
             return Hex.toHexString(sigBytes);
         } catch (IOException e) {
             e.printStackTrace();
@@ -251,7 +295,7 @@ public class EthImpl implements Coin {
     public String signPersonalMessage(@NonNull String message, Signer signer) {
         String signature = signer.sign(Hex.toHexString(hashPersonalMessage(message)));
         Sign.SignatureData signatureData = getSignatureData(signature);
-        byte[] sigBytes = concat(concat(signatureData.getR(),signatureData.getS()),signatureData.getV());
+        byte[] sigBytes = concat(concat(signatureData.getR(), signatureData.getS()), signatureData.getV());
         return Hex.toHexString(sigBytes);
     }
 
@@ -268,5 +312,9 @@ public class EthImpl implements Coin {
     @Override
     public boolean isAddressValid(@NonNull String address) {
         return false;
+    }
+
+    public interface Callback {
+        void fromTFCard();
     }
 }

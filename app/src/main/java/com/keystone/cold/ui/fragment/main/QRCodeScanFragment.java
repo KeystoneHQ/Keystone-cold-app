@@ -215,7 +215,7 @@ public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
         }
     }
 
-    private void handleException(Exception e) {
+    public void handleException(Exception e) {
         e.printStackTrace();
         if (e instanceof InvalidTransactionException || e instanceof InvalidUOSException) {
             alert(getString(R.string.unresolve_tx),

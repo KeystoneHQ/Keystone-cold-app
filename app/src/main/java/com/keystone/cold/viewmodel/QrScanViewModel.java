@@ -30,6 +30,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.exception.CoinNotFindException;
 import com.keystone.coinlib.exception.InvalidTransactionException;
+import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.protocol.ZipUtil;
@@ -106,25 +107,30 @@ public class QrScanViewModel extends AndroidViewModel {
                     handleSignXrpTx(object);
                     return;
                 }
-                break;
+                throw new InvalidTransactionException("unknown qr code type");
             case KEYSTONE:
                 if (object.optString("type").equals("TYPE_SIGN_TX")) {
                     handleSign(object);
                     return;
                 }
-                break;
+                throw new InvalidTransactionException("unknown qr code type");
             case METAMASK:
                 String txHex = object.optString("txHex");
                 JSONObject data = object.optJSONObject("data");
-                if (!TextUtils.isEmpty(txHex) && EthImpl.decodeRawTransaction(txHex) != null) {
-                    handleSignMetamaskTx(object);
-                    return;
-                } else if (data != null) {
-                    handleSignMetamaskMessage(object);
-                    return;
-                }
+                AppExecutors.getInstance().diskIO().execute(() -> {
+                    try {
+                        if (!TextUtils.isEmpty(txHex) && EthImpl.decodeRawTransaction(txHex, null) != null) {
+                            handleSignMetamaskTx(object);
+                        } else if (data != null) {
+                            handleSignMetamaskMessage(object);
+                        } else {
+                            throw new InvalidTransactionException("unknown qr code type");
+                        }
+                    } catch (XfpNotMatchException | InvalidTransactionException e) {
+                        AppExecutors.getInstance().mainThread().execute(() -> fragment.handleException(e));
+                    }
+                });
         }
-        throw new InvalidTransactionException("unknown qr code type");
     }
 
     private boolean checkWebAuth(JSONObject object) throws JSONException {
@@ -142,7 +148,7 @@ public class QrScanViewModel extends AndroidViewModel {
         }
         Bundle bundle = new Bundle();
         bundle.putString(KEY_TX_DATA, object.toString());
-        fragment.navigate(R.id.action_to_ethTxConfirmFragment, bundle);
+        AppExecutors.getInstance().mainThread().execute(() -> fragment.navigate(R.id.action_to_ethTxConfirmFragment, bundle));
     }
 
     private void handleSignMetamaskMessage(JSONObject object) throws XfpNotMatchException {
@@ -151,7 +157,7 @@ public class QrScanViewModel extends AndroidViewModel {
         }
         Bundle bundle = new Bundle();
         bundle.putString(KEY_TX_DATA, object.toString());
-        fragment.navigate(R.id.action_to_ethSignMessageFragment, bundle);
+        AppExecutors.getInstance().mainThread().execute(() -> fragment.navigate(R.id.action_to_ethSignMessageFragment, bundle));
     }
 
     private void handleSignXrpTx(JSONObject object) {

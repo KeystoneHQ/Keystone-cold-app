@@ -15,7 +15,7 @@
   ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
+<resources xmlns:color="http://schemas.android.com/apk/res-auto">
     <string name="app_name">Keystone</string>
     <string name="action_scan_qr_code">Scan QR Code</string>
     <string name="drawer_menu_my_vault">我的铠石钱包</string>
@@ -520,6 +520,11 @@
     <string name="calc_mnemonic_warning">您触发了“创建自己的助记词”这一高级功能，请确保您已充分了解助记词生成的相关知识后，再使用本功能。否则请关闭当前页面。</string>
     <string name="calc_mnemonic_warning_checkbox">我已充分了解随机熵、BIP39、私钥生成等相关知识。</string>
     <string name="note">须知</string>
+    <string name="tip">提示</string>
+    <string name="learn_more"><Data><![CDATA[Keystone支持解析交易，您可前往<font color="#00CDC3"><b> https://keyst.one/eth </b></font>了解详情。]]></Data></string>
+    <string name="undecod_info">注意！这是一个没有解密的数据。</string>
+    <string name="from_tfcard">（解码资源来源于TF卡）</string>
+    <string name="check_info">* 请在签名之前检查交易信息</string>
     <string name="select_last_word_hint">请在以下单词中任选一个作为第24个单词</string>
     <string name="please_insert_sdcard">请先将TF卡插入到设备中</string>
     <string name="confirm_format">确认是否格式化?</string>
