@@ -39,4 +39,5 @@
     <color name="id_color">#FF874B</color>
     <color name="red">#ff0000</color>
     <color name="undecoded_tip_color">#FF0B0B</color>
+    <color name="check_info_color">#FBC31B</color>
 </resources>

@@ -121,8 +121,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/check_info"
-                android:textColor="#FBC31B"
-                android:gravity="center_horizontal"
+                android:textColor="@color/check_info_color"
+                android:textSize="13sp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:gravity="start"
                 android:visibility="gone"/>
 
             <LinearLayout
@@ -136,7 +139,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="8dp"
                     android:text="@string/tx_id"
                     android:textColor="@color/white40"
                     android:textSize="14sp"
@@ -331,13 +334,14 @@
                         android:layout_marginStart="3dp"
                         android:layout_marginTop="3dp"
                         android:text="@string/undecoded_tip"
+                        android:textSize="13sp"
                         android:textColor="@color/undecoded_tip_color"
                         android:textStyle="bold" />
 
                     <ImageView
                         android:layout_width="15dp"
                         android:layout_height="15dp"
-                        android:layout_marginTop="3dp"
+                        android:layout_marginTop="2dp"
                         android:src="@drawable/info" />
 
                 </LinearLayout>
@@ -370,7 +374,7 @@
                         android:layout_marginStart="5dp"
                         android:text="@string/from_tfcard"
                         android:textColor="@color/white"
-                        android:textSize="14sp"
+                        android:textSize="13sp"
                         android:visibility="gone"/>
 
                 </LinearLayout>
