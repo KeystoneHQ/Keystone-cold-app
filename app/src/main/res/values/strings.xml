@@ -556,7 +556,7 @@
     <string name="tip">Note</string>
     <string name="learn_more"><Data><![CDATA[Keystone supports parsing transactions, you can go to<font color="#00CDC3"><b> https://keyst.one/eth </b></font>for details.]]></Data></string>
     <string name="check_info">* Please check transaction information before signing</string>
-    <string name="undecod_info">Attention! It’s a undecoded data.</string>
+    <string name="undecoded_tip">Attention! It’s a undecoded data.</string>
     <string name="from_tfcard">(Decoding resources are provided by MicroSD Card)</string>
     <string name="select_last_word_hint">Please choose one of the following words as the 24th word</string>
     <string name="please_insert_sdcard">Please make sure you have inserted a microSD card</string>

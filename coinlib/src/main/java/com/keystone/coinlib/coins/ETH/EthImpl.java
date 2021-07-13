@@ -136,7 +136,6 @@ public class EthImpl implements Coin {
             } else {
                 abi = readAbiFromTFCard(rawTx.getTo(), callback);
                 contractName = contractNameFromTFCard(rawTx.getTo());
-                contractName = "SwTest";
             }
 
             if (TextUtils.isEmpty(abi)) {

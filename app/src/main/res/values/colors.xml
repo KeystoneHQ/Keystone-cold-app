@@ -38,4 +38,5 @@
     <color name="black">#000000</color>
     <color name="id_color">#FF874B</color>
     <color name="red">#ff0000</color>
+    <color name="undecoded_tip_color">#FF0B0B</color>
 </resources>

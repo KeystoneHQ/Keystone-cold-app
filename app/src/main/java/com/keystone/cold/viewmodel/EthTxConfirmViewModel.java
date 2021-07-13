@@ -71,6 +71,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     private String messageData;
     private String messageSignature;
     private String fromAddress;
+    private String inputData;
 
     public EthTxConfirmViewModel(@NonNull Application application) {
         super(application);
@@ -173,7 +174,9 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                 String data = ethTx.getString("data");
                 try {
                     abi = new JSONObject(data);
-                } catch (JSONException ignore) { }
+                } catch (JSONException ignore) {
+                    inputData = data;
+                }
                 TxEntity tx = generateTxEntity(ethTx);
                 observableTx.postValue(tx);
 
@@ -341,6 +344,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
             signed.put("signId", signId);
             signed.put("chainId", chainId);
             signed.put("abi", abi);
+            signed.put("inputData", inputData);
             tx.setSignedHex(signed.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -396,11 +400,11 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         return Objects.requireNonNull(observableTx.getValue()).getSignedHex();
     }
 
-    public String getHex() {
-        return txHex;
-    }
-
     public int getChainId() {
         return chainId;
+    }
+
+    public String getInputData() {
+        return inputData;
     }
 }

@@ -96,16 +96,14 @@ public class ScriptLoader {
 
     public static String getContentFromSdCard(String path, String fileName) {
         if (TextUtils.isEmpty(externalSDCardPath())) {
-            Log.d(TAG, "sdCard is not exists");
+            Log.i(TAG, "sdCard is not exists");
             return "";
         }
         File file = new File(externalSDCardPath() + File.separator + path, fileName + ".json");
         if (!file.exists()) {
-            Log.d(TAG, file.getAbsolutePath() + " is not exists");
             return "";
         }
         StringBuilder stringBuilder = new StringBuilder();
-        Log.d(TAG, file.getAbsolutePath() + " is exists");
         BufferedReader bfr = null;
         try {
             bfr = new BufferedReader(new FileReader(file));
@@ -115,7 +113,6 @@ public class ScriptLoader {
                 stringBuilder.append("\n");
                 line = bfr.readLine();
             }
-            Log.d(TAG, "bufferRead: " + stringBuilder.toString());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -134,25 +131,14 @@ public class ScriptLoader {
         String sdCardPath = "";
         try {
             StorageManager storageManager = (StorageManager) Coinlib.sInstance.getContext().getSystemService(Context.STORAGE_SERVICE);
-            // 7.0才有的方法
+
+            // Android N started to have this method
             List<StorageVolume> storageVolumes = storageManager.getStorageVolumes();
             Class<?> volumeClass = Class.forName("android.os.storage.StorageVolume");
             Method getPath = volumeClass.getDeclaredMethod("getPath");
-            Method isRemovable = volumeClass.getDeclaredMethod("isRemovable");
             getPath.setAccessible(true);
-            isRemovable.setAccessible(true);
             StorageVolume storageVolume = storageVolumes.get(storageVolumes.size() - 1);
             sdCardPath = (String) getPath.invoke(storageVolume);
-            Boolean isRemove = (Boolean) isRemovable.invoke(storageVolume);
-            if (storageVolumes.size() > 1) {
-                Log.d(TAG, "externalSDCardPath is === " + sdCardPath);
-                Log.d(TAG, "isRemoveble == " + isRemove);
-            } else {
-                Log.d(TAG, "Built-in sd card path is === " + sdCardPath);
-                Log.d(TAG, "isRemoveble == " + isRemove);
-                Log.d(TAG, "no sd card inserted");
-                return "";
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }

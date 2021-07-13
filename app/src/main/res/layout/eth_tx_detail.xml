@@ -286,7 +286,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/undecode_data"
+                android:id="@+id/undecoded_data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -313,6 +313,7 @@
                     tools:text="0x35623ea315322ff2618e7469c2e88415111b5444000000000000000000000asd" />
 
                 <LinearLayout
+                    android:id="@+id/info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -329,12 +330,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="3dp"
                         android:layout_marginTop="3dp"
-                        android:text="@string/undecod_info"
-                        android:textColor="#FF0B0B"
+                        android:text="@string/undecoded_tip"
+                        android:textColor="@color/undecoded_tip_color"
                         android:textStyle="bold" />
 
                     <ImageView
-                        android:id="@+id/info"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_marginTop="3dp"

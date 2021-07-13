@@ -19,15 +19,12 @@
 
 package com.keystone.cold.ui.fragment.main;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -36,6 +33,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.databinding.AbiItemBinding;
 import com.keystone.cold.databinding.EthTxConfirmBinding;
@@ -62,8 +60,7 @@ import static com.keystone.cold.ui.fragment.main.TxConfirmFragment.KEY_TX_DATA;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
 public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
-    private static final String VISITS_NAME = "visitsName";
-    private static final String SP_NAME = "EthTxConfirmFragment";
+    public static final String PREFERENCE_KEY_VISITS = "visits_times";
     private EthTxConfirmViewModel viewModel;
     private SigningDialog signingDialog;
     private TxEntity txEntity;
@@ -108,13 +105,10 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     }
 
     private void showDialog() {
-        SharedPreferences sharedPreferences = mActivity.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
-        int visits = sharedPreferences.getInt(VISITS_NAME, 0);
+        int visits = Utilities.getVisitsTimes(mActivity);
         if (visits++ == 0) {
             realShowDialog();
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt(VISITS_NAME, visits);
-            editor.apply();
+            Utilities.setVisitsTimes(mActivity, visits);
         }
     }
 
@@ -198,11 +192,11 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
         if (abi != null) {
             updateAbiView(abi);
             mBinding.ethTx.data.setVisibility(View.VISIBLE);
-            mBinding.ethTx.undecodeData.setVisibility(View.GONE);
+            mBinding.ethTx.undecodedData.setVisibility(View.GONE);
         } else {
             mBinding.ethTx.data.setVisibility(View.GONE);
-            mBinding.ethTx.undecodeData.setVisibility(View.VISIBLE);
-            mBinding.ethTx.inputData.setText("0x" + viewModel.getHex());
+            mBinding.ethTx.undecodedData.setVisibility(View.VISIBLE);
+            mBinding.ethTx.inputData.setText("0x" + viewModel.getInputData());
         }
         mBinding.ethTx.setTx(txEntity);
         processAndUpdateTo();
