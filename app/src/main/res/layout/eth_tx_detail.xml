@@ -372,6 +372,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
+                        android:layout_marginEnd="16dp"
                         android:text="@string/from_tfcard"
                         android:textColor="@color/white"
                         android:textSize="13sp"
