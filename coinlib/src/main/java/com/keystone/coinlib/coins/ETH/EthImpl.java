@@ -28,8 +28,8 @@ import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.interfaces.Coin;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
+import com.keystone.coinlib.utils.AbiLoader;
 import com.keystone.coinlib.utils.Coins;
-import com.keystone.coinlib.v8.ScriptLoader;
 
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONArray;
@@ -172,7 +172,7 @@ public class EthImpl implements Coin {
     private static String contractNameFromTFCard(String to) {
         String result = null;
         try {
-            String contentFromSdCard = ScriptLoader.getContentFromSdCard(ABI_JSON_SDCARD_PATH, to);
+            String contentFromSdCard = AbiLoader.getContentFromSdCard(ABI_JSON_SDCARD_PATH, to);
             if (!TextUtils.isEmpty(contentFromSdCard)) {
                 JSONObject sdCardJsonObject = new JSONObject(contentFromSdCard);
                 result = sdCardJsonObject.optString("name");
@@ -189,10 +189,11 @@ public class EthImpl implements Coin {
     private static String readAbiFromTFCard(String to, Callback callback) {
         String result = null;
         try {
-            String contentFromSdCard = ScriptLoader.getContentFromSdCard(ABI_JSON_SDCARD_PATH, to);
+            String contentFromSdCard = AbiLoader.getContentFromSdCard(ABI_JSON_SDCARD_PATH, to);
             if (!TextUtils.isEmpty(contentFromSdCard)) {
                 JSONObject sdCardJsonObject = new JSONObject(contentFromSdCard);
-                JSONObject output = sdCardJsonObject.getJSONObject("output");
+                JSONObject metadata = sdCardJsonObject.getJSONObject("metadata");
+                JSONObject output = metadata.getJSONObject("output");
                 JSONArray abi = output.getJSONArray("abi");
                 result = abi.toString();
                 if (result != null && callback != null) {

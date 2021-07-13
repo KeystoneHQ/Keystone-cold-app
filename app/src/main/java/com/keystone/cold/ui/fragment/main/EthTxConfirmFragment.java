@@ -32,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
@@ -256,7 +257,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
         SpannableStringBuilder spannable = new SpannableStringBuilder(content);
         Matcher matcher = pattern.matcher(spannable);
         while (matcher.find())
-            spannable.setSpan(new ForegroundColorSpan(0xff00cdc3), matcher.start() - 1,
+            spannable.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.icon_select)), matcher.start() - 1,
                     matcher.end() + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 
         matcher = pattern1.matcher(spannable);

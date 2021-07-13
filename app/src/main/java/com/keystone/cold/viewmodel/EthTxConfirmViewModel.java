@@ -34,8 +34,8 @@ import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.path.CoinPath;
+import com.keystone.coinlib.utils.AbiLoader;
 import com.keystone.coinlib.utils.Coins;
-import com.keystone.coinlib.v8.ScriptLoader;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.ClearTokenCallable;
@@ -126,7 +126,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     private String recognizeAddressFromTFCard(String to) {
         String addressSymbol = null;
         try {
-            String contentFromSdCard = ScriptLoader.getContentFromSdCard(EthImpl.ABI_JSON_SDCARD_PATH, to);
+            String contentFromSdCard = AbiLoader.getContentFromSdCard(EthImpl.ABI_JSON_SDCARD_PATH, to);
             if (!TextUtils.isEmpty(contentFromSdCard)) {
                 JSONObject sdCardJsonObject = new JSONObject(contentFromSdCard);
                 addressSymbol = sdCardJsonObject.optString("name");
