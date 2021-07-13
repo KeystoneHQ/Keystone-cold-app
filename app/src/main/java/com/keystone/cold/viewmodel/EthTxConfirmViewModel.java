@@ -34,6 +34,7 @@ import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.path.CoinPath;
+import com.keystone.coinlib.utils.AbiLoader;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
@@ -42,6 +43,7 @@ import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
+import com.keystone.cold.ui.fragment.main.EthTxConfirmFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,6 +71,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     private String messageData;
     private String messageSignature;
     private String fromAddress;
+    private String inputData;
 
     public EthTxConfirmViewModel(@NonNull Application application) {
         super(application);
@@ -93,7 +96,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         return contractMap;
     }
 
-    public String recognizeAddress(String to){
+    public String recognizeAddress(String to) {
         try {
             String addressSymbol = null;
             JSONArray tokensMap = getTokensMap();
@@ -104,12 +107,13 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                     break;
                 }
             }
-
             if (addressSymbol == null) {
                 JSONObject bundleMap = getContractMap();
                 String abiFile = bundleMap.optString(to.toLowerCase());
                 if (!TextUtils.isEmpty(abiFile)) {
                     addressSymbol = abiFile.replace(".json", "");
+                } else {
+                    addressSymbol = recognizeAddressFromTFCard(to);
                 }
             }
             return addressSymbol;
@@ -119,6 +123,20 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         return null;
     }
 
+    private String recognizeAddressFromTFCard(String to) {
+        String addressSymbol = null;
+        try {
+            String contentFromSdCard = AbiLoader.getContentFromSdCard(EthImpl.ABI_JSON_SDCARD_PATH, to);
+            if (!TextUtils.isEmpty(contentFromSdCard)) {
+                JSONObject sdCardJsonObject = new JSONObject(contentFromSdCard);
+                addressSymbol = sdCardJsonObject.optString("name");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return addressSymbol;
+    }
+
     public String getNetwork(int chainId) {
         Network network = Network.getNetwork(chainId);
         if (network == null) {
@@ -126,7 +144,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         }
         String networkName = network.name();
         if (chainId != 1) {
-            networkName += String.format(" (%s)",context.getString(R.string.testnet));
+            networkName += String.format(" (%s)", context.getString(R.string.testnet));
         }
         return networkName;
     }
@@ -146,7 +164,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                 hdPath = object.getString("hdPath");
                 signId = object.getString("signId");
                 txHex = object.getString("txHex");
-                JSONObject ethTx = EthImpl.decodeRawTransaction(txHex);
+                JSONObject ethTx = EthImpl.decodeRawTransaction(txHex, () -> EthTxConfirmFragment.isFromTFCard = true);
                 if (ethTx == null) {
                     observableTx.postValue(null);
                     parseTxException.postValue(new InvalidTransactionException("invalid transaction"));
@@ -156,7 +174,9 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                 String data = ethTx.getString("data");
                 try {
                     abi = new JSONObject(data);
-                } catch (JSONException ignore) { }
+                } catch (JSONException ignore) {
+                    inputData = data;
+                }
                 TxEntity tx = generateTxEntity(ethTx);
                 observableTx.postValue(tx);
 
@@ -324,6 +344,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
             signed.put("signId", signId);
             signed.put("chainId", chainId);
             signed.put("abi", abi);
+            signed.put("inputData", inputData);
             tx.setSignedHex(signed.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -344,6 +365,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
             callback.onSuccess(result.txId, result.txHex);
         }
     }
+
     private void signMessage(@NonNull SignCallback callback, Signer signer) {
         if (signer == null) {
             callback.onFail();
@@ -360,7 +382,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     private Signer initSigner() {
         String authToken = getAuthToken();
         if (TextUtils.isEmpty(authToken)) {
-            Log.w(TAG,"authToken null");
+            Log.w(TAG, "authToken null");
             return null;
         }
         return new ChipSigner(hdPath.toLowerCase(), authToken);
@@ -380,5 +402,9 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
 
     public int getChainId() {
         return chainId;
+    }
+
+    public String getInputData() {
+        return inputData;
     }
 }

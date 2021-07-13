@@ -116,6 +116,18 @@
                     android:layout_alignParentBottom="true" />
             </RelativeLayout>
 
+            <TextView
+                android:id="@+id/check_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/check_info"
+                android:textColor="@color/check_info_color"
+                android:textSize="13sp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:gravity="start"
+                android:visibility="gone"/>
+
             <LinearLayout
                 android:id="@+id/tx_id_info"
                 visibleGone="@{!TextUtils.isEmpty(tx.txId)}"
@@ -127,7 +139,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="8dp"
                     android:text="@string/tx_id"
                     android:textColor="@color/white40"
                     android:textSize="14sp"
@@ -173,6 +185,7 @@
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     tools:text="0xf3617ee7e3b8cf2a4298cdd519296e36a1fc666d" />
+
                 <include
                     layout="@layout/divider"
                     android:layout_width="match_parent"
@@ -200,9 +213,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
+                    android:breakStrategy="simple"
                     android:textColor="@color/white"
                     android:textStyle="bold"
-                    android:breakStrategy="simple"
                     tools:text="0x35623ea315322ff2618e7469c2e88415111b5444(Unknown adderee)" />
 
                 <include
@@ -276,37 +289,114 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/data"
+                android:id="@+id/undecoded_data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="14dp"
-                    android:text="Data"
+                    android:text="Input_Data"
                     android:textColor="@color/white40"
                     android:textSize="14sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/input_data"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:breakStrategy="simple"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    tools:text="0x35623ea315322ff2618e7469c2e88415111b5444000000000000000000000asd" />
+
+                <LinearLayout
+                    android:id="@+id/info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginStart="16dp"
+                        android:src="@drawable/direction" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="3dp"
+                        android:layout_marginTop="3dp"
+                        android:text="@string/undecoded_tip"
+                        android:textSize="13sp"
+                        android:textColor="@color/undecoded_tip_color"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginTop="2dp"
+                        android:src="@drawable/info" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="14dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="Data"
+                        android:textColor="@color/white40"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tfcard_tip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/from_tfcard"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
 
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
-                    android:src="@drawable/data_bg1"/>
+                    android:src="@drawable/data_bg1" />
+
                 <LinearLayout
                     android:id="@+id/container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="-5dp"
-                    android:paddingTop="16dp"
                     android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="-5dp"
                     android:background="@drawable/data_bg"
                     android:orientation="vertical"
-                    android:padding="10dp">
+                    android:padding="10dp"
+                    android:paddingTop="16dp">
 
                 </LinearLayout>
 

@@ -24,6 +24,7 @@ import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -32,6 +33,7 @@ import com.keystone.cold.databinding.AbiItemBinding;
 import com.keystone.cold.databinding.EthTxBinding;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 import com.keystone.cold.viewmodel.EthTxConfirmViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
@@ -42,7 +44,6 @@ import org.spongycastle.util.encoders.Hex;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Objects;
 
 import static com.keystone.cold.ui.fragment.main.EthTxConfirmFragment.highLight;
 import static com.keystone.cold.ui.fragment.main.TxFragment.KEY_TX_ID;
@@ -71,6 +72,15 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
             }
         });
         viewModel = ViewModelProviders.of(this).get(EthTxConfirmViewModel.class);
+        mBinding.ethTx.info.setOnClickListener(view1 -> showDialog());
+    }
+
+    private void showDialog() {
+        ModalDialog.showCommonModal((AppCompatActivity) getActivity(),
+                getString(R.string.tip),
+                getString(R.string.learn_more),
+                getString(R.string.know),
+                null);
     }
 
     private void updateUI() {
@@ -120,11 +130,23 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
                     }
                     mBinding.ethTx.container.addView(binding.getRoot());
                 }
+                mBinding.ethTx.data.setVisibility(View.VISIBLE);
+                mBinding.ethTx.undecodedData.setVisibility(View.GONE);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         } else {
             mBinding.ethTx.data.setVisibility(View.GONE);
+            mBinding.ethTx.undecodedData.setVisibility(View.VISIBLE);
+            JSONObject signData = null;
+            try {
+                signData = new JSONObject(txEntity.getSignedHex());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (signData != null) {
+                mBinding.ethTx.inputData.setText("0x" + signData.optString("inputData"));
+            }
         }
     }
 

@@ -16,11 +16,12 @@
  */
 
 package com.keystone.coinlib.v8;
+
 import android.content.res.AssetManager;
 import android.text.TextUtils;
 
-import com.keystone.coinlib.Coinlib;
 import com.eclipsesource.v8.V8;
+import com.keystone.coinlib.Coinlib;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +32,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class ScriptLoader {
+    private static final String TAG = "ScriptLoader";
 
     public static ScriptLoader sInstance;
 
@@ -83,4 +85,5 @@ public class ScriptLoader {
         }
         return stringBuilder.toString();
     }
+
 }

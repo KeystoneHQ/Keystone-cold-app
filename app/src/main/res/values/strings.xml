@@ -553,6 +553,11 @@
     <string name="calc_mnemonic_warning">You have triggered an advanced function of "Create your Recovery Phrase". Please make sure that you fully understand the dangers of this feature before proceeding to generate a recovery phrase with it. Your funds might get compromised if you fail to do so. Proceed at your own risk!</string>
     <string name="calc_mnemonic_warning_checkbox">I fully understand entropy, BIP39, private key generation and other related material to generate my recovery phrase.</string>
     <string name="note">DANGER!</string>
+    <string name="tip">Note</string>
+    <string name="learn_more"><Data><![CDATA[Keystone supports decoding transactions, you can go to<font color="#00CDC3"><b> https://keyst.one/eth </b></font>for details.]]></Data></string>
+    <string name="check_info">* Please check transaction details before signing</string>
+    <string name="undecoded_tip">Attention! It’s a undecoded data.</string>
+    <string name="from_tfcard">(Decoding resources are provided by MicroSD Card)</string>
     <string name="select_last_word_hint">Please choose one of the following words as the 24th word</string>
     <string name="please_insert_sdcard">Please make sure you have inserted a microSD card</string>
     <string name="confirm_format">Are you SURE ?</string>

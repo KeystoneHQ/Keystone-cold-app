@@ -31,6 +31,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.keystone.cold.ui.modal.ModalDialog;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.keystone.cold.ui.fragment.main.EthTxConfirmFragment.PREFERENCE_KEY_VISITS;
 import static com.keystone.cold.ui.fragment.setting.FingerprintPreferenceFragment.FINGERPRINT_UNLOCK;
 
 public class Utilities {
@@ -56,6 +57,7 @@ public class Utilities {
     public static final String FINGERPRINT_PASSWORD = "fingerprint_password";
     public static final String ATTACK_DETECTED = "attack_detected";
     public static final String INPUT_SETTINGS_CLEARED = "input_settings_cleared";
+
 
     public static void alert(AppCompatActivity activity,
                              @Nullable String title, @NonNull String message,
@@ -211,5 +213,15 @@ public class Utilities {
     public static boolean isAttackDetected(Context context) {
         SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
         return sp.getBoolean(ATTACK_DETECTED,false);
+    }
+
+    public static int getVisitsTimes(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        return sp.getInt(PREFERENCE_KEY_VISITS, 0);
+    }
+
+    public static void setVisitsTimes(Context context, int visits) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        sp.edit().putInt(PREFERENCE_KEY_VISITS, visits).apply();
     }
 }
