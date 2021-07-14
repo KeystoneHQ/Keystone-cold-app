@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.cold.AppExecutors;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
@@ -57,7 +59,6 @@ import java.util.regex.Pattern;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
 import static com.keystone.cold.ui.fragment.main.BroadcastTxFragment.KEY_TXID;
-import static com.keystone.cold.ui.fragment.main.TxConfirmFragment.KEY_TX_DATA;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
 public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
@@ -83,26 +84,12 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
 
     @Override
     protected void init(View view) {
-        Bundle data = requireArguments();
         mBinding.ethTx.checkInfo.setVisibility(View.VISIBLE);
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         viewModel = ViewModelProviders.of(this).get(EthTxConfirmViewModel.class);
-        try {
-            JSONObject txData = new JSONObject(data.getString(KEY_TX_DATA));
-            viewModel.parseTxData(txData);
-            viewModel.getObservableTx().observe(this, txEntity -> {
-                this.txEntity = txEntity;
-                if (this.txEntity != null) {
-                    updateUI();
-                }
-            });
-            viewModel.parseTxException().observe(this, this::handleParseException);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
         mBinding.sign.setOnClickListener(v -> handleSign());
         mBinding.ethTx.info.setOnClickListener(view1 -> realShowDialog());
-        showDialog();
+        viewModel.parseTxData(requireArguments());
     }
 
     private void showDialog() {
@@ -198,6 +185,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
             mBinding.ethTx.data.setVisibility(View.GONE);
             mBinding.ethTx.undecodedData.setVisibility(View.VISIBLE);
             mBinding.ethTx.inputData.setText("0x" + viewModel.getInputData());
+            showDialog();
         }
         mBinding.ethTx.setTx(txEntity);
         processAndUpdateTo();
@@ -208,14 +196,17 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     }
 
     private void processAndUpdateTo() {
-        String to = txEntity.getTo();
-        String addressSymbol = viewModel.recognizeAddress(to);
-        if (addressSymbol != null) {
-            to = to + String.format(" (%s)", addressSymbol);
-        } else {
-            to = to + String.format(" [%s]", "Unknown Address");
-        }
-        mBinding.ethTx.to.setText(highLight(to));
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            String to = txEntity.getTo();
+            String addressSymbol = viewModel.recognizeAddress(to);
+            if (!TextUtils.isEmpty(addressSymbol)) {
+                to = to + String.format(" (%s)", addressSymbol);
+            } else {
+                to = to + String.format(" [%s]", "Unknown Address");
+            }
+            String finalTo = to;
+            AppExecutors.getInstance().mainThread().execute(() -> mBinding.ethTx.to.setText(highLight(finalTo)));
+        });
     }
 
     private void updateAbiView(JSONObject abi) {
@@ -227,30 +218,42 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
                 }
                 String contract = abi.getString("contract");
                 boolean isUniswap = contract.toLowerCase().contains("uniswap");
-                List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(txEntity.getFrom(), viewModel).adapt(abi);
-                for (AbiItemAdapter.AbiItem item : itemList) {
-                    AbiItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
-                            R.layout.abi_item, null, false);
-                    binding.key.setText(item.key);
-                    if (isUniswap && "to".equals(item.key)) {
-                        if (!item.value.equalsIgnoreCase(txEntity.getFrom())) {
-                            item.value += String.format(" [%s]", getString(R.string.inconsistent_address));
-                        }
-                        binding.value.setText(highLight(item.value));
-                    } else {
-                        binding.value.setText(highLight(item.value));
-                    }
-                    mBinding.ethTx.container.addView(binding.getRoot());
-                }
+                AppExecutors.getInstance().diskIO().execute(() -> {
+                    List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(txEntity.getFrom(), viewModel).adapt(abi);
+                    AppExecutors.getInstance().mainThread().execute(() -> addViewToData(isUniswap, itemList));
+                });
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    private void addViewToData(boolean isUniswap, List<AbiItemAdapter.AbiItem> itemList) {
+        for (AbiItemAdapter.AbiItem item : itemList) {
+            AbiItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+                    R.layout.abi_item, null, false);
+            binding.key.setText(item.key);
+            if (isUniswap && "to".equals(item.key)) {
+                if (!item.value.equalsIgnoreCase(txEntity.getFrom())) {
+                    item.value += String.format(" [%s]", getString(R.string.inconsistent_address));
+                }
+                binding.value.setText(highLight(item.value));
+            } else {
+                binding.value.setText(highLight(item.value));
+            }
+            mBinding.ethTx.container.addView(binding.getRoot());
+        }
+    }
+
     @Override
     protected void initData(Bundle savedInstanceState) {
-
+        viewModel.getObservableTx().observe(this, txEntity -> {
+            this.txEntity = txEntity;
+            if (this.txEntity != null) {
+                updateUI();
+            }
+        });
+        viewModel.parseTxException().observe(this, this::handleParseException);
     }
 
     public static SpannableStringBuilder highLight(String content) {
