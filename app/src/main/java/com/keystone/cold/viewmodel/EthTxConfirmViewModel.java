@@ -20,6 +20,7 @@ package com.keystone.cold.viewmodel;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -55,6 +56,7 @@ import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
 import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
+import static com.keystone.cold.ui.fragment.main.TxConfirmFragment.KEY_TX_DATA;
 
 public class EthTxConfirmViewModel extends TxConfirmViewModel {
     private final MutableLiveData<Boolean> addingAddress = new MutableLiveData<>();
@@ -116,6 +118,12 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                     addressSymbol = recognizeAddressFromTFCard(to);
                 }
             }
+            if (addressSymbol != null && addressSymbol.length() > 25) {
+                String abbreviationString = addressSymbol.substring(0, 10) +
+                        "..." +
+                        addressSymbol.substring(addressSymbol.length() - 10);
+                addressSymbol = abbreviationString;
+            }
             return addressSymbol;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -157,9 +165,10 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         return parseTxException;
     }
 
-    public void parseTxData(JSONObject object) {
+    public void parseTxData(Bundle bundle) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             try {
+                JSONObject object = new JSONObject(bundle.getString(KEY_TX_DATA));
                 Log.i(TAG, "object = " + object.toString(4));
                 hdPath = object.getString("hdPath");
                 signId = object.getString("signId");
@@ -179,7 +188,6 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                 }
                 TxEntity tx = generateTxEntity(ethTx);
                 observableTx.postValue(tx);
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }

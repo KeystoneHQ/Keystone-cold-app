@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,26 +84,12 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
 
     @Override
     protected void init(View view) {
-        Bundle data = requireArguments();
         mBinding.ethTx.checkInfo.setVisibility(View.VISIBLE);
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         viewModel = ViewModelProviders.of(this).get(EthTxConfirmViewModel.class);
-        try {
-            JSONObject txData = new JSONObject(data.getString(KEY_TX_DATA));
-            viewModel.parseTxData(txData);
-            viewModel.getObservableTx().observe(this, txEntity -> {
-                this.txEntity = txEntity;
-                if (this.txEntity != null) {
-                    updateUI();
-                }
-            });
-            viewModel.parseTxException().observe(this, this::handleParseException);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
         mBinding.sign.setOnClickListener(v -> handleSign());
         mBinding.ethTx.info.setOnClickListener(view1 -> realShowDialog());
-        showDialog();
+        viewModel.parseTxData(requireArguments());
     }
 
     private void showDialog() {
@@ -198,6 +185,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
             mBinding.ethTx.data.setVisibility(View.GONE);
             mBinding.ethTx.undecodedData.setVisibility(View.VISIBLE);
             mBinding.ethTx.inputData.setText("0x" + viewModel.getInputData());
+            showDialog();
         }
         mBinding.ethTx.setTx(txEntity);
         processAndUpdateTo();
@@ -210,7 +198,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     private void processAndUpdateTo() {
         String to = txEntity.getTo();
         String addressSymbol = viewModel.recognizeAddress(to);
-        if (addressSymbol != null) {
+        if (!TextUtils.isEmpty(addressSymbol)) {
             to = to + String.format(" (%s)", addressSymbol);
         } else {
             to = to + String.format(" [%s]", "Unknown Address");
@@ -250,7 +238,13 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-
+        viewModel.getObservableTx().observe(this, txEntity -> {
+            this.txEntity = txEntity;
+            if (this.txEntity != null) {
+                updateUI();
+            }
+        });
+        viewModel.parseTxException().observe(this, this::handleParseException);
     }
 
     public static SpannableStringBuilder highLight(String content) {
