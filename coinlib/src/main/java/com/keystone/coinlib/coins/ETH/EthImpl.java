@@ -143,7 +143,11 @@ public class EthImpl implements Coin {
                 abi = readAsset("abi/Erc20.json");
                 contractName = "Erc20";
             }
-            decoder.addAbi(abi);
+            try {
+                decoder.addAbi(abi);
+            } catch (RuntimeException e) {
+                metaData.put("data", rawTx.getData());
+            }
             AbiDecoder.DecodedMethod method = decoder.decodeMethod(rawTx.getData());
             if (method != null) {
                 JSONObject data = method.toJson();
