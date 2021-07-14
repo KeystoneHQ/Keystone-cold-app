@@ -33,6 +33,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.cold.AppExecutors;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
@@ -58,7 +59,6 @@ import java.util.regex.Pattern;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
 import static com.keystone.cold.ui.fragment.main.BroadcastTxFragment.KEY_TXID;
-import static com.keystone.cold.ui.fragment.main.TxConfirmFragment.KEY_TX_DATA;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
 public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
@@ -196,14 +196,17 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     }
 
     private void processAndUpdateTo() {
-        String to = txEntity.getTo();
-        String addressSymbol = viewModel.recognizeAddress(to);
-        if (!TextUtils.isEmpty(addressSymbol)) {
-            to = to + String.format(" (%s)", addressSymbol);
-        } else {
-            to = to + String.format(" [%s]", "Unknown Address");
-        }
-        mBinding.ethTx.to.setText(highLight(to));
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            String to = txEntity.getTo();
+            String addressSymbol = viewModel.recognizeAddress(to);
+            if (!TextUtils.isEmpty(addressSymbol)) {
+                to = to + String.format(" (%s)", addressSymbol);
+            } else {
+                to = to + String.format(" [%s]", "Unknown Address");
+            }
+            String finalTo = to;
+            AppExecutors.getInstance().mainThread().execute(() -> mBinding.ethTx.to.setText(highLight(finalTo)));
+        });
     }
 
     private void updateAbiView(JSONObject abi) {
@@ -215,24 +218,30 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
                 }
                 String contract = abi.getString("contract");
                 boolean isUniswap = contract.toLowerCase().contains("uniswap");
-                List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(txEntity.getFrom(), viewModel).adapt(abi);
-                for (AbiItemAdapter.AbiItem item : itemList) {
-                    AbiItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
-                            R.layout.abi_item, null, false);
-                    binding.key.setText(item.key);
-                    if (isUniswap && "to".equals(item.key)) {
-                        if (!item.value.equalsIgnoreCase(txEntity.getFrom())) {
-                            item.value += String.format(" [%s]", getString(R.string.inconsistent_address));
-                        }
-                        binding.value.setText(highLight(item.value));
-                    } else {
-                        binding.value.setText(highLight(item.value));
-                    }
-                    mBinding.ethTx.container.addView(binding.getRoot());
-                }
+                AppExecutors.getInstance().diskIO().execute(() -> {
+                    List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(txEntity.getFrom(), viewModel).adapt(abi);
+                    AppExecutors.getInstance().mainThread().execute(() -> addViewToData(isUniswap, itemList));
+                });
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void addViewToData(boolean isUniswap, List<AbiItemAdapter.AbiItem> itemList) {
+        for (AbiItemAdapter.AbiItem item : itemList) {
+            AbiItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+                    R.layout.abi_item, null, false);
+            binding.key.setText(item.key);
+            if (isUniswap && "to".equals(item.key)) {
+                if (!item.value.equalsIgnoreCase(txEntity.getFrom())) {
+                    item.value += String.format(" [%s]", getString(R.string.inconsistent_address));
+                }
+                binding.value.setText(highLight(item.value));
+            } else {
+                binding.value.setText(highLight(item.value));
+            }
+            mBinding.ethTx.container.addView(binding.getRoot());
         }
     }
 
