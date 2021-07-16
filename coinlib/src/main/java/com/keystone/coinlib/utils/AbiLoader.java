@@ -8,6 +8,9 @@ import android.util.Log;
 
 import com.keystone.coinlib.Coinlib;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -18,37 +21,26 @@ import java.util.List;
 public class AbiLoader {
     private static final String TAG = "AbiLoader";
 
-    public static String getContentFromSdCard(String path, String fileName) {
+    public static final String INDEX_JSON_SDCARD_PATH = "contracts";
+
+    public static String getContentFromSdCard(String address) {
         if (TextUtils.isEmpty(externalSDCardPath())) {
             Log.i(TAG, "sdCard is not exists");
             return "";
         }
-        File file = new File(externalSDCardPath() + File.separator + path, fileName + ".json");
-        if (!file.exists()) {
-            return "";
-        }
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bfr = null;
+        String content = null;
         try {
-            bfr = new BufferedReader(new FileReader(file));
-            String line = bfr.readLine();
-            while (line != null) {
-                stringBuilder.append(line);
-                stringBuilder.append("\n");
-                line = bfr.readLine();
-            }
-        } catch (IOException e) {
+            String indexPath = externalSDCardPath() + File.separator + INDEX_JSON_SDCARD_PATH + File.separator + "index.json";
+            String indexString = readFromFile(indexPath);
+            JSONObject indexJson = new JSONObject(indexString);
+            String filename = indexJson.getString(address);
+            String contractsString = readFromFile(externalSDCardPath() + File.separator + INDEX_JSON_SDCARD_PATH + File.separator + filename);
+            JSONObject contractsJson = new JSONObject(contractsString);
+            content = contractsJson.getString(address);
+        } catch (JSONException e) {
             e.printStackTrace();
-        } finally {
-            if (bfr != null) {
-                try {
-                    bfr.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
-        return stringBuilder.toString();
+        return content;
     }
 
     private static String externalSDCardPath() {
@@ -67,5 +59,20 @@ public class AbiLoader {
             e.printStackTrace();
         }
         return sdCardPath;
+    }
+
+    public static String readFromFile(String filepath) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader bfr = new BufferedReader(new FileReader(filepath))) {
+            String line = bfr.readLine();
+            while (line != null) {
+                stringBuilder.append(line);
+                stringBuilder.append("\n");
+                line = bfr.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stringBuilder.toString();
     }
 }

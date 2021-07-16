@@ -134,7 +134,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     private String recognizeAddressFromTFCard(String to) {
         String addressSymbol = null;
         try {
-            String contentFromSdCard = AbiLoader.getContentFromSdCard(EthImpl.ABI_JSON_SDCARD_PATH, to);
+            String contentFromSdCard = AbiLoader.getContentFromSdCard(to);
             if (!TextUtils.isEmpty(contentFromSdCard)) {
                 JSONObject sdCardJsonObject = new JSONObject(contentFromSdCard);
                 addressSymbol = sdCardJsonObject.optString("name");

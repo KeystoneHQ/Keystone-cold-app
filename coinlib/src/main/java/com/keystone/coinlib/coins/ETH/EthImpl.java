@@ -64,8 +64,6 @@ import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
 import static org.web3j.crypto.TransactionEncoder.asRlpValues;
 
 public class EthImpl implements Coin {
-    public static final String ABI_JSON_SDCARD_PATH = "contracts" + File.separator + "ethereum";
-
     private final int chainId;
 
     public EthImpl(int chainId) {
@@ -176,7 +174,7 @@ public class EthImpl implements Coin {
     private static String contractNameFromTFCard(String to) {
         String result = null;
         try {
-            String contentFromSdCard = AbiLoader.getContentFromSdCard(ABI_JSON_SDCARD_PATH, to);
+            String contentFromSdCard = AbiLoader.getContentFromSdCard(to);
             if (!TextUtils.isEmpty(contentFromSdCard)) {
                 JSONObject sdCardJsonObject = new JSONObject(contentFromSdCard);
                 result = sdCardJsonObject.optString("name");
@@ -193,7 +191,7 @@ public class EthImpl implements Coin {
     private static String readAbiFromTFCard(String to, Callback callback) {
         String result = null;
         try {
-            String contentFromSdCard = AbiLoader.getContentFromSdCard(ABI_JSON_SDCARD_PATH, to);
+            String contentFromSdCard = AbiLoader.getContentFromSdCard(to);
             if (!TextUtils.isEmpty(contentFromSdCard)) {
                 JSONObject sdCardJsonObject = new JSONObject(contentFromSdCard);
                 JSONObject metadata = sdCardJsonObject.getJSONObject("metadata");
