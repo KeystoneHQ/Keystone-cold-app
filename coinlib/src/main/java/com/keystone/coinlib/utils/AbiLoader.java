@@ -21,7 +21,7 @@ import java.util.List;
 public class AbiLoader {
     private static final String TAG = "AbiLoader";
 
-    public static final String INDEX_JSON_SDCARD_PATH = "contracts";
+    public static final String INDEX_JSON_SDCARD_PATH = "contracts" + File.separator + "ethereum";
 
     public static String getContentFromSdCard(String address) {
         if (TextUtils.isEmpty(externalSDCardPath())) {
