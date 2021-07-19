@@ -16,48 +16,48 @@ import java.util.List;
 
 public class AbiLoader {
     public static final String INDEX_JSON_SDCARD_PATH = "contracts" + File.separator + "ethereum";
-    private static SQLiteDatabase db;
 
     public static String getNameFromTFCard(String address) {
-        if (TextUtils.isEmpty(address) || getDb() == null) {
+        SQLiteDatabase db = getDb();
+        if (TextUtils.isEmpty(address) || db == null) {
             return null;
         }
         try (Cursor cursor = db.query("contracts", new String[]{"name"}, "address='" + address + "'",
                 null, null, null, null)) {
-            cursor.moveToFirst();
-            return cursor.getString(cursor.getColumnIndex("name"));
+            if (cursor != null && cursor.moveToFirst() && cursor.getCount() > 0) {
+                return cursor.getString(cursor.getColumnIndex("name"));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+        } finally {
+            db.close();
         }
+        return null;
     }
 
     public static String getAbiFromTFCard(String address) {
-        if (TextUtils.isEmpty(address) || getDb() == null) {
+        SQLiteDatabase db = getDb();
+        if (TextUtils.isEmpty(address) || db == null) {
             return null;
         }
-        try (Cursor cursor = db.query("ethabis", new String[]{"metadata"}, "address='" + address + "'",
+        try (Cursor cursor = db.query("contracts", new String[]{"metadata"}, "address='" + address + "'",
                 null, null, null, null)) {
-            cursor.moveToFirst();
-            return cursor.getString(cursor.getColumnIndex("metadata"));
+            if (cursor != null && cursor.moveToFirst() && cursor.getCount() > 0) {
+                return cursor.getString(cursor.getColumnIndex("metadata"));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+        } finally {
+            db.close();
         }
+        return null;
     }
 
     private static SQLiteDatabase getDb() {
-        if (db != null) {
-            return db;
-        }
         try {
-            String databaseFilename = externalSDCardPath() + File.separator + INDEX_JSON_SDCARD_PATH + File.separator + "contracts.db";
-            File file = new File(databaseFilename);
-            if (file.exists()) {
-                db = SQLiteDatabase.openDatabase(databaseFilename, null, SQLiteDatabase.OPEN_READONLY);
-            }
-            return db;
-        } catch (Exception e) {
+            String databaseFilePath = externalSDCardPath() + File.separator + INDEX_JSON_SDCARD_PATH + File.separator + "contracts";
+            return SQLiteDatabase.openDatabase(databaseFilePath, null, SQLiteDatabase.OPEN_READONLY);
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
