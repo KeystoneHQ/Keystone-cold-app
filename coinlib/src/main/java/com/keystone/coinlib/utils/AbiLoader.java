@@ -22,7 +22,8 @@ public class AbiLoader {
         if (TextUtils.isEmpty(address) || getDb() == null) {
             return null;
         }
-        try (Cursor cursor = db.query("contracts", new String[]{"name"}, "address='" + address + "'", null, null, null, null)) {
+        try (Cursor cursor = db.query("contracts", new String[]{"name"}, "address='" + address + "'",
+                null, null, null, null)) {
             cursor.moveToFirst();
             return cursor.getString(cursor.getColumnIndex("name"));
         } catch (SQLException e) {
@@ -35,7 +36,8 @@ public class AbiLoader {
         if (TextUtils.isEmpty(address) || getDb() == null) {
             return null;
         }
-        try (Cursor cursor = db.query("ethabis", new String[]{"metadata"}, "address='" + address + "'", null, null, null, null)) {
+        try (Cursor cursor = db.query("ethabis", new String[]{"metadata"}, "address='" + address + "'",
+                null, null, null, null)) {
             cursor.moveToFirst();
             return cursor.getString(cursor.getColumnIndex("metadata"));
         } catch (SQLException e) {

@@ -131,6 +131,18 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         return null;
     }
 
+    public String getNetwork(int chainId) {
+        Network network = Network.getNetwork(chainId);
+        if (network == null) {
+            return String.format("chainId:%d", chainId);
+        }
+        String networkName = network.name();
+        if (chainId != 1) {
+            networkName += String.format(" (%s)", context.getString(R.string.testnet));
+        }
+        return networkName;
+    }
+
     public MutableLiveData<TxEntity> getObservableTx() {
         return observableTx;
     }
