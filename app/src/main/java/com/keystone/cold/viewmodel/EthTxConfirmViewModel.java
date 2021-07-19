@@ -115,7 +115,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                 if (!TextUtils.isEmpty(abiFile)) {
                     addressSymbol = abiFile.replace(".json", "");
                 } else {
-                    addressSymbol = recognizeAddressFromTFCard(to);
+                    addressSymbol = AbiLoader.getNameFromTFCard(to);
                 }
             }
             if (addressSymbol != null && addressSymbol.length() > 25) {
@@ -129,32 +129,6 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
             e.printStackTrace();
         }
         return null;
-    }
-
-    private String recognizeAddressFromTFCard(String to) {
-        String addressSymbol = null;
-        try {
-            String contentFromSdCard = AbiLoader.getContentFromSdCard(to);
-            if (!TextUtils.isEmpty(contentFromSdCard)) {
-                JSONObject sdCardJsonObject = new JSONObject(contentFromSdCard);
-                addressSymbol = sdCardJsonObject.optString("name");
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return addressSymbol;
-    }
-
-    public String getNetwork(int chainId) {
-        Network network = Network.getNetwork(chainId);
-        if (network == null) {
-            return String.format("chainId:%d", chainId);
-        }
-        String networkName = network.name();
-        if (chainId != 1) {
-            networkName += String.format(" (%s)", context.getString(R.string.testnet));
-        }
-        return networkName;
     }
 
     public MutableLiveData<TxEntity> getObservableTx() {

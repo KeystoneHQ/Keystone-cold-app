@@ -1,46 +1,64 @@
 package com.keystone.coinlib.utils;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageVolume;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.keystone.coinlib.Coinlib;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.List;
 
 public class AbiLoader {
-    private static final String TAG = "AbiLoader";
-
     public static final String INDEX_JSON_SDCARD_PATH = "contracts" + File.separator + "ethereum";
+    private static SQLiteDatabase db;
 
-    public static String getContentFromSdCard(String address) {
-        if (TextUtils.isEmpty(externalSDCardPath())) {
-            Log.i(TAG, "sdCard is not exists");
-            return "";
+    public static String getNameFromTFCard(String address) {
+        if (TextUtils.isEmpty(address) || getDb() == null) {
+            return null;
         }
-        String content = null;
+        try (Cursor cursor = db.query("contracts", new String[]{"name"}, "address='" + address + "'", null, null, null, null)) {
+            cursor.moveToFirst();
+            return cursor.getString(cursor.getColumnIndex("name"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String getAbiFromTFCard(String address) {
+        if (TextUtils.isEmpty(address) || getDb() == null) {
+            return null;
+        }
+        try (Cursor cursor = db.query("ethabis", new String[]{"metadata"}, "address='" + address + "'", null, null, null, null)) {
+            cursor.moveToFirst();
+            return cursor.getString(cursor.getColumnIndex("metadata"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static SQLiteDatabase getDb() {
+        if (db != null) {
+            return db;
+        }
         try {
-            String indexPath = externalSDCardPath() + File.separator + INDEX_JSON_SDCARD_PATH + File.separator + "index.json";
-            String indexString = readFromFile(indexPath);
-            JSONObject indexJson = new JSONObject(indexString);
-            String filename = indexJson.getString(address);
-            String contractsString = readFromFile(externalSDCardPath() + File.separator + INDEX_JSON_SDCARD_PATH + File.separator + filename);
-            JSONObject contractsJson = new JSONObject(contractsString);
-            content = contractsJson.getString(address);
-        } catch (JSONException e) {
+            String databaseFilename = externalSDCardPath() + File.separator + INDEX_JSON_SDCARD_PATH + File.separator + "contracts.db";
+            File file = new File(databaseFilename);
+            if (file.exists()) {
+                db = SQLiteDatabase.openDatabase(databaseFilename, null, SQLiteDatabase.OPEN_READONLY);
+            }
+            return db;
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return content;
+        return null;
     }
 
     private static String externalSDCardPath() {
@@ -59,20 +77,5 @@ public class AbiLoader {
             e.printStackTrace();
         }
         return sdCardPath;
-    }
-
-    public static String readFromFile(String filepath) {
-        StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader bfr = new BufferedReader(new FileReader(filepath))) {
-            String line = bfr.readLine();
-            while (line != null) {
-                stringBuilder.append(line);
-                stringBuilder.append("\n");
-                line = bfr.readLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return stringBuilder.toString();
     }
 }

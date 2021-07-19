@@ -132,8 +132,11 @@ public class EthImpl implements Coin {
                 abi = readAsset("abi/" + abiFile);
                 contractName = abiFile.replace(".json", "");
             } else {
-                abi = readAbiFromTFCard(rawTx.getTo(), callback);
-                contractName = contractNameFromTFCard(rawTx.getTo());
+                abi = AbiLoader.getAbiFromTFCard(rawTx.getTo());
+                if (!TextUtils.isEmpty(abi) && callback != null) {
+                    callback.fromTFCard();
+                }
+                contractName = AbiLoader.getNameFromTFCard(rawTx.getTo());
             }
 
             if (TextUtils.isEmpty(abi)) {
@@ -169,43 +172,6 @@ public class EthImpl implements Coin {
             return null;
         }
         return metaData;
-    }
-
-    private static String contractNameFromTFCard(String to) {
-        String result = null;
-        try {
-            String contentFromSdCard = AbiLoader.getContentFromSdCard(to);
-            if (!TextUtils.isEmpty(contentFromSdCard)) {
-                JSONObject sdCardJsonObject = new JSONObject(contentFromSdCard);
-                result = sdCardJsonObject.optString("name");
-                if (TextUtils.isEmpty(result)) {
-                    result = "";
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    private static String readAbiFromTFCard(String to, Callback callback) {
-        String result = null;
-        try {
-            String contentFromSdCard = AbiLoader.getContentFromSdCard(to);
-            if (!TextUtils.isEmpty(contentFromSdCard)) {
-                JSONObject sdCardJsonObject = new JSONObject(contentFromSdCard);
-                JSONObject metadata = sdCardJsonObject.getJSONObject("metadata");
-                JSONObject output = metadata.getJSONObject("output");
-                JSONArray abi = output.getJSONArray("abi");
-                result = abi.toString();
-                if (result != null && callback != null) {
-                    callback.fromTFCard();
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 
     public static String getSignature(String signedHex) {
