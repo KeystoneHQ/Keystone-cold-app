@@ -62,6 +62,8 @@ android {
 
 dependencies {
     implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'com.esaulpaugh:headlong:5.3.0'
+    implementation 'com.google.code.gson:gson:2.8.7'
     implementation 'com.github.sealedtx:bitcoin-cash-converter:1.0'
     implementation ('org.bitcoinj:bitcoinj-core:0.15.2'){
         exclude group: 'com.squareup.okhttp3'

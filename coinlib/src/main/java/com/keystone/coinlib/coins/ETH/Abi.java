@@ -36,7 +36,6 @@ import static com.keystone.coinlib.coins.ETH.SolidityType.IntType.decodeInt;
 import static com.keystone.coinlib.coins.ETH.SolidityType.IntType.encodeInt;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include;
 import static java.lang.String.format;
-import static org.apache.commons.lang3.ArrayUtils.nullToEmpty;
 import static org.apache.commons.lang3.ArrayUtils.subarray;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.commons.lang3.StringUtils.stripEnd;
