@@ -74,6 +74,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     private String messageSignature;
     private String fromAddress;
     private String inputData;
+    private boolean isFromTFCard;
 
     public EthTxConfirmViewModel(@NonNull Application application) {
         super(application);
@@ -159,7 +160,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                 hdPath = object.getString("hdPath");
                 signId = object.getString("signId");
                 txHex = object.getString("txHex");
-                JSONObject ethTx = EthImpl.decodeRawTransaction(txHex, () -> EthTxConfirmFragment.isFromTFCard = true);
+                JSONObject ethTx = EthImpl.decodeRawTransaction(txHex, () -> isFromTFCard = true);
                 if (ethTx == null) {
                     observableTx.postValue(null);
                     parseTxException.postValue(new InvalidTransactionException("invalid transaction"));
@@ -339,6 +340,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
             signed.put("chainId", chainId);
             signed.put("abi", abi);
             signed.put("inputData", inputData);
+            signed.put("isFromTFCard", isFromTFCard);
             tx.setSignedHex(signed.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -400,5 +402,9 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
 
     public String getInputData() {
         return inputData;
+    }
+
+    public boolean isFromTFCard() {
+        return isFromTFCard;
     }
 }

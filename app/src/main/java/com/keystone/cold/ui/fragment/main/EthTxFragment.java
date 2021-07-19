@@ -110,6 +110,12 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
     }
 
     private void updateAbiView(JSONObject abi) {
+        JSONObject signData = null;
+        try {
+            signData = new JSONObject(txEntity.getSignedHex());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         if (abi != null) {
             try {
                 String contract = abi.getString("contract");
@@ -132,18 +138,17 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
                 }
                 mBinding.ethTx.data.setVisibility(View.VISIBLE);
                 mBinding.ethTx.undecodedData.setVisibility(View.GONE);
+                if (signData != null) {
+                    if (signData.optBoolean("isFromTFCard")) {
+                        mBinding.ethTx.tfcardTip.setVisibility(View.VISIBLE);
+                    }
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         } else {
             mBinding.ethTx.data.setVisibility(View.GONE);
             mBinding.ethTx.undecodedData.setVisibility(View.VISIBLE);
-            JSONObject signData = null;
-            try {
-                signData = new JSONObject(txEntity.getSignedHex());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
             if (signData != null) {
                 mBinding.ethTx.inputData.setText("0x" + signData.optString("inputData"));
             }
