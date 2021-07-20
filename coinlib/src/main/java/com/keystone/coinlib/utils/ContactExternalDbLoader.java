@@ -15,10 +15,10 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.List;
 
-public class TFDBLoader {
+public class ContactExternalDbLoader {
     public static final String DATABASE_TFCARD_PATH = "contracts" + File.separator + "ethereum";
 
-    public static Contract getDataFromTFCard(String address) {
+    public static Contract contractData(String address) {
         SQLiteDatabase db = getDb();
         Contract contract = new Contract();
         if (TextUtils.isEmpty(address) || db == null) {

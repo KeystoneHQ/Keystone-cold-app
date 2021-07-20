@@ -36,7 +36,7 @@ import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.model.Contract;
 import com.keystone.coinlib.path.CoinPath;
-import com.keystone.coinlib.utils.TFDBLoader;
+import com.keystone.coinlib.utils.ContactExternalDbLoader;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
@@ -116,7 +116,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                 if (!TextUtils.isEmpty(abiFile)) {
                     addressSymbol = abiFile.replace(".json", "");
                 } else {
-                    Contract dataFromTFCard = TFDBLoader.getDataFromTFCard(to);
+                    Contract dataFromTFCard = ContactExternalDbLoader.contractData(to);
                     addressSymbol = dataFromTFCard.getName();
                 }
             }
