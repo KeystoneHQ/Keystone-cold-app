@@ -66,7 +66,6 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     private EthTxConfirmViewModel viewModel;
     private SigningDialog signingDialog;
     private TxEntity txEntity;
-    public static boolean isFromTFCard;
     private final Runnable forgetPassword = () -> {
         Bundle bundle = new Bundle();
         bundle.putString(ACTION, PreImportFragment.ACTION_RESET_PWD);
@@ -212,8 +211,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     private void updateAbiView(JSONObject abi) {
         if (abi != null) {
             try {
-                if (isFromTFCard) {
-                    isFromTFCard = false;
+                if (viewModel.isFromTFCard()) {
                     mBinding.ethTx.tfcardTip.setVisibility(View.VISIBLE);
                 }
                 String contract = abi.getString("contract");

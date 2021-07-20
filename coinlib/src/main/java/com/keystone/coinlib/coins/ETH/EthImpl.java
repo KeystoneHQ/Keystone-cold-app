@@ -28,11 +28,10 @@ import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.interfaces.Coin;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
-import com.keystone.coinlib.utils.AbiLoader;
 import com.keystone.coinlib.utils.Coins;
+import com.keystone.coinlib.utils.ContractExternalDbLoader;
 
 import org.bouncycastle.util.encoders.Hex;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.web3j.abi.FunctionEncoder;
@@ -51,7 +50,6 @@ import org.web3j.rlp.RlpEncoder;
 import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpType;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -64,8 +62,6 @@ import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
 import static org.web3j.crypto.TransactionEncoder.asRlpValues;
 
 public class EthImpl implements Coin {
-    public static final String ABI_JSON_SDCARD_PATH = "contracts" + File.separator + "ethereum";
-
     private final int chainId;
 
     public EthImpl(int chainId) {
@@ -134,8 +130,12 @@ public class EthImpl implements Coin {
                 abi = readAsset("abi/" + abiFile);
                 contractName = abiFile.replace(".json", "");
             } else {
-                abi = readAbiFromTFCard(rawTx.getTo(), callback);
-                contractName = contractNameFromTFCard(rawTx.getTo());
+                ContractExternalDbLoader.Contract contract = ContractExternalDbLoader.contractData(rawTx.getTo());
+                abi = contract.getAbi();
+                contractName = contract.getName();
+                if (!TextUtils.isEmpty(abi) && callback != null) {
+                    callback.fromTFCard();
+                }
             }
 
             if (TextUtils.isEmpty(abi)) {
@@ -171,43 +171,6 @@ public class EthImpl implements Coin {
             return null;
         }
         return metaData;
-    }
-
-    private static String contractNameFromTFCard(String to) {
-        String result = null;
-        try {
-            String contentFromSdCard = AbiLoader.getContentFromSdCard(ABI_JSON_SDCARD_PATH, to);
-            if (!TextUtils.isEmpty(contentFromSdCard)) {
-                JSONObject sdCardJsonObject = new JSONObject(contentFromSdCard);
-                result = sdCardJsonObject.optString("name");
-                if (TextUtils.isEmpty(result)) {
-                    result = "";
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    private static String readAbiFromTFCard(String to, Callback callback) {
-        String result = null;
-        try {
-            String contentFromSdCard = AbiLoader.getContentFromSdCard(ABI_JSON_SDCARD_PATH, to);
-            if (!TextUtils.isEmpty(contentFromSdCard)) {
-                JSONObject sdCardJsonObject = new JSONObject(contentFromSdCard);
-                JSONObject metadata = sdCardJsonObject.getJSONObject("metadata");
-                JSONObject output = metadata.getJSONObject("output");
-                JSONArray abi = output.getJSONArray("abi");
-                result = abi.toString();
-                if (result != null && callback != null) {
-                    callback.fromTFCard();
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 
     public static String getSignature(String signedHex) {

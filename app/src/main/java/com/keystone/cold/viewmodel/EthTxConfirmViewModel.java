@@ -35,8 +35,8 @@ import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.path.CoinPath;
-import com.keystone.coinlib.utils.AbiLoader;
 import com.keystone.coinlib.utils.Coins;
+import com.keystone.coinlib.utils.ContractExternalDbLoader;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.ClearTokenCallable;
@@ -44,7 +44,6 @@ import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
-import com.keystone.cold.ui.fragment.main.EthTxConfirmFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,6 +73,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     private String messageSignature;
     private String fromAddress;
     private String inputData;
+    private boolean isFromTFCard;
 
     public EthTxConfirmViewModel(@NonNull Application application) {
         super(application);
@@ -115,7 +115,8 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                 if (!TextUtils.isEmpty(abiFile)) {
                     addressSymbol = abiFile.replace(".json", "");
                 } else {
-                    addressSymbol = recognizeAddressFromTFCard(to);
+                    ContractExternalDbLoader.Contract contract = ContractExternalDbLoader.contractData(to);
+                    addressSymbol = contract.getName();
                 }
             }
             if (addressSymbol != null && addressSymbol.length() > 25) {
@@ -129,20 +130,6 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
             e.printStackTrace();
         }
         return null;
-    }
-
-    private String recognizeAddressFromTFCard(String to) {
-        String addressSymbol = null;
-        try {
-            String contentFromSdCard = AbiLoader.getContentFromSdCard(EthImpl.ABI_JSON_SDCARD_PATH, to);
-            if (!TextUtils.isEmpty(contentFromSdCard)) {
-                JSONObject sdCardJsonObject = new JSONObject(contentFromSdCard);
-                addressSymbol = sdCardJsonObject.optString("name");
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return addressSymbol;
     }
 
     public String getNetwork(int chainId) {
@@ -173,7 +160,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                 hdPath = object.getString("hdPath");
                 signId = object.getString("signId");
                 txHex = object.getString("txHex");
-                JSONObject ethTx = EthImpl.decodeRawTransaction(txHex, () -> EthTxConfirmFragment.isFromTFCard = true);
+                JSONObject ethTx = EthImpl.decodeRawTransaction(txHex, () -> isFromTFCard = true);
                 if (ethTx == null) {
                     observableTx.postValue(null);
                     parseTxException.postValue(new InvalidTransactionException("invalid transaction"));
@@ -353,6 +340,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
             signed.put("chainId", chainId);
             signed.put("abi", abi);
             signed.put("inputData", inputData);
+            signed.put("isFromTFCard", isFromTFCard);
             tx.setSignedHex(signed.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -414,5 +402,9 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
 
     public String getInputData() {
         return inputData;
+    }
+
+    public boolean isFromTFCard() {
+        return isFromTFCard;
     }
 }
