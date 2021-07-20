@@ -13,5 +13,8 @@
   "0xb440dd674e1243644791a4adfe3a2abb0a92d309": "Synthetix.json",
   "0x448a5065aebb8e423f0896e6c5d525c040f59af3": "Maker.json",
   "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": "WETH.json",
-  "0x111111125434b319222cdbf8c261674adb56f3ae": "1inch exchange v2.json"
+  "0x111111125434b319222cdbf8c261674adb56f3ae": "1inch exchange v2.json",
+  "0xe592427a0aece92de3edee1f18e0157c05861564": "Uniswap V3_Router.json",
+  "0xa5644e29708357803b5a882d272c41cc0df92b34": "Uniswap V3_Migrator.json",
+  "0xc36442b4a4522e871399cd717abdd847ab11fe88": "Uniswap V3_Positions NFT.json"
 }
