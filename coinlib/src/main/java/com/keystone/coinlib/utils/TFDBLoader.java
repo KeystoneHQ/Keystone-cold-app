@@ -9,48 +9,39 @@ import android.os.storage.StorageVolume;
 import android.text.TextUtils;
 
 import com.keystone.coinlib.Coinlib;
+import com.keystone.coinlib.model.Contract;
 
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.List;
 
-public class AbiLoader {
-    public static final String INDEX_JSON_SDCARD_PATH = "contracts" + File.separator + "ethereum";
+public class TFDBLoader {
+    public static final String DATABASE_TFCARD_PATH = "contracts" + File.separator + "ethereum";
 
-    public static String[] getDataFromTFCard(String address, QueryType queryType) {
+    public static Contract getDataFromTFCard(String address) {
         SQLiteDatabase db = getDb();
-        String[] result = new String[2];
+        Contract contract = new Contract();
         if (TextUtils.isEmpty(address) || db == null) {
-            return result;
+            return contract;
         }
         try (Cursor cursor = db.query("contracts", null, "address='" + address + "'",
                 null, null, null, null)) {
             if (cursor != null && cursor.moveToFirst() && cursor.getCount() > 0) {
-                switch (queryType) {
-                    case NAME:
-                        result[QueryType.NAME.getIndex()] = cursor.getString(cursor.getColumnIndex("name"));
-                        break;
-                    case METADATA:
-                        result[QueryType.METADATA.getIndex()] = cursor.getString(cursor.getColumnIndex("metadata"));
-                        break;
-                    case ALL:
-                        result[QueryType.NAME.getIndex()] = cursor.getString(cursor.getColumnIndex("name"));
-                        result[QueryType.METADATA.getIndex()] = cursor.getString(cursor.getColumnIndex("metadata"));
-                        break;
-                }
-                return result;
+                contract.setName(cursor.getString(cursor.getColumnIndex("name")));
+                contract.setMetadata(cursor.getString(cursor.getColumnIndex("metadata")));
+                return contract;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             db.close();
         }
-        return result;
+        return contract;
     }
 
     private static SQLiteDatabase getDb() {
         try {
-            String databaseFilePath = externalSDCardPath() + File.separator + INDEX_JSON_SDCARD_PATH + File.separator + "contracts";
+            String databaseFilePath = externalSDCardPath() + File.separator + DATABASE_TFCARD_PATH + File.separator + "contracts";
             return SQLiteDatabase.openDatabase(databaseFilePath, null, SQLiteDatabase.OPEN_READONLY);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -74,22 +65,5 @@ public class AbiLoader {
             e.printStackTrace();
         }
         return sdCardPath;
-    }
-
-    public enum QueryType {
-        NAME(0), METADATA(1), ALL;
-
-        private int index;
-
-        QueryType() {
-        }
-
-        QueryType(int index) {
-            this.index = index;
-        }
-
-        public int getIndex() {
-            return index;
-        }
     }
 }

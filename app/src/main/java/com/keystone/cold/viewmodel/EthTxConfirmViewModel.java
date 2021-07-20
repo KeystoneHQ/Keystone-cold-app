@@ -34,8 +34,9 @@ import com.keystone.coinlib.exception.InvalidPathException;
 import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
+import com.keystone.coinlib.model.Contract;
 import com.keystone.coinlib.path.CoinPath;
-import com.keystone.coinlib.utils.AbiLoader;
+import com.keystone.coinlib.utils.TFDBLoader;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
@@ -44,7 +45,6 @@ import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
-import com.keystone.cold.ui.fragment.main.EthTxConfirmFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -116,8 +116,8 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                 if (!TextUtils.isEmpty(abiFile)) {
                     addressSymbol = abiFile.replace(".json", "");
                 } else {
-                    String[] dataFromTFCard = AbiLoader.getDataFromTFCard(to, AbiLoader.QueryType.NAME);
-                    addressSymbol = dataFromTFCard[AbiLoader.QueryType.NAME.getIndex()];
+                    Contract dataFromTFCard = TFDBLoader.getDataFromTFCard(to);
+                    addressSymbol = dataFromTFCard.getName();
                 }
             }
             if (addressSymbol != null && addressSymbol.length() > 25) {
