@@ -29,7 +29,7 @@ import com.keystone.coinlib.interfaces.Coin;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.utils.Coins;
-import com.keystone.coinlib.utils.ContactExternalDbLoader;
+import com.keystone.coinlib.utils.ContractExternalDbLoader;
 
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONException;
@@ -130,9 +130,9 @@ public class EthImpl implements Coin {
                 abi = readAsset("abi/" + abiFile);
                 contractName = abiFile.replace(".json", "");
             } else {
-                ContactExternalDbLoader.Contract dataFromTFCard = ContactExternalDbLoader.contractData(rawTx.getTo());
-                abi = dataFromTFCard.getAbi();
-                contractName = dataFromTFCard.getName();
+                ContractExternalDbLoader.Contract contract = ContractExternalDbLoader.contractData(rawTx.getTo());
+                abi = contract.getAbi();
+                contractName = contract.getName();
                 if (!TextUtils.isEmpty(abi) && callback != null) {
                     callback.fromTFCard();
                 }

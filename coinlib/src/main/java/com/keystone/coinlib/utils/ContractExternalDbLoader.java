@@ -17,7 +17,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.List;
 
-public class ContactExternalDbLoader {
+public class ContractExternalDbLoader {
     public static final String DATABASE_TFCARD_PATH = "contracts" + File.separator + "ethereum";
 
     public static Contract contractData(String address) {
