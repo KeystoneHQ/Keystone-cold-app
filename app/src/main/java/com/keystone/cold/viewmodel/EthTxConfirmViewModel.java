@@ -116,7 +116,8 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                 if (!TextUtils.isEmpty(abiFile)) {
                     addressSymbol = abiFile.replace(".json", "");
                 } else {
-                    addressSymbol = AbiLoader.getNameFromTFCard(to);
+                    String[] dataFromTFCard = AbiLoader.getDataFromTFCard(to, AbiLoader.QueryType.NAME);
+                    addressSymbol = dataFromTFCard[AbiLoader.QueryType.NAME.getIndex()];
                 }
             }
             if (addressSymbol != null && addressSymbol.length() > 25) {

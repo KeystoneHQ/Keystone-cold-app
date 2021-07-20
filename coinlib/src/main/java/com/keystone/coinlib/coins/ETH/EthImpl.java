@@ -32,7 +32,6 @@ import com.keystone.coinlib.utils.AbiLoader;
 import com.keystone.coinlib.utils.Coins;
 
 import org.bouncycastle.util.encoders.Hex;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.web3j.abi.FunctionEncoder;
@@ -51,7 +50,6 @@ import org.web3j.rlp.RlpEncoder;
 import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpType;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -132,11 +130,12 @@ public class EthImpl implements Coin {
                 abi = readAsset("abi/" + abiFile);
                 contractName = abiFile.replace(".json", "");
             } else {
-                abi = AbiLoader.getAbiFromTFCard(rawTx.getTo());
+                String[] dataFromTFCard = AbiLoader.getDataFromTFCard(rawTx.getTo(), AbiLoader.QueryType.ALL);
+                contractName = dataFromTFCard[AbiLoader.QueryType.NAME.getIndex()];
+                abi = dataFromTFCard[AbiLoader.QueryType.METADATA.getIndex()];
                 if (!TextUtils.isEmpty(abi) && callback != null) {
                     callback.fromTFCard();
                 }
-                contractName = AbiLoader.getNameFromTFCard(rawTx.getTo());
             }
 
             if (TextUtils.isEmpty(abi)) {

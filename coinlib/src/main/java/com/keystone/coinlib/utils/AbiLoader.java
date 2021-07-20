@@ -17,40 +17,35 @@ import java.util.List;
 public class AbiLoader {
     public static final String INDEX_JSON_SDCARD_PATH = "contracts" + File.separator + "ethereum";
 
-    public static String getNameFromTFCard(String address) {
+    public static String[] getDataFromTFCard(String address, QueryType queryType) {
         SQLiteDatabase db = getDb();
+        String[] result = new String[2];
         if (TextUtils.isEmpty(address) || db == null) {
-            return null;
+            return result;
         }
-        try (Cursor cursor = db.query("contracts", new String[]{"name"}, "address='" + address + "'",
+        try (Cursor cursor = db.query("contracts", null, "address='" + address + "'",
                 null, null, null, null)) {
             if (cursor != null && cursor.moveToFirst() && cursor.getCount() > 0) {
-                return cursor.getString(cursor.getColumnIndex("name"));
+                switch (queryType) {
+                    case NAME:
+                        result[QueryType.NAME.getIndex()] = cursor.getString(cursor.getColumnIndex("name"));
+                        break;
+                    case METADATA:
+                        result[QueryType.METADATA.getIndex()] = cursor.getString(cursor.getColumnIndex("metadata"));
+                        break;
+                    case ALL:
+                        result[QueryType.NAME.getIndex()] = cursor.getString(cursor.getColumnIndex("name"));
+                        result[QueryType.METADATA.getIndex()] = cursor.getString(cursor.getColumnIndex("metadata"));
+                        break;
+                }
+                return result;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             db.close();
         }
-        return null;
-    }
-
-    public static String getAbiFromTFCard(String address) {
-        SQLiteDatabase db = getDb();
-        if (TextUtils.isEmpty(address) || db == null) {
-            return null;
-        }
-        try (Cursor cursor = db.query("contracts", new String[]{"metadata"}, "address='" + address + "'",
-                null, null, null, null)) {
-            if (cursor != null && cursor.moveToFirst() && cursor.getCount() > 0) {
-                return cursor.getString(cursor.getColumnIndex("metadata"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            db.close();
-        }
-        return null;
+        return result;
     }
 
     private static SQLiteDatabase getDb() {
@@ -79,5 +74,22 @@ public class AbiLoader {
             e.printStackTrace();
         }
         return sdCardPath;
+    }
+
+    public enum QueryType {
+        NAME(0), METADATA(1), ALL;
+
+        private int index;
+
+        QueryType() {
+        }
+
+        QueryType(int index) {
+            this.index = index;
+        }
+
+        public int getIndex() {
+            return index;
+        }
     }
 }
