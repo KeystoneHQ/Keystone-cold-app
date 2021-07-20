@@ -9,7 +9,9 @@ import android.os.storage.StorageVolume;
 import android.text.TextUtils;
 
 import com.keystone.coinlib.Coinlib;
-import com.keystone.coinlib.model.Contract;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -65,5 +67,39 @@ public class ContactExternalDbLoader {
             e.printStackTrace();
         }
         return sdCardPath;
+    }
+
+    public static class Contract {
+        private String name;
+
+        private String metadata;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getMetadata() {
+            return metadata;
+        }
+
+        public void setMetadata(String metadata) {
+            this.metadata = metadata;
+        }
+
+        public String getAbi() {
+            String abi = null;
+            try {
+                JSONObject metaData = new JSONObject(metadata);
+                JSONObject output = metaData.getJSONObject("output");
+                abi = output.getString("abi");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return abi;
+        }
     }
 }
