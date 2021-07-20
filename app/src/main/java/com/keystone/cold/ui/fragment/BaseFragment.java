@@ -33,8 +33,13 @@ import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.keystone.cold.R;
+import com.keystone.cold.databinding.CommonModalBinding;
+import com.keystone.cold.ui.modal.ModalDialog;
+
 public abstract class BaseFragment<T extends ViewDataBinding> extends Fragment {
     private static final boolean DEBUG = false;
+    private ModalDialog dialog;
     protected final String TAG = getClass().getSimpleName();
 
     protected T mBinding;
@@ -162,5 +167,35 @@ public abstract class BaseFragment<T extends ViewDataBinding> extends Fragment {
 
     public AppCompatActivity getHostActivity() {
         return mActivity;
+    }
+
+    public void alert(String message) {
+        alert(null, message);
+    }
+
+    public void alert(String title, String message) {
+        alert(title, message, null);
+    }
+
+    public void alert(String title, String message, Runnable run) {
+        dialog = ModalDialog.newInstance();
+        CommonModalBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+                R.layout.common_modal, null, false);
+        if (title != null) {
+            binding.title.setText(title);
+        } else {
+            binding.title.setText(R.string.fail);
+        }
+        binding.subTitle.setText(message);
+        binding.close.setVisibility(View.GONE);
+        binding.confirm.setText(R.string.know);
+        binding.confirm.setOnClickListener(v -> {
+            dialog.dismiss();
+            if (run != null) {
+                run.run();
+            }
+        });
+        dialog.setBinding(binding);
+        dialog.show(mActivity.getSupportFragmentManager(), "failed");
     }
 }
