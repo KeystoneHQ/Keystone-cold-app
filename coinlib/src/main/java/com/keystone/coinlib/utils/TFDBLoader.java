@@ -41,7 +41,7 @@ public class TFDBLoader {
 
     private static SQLiteDatabase getDb() {
         try {
-            String databaseFilePath = externalSDCardPath() + File.separator + DATABASE_TFCARD_PATH + File.separator + "contracts";
+            String databaseFilePath = externalSDCardPath() + File.separator + DATABASE_TFCARD_PATH + File.separator + "contracts.db";
             return SQLiteDatabase.openDatabase(databaseFilePath, null, SQLiteDatabase.OPEN_READONLY);
         } catch (SQLException e) {
             e.printStackTrace();
