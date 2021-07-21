@@ -1,12 +1,15 @@
 package com.keystone.coinlib.coins.ETH.CanonicalValues;
 
+import org.json.JSONObject;
+
 public class CanonicalUFixedValue extends CanonicalValue {
-    CanonicalUFixedValue(String abiType, Object value) {
-        super(abiType, value);
+    CanonicalUFixedValue(String abiType) {
+        super(abiType);
     }
 
     @Override
-    public String getValue() {
-        return value.toString();
+    public void resolveValueWith(Object value, JSONObject jsonObject) {
+
     }
+
 }

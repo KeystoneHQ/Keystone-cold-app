@@ -1,12 +1,12 @@
 package com.keystone.coinlib.coins.ETH.CanonicalValues;
 
 public class CanonicalStringValue extends CanonicalValue {
-    CanonicalStringValue(String canonicalType, Object value) {
-        super(canonicalType, value);
+    CanonicalStringValue(String canonicalType) {
+        super(canonicalType);
     }
 
     @Override
-    public String getValue() {
+    public String resolveValueWith() {
         return null;
     }
 }

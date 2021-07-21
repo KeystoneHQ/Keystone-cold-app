@@ -94,22 +94,6 @@ public class ABIReader {
             return result;
         }
 
-        public JSONObject toPrettierJSON() {
-            JSONObject origin = this.toJson();
-            JSONObject result = new JSONObject();
-            try {
-                result.put("method", origin.get("method"));
-                result.put("param", prettierParams(origin.getJSONArray("param")));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return result;
-        }
-
-        public JSONArray prettierParams(JSONArray params) {
-
-        }
-
         private JSONObject decodeParameter(ABIType<?> type, Object callParameter) {
             JSONObject parameter = new JSONObject();
             try {
