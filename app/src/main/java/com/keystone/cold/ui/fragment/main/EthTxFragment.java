@@ -21,6 +21,7 @@ package com.keystone.cold.ui.fragment.main;
 
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -147,10 +148,13 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
                 e.printStackTrace();
             }
         } else {
-            mBinding.ethTx.data.setVisibility(View.GONE);
-            mBinding.ethTx.undecodedData.setVisibility(View.VISIBLE);
-            if (signData != null) {
+            if (signData != null && !TextUtils.isEmpty(signData.optString("inputData"))){
+                mBinding.ethTx.data.setVisibility(View.GONE);
+                mBinding.ethTx.undecodedData.setVisibility(View.VISIBLE);
                 mBinding.ethTx.inputData.setText("0x" + signData.optString("inputData"));
+            } else {
+                mBinding.ethTx.data.setVisibility(View.GONE);
+                mBinding.ethTx.undecodedData.setVisibility(View.GONE);
             }
         }
     }
