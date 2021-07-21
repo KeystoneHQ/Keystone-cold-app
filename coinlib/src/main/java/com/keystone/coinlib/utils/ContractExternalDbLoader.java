@@ -92,6 +92,9 @@ public class ContractExternalDbLoader {
 
         public String getAbi() {
             String abi = null;
+            if (metadata == null) {
+                return abi;
+            }
             try {
                 JSONObject metaData = new JSONObject(metadata);
                 JSONObject output = metaData.getJSONObject("output");
