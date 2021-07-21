@@ -121,28 +121,58 @@ public class ABIReader {
             return parameter;
         }
 
-        private JSONArray decodeArrayType(ArrayType array, Object[] callParameters) {
+        private JSONArray decodeArrayType(ArrayType array, Object callParameters) {
             JSONArray jsonArray = new JSONArray();
             switch (array.getElementType().typeCode()) {
-                case TYPE_CODE_BOOLEAN:
-                case TYPE_CODE_BYTE:
-                case TYPE_CODE_INT:
-                case TYPE_CODE_LONG:
+                case TYPE_CODE_BOOLEAN: {
+                    boolean[] params = (boolean[]) callParameters;
+                    for (boolean o : params) {
+                        jsonArray.put(o);
+                    }
+                    break;
+                }
+                case TYPE_CODE_BYTE: {
+                    byte[] params = (byte[]) callParameters;
+                    for (byte o : params) {
+                        jsonArray.put(String.valueOf(o));
+                    }
+                    break;
+                }
+                case TYPE_CODE_INT: {
+                    int[] params = (int[]) callParameters;
+                    for (int o : params) {
+                        jsonArray.put(o);
+                    }
+                    break;
+                }
+                case TYPE_CODE_LONG: {
+                    long[] params = (long[]) callParameters;
+                    for (long o : params) {
+                        jsonArray.put(o);
+                    }
+                    break;
+                }
                 case TYPE_CODE_BIG_INTEGER:
-                case TYPE_CODE_BIG_DECIMAL:
-                    for (Object o : callParameters) {
+                case TYPE_CODE_BIG_DECIMAL: {
+                    Object[] params = (Object[]) callParameters;
+                    for (Object o : params) {
                         jsonArray.put(o.toString());
                     }
                     break;
-                case TYPE_CODE_ARRAY:
-                    for (Object o : callParameters) {
+                }
+                case TYPE_CODE_ARRAY: {
+                    Object[] params = (Object[]) callParameters;
+                    for (Object o : params) {
                         jsonArray.put(decodeArrayType((ArrayType) array.getElementType(), (Object[]) o));
                     }
                     break;
-                case TYPE_CODE_TUPLE:
-                    for (Object o : callParameters) {
+                }
+                case TYPE_CODE_TUPLE: {
+                    Object[] params = (Object[]) callParameters;
+                    for (Object o : params) {
                         jsonArray.put(decodeTuple((TupleType) array.getElementType(), (Tuple) o));
                     }
+                }
             }
             return jsonArray;
         }
@@ -167,7 +197,7 @@ public class ABIReader {
                             jsonObject.put("value", param);
                             break;
                         case TYPE_CODE_ARRAY:
-                            jsonObject.put("value", decodeArrayType((ArrayType) abiType, (Object[]) param));
+                            jsonObject.put("value", decodeArrayType((ArrayType) abiType, param));
                             break;
                         case TYPE_CODE_TUPLE:
                             jsonObject.put("value", decodeTuple((TupleType) abiType, (Tuple) param));
