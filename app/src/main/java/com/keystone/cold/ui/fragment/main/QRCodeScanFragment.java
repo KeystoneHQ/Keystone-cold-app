@@ -278,15 +278,15 @@ public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
         return mHandler;
     }
 
-    private void alert(String message) {
+    public void alert(String message) {
         alert(null, message);
     }
 
-    private void alert(String title, String message) {
+    public void alert(String title, String message) {
         alert(title, message, null);
     }
 
-    private void alert(String title, String message, Runnable run) {
+    public void alert(String title, String message, Runnable run) {
         dialog = ModalDialog.newInstance();
         CommonModalBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
                 R.layout.common_modal, null, false);
