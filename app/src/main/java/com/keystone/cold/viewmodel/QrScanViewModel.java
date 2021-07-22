@@ -157,7 +157,7 @@ public class QrScanViewModel extends AndroidViewModel {
         }
         Bundle bundle = new Bundle();
         bundle.putString(KEY_TX_DATA, object.toString());
-        AppExecutors.getInstance().mainThread().execute(() -> fragment.navigate(R.id.action_to_ethSignMessageFragment, bundle));
+        AppExecutors.getInstance().mainThread().execute(() -> fragment.navigate(R.id.action_to_ethSignTypedDataFragment, bundle));
     }
 
     private void handleSignXrpTx(JSONObject object) {

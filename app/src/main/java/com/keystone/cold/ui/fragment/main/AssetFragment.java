@@ -60,10 +60,12 @@ import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
@@ -277,7 +279,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     public static final String TRANSACTION = "Transaction";
     public static final String TYPEDDATA = "TypedData";
     public static final String RAWDATA = "RawData";
-    public static final String SCAN_RESULT_DATA = "scanResult";
+    public static final String SIGN_DATA = "signData";
+    public static final String REQUEST_ID = "requestId";
+    public static final String HD_PATH = "hdPath";
 
     private void scanQrCode() {
         ViewModelProviders.of(mActivity).get(ScannerViewModel.class).setState(new ScannerState(Collections.singletonList(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
@@ -286,10 +290,17 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 if (result.getType().equals(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
                     EthSignRequest ethSignRequest = (EthSignRequest) result.resolve();
                     Bundle bundle = new Bundle();
-                    bundle.putString(SCAN_RESULT_DATA, result.getData());
+                    ByteBuffer uuidBuffer = ByteBuffer.wrap(ethSignRequest.getRequestId());
+                    UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+                    String hdPath = ethSignRequest.getDerivationPath();
+                    bundle.putString(REQUEST_ID, uuid.toString());
+                    bundle.putString(SIGN_DATA, Hex.toHexString(ethSignRequest.getSignData()));
+                    bundle.putString(HD_PATH, "M/" + hdPath);
                     if (ethSignRequest.getDataType().equals(TRANSACTION)) {
                         mFragment.navigate(R.id.action_to_ethTxConfirmFragment, bundle);
-                    } else if (ethSignRequest.getDataType().equals(TYPEDDATA) || ethSignRequest.getDataType().equals(RAWDATA)) {
+                    } else if (ethSignRequest.getDataType().equals(TYPEDDATA)) {
+                        mFragment.navigate(R.id.action_to_ethSignTypedDataFragment, bundle);
+                    } else if (ethSignRequest.getDataType().equals(RAWDATA)) {
                         mFragment.navigate(R.id.action_to_ethSignMessageFragment, bundle);
                     }
 
