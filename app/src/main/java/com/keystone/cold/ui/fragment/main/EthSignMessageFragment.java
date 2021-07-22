@@ -72,11 +72,9 @@ public class EthSignMessageFragment extends BaseFragment<EthSignMessageBinding> 
 
     @Override
     protected void init(View view) {
-        Bundle data = requireArguments();
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         viewModel = ViewModelProviders.of(this).get(EthTxConfirmViewModel.class);
-        String txData = data.getString(KEY_TX_DATA);
-        LiveData<JSONObject> liveData = viewModel.parseMessageData(txData);
+        LiveData<JSONObject> liveData = viewModel.parseMessageData(requireArguments());
         liveData.observe(this, o -> onMessageParsed(liveData, o));
         viewModel.parseTxException().observe(this, this::handleParseException);
         mBinding.sign.setOnClickListener(v -> handleSign());

@@ -170,6 +170,7 @@
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right"/>
     </fragment>
+
     <fragment
         android:id="@+id/ethBroadcastTxFragment"
         android:name="com.keystone.cold.ui.fragment.main.EthBroadcastTxFragment"
@@ -806,6 +807,13 @@
             app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
 
+    <fragment
+        android:id="@+id/scannerFragment"
+        android:name="com.keystone.cold.ui.fragment.main.scan.scanner.ScannerFragment"
+        tools:layout="@layout/scanner_fragment"
+        android:label="ScannerFragment">
+    </fragment>
+
     <!--global action-->
     <action
         android:id="@+id/action_to_preImportFragment"
@@ -824,6 +832,14 @@
         app:popExitAnim="@android:anim/slide_out_right"/>
 
     <action
+        android:id="@+id/action_to_scanner"
+        app:destination="@id/scannerFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right"/>
+
+    <action
         android:id="@+id/action_to_syncWatchWalletGuide"
         app:destination="@id/syncWatchWalletGuide"
         app:enterAnim="@anim/slide_in_right"
@@ -831,5 +847,21 @@
         app:popEnterAnim="@android:anim/slide_in_left"
         app:popExitAnim="@android:anim/slide_out_right"
         />
+
+    <action
+        android:id="@+id/action_to_ethTxConfirmFragment"
+        app:destination="@id/ethTxConfirmFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right"/>
+
+    <action
+        android:id="@+id/action_to_ethSignMessageFragment"
+        app:destination="@id/ethSignMessageFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right"/>
 
 </navigation>

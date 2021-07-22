@@ -44,13 +44,19 @@ import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
+import com.keystone.cold.ui.fragment.main.AssetFragment;
+import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
+import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
+import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.spongycastle.util.encoders.Hex;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
@@ -74,6 +80,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     private String fromAddress;
     private String inputData;
     private boolean isFromTFCard;
+    private ScanResult scanResult;
 
     public EthTxConfirmViewModel(@NonNull Application application) {
         super(application);
@@ -155,6 +162,18 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     public void parseTxData(Bundle bundle) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             try {
+//                scanResult = new ScanResult(ScanResultTypes.UR_ETH_SIGN_REQUEST,bundle.getString(AssetFragment.SCAN_RESULT_DATA));
+//                EthSignRequest ethSignRequest = (EthSignRequest) scanResult.resolve();
+//                chainId = ethSignRequest.getChainId();
+//                byte[] signData = ethSignRequest.getSignData();
+//                txHex = Hex.toHexString(signData);
+//                signId = Arrays.toString(ethSignRequest.getRequestId());
+//                hdPath = ethSignRequest.getDerivationPath();
+
+
+
+
+
                 JSONObject object = new JSONObject(bundle.getString(KEY_TX_DATA));
                 Log.i(TAG, "object = " + object.toString(4));
                 hdPath = object.getString("hdPath");
@@ -181,18 +200,34 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         });
     }
 
-    public MutableLiveData<JSONObject> parseMessageData(String s) {
+    public MutableLiveData<JSONObject> parseMessageData(Bundle bundle) {
         MutableLiveData<JSONObject> observableObject = new MutableLiveData<>();
         AppExecutors.getInstance().networkIO().execute(() -> {
             try {
-                JSONObject object = new JSONObject(s);
-                Log.i(TAG, "object = " + object.toString(4));
-                hdPath = object.getString("hdPath");
-                signId = object.getString("signId");
-                messageData = object.getJSONObject("data").toString();
-                chainId = object.getJSONObject("data").getJSONObject("domain").optInt("chainId", 1);
+                scanResult = new ScanResult(ScanResultTypes.UR_ETH_SIGN_REQUEST,bundle.getString(AssetFragment.SCAN_RESULT_DATA));
+                EthSignRequest ethSignRequest = (EthSignRequest) scanResult.resolve();
+                hdPath = ethSignRequest.getDerivationPath();
+                signId = Arrays.toString(ethSignRequest.getRequestId());
+                byte[] signData = ethSignRequest.getSignData();
+                messageData = Hex.toHexString(signData);
+                chainId = ethSignRequest.getChainId();
                 fromAddress = getFromAddress(hdPath);
+                JSONObject object = new JSONObject();
+                object.put("hdPath", hdPath);
+                object.put("signId", signId);
+                object.put("data", messageData);
                 observableObject.postValue(object);
+
+
+//                String keyTxData = bundle.getString(KEY_TX_DATA);
+//                JSONObject object = new JSONObject(keyTxData);
+//                Log.i(TAG, "object = " + object.toString(4));
+//                hdPath = object.getString("hdPath");
+//                signId = object.getString("signId");
+//                messageData = object.getJSONObject("data").toString();
+//                chainId = object.getJSONObject("data").getJSONObject("domain").optInt("chainId", 1);
+//                fromAddress = getFromAddress(hdPath);
+//                observableObject.postValue(object);
             } catch (JSONException e) {
                 e.printStackTrace();
                 observableObject.postValue(null);
