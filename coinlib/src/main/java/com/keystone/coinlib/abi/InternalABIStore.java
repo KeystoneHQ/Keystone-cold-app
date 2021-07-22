@@ -28,14 +28,6 @@ public class InternalABIStore implements ABIStoreEngine {
             contract.setAbi(readAsset("abi/" + abiFile));
             contract.setName(abiFile.replace(".json", ""));
         }
-        if (contract.isEmpty()) {
-            return getNext().load();
-        }
         return contract;
-    }
-
-    @Override
-    public ABIStoreEngine getNext() {
-        return new TFCardABIStore(address);
     }
 }

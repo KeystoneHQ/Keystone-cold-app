@@ -39,15 +39,7 @@ public class TFCardABIStore implements ABIStoreEngine {
         } finally {
             sqLiteDatabase.close();
         }
-        if (contract.isEmpty()) {
-            return getNext().load();
-        }
         contract.setFromTFCard(true);
         return contract;
-    }
-
-    @Override
-    public ABIStoreEngine getNext() {
-        return new SelfDefinedABIStore(address);
     }
 }

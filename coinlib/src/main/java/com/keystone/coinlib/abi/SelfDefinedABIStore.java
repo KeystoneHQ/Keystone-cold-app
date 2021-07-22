@@ -31,14 +31,7 @@ public class SelfDefinedABIStore implements ABIStoreEngine {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (!content.isEmpty()){
-            contract.setFromTFCard(true);
-        }
+        contract.setFromTFCard(true);
         return contract;
-    }
-
-    @Override
-    public ABIStoreEngine getNext() {
-        return null;
     }
 }
