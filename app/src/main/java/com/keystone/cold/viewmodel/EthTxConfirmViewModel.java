@@ -166,14 +166,6 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     public void parseTxData(Bundle bundle) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             try {
-//                scanResult = new ScanResult(ScanResultTypes.UR_ETH_SIGN_REQUEST,bundle.getString(AssetFragment.SCAN_RESULT_DATA));
-//                EthSignRequest ethSignRequest = (EthSignRequest) scanResult.resolve();
-//                chainId = ethSignRequest.getChainId();
-//                byte[] signData = ethSignRequest.getSignData();
-//                txHex = Hex.toHexString(signData);
-//                signId = Arrays.toString(ethSignRequest.getRequestId());
-//                hdPath = ethSignRequest.getDerivationPath();
-
                 txHex = bundle.getString(SIGN_DATA);
                 hdPath = bundle.getString(HD_PATH);
                 signId = bundle.getString(REQUEST_ID);
