@@ -46,15 +46,26 @@ import com.keystone.cold.databinding.DialogBottomSheetBinding;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
+import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
+import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerState;
+import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerViewModel;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.CoinViewModel;
 import com.keystone.cold.viewmodel.PublicKeyViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
+import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 
+import org.json.JSONObject;
+import org.spongycastle.util.encoders.Hex;
+
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
@@ -90,7 +101,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             mBinding.customTitle.setVisibility(View.GONE);
             coinId = Coins.ETH.coinId();
             coinCode = Coins.ETH.coinCode();
-        }else if (watchWallet == WatchWallet.XRP_TOOLKIT) {
+        } else if (watchWallet == WatchWallet.XRP_TOOLKIT) {
             mBinding.toolbar.setNavigationIcon(R.drawable.menu);
             mBinding.toolbar.setTitle(watchWallet.getWalletName(mActivity));
             mBinding.customTitle.setVisibility(View.GONE);
@@ -128,7 +139,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     private void syncPolkadot() {
         Bundle bundle = new Bundle();
         bundle.putString("coinCode", coinCode);
-        navigate(R.id.action_to_syncFragment,bundle);
+        navigate(R.id.action_to_syncFragment, bundle);
     }
 
     private int getMenuResId() {
@@ -253,12 +264,58 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 showBottomSheetMenu();
                 break;
             case R.id.action_scan:
-                navigate(R.id.action_to_QRCodeScanFragment);
+                if (watchWallet == WatchWallet.METAMASK) {
+                    scanQrCode();
+                } else {
+                    navigate(R.id.action_to_QRCodeScanFragment);
+                }
                 break;
             default:
                 break;
         }
         return true;
+    }
+
+    public static final String TRANSACTION = "Transaction";
+    public static final String TYPEDDATA = "TypedData";
+    public static final String RAWDATA = "RawData";
+    public static final String SIGN_DATA = "signData";
+    public static final String REQUEST_ID = "requestId";
+    public static final String HD_PATH = "hdPath";
+
+    private void scanQrCode() {
+        ViewModelProviders.of(mActivity).get(ScannerViewModel.class).setState(new ScannerState(Collections.singletonList(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
+            @Override
+            public void handleScanResult(ScanResult result) throws Exception {
+                if (result.getType().equals(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
+                    EthSignRequest ethSignRequest = (EthSignRequest) result.resolve();
+                    Bundle bundle = new Bundle();
+                    ByteBuffer uuidBuffer = ByteBuffer.wrap(ethSignRequest.getRequestId());
+                    UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+                    String hdPath = ethSignRequest.getDerivationPath();
+                    bundle.putString(REQUEST_ID, uuid.toString());
+                    bundle.putString(SIGN_DATA, Hex.toHexString(ethSignRequest.getSignData()));
+                    bundle.putString(HD_PATH, "M/" + hdPath);
+                    if (ethSignRequest.getDataType().equals(TRANSACTION)) {
+                        mFragment.navigate(R.id.action_to_ethTxConfirmFragment, bundle);
+                    } else if (ethSignRequest.getDataType().equals(TYPEDDATA)) {
+                        mFragment.navigate(R.id.action_to_ethSignTypedDataFragment, bundle);
+                    } else if (ethSignRequest.getDataType().equals(RAWDATA)) {
+                        mFragment.navigate(R.id.action_to_ethSignMessageFragment, bundle);
+                    }
+
+                }
+            }
+        });
+        navigate(R.id.action_to_scanner);
+    }
+
+    private JSONObject tryDecodeAsJson(String hex) {
+        try {
+            return new JSONObject(new String(Hex.decode(hex)));
+        } catch (Exception ignored) {
+        }
+        return null;
     }
 
     private void handleAddAddress() {
@@ -275,13 +332,13 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     private void showBottomSheetMenu() {
         BottomSheetDialog dialog = new BottomSheetDialog(mActivity);
         DialogBottomSheetBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
-                R.layout.dialog_bottom_sheet,null,false);
-        binding.addAddress.setOnClickListener(v-> {
+                R.layout.dialog_bottom_sheet, null, false);
+        binding.addAddress.setOnClickListener(v -> {
             handleAddAddress();
             dialog.dismiss();
 
         });
-        binding.sync.setOnClickListener(v-> {
+        binding.sync.setOnClickListener(v -> {
             navigate(R.id.action_to_syncFragment);
             dialog.dismiss();
         });
@@ -329,7 +386,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 int addrCount = coinEntity.getAddressCount();
                 List<String> observableAddressNames = new ArrayList<>();
                 for (int i = addrCount; i < value + addrCount; i++) {
-                    String name = coinEntity.getDisplayName() + "-" + i ;
+                    String name = coinEntity.getDisplayName() + "-" + i;
                     observableAddressNames.add(name);
                 }
                 viewModel.addAddress(observableAddressNames);

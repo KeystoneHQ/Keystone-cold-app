@@ -44,17 +44,27 @@ import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
+import com.keystone.cold.ui.fragment.main.AssetFragment;
+import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
+import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
+import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.spongycastle.util.encoders.Hex;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
 import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.HD_PATH;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.REQUEST_ID;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.SIGN_DATA;
 import static com.keystone.cold.ui.fragment.main.TxConfirmFragment.KEY_TX_DATA;
 
 public class EthTxConfirmViewModel extends TxConfirmViewModel {
@@ -74,6 +84,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     private String fromAddress;
     private String inputData;
     private boolean isFromTFCard;
+    private ScanResult scanResult;
 
     public EthTxConfirmViewModel(@NonNull Application application) {
         super(application);
@@ -155,11 +166,17 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     public void parseTxData(Bundle bundle) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             try {
-                JSONObject object = new JSONObject(bundle.getString(KEY_TX_DATA));
-                Log.i(TAG, "object = " + object.toString(4));
-                hdPath = object.getString("hdPath");
-                signId = object.getString("signId");
-                txHex = object.getString("txHex");
+//                scanResult = new ScanResult(ScanResultTypes.UR_ETH_SIGN_REQUEST,bundle.getString(AssetFragment.SCAN_RESULT_DATA));
+//                EthSignRequest ethSignRequest = (EthSignRequest) scanResult.resolve();
+//                chainId = ethSignRequest.getChainId();
+//                byte[] signData = ethSignRequest.getSignData();
+//                txHex = Hex.toHexString(signData);
+//                signId = Arrays.toString(ethSignRequest.getRequestId());
+//                hdPath = ethSignRequest.getDerivationPath();
+
+                txHex = bundle.getString(SIGN_DATA);
+                hdPath = bundle.getString(HD_PATH);
+                signId = bundle.getString(REQUEST_ID);
                 JSONObject ethTx = EthImpl.decodeRawTransaction(txHex, () -> isFromTFCard = true);
                 if (ethTx == null) {
                     observableTx.postValue(null);
@@ -181,17 +198,44 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         });
     }
 
-    public MutableLiveData<JSONObject> parseMessageData(String s) {
+    public MutableLiveData<JSONObject> parseEIP712TypedData(Bundle bundle) {
         MutableLiveData<JSONObject> observableObject = new MutableLiveData<>();
         AppExecutors.getInstance().networkIO().execute(() -> {
             try {
-                JSONObject object = new JSONObject(s);
-                Log.i(TAG, "object = " + object.toString(4));
-                hdPath = object.getString("hdPath");
-                signId = object.getString("signId");
-                messageData = object.getJSONObject("data").toString();
-                chainId = object.getJSONObject("data").getJSONObject("domain").optInt("chainId", 1);
+                String typedDataHex = bundle.getString(SIGN_DATA);
+                hdPath = bundle.getString(HD_PATH);
+                signId = bundle.getString(REQUEST_ID);
                 fromAddress = getFromAddress(hdPath);
+                messageData = new String(Hex.decode(typedDataHex), StandardCharsets.UTF_8);
+                JSONObject typedData = new JSONObject(new String(Hex.decode(typedDataHex), StandardCharsets.UTF_8));
+                chainId = typedData.getJSONObject("domain").optInt("chainId", 1);
+
+                JSONObject object = new JSONObject();
+                object.put("hdPath", hdPath);
+                object.put("signId", signId);
+                object.put("data", messageData);
+                observableObject.postValue(object);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                observableObject.postValue(null);
+                parseTxException.postValue(e);
+            }
+        });
+        return observableObject;
+    }
+
+    public MutableLiveData<JSONObject> parseRawMessage(Bundle bundle) {
+        MutableLiveData<JSONObject> observableObject = new MutableLiveData<>();
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            try {
+                hdPath = bundle.getString(HD_PATH);
+                signId = bundle.getString(REQUEST_ID);
+                messageData = bundle.getString(SIGN_DATA);
+                fromAddress = getFromAddress(hdPath);
+                JSONObject object = new JSONObject();
+                object.put("hdPath", hdPath);
+                object.put("signId", signId);
+                object.put("data", messageData);
                 observableObject.postValue(object);
             } catch (JSONException e) {
                 e.printStackTrace();
