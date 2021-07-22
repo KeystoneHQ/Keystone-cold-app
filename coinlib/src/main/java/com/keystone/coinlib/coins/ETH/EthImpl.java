@@ -121,7 +121,7 @@ public class EthImpl implements Coin {
             //decode data
             String contractName = null;
             String abi = null;
-            ABIReader abiReader = new ABIReader();
+            AbiDecoder decoder = new AbiDecoder();
 
             JSONObject bundleMap = new JSONObject(readAsset("abi/abiMap.json"));
             String abiFile = bundleMap.optString(rawTx.getTo());
@@ -144,13 +144,13 @@ public class EthImpl implements Coin {
                 contractName = "Erc20";
             }
             try {
-                abiReader.addABI(abi);
+                decoder.addAbi(abi);
             } catch (RuntimeException e) {
                 metaData.put("data", rawTx.getData());
             }
-            ABIReader.DecodedFunctionCall call = abiReader.decodeCall(rawTx.getData());
-            if (call != null) {
-                JSONObject data = call.toJson();
+            AbiDecoder.DecodedMethod method = decoder.decodeMethod(rawTx.getData());
+            if (method != null) {
+                JSONObject data = method.toJson();
                 data.put("contract", contractName);
                 metaData.put("data", data.toString());
             } else {
