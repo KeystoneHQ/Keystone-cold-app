@@ -27,6 +27,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.keystone.coinlib.abi.AbiLoadManager;
+import com.keystone.coinlib.abi.Contract;
 import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.coins.ETH.Network;
 import com.keystone.coinlib.coins.SignTxResult;
@@ -35,7 +37,6 @@ import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.path.CoinPath;
-import com.keystone.coinlib.utils.AbiLoadManager;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
@@ -115,7 +116,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                 }
             }
             if (TextUtils.isEmpty(addressSymbol)) {
-                AbiLoadManager.Contract contract = new AbiLoadManager(to).loadAbi();
+                Contract contract = new AbiLoadManager(to).loadAbi();
                 addressSymbol = contract.getName();
             }
             if (addressSymbol != null && addressSymbol.length() > 25) {

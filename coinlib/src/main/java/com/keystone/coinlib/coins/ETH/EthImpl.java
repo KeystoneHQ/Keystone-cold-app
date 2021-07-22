@@ -23,12 +23,13 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import com.keystone.coinlib.abi.AbiLoadManager;
+import com.keystone.coinlib.abi.Contract;
 import com.keystone.coinlib.coins.AbsTx;
 import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.interfaces.Coin;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
-import com.keystone.coinlib.utils.AbiLoadManager;
 import com.keystone.coinlib.utils.Coins;
 
 import org.bouncycastle.util.encoders.Hex;
@@ -119,8 +120,8 @@ public class EthImpl implements Coin {
             metaData.put("gasLimit", rawTx.getGasLimit().toString());
             metaData.put("value", rawTx.getValue().toString());
             AbiLoadManager abiLoadManager = new AbiLoadManager(rawTx.getTo());
-            AbiLoadManager.Contract contract = abiLoadManager.loadAbi();
-            if (abiLoadManager.isFromTFCard() && callback != null) {
+            Contract contract = abiLoadManager.loadAbi();
+            if (contract.isFromTFCard() && callback != null) {
                 callback.fromTFCard();
             }
             if (contract.isEmpty()) {
