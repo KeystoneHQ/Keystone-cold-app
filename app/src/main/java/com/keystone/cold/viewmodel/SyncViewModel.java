@@ -26,19 +26,18 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.Util;
+import com.keystone.coinlib.accounts.Chains;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
-import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.protocol.EncodeConfig;
 import com.keystone.cold.protocol.builder.SyncBuilder;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.keystone.cold.util.URRegistryHelper;
+import com.sparrowwallet.hummingbird.registry.CryptoHDKey;
 
 import java.util.List;
 
@@ -142,18 +141,9 @@ public class SyncViewModel extends AndroidViewModel {
 
     public LiveData<String> generateSyncMetamask() {
         MutableLiveData<String> result = new MutableLiveData<>();
-        AppExecutors.getInstance().diskIO().execute(()->{
-            CoinEntity eth = mRepository.loadCoinSync(Coins.ETH.coinId());
-            JSONObject o = new JSONObject();
-            try {
-                o.put("xfp", new GetMasterFingerprintCallable().call());
-                o.put("path","m/44'/60'/0'");
-                o.put("xpub",eth.getExPub());
-                result.postValue(o.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            CryptoHDKey cryptoHDKey = URRegistryHelper.generateCryptoHDKey(Chains.ETH);
+            result.postValue(cryptoHDKey.toUR().toString());
         });
         return result;
     }
@@ -167,6 +157,4 @@ public class SyncViewModel extends AndroidViewModel {
         }
         return "";
     }
-
-
 }
