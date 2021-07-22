@@ -30,13 +30,18 @@ public class URRegistryHelper {
 
     public static List<PathComponent> getPathComponents(Chains chains) {
         List<PathComponent> pathComponents = new ArrayList<>();
-        String dest = chains.getPath();
-        if (dest != null) {
-            dest = dest.replaceAll("[^0-9']", "");
-            String[] strings = dest.split("'");
-            for (String string : strings) {
+        String path = chains.getPath();
+        if (path != null) {
+            String dest = path.substring(2);
+            String[] strings = dest.split("/");
+            for (String item : strings) {
                 try {
-                    pathComponents.add(new PathComponent(Integer.parseInt(string), true));
+                    if (item.contains("'")) {
+                        item = item.replace("'", "");
+                        pathComponents.add(new PathComponent(Integer.parseInt(item), true));
+                    } else {
+                        pathComponents.add(new PathComponent(Integer.parseInt(item), false));
+                    }
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
