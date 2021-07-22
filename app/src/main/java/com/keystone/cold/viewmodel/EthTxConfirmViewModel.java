@@ -27,6 +27,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.keystone.coinlib.abi.AbiLoadManager;
+import com.keystone.coinlib.abi.Contract;
 import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.coins.ETH.Network;
 import com.keystone.coinlib.coins.SignTxResult;
@@ -36,7 +38,6 @@ import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.path.CoinPath;
 import com.keystone.coinlib.utils.Coins;
-import com.keystone.coinlib.utils.ContractExternalDbLoader;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.ClearTokenCallable;
@@ -70,7 +71,6 @@ import static com.keystone.cold.ui.fragment.main.TxConfirmFragment.KEY_TX_DATA;
 public class EthTxConfirmViewModel extends TxConfirmViewModel {
     private final MutableLiveData<Boolean> addingAddress = new MutableLiveData<>();
     private JSONArray tokensMap;
-    private JSONObject contractMap;
     private String hdPath;
     private String signId;
     private String txHex;
@@ -95,7 +95,6 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     protected void readPresetContactInfo() {
         try {
             tokensMap = new JSONArray(readAsset("abi/token_address_book.json"));
-            contractMap = new JSONObject(readAsset("abi/abiMap.json"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -103,10 +102,6 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
 
     public JSONArray getTokensMap() {
         return tokensMap;
-    }
-
-    public JSONObject getContractMap() {
-        return contractMap;
     }
 
     public String recognizeAddress(String to) {
@@ -120,21 +115,12 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                     break;
                 }
             }
-            if (addressSymbol == null) {
-                JSONObject bundleMap = getContractMap();
-                String abiFile = bundleMap.optString(to.toLowerCase());
-                if (!TextUtils.isEmpty(abiFile)) {
-                    addressSymbol = abiFile.replace(".json", "");
-                } else {
-                    ContractExternalDbLoader.Contract contract = ContractExternalDbLoader.contractData(to);
-                    addressSymbol = contract.getName();
-                }
+            if (TextUtils.isEmpty(addressSymbol)) {
+                Contract contract = new AbiLoadManager(to).loadAbi();
+                addressSymbol = contract.getName();
             }
             if (addressSymbol != null && addressSymbol.length() > 25) {
-                String abbreviationString = addressSymbol.substring(0, 10) +
-                        "..." +
-                        addressSymbol.substring(addressSymbol.length() - 10);
-                addressSymbol = abbreviationString;
+                addressSymbol = addressSymbol.substring(0, 10) + "..." + addressSymbol.substring(addressSymbol.length() - 10);
             }
             return addressSymbol;
         } catch (JSONException e) {

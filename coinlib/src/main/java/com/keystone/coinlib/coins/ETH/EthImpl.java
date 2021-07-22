@@ -23,13 +23,14 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import com.keystone.coinlib.abi.AbiLoadManager;
+import com.keystone.coinlib.abi.Contract;
 import com.keystone.coinlib.coins.AbsTx;
 import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.interfaces.Coin;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.utils.Coins;
-import com.keystone.coinlib.utils.ContractExternalDbLoader;
 
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONException;
@@ -118,40 +119,28 @@ public class EthImpl implements Coin {
             metaData.put("gasPrice", rawTx.getGasPrice().toString());
             metaData.put("gasLimit", rawTx.getGasLimit().toString());
             metaData.put("value", rawTx.getValue().toString());
-            //decode data
-            String contractName = null;
-            String abi = null;
-            AbiDecoder decoder = new AbiDecoder();
-
-            JSONObject bundleMap = new JSONObject(readAsset("abi/abiMap.json"));
-            String abiFile = bundleMap.optString(rawTx.getTo());
-
-            if (!TextUtils.isEmpty(abiFile)) {
-                abi = readAsset("abi/" + abiFile);
-                contractName = abiFile.replace(".json", "");
-            } else {
-                ContractExternalDbLoader.Contract contract = ContractExternalDbLoader.contractData(rawTx.getTo());
-                abi = contract.getAbi();
-                contractName = contract.getName();
-                if (!TextUtils.isEmpty(abi) && callback != null) {
-                    callback.fromTFCard();
-                }
+            AbiLoadManager abiLoadManager = new AbiLoadManager(rawTx.getTo());
+            Contract contract = abiLoadManager.loadAbi();
+            if (contract.isFromTFCard() && callback != null) {
+                callback.fromTFCard();
             }
-
-            if (TextUtils.isEmpty(abi)) {
+            if (contract.isEmpty()) {
                 //try decode with erc20 abi
-                abi = readAsset("abi/Erc20.json");
-                contractName = "Erc20";
+                contract.setAbi(readAsset("abi/Erc20.json"));
+                contract.setName("Erc20");
             }
+
+            //decode data
+            ABIReader abiReader = new ABIReader();
             try {
-                decoder.addAbi(abi);
+                abiReader.addABI(contract.getAbi());
             } catch (RuntimeException e) {
                 metaData.put("data", rawTx.getData());
             }
-            AbiDecoder.DecodedMethod method = decoder.decodeMethod(rawTx.getData());
-            if (method != null) {
-                JSONObject data = method.toJson();
-                data.put("contract", contractName);
+            ABIReader.DecodedFunctionCall call = abiReader.decodeCall(rawTx.getData());
+            if (call != null) {
+                JSONObject data = call.toJson();
+                data.put("contract", contract.getName());
                 metaData.put("data", data.toString());
             } else {
                 metaData.put("data", rawTx.getData());
