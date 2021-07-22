@@ -1,7 +1,7 @@
 package com.keystone.coinlib.accounts;
 
 public enum Chains {
-    ETH("m/44'/60'/0'", 0);
+    ETH("m/44'/60'/0'", 0x3c);
 
     private String path;
     private int type;
