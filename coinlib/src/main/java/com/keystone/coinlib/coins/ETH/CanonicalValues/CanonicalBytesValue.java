@@ -1,12 +1,18 @@
 package com.keystone.coinlib.coins.ETH.CanonicalValues;
 
+import com.esaulpaugh.headlong.abi.ABIType;
+
+import org.bouncycastle.util.encoders.Hex;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class CanonicalBytesValue extends CanonicalValue {
-    CanonicalBytesValue(String canonicalType) {
+    CanonicalBytesValue(ABIType canonicalType) {
         super(canonicalType);
     }
 
     @Override
-    public String resolveValueWith() {
-        return null;
+    public void resolveValueToJSONObject(Object value, JSONObject jsonObject) throws JSONException {
+        jsonObject.put("value", Hex.toHexString((byte[]) value));
     }
 }

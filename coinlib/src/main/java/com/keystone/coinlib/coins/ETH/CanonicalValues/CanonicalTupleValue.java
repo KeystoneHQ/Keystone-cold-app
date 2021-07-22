@@ -1,12 +1,17 @@
 package com.keystone.coinlib.coins.ETH.CanonicalValues;
 
+import com.esaulpaugh.headlong.abi.ABIType;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class CanonicalTupleValue extends CanonicalValue {
-    CanonicalTupleValue(String canonicalType) {
+    CanonicalTupleValue(ABIType canonicalType) {
         super(canonicalType);
     }
 
     @Override
-    public String resolveValueWith() {
-        return null;
+    public void resolveValueToJSONObject(Object value, JSONObject jsonObject) throws JSONException {
+
     }
 }

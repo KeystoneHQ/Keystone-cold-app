@@ -1,27 +1,32 @@
 package com.keystone.coinlib.coins.ETH.CanonicalValues;
 
+import com.esaulpaugh.headlong.abi.ABIType;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public abstract class CanonicalValue {
-    protected String canonicalType;
+    protected ABIType canonicalType;
 
-    CanonicalValue(String canonicalType) {
+    CanonicalValue(ABIType canonicalType) {
         this.canonicalType = canonicalType;
     }
 
-    public abstract void resolveValueWith(Object value, JSONObject jsonObject);
+    public abstract void resolveValueToJSONObject(Object value, JSONObject jsonObject) throws JSONException;
 
-    public static CanonicalValue getCanonicalValue(String canonicalType) {
-        if (canonicalType.endsWith("]")) return new CanonicalArrayValue(canonicalType);
-        if ("bool".equals(canonicalType)) return new CanonicalBoolValue(canonicalType);
-        if (canonicalType.startsWith("int")) return new CanonicalIntValue(canonicalType);
-        if (canonicalType.startsWith("uint")) return new CanonicalUIntValue(canonicalType);
-        if (canonicalType.startsWith("fixed")) return new CanonicalFixedValue(canonicalType);
-        if (canonicalType.startsWith("ufixed")) return new CanonicalUFixedValue(canonicalType);
-        if ("address".equals(canonicalType)) return new CanonicalAddressValue(canonicalType);
-        if ("string".equals(canonicalType)) return new CanonicalStringValue(canonicalType);
-        if ("bytes".equals(canonicalType)) return new CanonicalBytesValue(canonicalType);
-        if (canonicalType.startsWith("bytes")) return new CanonicalBytesValue(canonicalType);
+    public static CanonicalValue getCanonicalValue(ABIType abiType) {
+        String canonicalType = abiType.getCanonicalType();
+        if (canonicalType.endsWith("]")) return new CanonicalArrayValue(abiType);
+        if ("bool".equals(canonicalType)) return new CanonicalBoolValue(abiType);
+        if (canonicalType.startsWith("int")) return new CanonicalIntValue(abiType);
+        if (canonicalType.startsWith("uint")) return new CanonicalUIntValue(abiType);
+        if (canonicalType.startsWith("fixed")) return new CanonicalFixedValue(abiType);
+        if (canonicalType.startsWith("ufixed")) return new CanonicalUFixedValue(abiType);
+        if ("address".equals(canonicalType)) return new CanonicalAddressValue(abiType);
+        if ("string".equals(canonicalType)) return new CanonicalStringValue(abiType);
+        if ("bytes".equals(canonicalType)) return new CanonicalBytesValue(abiType);
+        if ("function".equals(canonicalType)) return new CanonicalFunctionValue(abiType);
+        if (canonicalType.startsWith("bytes")) return new CanonicalBytesValue(abiType);
         throw new RuntimeException("Unknown type: " + canonicalType);
     }
 }

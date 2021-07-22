@@ -8,6 +8,7 @@ import com.esaulpaugh.headlong.abi.ArrayType;
 import com.esaulpaugh.headlong.abi.Function;
 import com.esaulpaugh.headlong.abi.Tuple;
 import com.esaulpaugh.headlong.abi.TupleType;
+import com.keystone.coinlib.coins.ETH.CanonicalValues.CanonicalValue;
 
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONArray;
@@ -99,6 +100,8 @@ public class ABIReader {
             try {
                 parameter.put("name", type.getName());
                 parameter.put("type", type.getCanonicalType());
+                CanonicalValue value = CanonicalValue.getCanonicalValue(type);
+                value.resolveValueToJSONObject(callParameter, parameter);
                 switch (type.typeCode()) {
                     case TYPE_CODE_BOOLEAN:
                     case TYPE_CODE_BYTE:
