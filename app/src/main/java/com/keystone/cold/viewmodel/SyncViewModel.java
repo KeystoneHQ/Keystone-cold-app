@@ -26,6 +26,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.Util;
+import com.keystone.coinlib.accounts.Chains;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
@@ -141,7 +142,8 @@ public class SyncViewModel extends AndroidViewModel {
     public LiveData<String> generateSyncMetamask() {
         MutableLiveData<String> result = new MutableLiveData<>();
         AppExecutors.getInstance().diskIO().execute(() -> {
-            result.postValue(exportCryptoHDKey().toUR().toString());
+            CryptoHDKey cryptoHDKey = URRegistryHelper.generateCryptoHDKey(Chains.ETH);
+            result.postValue(cryptoHDKey.toUR().toString());
         });
         return result;
     }
@@ -154,9 +156,5 @@ public class SyncViewModel extends AndroidViewModel {
                 return "0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe";
         }
         return "";
-    }
-
-    public CryptoHDKey exportCryptoHDKey() {
-        return URRegistryHelper.generateETHCryptoHDKey();
     }
 }
