@@ -49,6 +49,7 @@ import java.util.regex.Pattern;
 
 import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
+import static com.keystone.cold.ui.fragment.main.EthBroadcastTxFragment.KEY_SIGNATURE_JSON;
 import static com.keystone.cold.ui.fragment.main.EthTxConfirmFragment.highLight;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
@@ -193,9 +194,9 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
     }
 
     private void onSignSuccess() {
-        String signature = viewModel.getMessageSignature();
+        String signature = viewModel.getSignatureJson();
         Bundle data = new Bundle();
-        data.putString("MessageSignature", signature);
+        data.putString(KEY_SIGNATURE_JSON, signature);
         navigate(R.id.action_to_ethBroadcastTxFragment, data);
         viewModel.getSignState().setValue("");
         viewModel.getSignState().removeObservers(this);
