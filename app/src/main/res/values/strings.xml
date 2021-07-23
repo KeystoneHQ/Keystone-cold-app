@@ -422,7 +422,7 @@
         <item>Keystone App</item>
         <item>Polkadot.js</item>-->
         <item>XRP Toolkit</item>
-        <item>Keystone Ethereum Extension</item>
+        <item>Web3</item>
     </string-array>
 
     <string-array name="watch_wallet_list_values" translatable="false">
@@ -444,7 +444,7 @@
     <string name="sync_xumm_guide_title">How to create a Read only account in XUMM：</string>
     <string name="sync_xrp_toolkit_guide_title">How to create a watch-only account in XRP Toolkit：</string>
     <string name="sync_polkadotjs_wallet_guide_title">How to create a %s watch-only wallet in Polkadot.js：</string>
-    <string name="sync_metamask_guide_title">How to create a watch-only wallet in Keystone Ethereum Extension：</string>
+    <string name="sync_metamask_guide_title">How to create a watch-only wallet in Web3：</string>
 
     <string name="sync_keystone_wallet_guide_text"><![CDATA[
         1. Open Keystone Mobile and add new wallet<br>

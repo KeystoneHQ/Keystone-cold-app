@@ -396,7 +396,7 @@
         <item>铠石钱包移动端</item>
         <item>Polkadot.js</item>
         <item>XRP Toolkit</item>
-        <item>Keystone Ethereum Extension</item>
+        <item>Web3</item>
     </string-array>
     <string-array name="watch_wallet_summury" >
         <item>BTC、ETH等8条主链</item>
@@ -411,7 +411,7 @@
     <string name="sync_xumm_guide_title">XUMM 导入观察账户指引：</string>
     <string name="sync_xrp_toolkit_guide_title">XRP Toolkit 导入观察账户指引：</string>
     <string name="sync_polkadotjs_wallet_guide_title">Polkadot.js 导入 %s 观察钱包指引：</string>
-    <string name="sync_metamask_guide_title">Keystone Ethereum Extension 导入观察账户指引：</string>
+    <string name="sync_metamask_guide_title">Web3 导入观察账户指引：</string>
     <string name="sync_keystone_wallet_guide_text"><![CDATA[
         1. 打开铠石钱包移动端，添加新钱包<br>
         2. 选择“硬件钱包”，点击绑定按钮<br>
