@@ -188,11 +188,11 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
                 mBinding.ethTx.data.setVisibility(View.GONE);
                 mBinding.ethTx.undecodedData.setVisibility(View.VISIBLE);
                 mBinding.ethTx.inputData.setText("0x" + viewModel.getInputData());
+                showDialog();
             } else {
                 mBinding.ethTx.data.setVisibility(View.GONE);
                 mBinding.ethTx.undecodedData.setVisibility(View.GONE);
             }
-            showDialog();
         }
         mBinding.ethTx.setTx(txEntity);
         processAndUpdateTo();
