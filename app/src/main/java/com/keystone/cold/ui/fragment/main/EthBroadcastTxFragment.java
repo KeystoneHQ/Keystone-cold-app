@@ -34,7 +34,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
-import java.nio.charset.StandardCharsets;
+import java.nio.ByteBuffer;
+import java.util.UUID;
 
 public class EthBroadcastTxFragment extends BroadcastTxFragment {
     public static final String KEY_SIGNATURE_JSON = "SignatureJson";
@@ -77,7 +78,11 @@ public class EthBroadcastTxFragment extends BroadcastTxFragment {
         try {
             JSONObject messageSignatureJson = new JSONObject(messageSignature);
             byte[] signature = Hex.decode(messageSignatureJson.getString("signature"));
-            byte[] requestId = Hex.decode(messageSignatureJson.getString("signId"));
+            UUID uuid = UUID.fromString(messageSignatureJson.getString("signId"));
+            ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
+            byteBuffer.putLong(uuid.getMostSignificantBits());
+            byteBuffer.putLong(uuid.getLeastSignificantBits());
+            byte[] requestId = byteBuffer.array();
             EthSignature ethSignature = new EthSignature(signature, requestId);
             return ethSignature.toUR().toString();
         } catch (JSONException e) {
