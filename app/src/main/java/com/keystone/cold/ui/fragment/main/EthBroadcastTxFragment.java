@@ -38,6 +38,7 @@ import java.nio.charset.StandardCharsets;
 
 public class EthBroadcastTxFragment extends BroadcastTxFragment {
     public static final String KEY_SIGNATURE_JSON = "SignatureJson";
+    private String messageSignature;
 
     @Override
     protected int setView() {
@@ -51,16 +52,8 @@ public class EthBroadcastTxFragment extends BroadcastTxFragment {
         mBinding.toolbar.setNavigationOnClickListener(goHome);
         mBinding.complete.setOnClickListener(goHome);
         String txId = data.getString(KEY_TXID);
-        String messageSignature = data.getString(KEY_SIGNATURE_JSON);
-        try {
-            JSONObject messageSignatureJson = new JSONObject(messageSignature);
-            byte[] signature = Hex.decode(messageSignatureJson.getString("signature"));
-            byte[] requestId = Hex.decode(messageSignatureJson.getString("signId"));
-            EthSignature ethSignature = new EthSignature(signature, requestId);
-            mBinding.qrcodeLayout.qrcode.setData(ethSignature.toUR().toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        messageSignature = data.getString(KEY_SIGNATURE_JSON);
+        mBinding.qrcodeLayout.qrcode.setData(getSignedTxData());
         if (!TextUtils.isEmpty(txId)) {
             ViewModelProviders.of(mActivity).get(CoinListViewModel.class)
                     .loadTx(data.getString(KEY_TXID)).observe(this, txEntity -> {
@@ -82,10 +75,11 @@ public class EthBroadcastTxFragment extends BroadcastTxFragment {
     @Override
     public String getSignedTxData() {
         try {
-            JSONObject signed = new JSONObject(txEntity.getSignedHex());
-            signed.remove("abi");
-            signed.remove("chainId");
-            return Hex.toHexString(signed.toString().getBytes(StandardCharsets.UTF_8));
+            JSONObject messageSignatureJson = new JSONObject(messageSignature);
+            byte[] signature = Hex.decode(messageSignatureJson.getString("signature"));
+            byte[] requestId = Hex.decode(messageSignatureJson.getString("signId"));
+            EthSignature ethSignature = new EthSignature(signature, requestId);
+            return ethSignature.toUR().toString();
         } catch (JSONException e) {
             e.printStackTrace();
         }
