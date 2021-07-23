@@ -12,6 +12,6 @@ public class CanonicalUIntValue extends CanonicalValue {
 
     @Override
     public void resolveValueToJSONObject(Object value, JSONObject jsonObject) throws JSONException {
-
+        jsonObject.put("value", value);
     }
 }

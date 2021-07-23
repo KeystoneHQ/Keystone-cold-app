@@ -17,6 +17,7 @@ public abstract class CanonicalValue {
     public static CanonicalValue getCanonicalValue(ABIType abiType) {
         String canonicalType = abiType.getCanonicalType();
         if (canonicalType.endsWith("]")) return new CanonicalArrayValue(abiType);
+        if (canonicalType.endsWith(")")) return new CanonicalTupleValue(abiType);
         if ("bool".equals(canonicalType)) return new CanonicalBoolValue(abiType);
         if (canonicalType.startsWith("int")) return new CanonicalIntValue(abiType);
         if (canonicalType.startsWith("uint")) return new CanonicalUIntValue(abiType);
