@@ -45,10 +45,6 @@ import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
-import com.keystone.cold.ui.fragment.main.AssetFragment;
-import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
-import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
-import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,7 +54,6 @@ import org.spongycastle.util.encoders.Hex;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
@@ -66,13 +61,13 @@ import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.HD_PATH;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.REQUEST_ID;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.SIGN_DATA;
-import static com.keystone.cold.ui.fragment.main.TxConfirmFragment.KEY_TX_DATA;
 
 public class EthTxConfirmViewModel extends TxConfirmViewModel {
     private final MutableLiveData<Boolean> addingAddress = new MutableLiveData<>();
     private JSONArray tokensMap;
     private String hdPath;
     private String signId;
+    private String signature;
     private String txHex;
     private int chainId;
     private JSONObject abi;
@@ -80,11 +75,9 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     @SuppressLint("StaticFieldLeak")
     private final Context context;
     private String messageData;
-    private String messageSignature;
     private String fromAddress;
     private String inputData;
     private boolean isFromTFCard;
-    private ScanResult scanResult;
 
     public EthTxConfirmViewModel(@NonNull Application application) {
         super(application);
@@ -324,7 +317,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
 
                 @Override
                 public void onSuccess(String txId, String sig) {
-                    messageSignature = sig;
+                    signature = sig;
                     signState.postValue(STATE_SIGN_SUCCESS);
                     new ClearTokenCallable().call();
                 }
@@ -340,10 +333,10 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         });
     }
 
-    public String getMessageSignature() {
+    public String getSignatureJson() {
         JSONObject signed = new JSONObject();
         try {
-            signed.put("signature", messageSignature);
+            signed.put("signature", signature);
             signed.put("signId", signId);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -356,6 +349,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         this.txId = txId;
         Objects.requireNonNull(tx).setTxId(txId);
         JSONObject signed = new JSONObject();
+        signature = EthImpl.getSignature(rawTx);
         try {
             signed.put("signature", EthImpl.getSignature(rawTx));
             signed.put("signId", signId);

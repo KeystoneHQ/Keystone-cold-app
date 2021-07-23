@@ -40,16 +40,9 @@ import com.keystone.cold.viewmodel.TxConfirmViewModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
-import static com.keystone.cold.ui.fragment.main.EthTxConfirmFragment.highLight;
+import static com.keystone.cold.ui.fragment.main.EthBroadcastTxFragment.KEY_SIGNATURE_JSON;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
 public class EthSignMessageFragment extends BaseFragment<EthSignMessageBinding> {
@@ -150,9 +143,9 @@ public class EthSignMessageFragment extends BaseFragment<EthSignMessageBinding> 
     }
 
     private void onSignSuccess() {
-        String signature = viewModel.getMessageSignature();
+        String signature = viewModel.getSignatureJson();
         Bundle data = new Bundle();
-        data.putString("MessageSignature", signature);
+        data.putString(KEY_SIGNATURE_JSON, signature);
         navigate(R.id.action_to_ethBroadcastTxFragment, data);
         viewModel.getSignState().setValue("");
         viewModel.getSignState().removeObservers(this);
