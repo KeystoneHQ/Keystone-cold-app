@@ -104,7 +104,7 @@ public class EthSignMessageFragment extends BaseFragment<EthSignMessageBinding> 
                 getString(R.string.password_modal_title), "", fingerprintSignEnable,
                 token -> {
                     viewModel.setToken(token);
-                    viewModel.handleSignMessage();
+                    viewModel.handleSignPersonalMessage();
                     subscribeSignState();
                 }, forgetPassword);
     }

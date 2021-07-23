@@ -276,9 +276,6 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         return true;
     }
 
-    public static final String TRANSACTION = "Transaction";
-    public static final String TYPEDDATA = "TypedData";
-    public static final String RAWDATA = "RawData";
     public static final String SIGN_DATA = "signData";
     public static final String REQUEST_ID = "requestId";
     public static final String HD_PATH = "hdPath";
@@ -296,11 +293,11 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     bundle.putString(REQUEST_ID, uuid.toString());
                     bundle.putString(SIGN_DATA, Hex.toHexString(ethSignRequest.getSignData()));
                     bundle.putString(HD_PATH, "M/" + hdPath);
-                    if (ethSignRequest.getDataType().equals(TRANSACTION)) {
+                    if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TRANSACTION.getType())) {
                         mFragment.navigate(R.id.action_to_ethTxConfirmFragment, bundle);
-                    } else if (ethSignRequest.getDataType().equals(TYPEDDATA)) {
+                    } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_DATA.getType())) {
                         mFragment.navigate(R.id.action_to_ethSignTypedDataFragment, bundle);
-                    } else if (ethSignRequest.getDataType().equals(RAWDATA)) {
+                    } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.PERSONAL_MESSAGE.getType())) {
                         mFragment.navigate(R.id.action_to_ethSignMessageFragment, bundle);
                     }
 
