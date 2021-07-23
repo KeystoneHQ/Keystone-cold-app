@@ -155,7 +155,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
                 getString(R.string.password_modal_title), "", fingerprintSignEnable,
                 token -> {
                     viewModel.setToken(token);
-                    viewModel.handleSignMessage();
+                    viewModel.handleSignEIP712TypedData();
                     subscribeSignState();
                 }, forgetPassword);
     }
