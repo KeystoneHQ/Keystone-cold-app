@@ -102,22 +102,22 @@ public class ABIReader {
                 parameter.put("type", type.getCanonicalType());
                 CanonicalValue value = CanonicalValue.getCanonicalValue(type);
                 value.resolveValueToJSONObject(callParameter, parameter);
-                switch (type.typeCode()) {
-                    case TYPE_CODE_BOOLEAN:
-                    case TYPE_CODE_BYTE:
-                    case TYPE_CODE_INT:
-                    case TYPE_CODE_LONG:
-                    case TYPE_CODE_BIG_INTEGER:
-                    case TYPE_CODE_BIG_DECIMAL:
-                        parameter.put("value", callParameter.toString());
-                        break;
-                    case TYPE_CODE_ARRAY:
-                        parameter.put("value", decodeArrayType((ArrayType) type, (Object[]) callParameter));
-                        break;
-                    case TYPE_CODE_TUPLE:
-                        parameter.put("type", "tuple");
-                        parameter.put("value", decodeTuple((TupleType) type, (Tuple) callParameter));
-                }
+//                switch (type.typeCode()) {
+//                    case TYPE_CODE_BOOLEAN:
+//                    case TYPE_CODE_BYTE:
+//                    case TYPE_CODE_INT:
+//                    case TYPE_CODE_LONG:
+//                    case TYPE_CODE_BIG_INTEGER:
+//                    case TYPE_CODE_BIG_DECIMAL:
+//                        parameter.put("value", callParameter.toString());
+//                        break;
+//                    case TYPE_CODE_ARRAY:
+//                        parameter.put("value", decodeArrayType((ArrayType) type, (Object[]) callParameter));
+//                        break;
+//                    case TYPE_CODE_TUPLE:
+//                        parameter.put("type", "tuple");
+//                        parameter.put("value", decodeTuple((TupleType) type, (Tuple) callParameter));
+//                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }

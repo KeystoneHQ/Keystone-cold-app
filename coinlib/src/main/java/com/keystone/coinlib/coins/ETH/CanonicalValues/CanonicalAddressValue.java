@@ -16,6 +16,6 @@ public class CanonicalAddressValue extends CanonicalValue {
 
     @Override
     public void resolveValueToJSONObject(Object value, JSONObject jsonObject) throws JSONException {
-        jsonObject.put("value", Hex.toHexString(ByteUtil.bigIntegerToBytes((BigInteger) value, 20)));
+        jsonObject.put("value", "0x" + Hex.toHexString(ByteUtil.bigIntegerToBytes((BigInteger) value, 20)));
     }
 }

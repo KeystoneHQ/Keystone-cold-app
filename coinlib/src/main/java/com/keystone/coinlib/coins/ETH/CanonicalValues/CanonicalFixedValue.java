@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.math.BigDecimal;
 
 public class CanonicalFixedValue extends CanonicalValue {
+
     CanonicalFixedValue(ABIType canonicalType) {
         super(canonicalType);
     }
