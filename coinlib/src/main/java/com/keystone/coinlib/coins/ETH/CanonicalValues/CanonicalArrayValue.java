@@ -2,7 +2,6 @@ package com.keystone.coinlib.coins.ETH.CanonicalValues;
 
 import com.esaulpaugh.headlong.abi.ABIType;
 import com.esaulpaugh.headlong.abi.ArrayType;
-import com.esaulpaugh.headlong.abi.Tuple;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,14 +13,14 @@ import java.util.stream.Stream;
 
 public class CanonicalArrayValue extends CanonicalValue {
     int count;
-    CanonicalValue[] canonicalValuesOne;
+    List<CanonicalValue> canonicalValuesOne;
     CanonicalValue[][] canonicalValuesTwo;
     CanonicalArrayValue(ABIType abiType) {
         super(abiType);
         ArrayType arrayType = (ArrayType) abiType;
         count = getCount(abiType.getCanonicalType());
         if (count == 1) {
-            canonicalValuesOne = Stream.of(arrayType.getElementType()).map(CanonicalValue::getCanonicalValue).toArray(CanonicalValue[]::new);
+            canonicalValuesOne = Stream.of(arrayType.getElementType()).map(CanonicalValue::getCanonicalValue).collect(Collectors.toList());
         } else if (count == 2) {
             canonicalValuesTwo = Stream.of(arrayType.getElementType()).map(CanonicalValue::getCanonicalValue).toArray(CanonicalValue[][]::new);
         }
@@ -32,14 +31,12 @@ public class CanonicalArrayValue extends CanonicalValue {
         if (count == 1) {
             JSONArray jsonArray = new JSONArray();
             Object[] objects = (Object[]) value;
-            for (int i = 0; i < canonicalValuesOne.length; i++) {
+            CanonicalValue canonicalValue = canonicalValuesOne.get(0);
+            for (int i = 0; i < objects.length; i++) {
                 Object subValue = objects[i];
                 JSONObject subObject = new JSONObject();
-                CanonicalValue subType = canonicalValuesOne[i];
-                subObject.put("name", subType.canonicalType.getName());
-                subObject.put("type", subType.canonicalType.getCanonicalType());
-                canonicalValuesOne[i].resolveValueToJSONObject(subValue, subObject);
-                jsonArray.put(subObject);
+                canonicalValue.resolveValueToJSONObject(subValue, subObject);
+                jsonArray.put(subObject.optString("value"));
             }
             jsonObject.put("value", jsonArray);
         } else if (count == 2) {

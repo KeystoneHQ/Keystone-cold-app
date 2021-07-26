@@ -19,6 +19,8 @@
 
 package com.keystone.cold.ui.fragment.main;
 
+import android.text.TextUtils;
+
 import com.keystone.cold.viewmodel.EthTxConfirmViewModel;
 
 import org.json.JSONArray;
@@ -41,13 +43,20 @@ public class AbiItemAdapter {
         try {
             JSONArray params = tx.getJSONArray("param");
             List<AbiItem> items = new ArrayList<>();
-            items.add(new AbiItem("method", tx.getString("method"), "method"));
+            String method = tx.optString("method");
+            if (!TextUtils.isEmpty(method)) {
+                items.add(new AbiItem("method", tx.getString("method"), "method"));
+            }
             for (int i = 0; i < params.length(); i++) {
                 JSONObject param = params.getJSONObject(i);
                 String name = param.getString("name");
                 String type = param.getString("type");
                 Object value = param.get("value");
-                if (value instanceof JSONArray) {
+                if (TextUtils.equals("tuple", type)) {
+                    JSONObject tupleObject = new JSONObject();
+                    tupleObject.put("param", addParamsName(value));
+                    items.addAll(adapt(tupleObject));
+                } else if (value instanceof JSONArray) {
                     JSONArray arr = (JSONArray) value;
                     StringBuilder concatValue = new StringBuilder();
                     for (int j = 0; j < arr.length(); j++) {
@@ -84,6 +93,22 @@ public class AbiItemAdapter {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private Object addParamsName(Object value) {
+        try {
+            if (value instanceof JSONArray) {
+                JSONArray jsonArray = (JSONArray) value;
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    String name = jsonObject.getString("name");
+                    jsonObject.put("name", "params." + name);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return value;
     }
 
     public static class AbiItem{

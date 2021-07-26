@@ -33,6 +33,7 @@ public class CanonicalTupleValue extends CanonicalValue {
             elementTypes.get(i).resolveValueToJSONObject(subValue, subObject);
             jsonArray.put(subObject);
         }
+        jsonObject.put("type", "tuple");
         jsonObject.put("value", jsonArray);
     }
 }
