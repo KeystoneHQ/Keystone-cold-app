@@ -261,12 +261,14 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
             spannable.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.icon_select)), matcher.start() - 1,
                     matcher.end() + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 
-        matcher = pattern1.matcher(spannable);
-        while (matcher.find()) {
-            spannable.replace(matcher.start() - 1, matcher.start(), "(");
-            spannable.replace(matcher.end(), matcher.end() + 1, ")");
-            spannable.setSpan(new ForegroundColorSpan(Color.RED), matcher.start() - 1,
-                    matcher.end() + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        if (content.contains("Unknown") || content.contains("Inconsistent")) {
+            matcher = pattern1.matcher(spannable);
+            while (matcher.find()) {
+                spannable.replace(matcher.start() - 1, matcher.start(), "(");
+                spannable.replace(matcher.end(), matcher.end() + 1, ")");
+                spannable.setSpan(new ForegroundColorSpan(Color.RED), matcher.start() - 1,
+                        matcher.end() + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            }
         }
         return spannable;
     }
