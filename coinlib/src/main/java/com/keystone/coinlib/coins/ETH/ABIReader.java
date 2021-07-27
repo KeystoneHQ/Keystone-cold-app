@@ -8,6 +8,7 @@ import com.esaulpaugh.headlong.abi.ArrayType;
 import com.esaulpaugh.headlong.abi.Function;
 import com.esaulpaugh.headlong.abi.Tuple;
 import com.esaulpaugh.headlong.abi.TupleType;
+import com.keystone.coinlib.coins.ETH.CanonicalValues.CanonicalValue;
 
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONArray;
@@ -46,7 +47,7 @@ public class ABIReader {
             }
             String methodId = noPrefix.substring(0, 8);
             Function entry = functions.get(methodId);
-            Tuple result = entry.decodeCall(Hex.decode(data));
+            Tuple result = entry.decodeCall(Hex.decode(noPrefix));
             return new DecodedFunctionCall(entry, result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -99,22 +100,8 @@ public class ABIReader {
             try {
                 parameter.put("name", type.getName());
                 parameter.put("type", type.getCanonicalType());
-                switch (type.typeCode()) {
-                    case TYPE_CODE_BOOLEAN:
-                    case TYPE_CODE_BYTE:
-                    case TYPE_CODE_INT:
-                    case TYPE_CODE_LONG:
-                    case TYPE_CODE_BIG_INTEGER:
-                    case TYPE_CODE_BIG_DECIMAL:
-                        parameter.put("value", callParameter.toString());
-                        break;
-                    case TYPE_CODE_ARRAY:
-                        parameter.put("value", decodeArrayType((ArrayType) type, (Object[]) callParameter));
-                        break;
-                    case TYPE_CODE_TUPLE:
-                        parameter.put("type", "tuple");
-                        parameter.put("value", decodeTuple((TupleType) type, (Tuple) callParameter));
-                }
+                CanonicalValue value = CanonicalValue.getCanonicalValue(type);
+                value.resolveValueToJSONObject(callParameter, parameter);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
