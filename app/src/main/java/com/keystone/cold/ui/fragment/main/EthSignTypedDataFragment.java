@@ -21,6 +21,7 @@ package com.keystone.cold.ui.fragment.main;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.lifecycle.LiveData;
@@ -87,7 +88,12 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
                 mBinding.primaryType.setText(messageData.getString("primaryType"));
                 mBinding.network.setText(viewModel.getNetwork(domain.optInt("chainId", 1)));
                 mBinding.name.setText(domain.optString("name"));
-                mBinding.verifyingContract.setText(highLight(recognizeAddress(domain.getString("verifyingContract"))));
+                String verifyingContract = domain.optString("verifyingContract", "");
+                if (TextUtils.isEmpty(verifyingContract)) {
+                    mBinding.verifyingContractContainer.setVisibility(View.GONE);
+                } else {
+                    mBinding.verifyingContract.setText(highLight(recognizeAddress(verifyingContract)));
+                }
                 String message = messageData.getJSONObject("message").toString(2);
                 mBinding.message.setText(highLight(recognizeAddressInText(message)));
                 liveData.removeObservers(EthSignTypedDataFragment.this);

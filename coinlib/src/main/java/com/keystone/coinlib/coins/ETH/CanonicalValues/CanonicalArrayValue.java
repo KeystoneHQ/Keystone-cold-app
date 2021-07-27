@@ -7,29 +7,69 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigInteger;
+
 public class CanonicalArrayValue extends CanonicalValue {
-    CanonicalValue canonicalValue;
+    CanonicalValue elementValue;
 
     CanonicalArrayValue(ABIType abiType) {
         super(abiType);
         ArrayType arrayType = (ArrayType) abiType;
-        canonicalValue = CanonicalValue.getCanonicalValue(arrayType.getElementType());
+        elementValue = CanonicalValue.getCanonicalValue(arrayType.getElementType());
     }
 
     @Override
     public void resolveValueToJSONObject(Object value, JSONObject jsonObject) throws JSONException {
         JSONArray jsonArray = new JSONArray();
-        JSONArray valueArray;
-        if (value instanceof JSONArray) {
-            valueArray = (JSONArray)value;
-        } else {
-            valueArray = new JSONArray(value);
-        }
-        for (int i = 0; i < valueArray.length(); i++) {
-            Object subValues = valueArray.get(i);
-            JSONObject subObject = new JSONObject();
-            canonicalValue.resolveValueToJSONObject(subValues, subObject);
-            jsonArray.put(subObject.opt("value"));
+        switch (elementValue.canonicalType.typeCode()) {
+            case ABIType.TYPE_CODE_BOOLEAN: {
+                boolean[] valueArray = (boolean[]) value;
+                for (Object subValues : valueArray) {
+                    JSONObject subObject = new JSONObject();
+                    elementValue.resolveValueToJSONObject(subValues, subObject);
+                    jsonArray.put(subObject.opt("value"));
+                }
+                break;
+            }
+            case ABIType.TYPE_CODE_INT: {
+                int[] valueArray = (int[]) value;
+                for (Object subValues : valueArray) {
+                    JSONObject subObject = new JSONObject();
+                    elementValue.resolveValueToJSONObject(subValues, subObject);
+                    jsonArray.put(subObject.opt("value"));
+                }
+                break;
+            }
+            case ABIType.TYPE_CODE_LONG: {
+                long[] valueArray = (long[]) value;
+                for (Object subValues : valueArray) {
+                    JSONObject subObject = new JSONObject();
+                    elementValue.resolveValueToJSONObject(subValues, subObject);
+                    jsonArray.put(subObject.opt("value"));
+                }
+                break;
+            }
+            case ABIType.TYPE_CODE_BYTE: {
+                byte[] valueArray = (byte[]) value;
+                for (Object subValues : valueArray) {
+                    JSONObject subObject = new JSONObject();
+                    elementValue.resolveValueToJSONObject(subValues, subObject);
+                    jsonArray.put(subObject.opt("value"));
+                }
+                break;
+            }
+            case ABIType.TYPE_CODE_BIG_INTEGER:
+            case ABIType.TYPE_CODE_BIG_DECIMAL:
+            case ABIType.TYPE_CODE_ARRAY:
+            case ABIType.TYPE_CODE_TUPLE: {
+                Object[] valueArray = (Object[]) value;
+                for (Object subValues : valueArray) {
+                    JSONObject subObject = new JSONObject();
+                    elementValue.resolveValueToJSONObject(subValues, subObject);
+                    jsonArray.put(subObject.opt("value"));
+                }
+            }
+
         }
         jsonObject.put("value", jsonArray);
     }
