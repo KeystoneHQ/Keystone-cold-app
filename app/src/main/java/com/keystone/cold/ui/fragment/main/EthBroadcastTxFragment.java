@@ -28,15 +28,19 @@ import androidx.lifecycle.ViewModelProviders;
 import com.keystone.cold.R;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
+import com.sparrowwallet.hummingbird.registry.EthSignature;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
+import java.nio.ByteBuffer;
+import java.util.UUID;
 
 public class EthBroadcastTxFragment extends BroadcastTxFragment {
+    public static final String KEY_SIGNATURE_JSON = "SignatureJson";
+    private String messageSignature;
+
     @Override
     protected int setView() {
         return R.layout.broadcast_tx_fragment;
@@ -48,21 +52,18 @@ public class EthBroadcastTxFragment extends BroadcastTxFragment {
         watchWallet = WatchWallet.getWatchWallet(mActivity);
         mBinding.toolbar.setNavigationOnClickListener(goHome);
         mBinding.complete.setOnClickListener(goHome);
-
         String txId = data.getString(KEY_TXID);
-        String messageSignature = data.getString("MessageSignature");
+        messageSignature = data.getString(KEY_SIGNATURE_JSON);
+        mBinding.qrcodeLayout.qrcode.setData(getSignedTxData());
         if (!TextUtils.isEmpty(txId)) {
             ViewModelProviders.of(mActivity).get(CoinListViewModel.class)
                     .loadTx(data.getString(KEY_TXID)).observe(this, txEntity -> {
                 mBinding.setCoinCode(txEntity.getCoinCode());
                 this.txEntity = txEntity;
                 refreshUI();
-                mBinding.qrcodeLayout.qrcode.setData(getSignedTxData());
             });
-        } else if (!TextUtils.isEmpty(messageSignature)){
-            mBinding.qrcodeLayout.qrcode.setData(Hex.toHexString(messageSignature.getBytes(StandardCharsets.UTF_8)));
         }
-        mBinding.toolbar.setNavigationOnClickListener(v -> popBackStack(R.id.assetFragment,false));
+        mBinding.toolbar.setNavigationOnClickListener(v -> popBackStack(R.id.assetFragment, false));
         mBinding.broadcastHint.setText(R.string.sync_with_metamask);
         mBinding.icon.setImageDrawable(mActivity.getDrawable(R.drawable.coin_eth));
     }
@@ -75,10 +76,15 @@ public class EthBroadcastTxFragment extends BroadcastTxFragment {
     @Override
     public String getSignedTxData() {
         try {
-            JSONObject signed = new JSONObject(txEntity.getSignedHex());
-            signed.remove("abi");
-            signed.remove("chainId");
-            return Hex.toHexString(signed.toString().getBytes(StandardCharsets.UTF_8));
+            JSONObject messageSignatureJson = new JSONObject(messageSignature);
+            byte[] signature = Hex.decode(messageSignatureJson.getString("signature"));
+            UUID uuid = UUID.fromString(messageSignatureJson.getString("signId"));
+            ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
+            byteBuffer.putLong(uuid.getMostSignificantBits());
+            byteBuffer.putLong(uuid.getLeastSignificantBits());
+            byte[] requestId = byteBuffer.array();
+            EthSignature ethSignature = new EthSignature(signature, requestId);
+            return ethSignature.toUR().toString();
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -27,6 +27,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.keystone.coinlib.abi.AbiLoadManager;
+import com.keystone.coinlib.abi.Contract;
 import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.coins.ETH.Network;
 import com.keystone.coinlib.coins.SignTxResult;
@@ -36,7 +38,6 @@ import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.path.CoinPath;
 import com.keystone.coinlib.utils.Coins;
-import com.keystone.coinlib.utils.ContractExternalDbLoader;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.ClearTokenCallable;
@@ -48,21 +49,25 @@ import com.keystone.cold.encryption.ChipSigner;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.spongycastle.util.encoders.Hex;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
 import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
-import static com.keystone.cold.ui.fragment.main.TxConfirmFragment.KEY_TX_DATA;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.HD_PATH;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.REQUEST_ID;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.SIGN_DATA;
 
 public class EthTxConfirmViewModel extends TxConfirmViewModel {
     private final MutableLiveData<Boolean> addingAddress = new MutableLiveData<>();
     private JSONArray tokensMap;
-    private JSONObject contractMap;
     private String hdPath;
     private String signId;
+    private String signature;
     private String txHex;
     private int chainId;
     private JSONObject abi;
@@ -70,7 +75,6 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     @SuppressLint("StaticFieldLeak")
     private final Context context;
     private String messageData;
-    private String messageSignature;
     private String fromAddress;
     private String inputData;
     private boolean isFromTFCard;
@@ -84,7 +88,6 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     protected void readPresetContactInfo() {
         try {
             tokensMap = new JSONArray(readAsset("abi/token_address_book.json"));
-            contractMap = new JSONObject(readAsset("abi/abiMap.json"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -92,10 +95,6 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
 
     public JSONArray getTokensMap() {
         return tokensMap;
-    }
-
-    public JSONObject getContractMap() {
-        return contractMap;
     }
 
     public String recognizeAddress(String to) {
@@ -109,21 +108,12 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                     break;
                 }
             }
-            if (addressSymbol == null) {
-                JSONObject bundleMap = getContractMap();
-                String abiFile = bundleMap.optString(to.toLowerCase());
-                if (!TextUtils.isEmpty(abiFile)) {
-                    addressSymbol = abiFile.replace(".json", "");
-                } else {
-                    ContractExternalDbLoader.Contract contract = ContractExternalDbLoader.contractData(to);
-                    addressSymbol = contract.getName();
-                }
+            if (TextUtils.isEmpty(addressSymbol)) {
+                Contract contract = new AbiLoadManager(to).loadAbi();
+                addressSymbol = contract.getName();
             }
             if (addressSymbol != null && addressSymbol.length() > 25) {
-                String abbreviationString = addressSymbol.substring(0, 10) +
-                        "..." +
-                        addressSymbol.substring(addressSymbol.length() - 10);
-                addressSymbol = abbreviationString;
+                addressSymbol = addressSymbol.substring(0, 10) + "..." + addressSymbol.substring(addressSymbol.length() - 10);
             }
             return addressSymbol;
         } catch (JSONException e) {
@@ -155,11 +145,9 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     public void parseTxData(Bundle bundle) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             try {
-                JSONObject object = new JSONObject(bundle.getString(KEY_TX_DATA));
-                Log.i(TAG, "object = " + object.toString(4));
-                hdPath = object.getString("hdPath");
-                signId = object.getString("signId");
-                txHex = object.getString("txHex");
+                txHex = bundle.getString(SIGN_DATA);
+                hdPath = bundle.getString(HD_PATH);
+                signId = bundle.getString(REQUEST_ID);
                 JSONObject ethTx = EthImpl.decodeRawTransaction(txHex, () -> isFromTFCard = true);
                 if (ethTx == null) {
                     observableTx.postValue(null);
@@ -181,17 +169,44 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         });
     }
 
-    public MutableLiveData<JSONObject> parseMessageData(String s) {
+    public MutableLiveData<JSONObject> parseEIP712TypedData(Bundle bundle) {
         MutableLiveData<JSONObject> observableObject = new MutableLiveData<>();
         AppExecutors.getInstance().networkIO().execute(() -> {
             try {
-                JSONObject object = new JSONObject(s);
-                Log.i(TAG, "object = " + object.toString(4));
-                hdPath = object.getString("hdPath");
-                signId = object.getString("signId");
-                messageData = object.getJSONObject("data").toString();
-                chainId = object.getJSONObject("data").getJSONObject("domain").optInt("chainId", 1);
+                String typedDataHex = bundle.getString(SIGN_DATA);
+                hdPath = bundle.getString(HD_PATH);
+                signId = bundle.getString(REQUEST_ID);
                 fromAddress = getFromAddress(hdPath);
+                messageData = new String(Hex.decode(typedDataHex), StandardCharsets.UTF_8);
+                JSONObject typedData = new JSONObject(new String(Hex.decode(typedDataHex), StandardCharsets.UTF_8));
+                chainId = typedData.getJSONObject("domain").optInt("chainId", 1);
+
+                JSONObject object = new JSONObject();
+                object.put("hdPath", hdPath);
+                object.put("signId", signId);
+                object.put("data", messageData);
+                observableObject.postValue(object);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                observableObject.postValue(null);
+                parseTxException.postValue(e);
+            }
+        });
+        return observableObject;
+    }
+
+    public MutableLiveData<JSONObject> parseRawMessage(Bundle bundle) {
+        MutableLiveData<JSONObject> observableObject = new MutableLiveData<>();
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            try {
+                hdPath = bundle.getString(HD_PATH);
+                signId = bundle.getString(REQUEST_ID);
+                messageData = bundle.getString(SIGN_DATA);
+                fromAddress = getFromAddress(hdPath);
+                JSONObject object = new JSONObject();
+                object.put("hdPath", hdPath);
+                object.put("signId", signId);
+                object.put("data", messageData);
                 observableObject.postValue(object);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -286,7 +301,39 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         });
     }
 
-    public void handleSignMessage() {
+    public void handleSignEIP712TypedData() {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            SignCallback callback = new SignCallback() {
+                @Override
+                public void startSign() {
+                    signState.postValue(STATE_SIGNING);
+                }
+
+                @Override
+                public void onFail() {
+                    signState.postValue(STATE_SIGN_FAIL);
+                    new ClearTokenCallable().call();
+                }
+
+                @Override
+                public void onSuccess(String txId, String sig) {
+                    signature = sig;
+                    signState.postValue(STATE_SIGN_SUCCESS);
+                    new ClearTokenCallable().call();
+                }
+
+                @Override
+                public void postProgress(int progress) {
+
+                }
+            };
+            callback.startSign();
+            Signer signer = initSigner();
+            signEIP712TypedData(callback, signer);
+        });
+    }
+
+    public void handleSignPersonalMessage() {
         AppExecutors.getInstance().diskIO().execute(() -> {
             SignCallback callback = new SignCallback() {
                 @Override
@@ -314,14 +361,14 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
             };
             callback.startSign();
             Signer signer = initSigner();
-            signMessage(callback, signer);
+            signPersonalMessage(callback, signer);
         });
     }
 
-    public String getMessageSignature() {
+    public String getSignatureJson() {
         JSONObject signed = new JSONObject();
         try {
-            signed.put("signature", messageSignature);
+            signed.put("signature", signature);
             signed.put("signId", signId);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -334,6 +381,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         this.txId = txId;
         Objects.requireNonNull(tx).setTxId(txId);
         JSONObject signed = new JSONObject();
+        signature = EthImpl.getSignature(rawTx);
         try {
             signed.put("signature", EthImpl.getSignature(rawTx));
             signed.put("signId", signId);
@@ -362,12 +410,25 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         }
     }
 
-    private void signMessage(@NonNull SignCallback callback, Signer signer) {
+    private void signEIP712TypedData(@NonNull SignCallback callback, Signer signer) {
         if (signer == null) {
             callback.onFail();
             return;
         }
-        String sig = new EthImpl(chainId).signMessage(messageData, signer);
+        String sig = new EthImpl(chainId).signEIP712TypedData(messageData, signer);
+        if (sig == null) {
+            callback.onFail();
+        } else {
+            callback.onSuccess(sig, sig);
+        }
+    }
+
+    private void signPersonalMessage(@NonNull SignCallback callback, Signer signer) {
+        if (signer == null) {
+            callback.onFail();
+            return;
+        }
+        String sig = new EthImpl(chainId).signPersonalMessage(messageData, signer);
         if (sig == null) {
             callback.onFail();
         } else {

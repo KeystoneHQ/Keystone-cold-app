@@ -23,13 +23,14 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import com.keystone.coinlib.abi.AbiLoadManager;
+import com.keystone.coinlib.abi.Contract;
 import com.keystone.coinlib.coins.AbsTx;
 import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.interfaces.Coin;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.utils.Coins;
-import com.keystone.coinlib.utils.ContractExternalDbLoader;
 
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONException;
@@ -118,40 +119,28 @@ public class EthImpl implements Coin {
             metaData.put("gasPrice", rawTx.getGasPrice().toString());
             metaData.put("gasLimit", rawTx.getGasLimit().toString());
             metaData.put("value", rawTx.getValue().toString());
-            //decode data
-            String contractName = null;
-            String abi = null;
-            ABIReader abiReader = new ABIReader();
-
-            JSONObject bundleMap = new JSONObject(readAsset("abi/abiMap.json"));
-            String abiFile = bundleMap.optString(rawTx.getTo());
-
-            if (!TextUtils.isEmpty(abiFile)) {
-                abi = readAsset("abi/" + abiFile);
-                contractName = abiFile.replace(".json", "");
-            } else {
-                ContractExternalDbLoader.Contract contract = ContractExternalDbLoader.contractData(rawTx.getTo());
-                abi = contract.getAbi();
-                contractName = contract.getName();
-                if (!TextUtils.isEmpty(abi) && callback != null) {
-                    callback.fromTFCard();
-                }
+            AbiLoadManager abiLoadManager = new AbiLoadManager(rawTx.getTo());
+            Contract contract = abiLoadManager.loadAbi();
+            if (contract.isFromTFCard() && callback != null) {
+                callback.fromTFCard();
             }
-
-            if (TextUtils.isEmpty(abi)) {
+            if (contract.isEmpty()) {
                 //try decode with erc20 abi
-                abi = readAsset("abi/Erc20.json");
-                contractName = "Erc20";
+                contract.setAbi(readAsset("abi/Erc20.json"));
+                contract.setName("Erc20");
             }
+
+            //decode data
+            ABIReader abiReader = new ABIReader();
             try {
-                abiReader.addABI(abi);
+                abiReader.addABI(contract.getAbi());
             } catch (RuntimeException e) {
                 metaData.put("data", rawTx.getData());
             }
             ABIReader.DecodedFunctionCall call = abiReader.decodeCall(rawTx.getData());
             if (call != null) {
                 JSONObject data = call.toJson();
-                data.put("contract", contractName);
+                data.put("contract", contract.getName());
                 metaData.put("data", data.toString());
             } else {
                 metaData.put("data", rawTx.getData());
@@ -247,6 +236,10 @@ public class EthImpl implements Coin {
 
     @Override
     public String signMessage(@NonNull String message, Signer signer) {
+        return signPersonalMessage(message, signer);
+    }
+
+    public String signEIP712TypedData(@NonNull String message, Signer signer) {
         try {
             byte[] messageHash = new StructuredDataEncoder(message).hashStructuredData();
             String signature = signer.sign(Hex.toHexString(messageHash));
@@ -266,9 +259,11 @@ public class EthImpl implements Coin {
         return Hex.toHexString(sigBytes);
     }
 
-    private byte[] hashPersonalMessage(String message) {
-        String prefix = "\u0019Ethereum Signed Message:\n" + message.length();
-        return Hash.sha3((prefix + message).getBytes(StandardCharsets.UTF_8));
+    private byte[] hashPersonalMessage(String messageHex) {
+        byte[] message = Hex.decode(messageHex);
+        String prefix = "\u0019Ethereum Signed Message:\n" + message.length;
+        byte[] rawData = concat(prefix.getBytes(StandardCharsets.UTF_8), message);
+        return Hash.sha3(rawData);
     }
 
     @Override
