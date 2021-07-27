@@ -301,7 +301,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         });
     }
 
-    public void handleSignMessage() {
+    public void handleSignEIP712TypedData() {
         AppExecutors.getInstance().diskIO().execute(() -> {
             SignCallback callback = new SignCallback() {
                 @Override
@@ -329,7 +329,39 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
             };
             callback.startSign();
             Signer signer = initSigner();
-            signMessage(callback, signer);
+            signEIP712TypedData(callback, signer);
+        });
+    }
+
+    public void handleSignPersonalMessage() {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            SignCallback callback = new SignCallback() {
+                @Override
+                public void startSign() {
+                    signState.postValue(STATE_SIGNING);
+                }
+
+                @Override
+                public void onFail() {
+                    signState.postValue(STATE_SIGN_FAIL);
+                    new ClearTokenCallable().call();
+                }
+
+                @Override
+                public void onSuccess(String txId, String sig) {
+                    messageSignature = sig;
+                    signState.postValue(STATE_SIGN_SUCCESS);
+                    new ClearTokenCallable().call();
+                }
+
+                @Override
+                public void postProgress(int progress) {
+
+                }
+            };
+            callback.startSign();
+            Signer signer = initSigner();
+            signPersonalMessage(callback, signer);
         });
     }
 
@@ -378,12 +410,25 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         }
     }
 
-    private void signMessage(@NonNull SignCallback callback, Signer signer) {
+    private void signEIP712TypedData(@NonNull SignCallback callback, Signer signer) {
         if (signer == null) {
             callback.onFail();
             return;
         }
-        String sig = new EthImpl(chainId).signMessage(messageData, signer);
+        String sig = new EthImpl(chainId).signEIP712TypedData(messageData, signer);
+        if (sig == null) {
+            callback.onFail();
+        } else {
+            callback.onSuccess(sig, sig);
+        }
+    }
+
+    private void signPersonalMessage(@NonNull SignCallback callback, Signer signer) {
+        if (signer == null) {
+            callback.onFail();
+            return;
+        }
+        String sig = new EthImpl(chainId).signPersonalMessage(messageData, signer);
         if (sig == null) {
             callback.onFail();
         } else {

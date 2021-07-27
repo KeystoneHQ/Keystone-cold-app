@@ -236,6 +236,10 @@ public class EthImpl implements Coin {
 
     @Override
     public String signMessage(@NonNull String message, Signer signer) {
+        return signPersonalMessage(message, signer);
+    }
+
+    public String signEIP712TypedData(@NonNull String message, Signer signer) {
         try {
             byte[] messageHash = new StructuredDataEncoder(message).hashStructuredData();
             String signature = signer.sign(Hex.toHexString(messageHash));
@@ -255,9 +259,11 @@ public class EthImpl implements Coin {
         return Hex.toHexString(sigBytes);
     }
 
-    private byte[] hashPersonalMessage(String message) {
-        String prefix = "\u0019Ethereum Signed Message:\n" + message.length();
-        return Hash.sha3((prefix + message).getBytes(StandardCharsets.UTF_8));
+    private byte[] hashPersonalMessage(String messageHex) {
+        byte[] message = Hex.decode(messageHex);
+        String prefix = "\u0019Ethereum Signed Message:\n" + message.length;
+        byte[] rawData = concat(prefix.getBytes(StandardCharsets.UTF_8), message);
+        return Hash.sha3(rawData);
     }
 
     @Override
