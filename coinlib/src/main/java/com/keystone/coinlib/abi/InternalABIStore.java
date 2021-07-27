@@ -9,24 +9,25 @@ import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
 
 public class InternalABIStore implements ABIStoreEngine {
     private String address;
-    private JSONObject bundleMap;
 
     public InternalABIStore(String address) {
         this.address = address;
-        try {
-            bundleMap = new JSONObject(readAsset("abi/abiMap.json"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public Contract load() {
         Contract contract = new Contract();
-        String abiFile = bundleMap.optString(address);
-        if (!TextUtils.isEmpty(abiFile)) {
-            contract.setAbi(readAsset("abi/" + abiFile));
-            contract.setName(abiFile.replace(".json", ""));
+        String content = readAsset("abi/" + address + ".json");
+        if (!TextUtils.isEmpty(content)) {
+            try {
+                JSONObject contentJson = new JSONObject(content);
+                JSONObject metadataJson = contentJson.getJSONObject("metadata");
+                JSONObject outputJson = metadataJson.getJSONObject("output");
+                contract.setAbi(outputJson.getString("abi"));
+                contract.setName(contentJson.getString("name"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         return contract;
     }

@@ -1,0 +1,1 @@
+{"name": "Convex Multisig", "address": "0xa3C5A1e09150B75ff251c1a7815A07182c3de2FB", "metadata": {"output": {"abi": [{"inputs": [{"internalType": "address", "name": "_masterCopy", "type": "address"}], "payable": false, "stateMutability": "nonpayable", "type": "constructor"}, {"payable": true, "stateMutability": "payable", "type": "fallback"}]}}, "version": 1, "checkPoints": []}
