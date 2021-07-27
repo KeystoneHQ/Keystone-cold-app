@@ -27,7 +27,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,8 +62,6 @@ public class AbiItemAdapter {
                     for (int j = 0; j < arr.length(); j++) {
                         String item = arr.getString(j);
                         if ("address[]".equals(type)) {
-                            BigInteger bigInteger = new BigInteger(item);
-                            item = "0x" + bigInteger.toString(16);
                             String addressSymbol = viewModel.recognizeAddress(item);
                             if (addressSymbol != null) {
                                 item += String.format(" (%s)", addressSymbol);
@@ -81,8 +78,6 @@ public class AbiItemAdapter {
                 } else {
                     String item = value.toString();
                     if ("address".equals(type)) {
-                        BigInteger bigInteger = new BigInteger(item);
-                        item = "0x" + bigInteger.toString(16);
                         String addressSymbol = viewModel.recognizeAddress(item);
                         if (addressSymbol != null) {
                             item += String.format(" (%s)", addressSymbol);

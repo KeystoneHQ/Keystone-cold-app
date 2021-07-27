@@ -349,7 +349,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
 
                 @Override
                 public void onSuccess(String txId, String sig) {
-                    messageSignature = sig;
+                    signature = sig;
                     signState.postValue(STATE_SIGN_SUCCESS);
                     new ClearTokenCallable().call();
                 }

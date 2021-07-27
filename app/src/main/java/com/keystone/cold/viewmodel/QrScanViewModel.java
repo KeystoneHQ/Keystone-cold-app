@@ -42,6 +42,9 @@ import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.HD_PATH;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.REQUEST_ID;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.SIGN_DATA;
 import static com.keystone.cold.ui.fragment.main.TxConfirmFragment.KEY_TX_DATA;
 import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
 
@@ -148,6 +151,13 @@ public class QrScanViewModel extends AndroidViewModel {
         }
         Bundle bundle = new Bundle();
         bundle.putString(KEY_TX_DATA, object.toString());
+        try {
+            bundle.putString(SIGN_DATA, object.getString("txHex"));
+            bundle.putString(HD_PATH, object.getString("hdPath"));
+            bundle.putString(REQUEST_ID, object.getString("signId"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         AppExecutors.getInstance().mainThread().execute(() -> fragment.navigate(R.id.action_to_ethTxConfirmFragment, bundle));
     }
 

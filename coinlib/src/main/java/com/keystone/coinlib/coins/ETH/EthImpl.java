@@ -182,19 +182,6 @@ public class EthImpl implements Coin {
         }
     }
 
-    private static String getAbi(String contractAddress) {
-        try {
-            JSONObject bundleMap = new JSONObject(readAsset("abi/abiMap.json"));
-            String abiFile = bundleMap.optString(contractAddress);
-            if (!TextUtils.isEmpty(abiFile)) {
-                return readAsset("abi/" + abiFile);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public byte[] signTransaction(RawTransaction transaction, Signer signer) {
         byte[] encodedTransaction = TransactionEncoder.encode(transaction, chainId);
         byte[] transactionHash = Hash.sha3(encodedTransaction);
