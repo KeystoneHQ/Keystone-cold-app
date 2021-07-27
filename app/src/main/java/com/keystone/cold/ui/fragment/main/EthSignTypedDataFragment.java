@@ -82,7 +82,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
     private void onMessageParsed(LiveData<JSONObject> liveData, JSONObject jsonObject) {
         if (jsonObject != null) {
             try {
-                JSONObject messageData = jsonObject.getJSONObject("data");
+                JSONObject messageData = new JSONObject(jsonObject.getString("data"));
                 JSONObject domain = messageData.getJSONObject("domain");
                 mBinding.primaryType.setText(messageData.getString("primaryType"));
                 mBinding.network.setText(viewModel.getNetwork(domain.optInt("chainId", 1)));
@@ -91,7 +91,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
                 String message = messageData.getJSONObject("message").toString(2);
                 mBinding.message.setText(highLight(recognizeAddressInText(message)));
                 liveData.removeObservers(EthSignTypedDataFragment.this);
-            } catch (JSONException e){
+            } catch (JSONException e) {
                 e.printStackTrace();
                 handleParseException(e);
             }
@@ -130,20 +130,20 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
             String address = matcher.group();
             String symbol = viewModel.recognizeAddress(address);
             if (symbol != null) {
-               recognized.put(address, symbol);
-            } else if (address.equalsIgnoreCase(viewModel.getFromAddress())){
+                recognized.put(address, symbol);
+            } else if (address.equalsIgnoreCase(viewModel.getFromAddress())) {
                 //do nothing
-            }else {
+            } else {
                 unknown.add(address);
             }
         }
 
-        for (String s: recognized.keySet()) {
-            text = text.replace(s, s+String.format(" (%s)", recognized.get(s)));
+        for (String s : recognized.keySet()) {
+            text = text.replace(s, s + String.format(" (%s)", recognized.get(s)));
         }
 
-        for (String s: unknown) {
-            text = text.replace(s, s +" [Unknown Address]");
+        for (String s : unknown) {
+            text = text.replace(s, s + " [Unknown Address]");
         }
 
         return text;

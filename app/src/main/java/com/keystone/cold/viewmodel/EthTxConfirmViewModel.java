@@ -178,7 +178,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                 signId = bundle.getString(REQUEST_ID);
                 fromAddress = getFromAddress(hdPath);
                 messageData = new String(Hex.decode(typedDataHex), StandardCharsets.UTF_8);
-                JSONObject typedData = new JSONObject(new String(Hex.decode(typedDataHex), StandardCharsets.UTF_8));
+                JSONObject typedData = new JSONObject(messageData);
                 chainId = typedData.getJSONObject("domain").optInt("chainId", 1);
 
                 JSONObject object = new JSONObject();
