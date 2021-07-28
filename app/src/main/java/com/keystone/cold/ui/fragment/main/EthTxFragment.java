@@ -66,8 +66,7 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
     protected void init(View view) {
         Bundle bundle = requireArguments();
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
-        mBinding.broadcastHint.setText(getString(R.string.please_broadcast_with_hot,
-                WatchWallet.METAMASK.getWalletName(mActivity)));
+        mBinding.broadcastHint.setText(getString(R.string.please_broadcast_with_hot));
         ViewModelProviders.of(mActivity).get(CoinListViewModel.class)
                 .loadTx(bundle.getString(KEY_TX_ID)).observe(this, txEntity -> {
             this.txEntity = txEntity;

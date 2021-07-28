@@ -56,8 +56,7 @@ public class PolkadotTxFragment extends BaseFragment<PolkadotTxBinding> {
                 mBinding.dotTx.qrcode.qrcode.disableMultipart();
                 mBinding.dotTx.qrcode.qrcode.setVisibility(View.VISIBLE);
                 mBinding.dotTx.broadcastHint.setVisibility(View.VISIBLE);
-                mBinding.dotTx.broadcastHint.setText(getString(R.string.please_broadcast_with_hot,
-                        POLKADOT_JS.getWalletName(mActivity)));
+                mBinding.dotTx.broadcastHint.setText(getString(R.string.please_broadcast_with_hot));
                 try {
                     mBinding.dotTx.qrcode.qrcode.setData(new JSONObject(txEntity.getSignedHex())
                             .getString("signedHex"));

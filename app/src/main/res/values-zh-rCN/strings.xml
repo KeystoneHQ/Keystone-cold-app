@@ -161,7 +161,7 @@
     <string name="create_new_address">创建新地址</string>
     <string name="screen_brightness_hint">滑动调整屏幕亮度</string>
     <string name="broadcast_tx">广播交易</string>
-    <string name="please_broadcast_with_hot">请使用 %s 扫描二维码，并广播交易至区块链</string>
+    <string name="please_broadcast_with_hot">使用观察钱包扫描二维码获取签名结果</string>
     <string name="please_confirm">请确认</string>
     <string name="mnemonic_save_hint">请确认您已妥善保管好助记词，一旦助记词丢失，资产将无法找回！（钱包生成后，无法再次查看助记词）</string>
     <string name="know">我知道了</string>
@@ -407,11 +407,11 @@
     <string name="choose_watch_only_wallet">选择观察钱包</string>
     <string name="sync_later">暂不同步</string>
     <string name="sync_watch_wallet">同步观察钱包</string>
-    <string name="sync_keystone_wallet_guide_title">铠石钱包移动端导入观察钱包指引：</string>
-    <string name="sync_xumm_guide_title">XUMM 导入观察账户指引：</string>
-    <string name="sync_xrp_toolkit_guide_title">XRP Toolkit 导入观察账户指引：</string>
-    <string name="sync_polkadotjs_wallet_guide_title">Polkadot.js 导入 %s 观察钱包指引：</string>
-    <string name="sync_metamask_guide_title">Web3 导入观察账户指引：</string>
+    <string name="sync_keystone_wallet_guide_title">铠石钱包移动端导入指引：</string>
+    <string name="sync_xumm_guide_title">XUMM 导入指引：</string>
+    <string name="sync_xrp_toolkit_guide_title">XRP Toolkit 导入指引：</string>
+    <string name="sync_polkadotjs_wallet_guide_title">Polkadot.js 导入 %s 指引：</string>
+    <string name="sync_metamask_guide_title">Web3钱包导入指引：</string>
     <string name="sync_keystone_wallet_guide_text"><![CDATA[
         1. 打开铠石钱包移动端，添加新钱包<br>
         2. 选择“硬件钱包”，点击绑定按钮<br>
@@ -441,12 +441,12 @@
         3. 点击 “Scan Keystone”<br>
         4. 扫描地址二维码<br>
     ]]></string>
-
+    <string name="sync_metamask_guide_text_hint">以 Keystone Ethereum Extension 导入流程为例，其他钱包导入流程类似。</string>
     <string name="sync_metamask_guide_text"><![CDATA[
         1. 前往 <font color="#00cdc3">https://keyst.one/mm<font/>，根据教程安装 Keystone Ethereum Extension 浏览器插件<br>
         2. 进入 Keystone Ethereum Extension ，点击“开始使用”按钮后设置密码<br>
         3. 进入同步铠石钱包页面后，扫描钱包二维码完成同步<br>
-        4. 进入观察钱包<br>
+        4. 选择账户后，进入观察钱包<br>
     ]]></string>
     <string name="sync_keystone_guide_button_text">查看钱包二维码</string>
     <string name="sync_xumm_guide_button_text">查看地址二维码</string>
@@ -457,13 +457,13 @@
     <string name="sync_with_keystone_vault">请使用铠石钱包移动端扫描二维码</string>
     <string name="sync_with_xumm">请使用 XUMM 扫描地址二维码</string>
     <string name="sync_with_xrp_toolkit">请使用 XRP Toolkit 扫描二维码</string>
-    <string name="sync_with_metamask">请使用 MetaMask 扫描二维码</string>
+    <string name="sync_with_metamask">请使用观察钱包扫描二维码</string>
     <string name="sync_with_polkadot_js">请使用 Polkadot.js 扫描二维码</string>
     <string name="broadcast_xrp_toolkit_hint">请使用 XRP Toolkit 扫描二维码</string>
     <string name="sync_first_xrp_accout">将默认展示第一个地址的二维码，若您要同步其他地址，可进入钱包添加地址。</string>
     <string name="sync_xrp">同步账户</string>
     <string name="unresolve_tx">无法解析该交易</string>
-    <string name="unresolve_tx_hint">无法解析该交易，当前观察钱包下仅支持扫描%s生成的二维码。</string>
+    <string name="unresolve_tx_hint">当前钱包模式为%s，仅支持扫描对应观察钱包生成的二维码。</string>
     <string name="account_not_match">非当前钱包交易</string>
     <string name="account_not_match_detail">该交易不属于当前钱包，请检查交易信息。</string>
     <string name="simple">简单</string>
@@ -514,7 +514,6 @@
     <string name="create_23_word">创建自己的助记词</string>
     <string name="create_23_word_title">创建自己的助记词</string>
     <string name="mnemonic_backuped">我已备份好助记词</string>
-    <string name="metamask_install_hint">请注意，在使用 Keystone Ethereum Extension 前，您需先卸载其他所有的 MetaMask（包括官方提供以及非官方fork）。</string>
     <string name="testnet">测试网</string>
     <string name="inconsistent_address">Inconsistent with "From" address</string>
     <string name="calc_mnemonic_warning">您触发了“创建自己的助记词”这一高级功能，请确保您已充分了解助记词生成的相关知识后，再使用本功能。否则请关闭当前页面。</string>

@@ -56,6 +56,7 @@ public class SyncWatchWalletGuide extends BaseFragment<SyncWatchWalletGuideBindi
         }
 
         mBinding.text1.setText(getString(getSyncWatchWalletGuideTitle(watchWallet), coinCode));
+        mBinding.text2Hint.setText(getString(getSyncWatchWalletGuideHint(watchWallet), coinCode));
         mBinding.text2.setText(getString(getSyncWatchWalletGuide(watchWallet),
                 Coins.coinNameFromCoinCode(coinCode), coinCode));
 
@@ -66,9 +67,8 @@ public class SyncWatchWalletGuide extends BaseFragment<SyncWatchWalletGuideBindi
 
     private String getText3() {
         if (watchWallet == WatchWallet.XRP_TOOLKIT) {
+            mBinding.text3.setVisibility(View.VISIBLE);
             return getString(R.string.sync_first_xrp_accout );
-        } else if (watchWallet == WatchWallet.METAMASK) {
-            return getString(R.string.metamask_install_hint);
         }
         return "";
     }
@@ -115,6 +115,14 @@ public class SyncWatchWalletGuide extends BaseFragment<SyncWatchWalletGuideBindi
                 return R.string.sync_polkadotjs_wallet_guide_title;
             case METAMASK:
                 return R.string.sync_metamask_guide_title;
+        }
+        return 0;
+    }
+
+    public static int getSyncWatchWalletGuideHint(WatchWallet watchWallet) {
+        switch (watchWallet) {
+            case METAMASK:
+                return R.string.sync_metamask_guide_text_hint;
         }
         return 0;
     }
