@@ -41,6 +41,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
+import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.databinding.AssetFragmentBinding;
 import com.keystone.cold.databinding.DialogBottomSheetBinding;
 import com.keystone.cold.db.entity.CoinEntity;
@@ -55,6 +56,7 @@ import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.CoinViewModel;
 import com.keystone.cold.viewmodel.PublicKeyViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
+import com.keystone.cold.viewmodel.XfpNotMatchException;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 
 import org.json.JSONObject;
@@ -290,9 +292,15 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     ByteBuffer uuidBuffer = ByteBuffer.wrap(ethSignRequest.getRequestId());
                     UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
                     String hdPath = ethSignRequest.getDerivationPath();
+                    String requestMFP = Hex.toHexString(ethSignRequest.getMasterFingerprint());
                     bundle.putString(REQUEST_ID, uuid.toString());
                     bundle.putString(SIGN_DATA, Hex.toHexString(ethSignRequest.getSignData()));
                     bundle.putString(HD_PATH, "M/" + hdPath);
+                    String MFP = new GetMasterFingerprintCallable().call();
+
+                    if (!requestMFP.equalsIgnoreCase(MFP)) {
+                        throw new XfpNotMatchException("Master fingerprint not match");
+                    }
                     if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TRANSACTION.getType())) {
                         mFragment.navigate(R.id.action_to_ethTxConfirmFragment, bundle);
                     } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_DATA.getType())) {
@@ -302,6 +310,16 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     }
 
                 }
+            }
+
+            @Override
+            public boolean handleException(Exception e) {
+                e.printStackTrace();
+                if (e instanceof XfpNotMatchException) {
+                    mFragment.alert(getString(R.string.incorrect_tx_data));
+                    return true;
+                }
+                return false;
             }
         });
         navigate(R.id.action_to_scanner);
