@@ -331,7 +331,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             public boolean handleException(Exception e) {
                 e.printStackTrace();
                 if (e instanceof XfpNotMatchException) {
-                    mFragment.alert(getString(R.string.incorrect_tx_data));
+                    mFragment.alert(getString(R.string.account_not_match), getString(R.string.account_not_match_detail));
                     return true;
                 }
                 return false;
