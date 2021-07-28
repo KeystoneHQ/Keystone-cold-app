@@ -1,12 +1,9 @@
 package com.keystone.coinlib.coins.ETH.CanonicalValues;
 
-import android.text.TextUtils;
-
 import com.esaulpaugh.headlong.abi.ABIType;
 import com.keystone.coinlib.coins.ETH.ABIReader;
 
 import org.bouncycastle.util.encoders.Hex;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
