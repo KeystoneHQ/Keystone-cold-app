@@ -54,7 +54,7 @@ public class AbiItemAdapter {
                 Object value = param.get("value");
                 if (TextUtils.equals("tuple", type)) {
                     JSONObject tupleObject = new JSONObject();
-                    tupleObject.put("param", addParamsName(value));
+                    tupleObject.put("param", addParamsName(value, name));
                     items.addAll(adapt(tupleObject));
                 } else if (value instanceof JSONArray) {
                     JSONArray arr = (JSONArray) value;
@@ -95,14 +95,21 @@ public class AbiItemAdapter {
         return null;
     }
 
-    private Object addParamsName(Object value) {
+    private Object addParamsName(Object value, String name) {
         try {
             if (value instanceof JSONArray) {
                 JSONArray jsonArray = (JSONArray) value;
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    String name = jsonObject.getString("name");
-                    jsonObject.put("name", "params." + name);
+                    String nameItem = jsonObject.getString("name");
+                    String typeItem = jsonObject.getString("type");
+                    Object valueItem = jsonObject.get("value");
+                    if (nameItem.startsWith(name)) continue;
+                    if (TextUtils.equals("tuple", typeItem)) {
+                        JSONObject tupleObject = new JSONObject();
+                        tupleObject.put("param", addParamsName(valueItem, nameItem));
+                    }
+                    jsonObject.put("name", name + "." + nameItem);
                 }
             }
         } catch (JSONException e) {
