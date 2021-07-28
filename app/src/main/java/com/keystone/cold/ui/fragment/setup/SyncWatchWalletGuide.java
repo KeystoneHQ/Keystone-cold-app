@@ -56,7 +56,11 @@ public class SyncWatchWalletGuide extends BaseFragment<SyncWatchWalletGuideBindi
         }
 
         mBinding.text1.setText(getString(getSyncWatchWalletGuideTitle(watchWallet), coinCode));
-        mBinding.text2Hint.setText(getString(getSyncWatchWalletGuideHint(watchWallet), coinCode));
+        if (getSyncWatchWalletGuideHint(watchWallet) == 0) {
+            mBinding.text2Hint.setVisibility(View.GONE);
+        } else {
+            mBinding.text2Hint.setText(getString(getSyncWatchWalletGuideHint(watchWallet)));
+        }
         mBinding.text2.setText(getString(getSyncWatchWalletGuide(watchWallet),
                 Coins.coinNameFromCoinCode(coinCode), coinCode));
 

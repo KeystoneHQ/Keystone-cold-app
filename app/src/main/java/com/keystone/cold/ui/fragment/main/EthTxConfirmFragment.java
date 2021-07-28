@@ -219,19 +219,15 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
 
     private void updateAbiView(JSONObject abi) {
         if (abi != null) {
-            try {
-                if (viewModel.isFromTFCard()) {
-                    mBinding.ethTx.tfcardTip.setVisibility(View.VISIBLE);
-                }
-                String contract = abi.getString("contract");
-                boolean isUniswap = contract.toLowerCase().contains("uniswap");
-                AppExecutors.getInstance().diskIO().execute(() -> {
-                    List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(txEntity.getFrom(), viewModel).adapt(abi);
-                    AppExecutors.getInstance().mainThread().execute(() -> addViewToData(isUniswap, itemList));
-                });
-            } catch (JSONException e) {
-                e.printStackTrace();
+            if (viewModel.isFromTFCard()) {
+                mBinding.ethTx.tfcardTip.setVisibility(View.VISIBLE);
             }
+            String contract = abi.optString("contract");
+            boolean isUniswap = contract.toLowerCase().contains("uniswap");
+            AppExecutors.getInstance().diskIO().execute(() -> {
+                List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(txEntity.getFrom(), viewModel).adapt(abi);
+                AppExecutors.getInstance().mainThread().execute(() -> addViewToData(isUniswap, itemList));
+            });
         }
     }
 

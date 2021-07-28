@@ -140,20 +140,16 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
             e.printStackTrace();
         }
         if (abi != null) {
-            try {
-                String contract = abi.getString("contract");
-                boolean isUniswap = contract.toLowerCase().contains("uniswap");
-                List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(txEntity.getFrom(), viewModel).adapt(abi);
-                addViewToData(isUniswap, itemList);
-                mBinding.ethTx.data.setVisibility(View.VISIBLE);
-                mBinding.ethTx.undecodedData.setVisibility(View.GONE);
-                if (signData != null) {
-                    if (signData.optBoolean("isFromTFCard")) {
-                        mBinding.ethTx.tfcardTip.setVisibility(View.VISIBLE);
-                    }
+            String contract = abi.optString("contract");
+            boolean isUniswap = contract.toLowerCase().contains("uniswap");
+            List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(txEntity.getFrom(), viewModel).adapt(abi);
+            addViewToData(isUniswap, itemList);
+            mBinding.ethTx.data.setVisibility(View.VISIBLE);
+            mBinding.ethTx.undecodedData.setVisibility(View.GONE);
+            if (signData != null) {
+                if (signData.optBoolean("isFromTFCard")) {
+                    mBinding.ethTx.tfcardTip.setVisibility(View.VISIBLE);
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
         } else {
             if (signData != null && !TextUtils.isEmpty(signData.optString("inputData"))) {
