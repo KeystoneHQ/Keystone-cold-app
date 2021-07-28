@@ -64,6 +64,7 @@ import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -313,7 +314,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                         mFragment.navigate(R.id.action_to_ethSignMessageFragment, bundle);
                     }
                 } else if (result.getType().equals(ScanResultTypes.UR_BYTES)) {
-                    JSONObject object = scannerViewModel.decodeProtocolBuffer((byte[]) result.resolve());
+                    JSONObject object = new JSONObject(new String((byte[]) result.resolve(), StandardCharsets.UTF_8));
                     JSONObject webAuth = object.optJSONObject("data");
                     if (webAuth != null && webAuth.optString("type").equals("webAuth")) {
                         String data = webAuth.getString("data");

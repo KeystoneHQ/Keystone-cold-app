@@ -191,6 +191,10 @@ public class EthImpl implements Coin {
     }
 
     public Sign.SignatureData getSignatureData(String signature) {
+        return getSignatureData(signature, true);
+    }
+
+    public Sign.SignatureData getSignatureData(String signature, boolean isEIP155) {
         if (TextUtils.isEmpty(signature)) return null;
         byte[] r = Hex.decode(signature.substring(0, 64));
         byte[] s = Hex.decode(signature.substring(64, 128));
@@ -201,7 +205,7 @@ public class EthImpl implements Coin {
         } catch (Exception ignore) {
         }
         int v = 27 + recId;
-        if (chainId > 0) {
+        if (chainId > 0 && isEIP155) {
             v += chainId * 2 + 8;
         }
         return new Sign.SignatureData((byte) v, r, s);
@@ -230,7 +234,7 @@ public class EthImpl implements Coin {
         try {
             byte[] messageHash = new StructuredDataEncoder(message).hashStructuredData();
             String signature = signer.sign(Hex.toHexString(messageHash));
-            Sign.SignatureData signatureData = getSignatureData(signature);
+            Sign.SignatureData signatureData = getSignatureData(signature, false);
             byte[] sigBytes = concat(concat(signatureData.getR(), signatureData.getS()), signatureData.getV());
             return Hex.toHexString(sigBytes);
         } catch (IOException e) {
@@ -241,7 +245,7 @@ public class EthImpl implements Coin {
 
     public String signPersonalMessage(@NonNull String message, Signer signer) {
         String signature = signer.sign(Hex.toHexString(hashPersonalMessage(message)));
-        Sign.SignatureData signatureData = getSignatureData(signature);
+        Sign.SignatureData signatureData = getSignatureData(signature, false);
         byte[] sigBytes = concat(concat(signatureData.getR(), signatureData.getS()), signatureData.getV());
         return Hex.toHexString(sigBytes);
     }
