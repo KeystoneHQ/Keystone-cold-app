@@ -56,6 +56,11 @@ public class AbiItemAdapter {
                     JSONObject tupleObject = new JSONObject();
                     tupleObject.put("param", addParamsName(value, name));
                     items.addAll(adapt(tupleObject));
+                } else if (TextUtils.equals("bytes[]", type)) {
+                    JSONArray jsonArray = new JSONArray(value.toString());
+                    for (int j = 0; j < jsonArray.length(); j++) {
+                        items.addAll(adapt(new JSONObject(jsonArray.getString(j))));
+                    }
                 } else if (value instanceof JSONArray) {
                     JSONArray arr = (JSONArray) value;
                     StringBuilder concatValue = new StringBuilder();
