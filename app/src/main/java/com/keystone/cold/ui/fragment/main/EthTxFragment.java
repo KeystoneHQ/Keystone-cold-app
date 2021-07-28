@@ -20,7 +20,6 @@
 package com.keystone.cold.ui.fragment.main;
 
 import android.os.Bundle;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +30,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.AbiItemBinding;
+import com.keystone.cold.databinding.AbiItemMethodBinding;
 import com.keystone.cold.databinding.EthTxBinding;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
@@ -145,21 +145,7 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
                 String contract = abi.getString("contract");
                 boolean isUniswap = contract.toLowerCase().contains("uniswap");
                 List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(txEntity.getFrom(), viewModel).adapt(abi);
-                for (AbiItemAdapter.AbiItem item : itemList) {
-                    AbiItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
-                            R.layout.abi_item, null, false);
-                    binding.key.setText(item.key);
-                    if (isUniswap && "to".equals(item.key)) {
-                        if (!item.value.equalsIgnoreCase(txEntity.getFrom())) {
-                            item.value += String.format(" [%s]", getString(R.string.inconsistent_address));
-                        }
-                        binding.value.setText(highLight(item.value));
-                    } else {
-                        SpannableStringBuilder spannableString = highLight(item.value);
-                        binding.value.setText(spannableString);
-                    }
-                    mBinding.ethTx.container.addView(binding.getRoot());
-                }
+                addViewToData(isUniswap, itemList);
                 mBinding.ethTx.data.setVisibility(View.VISIBLE);
                 mBinding.ethTx.undecodedData.setVisibility(View.GONE);
                 if (signData != null) {
@@ -179,6 +165,33 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
                 mBinding.ethTx.data.setVisibility(View.GONE);
                 mBinding.ethTx.undecodedData.setVisibility(View.GONE);
             }
+        }
+    }
+
+    private void addViewToData(boolean isUniswap, List<AbiItemAdapter.AbiItem> itemList) {
+        for (int i = 0; i < itemList.size(); i++) {
+            AbiItemAdapter.AbiItem item = itemList.get(i);
+            if ("method".equals(item.key)) {
+                AbiItemMethodBinding abiItemMethodBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+                        R.layout.abi_item_method, null, false);
+                abiItemMethodBinding.key.setText(item.key);
+                abiItemMethodBinding.value.setText(item.value);
+                if (i == 0) {
+                    abiItemMethodBinding.divider.setVisibility(View.GONE);
+                }
+                mBinding.ethTx.container.addView(abiItemMethodBinding.getRoot());
+                continue;
+            }
+            AbiItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+                    R.layout.abi_item, null, false);
+            binding.key.setText(item.key);
+            if (isUniswap && "to".equals(item.key)) {
+                if (!item.value.equalsIgnoreCase(txEntity.getFrom())) {
+                    item.value += String.format(" [%s]", getString(R.string.inconsistent_address));
+                }
+            }
+            binding.value.setText(highLight(item.value));
+            mBinding.ethTx.container.addView(binding.getRoot());
         }
     }
 
