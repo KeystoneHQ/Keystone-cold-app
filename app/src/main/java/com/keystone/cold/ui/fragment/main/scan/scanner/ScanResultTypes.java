@@ -19,7 +19,10 @@ public enum ScanResultTypes {
 
 
     public boolean isType(String text) {
-        return true;
+        if (this == ScanResultTypes.PLAIN_TEXT) {
+            return true;
+        }
+        return false;
     }
 
     public boolean isType(UR ur) {

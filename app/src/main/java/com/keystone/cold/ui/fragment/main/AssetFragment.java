@@ -51,6 +51,7 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerState;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerViewModel;
+import com.keystone.cold.ui.fragment.main.scan.scanner.exceptions.UnExpectedQRException;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.CoinViewModel;
@@ -64,14 +65,16 @@ import org.spongycastle.util.encoders.Hex;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
+import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
+import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
 
 public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         implements Toolbar.OnMenuItemClickListener, NumberPickerCallback {
@@ -283,7 +286,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     public static final String HD_PATH = "hdPath";
 
     private void scanQrCode() {
-        ViewModelProviders.of(mActivity).get(ScannerViewModel.class).setState(new ScannerState(Collections.singletonList(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
+        ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);
+        scannerViewModel.setState(new ScannerState(Arrays.asList(ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_BYTES)) {
             @Override
             public void handleScanResult(ScanResult result) throws Exception {
                 if (result.getType().equals(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
@@ -308,7 +312,18 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.PERSONAL_MESSAGE.getType())) {
                         mFragment.navigate(R.id.action_to_ethSignMessageFragment, bundle);
                     }
-
+                } else if (result.getType().equals(ScanResultTypes.UR_BYTES)) {
+                    JSONObject object = scannerViewModel.decodeProtocolBuffer((byte[]) result.resolve());
+                    JSONObject webAuth = object.optJSONObject("data");
+                    if (webAuth != null && webAuth.optString("type").equals("webAuth")) {
+                        String data = webAuth.getString("data");
+                        Bundle bundle = new Bundle();
+                        bundle.putString(WEB_AUTH_DATA, data);
+                        bundle.putBoolean(IS_SETUP_VAULT, false);
+                        mFragment.navigate(R.id.action_QRCodeScan_to_result, bundle);
+                    } else {
+                        throw new UnExpectedQRException("cannot resolve ur bytes");
+                    }
                 }
             }
 
