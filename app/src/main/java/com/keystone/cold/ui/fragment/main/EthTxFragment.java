@@ -105,30 +105,36 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
     }
 
     private void showQrCode(JSONObject signed) {
-        WatchWallet watchWallet = WatchWallet.getWatchWallet(mActivity);
-        if (watchWallet.equals(WatchWallet.METAMASK)) {
-            try {
+        try {
+            WatchWallet watchWallet = WatchWallet.getWatchWallet(mActivity);
+            if (watchWallet.equals(WatchWallet.METAMASK)) {
+                try {
+                    if (signed != null) {
+                        signed.remove("abi");
+                        signed.remove("chainId");
+                        byte[] signature = Hex.decode(signed.getString("signature"));
+                        UUID uuid = UUID.fromString(signed.getString("signId"));
+                        ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
+                        byteBuffer.putLong(uuid.getMostSignificantBits());
+                        byteBuffer.putLong(uuid.getLeastSignificantBits());
+                        byte[] requestId = byteBuffer.array();
+                        EthSignature ethSignature = new EthSignature(signature, requestId);
+                        mBinding.qrcode.qrcode.setData(ethSignature.toUR().toString());
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
                 if (signed != null) {
                     signed.remove("abi");
                     signed.remove("chainId");
-                    byte[] signature = Hex.decode(signed.getString("signature"));
-                    UUID uuid = UUID.fromString(signed.getString("signId"));
-                    ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
-                    byteBuffer.putLong(uuid.getMostSignificantBits());
-                    byteBuffer.putLong(uuid.getLeastSignificantBits());
-                    byte[] requestId = byteBuffer.array();
-                    EthSignature ethSignature = new EthSignature(signature, requestId);
-                    mBinding.qrcode.qrcode.setData(ethSignature.toUR().toString());
+                    mBinding.qrcode.qrcode.setData(Hex.toHexString(signed.toString().getBytes(StandardCharsets.UTF_8)));
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
-        } else {
-            if (signed != null) {
-                signed.remove("abi");
-                signed.remove("chainId");
-                mBinding.qrcode.qrcode.setData(Hex.toHexString(signed.toString().getBytes(StandardCharsets.UTF_8)));
-            }
+        }catch (Exception e){
+            signed.remove("abi");
+            signed.remove("chainId");
+            mBinding.qrcode.qrcode.setData(Hex.toHexString(signed.toString().getBytes(StandardCharsets.UTF_8)));
         }
     }
 
