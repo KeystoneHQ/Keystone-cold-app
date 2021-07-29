@@ -30,13 +30,34 @@ import static com.esaulpaugh.headlong.abi.ABIType.TYPE_CODE_LONG;
 import static com.esaulpaugh.headlong.abi.ABIType.TYPE_CODE_TUPLE;
 
 public class ABIReader {
-    Map<String, Function> functions = new HashMap<>();
+    static Map<String, Function> functions = new HashMap<>();
 
     public void addABI(String json) {
+        functions.clear();
         List<Function> functions = ABIJSON.parseNormalFunctions(json);
         functions.forEach(f -> {
             this.functions.put(f.selectorHex(), f);
         });
+    }
+
+
+    public static DecodedFunctionCall staticDecodeCall(String data) {
+        try {
+            String noPrefix = data;
+            if (data.startsWith("0x")) {
+                noPrefix = data.substring(2);
+            }
+            if (TextUtils.isEmpty(noPrefix)) {
+                return null;
+            }
+            String methodId = noPrefix.substring(0, 8);
+            Function entry = functions.get(methodId);
+            Tuple result = entry.decodeCall(Hex.decode(noPrefix));
+            return new DecodedFunctionCall(entry, result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public DecodedFunctionCall decodeCall(String data) {
@@ -62,7 +83,7 @@ public class ABIReader {
         return data;
     }
 
-    public class DecodedFunctionCall {
+    public static class DecodedFunctionCall {
         private final Function function;
         private final Tuple callParameters;
 

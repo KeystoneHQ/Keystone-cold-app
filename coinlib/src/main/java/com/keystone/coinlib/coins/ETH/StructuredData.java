@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs LTD.
+ * Copyright 2019 Web3 Labs Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -12,14 +12,15 @@
  */
 package com.keystone.coinlib.coins.ETH;
 
-import java.util.HashMap;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.generated.Uint256;
+
+import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.List;
 
 public class StructuredData {
     static class Entry {
@@ -48,17 +49,20 @@ public class StructuredData {
         private final String version;
         private final Uint256 chainId;
         private final Address verifyingContract;
+        private final String salt;
 
         @JsonCreator
         public EIP712Domain(
                 @JsonProperty(value = "name") String name,
                 @JsonProperty(value = "version") String version,
-                @JsonProperty(value = "chainId") Uint256 chainId,
-                @JsonProperty(value = "verifyingContract") Address verifyingContract) {
+                @JsonProperty(value = "chainId") String chainId,
+                @JsonProperty(value = "verifyingContract") Address verifyingContract,
+                @JsonProperty(value = "salt") String salt) {
             this.name = name;
             this.version = version;
-            this.chainId = chainId;
+            this.chainId = chainId != null ? new Uint256(new BigInteger(chainId)) : null;
             this.verifyingContract = verifyingContract;
+            this.salt = salt;
         }
 
         public String getName() {
@@ -75,6 +79,10 @@ public class StructuredData {
 
         public Address getVerifyingContract() {
             return verifyingContract;
+        }
+
+        public String getSalt() {
+            return salt;
         }
     }
 

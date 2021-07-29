@@ -72,12 +72,21 @@
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
+                <TextView
+                    android:id="@+id/text2_hint"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white40"
+                    android:textSize="13sp"
+                    android:layout_marginHorizontal="16dp"/>
+
                 <com.keystone.cold.ui.views.SpanedTextView
                     android:id="@+id/text2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:lineSpacingExtra="6dp"
-                    android:padding="16dp"
+                    android:padding="16sp"
                     android:textColor="@color/white"
                     android:textSize="13sp" />
 
@@ -88,6 +97,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/white40"
                     android:textSize="14sp"
+                    android:visibility="gone"
                     android:layout_marginHorizontal="16dp"/>
 
                 <Space

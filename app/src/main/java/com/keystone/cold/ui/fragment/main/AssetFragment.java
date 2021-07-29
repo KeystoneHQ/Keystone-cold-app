@@ -41,6 +41,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
+import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.databinding.AssetFragmentBinding;
 import com.keystone.cold.databinding.DialogBottomSheetBinding;
 import com.keystone.cold.db.entity.CoinEntity;
@@ -50,26 +51,31 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerState;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerViewModel;
+import com.keystone.cold.ui.fragment.main.scan.scanner.exceptions.UnExpectedQRException;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.CoinViewModel;
 import com.keystone.cold.viewmodel.PublicKeyViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
+import com.keystone.cold.viewmodel.XfpNotMatchException;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
+import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
+import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
 
 public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         implements Toolbar.OnMenuItemClickListener, NumberPickerCallback {
@@ -281,7 +287,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     public static final String HD_PATH = "hdPath";
 
     private void scanQrCode() {
-        ViewModelProviders.of(mActivity).get(ScannerViewModel.class).setState(new ScannerState(Collections.singletonList(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
+        ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);
+        scannerViewModel.setState(new ScannerState(Arrays.asList(ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_BYTES)) {
             @Override
             public void handleScanResult(ScanResult result) throws Exception {
                 if (result.getType().equals(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
@@ -290,9 +297,15 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     ByteBuffer uuidBuffer = ByteBuffer.wrap(ethSignRequest.getRequestId());
                     UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
                     String hdPath = ethSignRequest.getDerivationPath();
+                    String requestMFP = Hex.toHexString(ethSignRequest.getMasterFingerprint());
                     bundle.putString(REQUEST_ID, uuid.toString());
                     bundle.putString(SIGN_DATA, Hex.toHexString(ethSignRequest.getSignData()));
                     bundle.putString(HD_PATH, "M/" + hdPath);
+                    String MFP = new GetMasterFingerprintCallable().call();
+
+                    if (!requestMFP.equalsIgnoreCase(MFP)) {
+                        throw new XfpNotMatchException("Master fingerprint not match");
+                    }
                     if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TRANSACTION.getType())) {
                         mFragment.navigate(R.id.action_to_ethTxConfirmFragment, bundle);
                     } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_DATA.getType())) {
@@ -300,8 +313,29 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.PERSONAL_MESSAGE.getType())) {
                         mFragment.navigate(R.id.action_to_ethSignMessageFragment, bundle);
                     }
-
+                } else if (result.getType().equals(ScanResultTypes.UR_BYTES)) {
+                    JSONObject object = new JSONObject(new String((byte[]) result.resolve(), StandardCharsets.UTF_8));
+                    JSONObject webAuth = object.optJSONObject("data");
+                    if (webAuth != null && webAuth.optString("type").equals("webAuth")) {
+                        String data = webAuth.getString("data");
+                        Bundle bundle = new Bundle();
+                        bundle.putString(WEB_AUTH_DATA, data);
+                        bundle.putBoolean(IS_SETUP_VAULT, false);
+                        mFragment.navigate(R.id.action_QRCodeScan_to_result, bundle);
+                    } else {
+                        throw new UnExpectedQRException("cannot resolve ur bytes");
+                    }
                 }
+            }
+
+            @Override
+            public boolean handleException(Exception e) {
+                e.printStackTrace();
+                if (e instanceof XfpNotMatchException) {
+                    mFragment.alert(getString(R.string.account_not_match), getString(R.string.account_not_match_detail));
+                    return true;
+                }
+                return false;
             }
         });
         navigate(R.id.action_to_scanner);

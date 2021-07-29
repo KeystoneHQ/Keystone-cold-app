@@ -69,8 +69,7 @@ public class BroadcastTxFragment extends BaseFragment<BroadcastTxFragmentBinding
     }
 
     protected void refreshUI() {
-        mBinding.broadcastHint.setText(getString(R.string.please_broadcast_with_hot,
-                watchWallet.getWalletName(mActivity)));
+        mBinding.broadcastHint.setText(getString(R.string.please_broadcast_with_hot));
         if (watchWallet == WatchWallet.POLKADOT_JS) {
             mBinding.qrcodeLayout.qrcode.disableMultipart();
         }

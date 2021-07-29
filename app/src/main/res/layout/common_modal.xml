@@ -52,10 +52,24 @@
                 android:textStyle="bold" />
 
             <com.keystone.cold.ui.views.SpanedTextView
-                android:id="@+id/sub_title"
+                android:id="@+id/sub_title_hint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="12dp"
+                android:gravity="center_horizontal"
+                android:lineSpacingExtra="6dp"
+                android:maxLines="15"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <com.keystone.cold.ui.views.SpanedTextView
+                android:id="@+id/sub_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sub_title_hint"
                 android:layout_centerHorizontal="true"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="12dp"

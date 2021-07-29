@@ -39,6 +39,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.databinding.AbiItemBinding;
+import com.keystone.cold.databinding.AbiItemMethodBinding;
 import com.keystone.cold.databinding.EthTxConfirmBinding;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
@@ -188,11 +189,11 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
                 mBinding.ethTx.data.setVisibility(View.GONE);
                 mBinding.ethTx.undecodedData.setVisibility(View.VISIBLE);
                 mBinding.ethTx.inputData.setText("0x" + viewModel.getInputData());
+                showDialog();
             } else {
                 mBinding.ethTx.data.setVisibility(View.GONE);
                 mBinding.ethTx.undecodedData.setVisibility(View.GONE);
             }
-            showDialog();
         }
         mBinding.ethTx.setTx(txEntity);
         processAndUpdateTo();
@@ -218,24 +219,32 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
 
     private void updateAbiView(JSONObject abi) {
         if (abi != null) {
-            try {
-                if (viewModel.isFromTFCard()) {
-                    mBinding.ethTx.tfcardTip.setVisibility(View.VISIBLE);
-                }
-                String contract = abi.getString("contract");
-                boolean isUniswap = contract.toLowerCase().contains("uniswap");
-                AppExecutors.getInstance().diskIO().execute(() -> {
-                    List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(txEntity.getFrom(), viewModel).adapt(abi);
-                    AppExecutors.getInstance().mainThread().execute(() -> addViewToData(isUniswap, itemList));
-                });
-            } catch (JSONException e) {
-                e.printStackTrace();
+            if (viewModel.isFromTFCard()) {
+                mBinding.ethTx.tfcardTip.setVisibility(View.VISIBLE);
             }
+            String contract = abi.optString("contract");
+            boolean isUniswap = contract.toLowerCase().contains("uniswap");
+            AppExecutors.getInstance().diskIO().execute(() -> {
+                List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(txEntity.getFrom(), viewModel).adapt(abi);
+                AppExecutors.getInstance().mainThread().execute(() -> addViewToData(isUniswap, itemList));
+            });
         }
     }
 
     private void addViewToData(boolean isUniswap, List<AbiItemAdapter.AbiItem> itemList) {
-        for (AbiItemAdapter.AbiItem item : itemList) {
+        for (int i = 0; i < itemList.size(); i++) {
+            AbiItemAdapter.AbiItem item = itemList.get(i);
+            if ("method".equals(item.key)) {
+                AbiItemMethodBinding abiItemMethodBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+                        R.layout.abi_item_method, null, false);
+                abiItemMethodBinding.key.setText(item.key);
+                abiItemMethodBinding.value.setText(item.value);
+                if (i == 0) {
+                    abiItemMethodBinding.divider.setVisibility(View.GONE);
+                }
+                mBinding.ethTx.container.addView(abiItemMethodBinding.getRoot());
+                continue;
+            }
             AbiItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
                     R.layout.abi_item, null, false);
             binding.key.setText(item.key);
@@ -243,10 +252,8 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
                 if (!item.value.equalsIgnoreCase(txEntity.getFrom())) {
                     item.value += String.format(" [%s]", getString(R.string.inconsistent_address));
                 }
-                binding.value.setText(highLight(item.value));
-            } else {
-                binding.value.setText(highLight(item.value));
             }
+            binding.value.setText(highLight(item.value));
             mBinding.ethTx.container.addView(binding.getRoot());
         }
     }

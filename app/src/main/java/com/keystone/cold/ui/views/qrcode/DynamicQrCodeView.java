@@ -33,6 +33,8 @@ import androidx.core.view.ViewCompat;
 
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
+import com.sparrowwallet.hummingbird.UR;
+import com.sparrowwallet.hummingbird.URDecoder;
 import com.sparrowwallet.hummingbird.UREncoder;
 
 import org.spongycastle.util.encoders.Hex;
@@ -94,7 +96,13 @@ public class DynamicQrCodeView extends LinearLayout implements QrCodeHolder {
         if (multiPart) {
             AppExecutors.getInstance().networkIO().execute(()-> {
                 try {
-                    encoder = new UREncoder(fromBytes(Hex.decode(data)), qrCapacity.capacity, 10, 0);
+                    UR ur;
+                    if (data.toUpperCase().startsWith("UR:")) {
+                        ur = URDecoder.decode(data);
+                    } else {
+                        ur = fromBytes(Hex.decode(data));
+                    }
+                    encoder = new UREncoder(ur, qrCapacity.capacity, 10, 0);
                     mCache.restart();
                     handler.removeCallbacks(runnable);
                     handler.post(runnable);

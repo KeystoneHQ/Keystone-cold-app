@@ -39,6 +39,9 @@ import com.keystone.cold.viewmodel.TxConfirmViewModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.spongycastle.util.encoders.Hex;
+
+import java.nio.charset.StandardCharsets;
 
 import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
@@ -58,7 +61,7 @@ public class EthSignMessageFragment extends BaseFragment<EthSignMessageBinding> 
 
     @Override
     protected int setView() {
-        return R.layout.eth_sign_typed_data;
+        return R.layout.eth_sign_message;
     }
 
     @Override
@@ -76,7 +79,9 @@ public class EthSignMessageFragment extends BaseFragment<EthSignMessageBinding> 
             try {
                 String message = jsonObject.getString("data");
                 mBinding.address.setText(viewModel.getFromAddress());
-                mBinding.message.setText(message);
+                mBinding.message.setText(new String(Hex.decode(message), StandardCharsets.UTF_8));
+                mBinding.rawMessage.setText(message);
+
                 liveData.removeObservers(EthSignMessageFragment.this);
             } catch (JSONException e) {
                 e.printStackTrace();

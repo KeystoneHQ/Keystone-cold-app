@@ -35,6 +35,8 @@ import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.main.scan.scanner.bean.ZxingConfig;
 import com.keystone.cold.ui.fragment.main.scan.scanner.bean.ZxingConfigBuilder;
 import com.keystone.cold.ui.fragment.main.scan.scanner.camera.CameraManager;
+import com.keystone.cold.ui.fragment.main.scan.scanner.exceptions.UnExpectedQRException;
+import com.keystone.cold.viewmodel.WatchWallet;
 import com.sparrowwallet.hummingbird.UR;
 
 import org.spongycastle.util.encoders.Hex;
@@ -57,6 +59,7 @@ public class ScannerFragment extends BaseFragment<ScannerFragmentBinding>
 
     private ScannerViewModel scannerViewModel;
     private ScannerState scannerState;
+    private WatchWallet watchWallet;
 
     private final Handler handler = new Handler();
 
@@ -191,16 +194,22 @@ public class ScannerFragment extends BaseFragment<ScannerFragmentBinding>
 
     @Override
     public void handleDecode(String text) {
+        watchWallet = WatchWallet.getWatchWallet(mActivity);
         runInSubThread(() -> {
             try {
-                if (this.desiredTypes.stream().anyMatch(dt -> dt.isType(text))) {
+                ScanResultTypes srt = this.desiredTypes.stream().filter(dt -> dt.isType(text)).findFirst().orElse(null);
+                if (srt != null) {
                     scannerState.handleScanResult(new ScanResult(ScanResultTypes.PLAIN_TEXT, text));
                 } else {
-                    alert(getString(R.string.scan_failed), getString(R.string.unsupported_qrcode));
+                    throw new UnExpectedQRException("un expected qrcode");
                 }
             } catch (Exception e) {
                 if (!scannerState.handleException(e)) {
-                    alert(getString(R.string.scan_failed), getString(R.string.unsupported_qrcode));
+                    if (e instanceof UnExpectedQRException) {
+                        alert(getString(R.string.unresolve_tx), getString(R.string.unresolve_tx_hint, watchWallet.getWalletName(mActivity)));
+                    } else {
+                        alert(getString(R.string.scan_failed), getString(R.string.unsupported_qrcode));
+                    }
                 }
             }
         });
@@ -208,17 +217,22 @@ public class ScannerFragment extends BaseFragment<ScannerFragmentBinding>
 
     @Override
     public void handleDecode(UR ur) {
+        watchWallet = WatchWallet.getWatchWallet(mActivity);
         runInSubThread(() -> {
             try {
                 ScanResultTypes srt = this.desiredTypes.stream().filter(dt -> dt.isType(ur)).findFirst().orElse(null);
                 if (srt != null) {
                     scannerState.handleScanResult(new ScanResult(srt, Hex.toHexString(ur.getCborBytes())));
                 } else {
-                    alert(getString(R.string.scan_failed), getString(R.string.unsupported_qrcode));
+                    throw new UnExpectedQRException("un expected qrcode");
                 }
             } catch (Exception e) {
                 if (!scannerState.handleException(e)) {
-                    alert(getString(R.string.scan_failed), getString(R.string.unsupported_qrcode));
+                    if (e instanceof UnExpectedQRException) {
+                        alert(getString(R.string.unresolve_tx), getString(R.string.unresolve_tx_hint, watchWallet.getWalletName(mActivity)));
+                    } else {
+                        alert(getString(R.string.scan_failed), getString(R.string.unsupported_qrcode));
+                    }
                 }
             }
         });

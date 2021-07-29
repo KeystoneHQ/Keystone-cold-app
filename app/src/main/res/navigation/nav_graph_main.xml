@@ -828,7 +828,11 @@
         android:id="@+id/scannerFragment"
         android:name="com.keystone.cold.ui.fragment.main.scan.scanner.ScannerFragment"
         android:label="ScannerFragment"
-        tools:layout="@layout/scanner_fragment"></fragment>
+        tools:layout="@layout/scanner_fragment">
+        <action
+            android:id="@+id/action_QRCodeScan_to_result"
+            app:destination="@id/webAuthResultFragment" />
+    </fragment>
 
     <!--global action-->
     <action

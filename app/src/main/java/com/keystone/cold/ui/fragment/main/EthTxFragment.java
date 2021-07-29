@@ -20,7 +20,6 @@
 package com.keystone.cold.ui.fragment.main;
 
 import android.os.Bundle;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +30,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.AbiItemBinding;
+import com.keystone.cold.databinding.AbiItemMethodBinding;
 import com.keystone.cold.databinding.EthTxBinding;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
@@ -38,13 +38,16 @@ import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 import com.keystone.cold.viewmodel.EthTxConfirmViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
+import com.sparrowwallet.hummingbird.registry.EthSignature;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.UUID;
 
 import static com.keystone.cold.ui.fragment.main.EthTxConfirmFragment.highLight;
 import static com.keystone.cold.ui.fragment.main.TxFragment.KEY_TX_ID;
@@ -63,8 +66,7 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
     protected void init(View view) {
         Bundle bundle = requireArguments();
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
-        mBinding.broadcastHint.setText(getString(R.string.please_broadcast_with_hot,
-                WatchWallet.METAMASK.getWalletName(mActivity)));
+        mBinding.broadcastHint.setText(getString(R.string.please_broadcast_with_hot));
         ViewModelProviders.of(mActivity).get(CoinListViewModel.class)
                 .loadTx(bundle.getString(KEY_TX_ID)).observe(this, txEntity -> {
             this.txEntity = txEntity;
@@ -90,7 +92,7 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
         JSONObject abi = null;
         try {
             signed = new JSONObject(txEntity.getSignedHex());
-            chainId = signed.optInt("chainId",1);
+            chainId = signed.optInt("chainId", 1);
             abi = signed.getJSONObject("abi");
         } catch (JSONException e) {
             e.printStackTrace();
@@ -103,10 +105,30 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
     }
 
     private void showQrCode(JSONObject signed) {
-        if (signed != null) {
-            signed.remove("abi");
-            signed.remove("chainId");
-            mBinding.qrcode.qrcode.setData(Hex.toHexString(signed.toString().getBytes(StandardCharsets.UTF_8)));
+        WatchWallet watchWallet = WatchWallet.getWatchWallet(mActivity);
+        if (watchWallet.equals(WatchWallet.METAMASK)) {
+            try {
+                if (signed != null) {
+                    signed.remove("abi");
+                    signed.remove("chainId");
+                    byte[] signature = Hex.decode(signed.getString("signature"));
+                    UUID uuid = UUID.fromString(signed.getString("signId"));
+                    ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
+                    byteBuffer.putLong(uuid.getMostSignificantBits());
+                    byteBuffer.putLong(uuid.getLeastSignificantBits());
+                    byte[] requestId = byteBuffer.array();
+                    EthSignature ethSignature = new EthSignature(signature, requestId);
+                    mBinding.qrcode.qrcode.setData(ethSignature.toUR().toString());
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            if (signed != null) {
+                signed.remove("abi");
+                signed.remove("chainId");
+                mBinding.qrcode.qrcode.setData(Hex.toHexString(signed.toString().getBytes(StandardCharsets.UTF_8)));
+            }
         }
     }
 
@@ -118,37 +140,19 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
             e.printStackTrace();
         }
         if (abi != null) {
-            try {
-                String contract = abi.getString("contract");
-                boolean isUniswap = contract.toLowerCase().contains("uniswap");
-                List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(txEntity.getFrom(),viewModel).adapt(abi);
-                for (AbiItemAdapter.AbiItem item : itemList) {
-                    AbiItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
-                            R.layout.abi_item, null, false);
-                    binding.key.setText(item.key);
-                    if (isUniswap && "to".equals(item.key)) {
-                        if (!item.value.equalsIgnoreCase(txEntity.getFrom())) {
-                            item.value += String.format(" [%s]",getString(R.string.inconsistent_address));
-                        }
-                        binding.value.setText(highLight(item.value));
-                    } else {
-                        SpannableStringBuilder spannableString = highLight(item.value);
-                        binding.value.setText(spannableString);
-                    }
-                    mBinding.ethTx.container.addView(binding.getRoot());
+            String contract = abi.optString("contract");
+            boolean isUniswap = contract.toLowerCase().contains("uniswap");
+            List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(txEntity.getFrom(), viewModel).adapt(abi);
+            addViewToData(isUniswap, itemList);
+            mBinding.ethTx.data.setVisibility(View.VISIBLE);
+            mBinding.ethTx.undecodedData.setVisibility(View.GONE);
+            if (signData != null) {
+                if (signData.optBoolean("isFromTFCard")) {
+                    mBinding.ethTx.tfcardTip.setVisibility(View.VISIBLE);
                 }
-                mBinding.ethTx.data.setVisibility(View.VISIBLE);
-                mBinding.ethTx.undecodedData.setVisibility(View.GONE);
-                if (signData != null) {
-                    if (signData.optBoolean("isFromTFCard")) {
-                        mBinding.ethTx.tfcardTip.setVisibility(View.VISIBLE);
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
         } else {
-            if (signData != null && !TextUtils.isEmpty(signData.optString("inputData"))){
+            if (signData != null && !TextUtils.isEmpty(signData.optString("inputData"))) {
                 mBinding.ethTx.data.setVisibility(View.GONE);
                 mBinding.ethTx.undecodedData.setVisibility(View.VISIBLE);
                 mBinding.ethTx.inputData.setText("0x" + signData.optString("inputData"));
@@ -156,6 +160,33 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
                 mBinding.ethTx.data.setVisibility(View.GONE);
                 mBinding.ethTx.undecodedData.setVisibility(View.GONE);
             }
+        }
+    }
+
+    private void addViewToData(boolean isUniswap, List<AbiItemAdapter.AbiItem> itemList) {
+        for (int i = 0; i < itemList.size(); i++) {
+            AbiItemAdapter.AbiItem item = itemList.get(i);
+            if ("method".equals(item.key)) {
+                AbiItemMethodBinding abiItemMethodBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+                        R.layout.abi_item_method, null, false);
+                abiItemMethodBinding.key.setText(item.key);
+                abiItemMethodBinding.value.setText(item.value);
+                if (i == 0) {
+                    abiItemMethodBinding.divider.setVisibility(View.GONE);
+                }
+                mBinding.ethTx.container.addView(abiItemMethodBinding.getRoot());
+                continue;
+            }
+            AbiItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+                    R.layout.abi_item, null, false);
+            binding.key.setText(item.key);
+            if (isUniswap && "to".equals(item.key)) {
+                if (!item.value.equalsIgnoreCase(txEntity.getFrom())) {
+                    item.value += String.format(" [%s]", getString(R.string.inconsistent_address));
+                }
+            }
+            binding.value.setText(highLight(item.value));
+            mBinding.ethTx.container.addView(binding.getRoot());
         }
     }
 

@@ -82,6 +82,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     public EthTxConfirmViewModel(@NonNull Application application) {
         super(application);
         context = application;
+        coinCode = Coins.ETH.coinCode();
         readPresetContactInfo();
     }
 
@@ -178,7 +179,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                 signId = bundle.getString(REQUEST_ID);
                 fromAddress = getFromAddress(hdPath);
                 messageData = new String(Hex.decode(typedDataHex), StandardCharsets.UTF_8);
-                JSONObject typedData = new JSONObject(new String(Hex.decode(typedDataHex), StandardCharsets.UTF_8));
+                JSONObject typedData = new JSONObject(messageData);
                 chainId = typedData.getJSONObject("domain").optInt("chainId", 1);
 
                 JSONObject object = new JSONObject();
@@ -225,7 +226,6 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         TxEntity tx = new TxEntity();
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMaximumFractionDigits(20);
-        coinCode = Coins.ETH.coinCode();
         tx.setSignId(WatchWallet.METAMASK_SIGN_ID);
         tx.setTimeStamp(getUniversalSignIndex(getApplication()));
         tx.setCoinCode(coinCode);
