@@ -43,6 +43,7 @@ import org.spongycastle.util.encoders.Hex;
 import java.nio.charset.StandardCharsets;
 
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuide;
+import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuideHint;
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuideTitle;
 
 public class SyncFragment extends BaseFragment<SyncFragmentBinding> {
@@ -127,6 +128,11 @@ public class SyncFragment extends BaseFragment<SyncFragmentBinding> {
                 LayoutInflater.from(mActivity), R.layout.common_modal,
                 null, false);
         binding.title.setText(getString(getSyncWatchWalletGuideTitle(watchWallet), coinCode));
+        if (getSyncWatchWalletGuideHint(watchWallet) != 0) {
+            binding.subTitleHint.setText(getString(getSyncWatchWalletGuideHint(watchWallet)));
+            binding.subTitleHint.setVisibility(View.VISIBLE);
+            binding.subTitleHint.setGravity(Gravity.START);
+        }
         binding.subTitle.setText(getString(getSyncWatchWalletGuide(watchWallet),
                 Coins.coinNameFromCoinCode(coinCode), coinCode));
         binding.subTitle.setGravity(Gravity.START);
