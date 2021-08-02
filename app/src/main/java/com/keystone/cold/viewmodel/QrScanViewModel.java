@@ -36,6 +36,8 @@ import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.protocol.ZipUtil;
 import com.keystone.cold.protocol.parser.ProtoParser;
 import com.keystone.cold.ui.fragment.main.QRCodeScanFragment;
+import com.keystone.cold.viewmodel.exceptions.UnknowQrCodeException;
+import com.keystone.cold.viewmodel.exceptions.XfpNotMatchException;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -15,7 +15,7 @@
  * in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.keystone.cold.viewmodel;
+package com.keystone.cold.viewmodel.exceptions;
 
 public class XfpNotMatchException extends Exception {
     public XfpNotMatchException(String message) {

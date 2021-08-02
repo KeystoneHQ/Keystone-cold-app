@@ -63,6 +63,7 @@ import com.keystone.cold.encryption.ChipSigner;
 import com.keystone.cold.protobuf.TransactionProtoc;
 import com.keystone.cold.ui.views.AuthenticateModal;
 import com.googlecode.protobuf.format.JsonFormat;
+import com.keystone.cold.viewmodel.exceptions.XpubNotMatchException;
 
 import org.json.JSONArray;
 import org.json.JSONException;

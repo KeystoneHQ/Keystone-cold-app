@@ -19,6 +19,8 @@ package com.keystone.cold.ui.fragment.main.scan.scanner;
 
 import android.os.Handler;
 
+import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
+import com.keystone.cold.R;
 import com.keystone.cold.ui.fragment.main.scan.scanner.bean.ZxingConfig;
 import com.keystone.cold.ui.fragment.main.scan.scanner.camera.CameraManager;
 import com.sparrowwallet.hummingbird.UR;
@@ -30,6 +32,10 @@ public interface Host {
     void handleDecode(String text);
 
     void handleDecode(UR ur);
+
+    void handleDecode(SubstratePayload substratePayload);
+
+    void handleProgress(int total, int scan);
 
     void handleProgressPercent(double percent);
 

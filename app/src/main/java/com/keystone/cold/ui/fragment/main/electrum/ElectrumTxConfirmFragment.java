@@ -54,7 +54,7 @@ import com.keystone.cold.update.utils.Storage;
 import com.keystone.cold.util.KeyStoreUtil;
 import com.keystone.cold.viewmodel.ElectrumViewModel;
 import com.keystone.cold.viewmodel.TxConfirmViewModel;
-import com.keystone.cold.viewmodel.XpubNotMatchException;
+import com.keystone.cold.viewmodel.exceptions.XpubNotMatchException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
