@@ -28,6 +28,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.ScannerFragmentBinding;
@@ -239,6 +240,29 @@ public class ScannerFragment extends BaseFragment<ScannerFragmentBinding>
     }
 
     @Override
+    public void handleDecode(SubstratePayload substratePayload) {
+        watchWallet = WatchWallet.getWatchWallet(mActivity);
+        runInSubThread(() -> {
+            try {
+                ScanResultTypes srt = this.desiredTypes.stream().filter(dt -> dt.isType(substratePayload)).findFirst().orElse(null);
+                if (srt != null) {
+                    scannerState.handleScanResult(new ScanResult(srt, substratePayload.rawData));
+                } else {
+                    throw new UnExpectedQRException("un expected qrcode");
+                }
+            } catch (Exception e) {
+                if (!scannerState.handleException(e)) {
+                    if (e instanceof UnExpectedQRException) {
+                        alert(getString(R.string.unresolve_tx), getString(R.string.unresolve_tx_hint, watchWallet.getWalletName(mActivity)));
+                    } else {
+                        alert(getString(R.string.scan_failed), getString(R.string.unsupported_qrcode));
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
     public void alert(String message) {
         alert(null, message);
     }
@@ -264,6 +288,10 @@ public class ScannerFragment extends BaseFragment<ScannerFragmentBinding>
         });
     }
 
+    @Override
+    public void handleProgress(int total, int scan) {
+        mActivity.runOnUiThread(() -> mBinding.scanProgress.setText(getString(R.string.scan_progress, scan + "/" + total)));
+    }
 
     @Override
     public void handleProgressPercent(double percent) {

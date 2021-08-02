@@ -1,5 +1,6 @@
 package com.keystone.cold.ui.fragment.main.scan.scanner;
 
+import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
 import com.sparrowwallet.hummingbird.UR;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 
@@ -14,6 +15,9 @@ import co.nstant.in.cbor.model.DataItem;
 
 public enum ScanResultTypes {
     PLAIN_TEXT,
+
+    UOS,
+
     UR_BYTES,
     UR_ETH_SIGN_REQUEST;
 
@@ -40,6 +44,13 @@ public enum ScanResultTypes {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public boolean isType(SubstratePayload substratePayload) {
+        if (this == ScanResultTypes.UOS) {
+            return true;
+        }
+        return false;
     }
 
     public Object resolveURHex(String hex) {

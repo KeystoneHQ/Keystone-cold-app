@@ -20,6 +20,10 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.google.zxing.Result;
+import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
+import com.keystone.coinlib.coins.polkadot.UOS.UOSDecoder;
+import com.keystone.coinlib.coins.polkadot.UOS.UosDecodeResult;
+import com.keystone.coinlib.exception.InvalidUOSException;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.ui.fragment.main.scan.scanner.camera.CameraManager;
 import com.keystone.cold.ui.fragment.main.scan.scanner.common.Constant;
@@ -27,6 +31,8 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.decode.DecodeThread;
 import com.sparrowwallet.hummingbird.ResultType;
 import com.sparrowwallet.hummingbird.UR;
 import com.sparrowwallet.hummingbird.URDecoder;
+
+import org.spongycastle.util.encoders.DecoderException;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,6 +44,7 @@ public final class CaptureHandler extends Handler {
     private State state;
     private final CameraManager cameraManager;
     private URDecoder decoder = new URDecoder();
+    private UOSDecoder uosDecoder = new UOSDecoder();
     private final ExecutorService sExecutor = Executors.newSingleThreadExecutor();
 
     private enum State {
@@ -65,7 +72,7 @@ public final class CaptureHandler extends Handler {
                 break;
             case Constant.DECODE_SUCCEEDED:
                 String text = ((Result) message.obj).getText();
-                tryDecodeAsUR(text);
+                tryDecode(text);
                 break;
             case Constant.DECODE_FAILED:
                 state = State.PREVIEW;
@@ -76,7 +83,7 @@ public final class CaptureHandler extends Handler {
         }
     }
 
-    private void tryDecodeAsUR(String text) {
+    private void tryDecode(String text) {
         sExecutor.submit(() -> {
             if (decoder.receivePart(text)) {
                 //done scan
@@ -95,10 +102,23 @@ public final class CaptureHandler extends Handler {
                 }
                 return;
             } else {
-                // in UR scan progress and receive a invalid part
-                if (decoder.getProcessedPartsCount() != 0) {
-                    decodeComplete(text);
-                    return;
+                UosDecodeResult decodeResult = null;
+                try {
+                    decodeResult = uosDecoder.decode(text);
+                } catch (InvalidUOSException | DecoderException e) {
+                    e.printStackTrace();
+                }
+                if (decodeResult != null) {
+                    SubstratePayload sp = decodeResult.getSubstratePayload();
+                    //TODO: handle multi part
+                    if (!decodeResult.isMultiPart || decodeResult.isComplete) {
+                        state = State.SUCCESS;
+                        decodeComplete(sp);
+                    } else {
+                        state = State.PREVIEW;
+                        host.handleProgressPercent((double) uosDecoder.getFrameCount() / uosDecoder.getScanedFrames());
+                        cameraManager.requestPreviewFrame(decodeThread.getHandler(), Constant.DECODE);
+                    }
                 }
             }
             decodeComplete(text);
@@ -116,6 +136,13 @@ public final class CaptureHandler extends Handler {
         AppExecutors.getInstance().mainThread().execute(() -> {
             state = State.SUCCESS;
             host.handleDecode(result);
+        });
+    }
+
+    private void decodeComplete(SubstratePayload substratePayload) {
+        AppExecutors.getInstance().mainThread().execute(() -> {
+            state = State.SUCCESS;
+            host.handleDecode(substratePayload);
         });
     }
 

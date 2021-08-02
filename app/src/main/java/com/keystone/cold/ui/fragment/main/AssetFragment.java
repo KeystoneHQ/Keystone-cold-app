@@ -38,6 +38,8 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.keystone.coinlib.coins.polkadot.UOS.Extrinsic;
+import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
@@ -55,9 +57,12 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.exceptions.UnExpectedQREx
 import com.keystone.cold.ui.modal.ProgressModalDialog;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.CoinViewModel;
+import com.keystone.cold.viewmodel.PolkadotJsTxConfirmViewModel;
 import com.keystone.cold.viewmodel.PublicKeyViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
-import com.keystone.cold.viewmodel.XfpNotMatchException;
+import com.keystone.cold.viewmodel.exceptions.UnknownSubstrateChainException;
+import com.keystone.cold.viewmodel.exceptions.UnsupportedSubstrateTxException;
+import com.keystone.cold.viewmodel.exceptions.XfpNotMatchException;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 
 import org.json.JSONObject;
@@ -75,6 +80,7 @@ import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CU
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
+import static com.keystone.cold.ui.fragment.main.TxConfirmFragment.KEY_TX_DATA;
 import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
 
 public class AssetFragment extends BaseFragment<AssetFragmentBinding>
@@ -270,7 +276,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 showBottomSheetMenu();
                 break;
             case R.id.action_scan:
-                if (watchWallet == WatchWallet.METAMASK) {
+                if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.POLKADOT_JS) {
                     scanQrCode();
                 } else {
                     navigate(R.id.action_to_QRCodeScanFragment);
@@ -288,7 +294,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 
     private void scanQrCode() {
         ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);
-        scannerViewModel.setState(new ScannerState(Arrays.asList(ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_BYTES)) {
+        scannerViewModel.setState(new ScannerState(Arrays.asList(ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_BYTES, ScanResultTypes.UOS)) {
             @Override
             public void handleScanResult(ScanResult result) throws Exception {
                 if (result.getType().equals(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
@@ -325,6 +331,24 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     } else {
                         throw new UnExpectedQRException("cannot resolve ur bytes");
                     }
+                } else if (result.getType().equals(ScanResultTypes.UOS)) {
+                    SubstratePayload sp = new SubstratePayload(result.getData());
+                    PolkadotJsTxConfirmViewModel viewModel = ViewModelProviders.of(mActivity)
+                            .get(PolkadotJsTxConfirmViewModel.class);
+                    Extrinsic extrinsic = sp.extrinsic;
+                    if (!viewModel.isNetworkSupported(sp.network)) {
+                        throw new UnknownSubstrateChainException("unknown substrate chain");
+                    } else if (extrinsic == null ||
+                            !viewModel.isTransactionSupported(extrinsic.palletParameter)) {
+                        throw new UnsupportedSubstrateTxException("un supported substrate tx");
+                    } else if (!viewModel.isAccountMatch(sp.getAccount())) {
+                        throw new XfpNotMatchException("Substrate account not match");
+                    } else {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(KEY_TX_DATA, result.getData());
+                        bundle.putBoolean("substrateTx", true);
+                        mFragment.navigate(R.id.action_to_polkadotTxConfirm, bundle);
+                    }
                 }
             }
 
@@ -333,6 +357,14 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 e.printStackTrace();
                 if (e instanceof XfpNotMatchException) {
                     mFragment.alert(getString(R.string.account_not_match), getString(R.string.account_not_match_detail));
+                    return true;
+                } else if (e instanceof UnsupportedSubstrateTxException) {
+                    mFragment.alert(getString(R.string.unsupported_polka_tx_type_title),
+                            getString(R.string.unsupported_polka_tx_type_content));
+                    return true;
+                } else if (e instanceof UnknownSubstrateChainException) {
+                    mFragment.alert(getString(R.string.unknown_substrate_chain_title),
+                            getString(R.string.unknown_substrate_chain_content));
                     return true;
                 }
                 return false;
