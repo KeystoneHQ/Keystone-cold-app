@@ -17,7 +17,7 @@
  *
  */
 
-package com.keystone.cold.ui.fragment.main;
+package com.keystone.cold.ui.fragment.main.web3;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -50,7 +50,6 @@ import com.keystone.cold.ui.views.AuthenticateModal;
 import com.keystone.cold.viewmodel.EthTxConfirmViewModel;
 import com.keystone.cold.viewmodel.TxConfirmViewModel;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -60,7 +59,7 @@ import java.util.regex.Pattern;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
 import static com.keystone.cold.ui.fragment.main.BroadcastTxFragment.KEY_TXID;
-import static com.keystone.cold.ui.fragment.main.EthBroadcastTxFragment.KEY_SIGNATURE_JSON;
+import static com.keystone.cold.ui.fragment.main.web3.EthBroadcastTxFragment.KEY_SIGNATURE_JSON;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
 public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {

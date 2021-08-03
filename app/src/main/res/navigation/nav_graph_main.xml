@@ -152,7 +152,7 @@
 
     <fragment
         android:id="@+id/ethSignTypedDataFragment"
-        android:name="com.keystone.cold.ui.fragment.main.EthSignTypedDataFragment"
+        android:name="com.keystone.cold.ui.fragment.main.web3.EthSignTypedDataFragment"
         android:label="ethSignTypedDataFragment">
         <action
             android:id="@+id/action_to_ethBroadcastTxFragment"
@@ -165,7 +165,7 @@
 
     <fragment
         android:id="@+id/ethSignMessageFragment"
-        android:name="com.keystone.cold.ui.fragment.main.EthSignMessageFragment"
+        android:name="com.keystone.cold.ui.fragment.main.web3.EthSignMessageFragment"
         android:label="ethSignMessageFragment">
         <action
             android:id="@+id/action_to_ethBroadcastTxFragment"
@@ -178,7 +178,7 @@
 
     <fragment
         android:id="@+id/ethTxConfirmFragment"
-        android:name="com.keystone.cold.ui.fragment.main.EthTxConfirmFragment"
+        android:name="com.keystone.cold.ui.fragment.main.web3.EthTxConfirmFragment"
         android:label="ethTxConfirmFragment"
         tools:layout="@layout/eth_tx_confirm">
         <action
@@ -192,7 +192,7 @@
 
     <fragment
         android:id="@+id/ethBroadcastTxFragment"
-        android:name="com.keystone.cold.ui.fragment.main.EthBroadcastTxFragment"
+        android:name="com.keystone.cold.ui.fragment.main.web3.EthBroadcastTxFragment"
         android:label="ethBroadcastTxFragment">
         <action
             android:id="@+id/action_to_home"
@@ -204,7 +204,7 @@
 
     <fragment
         android:id="@+id/ethTxFragment"
-        android:name="com.keystone.cold.ui.fragment.main.EthTxFragment"
+        android:name="com.keystone.cold.ui.fragment.main.web3.EthTxFragment"
         android:label="ethTxFragment" />
 
     <fragment

@@ -83,10 +83,10 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         super(application);
         context = application;
         coinCode = Coins.ETH.coinCode();
-        readPresetContactInfo();
+        readPresetContractInfo();
     }
 
-    protected void readPresetContactInfo() {
+    protected void readPresetContractInfo() {
         try {
             tokensMap = new JSONArray(readAsset("abi/token_address_book.json"));
         } catch (JSONException e) {

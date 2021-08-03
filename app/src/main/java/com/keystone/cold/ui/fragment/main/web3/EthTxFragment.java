@@ -17,7 +17,7 @@
  *
  */
 
-package com.keystone.cold.ui.fragment.main;
+package com.keystone.cold.ui.fragment.main.web3;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -49,7 +49,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
-import static com.keystone.cold.ui.fragment.main.EthTxConfirmFragment.highLight;
+import static com.keystone.cold.ui.fragment.main.web3.EthTxConfirmFragment.highLight;
 import static com.keystone.cold.ui.fragment.main.TxFragment.KEY_TX_ID;
 
 public class EthTxFragment extends BaseFragment<EthTxBinding> {

@@ -17,7 +17,7 @@
  *
  */
 
-package com.keystone.cold.ui.fragment.main;
+package com.keystone.cold.ui.fragment.main.web3;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,7 +45,7 @@ import java.nio.charset.StandardCharsets;
 
 import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
-import static com.keystone.cold.ui.fragment.main.EthBroadcastTxFragment.KEY_SIGNATURE_JSON;
+import static com.keystone.cold.ui.fragment.main.web3.EthBroadcastTxFragment.KEY_SIGNATURE_JSON;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
 public class EthSignMessageFragment extends BaseFragment<EthSignMessageBinding> {

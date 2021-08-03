@@ -17,7 +17,7 @@
  *
  */
 
-package com.keystone.cold.ui.fragment.main;
+package com.keystone.cold.ui.fragment.main.web3;
 
 import android.text.TextUtils;
 
