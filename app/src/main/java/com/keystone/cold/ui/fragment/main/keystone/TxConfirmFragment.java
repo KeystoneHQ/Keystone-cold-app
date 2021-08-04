@@ -15,7 +15,7 @@
  * in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.keystone.cold.ui.fragment.main;
+package com.keystone.cold.ui.fragment.main.keystone;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -42,6 +42,9 @@ import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryptioncore.utils.ByteFormatter;
 import com.keystone.cold.ui.BindingAdapters;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.ui.fragment.main.FeeAttackChecking;
+import com.keystone.cold.ui.fragment.main.TransactionItem;
+import com.keystone.cold.ui.fragment.main.TransactionItemAdapter;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.SigningDialog;
@@ -60,7 +63,7 @@ import java.util.List;
 
 import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
-import static com.keystone.cold.ui.fragment.main.BroadcastTxFragment.KEY_TXID;
+import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KEY_TXID;
 import static com.keystone.cold.ui.fragment.main.FeeAttackChecking.FeeAttackCheckingResult.NORMAL;
 import static com.keystone.cold.ui.fragment.main.FeeAttackChecking.FeeAttackCheckingResult.SAME_OUTPUTS;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;

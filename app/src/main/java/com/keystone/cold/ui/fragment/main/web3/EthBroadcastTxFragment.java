@@ -26,7 +26,7 @@ import android.view.View;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
-import com.keystone.cold.ui.fragment.main.BroadcastTxFragment;
+import com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 import com.sparrowwallet.hummingbird.registry.EthSignature;

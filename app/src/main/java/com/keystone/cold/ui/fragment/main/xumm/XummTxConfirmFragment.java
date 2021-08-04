@@ -42,8 +42,8 @@ import com.keystone.cold.viewmodel.tx.XummTxConfirmViewModel;
 import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
-import static com.keystone.cold.ui.fragment.main.BroadcastTxFragment.KEY_TXID;
-import static com.keystone.cold.ui.fragment.main.TxConfirmFragment.KEY_TX_DATA;
+import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KEY_TXID;
+import static com.keystone.cold.ui.fragment.main.keystone.TxConfirmFragment.KEY_TX_DATA;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
 public class XummTxConfirmFragment extends BaseFragment<XummTxConfirmBinding> {

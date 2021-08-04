@@ -499,7 +499,7 @@
         tools:layout="@layout/electrum_export"></fragment>
     <fragment
         android:id="@+id/txConfirmFragment"
-        android:name="com.keystone.cold.ui.fragment.main.TxConfirmFragment"
+        android:name="com.keystone.cold.ui.fragment.main.keystone.TxConfirmFragment"
         android:label="TxConfirmFragment"
         tools:layout="@layout/tx_confirm_fragment">
         <action
@@ -549,7 +549,7 @@
 
     <fragment
         android:id="@+id/broadcastTxFragment"
-        android:name="com.keystone.cold.ui.fragment.main.BroadcastTxFragment"
+        android:name="com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment"
         android:label="BroadcastTxFragment"
         tools:layout="@layout/broadcast_tx_fragment">
         <action

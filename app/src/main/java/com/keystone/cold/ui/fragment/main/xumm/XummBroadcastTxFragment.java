@@ -23,8 +23,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.keystone.cold.R;
-import com.keystone.cold.db.entity.TxEntity;
-import com.keystone.cold.ui.fragment.main.BroadcastTxFragment;
+import com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment;
 
 import org.json.JSONObject;
 

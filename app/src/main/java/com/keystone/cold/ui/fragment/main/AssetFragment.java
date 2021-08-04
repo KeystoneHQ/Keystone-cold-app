@@ -80,7 +80,7 @@ import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CU
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
-import static com.keystone.cold.ui.fragment.main.TxConfirmFragment.KEY_TX_DATA;
+import static com.keystone.cold.ui.fragment.main.keystone.TxConfirmFragment.KEY_TX_DATA;
 import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
 
 public class AssetFragment extends BaseFragment<AssetFragmentBinding>

@@ -67,7 +67,7 @@ import java.util.List;
 
 import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
-import static com.keystone.cold.ui.fragment.main.BroadcastTxFragment.KEY_TXID;
+import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KEY_TXID;
 import static com.keystone.cold.ui.fragment.main.FeeAttackChecking.FeeAttackCheckingResult.NORMAL;
 import static com.keystone.cold.ui.fragment.main.FeeAttackChecking.FeeAttackCheckingResult.SAME_OUTPUTS;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;

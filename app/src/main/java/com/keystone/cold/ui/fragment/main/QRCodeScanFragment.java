@@ -57,7 +57,7 @@ import org.json.JSONException;
 import java.io.IOException;
 
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
-import static com.keystone.cold.ui.fragment.main.TxConfirmFragment.KEY_TX_DATA;
+import static com.keystone.cold.ui.fragment.main.keystone.TxConfirmFragment.KEY_TX_DATA;
 
 public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
         implements SurfaceHolder.Callback, Host {
