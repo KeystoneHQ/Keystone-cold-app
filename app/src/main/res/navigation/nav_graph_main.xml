@@ -27,13 +27,6 @@
         android:label="AssetListFragment"
         tools:layout="@layout/asset_list_fragment">
         <action
-            android:id="@+id/action_to_scan"
-            app:destination="@id/QRCodeScanFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
-        <action
             android:id="@+id/action_to_aboutFragment"
             app:destination="@id/aboutFragment" />
         <action
@@ -58,6 +51,15 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_to_scanner"
+            app:destination="@id/scannerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+
     </fragment>
     <fragment
         android:id="@+id/QRCodeScanFragment"
@@ -849,13 +851,15 @@
         android:id="@+id/sparkTokenAddress"
         android:name="com.keystone.cold.ui.fragment.main.xumm.SparkTokenAddress"
         android:label="SparkTokenAddress">
+
         <action
-            android:id="@id/action_to_scan"
-            app:destination="@id/QRCodeScanFragment"
+            android:id="@+id/action_to_scanner"
+            app:destination="@id/scannerFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
+
     </fragment>
 
     <fragment

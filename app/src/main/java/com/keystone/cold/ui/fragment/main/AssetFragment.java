@@ -22,6 +22,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -40,13 +41,19 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.coins.polkadot.UOS.Extrinsic;
 import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
+import com.keystone.coinlib.exception.CoinNotFindException;
+import com.keystone.coinlib.exception.InvalidTransactionException;
+import com.keystone.coinlib.exception.InvalidUOSException;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
+import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.databinding.AssetFragmentBinding;
 import com.keystone.cold.databinding.DialogBottomSheetBinding;
 import com.keystone.cold.db.entity.CoinEntity;
+import com.keystone.cold.protocol.ZipUtil;
+import com.keystone.cold.protocol.parser.ProtoParser;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
@@ -66,6 +73,7 @@ import com.keystone.cold.viewmodel.exceptions.UnsupportedSubstrateTxException;
 import com.keystone.cold.viewmodel.exceptions.XfpNotMatchException;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
@@ -277,11 +285,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 showBottomSheetMenu();
                 break;
             case R.id.action_scan:
-                if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.POLKADOT_JS) {
-                    scanQrCode();
-                } else {
-                    navigate(R.id.action_to_QRCodeScanFragment);
-                }
+                scanQrCode();
                 break;
             default:
                 break;
@@ -299,67 +303,16 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             @Override
             public void handleScanResult(ScanResult result) throws Exception {
                 if (result.getType().equals(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
-                    EthSignRequest ethSignRequest = (EthSignRequest) result.resolve();
-                    Bundle bundle = new Bundle();
-                    ByteBuffer uuidBuffer = ByteBuffer.wrap(ethSignRequest.getRequestId());
-                    UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
-                    String hdPath = ethSignRequest.getDerivationPath();
-                    String requestMFP = Hex.toHexString(ethSignRequest.getMasterFingerprint());
-                    bundle.putString(REQUEST_ID, uuid.toString());
-                    bundle.putString(SIGN_DATA, Hex.toHexString(ethSignRequest.getSignData()));
-                    bundle.putString(HD_PATH, "M/" + hdPath);
-                    String MFP = new GetMasterFingerprintCallable().call();
-
-                    if (!requestMFP.equalsIgnoreCase(MFP)) {
-                        throw new XfpNotMatchException("Master fingerprint not match");
-                    }
-                    if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TRANSACTION.getType())) {
-                        mFragment.navigate(R.id.action_to_ethTxConfirmFragment, bundle);
-                    } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_DATA.getType())) {
-                        mFragment.navigate(R.id.action_to_ethSignTypedDataFragment, bundle);
-                    } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.PERSONAL_MESSAGE.getType())) {
-                        mFragment.navigate(R.id.action_to_ethSignMessageFragment, bundle);
-                    } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_TRANSACTION.getType())) {
-                        byte[] typedTransaction = ethSignRequest.getSignData();
-                        byte type = typedTransaction[0];
-                        switch (type) {
-                            case 0x02:
-                                mFragment.navigate(R.id.action_to_ethFeeMarketTxConfirmFragment, bundle);
-                                break;
-                            default:
-                                throw new UnknowQrCodeException("unknown transaction!");
-                        }
-                    }
+                    if (handleEthSignRequest(result)) return;
+                    throw new UnExpectedQRException("cannot resolve eth sign request");
                 } else if (result.getType().equals(ScanResultTypes.UR_BYTES)) {
-                    JSONObject object = new JSONObject(new String((byte[]) result.resolve(), StandardCharsets.UTF_8));
-                    JSONObject webAuth = object.optJSONObject("data");
-                    if (webAuth != null && webAuth.optString("type").equals("webAuth")) {
-                        String data = webAuth.getString("data");
-                        Bundle bundle = new Bundle();
-                        bundle.putString(WEB_AUTH_DATA, data);
-                        bundle.putBoolean(IS_SETUP_VAULT, false);
-                        mFragment.navigate(R.id.action_QRCodeScan_to_result, bundle);
-                    } else {
-                        throw new UnExpectedQRException("cannot resolve ur bytes");
-                    }
+                    if (handleWebAuth(result)) return;
+                    if (handleKeystoneTx(result)) return;
+                    if (handleXRPToolkit(result)) return;
+                    throw new UnExpectedQRException("cannot resolve ur bytes");
                 } else if (result.getType().equals(ScanResultTypes.UOS)) {
-                    SubstratePayload sp = new SubstratePayload(result.getData());
-                    PolkadotJsTxConfirmViewModel viewModel = ViewModelProviders.of(mActivity)
-                            .get(PolkadotJsTxConfirmViewModel.class);
-                    Extrinsic extrinsic = sp.extrinsic;
-                    if (!viewModel.isNetworkSupported(sp.network)) {
-                        throw new UnknownSubstrateChainException("unknown substrate chain");
-                    } else if (extrinsic == null ||
-                            !viewModel.isTransactionSupported(extrinsic.palletParameter)) {
-                        throw new UnsupportedSubstrateTxException("un supported substrate tx");
-                    } else if (!viewModel.isAccountMatch(sp.getAccount())) {
-                        throw new XfpNotMatchException("Substrate account not match");
-                    } else {
-                        Bundle bundle = new Bundle();
-                        bundle.putString(KEY_TX_DATA, result.getData());
-                        bundle.putBoolean("substrateTx", true);
-                        mFragment.navigate(R.id.action_to_polkadotTxConfirm, bundle);
-                    }
+                    if (handleSubstratePayload(result)) return;
+                    throw new UnExpectedQRException("unknown qrcode");
                 }
             }
 
@@ -377,19 +330,140 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     mFragment.alert(getString(R.string.unknown_substrate_chain_title),
                             getString(R.string.unknown_substrate_chain_content));
                     return true;
+                } else if (e instanceof InvalidTransactionException || e instanceof InvalidUOSException) {
+                    mFragment.alert(getString(R.string.unresolve_tx),
+                            getString(R.string.unresolve_tx_hint,
+                                    WatchWallet.getWatchWallet(mActivity).getWalletName(mActivity)));
+                    return true;
+                } else if (e instanceof CoinNotFindException) {
+                    mFragment.alert(null, getString(R.string.unsupported_coin), null);
+                    return true;
                 }
                 return false;
             }
+
+            private boolean handleEthSignRequest(ScanResult result) throws XfpNotMatchException {
+                EthSignRequest ethSignRequest = (EthSignRequest) result.resolve();
+                Bundle bundle = new Bundle();
+                ByteBuffer uuidBuffer = ByteBuffer.wrap(ethSignRequest.getRequestId());
+                UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+                String hdPath = ethSignRequest.getDerivationPath();
+                String requestMFP = Hex.toHexString(ethSignRequest.getMasterFingerprint());
+                bundle.putString(REQUEST_ID, uuid.toString());
+                bundle.putString(SIGN_DATA, Hex.toHexString(ethSignRequest.getSignData()));
+                bundle.putString(HD_PATH, "M/" + hdPath);
+                String MFP = new GetMasterFingerprintCallable().call();
+
+                if (!requestMFP.equalsIgnoreCase(MFP)) {
+                    throw new XfpNotMatchException("Master fingerprint not match");
+                }
+                if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TRANSACTION.getType())) {
+                    mFragment.navigate(R.id.action_to_ethTxConfirmFragment, bundle);
+                    return true;
+                } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_DATA.getType())) {
+                    mFragment.navigate(R.id.action_to_ethSignTypedDataFragment, bundle);
+                    return true;
+                } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.PERSONAL_MESSAGE.getType())) {
+                    mFragment.navigate(R.id.action_to_ethSignMessageFragment, bundle);
+                    return true;
+                } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_TRANSACTION.getType())) {
+                    byte[] typedTransaction = ethSignRequest.getSignData();
+                    byte type = typedTransaction[0];
+                    switch (type) {
+                        case 0x02:
+                            mFragment.navigate(R.id.action_to_ethFeeMarketTxConfirmFragment, bundle);
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+                return false;
+            }
+
+            private boolean handleWebAuth(ScanResult result) throws JSONException {
+                JSONObject object = new JSONObject(new String((byte[]) result.resolve(), StandardCharsets.UTF_8));
+                JSONObject webAuth = object.optJSONObject("data");
+                if (webAuth != null && webAuth.optString("type").equals("webAuth")) {
+                    String data = webAuth.getString("data");
+                    Bundle bundle = new Bundle();
+                    bundle.putString(WEB_AUTH_DATA, data);
+                    bundle.putBoolean(IS_SETUP_VAULT, false);
+                    mFragment.navigate(R.id.action_QRCodeScan_to_result, bundle);
+                    return true;
+                }
+                return false;
+            }
+
+            private boolean handleSubstratePayload(ScanResult result) throws UnknownSubstrateChainException, UnsupportedSubstrateTxException, XfpNotMatchException, InvalidUOSException {
+                SubstratePayload sp = new SubstratePayload(result.getData());
+                PolkadotJsTxConfirmViewModel viewModel = ViewModelProviders.of(mActivity)
+                        .get(PolkadotJsTxConfirmViewModel.class);
+                Extrinsic extrinsic = sp.extrinsic;
+                if (!viewModel.isNetworkSupported(sp.network)) {
+                    throw new UnknownSubstrateChainException("unknown substrate chain");
+                } else if (extrinsic == null ||
+                        !viewModel.isTransactionSupported(extrinsic.palletParameter)) {
+                    throw new UnsupportedSubstrateTxException("un supported substrate tx");
+                } else if (!viewModel.isAccountMatch(sp.getAccount())) {
+                    throw new XfpNotMatchException("Substrate account not match");
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(KEY_TX_DATA, result.getData());
+                    bundle.putBoolean("substrateTx", true);
+                    mFragment.navigate(R.id.action_to_polkadotTxConfirm, bundle);
+                    return true;
+                }
+            }
+
+            private boolean handleKeystoneTx(ScanResult result) throws XfpNotMatchException, UnknowQrCodeException, JSONException, CoinNotFindException, InvalidTransactionException {
+                byte[] bytes = (byte[]) result.resolve();
+                String hex = Hex.toHexString(bytes);
+                JSONObject object;
+                hex = ZipUtil.unzip(hex);
+                object = new ProtoParser(Hex.decode(hex)).parseToJson();
+                if (object != null) {
+                    Log.i(TAG, "decodeAsProtobuf result: " + object);
+                    WatchWallet wallet = WatchWallet.getWatchWallet(MainApplication.getApplication());
+                    if (wallet != WatchWallet.KEYSTONE) {
+                        throw new UnknowQrCodeException("not support bc32 qrcode in current wallet mode");
+                    }
+                    String type = object.getString("type");
+                    if ("TYPE_SIGN_TX".equals(type)) {
+                        String xfp = new GetMasterFingerprintCallable().call();
+                        if (!object.optString("xfp").equals(xfp)) {
+                            throw new XfpNotMatchException("xfp not match");
+                        }
+                        try {
+                            JSONObject transaction = object.getJSONObject("signTx");
+                            String coinCode = transaction.getString("coinCode");
+                            if (!WatchWallet.isSupported(mActivity, coinCode)) {
+                                throw new CoinNotFindException("not support " + coinCode);
+                            }
+                            Bundle bundle = new Bundle();
+                            bundle.putString(KEY_TX_DATA, object.getJSONObject("signTx").toString());
+                            mFragment.navigate(R.id.action_to_txConfirmFragment, bundle);
+                            return true;
+                        } catch (JSONException e) {
+                            throw new InvalidTransactionException("invalid transaction");
+                        }
+                    }
+                    throw new UnknowQrCodeException("unknow qrcode type " + type);
+                }
+                return false;
+            }
+
+            private boolean handleXRPToolkit(ScanResult result) throws JSONException, InvalidTransactionException {
+                JSONObject object = new JSONObject(new String((byte[]) result.resolve(), StandardCharsets.UTF_8));
+                if (object.has("TransactionType")) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(KEY_TX_DATA, object.toString());
+                    mFragment.navigate(R.id.action_to_xrpTxConfirmFragment, bundle);
+                    return true;
+                }
+                throw new InvalidTransactionException("unknown qr code type");
+            }
         });
         navigate(R.id.action_to_scanner);
-    }
-
-    private JSONObject tryDecodeAsJson(String hex) {
-        try {
-            return new JSONObject(new String(Hex.decode(hex)));
-        } catch (Exception ignored) {
-        }
-        return null;
     }
 
     private void handleAddAddress() {
