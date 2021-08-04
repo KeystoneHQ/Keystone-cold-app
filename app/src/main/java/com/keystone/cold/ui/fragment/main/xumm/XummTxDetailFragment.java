@@ -34,7 +34,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.databinding.XrpTxDetailBinding;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
-import com.keystone.cold.viewmodel.XummTxConfirmViewModel;
+import com.keystone.cold.viewmodel.tx.XummTxConfirmViewModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;

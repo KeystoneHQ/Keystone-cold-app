@@ -76,12 +76,12 @@ public class AddAddressViewModel extends AndroidViewModel {
         return addComplete;
     }
 
-    static class AddAddressTask extends AsyncTask<String, Void, Void> {
+    public static class AddAddressTask extends AsyncTask<String, Void, Void> {
         private final CoinEntity coinEntity;
         private final DataRepository repo;
         private final Runnable onComplete;
 
-        AddAddressTask(CoinEntity coinEntity, DataRepository repo, Runnable onComplete) {
+        public AddAddressTask(CoinEntity coinEntity, DataRepository repo, Runnable onComplete) {
             this.coinEntity = coinEntity;
             this.repo = repo;
             this.onComplete = onComplete;

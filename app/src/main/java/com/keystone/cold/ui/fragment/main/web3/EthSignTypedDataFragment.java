@@ -35,8 +35,8 @@ import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
-import com.keystone.cold.viewmodel.EthTxConfirmViewModel;
-import com.keystone.cold.viewmodel.TxConfirmViewModel;
+import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
+import com.keystone.cold.viewmodel.tx.KeystoneTxViewModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,7 +56,7 @@ import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
 public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBinding> {
 
-    private EthTxConfirmViewModel viewModel;
+    private Web3TxViewModel viewModel;
     private SigningDialog signingDialog;
 
     private final Runnable forgetPassword = () -> {
@@ -73,7 +73,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
     @Override
     protected void init(View view) {
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
-        viewModel = ViewModelProviders.of(this).get(EthTxConfirmViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(Web3TxViewModel.class);
         LiveData<JSONObject> liveData = viewModel.parseEIP712TypedData(requireArguments());
         liveData.observe(this, o -> onMessageParsed(liveData, o));
         viewModel.parseTxException().observe(this, this::handleParseException);
@@ -168,10 +168,10 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
 
     private void subscribeSignState() {
         viewModel.getSignState().observe(this, s -> {
-            if (TxConfirmViewModel.STATE_SIGNING.equals(s)) {
+            if (KeystoneTxViewModel.STATE_SIGNING.equals(s)) {
                 signingDialog = SigningDialog.newInstance();
                 signingDialog.show(mActivity.getSupportFragmentManager(), "");
-            } else if (TxConfirmViewModel.STATE_SIGN_SUCCESS.equals(s)) {
+            } else if (KeystoneTxViewModel.STATE_SIGN_SUCCESS.equals(s)) {
                 if (signingDialog != null) {
                     signingDialog.setState(SigningDialog.STATE_SUCCESS);
                 }
@@ -182,7 +182,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
                     signingDialog = null;
                     onSignSuccess();
                 }, 500);
-            } else if (TxConfirmViewModel.STATE_SIGN_FAIL.equals(s)) {
+            } else if (KeystoneTxViewModel.STATE_SIGN_FAIL.equals(s)) {
                 if (signingDialog == null) {
                     signingDialog = SigningDialog.newInstance();
                     signingDialog.show(mActivity.getSupportFragmentManager(), "");

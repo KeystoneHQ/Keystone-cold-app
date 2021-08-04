@@ -15,7 +15,7 @@
  * in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.keystone.cold.viewmodel;
+package com.keystone.cold.viewmodel.tx;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
@@ -42,9 +42,9 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.db.entity.AddressEntity;
-import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
+import com.keystone.cold.viewmodel.WatchWallet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,15 +55,13 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
 
 import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.HD_PATH;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.REQUEST_ID;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.SIGN_DATA;
 
-public class EthTxConfirmViewModel extends TxConfirmViewModel {
-    private final MutableLiveData<Boolean> addingAddress = new MutableLiveData<>();
+public class Web3TxViewModel extends Base {
     private JSONArray tokensMap;
     private String hdPath;
     private String signId;
@@ -79,7 +77,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
     private String inputData;
     private boolean isFromTFCard;
 
-    public EthTxConfirmViewModel(@NonNull Application application) {
+    public Web3TxViewModel(@NonNull Application application) {
         super(application);
         context = application;
         coinCode = Coins.ETH.coinCode();
@@ -260,29 +258,6 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
         }
     }
 
-    private void addAddress(int addressIndex) {
-        CoinEntity coin = mRepository.loadCoinSync(Coins.coinIdFromCoinCode(coinCode));
-        int addressLength = mRepository.loadAccountsForCoin(coin).get(0).getAddressLength();
-
-        if (addressLength < addressIndex + 1) {
-            String[] names = new String[addressIndex + 1 - addressLength];
-            int index = 0;
-            for (int i = addressLength; i < addressIndex + 1; i++) {
-                names[index++] = coinCode + "-" + i;
-            }
-            final CountDownLatch mLatch = new CountDownLatch(1);
-            addingAddress.postValue(true);
-            new AddAddressViewModel.AddAddressTask(coin, mRepository, mLatch::countDown)
-                    .execute(names);
-            try {
-                mLatch.await();
-                addingAddress.postValue(false);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     private int getAddressIndex(String hdPath) {
         try {
             return CoinPath.parsePath(hdPath).getValue();
@@ -294,39 +269,43 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
 
     public void handleSign() {
         AppExecutors.getInstance().diskIO().execute(() -> {
-            SignCallback callback = initSignCallback();
+            SignCallback callback = initSignTxCallback();
             callback.startSign();
             Signer signer = initSigner();
             signTransaction(callback, signer);
         });
     }
 
+    private SignCallback initialSignMessageCallback() {
+        return new SignCallback() {
+            @Override
+            public void startSign() {
+                signState.postValue(STATE_SIGNING);
+            }
+
+            @Override
+            public void onFail() {
+                signState.postValue(STATE_SIGN_FAIL);
+                new ClearTokenCallable().call();
+            }
+
+            @Override
+            public void onSuccess(String txId, String sig) {
+                signature = sig;
+                signState.postValue(STATE_SIGN_SUCCESS);
+                new ClearTokenCallable().call();
+            }
+
+            @Override
+            public void postProgress(int progress) {
+
+            }
+        };
+    }
+
     public void handleSignEIP712TypedData() {
         AppExecutors.getInstance().diskIO().execute(() -> {
-            SignCallback callback = new SignCallback() {
-                @Override
-                public void startSign() {
-                    signState.postValue(STATE_SIGNING);
-                }
-
-                @Override
-                public void onFail() {
-                    signState.postValue(STATE_SIGN_FAIL);
-                    new ClearTokenCallable().call();
-                }
-
-                @Override
-                public void onSuccess(String txId, String sig) {
-                    signature = sig;
-                    signState.postValue(STATE_SIGN_SUCCESS);
-                    new ClearTokenCallable().call();
-                }
-
-                @Override
-                public void postProgress(int progress) {
-
-                }
-            };
+            SignCallback callback = initialSignMessageCallback();
             callback.startSign();
             Signer signer = initSigner();
             signEIP712TypedData(callback, signer);
@@ -335,30 +314,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
 
     public void handleSignPersonalMessage() {
         AppExecutors.getInstance().diskIO().execute(() -> {
-            SignCallback callback = new SignCallback() {
-                @Override
-                public void startSign() {
-                    signState.postValue(STATE_SIGNING);
-                }
-
-                @Override
-                public void onFail() {
-                    signState.postValue(STATE_SIGN_FAIL);
-                    new ClearTokenCallable().call();
-                }
-
-                @Override
-                public void onSuccess(String txId, String sig) {
-                    signature = sig;
-                    signState.postValue(STATE_SIGN_SUCCESS);
-                    new ClearTokenCallable().call();
-                }
-
-                @Override
-                public void postProgress(int progress) {
-
-                }
-            };
+            SignCallback callback = initialSignMessageCallback();
             callback.startSign();
             Signer signer = initSigner();
             signPersonalMessage(callback, signer);

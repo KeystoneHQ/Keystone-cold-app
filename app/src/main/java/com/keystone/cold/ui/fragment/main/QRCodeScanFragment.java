@@ -46,7 +46,7 @@ import com.keystone.cold.scan.bean.ZxingConfigBuilder;
 import com.keystone.cold.scan.camera.CameraManager;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
-import com.keystone.cold.viewmodel.PolkadotJsTxConfirmViewModel;
+import com.keystone.cold.viewmodel.tx.PolkadotJsTxConfirmViewModel;
 import com.keystone.cold.viewmodel.QrScanViewModel;
 import com.keystone.cold.viewmodel.exceptions.UnknowQrCodeException;
 import com.keystone.cold.viewmodel.WatchWallet;

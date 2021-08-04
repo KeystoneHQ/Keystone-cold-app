@@ -17,7 +17,7 @@
  *
  */
 
-package com.keystone.cold.viewmodel;
+package com.keystone.cold.viewmodel.tx;
 
 import android.app.Application;
 import android.text.TextUtils;
@@ -39,6 +39,7 @@ import com.keystone.cold.MainApplication;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
+import com.keystone.cold.viewmodel.WatchWallet;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,7 +54,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class PolkadotJsTxConfirmViewModel extends TxConfirmViewModel {
+public class PolkadotJsTxConfirmViewModel extends Base {
 
     private byte[] signingPayload;
     private boolean isHash;
@@ -64,8 +65,9 @@ public class PolkadotJsTxConfirmViewModel extends TxConfirmViewModel {
 
     public PolkadotJsTxConfirmViewModel(@NonNull Application application) {
         super(application);
-        mRepo = ((MainApplication)application).getRepository();
+        mRepo = ((MainApplication) application).getRepository();
     }
+
     private JSONObject extrinsicObject;
 
     public void parseTxData(String data) {
@@ -85,7 +87,7 @@ public class PolkadotJsTxConfirmViewModel extends TxConfirmViewModel {
 
     public boolean isTransactionSupported(Parameter parameter) {
         if (parameter == null) return false;
-        return  parameter.name.startsWith("balance.transfer")
+        return parameter.name.startsWith("balance.transfer")
                 || parameter.name.startsWith("staking")
                 || parameter.name.startsWith("utility.batch")
                 || parameter.name.startsWith("session.setKeys")
@@ -126,7 +128,7 @@ public class PolkadotJsTxConfirmViewModel extends TxConfirmViewModel {
         tx.setCoinCode(coinCode);
         tx.setCoinId(Coins.coinIdFromCoinCode(coinCode));
         tx.setFrom(sp.getAccount());
-        tx.setFee(sp.extrinsic.getTip()+ " " + coinCode);
+        tx.setFee(sp.extrinsic.getTip() + " " + coinCode);
         tx.setSignedHex(extrinsicObject.toString());
         tx.setBelongTo(mRepository.getBelongTo());
         return tx;
@@ -134,7 +136,7 @@ public class PolkadotJsTxConfirmViewModel extends TxConfirmViewModel {
 
     public void handleSign() {
         AppExecutors.getInstance().diskIO().execute(() -> {
-            SignCallback callback = initSignCallback();
+            SignCallback callback = initSignTxCallback();
             callback.startSign();
             String authToken = getAuthToken();
             if (TextUtils.isEmpty(authToken)) {
@@ -145,7 +147,7 @@ public class PolkadotJsTxConfirmViewModel extends TxConfirmViewModel {
                     Coins.DOT.getAccounts()[0] : Coins.KSM.getAccounts()[0], authToken);
             String signedHex = signer.sign(Hex.toHexString(signingPayload));
             try {
-                String txId = extrinsic.getTxId(accountPublicKey,Hex.decode(signedHex));
+                String txId = extrinsic.getTxId(accountPublicKey, Hex.decode(signedHex));
                 if (!TextUtils.isEmpty(signedHex)) {
                     callback.onSuccess(txId, signedHex);
                 } else {
@@ -162,13 +164,12 @@ public class PolkadotJsTxConfirmViewModel extends TxConfirmViewModel {
         return txId;
     }
 
-    @Override
     protected TxEntity onSignSuccess(String txId, String rawTx) {
         this.txId = txId;
         TxEntity tx = observableTx.getValue();
         Objects.requireNonNull(tx).setTxId(txId);
         try {
-            extrinsicObject.put("signedHex","01" + rawTx);
+            extrinsicObject.put("signedHex", "01" + rawTx);
             tx.setSignedHex(extrinsicObject.toString());
             mRepository.insertTx(tx);
         } catch (JSONException e) {

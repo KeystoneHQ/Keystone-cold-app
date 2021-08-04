@@ -57,7 +57,7 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.exceptions.UnExpectedQREx
 import com.keystone.cold.ui.modal.ProgressModalDialog;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.CoinViewModel;
-import com.keystone.cold.viewmodel.PolkadotJsTxConfirmViewModel;
+import com.keystone.cold.viewmodel.tx.PolkadotJsTxConfirmViewModel;
 import com.keystone.cold.viewmodel.PublicKeyViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 import com.keystone.cold.viewmodel.exceptions.UnknownSubstrateChainException;

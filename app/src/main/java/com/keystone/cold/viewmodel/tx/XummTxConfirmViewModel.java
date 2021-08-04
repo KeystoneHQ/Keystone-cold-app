@@ -17,13 +17,12 @@
  *
  */
 
-package com.keystone.cold.viewmodel;
+package com.keystone.cold.viewmodel.tx;
 
 import android.app.Application;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.coins.XRP.Xrp;
@@ -37,7 +36,6 @@ import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.db.entity.AddressEntity;
-import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
 
@@ -47,7 +45,7 @@ import org.json.JSONObject;
 import java.text.NumberFormat;
 import java.util.Objects;
 
-public class XummTxConfirmViewModel extends TxConfirmViewModel{
+public class XummTxConfirmViewModel extends Base {
 
     private JSONObject xummTxObj;
     private String account;
@@ -56,6 +54,7 @@ public class XummTxConfirmViewModel extends TxConfirmViewModel{
     private String txId;
 
     private final MutableLiveData<JSONObject> displayJson = new MutableLiveData<>();
+
     public XummTxConfirmViewModel(@NonNull Application application) {
         super(application);
         coinCode = Coins.XRP.coinCode();
@@ -95,7 +94,7 @@ public class XummTxConfirmViewModel extends TxConfirmViewModel{
                 tx.setCoinId(Coins.XRP.coinId());
                 tx.setBelongTo(mRepository.getBelongTo());
                 observableTx.postValue(tx);
-            }  catch (JSONException e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
         });
@@ -120,18 +119,13 @@ public class XummTxConfirmViewModel extends TxConfirmViewModel{
 
     public void handleSignXummTransaction() {
         AppExecutors.getInstance().diskIO().execute(() -> {
-            SignCallback callback = initSignCallback();
+            SignCallback callback = initSignTxCallback();
             callback.startSign();
             Signer signer = new ChipSigner(signingKeyPath, getAuthToken(), signingPubKey);
             signXummTransaction(xummTxObj, callback, signer);
         });
     }
 
-    public LiveData<CoinEntity> loadXrpCoinEntity() {
-        return mRepository.loadCoin(Coins.XRP.coinId());
-    }
-
-    @Override
     protected TxEntity onSignSuccess(String txId, String rawTx) {
         this.txId = txId;
         TxEntity tx = observableTx.getValue();
@@ -151,7 +145,7 @@ public class XummTxConfirmViewModel extends TxConfirmViewModel{
         return txId;
     }
 
-    public void signXummTransaction(JSONObject txObj, SignCallback callback, Signer signer ) {
+    public void signXummTransaction(JSONObject txObj, SignCallback callback, Signer signer) {
         new Xrp(new XrpImpl()).signTx(txObj, callback, signer);
     }
 }

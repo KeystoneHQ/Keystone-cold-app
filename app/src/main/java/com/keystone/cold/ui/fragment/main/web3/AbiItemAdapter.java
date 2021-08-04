@@ -21,7 +21,7 @@ package com.keystone.cold.ui.fragment.main.web3;
 
 import android.text.TextUtils;
 
-import com.keystone.cold.viewmodel.EthTxConfirmViewModel;
+import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,8 +33,8 @@ import java.util.List;
 public class AbiItemAdapter {
 
     private String fromAddress;
-    private EthTxConfirmViewModel viewModel;
-    public AbiItemAdapter(String fromAddress, EthTxConfirmViewModel viewModel) {
+    private Web3TxViewModel viewModel;
+    public AbiItemAdapter(String fromAddress, Web3TxViewModel viewModel) {
         this.fromAddress = fromAddress;
         this.viewModel = viewModel;
     }

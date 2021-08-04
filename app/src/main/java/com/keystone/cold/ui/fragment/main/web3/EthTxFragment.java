@@ -36,7 +36,7 @@ import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.viewmodel.CoinListViewModel;
-import com.keystone.cold.viewmodel.EthTxConfirmViewModel;
+import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 import com.sparrowwallet.hummingbird.registry.EthSignature;
 
@@ -55,7 +55,7 @@ import static com.keystone.cold.ui.fragment.main.TxFragment.KEY_TX_ID;
 public class EthTxFragment extends BaseFragment<EthTxBinding> {
 
     private TxEntity txEntity;
-    private EthTxConfirmViewModel viewModel;
+    private Web3TxViewModel viewModel;
 
     @Override
     protected int setView() {
@@ -74,7 +74,7 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
                 updateUI();
             }
         });
-        viewModel = ViewModelProviders.of(this).get(EthTxConfirmViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(Web3TxViewModel.class);
         mBinding.ethTx.info.setOnClickListener(view1 -> showDialog());
     }
 
