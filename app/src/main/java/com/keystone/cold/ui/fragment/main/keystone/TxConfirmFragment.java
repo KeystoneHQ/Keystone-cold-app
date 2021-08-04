@@ -15,7 +15,7 @@
  * in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.keystone.cold.ui.fragment.main;
+package com.keystone.cold.ui.fragment.main.keystone;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -42,13 +42,15 @@ import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryptioncore.utils.ByteFormatter;
 import com.keystone.cold.ui.BindingAdapters;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.ui.fragment.main.FeeAttackChecking;
+import com.keystone.cold.ui.fragment.main.TransactionItem;
+import com.keystone.cold.ui.fragment.main.TransactionItemAdapter;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
 import com.keystone.cold.util.KeyStoreUtil;
-import com.keystone.cold.viewmodel.PolkadotJsTxConfirmViewModel;
-import com.keystone.cold.viewmodel.TxConfirmViewModel;
+import com.keystone.cold.viewmodel.tx.KeystoneTxViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,11 +60,10 @@ import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
-import static com.keystone.cold.ui.fragment.main.BroadcastTxFragment.KEY_TXID;
+import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KEY_TXID;
 import static com.keystone.cold.ui.fragment.main.FeeAttackChecking.FeeAttackCheckingResult.NORMAL;
 import static com.keystone.cold.ui.fragment.main.FeeAttackChecking.FeeAttackCheckingResult.SAME_OUTPUTS;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
@@ -76,13 +77,12 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
         navigate(R.id.action_to_preImportFragment, bundle);
     };
     private String data;
-    private TxConfirmViewModel viewModel;
+    private KeystoneTxViewModel viewModel;
     private SigningDialog signingDialog;
     private TxEntity txEntity;
     private ModalDialog addingAddressDialog;
     private int feeAttackCheckingState;
     private FeeAttackChecking feeAttackChecking;
-    private boolean isSubstrate;
 
     @Override
     protected int setView() {
@@ -95,12 +95,7 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         mBinding.txDetail.txIdInfo.setVisibility(View.GONE);
         data = bundle.getString(KEY_TX_DATA);
-        isSubstrate = bundle.getBoolean("substrateTx");
-        if (isSubstrate) {
-            viewModel = ViewModelProviders.of(this).get(PolkadotJsTxConfirmViewModel.class);
-        } else {
-            viewModel = ViewModelProviders.of(this).get(TxConfirmViewModel.class);
-        }
+        viewModel = ViewModelProviders.of(this).get(KeystoneTxViewModel.class);
         mBinding.setViewModel(viewModel);
         subscribeTxEntityState();
 
@@ -313,10 +308,10 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
 
     private void subscribeSignState() {
         viewModel.getSignState().observe(this, s -> {
-            if (TxConfirmViewModel.STATE_SIGNING.equals(s)) {
+            if (KeystoneTxViewModel.STATE_SIGNING.equals(s)) {
                 signingDialog = SigningDialog.newInstance();
                 signingDialog.show(mActivity.getSupportFragmentManager(), "");
-            } else if (TxConfirmViewModel.STATE_SIGN_SUCCESS.equals(s)) {
+            } else if (KeystoneTxViewModel.STATE_SIGN_SUCCESS.equals(s)) {
                 if (signingDialog != null) {
                     signingDialog.setState(SigningDialog.STATE_SUCCESS);
                 }
@@ -327,7 +322,7 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
                     signingDialog = null;
                     onSignSuccess();
                 }, 500);
-            } else if (TxConfirmViewModel.STATE_SIGN_FAIL.equals(s)) {
+            } else if (KeystoneTxViewModel.STATE_SIGN_FAIL.equals(s)) {
                 if (signingDialog == null) {
                     signingDialog = SigningDialog.newInstance();
                     signingDialog.show(mActivity.getSupportFragmentManager(), "");
@@ -338,7 +333,7 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
                         signingDialog.dismiss();
                     }
                     signingDialog = null;
-                    viewModel.getSignState().postValue(TxConfirmViewModel.STATE_NONE);
+                    viewModel.getSignState().postValue(KeystoneTxViewModel.STATE_NONE);
                     viewModel.getSignState().removeObservers(this);
                 }, 2000);
             }

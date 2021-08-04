@@ -31,7 +31,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.keystone.cold.ui.modal.ModalDialog;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.keystone.cold.ui.fragment.main.EthTxConfirmFragment.PREFERENCE_KEY_VISITS;
+import static com.keystone.cold.ui.fragment.main.web3.EthTxConfirmFragment.PREFERENCE_KEY_VISITS;
 import static com.keystone.cold.ui.fragment.setting.FingerprintPreferenceFragment.FINGERPRINT_UNLOCK;
 
 public class Utilities {

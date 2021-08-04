@@ -53,7 +53,7 @@ import com.keystone.cold.ui.views.AuthenticateModal;
 import com.keystone.cold.update.utils.Storage;
 import com.keystone.cold.util.KeyStoreUtil;
 import com.keystone.cold.viewmodel.ElectrumViewModel;
-import com.keystone.cold.viewmodel.TxConfirmViewModel;
+import com.keystone.cold.viewmodel.tx.ElectrumTxViewModel;
 import com.keystone.cold.viewmodel.exceptions.XpubNotMatchException;
 
 import org.json.JSONArray;
@@ -67,7 +67,7 @@ import java.util.List;
 
 import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
-import static com.keystone.cold.ui.fragment.main.BroadcastTxFragment.KEY_TXID;
+import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KEY_TXID;
 import static com.keystone.cold.ui.fragment.main.FeeAttackChecking.FeeAttackCheckingResult.NORMAL;
 import static com.keystone.cold.ui.fragment.main.FeeAttackChecking.FeeAttackCheckingResult.SAME_OUTPUTS;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
@@ -75,7 +75,7 @@ import static com.keystone.cold.update.utils.Storage.hasSdcard;
 import static com.keystone.cold.viewmodel.ElectrumViewModel.exportSuccess;
 import static com.keystone.cold.viewmodel.ElectrumViewModel.showNoSdcardModal;
 import static com.keystone.cold.viewmodel.ElectrumViewModel.writeToSdcard;
-import static com.keystone.cold.viewmodel.TxConfirmViewModel.STATE_NONE;
+import static com.keystone.cold.viewmodel.tx.KeystoneTxViewModel.STATE_NONE;
 
 public class ElectrumTxConfirmFragment extends BaseFragment<ElectrumTxConfirmFragmentBinding> {
 
@@ -84,7 +84,7 @@ public class ElectrumTxConfirmFragment extends BaseFragment<ElectrumTxConfirmFra
         bundle.putString(ACTION, PreImportFragment.ACTION_RESET_PWD);
         navigate(R.id.action_to_preImportFragment, bundle);
     };
-    private TxConfirmViewModel viewModel;
+    private ElectrumTxViewModel viewModel;
     private SigningDialog signingDialog;
     private TxEntity txEntity;
     private ModalDialog addingAddressDialog;
@@ -146,7 +146,7 @@ public class ElectrumTxConfirmFragment extends BaseFragment<ElectrumTxConfirmFra
         mBinding.txDetail.export.setVisibility(View.GONE);
         mBinding.txDetail.qr.setVisibility(View.GONE);
         txnData = bundle.getString("txn");
-        viewModel = ViewModelProviders.of(this).get(TxConfirmViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(ElectrumTxViewModel.class);
         mBinding.setViewModel(viewModel);
         subscribeTxEntityState();
         mBinding.sign.setOnClickListener(v -> handleSign());
@@ -310,10 +310,10 @@ public class ElectrumTxConfirmFragment extends BaseFragment<ElectrumTxConfirmFra
 
     private void subscribeSignState() {
         viewModel.getSignState().observe(this, s -> {
-            if (TxConfirmViewModel.STATE_SIGNING.equals(s)) {
+            if (ElectrumTxViewModel.STATE_SIGNING.equals(s)) {
                 signingDialog = SigningDialog.newInstance();
                 signingDialog.show(mActivity.getSupportFragmentManager(), "");
-            } else if (TxConfirmViewModel.STATE_SIGN_SUCCESS.equals(s)) {
+            } else if (ElectrumTxViewModel.STATE_SIGN_SUCCESS.equals(s)) {
                 if (signingDialog != null) {
                     signingDialog.setState(SigningDialog.STATE_SUCCESS);
                 }
@@ -324,7 +324,7 @@ public class ElectrumTxConfirmFragment extends BaseFragment<ElectrumTxConfirmFra
                     signingDialog = null;
                     onSignSuccess();
                 }, 500);
-            } else if (TxConfirmViewModel.STATE_SIGN_FAIL.equals(s)) {
+            } else if (ElectrumTxViewModel.STATE_SIGN_FAIL.equals(s)) {
                 if (signingDialog == null) {
                     signingDialog = SigningDialog.newInstance();
                     signingDialog.show(mActivity.getSupportFragmentManager(), "");

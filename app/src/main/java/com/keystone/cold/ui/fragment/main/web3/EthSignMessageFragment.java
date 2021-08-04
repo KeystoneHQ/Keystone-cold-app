@@ -17,11 +17,10 @@
  *
  */
 
-package com.keystone.cold.ui.fragment.main;
+package com.keystone.cold.ui.fragment.main.web3;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.View;
 
 import androidx.lifecycle.LiveData;
@@ -29,34 +28,29 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
-import com.keystone.cold.databinding.EthSignTypedDataBinding;
+import com.keystone.cold.databinding.EthSignMessageBinding;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
-import com.keystone.cold.viewmodel.EthTxConfirmViewModel;
-import com.keystone.cold.viewmodel.TxConfirmViewModel;
+import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
+import com.keystone.cold.viewmodel.tx.KeystoneTxViewModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.spongycastle.util.encoders.Hex;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.nio.charset.StandardCharsets;
 
 import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
-import static com.keystone.cold.ui.fragment.main.EthBroadcastTxFragment.KEY_SIGNATURE_JSON;
-import static com.keystone.cold.ui.fragment.main.EthTxConfirmFragment.highLight;
+import static com.keystone.cold.ui.fragment.main.web3.EthBroadcastTxFragment.KEY_SIGNATURE_JSON;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
-public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBinding> {
+public class EthSignMessageFragment extends BaseFragment<EthSignMessageBinding> {
 
-    private EthTxConfirmViewModel viewModel;
+    private Web3TxViewModel viewModel;
     private SigningDialog signingDialog;
 
     private final Runnable forgetPassword = () -> {
@@ -67,14 +61,14 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
 
     @Override
     protected int setView() {
-        return R.layout.eth_sign_typed_data;
+        return R.layout.eth_sign_message;
     }
 
     @Override
     protected void init(View view) {
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
-        viewModel = ViewModelProviders.of(this).get(EthTxConfirmViewModel.class);
-        LiveData<JSONObject> liveData = viewModel.parseEIP712TypedData(requireArguments());
+        viewModel = ViewModelProviders.of(this).get(Web3TxViewModel.class);
+        LiveData<JSONObject> liveData = viewModel.parseRawMessage(requireArguments());
         liveData.observe(this, o -> onMessageParsed(liveData, o));
         viewModel.parseTxException().observe(this, this::handleParseException);
         mBinding.sign.setOnClickListener(v -> handleSign());
@@ -83,20 +77,12 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
     private void onMessageParsed(LiveData<JSONObject> liveData, JSONObject jsonObject) {
         if (jsonObject != null) {
             try {
-                JSONObject messageData = new JSONObject(jsonObject.getString("data"));
-                JSONObject domain = messageData.getJSONObject("domain");
-                mBinding.primaryType.setText(messageData.getString("primaryType"));
-                mBinding.network.setText(viewModel.getNetwork(domain.optInt("chainId", 1)));
-                mBinding.name.setText(domain.optString("name"));
-                String verifyingContract = domain.optString("verifyingContract", "");
-                if (TextUtils.isEmpty(verifyingContract)) {
-                    mBinding.verifyingContractContainer.setVisibility(View.GONE);
-                } else {
-                    mBinding.verifyingContract.setText(highLight(recognizeAddress(verifyingContract)));
-                }
-                String message = messageData.getJSONObject("message").toString(2);
-                mBinding.message.setText(highLight(recognizeAddressInText(message)));
-                liveData.removeObservers(EthSignTypedDataFragment.this);
+                String message = jsonObject.getString("data");
+                mBinding.address.setText(viewModel.getFromAddress());
+                mBinding.message.setText(new String(Hex.decode(message), StandardCharsets.UTF_8));
+                mBinding.rawMessage.setText(message);
+
+                liveData.removeObservers(EthSignMessageFragment.this);
             } catch (JSONException e) {
                 e.printStackTrace();
                 handleParseException(e);
@@ -117,61 +103,23 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
         }
     }
 
-    private String recognizeAddress(String address) {
-        String addressSymbol = viewModel.recognizeAddress(address);
-        if (addressSymbol != null) {
-            address = address + String.format(" (%s)", addressSymbol);
-        } else {
-            address = address + String.format(" [%s]", "Unknown Address");
-        }
-        return address;
-    }
-
-    private String recognizeAddressInText(String text) {
-        Pattern pattern = Pattern.compile("0x[a-fA-F0-9]{40}");
-        Matcher matcher = pattern.matcher(text);
-        Map<String, String> recognized = new HashMap<>();
-        Set<String> unknown = new HashSet<>();
-        while (matcher.find()) {
-            String address = matcher.group();
-            String symbol = viewModel.recognizeAddress(address);
-            if (symbol != null) {
-                recognized.put(address, symbol);
-            } else if (address.equalsIgnoreCase(viewModel.getFromAddress())) {
-                //do nothing
-            } else {
-                unknown.add(address);
-            }
-        }
-
-        for (String s : recognized.keySet()) {
-            text = text.replace(s, s + String.format(" (%s)", recognized.get(s)));
-        }
-
-        for (String s : unknown) {
-            text = text.replace(s, s + " [Unknown Address]");
-        }
-
-        return text;
-    }
-
     private void handleSign() {
         boolean fingerprintSignEnable = new FingerprintPolicyCallable(READ, TYPE_SIGN_TX).call();
         AuthenticateModal.show(mActivity,
                 getString(R.string.password_modal_title), "", fingerprintSignEnable,
                 token -> {
                     viewModel.setToken(token);
-                    viewModel.handleSignEIP712TypedData();
+                    viewModel.handleSignPersonalMessage();
                     subscribeSignState();
                 }, forgetPassword);
     }
 
     private void subscribeSignState() {
         viewModel.getSignState().observe(this, s -> {
-            if (TxConfirmViewModel.STATE_SIGNING.equals(s)) {
+            if (KeystoneTxViewModel.STATE_SIGNING.equals(s)) {
                 signingDialog = SigningDialog.newInstance();
                 signingDialog.show(mActivity.getSupportFragmentManager(), "");
-            } else if (TxConfirmViewModel.STATE_SIGN_SUCCESS.equals(s)) {
+            } else if (KeystoneTxViewModel.STATE_SIGN_SUCCESS.equals(s)) {
                 if (signingDialog != null) {
                     signingDialog.setState(SigningDialog.STATE_SUCCESS);
                 }
@@ -182,7 +130,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
                     signingDialog = null;
                     onSignSuccess();
                 }, 500);
-            } else if (TxConfirmViewModel.STATE_SIGN_FAIL.equals(s)) {
+            } else if (KeystoneTxViewModel.STATE_SIGN_FAIL.equals(s)) {
                 if (signingDialog == null) {
                     signingDialog = SigningDialog.newInstance();
                     signingDialog.show(mActivity.getSupportFragmentManager(), "");

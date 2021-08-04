@@ -32,7 +32,7 @@
 
         <variable
             name="viewModel"
-            type="com.keystone.cold.viewmodel.TxConfirmViewModel" />
+            type="com.keystone.cold.viewmodel.tx.KeystoneTxViewModel" />
     </data>
 
 

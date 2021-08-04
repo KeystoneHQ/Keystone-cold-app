@@ -17,7 +17,7 @@
  *
  */
 
-package com.keystone.cold.ui.fragment.main;
+package com.keystone.cold.ui.fragment.main.web3;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -26,6 +26,7 @@ import android.view.View;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
+import com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 import com.sparrowwallet.hummingbird.registry.EthSignature;
