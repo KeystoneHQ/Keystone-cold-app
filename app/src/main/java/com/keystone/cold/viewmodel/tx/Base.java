@@ -110,7 +110,7 @@ abstract class Base extends AndroidViewModel {
             @Override
             public void onSuccess(String txId, String rawTx) {
                 signState.postValue(STATE_SIGN_SUCCESS);
-//                TxEntity tx = onSignSuccess(txId, rawTx);
+                TxEntity tx = onSignSuccess(txId, rawTx);
 //                if (Coins.showPublicKey(tx.getCoinCode())) {
 //                    persistAddress(tx.getCoinCode(), tx.getCoinId(), tx.getFrom());
 //                }
@@ -122,6 +122,15 @@ abstract class Base extends AndroidViewModel {
 
             }
         };
+    }
+
+
+    protected TxEntity onSignSuccess(String txId, String rawTx) {
+        TxEntity tx = observableTx.getValue();
+        Objects.requireNonNull(tx).setTxId(txId);
+        tx.setSignedHex(rawTx);
+        mRepository.insertTx(tx);
+        return tx;
     }
 
     protected void addAddress(int addressIndex) {

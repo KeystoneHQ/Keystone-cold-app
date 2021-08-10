@@ -269,14 +269,6 @@ public class KeystoneTxViewModel extends Base {
 
     }
 
-    protected TxEntity onSignSuccess(String txId, String rawTx) {
-        TxEntity tx = observableTx.getValue();
-        Objects.requireNonNull(tx).setTxId(txId);
-        tx.setSignedHex(rawTx);
-        mRepository.insertTx(tx);
-        return tx;
-    }
-
 //    private void persistAddress(String coinCode, String coinId, String address) {
 //        String path;
 //        switch (coinCode) {
