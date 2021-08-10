@@ -21,6 +21,7 @@ package com.keystone.cold.ui.fragment.main;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import androidx.lifecycle.ViewModelProviders;
@@ -54,6 +55,8 @@ public class EthBroadcastTxFragment extends BroadcastTxFragment {
         mBinding.complete.setOnClickListener(goHome);
         String txId = data.getString(KEY_TXID);
         messageSignature = data.getString(KEY_SIGNATURE_JSON);
+        Log.d("sora", "init: " + txId);
+        Log.d("sora", "init: " + messageSignature);
         mBinding.qrcodeLayout.qrcode.setData(getSignedTxData());
         if (!TextUtils.isEmpty(txId)) {
             ViewModelProviders.of(mActivity).get(CoinListViewModel.class)

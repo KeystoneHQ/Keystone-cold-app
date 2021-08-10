@@ -150,6 +150,7 @@ public class EthTxConfirmViewModel extends TxConfirmViewModel {
                 hdPath = bundle.getString(HD_PATH);
                 signId = bundle.getString(REQUEST_ID);
                 JSONObject ethTx = EthImpl.decodeRawTransaction(txHex, () -> isFromTFCard = true);
+                Log.d("sora", "parseTxData: " + ethTx);
                 if (ethTx == null) {
                     observableTx.postValue(null);
                     parseTxException.postValue(new InvalidTransactionException("invalid transaction"));
