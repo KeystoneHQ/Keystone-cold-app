@@ -35,11 +35,15 @@ public class ABIReader {
     static Map<String, Function> functions = new HashMap<>();
 
     public void addABI(String json) {
-        functions.clear();
-        List<Function> functions = ABIJSON.parseNormalFunctions(json);
-        functions.forEach(f -> {
-            this.functions.put(f.selectorHex(), f);
-        });
+        try {
+            functions.clear();
+            List<Function> functions = ABIJSON.parseNormalFunctions(json);
+            functions.forEach(f -> {
+                this.functions.put(f.selectorHex(), f);
+            });
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
     }
 
 

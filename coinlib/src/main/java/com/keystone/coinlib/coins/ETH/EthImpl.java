@@ -123,12 +123,13 @@ public class EthImpl implements Coin {
 
             //decode data
             ABIReader abiReader = new ABIReader();
-            try {
-                abiReader.addABI(contract.getAbi());
-            } catch (RuntimeException e) {
-                metaData.put("data", rawTx.getData());
-            }
+            abiReader.addABI(contract.getAbi());
             ABIReader.DecodedFunctionCall call = abiReader.decodeCall(rawTx.getData());
+            if (call == null) {
+                call = tryDecodeWithGnosisDefault(rawTx.getData());
+                contract.setName("Gnosis Safe: Mastercopy 1.2.0");
+            }
+
             if (call != null) {
                 JSONObject data = call.toJson();
                 data.put("contract", contract.getName());
@@ -151,6 +152,13 @@ public class EthImpl implements Coin {
             return null;
         }
         return metaData;
+    }
+
+    private static ABIReader.DecodedFunctionCall tryDecodeWithGnosisDefault(String data) {
+        String abi = readAsset("abi/Mastercopy_1.2.0.json");
+        ABIReader abiReader = new ABIReader();
+        abiReader.addABI(abi);
+        return abiReader.decodeCall(data);
     }
 
     protected static Contract getContract(Callback callback, String address) {
