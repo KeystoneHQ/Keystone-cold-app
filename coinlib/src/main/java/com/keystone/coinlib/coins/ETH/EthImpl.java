@@ -119,25 +119,13 @@ public class EthImpl implements Coin {
             metaData.put("gasPrice", rawTx.getGasPrice().toString());
             metaData.put("gasLimit", rawTx.getGasLimit().toString());
             metaData.put("value", rawTx.getValue().toString());
-            AbiLoadManager abiLoadManager = new AbiLoadManager(rawTx.getTo());
-            Contract contract = abiLoadManager.loadAbi();
-            if (contract.isFromTFCard() && callback != null) {
-                callback.fromTFCard();
-            }
-            if (contract.isEmpty()) {
-                //try decode with erc20 abi
-                contract.setAbi(readAsset("abi/Erc20.json"));
-                contract.setName("Erc20");
-            }
-
-            //decode data
-            ABIReader abiReader = new ABIReader();
+            Contract contract = getContract(callback, rawTx.getTo());
+            ABIReader.DecodedFunctionCall call = null;
             try {
-                abiReader.addABI(contract.getAbi());
+                call = getDecodedFunctionCall(rawTx.getData(), contract);
             } catch (RuntimeException e) {
                 metaData.put("data", rawTx.getData());
             }
-            ABIReader.DecodedFunctionCall call = abiReader.decodeCall(rawTx.getData());
             if (call != null) {
                 JSONObject data = call.toJson();
                 data.put("contract", contract.getName());
@@ -160,6 +148,27 @@ public class EthImpl implements Coin {
             return null;
         }
         return metaData;
+    }
+
+    protected static Contract getContract(Callback callback, String address) {
+        AbiLoadManager abiLoadManager = new AbiLoadManager(address);
+        Contract contract = abiLoadManager.loadAbi();
+        if (contract.isFromTFCard() && callback != null) {
+            callback.fromTFCard();
+        }
+        if (contract.isEmpty()) {
+            // try decode with erc20 abi
+            contract.setAbi(readAsset("abi/Erc20.json"));
+            contract.setName("Erc20");
+        }
+        return contract;
+    }
+
+    protected static ABIReader.DecodedFunctionCall getDecodedFunctionCall(String data, Contract contract) {
+        // decode data
+        ABIReader abiReader = new ABIReader();
+        abiReader.addABI(contract.getAbi());
+        return abiReader.decodeCall(data);
     }
 
     public static String getSignature(String signedHex) {
