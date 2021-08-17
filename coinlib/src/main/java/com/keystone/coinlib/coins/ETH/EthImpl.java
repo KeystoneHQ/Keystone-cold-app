@@ -119,16 +119,7 @@ public class EthImpl implements Coin {
             metaData.put("gasPrice", rawTx.getGasPrice().toString());
             metaData.put("gasLimit", rawTx.getGasLimit().toString());
             metaData.put("value", rawTx.getValue().toString());
-            AbiLoadManager abiLoadManager = new AbiLoadManager(rawTx.getTo());
-            Contract contract = abiLoadManager.loadAbi();
-            if (contract.isFromTFCard() && callback != null) {
-                callback.fromTFCard();
-            }
-            if (contract.isEmpty()) {
-                //try decode with erc20 abi
-                contract.setAbi(readAsset("abi/Erc20.json"));
-                contract.setName("Erc20");
-            }
+            Contract contract = getContract(callback, rawTx.getTo());
 
             //decode data
             ABIReader abiReader = new ABIReader();
@@ -160,6 +151,20 @@ public class EthImpl implements Coin {
             return null;
         }
         return metaData;
+    }
+
+    protected static Contract getContract(Callback callback, String address) {
+        AbiLoadManager abiLoadManager = new AbiLoadManager(address);
+        Contract contract = abiLoadManager.loadAbi();
+        if (contract.isFromTFCard() && callback != null) {
+            callback.fromTFCard();
+        }
+        if (contract.isEmpty()) {
+            //try decode with erc20 abi
+            contract.setAbi(readAsset("abi/Erc20.json"));
+            contract.setName("Erc20");
+        }
+        return contract;
     }
 
     public static String getSignature(String signedHex) {

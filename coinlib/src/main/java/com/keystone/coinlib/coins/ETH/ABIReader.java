@@ -8,6 +8,7 @@ import com.esaulpaugh.headlong.abi.ArrayType;
 import com.esaulpaugh.headlong.abi.Function;
 import com.esaulpaugh.headlong.abi.Tuple;
 import com.esaulpaugh.headlong.abi.TupleType;
+import com.keystone.coinlib.abi.Contract;
 import com.keystone.coinlib.coins.ETH.CanonicalValues.CanonicalValue;
 
 import org.bouncycastle.util.encoders.Hex;
@@ -15,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigInteger;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.List;
@@ -69,10 +71,30 @@ public class ABIReader {
             String methodId = noPrefix.substring(0, 8);
             Function entry = functions.get(methodId);
             Tuple result = entry.decodeCall(Hex.decode(noPrefix));
-            return new DecodedFunctionCall(entry, result);
+            DecodedFunctionCall decodedFunctionCall = new DecodedFunctionCall(entry, result);
+            handleNestedContract(decodedFunctionCall);
+            return decodedFunctionCall;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    private void handleNestedContract(DecodedFunctionCall decodedFunctionCall) {
+        if (TextUtils.equals(decodedFunctionCall.function.getName(), "createProxyWithNonce")) {
+            Object _singleton = decodedFunctionCall.callParameters.get(0);
+            String address = "0x" + Hex.toHexString(
+                    ByteUtil.bigIntegerToBytes(new BigInteger(String.valueOf(_singleton)), 20));
+            Contract contract = EthImpl.getContract(null, address);
+            Object initializer = decodedFunctionCall.callParameters.get(1);
+            String data = Hex.toHexString((byte[]) initializer);
+            ABIReader.DecodedFunctionCall call = ABIReader.staticDecodeCall(data);
+            if (call != null) {
+                data = decodedFunctionCall.toJson().toString();
+            }
+            ABIReader abiReader = new ABIReader();
+            abiReader.addABI(contract.getAbi());
+            abiReader.decodeCall(data);
         }
     }
 
@@ -116,7 +138,7 @@ public class ABIReader {
             return result;
         }
 
-        private JSONObject decodeParameter(ABIType<?> type, Object callParameter) {
+        protected static JSONObject decodeParameter(ABIType<?> type, Object callParameter) {
             JSONObject parameter = new JSONObject();
             try {
                 parameter.put("name", type.getName());
