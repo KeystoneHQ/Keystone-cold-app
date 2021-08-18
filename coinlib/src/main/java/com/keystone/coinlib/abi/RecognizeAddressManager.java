@@ -5,38 +5,32 @@ import android.text.TextUtils;
 import java.util.Arrays;
 import java.util.List;
 
-public class AbiLoadManager {
+public class RecognizeAddressManager {
     private String address;
     private static List<ABIStoreEngine> abiStoreEngineList;
 
     static {
         abiStoreEngineList = Arrays.asList(
+                new TFCardENSStore(),
                 new InternalABIStore(),
                 new TFCardABIStore(),
                 new SelfDefinedABIStore());
     }
 
-    public AbiLoadManager(String address) {
+    public RecognizeAddressManager(String address) {
         this.address = address.toLowerCase();
     }
 
-    public AbiLoadManager(List<ABIStoreEngine> abiStoreEngines, String address) {
-        this.address = address.toLowerCase();
-        abiStoreEngineList = abiStoreEngines;
-    }
-
-    public Contract loadAbi() {
-        Contract contract = new Contract();
+    public String recognizeAddress() {
         if (TextUtils.isEmpty(address)) {
-            return contract;
+            return null;
         }
         for (ABIStoreEngine abiStoreEngine : abiStoreEngineList) {
-            Contract load = abiStoreEngine.load(address);
-            if (!load.isEmpty()) {
-                contract = load;
-                break;
+            String name = abiStoreEngine.load(address).getName();
+            if (!TextUtils.isEmpty(name)) {
+                return name;
             }
         }
-        return contract;
+        return null;
     }
 }

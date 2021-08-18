@@ -8,8 +8,8 @@ import com.keystone.coinlib.utils.SDCardUtil;
 
 import java.io.File;
 
-public class TFCardABIStore implements ABIStoreEngine {
-    private static final String DATABASE_TFCARD_PATH = "contracts" + File.separator + "ethereum";
+public class TFCardENSStore implements ABIStoreEngine {
+    private static final String DATABASE_TFCARD_PATH = "ens";
 
     @Override
     public Contract load(String address) {
@@ -17,17 +17,16 @@ public class TFCardABIStore implements ABIStoreEngine {
         Contract contract = new Contract();
         try {
             String databaseFilePath = SDCardUtil.externalSDCardPath() + File.separator
-                    + DATABASE_TFCARD_PATH + File.separator + "contracts.db";
+                    + DATABASE_TFCARD_PATH + File.separator + "ENS.db";
             sqLiteDatabase = SQLiteDatabase.openDatabase(databaseFilePath, null, SQLiteDatabase.OPEN_READONLY);
         } catch (SQLException e) {
             e.printStackTrace();
             return contract;
         }
-        try (Cursor cursor = sqLiteDatabase.query("contracts", null, "address='" + address + "'",
+        try (Cursor cursor = sqLiteDatabase.query("ens", null, "addr='" + address + "'",
                 null, null, null, null)) {
             if (cursor != null && cursor.moveToFirst() && cursor.getCount() > 0) {
                 contract.setName(cursor.getString(cursor.getColumnIndex("name")));
-                contract.setMetadata(cursor.getString(cursor.getColumnIndex("metadata")));
             }
         } catch (SQLException e) {
             e.printStackTrace();

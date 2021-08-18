@@ -27,8 +27,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
-import com.keystone.coinlib.abi.AbiLoadManager;
-import com.keystone.coinlib.abi.Contract;
+import com.keystone.coinlib.abi.RecognizeAddressManager;
 import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.coins.ETH.Network;
 import com.keystone.coinlib.coins.SignTxResult;
@@ -108,8 +107,7 @@ public class Web3TxViewModel extends Base {
                 }
             }
             if (TextUtils.isEmpty(addressSymbol)) {
-                Contract contract = new AbiLoadManager(to).loadAbi();
-                addressSymbol = contract.getName();
+                addressSymbol = new RecognizeAddressManager(to).recognizeAddress();
             }
             if (addressSymbol != null && addressSymbol.length() > 25) {
                 addressSymbol = addressSymbol.substring(0, 10) + "..." + addressSymbol.substring(addressSymbol.length() - 10);
