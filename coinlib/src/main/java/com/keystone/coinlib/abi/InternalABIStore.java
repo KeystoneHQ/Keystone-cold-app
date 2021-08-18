@@ -8,14 +8,8 @@ import org.json.JSONObject;
 import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
 
 public class InternalABIStore implements ABIStoreEngine {
-    private String address;
-
-    public InternalABIStore(String address) {
-        this.address = address;
-    }
-
     @Override
-    public Contract load() {
+    public Contract load(String address) {
         Contract contract = new Contract();
         String content = readAsset("abi/" + address + ".json");
         if (!TextUtils.isEmpty(content)) {

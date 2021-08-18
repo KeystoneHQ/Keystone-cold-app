@@ -10,14 +10,9 @@ import java.io.File;
 
 public class TFCardABIStore implements ABIStoreEngine {
     private static final String DATABASE_TFCARD_PATH = "contracts" + File.separator + "ethereum";
-    private String address;
-
-    public TFCardABIStore(String address) {
-        this.address = address;
-    }
 
     @Override
-    public Contract load() {
+    public Contract load(String address) {
         SQLiteDatabase sqLiteDatabase;
         Contract contract = new Contract();
         try {

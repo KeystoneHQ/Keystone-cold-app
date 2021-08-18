@@ -2,21 +2,22 @@ package com.keystone.coinlib.abi;
 
 import android.text.TextUtils;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class AbiLoadManager {
     private String address;
-    private List<ABIStoreEngine> abiStoreEngineList;
+    private static List<ABIStoreEngine> abiStoreEngineList;
+
+    static {
+        abiStoreEngineList = Arrays.asList(
+                new InternalABIStore(),
+                new TFCardABIStore(),
+                new SelfDefinedABIStore());
+    }
 
     public AbiLoadManager(String address) {
         this.address = address.toLowerCase();
-        abiStoreEngineList = Arrays.asList(
-                new InternalABIStore(this.address),
-                new TFCardABIStore(this.address),
-                new SelfDefinedABIStore(this.address));
     }
 
     public AbiLoadManager(List<ABIStoreEngine> abiStoreEngines, String address) {
@@ -30,7 +31,7 @@ public class AbiLoadManager {
             return contract;
         }
         for (ABIStoreEngine abiStoreEngine : abiStoreEngineList) {
-            Contract load = abiStoreEngine.load();
+            Contract load = abiStoreEngine.load(address);
             if (!load.isEmpty()) {
                 contract = load;
                 break;
