@@ -8,6 +8,7 @@ import com.esaulpaugh.headlong.abi.ArrayType;
 import com.esaulpaugh.headlong.abi.Function;
 import com.esaulpaugh.headlong.abi.Tuple;
 import com.esaulpaugh.headlong.abi.TupleType;
+import com.keystone.coinlib.abi.Contract;
 import com.keystone.coinlib.coins.ETH.CanonicalValues.CanonicalValue;
 
 import org.bouncycastle.util.encoders.Hex;
@@ -16,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,13 +33,23 @@ import static com.esaulpaugh.headlong.abi.ABIType.TYPE_CODE_TUPLE;
 
 public class ABIReader {
     static Map<String, Function> functions = new HashMap<>();
+    static List<FallbackHandler> fallbackHandlers = new ArrayList<>();
 
-    public void addABI(String json) {
-        functions.clear();
-        List<Function> functions = ABIJSON.parseNormalFunctions(json);
-        functions.forEach(f -> {
-            this.functions.put(f.selectorHex(), f);
-        });
+    static {
+        fallbackHandlers.add(new Erc20Handler());
+        fallbackHandlers.add(new GnosisHandler());
+    }
+
+    private void addABI(String json) {
+        try {
+            functions.clear();
+            List<Function> functions = ABIJSON.parseNormalFunctions(json);
+            functions.forEach(f -> {
+                this.functions.put(f.selectorHex(), f);
+            });
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -60,7 +72,22 @@ public class ABIReader {
         }
     }
 
-    public DecodedFunctionCall decodeCall(String data) {
+    public DecodedFunctionCall decodeCall(String data, Contract contract) {
+        if (contract.isEmpty()) {
+            for (FallbackHandler fallbackHandler : fallbackHandlers) {
+                DecodedFunctionCall call = fallbackHandler.decodeCall(data, contract);
+                if (call != null) {
+                    return call;
+                }
+            }
+        } else {
+            addABI(contract.getAbi());
+            return getDecodedFunctionCall(data);
+        }
+        return null;
+    }
+
+    private DecodedFunctionCall getDecodedFunctionCall(String data) {
         try {
             String noPrefix = removePrefix(data);
             if (TextUtils.isEmpty(noPrefix)) {
@@ -69,7 +96,11 @@ public class ABIReader {
             String methodId = noPrefix.substring(0, 8);
             Function entry = functions.get(methodId);
             Tuple result = entry.decodeCall(Hex.decode(noPrefix));
-            return new DecodedFunctionCall(entry, result);
+            DecodedFunctionCall call = new DecodedFunctionCall(entry, result);
+            for (FallbackHandler fallbackHandler : fallbackHandlers) {
+                fallbackHandler.handleNestedContract(call);
+            }
+            return call;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -84,8 +115,8 @@ public class ABIReader {
     }
 
     public static class DecodedFunctionCall {
-        private final Function function;
-        private final Tuple callParameters;
+        public final Function function;
+        public final Tuple callParameters;
 
         public DecodedFunctionCall(Function function, Tuple callParameters) {
             if (function.getInputs().size() == callParameters.size()) {
@@ -116,7 +147,7 @@ public class ABIReader {
             return result;
         }
 
-        private JSONObject decodeParameter(ABIType<?> type, Object callParameter) {
+        protected static JSONObject decodeParameter(ABIType<?> type, Object callParameter) {
             JSONObject parameter = new JSONObject();
             try {
                 parameter.put("name", type.getName());
