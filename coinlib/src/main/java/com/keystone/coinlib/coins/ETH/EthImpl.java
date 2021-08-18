@@ -59,7 +59,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.keystone.coinlib.Util.concat;
-import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
 import static org.web3j.crypto.TransactionEncoder.asRlpValues;
 
 public class EthImpl implements Coin {
@@ -123,13 +122,7 @@ public class EthImpl implements Coin {
 
             //decode data
             ABIReader abiReader = new ABIReader();
-            abiReader.addABI(contract.getAbi());
-            ABIReader.DecodedFunctionCall call = abiReader.decodeCall(rawTx.getData());
-            if (call == null) {
-                call = tryDecodeWithGnosisDefault(rawTx.getData());
-                contract.setName("Gnosis Safe: Mastercopy 1.2.0");
-            }
-
+            ABIReader.DecodedFunctionCall call = abiReader.decodeCall(rawTx.getData(), contract);
             if (call != null) {
                 JSONObject data = call.toJson();
                 data.put("contract", contract.getName());
@@ -154,23 +147,11 @@ public class EthImpl implements Coin {
         return metaData;
     }
 
-    private static ABIReader.DecodedFunctionCall tryDecodeWithGnosisDefault(String data) {
-        String abi = readAsset("abi/Mastercopy_1.2.0.json");
-        ABIReader abiReader = new ABIReader();
-        abiReader.addABI(abi);
-        return abiReader.decodeCall(data);
-    }
-
     protected static Contract getContract(Callback callback, String address) {
         AbiLoadManager abiLoadManager = new AbiLoadManager(address);
         Contract contract = abiLoadManager.loadAbi();
         if (contract.isFromTFCard() && callback != null) {
             callback.fromTFCard();
-        }
-        if (contract.isEmpty()) {
-            //try decode with erc20 abi
-            contract.setAbi(readAsset("abi/Erc20.json"));
-            contract.setName("Erc20");
         }
         return contract;
     }

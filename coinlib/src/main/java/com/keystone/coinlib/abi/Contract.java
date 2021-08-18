@@ -12,6 +12,14 @@ public class Contract {
 
     private boolean isFromTFCard;
 
+    public Contract() {
+    }
+
+    public Contract(String name, String abi) {
+        this.name = name;
+        this.abi = abi;
+    }
+
     public String getName() {
         return name;
     }
