@@ -40,6 +40,7 @@ import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.databinding.AbiItemBinding;
 import com.keystone.cold.databinding.AbiItemMethodBinding;
+import com.keystone.cold.databinding.EnsItemBinding;
 import com.keystone.cold.databinding.EthTxConfirmBinding;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
@@ -47,8 +48,8 @@ import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
-import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 import com.keystone.cold.viewmodel.tx.KeystoneTxViewModel;
+import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 
 import org.json.JSONObject;
 
@@ -184,7 +185,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
             mBinding.ethTx.data.setVisibility(View.VISIBLE);
             mBinding.ethTx.undecodedData.setVisibility(View.GONE);
         } else {
-            if (!TextUtils.isEmpty(viewModel.getInputData())){
+            if (!TextUtils.isEmpty(viewModel.getInputData())) {
                 mBinding.ethTx.data.setVisibility(View.GONE);
                 mBinding.ethTx.undecodedData.setVisibility(View.VISIBLE);
                 mBinding.ethTx.inputData.setText("0x" + viewModel.getInputData());
@@ -205,14 +206,26 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     private void processAndUpdateTo() {
         AppExecutors.getInstance().diskIO().execute(() -> {
             String to = txEntity.getTo();
+            String ens = viewModel.ensAddress(to);
             String addressSymbol = viewModel.recognizeAddress(to);
             if (!TextUtils.isEmpty(addressSymbol)) {
                 to = to + String.format(" (%s)", addressSymbol);
             } else {
-                to = to + String.format(" [%s]", "Unknown Address");
+//                to = to + String.format(" [%s]", "Unknown Address");
             }
             String finalTo = to;
-            AppExecutors.getInstance().mainThread().execute(() -> mBinding.ethTx.to.setText(highLight(finalTo)));
+            AppExecutors.getInstance().mainThread().execute(() -> {
+                mBinding.ethTx.to.setText(highLight(finalTo));
+                if (!TextUtils.isEmpty(ens)) {
+                    mBinding.ethTx.toInfo.setVisibility(View.GONE);
+                    mBinding.ethTx.ensToInfo.setVisibility(View.VISIBLE);
+                    mBinding.ethTx.ens.key.setText(getString(R.string.tx_to));
+                    mBinding.ethTx.ens.value.setText(ens);
+                    mBinding.ethTx.ens.address.setText(highLight(finalTo));
+                } else {
+                    mBinding.ethTx.to.setText(highLight(finalTo));
+                }
+            });
         });
     }
 
@@ -244,6 +257,19 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
                 mBinding.ethTx.container.addView(abiItemMethodBinding.getRoot());
                 continue;
             }
+            if ("address".equals(item.type)) {
+                String ens = viewModel.ensAddress(item.value);
+                if (!TextUtils.isEmpty(ens)) {
+                    EnsItemBinding ensBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+                            R.layout.ens_item, null, false);
+                    ensBinding.key.setText(item.key);
+                    ensBinding.value.setText(ens);
+                    ensBinding.address.setText(highLight(item.value));
+                    mBinding.ethTx.container.addView(ensBinding.getRoot());
+                    continue;
+                }
+            }
+
             AbiItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
                     R.layout.abi_item, null, false);
             binding.key.setText(item.key);
