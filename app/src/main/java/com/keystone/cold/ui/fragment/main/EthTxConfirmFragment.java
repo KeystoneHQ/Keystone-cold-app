@@ -263,6 +263,12 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
             }
             if ("address".equals(item.type)) {
                 String ens = viewModel.loadEnsAddress(item.value);
+                String addressSymbol = viewModel.recognizeAddress(item.value);
+                if (addressSymbol != null) {
+                    item.value += String.format(" (%s)", addressSymbol);
+                } else if (!"to".equals(item.key)) {
+//                            item += String.format(" [%s]", "Unknown Address");
+                }
                 if (!TextUtils.isEmpty(ens)) {
                     EnsItemBinding ensBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
                             R.layout.ens_item, null, false);

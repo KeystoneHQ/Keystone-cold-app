@@ -216,6 +216,7 @@
     <string name="tx_memo">Memo</string>
     <string name="tx_confirm">Verify Fingerprint</string>
     <string name="tx_confirm_title">Confirm Transaction Details</string>
+    <string name="msg_confirm_title">Confirm Message Details</string>
     <string name="sign">Sign</string>
     <string name="find_password">Forgot Password</string>
     <string name="update_hint">Only install firmware upgrades downloaded from the official Keystone website.</string>
