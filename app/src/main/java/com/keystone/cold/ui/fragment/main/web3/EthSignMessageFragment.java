@@ -34,14 +34,16 @@ import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
-import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 import com.keystone.cold.viewmodel.tx.KeystoneTxViewModel;
+import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
 import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
@@ -79,7 +81,14 @@ public class EthSignMessageFragment extends BaseFragment<EthSignMessageBinding> 
             try {
                 String message = jsonObject.getString("data");
                 mBinding.address.setText(viewModel.getFromAddress());
-                mBinding.message.setText(new String(Hex.decode(message), StandardCharsets.UTF_8));
+
+                String messageUtf8 = new String(Hex.decode(message), StandardCharsets.UTF_8);
+                if (isGarbled(messageUtf8)) {
+                    mBinding.llMsgUtf8.setVisibility(View.GONE);
+                } else {
+                    mBinding.message.setText(messageUtf8);
+                }
+
                 mBinding.rawMessage.setText(message);
 
                 liveData.removeObservers(EthSignMessageFragment.this);
@@ -88,6 +97,31 @@ public class EthSignMessageFragment extends BaseFragment<EthSignMessageBinding> 
                 handleParseException(e);
             }
         }
+    }
+
+    private boolean isGarbled(String messageUtf8) {
+        try {
+            Pattern p = Pattern.compile("\\s*|\t*|\r*|\n*");
+            Matcher m = p.matcher(messageUtf8);
+            String after = m.replaceAll("");
+            String temp = after.replaceAll("\\p{P}", "");
+            char[] ch = temp.trim().toCharArray();
+
+            int length = (ch != null) ? ch.length : 0;
+            for (int i = 0; i < length; i++) {
+                char c = ch[i];
+                if (!Character.isLetterOrDigit(c)) {
+                    String str = "" + ch[i];
+                    if (!str.matches("[\u4e00-\u9fa5]+")) {
+                        return true;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     private void handleParseException(Exception ex) {
