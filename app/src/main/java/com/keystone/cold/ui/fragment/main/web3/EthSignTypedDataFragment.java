@@ -163,7 +163,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
         }
 
         for (String s : unknown) {
-            text = text.replace(s, s + " [Unknown Address]");
+//            text = text.replace(s, s + " [Unknown Address]");
         }
 
         return text;
