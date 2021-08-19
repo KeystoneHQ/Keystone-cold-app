@@ -30,9 +30,9 @@ import static com.keystone.cold.ui.fragment.setting.MainPreferenceFragment.SETTI
 
 public enum WatchWallet {
     KEYSTONE("0"),
-    POLKADOT_JS("1"),
-    XRP_TOOLKIT("2"),
-    METAMASK("3");
+    METAMASK("1"),
+    POLKADOT_JS("2"),
+    XRP_TOOLKIT("3");
 
     public static final String XRP_TOOLKIT_SIGN_ID = "xrp_toolkit_sign_id";
     public static final String POLKADOT_JS_SIGN_ID = "polkadot_js_sign_id";
