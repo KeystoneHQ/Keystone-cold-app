@@ -59,7 +59,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.keystone.coinlib.Util.concat;
-import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
 import static org.web3j.crypto.TransactionEncoder.asRlpValues;
 
 public class EthImpl implements Coin {
@@ -119,25 +118,11 @@ public class EthImpl implements Coin {
             metaData.put("gasPrice", rawTx.getGasPrice().toString());
             metaData.put("gasLimit", rawTx.getGasLimit().toString());
             metaData.put("value", rawTx.getValue().toString());
-            AbiLoadManager abiLoadManager = new AbiLoadManager(rawTx.getTo());
-            Contract contract = abiLoadManager.loadAbi();
-            if (contract.isFromTFCard() && callback != null) {
-                callback.fromTFCard();
-            }
-            if (contract.isEmpty()) {
-                //try decode with erc20 abi
-                contract.setAbi(readAsset("abi/Erc20.json"));
-                contract.setName("Erc20");
-            }
+            Contract contract = getContract(callback, rawTx.getTo());
 
             //decode data
             ABIReader abiReader = new ABIReader();
-            try {
-                abiReader.addABI(contract.getAbi());
-            } catch (RuntimeException e) {
-                metaData.put("data", rawTx.getData());
-            }
-            ABIReader.DecodedFunctionCall call = abiReader.decodeCall(rawTx.getData());
+            ABIReader.DecodedFunctionCall call = abiReader.decodeCall(rawTx.getData(), contract);
             if (call != null) {
                 JSONObject data = call.toJson();
                 data.put("contract", contract.getName());
@@ -160,6 +145,15 @@ public class EthImpl implements Coin {
             return null;
         }
         return metaData;
+    }
+
+    protected static Contract getContract(Callback callback, String address) {
+        AbiLoadManager abiLoadManager = new AbiLoadManager(address);
+        Contract contract = abiLoadManager.loadAbi();
+        if (contract.isFromTFCard() && callback != null) {
+            callback.fromTFCard();
+        }
+        return contract;
     }
 
     public static String getSignature(String signedHex) {

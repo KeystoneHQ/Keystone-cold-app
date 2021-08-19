@@ -158,7 +158,8 @@
                 <include
                     layout="@layout/divider"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp" />
+                    android:layout_height="1dp"
+                    android:layout_marginTop="12sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -189,7 +190,8 @@
                 <include
                     layout="@layout/divider"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp" />
+                    android:layout_height="1dp"
+                    android:layout_marginTop="12sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -216,12 +218,34 @@
                     android:breakStrategy="simple"
                     android:textColor="@color/white"
                     android:textStyle="bold"
-                    tools:text="0x35623ea315322ff2618e7469c2e88415111b5444(Unknown adderee)" />
+                    tools:text="0x35623ea315322ff2618e7469c2e88415111b5444 (Unknown adderee)" />
 
                 <include
                     layout="@layout/divider"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp" />
+                    android:layout_height="1dp"
+                    android:layout_marginTop="12sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ens_to_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <include
+                    android:id="@+id/ens"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="6dp"
+                    layout="@layout/ens_item"/>
+
+                <include
+                    layout="@layout/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="12sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -253,7 +277,8 @@
             <include
                 layout="@layout/divider"
                 android:layout_width="match_parent"
-                android:layout_height="1dp" />
+                android:layout_height="1dp"
+                android:layout_marginTop="12sp"/>
 
             <LinearLayout
                 android:id="@+id/fee_info"
@@ -285,7 +310,8 @@
                 <include
                     layout="@layout/divider"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp" />
+                    android:layout_height="1dp"
+                    android:layout_marginTop="12sp"/>
             </LinearLayout>
 
             <LinearLayout

@@ -1,4 +1,4 @@
-package com.keystone.coinlib.abi;
+package com.keystone.coinlib.ens;
 
 import android.database.Cursor;
 import android.database.SQLException;
@@ -8,33 +8,30 @@ import com.keystone.coinlib.utils.SDCardUtil;
 
 import java.io.File;
 
-public class TFCardABIStore implements ABIStoreEngine {
-    private static final String DATABASE_TFCARD_PATH = "contracts" + File.separator + "ethereum";
+public class TFCardENSStore implements ENSStoreEngine {
+    private static final String DATABASE_TFCARD_PATH = "ens";
 
     @Override
-    public Contract load(String address) {
+    public String load(String address) {
         SQLiteDatabase sqLiteDatabase;
-        Contract contract = new Contract();
         try {
             String databaseFilePath = SDCardUtil.externalSDCardPath() + File.separator
-                    + DATABASE_TFCARD_PATH + File.separator + "contracts.db";
+                    + DATABASE_TFCARD_PATH + File.separator + "ENS.db";
             sqLiteDatabase = SQLiteDatabase.openDatabase(databaseFilePath, null, SQLiteDatabase.OPEN_READONLY);
         } catch (SQLException e) {
             e.printStackTrace();
-            return contract;
+            return null;
         }
-        try (Cursor cursor = sqLiteDatabase.query("contracts", null, "address='" + address + "'",
+        try (Cursor cursor = sqLiteDatabase.query("ens", null, "addr='" + address + "'",
                 null, null, null, null)) {
             if (cursor != null && cursor.moveToFirst() && cursor.getCount() > 0) {
-                contract.setName(cursor.getString(cursor.getColumnIndex("name")));
-                contract.setMetadata(cursor.getString(cursor.getColumnIndex("metadata")));
+                return cursor.getString(cursor.getColumnIndex("name"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             sqLiteDatabase.close();
         }
-        contract.setFromTFCard(true);
-        return contract;
+        return null;
     }
 }

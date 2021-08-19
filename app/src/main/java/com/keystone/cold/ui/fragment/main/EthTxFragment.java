@@ -28,9 +28,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.AbiItemBinding;
 import com.keystone.cold.databinding.AbiItemMethodBinding;
+import com.keystone.cold.databinding.EnsItemBinding;
 import com.keystone.cold.databinding.EthTxBinding;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
@@ -131,7 +133,7 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
                     mBinding.qrcode.qrcode.setData(Hex.toHexString(signed.toString().getBytes(StandardCharsets.UTF_8)));
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             signed.remove("abi");
             signed.remove("chainId");
             mBinding.qrcode.qrcode.setData(Hex.toHexString(signed.toString().getBytes(StandardCharsets.UTF_8)));
@@ -183,6 +185,18 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
                 mBinding.ethTx.container.addView(abiItemMethodBinding.getRoot());
                 continue;
             }
+            if ("address".equals(item.type)) {
+                String ens = viewModel.loadEnsAddress(item.value);
+                if (!TextUtils.isEmpty(ens)) {
+                    EnsItemBinding ensBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+                            R.layout.ens_item, null, false);
+                    ensBinding.key.setText(item.key);
+                    ensBinding.value.setText(ens);
+                    ensBinding.address.setText(highLight(item.value));
+                    mBinding.ethTx.container.addView(ensBinding.getRoot());
+                    continue;
+                }
+            }
             AbiItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
                     R.layout.abi_item, null, false);
             binding.key.setText(item.key);
@@ -197,14 +211,29 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
     }
 
     private void processAndUpdateTo() {
-        String to = txEntity.getTo();
-        String addressSymbol = viewModel.recognizeAddress(to);
-        if (addressSymbol != null) {
-            to = to + String.format(" (%s)", addressSymbol);
-        } else {
-            to = to + String.format(" [%s]", "Unknown Address");
-        }
-        mBinding.ethTx.to.setText(highLight(to));
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            String to = txEntity.getTo();
+            String ens = viewModel.loadEnsAddress(to);
+            String addressSymbol = viewModel.recognizeAddress(to);
+            if (!TextUtils.isEmpty(addressSymbol)) {
+                to = to + String.format(" (%s)", addressSymbol);
+            } else {
+//                to = to + String.format(" [%s]", "Unknown Address");
+            }
+            String finalTo = to;
+            AppExecutors.getInstance().mainThread().execute(() -> {
+                mBinding.ethTx.to.setText(highLight(finalTo));
+                if (!TextUtils.isEmpty(ens)) {
+                    mBinding.ethTx.toInfo.setVisibility(View.GONE);
+                    mBinding.ethTx.ensToInfo.setVisibility(View.VISIBLE);
+                    mBinding.ethTx.ens.key.setText(getString(R.string.tx_to));
+                    mBinding.ethTx.ens.value.setText(ens);
+                    mBinding.ethTx.ens.address.setText(highLight(finalTo));
+                } else {
+                    mBinding.ethTx.to.setText(highLight(finalTo));
+                }
+            });
+        });
     }
 
     @Override

@@ -10,14 +10,9 @@ import java.io.File;
 
 public class SelfDefinedABIStore implements ABIStoreEngine {
     private static final String SELF_DEFINE_TFCARD_PATH = "contracts" + File.separator + "self_define";
-    private String address;
-
-    public SelfDefinedABIStore(String address) {
-        this.address = address;
-    }
 
     @Override
-    public Contract load() {
+    public Contract load(String address) {
         Contract contract = new Contract();
         String selfDefineFilePath = SDCardUtil.externalSDCardPath() + File.separator
                 + SELF_DEFINE_TFCARD_PATH + File.separator + address + ".json";
