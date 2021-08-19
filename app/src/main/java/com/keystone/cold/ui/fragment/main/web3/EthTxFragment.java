@@ -186,7 +186,7 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
                 continue;
             }
             if ("address".equals(item.type)) {
-                String ens = viewModel.ensAddress(item.value);
+                String ens = viewModel.loadEnsAddress(item.value);
                 if (!TextUtils.isEmpty(ens)) {
                     EnsItemBinding ensBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
                             R.layout.ens_item, null, false);
@@ -213,7 +213,7 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
     private void processAndUpdateTo() {
         AppExecutors.getInstance().diskIO().execute(() -> {
             String to = txEntity.getTo();
-            String ens = viewModel.ensAddress(to);
+            String ens = viewModel.loadEnsAddress(to);
             String addressSymbol = viewModel.recognizeAddress(to);
             if (!TextUtils.isEmpty(addressSymbol)) {
                 to = to + String.format(" (%s)", addressSymbol);

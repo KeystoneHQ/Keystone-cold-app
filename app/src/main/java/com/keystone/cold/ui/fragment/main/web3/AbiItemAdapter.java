@@ -68,7 +68,7 @@ public class AbiItemAdapter {
                     for (int j = 0; j < arr.length(); j++) {
                         String item = arr.getString(j);
                         if ("address[]".equals(type)) {
-                            String ens = viewModel.ensAddress(item);
+                            String ens = viewModel.loadEnsAddress(item);
                             if (!TextUtils.isEmpty(ens)) {
                                 item = ens + "\n" + item;
                             }

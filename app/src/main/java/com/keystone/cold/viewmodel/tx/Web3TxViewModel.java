@@ -97,7 +97,7 @@ public class Web3TxViewModel extends Base {
         return tokensMap;
     }
 
-    public String ensAddress(String address) {
+    public String loadEnsAddress(String address) {
         EnsLoadManager ensLoadManager = new EnsLoadManager(address);
         return ensLoadManager.load();
     }

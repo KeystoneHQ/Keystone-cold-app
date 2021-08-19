@@ -105,7 +105,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
             mBinding.verifyingContractContainer.setVisibility(View.GONE);
             return;
         }
-        String ens = viewModel.ensAddress(verifyingContract);
+        String ens = viewModel.loadEnsAddress(verifyingContract);
         String addressSymbol = viewModel.recognizeAddress(verifyingContract);
         if (addressSymbol != null) {
             verifyingContract = verifyingContract + String.format(" (%s)", addressSymbol);
@@ -144,7 +144,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
         Set<String> unknown = new HashSet<>();
         while (matcher.find()) {
             String address = matcher.group();
-            String ens = viewModel.ensAddress(address);
+            String ens = viewModel.loadEnsAddress(address);
             if (!TextUtils.isEmpty(ens)) {
                 address = ens + "\n" + address;
             }
