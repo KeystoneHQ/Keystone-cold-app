@@ -103,12 +103,14 @@ public class DynamicQrCodeView extends LinearLayout implements QrCodeHolder {
         if (multiPart) {
             AppExecutors.getInstance().networkIO().execute(() -> {
                 try {
+                    UR urtemp;
                     if (data.toUpperCase().startsWith("UR:")) {
-                        ur.postValue(URDecoder.decode(data));
+                        urtemp = URDecoder.decode(data);
                     } else {
-                        ur.postValue(fromBytes(Hex.decode(data)));
+                        urtemp = fromBytes(Hex.decode(data));
                     }
-                    encoder = new UREncoder(ur.getValue(), qrCapacity.capacity, 10, 0);
+                    ur.postValue(urtemp);
+                    encoder = new UREncoder(urtemp, qrCapacity.capacity, 10, 0);
                     mCache.restart();
                     handler.removeCallbacks(runnable);
                     handler.post(runnable);
