@@ -420,9 +420,9 @@
 
     <string-array name="watch_wallet_list">
         <item>Keystone App</item>
+        <item>Web3</item>
         <item>Polkadot.js</item>
         <item>XRP Toolkit</item>
-        <item>Web3</item>
     </string-array>
 
     <string-array name="watch_wallet_list_values" translatable="false">
