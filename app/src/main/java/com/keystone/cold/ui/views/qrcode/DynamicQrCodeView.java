@@ -30,6 +30,7 @@ import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
+import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
@@ -52,6 +53,7 @@ public class DynamicQrCodeView extends LinearLayout implements QrCodeHolder {
     public final Runnable runnable;
     private final AppCompatActivity mActivity;
     private boolean detached = false;
+    private MutableLiveData<UR> ur = new MutableLiveData<>();
 
     private UREncoder encoder;
 
@@ -61,6 +63,7 @@ public class DynamicQrCodeView extends LinearLayout implements QrCodeHolder {
         LOW(200);
 
         public int capacity;
+
         QrCapacity(int i) {
             this.capacity = i;
         }
@@ -88,21 +91,24 @@ public class DynamicQrCodeView extends LinearLayout implements QrCodeHolder {
         multiPart = false;
     }
 
+    public MutableLiveData<UR> getUr() {
+        return ur;
+    }
+
     /*
      if multiPart, s should be hex string
      */
     public void setData(String s) {
         data = s;
         if (multiPart) {
-            AppExecutors.getInstance().networkIO().execute(()-> {
+            AppExecutors.getInstance().networkIO().execute(() -> {
                 try {
-                    UR ur;
                     if (data.toUpperCase().startsWith("UR:")) {
-                        ur = URDecoder.decode(data);
+                        ur.postValue(URDecoder.decode(data));
                     } else {
-                        ur = fromBytes(Hex.decode(data));
+                        ur.postValue(fromBytes(Hex.decode(data)));
                     }
-                    encoder = new UREncoder(ur, qrCapacity.capacity, 10, 0);
+                    encoder = new UREncoder(ur.getValue(), qrCapacity.capacity, 10, 0);
                     mCache.restart();
                     handler.removeCallbacks(runnable);
                     handler.post(runnable);
@@ -146,7 +152,7 @@ public class DynamicQrCodeView extends LinearLayout implements QrCodeHolder {
 
     private void showModal() {
         QrCodeModal modal = QrCodeModal.newInstance(data, multiPart);
-        modal.show(mActivity.getSupportFragmentManager(),"");
+        modal.show(mActivity.getSupportFragmentManager(), "");
     }
 
     public void showQrCode() {
