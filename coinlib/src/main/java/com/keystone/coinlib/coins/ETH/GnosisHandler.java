@@ -11,12 +11,18 @@ import java.math.BigInteger;
 import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
 
 public class GnosisHandler implements FallbackHandler {
+    public static boolean isFallbackSuccess = false;
+
     @Override
     public ABIReader.DecodedFunctionCall decodeCall(String data, Contract contract) {
         contract.setAbi(readAsset("abi/Mastercopy_1.2.0.json"));
         contract.setName("Gnosis Safe: Mastercopy 1.2.0");
         ABIReader abiReader = new ABIReader();
-        return abiReader.decodeCall(data, contract);
+        ABIReader.DecodedFunctionCall call = abiReader.decodeCall(data, contract);
+        if (call != null) {
+            isFallbackSuccess = true;
+        }
+        return call;
     }
 
     @Override
