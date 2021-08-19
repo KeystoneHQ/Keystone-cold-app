@@ -174,6 +174,25 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/ens_to_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="4dp">
+
+                        <include
+                            android:id="@+id/ens"
+                            layout="@layout/ens_item"/>
+                        <include
+                            layout="@layout/divider"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="12dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"

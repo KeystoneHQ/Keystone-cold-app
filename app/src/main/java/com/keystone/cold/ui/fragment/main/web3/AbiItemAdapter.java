@@ -34,6 +34,7 @@ public class AbiItemAdapter {
 
     private String fromAddress;
     private Web3TxViewModel viewModel;
+
     public AbiItemAdapter(String fromAddress, Web3TxViewModel viewModel) {
         this.fromAddress = fromAddress;
         this.viewModel = viewModel;
@@ -67,19 +68,23 @@ public class AbiItemAdapter {
                     for (int j = 0; j < arr.length(); j++) {
                         String item = arr.getString(j);
                         if ("address[]".equals(type)) {
+                            String ens = viewModel.loadEnsAddress(item);
+                            if (!TextUtils.isEmpty(ens)) {
+                                item = ens + "\n" + item;
+                            }
                             String addressSymbol = viewModel.recognizeAddress(item);
                             if (addressSymbol != null) {
                                 item += String.format(" (%s)", addressSymbol);
                             } else {
-                                item += String.format(" [%s]", "Unknown Address");
+//                                item += String.format(" [%s]", "Unknown Address");
                             }
                         }
                         concatValue.append(item);
-                        if (j != arr.length() -1) {
-                            concatValue.append("\n");
+                        if (j != arr.length() - 1) {
+                            concatValue.append("\n\n");
                         }
                     }
-                    items.add(new AbiItem(name, concatValue.toString(),type));
+                    items.add(new AbiItem(name, concatValue.toString(), type));
                 } else {
                     String item = value.toString();
                     if ("address".equals(type)) {
@@ -87,7 +92,7 @@ public class AbiItemAdapter {
                         if (addressSymbol != null) {
                             item += String.format(" (%s)", addressSymbol);
                         } else if (!"to".equals(name)) {
-                            item += String.format(" [%s]", "Unknown Address");
+//                            item += String.format(" [%s]", "Unknown Address");
                         }
                     }
                     items.add(new AbiItem(name, item, type));
@@ -123,12 +128,12 @@ public class AbiItemAdapter {
         return value;
     }
 
-    public static class AbiItem{
+    public static class AbiItem {
         String key;
         String value;
         String type;
 
-        public AbiItem(String key, String value,String type) {
+        public AbiItem(String key, String value, String type) {
             this.key = key;
             this.value = value;
             this.type = type;

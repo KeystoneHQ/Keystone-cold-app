@@ -35,8 +35,8 @@ import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
-import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 import com.keystone.cold.viewmodel.tx.KeystoneTxViewModel;
+import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,11 +89,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
                 mBinding.network.setText(viewModel.getNetwork(domain.optInt("chainId", 1)));
                 mBinding.name.setText(domain.optString("name"));
                 String verifyingContract = domain.optString("verifyingContract", "");
-                if (TextUtils.isEmpty(verifyingContract)) {
-                    mBinding.verifyingContractContainer.setVisibility(View.GONE);
-                } else {
-                    mBinding.verifyingContract.setText(highLight(recognizeAddress(verifyingContract)));
-                }
+                updateVerifyingContract(verifyingContract);
                 String message = messageData.getJSONObject("message").toString(2);
                 mBinding.message.setText(highLight(recognizeAddressInText(message)));
                 liveData.removeObservers(EthSignTypedDataFragment.this);
@@ -102,6 +98,30 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
                 handleParseException(e);
             }
         }
+    }
+
+    private void updateVerifyingContract(String verifyingContract) {
+        if (TextUtils.isEmpty(verifyingContract)) {
+            mBinding.verifyingContractContainer.setVisibility(View.GONE);
+            return;
+        }
+        String ens = viewModel.loadEnsAddress(verifyingContract);
+        String addressSymbol = viewModel.recognizeAddress(verifyingContract);
+        if (addressSymbol != null) {
+            verifyingContract = verifyingContract + String.format(" (%s)", addressSymbol);
+        } else {
+//            verifyingContract = verifyingContract + String.format(" [%s]", "Unknown Address");
+        }
+        if (!TextUtils.isEmpty(ens)) {
+            mBinding.verifyingContractContainer.setVisibility(View.GONE);
+            mBinding.ensToInfo.setVisibility(View.VISIBLE);
+            mBinding.ens.key.setText("Verifying Contract");
+            mBinding.ens.value.setText(ens);
+            mBinding.ens.address.setText(highLight(verifyingContract));
+        } else {
+            mBinding.verifyingContract.setText(highLight(verifyingContract));
+        }
+
     }
 
     private void handleParseException(Exception ex) {
@@ -117,16 +137,6 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
         }
     }
 
-    private String recognizeAddress(String address) {
-        String addressSymbol = viewModel.recognizeAddress(address);
-        if (addressSymbol != null) {
-            address = address + String.format(" (%s)", addressSymbol);
-        } else {
-            address = address + String.format(" [%s]", "Unknown Address");
-        }
-        return address;
-    }
-
     private String recognizeAddressInText(String text) {
         Pattern pattern = Pattern.compile("0x[a-fA-F0-9]{40}");
         Matcher matcher = pattern.matcher(text);
@@ -134,6 +144,10 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
         Set<String> unknown = new HashSet<>();
         while (matcher.find()) {
             String address = matcher.group();
+            String ens = viewModel.loadEnsAddress(address);
+            if (!TextUtils.isEmpty(ens)) {
+                address = ens + "\n" + address;
+            }
             String symbol = viewModel.recognizeAddress(address);
             if (symbol != null) {
                 recognized.put(address, symbol);

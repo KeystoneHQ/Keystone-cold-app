@@ -32,6 +32,7 @@ import com.keystone.coinlib.abi.Contract;
 import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.coins.ETH.Network;
 import com.keystone.coinlib.coins.SignTxResult;
+import com.keystone.coinlib.ens.EnsLoadManager;
 import com.keystone.coinlib.exception.InvalidPathException;
 import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.SignCallback;
@@ -94,6 +95,11 @@ public class Web3TxViewModel extends Base {
 
     public JSONArray getTokensMap() {
         return tokensMap;
+    }
+
+    public String loadEnsAddress(String address) {
+        EnsLoadManager ensLoadManager = new EnsLoadManager(address);
+        return ensLoadManager.load();
     }
 
     public String recognizeAddress(String to) {
