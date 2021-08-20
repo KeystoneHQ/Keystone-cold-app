@@ -108,7 +108,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
         String addressSymbol = viewModel.recognizeAddress(verifyingContract);
         if (addressSymbol != null) {
             verifyingContract = verifyingContract + String.format(" (%s)", addressSymbol);
-        } else if (GnosisHandler.gnosisContractAddresses.contains(verifyingContract)) {
+        } else if (GnosisHandler.gnosisContractAddresses.contains(verifyingContract.toLowerCase())) {
             verifyingContract += " (GnosisSafeProxy)";
         } else {
 //            verifyingContract = verifyingContract + String.format(" [%s]", "Unknown Address");
