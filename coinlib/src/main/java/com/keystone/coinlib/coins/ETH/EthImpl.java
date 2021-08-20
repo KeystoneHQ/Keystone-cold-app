@@ -122,7 +122,7 @@ public class EthImpl implements Coin {
 
             //decode data
             ABIReader abiReader = new ABIReader();
-            ABIReader.DecodedFunctionCall call = abiReader.decodeCall(rawTx.getData(), contract);
+            ABIReader.DecodedFunctionCall call = abiReader.decodeCall(rawTx.getData(), contract, rawTx.getTo());
             if (call != null) {
                 JSONObject data = call.toJson();
                 data.put("contract", contract.getName());

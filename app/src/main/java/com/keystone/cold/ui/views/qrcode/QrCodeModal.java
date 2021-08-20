@@ -79,6 +79,11 @@ public class QrCodeModal extends DialogFragment {
         setupSeekbar();
         setupController();
         setupCapacitySwitch();
+        modalBinding.qrcodeLayout.qrcode.getURSubscriber().observe(getActivity(), ur -> {
+            if (!multipart || ur.getCborBytes().length <= DynamicQrCodeView.QrCapacity.LOW.capacity) {
+                modalBinding.switchCapacity.setVisibility(View.GONE);
+            }
+        });
         updateUI();
         return modalBinding.getRoot();
     }
@@ -157,7 +162,7 @@ public class QrCodeModal extends DialogFragment {
     }
 
     private void showBottomMenu() {
-        BottomSheetDialog dialog = new BottomSheetDialog(Objects.requireNonNull(getActivity()));
+        BottomSheetDialog dialog = new BottomSheetDialog(requireActivity());
         SwitchQrCapacityBottomSheetBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getActivity()),
                 R.layout.switch_qr_capacity_bottom_sheet, null, false);
         refreshCheckedStatus(binding.getRoot());

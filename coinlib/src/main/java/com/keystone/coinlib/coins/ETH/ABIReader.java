@@ -72,10 +72,10 @@ public class ABIReader {
         }
     }
 
-    public DecodedFunctionCall decodeCall(String data, Contract contract) {
+    public DecodedFunctionCall decodeCall(String data, Contract contract, String address) {
         if (contract.isEmpty()) {
             for (FallbackHandler fallbackHandler : fallbackHandlers) {
-                DecodedFunctionCall call = fallbackHandler.decodeCall(data, contract);
+                DecodedFunctionCall call = fallbackHandler.decodeCall(data, contract, address);
                 if (call != null) {
                     return call;
                 }

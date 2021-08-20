@@ -28,6 +28,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.coinlib.coins.ETH.GnosisHandler;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.AbiItemBinding;
@@ -187,6 +188,12 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
             }
             if ("address".equals(item.type)) {
                 String ens = viewModel.loadEnsAddress(item.value);
+                String addressSymbol = viewModel.recognizeAddress(item.value);
+                if (addressSymbol != null) {
+                    item.value += String.format(" (%s)", addressSymbol);
+                } else if (!"to".equals(item.key)) {
+//                            item += String.format(" [%s]", "Unknown Address");
+                }
                 if (!TextUtils.isEmpty(ens)) {
                     EnsItemBinding ensBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
                             R.layout.ens_item, null, false);
@@ -217,6 +224,8 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
             String addressSymbol = viewModel.recognizeAddress(to);
             if (!TextUtils.isEmpty(addressSymbol)) {
                 to = to + String.format(" (%s)", addressSymbol);
+            } else if (GnosisHandler.gnosisContractAddresses.contains(to)) {
+                to += " (GnosisSafeProxy)";
             } else {
 //                to = to + String.format(" [%s]", "Unknown Address");
             }

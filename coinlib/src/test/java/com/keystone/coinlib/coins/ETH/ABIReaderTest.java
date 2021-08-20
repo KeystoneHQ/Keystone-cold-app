@@ -15,7 +15,7 @@ public class ABIReaderTest {
     @Test
     public void testABIReader() {
         ABIReader reader = new ABIReader();
-        ABIReader.DecodedFunctionCall call = reader.decodeCall(testCall2, new Contract(null, testABI2));
+        ABIReader.DecodedFunctionCall call = reader.decodeCall(testCall2, new Contract(null, testABI2), "");
         System.out.println(call.toJson().toString());
     }
 }
