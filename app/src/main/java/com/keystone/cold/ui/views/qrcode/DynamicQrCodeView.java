@@ -53,7 +53,7 @@ public class DynamicQrCodeView extends LinearLayout implements QrCodeHolder {
     public final Runnable runnable;
     private final AppCompatActivity mActivity;
     private boolean detached = false;
-    private MutableLiveData<UR> ur = new MutableLiveData<>();
+    private MutableLiveData<UR> URSubscriber = new MutableLiveData<>();
 
     private UREncoder encoder;
 
@@ -91,8 +91,8 @@ public class DynamicQrCodeView extends LinearLayout implements QrCodeHolder {
         multiPart = false;
     }
 
-    public MutableLiveData<UR> getUr() {
-        return ur;
+    public MutableLiveData<UR> getURSubscriber() {
+        return URSubscriber;
     }
 
     /*
@@ -103,14 +103,14 @@ public class DynamicQrCodeView extends LinearLayout implements QrCodeHolder {
         if (multiPart) {
             AppExecutors.getInstance().networkIO().execute(() -> {
                 try {
-                    UR urtemp;
+                    UR ur;
                     if (data.toUpperCase().startsWith("UR:")) {
-                        urtemp = URDecoder.decode(data);
+                        ur = URDecoder.decode(data);
                     } else {
-                        urtemp = fromBytes(Hex.decode(data));
+                        ur = fromBytes(Hex.decode(data));
                     }
-                    ur.postValue(urtemp);
-                    encoder = new UREncoder(urtemp, qrCapacity.capacity, 10, 0);
+                    URSubscriber.postValue(ur);
+                    encoder = new UREncoder(ur, qrCapacity.capacity, 10, 0);
                     mCache.restart();
                     handler.removeCallbacks(runnable);
                     handler.post(runnable);

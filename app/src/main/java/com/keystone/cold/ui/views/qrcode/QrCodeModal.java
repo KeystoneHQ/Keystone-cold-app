@@ -81,12 +81,9 @@ public class QrCodeModal extends DialogFragment {
         setupSeekbar();
         setupController();
         setupCapacitySwitch();
-        modalBinding.qrcodeLayout.qrcode.getUr().observe(getActivity(), new Observer<UR>() {
-            @Override
-            public void onChanged(UR ur) {
-                if (!multipart || ur.getCborBytes().length <= DynamicQrCodeView.QrCapacity.LOW.capacity) {
-                    modalBinding.switchCapacity.setVisibility(View.GONE);
-                }
+        modalBinding.qrcodeLayout.qrcode.getURSubscriber().observe(getActivity(), ur -> {
+            if (!multipart || ur.getCborBytes().length <= DynamicQrCodeView.QrCapacity.LOW.capacity) {
+                modalBinding.switchCapacity.setVisibility(View.GONE);
             }
         });
         updateUI();

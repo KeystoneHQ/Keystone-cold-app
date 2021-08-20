@@ -40,7 +40,6 @@ public class AbiItemAdapter {
         this.fromAddress = fromAddress;
         this.viewModel = viewModel;
     }
-
     public List<AbiItem> adapt(JSONObject tx) {
         try {
             JSONArray params = tx.getJSONArray("param");
@@ -54,51 +53,66 @@ public class AbiItemAdapter {
                 String name = param.getString("name");
                 String type = param.getString("type");
                 Object value = param.get("value");
-                if (TextUtils.equals("tuple", type)) {
-                    JSONObject tupleObject = new JSONObject();
-                    tupleObject.put("param", addParamsName(value, name));
-                    items.addAll(adapt(tupleObject));
-                } else if (TextUtils.equals("bytes[]", type)) {
-                    JSONArray jsonArray = new JSONArray(value.toString());
-                    for (int j = 0; j < jsonArray.length(); j++) {
-                        items.addAll(adapt(new JSONObject(jsonArray.getString(j))));
-                    }
-                } else if (value instanceof JSONArray) {
-                    JSONArray arr = (JSONArray) value;
-                    StringBuilder concatValue = new StringBuilder();
-                    for (int j = 0; j < arr.length(); j++) {
-                        String item = arr.getString(j);
-                        if ("address[]".equals(type)) {
-                            String ens = viewModel.loadEnsAddress(item);
-                            String addressSymbol = viewModel.recognizeAddress(item);
-                            if (!TextUtils.isEmpty(ens)) {
-                                item = ens + "\n" + item;
-                            }
-                            if (addressSymbol != null) {
-                                item += String.format(" (%s)", addressSymbol);
-                            } else {
-//                                item += String.format(" [%s]", "Unknown Address");
-                            }
-                        }
-                        concatValue.append(item);
-                        if (j != arr.length() - 1) {
-                            concatValue.append("\n\n");
-                        }
-                    }
-                    items.add(new AbiItem(name, concatValue.toString(), type));
-                }  else if (TextUtils.equals("initializer", name)) {
-                    String item = value.toString().replace(",",",\n");
-                    items.add(new AbiItem(name, item, type));
-                } else {
-                    String item = value.toString();
-                    items.add(new AbiItem(name, item, type));
+                if (adaptGnosis(items, name, type, value)) {
+                    continue;
                 }
+                adaptGeneric(items, i, name, type, value);
             }
             return items;
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void adaptGeneric(List<AbiItem> items, int i, String name, String type, Object value) throws JSONException {
+        if (TextUtils.equals("tuple", type)) {
+            JSONObject tupleObject = new JSONObject();
+            tupleObject.put("param", addParamsName(value, name));
+            items.addAll(adapt(tupleObject));
+        } else if (TextUtils.equals("bytes[]", type)) {
+            JSONArray jsonArray = new JSONArray(value.toString());
+            for (int j = 0; j < jsonArray.length(); j++) {
+                items.addAll(adapt(new JSONObject(jsonArray.getString(j))));
+            }
+        } else if (value instanceof JSONArray) {
+            JSONArray arr = (JSONArray) value;
+            StringBuilder concatValue = new StringBuilder();
+            for (int j = 0; j < arr.length(); j++) {
+                StringBuilder item = new StringBuilder(arr.getString(i));
+                if ("address[]".equals(type)) {
+                    String address = item.toString();
+                    String ens = viewModel.loadEnsAddress(address);
+                    String addressSymbol = viewModel.recognizeAddress(address);
+                    if (!TextUtils.isEmpty(ens)) {
+                        item.append("<").append(ens).append(">\n");
+                    }
+                    item.append(address);
+                    if (addressSymbol != null) {
+                        item.append(String.format(" (%s)", addressSymbol));
+                    } else {
+//                                item += String.format(" [%s]", "Unknown Address");
+                    }
+                }
+                concatValue.append(item);
+                if (j != arr.length() - 1) {
+                    concatValue.append("\n\n");
+                }
+            }
+            items.add(new AbiItem(name, concatValue.toString(), type));
+        } else {
+            String item = value.toString();
+            items.add(new AbiItem(name, item, type));
+        }
+    }
+
+    private boolean adaptGnosis(List<AbiItem> items, String name, String type, Object value) {
+        if (TextUtils.equals("initializer", name)) {
+            String item = value.toString().replace(",", ",\n");
+            items.add(new AbiItem(name, item, type));
+            return true;
+        }
+        return false;
     }
 
     private Object addParamsName(Object value, String name) {
