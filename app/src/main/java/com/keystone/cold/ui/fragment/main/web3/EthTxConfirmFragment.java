@@ -33,6 +33,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.coinlib.coins.ETH.GnosisHandler;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
@@ -210,6 +211,8 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
             String addressSymbol = viewModel.recognizeAddress(to);
             if (!TextUtils.isEmpty(addressSymbol)) {
                 to = to + String.format(" (%s)", addressSymbol);
+            } else if (GnosisHandler.gnosisContractAddresses.contains(to)) {
+                to += " (GnosisSafeProxy)";
             } else {
 //                to = to + String.format(" [%s]", "Unknown Address");
             }

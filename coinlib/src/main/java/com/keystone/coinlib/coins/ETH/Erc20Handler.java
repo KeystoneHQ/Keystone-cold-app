@@ -10,11 +10,11 @@ public class Erc20Handler implements FallbackHandler {
     private static final String TAG = "Erc20Handler";
 
     @Override
-    public ABIReader.DecodedFunctionCall decodeCall(String data, Contract contract) {
+    public ABIReader.DecodedFunctionCall decodeCall(String data, Contract contract, String address) {
         contract.setAbi(readAsset("abi/Erc20.json"));
         contract.setName("Erc20");
         ABIReader abiReader = new ABIReader();
-        return abiReader.decodeCall(data, contract);
+        return abiReader.decodeCall(data, contract, address);
     }
 
     @Override
