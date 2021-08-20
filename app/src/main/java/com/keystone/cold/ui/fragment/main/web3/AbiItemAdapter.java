@@ -53,6 +53,9 @@ public class AbiItemAdapter {
                 String name = param.getString("name");
                 String type = param.getString("type");
                 Object value = param.get("value");
+                if (handleGnosis(items, name, type, value)) {
+                    continue;
+                }
                 if (TextUtils.equals("tuple", type)) {
                     JSONObject tupleObject = new JSONObject();
                     tupleObject.put("param", addParamsName(value, name));
@@ -66,15 +69,17 @@ public class AbiItemAdapter {
                     JSONArray arr = (JSONArray) value;
                     StringBuilder concatValue = new StringBuilder();
                     for (int j = 0; j < arr.length(); j++) {
-                        String item = arr.getString(j);
+                        StringBuilder item = new StringBuilder(arr.getString(i));
                         if ("address[]".equals(type)) {
-                            String ens = viewModel.loadEnsAddress(item);
-                            String addressSymbol = viewModel.recognizeAddress(item);
+                            String address = item.toString();
+                            String ens = viewModel.loadEnsAddress(address);
+                            String addressSymbol = viewModel.recognizeAddress(address);
                             if (!TextUtils.isEmpty(ens)) {
-                                item = ens + "\n" + item;
+                                item.append("<").append(ens).append(">\n");
                             }
+                            item.append(address);
                             if (addressSymbol != null) {
-                                item += String.format(" (%s)", addressSymbol);
+                                item.append(String.format(" (%s)", addressSymbol));
                             } else {
 //                                item += String.format(" [%s]", "Unknown Address");
                             }
@@ -85,9 +90,6 @@ public class AbiItemAdapter {
                         }
                     }
                     items.add(new AbiItem(name, concatValue.toString(), type));
-                } else if (TextUtils.equals("initializer", name)) {
-                    String item = value.toString().replace(",", ",\n");
-                    items.add(new AbiItem(name, item, type));
                 } else {
                     String item = value.toString();
                     items.add(new AbiItem(name, item, type));
@@ -98,6 +100,15 @@ public class AbiItemAdapter {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private boolean handleGnosis(List<AbiItem> items, String name, String type, Object value) {
+        if (TextUtils.equals("initializer", name)) {
+            String item = value.toString().replace(",", ",\n");
+            items.add(new AbiItem(name, item, type));
+            return true;
+        }
+        return false;
     }
 
     private Object addParamsName(Object value, String name) {

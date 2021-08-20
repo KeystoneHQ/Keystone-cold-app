@@ -33,13 +33,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.Observer;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.DynamicQrcodeModalBinding;
 import com.keystone.cold.databinding.SwitchQrCapacityBottomSheetBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.sparrowwallet.hummingbird.UR;
 
 import java.util.Objects;
 
@@ -81,12 +79,9 @@ public class QrCodeModal extends DialogFragment {
         setupSeekbar();
         setupController();
         setupCapacitySwitch();
-        modalBinding.qrcodeLayout.qrcode.getUr().observe(getActivity(), new Observer<UR>() {
-            @Override
-            public void onChanged(UR ur) {
-                if (!multipart || ur.getCborBytes().length <= DynamicQrCodeView.QrCapacity.LOW.capacity) {
-                    modalBinding.switchCapacity.setVisibility(View.GONE);
-                }
+        modalBinding.qrcodeLayout.qrcode.getURSubscriber().observe(getActivity(), ur -> {
+            if (!multipart || ur.getCborBytes().length <= DynamicQrCodeView.QrCapacity.LOW.capacity) {
+                modalBinding.switchCapacity.setVisibility(View.GONE);
             }
         });
         updateUI();
