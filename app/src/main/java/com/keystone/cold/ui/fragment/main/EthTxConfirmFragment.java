@@ -75,6 +75,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
         navigate(R.id.action_to_preImportFragment, bundle);
     };
 
+    public static Pattern patternEns = Pattern.compile("(?<=\\<)[^\\>]+");
     public static Pattern pattern = Pattern.compile("(?<=\\()[^\\)]+");
     public static Pattern pattern1 = Pattern.compile("(?<=\\[)[^]]+");
 
@@ -211,9 +212,8 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
             String addressSymbol = viewModel.recognizeAddress(to);
             if (!TextUtils.isEmpty(addressSymbol)) {
                 to = to + String.format(" (%s)", addressSymbol);
-            } else if (GnosisHandler.isFallbackSuccess) {
+            } else if (GnosisHandler.gnosisContractAddresses.contains(to)) {
                 to += " (GnosisSafeProxy)";
-                GnosisHandler.isFallbackSuccess = false;
             } else {
 //                to = to + String.format(" [%s]", "Unknown Address");
             }
@@ -306,10 +306,20 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
 
     public static SpannableStringBuilder highLight(String content) {
         SpannableStringBuilder spannable = new SpannableStringBuilder(content);
+
+        Matcher matcherEns = patternEns.matcher(spannable);
+        while (matcherEns.find()) {
+            spannable.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.ens)), matcherEns.start() - 1,
+                    matcherEns.end() + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            spannable.replace(matcherEns.start() - 1, matcherEns.start(), "");
+            spannable.replace(matcherEns.end() - 1, matcherEns.end(), "");
+        }
+
         Matcher matcher = pattern.matcher(spannable);
-        while (matcher.find())
+        while (matcher.find()) {
             spannable.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.icon_select)), matcher.start() - 1,
                     matcher.end() + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        }
 
         if (content.contains("Unknown") || content.contains("Inconsistent")) {
             matcher = pattern1.matcher(spannable);

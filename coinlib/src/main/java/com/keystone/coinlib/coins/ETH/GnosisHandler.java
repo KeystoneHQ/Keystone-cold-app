@@ -7,20 +7,22 @@ import com.keystone.coinlib.abi.Contract;
 import org.bouncycastle.util.encoders.Hex;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
 
 public class GnosisHandler implements FallbackHandler {
-    public static boolean isFallbackSuccess = false;
+    public static List<String> gnosisContractAddresses = new ArrayList<>();
 
     @Override
-    public ABIReader.DecodedFunctionCall decodeCall(String data, Contract contract) {
+    public ABIReader.DecodedFunctionCall decodeCall(String data, Contract contract, String address) {
         contract.setAbi(readAsset("abi/Mastercopy_1.2.0.json"));
         contract.setName("Gnosis Safe: Mastercopy 1.2.0");
         ABIReader abiReader = new ABIReader();
-        ABIReader.DecodedFunctionCall call = abiReader.decodeCall(data, contract);
+        ABIReader.DecodedFunctionCall call = abiReader.decodeCall(data, contract, address);
         if (call != null) {
-            isFallbackSuccess = true;
+            gnosisContractAddresses.add(address);
         }
         return call;
     }
@@ -39,7 +41,7 @@ public class GnosisHandler implements FallbackHandler {
                 data = call.toJson().toString();
             }
             ABIReader abiReader = new ABIReader();
-            abiReader.decodeCall(data, contract);
+            abiReader.decodeCall(data, contract, "");
         }
     }
 }

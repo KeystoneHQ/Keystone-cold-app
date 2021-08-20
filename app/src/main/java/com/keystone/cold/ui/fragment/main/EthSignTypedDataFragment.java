@@ -27,6 +27,7 @@ import android.view.View;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.coinlib.coins.ETH.GnosisHandler;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.databinding.EthSignTypedDataBinding;
@@ -41,10 +42,6 @@ import com.keystone.cold.viewmodel.TxConfirmViewModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -109,6 +106,8 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
         String addressSymbol = viewModel.recognizeAddress(verifyingContract);
         if (addressSymbol != null) {
             verifyingContract = verifyingContract + String.format(" (%s)", addressSymbol);
+        } else if (GnosisHandler.gnosisContractAddresses.contains(verifyingContract)) {
+            verifyingContract += " (GnosisSafeProxy)";
         } else {
 //            verifyingContract = verifyingContract + String.format(" [%s]", "Unknown Address");
         }
@@ -146,7 +145,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
             String symbol = viewModel.recognizeAddress(address);
             StringBuilder result = new StringBuilder();
             if (!TextUtils.isEmpty(ens)) {
-                result.append(ens).append("\n");
+                result.append("<").append(ens).append(">\n");
             }
             result.append(address);
             if (symbol != null) {
