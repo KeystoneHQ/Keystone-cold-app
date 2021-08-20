@@ -69,10 +69,10 @@ public class AbiItemAdapter {
                         String item = arr.getString(j);
                         if ("address[]".equals(type)) {
                             String ens = viewModel.loadEnsAddress(item);
+                            String addressSymbol = viewModel.recognizeAddress(item);
                             if (!TextUtils.isEmpty(ens)) {
                                 item = ens + "\n" + item;
                             }
-                            String addressSymbol = viewModel.recognizeAddress(item);
                             if (addressSymbol != null) {
                                 item += String.format(" (%s)", addressSymbol);
                             } else {
@@ -85,16 +85,11 @@ public class AbiItemAdapter {
                         }
                     }
                     items.add(new AbiItem(name, concatValue.toString(), type));
+                } else if (TextUtils.equals("initializer", name)) {
+                    String item = value.toString().replace(",", ",\n");
+                    items.add(new AbiItem(name, item, type));
                 } else {
                     String item = value.toString();
-                    if ("address".equals(type)) {
-                        String addressSymbol = viewModel.recognizeAddress(item);
-                        if (addressSymbol != null) {
-                            item += String.format(" (%s)", addressSymbol);
-                        } else if (!"to".equals(name)) {
-//                            item += String.format(" [%s]", "Unknown Address");
-                        }
-                    }
                     items.add(new AbiItem(name, item, type));
                 }
             }

@@ -42,10 +42,6 @@ import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -143,30 +139,23 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
     private String recognizeAddressInText(String text) {
         Pattern pattern = Pattern.compile("0x[a-fA-F0-9]{40}");
         Matcher matcher = pattern.matcher(text);
-        Map<String, String> recognized = new HashMap<>();
-        Set<String> unknown = new HashSet<>();
         while (matcher.find()) {
             String address = matcher.group();
             String ens = viewModel.loadEnsAddress(address);
-            if (!TextUtils.isEmpty(ens)) {
-                address = ens + "\n" + address;
-            }
             String symbol = viewModel.recognizeAddress(address);
+            StringBuilder result = new StringBuilder();
+            if (!TextUtils.isEmpty(ens)) {
+                result.append("<").append(ens).append(">\n");
+            }
+            result.append(address);
             if (symbol != null) {
-                recognized.put(address, symbol);
+                result.append(String.format(" (%s)", symbol));
             } else if (address.equalsIgnoreCase(viewModel.getFromAddress())) {
                 //do nothing
             } else {
-                unknown.add(address);
+//                result.append(" [Unknown Address]");
             }
-        }
-
-        for (String s : recognized.keySet()) {
-            text = text.replace(s, s + String.format(" (%s)", recognized.get(s)));
-        }
-
-        for (String s : unknown) {
-//            text = text.replace(s, s + " [Unknown Address]");
+            text = text.replace(address, result.toString());
         }
 
         return text;
