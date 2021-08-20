@@ -42,6 +42,8 @@ import com.keystone.cold.viewmodel.TxConfirmViewModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -139,13 +141,15 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
     private String recognizeAddressInText(String text) {
         Pattern pattern = Pattern.compile("0x[a-fA-F0-9]{40}");
         Matcher matcher = pattern.matcher(text);
+        List<String> hasRepalcedAddress = new ArrayList<>();
         while (matcher.find()) {
             String address = matcher.group();
+            if (hasRepalcedAddress.contains(address)) continue;
             String ens = viewModel.loadEnsAddress(address);
             String symbol = viewModel.recognizeAddress(address);
             StringBuilder result = new StringBuilder();
             if (!TextUtils.isEmpty(ens)) {
-                result.append("<").append(ens).append(">\n");
+                result.append(String.format("<%s>\n", ens));
             }
             result.append(address);
             if (symbol != null) {
@@ -155,6 +159,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
             } else {
 //                result.append(" [Unknown Address]");
             }
+            hasRepalcedAddress.add(address);
             text = text.replace(address, result.toString());
         }
 

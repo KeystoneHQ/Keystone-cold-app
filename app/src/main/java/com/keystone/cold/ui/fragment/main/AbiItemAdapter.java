@@ -85,7 +85,7 @@ public class AbiItemAdapter {
                     String ens = viewModel.loadEnsAddress(address);
                     String addressSymbol = viewModel.recognizeAddress(address);
                     if (!TextUtils.isEmpty(ens)) {
-                        item.append("<").append(ens).append(">\n");
+                        item.append(String.format("<%s>\n", ens));
                     }
                     item.append(address);
                     if (addressSymbol != null) {

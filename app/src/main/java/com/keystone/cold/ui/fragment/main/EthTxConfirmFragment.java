@@ -309,10 +309,10 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
 
         Matcher matcherEns = patternEns.matcher(spannable);
         while (matcherEns.find()) {
-            spannable.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.ens)), matcherEns.start() - 1,
-                    matcherEns.end() + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-            spannable.replace(matcherEns.start() - 1, matcherEns.start(), "");
-            spannable.replace(matcherEns.end() - 1, matcherEns.end(), "");
+            spannable.replace(matcherEns.start() - 1, matcherEns.start(), " ");
+            spannable.replace(matcherEns.end(), matcherEns.end() + 1, " ");
+            spannable.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.ens)), matcherEns.start(),
+                    matcherEns.end(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         }
 
         Matcher matcher = pattern.matcher(spannable);
