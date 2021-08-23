@@ -34,10 +34,10 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.DynamicQrcodeModalBinding;
 import com.keystone.cold.databinding.SwitchQrCapacityBottomSheetBinding;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.Objects;
 
@@ -149,6 +149,7 @@ public class QrCodeModal extends DialogFragment {
             public void onStartTrackingTouch(SeekBar seekBar) {
 
             }
+
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
