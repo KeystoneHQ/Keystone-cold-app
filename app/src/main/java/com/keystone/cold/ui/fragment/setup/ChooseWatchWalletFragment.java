@@ -20,6 +20,7 @@ package com.keystone.cold.ui.fragment.setup;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Pair;
 import android.view.View;
 
@@ -105,6 +106,14 @@ public class ChooseWatchWalletFragment extends ListPreferenceFragment {
         prefs.edit().putString(SETTING_CHOOSE_WATCH_WALLET, value).apply();
     }
 
+    protected String getEntryByPosition(int position) {
+        return displayItems.get(position).second;
+    }
+
+    protected String getValueByPosition(int position) {
+        return displayItems.get(position).first;
+    }
+
     @Override
     protected int getEntries() {
         return R.array.watch_wallet_list;
@@ -126,17 +135,17 @@ public class ChooseWatchWalletFragment extends ListPreferenceFragment {
     }
 
     @Override
-    public void onSelect(int walletId) {
+    public void onSelect(int index) {
         if (mActivity instanceof MainActivity) {
             String old = tempValue;
-            tempValue = String.valueOf(walletId);
-            if (!old.equals(tempValue)) {
+            tempValue = getValueByPosition(index);
+            if (!TextUtils.equals(old, tempValue)) {
                 adapter.notifyDataSetChanged();
             }
         } else {
-            String old = value;
-            value = String.valueOf(walletId);
-            if (!old.equals(value)) {
+            String old = tempValue;
+            value = getValueByPosition(index);
+            if (!TextUtils.equals(old, value)) {
                 prefs.edit().putString(SETTING_CHOOSE_WATCH_WALLET, value).apply();
                 adapter.notifyDataSetChanged();
             }
@@ -157,20 +166,18 @@ public class ChooseWatchWalletFragment extends ListPreferenceFragment {
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             SettingItemSelectableBinding binding = DataBindingUtil.getBinding(holder.itemView);
-            binding.title.setText(displayItems.get(position).second);
+            binding.title.setText(getEntryByPosition(position));
             binding.title.setTypeface(binding.title.getTypeface(), Typeface.BOLD);
 
-            binding.subTitle.setVisibility(View.GONE);
             binding.subTitle.setVisibility(View.VISIBLE);
             binding.subTitle.setText(subTitles[position]);
             binding.subTitle.setTextColor(mActivity.getColor(R.color.white40));
-
-            binding.setIndex(Integer.parseInt(displayItems.get(position).first));
+            binding.setIndex(position);
             binding.setCallback(ChooseWatchWalletFragment.this);
             if (mActivity instanceof MainActivity) {
-                binding.setChecked(displayItems.get(position).first.equals(tempValue));
+                binding.setChecked(getValueByPosition(position).equals(tempValue));
             } else if (mActivity instanceof SetupVaultActivity) {
-                binding.setChecked(displayItems.get(position).first.equals(value));
+                binding.setChecked(getValueByPosition(position).equals(value));
             }
         }
 

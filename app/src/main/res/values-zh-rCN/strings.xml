@@ -401,10 +401,11 @@
     </string-array>
     <string-array name="watch_wallet_summury" >
         <item>BTC、ETH等8条主链</item>
+        <item>ETH</item>
         <item>DOT、KSM</item>
         <item>XRP</item>
-        <item>ETH</item>
     </string-array>
+
     <string name="choose_watch_only_wallet">选择观察钱包</string>
     <string name="sync_later">暂不同步</string>
     <string name="sync_watch_wallet">同步观察钱包</string>

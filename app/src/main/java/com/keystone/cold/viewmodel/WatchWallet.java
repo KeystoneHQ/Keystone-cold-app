@@ -20,6 +20,7 @@
 package com.keystone.cold.viewmodel;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
@@ -29,10 +30,10 @@ import com.keystone.cold.scan.QREncoding;
 import static com.keystone.cold.ui.fragment.setting.MainPreferenceFragment.SETTING_CHOOSE_WATCH_WALLET;
 
 public enum WatchWallet {
-    KEYSTONE("0"),
-    METAMASK("1"),
-    POLKADOT_JS("2"),
-    XRP_TOOLKIT("3");
+    KEYSTONE("keystone"),
+    POLKADOT_JS("polkadotJs"),
+    XRP_TOOLKIT("xrpToolkit"),
+    METAMASK("metamask");
 
     public static final String XRP_TOOLKIT_SIGN_ID = "xrp_toolkit_sign_id";
     public static final String POLKADOT_JS_SIGN_ID = "polkadot_js_sign_id";
@@ -45,9 +46,9 @@ public enum WatchWallet {
     }
 
     public static WatchWallet getWatchWallet(Context context) {
-        String wallet = Utilities.getPrefs(context)
+        String walletId = Utilities.getPrefs(context)
                 .getString(SETTING_CHOOSE_WATCH_WALLET, KEYSTONE.getWalletId());
-        return getWatchWalletById(wallet);
+        return getWatchWalletById(walletId);
     }
 
     public static WatchWallet getWatchWalletById(String walletId) {
@@ -67,7 +68,13 @@ public enum WatchWallet {
 
     public String getWalletName(Context context) {
         String[] wallets = context.getResources().getStringArray(R.array.watch_wallet_list);
-        return wallets[Integer.parseInt(walletId)];
+        String[] walletValues = context.getResources().getStringArray(R.array.watch_wallet_list_values);
+        for (int i = 0; i < wallets.length; i++) {
+            if (TextUtils.equals(walletId, walletValues[i])) {
+                return wallets[i];
+            }
+        }
+        return wallets[0];
     }
 
     public QREncoding getQrEncoding() {
