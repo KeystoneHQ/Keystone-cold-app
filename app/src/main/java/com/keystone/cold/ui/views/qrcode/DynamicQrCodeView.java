@@ -119,6 +119,7 @@ public class DynamicQrCodeView extends LinearLayout implements QrCodeHolder {
                 }
             });
         } else {
+            URSubscriber.postValue(null);
             count = 1;
             showQrCode();
         }

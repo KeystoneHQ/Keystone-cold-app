@@ -425,19 +425,19 @@
         <item>Polkadot.js</item>
         <item>XRP Toolkit</item>
     </string-array>
-
     <string-array name="watch_wallet_list_values" translatable="false">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
+        <item>keystone</item>
+        <item>metamask</item>
+        <item>polkadotJs</item>
+        <item>xrpToolkit</item>
     </string-array>
     <string-array name="watch_wallet_summury" >
         <item>8 main chains including BTC, ETH, etc</item>
+        <item>ETH</item>
         <item>DOT、KSM</item>
         <item>XRP</item>
-        <item>ETH</item>
     </string-array>
+
     <string name="choose_watch_only_wallet">Watch-only Wallet</string>
     <string name="sync_later">Export Later</string>
     <string name="sync_watch_wallet">Sync Watch-Only Wallet</string>

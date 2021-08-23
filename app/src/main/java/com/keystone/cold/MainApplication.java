@@ -24,6 +24,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -42,6 +43,12 @@ import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.UnlockActivity;
 
 import java.lang.ref.SoftReference;
+
+import static com.keystone.cold.ui.fragment.setting.MainPreferenceFragment.SETTING_CHOOSE_WATCH_WALLET;
+import static com.keystone.cold.viewmodel.WatchWallet.KEYSTONE;
+import static com.keystone.cold.viewmodel.WatchWallet.METAMASK;
+import static com.keystone.cold.viewmodel.WatchWallet.POLKADOT_JS;
+import static com.keystone.cold.viewmodel.WatchWallet.XRP_TOOLKIT;
 
 public class MainApplication extends Application {
     @SuppressLint("StaticFieldLeak")
@@ -62,6 +69,7 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        compatibleWalletSp();
         mAppExecutors = AppExecutors.getInstance();
         EncryptionCoreProvider.getInstance().initialize(this);
         mAppExecutors.diskIO().execute(() -> {
@@ -77,6 +85,27 @@ public class MainApplication extends Application {
         startAttackCheckingService();
         RestartSe();
         registerSdcardStatusMonitor();
+    }
+
+    private void compatibleWalletSp() {
+        SharedPreferences prefs = Utilities.getPrefs(sApplication);
+        String walletName = prefs.getString(SETTING_CHOOSE_WATCH_WALLET, KEYSTONE.getWalletId());
+        switch (walletName) {
+            case "0":
+                prefs.edit().putString(SETTING_CHOOSE_WATCH_WALLET, KEYSTONE.getWalletId()).apply();
+                break;
+            case "1":
+                prefs.edit().putString(SETTING_CHOOSE_WATCH_WALLET, POLKADOT_JS.getWalletId()).apply();
+                break;
+            case "2":
+                prefs.edit().putString(SETTING_CHOOSE_WATCH_WALLET, XRP_TOOLKIT.getWalletId()).apply();
+                break;
+            case "3":
+                prefs.edit().putString(SETTING_CHOOSE_WATCH_WALLET, METAMASK.getWalletId()).apply();
+                break;
+            default:
+                break;
+        }
     }
 
     private void registerSdcardStatusMonitor() {
