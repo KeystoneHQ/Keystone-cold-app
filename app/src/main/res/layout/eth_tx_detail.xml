@@ -240,6 +240,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="6dp"
                     layout="@layout/ens_item"/>
+
                 <include
                     layout="@layout/divider"
                     android:layout_width="match_parent"

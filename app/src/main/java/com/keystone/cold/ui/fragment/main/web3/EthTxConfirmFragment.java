@@ -212,7 +212,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
             String addressSymbol = viewModel.recognizeAddress(to);
             if (!TextUtils.isEmpty(addressSymbol)) {
                 to = to + String.format(" (%s)", addressSymbol);
-            } else if (GnosisHandler.gnosisContractAddresses.contains(to)) {
+            } else if (GnosisHandler.gnosisContractAddresses.contains(to.toLowerCase())) {
                 to += " (GnosisSafeProxy)";
             } else {
 //                to = to + String.format(" [%s]", "Unknown Address");
@@ -306,7 +306,6 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
 
     public static SpannableStringBuilder highLight(String content) {
         SpannableStringBuilder spannable = new SpannableStringBuilder(content);
-        Matcher matcher = pattern.matcher(spannable);
 
         Matcher matcherEns = patternEns.matcher(spannable);
         while (matcherEns.find()) {
@@ -316,6 +315,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
                     matcherEns.end(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         }
 
+        Matcher matcher = pattern.matcher(spannable);
         while (matcher.find()) {
             spannable.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.icon_select)), matcher.start() - 1,
                     matcher.end() + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);

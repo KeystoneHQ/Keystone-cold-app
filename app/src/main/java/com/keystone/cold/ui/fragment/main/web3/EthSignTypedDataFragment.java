@@ -162,7 +162,6 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
             hasRepalcedAddress.add(address);
             text = text.replace(address, result.toString());
         }
-
         return text;
     }
 

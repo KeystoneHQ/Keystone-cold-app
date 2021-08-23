@@ -22,7 +22,7 @@ public class GnosisHandler implements FallbackHandler {
         ABIReader abiReader = new ABIReader();
         ABIReader.DecodedFunctionCall call = abiReader.decodeCall(data, contract, address);
         if (call != null) {
-            gnosisContractAddresses.add(address);
+            gnosisContractAddresses.add(address.toLowerCase());
         }
         return call;
     }
