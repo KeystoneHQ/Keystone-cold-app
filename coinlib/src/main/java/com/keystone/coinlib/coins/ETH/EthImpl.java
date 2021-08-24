@@ -20,6 +20,7 @@
 package com.keystone.coinlib.coins.ETH;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -62,7 +63,19 @@ import static com.keystone.coinlib.Util.concat;
 import static org.web3j.crypto.TransactionEncoder.asRlpValues;
 
 public class EthImpl implements Coin {
+    private static final String TAG = "mengru";
     private final int chainId;
+    static {
+        System.loadLibrary("CryptoCoinKitRS");
+    }
+
+    private static native boolean nativeIsAddressValid(final String pattern);
+    private static native String nativeGenerateTransaction(final String tx, SignCallback sc, Signer signer, boolean is_eip_1559);
+    private static native String greeting(final String pattern);
+
+    public String sayHello(String to) {
+        return greeting(to);
+    }
 
     public EthImpl(int chainId) {
         this.chainId = chainId;
@@ -76,17 +89,10 @@ public class EthImpl implements Coin {
     @Override
     public void generateTransaction(@NonNull AbsTx tx, SignCallback callback, Signer... signers) {
         JSONObject metaData = tx.getMetaData();
+        String txStr = metaData.toString();
         try {
-            RawTransaction transaction = createRawTransaction(metaData);
-            byte[] signedTransaction = signTransaction(transaction, signers[0]);
-            if (signedTransaction == null) {
-                callback.onFail();
-            } else {
-                String txId = "0x" + Hex.toHexString(Hash.sha3(signedTransaction));
-                String txHex = "0x" + Hex.toHexString(signedTransaction);
-                callback.onSuccess(txId, txHex);
-            }
-        } catch (JSONException e) {
+            nativeGenerateTransaction(txStr, callback, signers[0], true);
+        }catch (Exception e) {
             e.printStackTrace();
             callback.onFail();
         }
