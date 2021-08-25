@@ -56,7 +56,7 @@ public class AbiItemAdapter {
                 if (adaptGnosis(items, name, type, value)) {
                     continue;
                 }
-                adaptGeneric(items, i, name, type, value);
+                adaptGeneric(items, name, type, value);
             }
             return items;
         } catch (JSONException e) {
@@ -65,7 +65,7 @@ public class AbiItemAdapter {
         return null;
     }
 
-    private void adaptGeneric(List<AbiItem> items, int i, String name, String type, Object value) throws JSONException {
+    private void adaptGeneric(List<AbiItem> items, String name, String type, Object value) throws JSONException {
         if (TextUtils.equals("tuple", type)) {
             JSONObject tupleObject = new JSONObject();
             tupleObject.put("param", addParamsName(value, name));
@@ -79,7 +79,7 @@ public class AbiItemAdapter {
             JSONArray arr = (JSONArray) value;
             StringBuilder concatValue = new StringBuilder();
             for (int j = 0; j < arr.length(); j++) {
-                StringBuilder item = new StringBuilder(arr.getString(i));
+                StringBuilder item = new StringBuilder(arr.getString(j));
                 if ("address[]".equals(type)) {
                     String address = item.toString();
                     String ens = viewModel.loadEnsAddress(address);
