@@ -81,7 +81,8 @@ public class AbiItemAdapter {
             for (int j = 0; j < arr.length(); j++) {
                 StringBuilder item = new StringBuilder(arr.getString(j));
                 if ("address[]".equals(type)) {
-                    String address = item.toString();
+                    item = new StringBuilder();
+                    String address = arr.getString(j);
                     String ens = viewModel.loadEnsAddress(address);
                     String addressSymbol = viewModel.recognizeAddress(address);
                     if (!TextUtils.isEmpty(ens)) {
