@@ -79,7 +79,7 @@ public class AbiItemAdapter {
             JSONArray arr = (JSONArray) value;
             StringBuilder concatValue = new StringBuilder();
             for (int j = 0; j < arr.length(); j++) {
-                StringBuilder item = new StringBuilder(arr.getString(j));
+                StringBuilder item;
                 if ("address[]".equals(type)) {
                     item = new StringBuilder();
                     String address = arr.getString(j);
@@ -94,6 +94,8 @@ public class AbiItemAdapter {
                     } else {
 //                                item += String.format(" [%s]", "Unknown Address");
                     }
+                } else {
+                    item = new StringBuilder(arr.getString(j));
                 }
                 concatValue.append(item);
                 if (j != arr.length() - 1) {
