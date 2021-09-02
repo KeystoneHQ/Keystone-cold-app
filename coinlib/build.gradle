@@ -68,7 +68,7 @@ dependencies {
     implementation ('org.bitcoinj:bitcoinj-core:0.15.2'){
         exclude group: 'com.squareup.okhttp3'
     }
-    implementation ('org.web3j:core:4.6.0-android') {
+    implementation ('org.web3j:core:4.8.7-android') {
         exclude group: 'com.squareup.okhttp3'
     }
     implementation 'com.madgag.spongycastle:core:1.58.0.0@jar'
