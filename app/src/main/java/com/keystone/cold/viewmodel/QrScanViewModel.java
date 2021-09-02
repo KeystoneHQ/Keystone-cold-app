@@ -124,7 +124,7 @@ public class QrScanViewModel extends AndroidViewModel {
                 JSONObject data = object.optJSONObject("data");
                 AppExecutors.getInstance().diskIO().execute(() -> {
                     try {
-                        if (!TextUtils.isEmpty(txHex) && EthImpl.decodeRawTransaction(txHex, null) != null) {
+                        if (!TextUtils.isEmpty(txHex) && EthImpl.decodeTransaction(txHex, null) != null) {
                             handleSignMetamaskTx(object);
                         } else if (data != null) {
                             handleSignMetamaskMessage(object);
