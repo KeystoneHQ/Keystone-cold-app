@@ -20,6 +20,7 @@
 package com.keystone.coinlib.coins.ETH;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -193,13 +194,18 @@ public class EthImpl implements Coin {
     public SignTxResult signEIP1559Hex(String hex, Signer signer) {
         byte[] encodedTransaction = Hex.decode(hex);
         byte[] transactionHash = Hash.sha3(encodedTransaction);
+
+        Log.d("sora", "signEIP1559Hex: " + hex);
+        Log.d("sora", "signEIP1559Hex: " + Hex.toHexString(transactionHash));
+
         String signature = signer.sign(Hex.toHexString(transactionHash));
 
         Sign.SignatureData signatureData = getEIP1559SignatureData(signature);
         RawTransaction rawTx = Transaction1559Decoder.decode(hex);
         byte[] signed = encodeSignedTransaction(rawTx, signatureData);
-        byte[] signatureBytes = concat(concat(signatureData.getR(), signatureData.getS()), signatureData.getV());
+        byte[] signatureBytes = concat(concat(signatureData.getR(), signatureData.getS()), new byte[]{(byte) Sign.getRecId(signatureData, ((Transaction1559) rawTx.getTransaction()).getChainId())});
         if (signed != null) {
+            Log.d("sora", "signEIP1559Hex: " + Hex.toHexString(signed));
             String txId = "0x" + Hex.toHexString(Hash.sha3(signed));
             String signedTxHex = "02" + Hex.toHexString(signed);
             String signatureHex = Hex.toHexString(signatureBytes);
