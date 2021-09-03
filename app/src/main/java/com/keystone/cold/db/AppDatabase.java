@@ -31,6 +31,7 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.db.dao.AccountDao;
 import com.keystone.cold.db.dao.AddressDao;
 import com.keystone.cold.db.dao.CoinDao;
+import com.keystone.cold.db.dao.ETHTxDao;
 import com.keystone.cold.db.dao.TxDao;
 import com.keystone.cold.db.dao.WhiteListDao;
 import com.keystone.cold.db.entity.AccountEntity;
@@ -50,6 +51,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract AddressDao addressDao();
 
     public abstract TxDao txDao();
+
+    public abstract ETHTxDao ethTxDao();
 
     public abstract WhiteListDao whiteListDao();
 

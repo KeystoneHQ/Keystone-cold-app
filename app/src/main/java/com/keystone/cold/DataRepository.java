@@ -21,12 +21,14 @@ import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.db.AppDatabase;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
+import com.keystone.cold.db.entity.GenericETHTxEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.db.entity.WhiteListEntity;
 import com.keystone.cold.model.Coin;
@@ -216,5 +218,17 @@ public class DataRepository {
         mDb.txDao().deleteHidden();
         mDb.addressDao().deleteHidden();
         mDb.whiteListDao().deleteHidden();
+    }
+
+    public void insertETHTx(GenericETHTxEntity tx) {
+        mDb.ethTxDao().insert(tx);
+    }
+
+    public GenericETHTxEntity loadETHTxSync(String txId) {
+        return mDb.ethTxDao().loadSync(txId);
+    }
+
+    public MutableLiveData<List<GenericETHTxEntity>> loadETHTxsSync() {
+        return mDb.ethTxDao().loadETHTxs();
     }
 }

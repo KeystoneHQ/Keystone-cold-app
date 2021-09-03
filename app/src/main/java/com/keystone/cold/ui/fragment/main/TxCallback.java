@@ -17,8 +17,8 @@
 
 package com.keystone.cold.ui.fragment.main;
 
-import com.keystone.cold.db.entity.TxEntity;
+import com.keystone.cold.model.Tx;
 
 public interface TxCallback {
-    void onClick(TxEntity tx);
+    void onClick(Tx tx);
 }

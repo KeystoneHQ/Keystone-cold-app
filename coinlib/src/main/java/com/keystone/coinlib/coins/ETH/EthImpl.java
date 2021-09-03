@@ -112,7 +112,7 @@ public class EthImpl implements Coin {
     public static JSONObject decodeTransaction(String txHex, Callback callback) {
         JSONObject metaData = new JSONObject();
         try {
-            RawTransaction rawTx = Transaction1559Decoder.decode(txHex);
+            RawTransaction rawTx = TransactionDecoder.decode(txHex);
             metaData.put("gasPrice", rawTx.getGasPrice().toString());
 
             //decode chainId
@@ -201,8 +201,9 @@ public class EthImpl implements Coin {
         byte[] signatureBytes = concat(concat(signatureData.getR(), signatureData.getS()), signatureData.getV());
         if (signed != null) {
             String txId = "0x" + Hex.toHexString(Hash.sha3(signed));
+            String signedTxHex = "02" + Hex.toHexString(signed);
             String signatureHex = Hex.toHexString(signatureBytes);
-            return new SignTxResult(txId, signatureHex);
+            return new SignTxResult(txId, signedTxHex, signatureHex);
         } else {
             return null;
         }
@@ -234,6 +235,12 @@ public class EthImpl implements Coin {
     public static String getSignature(String signedHex) {
         SignedRawTransaction signedTx = (SignedRawTransaction) TransactionDecoder.decode(signedHex);
         Sign.SignatureData signatureData = signedTx.getSignatureData();
+        byte[] signatureBytes = concat(concat(signatureData.getR(), signatureData.getS()), signatureData.getV());
+        return Hex.toHexString(signatureBytes);
+    }
+
+    public static String getEIP1559Signature(String signedHex) {
+        Sign.SignatureData signatureData = Transaction1559Decoder.decodeSignature(signedHex);
         byte[] signatureBytes = concat(concat(signatureData.getR(), signatureData.getS()), signatureData.getV());
         return Hex.toHexString(signatureBytes);
     }

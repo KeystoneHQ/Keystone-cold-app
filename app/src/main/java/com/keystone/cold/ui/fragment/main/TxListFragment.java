@@ -20,11 +20,13 @@ package com.keystone.cold.ui.fragment.main;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,13 +34,16 @@ import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.TxListBinding;
 import com.keystone.cold.databinding.TxListItemBinding;
+import com.keystone.cold.db.entity.GenericETHTxEntity;
 import com.keystone.cold.db.entity.TxEntity;
+import com.keystone.cold.model.Tx;
 import com.keystone.cold.ui.common.FilterableBaseBindingAdapter;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -47,13 +52,17 @@ import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
 import static com.keystone.cold.ui.fragment.main.TxFragment.KEY_TX_ID;
 import static com.keystone.cold.viewmodel.ElectrumViewModel.ELECTRUM_SIGN_ID;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class TxListFragment extends BaseFragment<TxListBinding> {
 
-    private TxAdapter adapter;
+    private FilterableBaseBindingAdapter adapter;
     private TxCallback txCallback;
     private String query;
-    private Comparator<TxEntity> txEntityComparator;
+    private Comparator<Tx> txEntityComparator;
     private String coinCode;
+    private WatchWallet watchWallet;
 
 
     static Fragment newInstance(@NonNull String coinId, @NonNull String coinCode) {
@@ -72,44 +81,55 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
 
     @Override
     protected void init(View view) {
-        Bundle data = requireArguments();
         CoinListViewModel viewModel = ViewModelProviders.of(mActivity)
                 .get(CoinListViewModel.class);
+        watchWallet = WatchWallet.getWatchWallet(mActivity);
         adapter = new TxAdapter(mActivity);
         mBinding.list.setAdapter(adapter);
-        txCallback = tx -> {
-            Bundle bundle = new Bundle();
-            bundle.putString(KEY_TX_ID, tx.getTxId());
-            if (ELECTRUM_SIGN_ID.equals(tx.getSignId())) {
-                navigate(R.id.action_to_electrumTxFragment, bundle);
-            } else if(WatchWallet.XRP_TOOLKIT_SIGN_ID.equals(tx.getSignId())){
-                navigate(R.id.action_to_xummTxFragment, bundle);
-            } else if(WatchWallet.METAMASK_SIGN_ID.equals(tx.getSignId())){
-                navigate(R.id.action_to_ethTxFragment, bundle);
-            } else if(WatchWallet.POLKADOT_JS_SIGN_ID.equals(tx.getSignId())) {
-                navigate(R.id.action_to_polkadotTxFragment, bundle);
-            }else {
-                navigate(R.id.action_to_txFragment, bundle);
-            }
-        };
-        coinCode = data.getString(KEY_COIN_CODE);
-        viewModel.loadTxs(data.getString(KEY_COIN_ID))
-                .observe(this, txEntities -> {
-                    txEntityComparator = (o1, o2) -> {
-                        if (o1.getSignId().equals(o2.getSignId())) {
-                            return (int) (o2.getTimeStamp() - o1.getTimeStamp());
-                        } else if (ELECTRUM_SIGN_ID.equals(o1.getSignId())) {
-                            return -1;
-                        } else {
-                            return 1;
-                        }
-                    };
-                    txEntities = txEntities.stream()
-                            .filter(this::shouldShow)
-                            .sorted(txEntityComparator)
-                            .collect(Collectors.toList());
-                    adapter.setItems(txEntities);
-                });
+        if (watchWallet == WatchWallet.METAMASK) {
+            viewModel.loadEthTxs()
+                    .observe(this, ethTxEntities -> {
+                        txEntityComparator = (o1, o2) -> {
+                            if (o1.getSignId().equals(o2.getSignId())) {
+                                return (int) (o2.getTimeStamp() - o1.getTimeStamp());
+                            } else if (ELECTRUM_SIGN_ID.equals(o1.getSignId())) {
+                                return -1;
+                            } else {
+                                return 1;
+                            }
+                        };
+                        ethTxEntities = ethTxEntities.stream()
+                                .filter(this::shouldShow)
+                                .sorted(txEntityComparator)
+                                .collect(Collectors.toList());
+//                        adapter.setItems(ethTxEntities);
+                    });
+            txCallback = ethTx -> {
+                String signedHex = ethTx.getSignedHex();
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_TX_ID, ethTx.getTxId());
+                try {
+                    new JSONObject(signedHex);
+                    navigate(R.id.action_to_ethTxFragment, bundle);
+                } catch (JSONException e) {
+                    if (TextUtils.isEmpty(ethTx.getFee())) {
+                        Log.i(TAG, "navigate: jump to ethEIP1559TxFragment");
+                        navigate(R.id.action_to_ethTxFragment, bundle);
+                    } else {
+                        Log.i(TAG, "navigate: jump to new ethTxFragment");
+                        navigate(R.id.action_to_ethTxFragment, bundle);
+                    }
+
+                    navigate(R.id.action_to_ethTxFragment, bundle);
+                }
+            };
+        } else if (watchWallet == WatchWallet.POLKADOT_JS) {
+            // do something
+        }
+
+
+        coinCode = requireArguments().getString(KEY_COIN_CODE);
+
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -125,7 +145,7 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
         });
     }
 
-    private boolean shouldShow(TxEntity tx) {
+    private boolean shouldShow(Tx tx) {
         boolean shouldShow;
         WatchWallet watchWallet = WatchWallet.getWatchWallet(mActivity);
         if (watchWallet.equals(WatchWallet.KEYSTONE)) {
@@ -147,7 +167,7 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
         }
     }
 
-    class TxAdapter extends FilterableBaseBindingAdapter<TxEntity, TxListItemBinding> {
+    class TxAdapter extends FilterableBaseBindingAdapter<Tx, TxListItemBinding> {
 
         TxAdapter(Context context) {
             super(context);
@@ -163,20 +183,27 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
             super.onBindViewHolder(holder, position);
             if (WatchWallet.getWatchWallet(mActivity) == WatchWallet.POLKADOT_JS) {
                 TxListItemBinding binding = DataBindingUtil.getBinding(holder.itemView);
-                TxEntity txEntity = items.get(position);
-                if (!txEntity.getTxId().startsWith("0x")) {
+                Tx tx = items.get(position);
+                if (!tx.getTxId().startsWith("0x")) {
                     Objects.requireNonNull(binding).txid.setText(coinCode + "-Transaction-" + (items.size() - position));
                 } else {
-                    Objects.requireNonNull(binding).txid.setText(txEntity.getTxId());
+                    Objects.requireNonNull(binding).txid.setText(tx.getTxId());
                 }
             }
         }
 
         @Override
-        protected void onBindItem(TxListItemBinding binding, TxEntity item) {
+        protected void onBindItem(TxListItemBinding binding, Tx item) {
             binding.setTx(item);
             binding.txid.setText(item.getTxId());
             binding.setTxCallback(txCallback);
+        }
+
+        @Override
+        public void setItems(List<Tx> data) {
+            allItems.clear();
+            allItems.addAll(data);
+            super.setItems(data);
         }
     }
 

@@ -218,6 +218,14 @@
         android:id="@+id/ethTxFragment"
         android:name="com.keystone.cold.ui.fragment.main.web3.EthTxFragment"
         android:label="ethTxFragment" />
+    <fragment
+        android:id="@+id/ethEIP1559TxFragment"
+        android:name="com.keystone.cold.ui.fragment.main.web3.EthEIP1559TxFragment"
+        android:label="ethEIP1559TxFragment" />
+    <fragment
+        android:id="@+id/newEthTxFragment"
+        android:name="com.keystone.cold.ui.fragment.main.web3.NewEthTxFragment"
+        android:label="ethEIP1559TxFragment" />
 
     <fragment
         android:id="@+id/xummTxConfirmFragment"
@@ -450,6 +458,20 @@
             app:popExitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_to_ethTxFragment"
+            app:destination="@id/ethTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_to_ethEIP1559TxFragment"
+            app:destination="@id/ethTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_to_newEthTxFragment"
             app:destination="@id/ethTxFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"

@@ -28,7 +28,7 @@
 
         <variable
             name="tx"
-            type="com.keystone.cold.db.entity.GenericETHTxEntity" />
+            type="com.keystone.cold.model.Tx" />
     </data>
 
 
@@ -50,37 +50,44 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/tx_confirm_title"
+                android:text="@string/signing_history"
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />
         </androidx.appcompat.widget.Toolbar>
 
         <include layout="@layout/divider" />
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <include
-                android:id="@+id/eth_tx"
-                layout="@layout/eth_fee_market_tx_detail"
-                android:layout_height="0dp"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                bind:tx="@{tx}" />
+                <include
+                    android:id="@+id/eth_tx"
+                    layout="@layout/eth_fee_market_tx_detail"
+                    bind:tx="@{tx}" />
+                <include layout="@layout/divider" />
 
-            <Button
-                android:id="@+id/sign"
-                style="@style/AcceptButton"
-                android:layout_width="match_parent"
-                android:layout_marginTop="16dp"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="20dp"
-                android:text="@string/sign" />
-        </LinearLayout>
-
+                <TextView
+                    android:id="@+id/broadcast_hint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:text="@string/please_broadcast_with_hot"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+                <include
+                    android:id="@+id/qrcode"
+                    layout="@layout/dynamic_qrcode"/>
+            </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
 

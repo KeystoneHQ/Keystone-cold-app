@@ -49,7 +49,7 @@ import com.keystone.cold.databinding.AbiItemBinding;
 import com.keystone.cold.databinding.AbiItemMethodBinding;
 import com.keystone.cold.databinding.EnsItemBinding;
 import com.keystone.cold.databinding.EthFeeMarketTxConfirmBinding;
-import com.keystone.cold.db.entity.FeeMarketTxEntity;
+import com.keystone.cold.db.entity.GenericETHTxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
@@ -67,7 +67,7 @@ import java.util.regex.Pattern;
 public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxConfirmBinding> {
     private Web3TxViewModel viewModel;
     private SigningDialog signingDialog;
-    private FeeMarketTxEntity feeMarketTxEntity;
+    private GenericETHTxEntity genericETHTxEntity;
     private final Runnable forgetPassword = () -> {
         Bundle bundle = new Bundle();
         bundle.putString(ACTION, PreImportFragment.ACTION_RESET_PWD);
@@ -86,6 +86,7 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
 
     @Override
     protected void init(View view) {
+        mBinding.ethTx.checkInfo.setVisibility(View.VISIBLE);
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         viewModel = ViewModelProviders.of(this).get(Web3TxViewModel.class);
         mBinding.sign.setOnClickListener(v -> handleSign());
@@ -180,9 +181,9 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
     private void updateUI() {
         mBinding.ethTx.network.setText(viewModel.getNetwork(viewModel.getChainId()));
         mBinding.ethTx.feeEstimatedDetail.setText(String.format("Max Priority fee (%s) * Gas limit (%s)",
-                feeMarketTxEntity.getMaxPriorityFeePerGas(), feeMarketTxEntity.getGasLimit()));
+                genericETHTxEntity.getMaxPriorityFeePerGas(), genericETHTxEntity.getGasLimit()));
         mBinding.ethTx.feeMaxDetail.setText(String.format("Max fee (%s) * Gas limit (%s)",
-                feeMarketTxEntity.getMaxFeePerGas(), feeMarketTxEntity.getGasLimit()));
+                genericETHTxEntity.getMaxFeePerGas(), genericETHTxEntity.getGasLimit()));
         JSONObject abi = viewModel.getAbi();
         if (abi != null) {
             updateAbiView(abi);
@@ -199,13 +200,13 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
                 mBinding.ethTx.undecodedData.setVisibility(View.GONE);
             }
         }
-        mBinding.ethTx.setTx(feeMarketTxEntity);
+        mBinding.ethTx.setTx(genericETHTxEntity);
         processAndUpdateTo();
     }
 
     private void processAndUpdateTo() {
         AppExecutors.getInstance().diskIO().execute(() -> {
-            String to = feeMarketTxEntity.getTo();
+            String to = genericETHTxEntity.getTo();
             String ens = viewModel.loadEnsAddress(to);
             String addressSymbol = viewModel.recognizeAddress(to);
             if (!TextUtils.isEmpty(addressSymbol)) {
@@ -239,7 +240,7 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
             String contract = abi.optString("contract");
             boolean isUniswap = contract.toLowerCase().contains("uniswap");
             AppExecutors.getInstance().diskIO().execute(() -> {
-                List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(feeMarketTxEntity.getFrom(), viewModel).adapt(abi);
+                List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(genericETHTxEntity.getFrom(), viewModel).adapt(abi);
                 AppExecutors.getInstance().mainThread().execute(() -> addViewToData(isUniswap, itemList));
             });
         }
@@ -282,7 +283,7 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
                     R.layout.abi_item, null, false);
             binding.key.setText(item.key);
             if (isUniswap && "to".equals(item.key)) {
-                if (!item.value.equalsIgnoreCase(feeMarketTxEntity.getFrom())) {
+                if (!item.value.equalsIgnoreCase(genericETHTxEntity.getFrom())) {
                     item.value += String.format(" [%s]", getString(R.string.inconsistent_address));
                 }
             }
@@ -293,9 +294,9 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-        viewModel.getObservableFeeTx().observe(this, feeMarketTxEntity -> {
-            this.feeMarketTxEntity = feeMarketTxEntity;
-            if (this.feeMarketTxEntity != null) {
+        viewModel.getObservableFeeTx().observe(this, GenericETHTxEntity -> {
+            this.genericETHTxEntity = GenericETHTxEntity;
+            if (this.genericETHTxEntity != null) {
                 updateUI();
             }
         });

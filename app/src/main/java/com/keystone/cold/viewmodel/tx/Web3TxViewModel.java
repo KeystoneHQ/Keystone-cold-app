@@ -48,10 +48,9 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.db.entity.AddressEntity;
-import com.keystone.cold.db.entity.FeeMarketTxEntity;
+import com.keystone.cold.db.entity.GenericETHTxEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
-import com.keystone.cold.viewmodel.WatchWallet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,6 +68,7 @@ public class Web3TxViewModel extends Base {
     private String signId;
     private String signature;
     private String txHex;
+    private String signedTxHex;
     private int chainId;
     private JSONObject abi;
     private String txId;
@@ -78,7 +78,7 @@ public class Web3TxViewModel extends Base {
     private String fromAddress;
     private String inputData;
     private boolean isFromTFCard;
-    private MutableLiveData<FeeMarketTxEntity> observableFeeTx = new MutableLiveData<>();
+    private MutableLiveData<GenericETHTxEntity> observableFeeTx = new MutableLiveData<>();
 
     public Web3TxViewModel(@NonNull Application application) {
         super(application);
@@ -145,7 +145,7 @@ public class Web3TxViewModel extends Base {
         return observableTx;
     }
 
-    public MutableLiveData<FeeMarketTxEntity> getObservableFeeTx() {
+    public MutableLiveData<GenericETHTxEntity> getObservableFeeTx() {
         return observableFeeTx;
     }
 
@@ -199,7 +199,7 @@ public class Web3TxViewModel extends Base {
                 } catch (JSONException ignore) {
                     inputData = data;
                 }
-                FeeMarketTxEntity tx = generateFeeMarketTxEntity(ethTx);
+                GenericETHTxEntity tx = generateGenericETHTxEntity(ethTx);
                 observableFeeTx.postValue(tx);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -263,10 +263,8 @@ public class Web3TxViewModel extends Base {
         TxEntity tx = new TxEntity();
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMaximumFractionDigits(20);
-        tx.setSignId(WatchWallet.METAMASK_SIGN_ID);
         tx.setTimeStamp(getUniversalSignIndex(getApplication()));
         tx.setCoinCode(coinCode);
-        tx.setCoinId(Coins.ETH.coinId());
         tx.setFrom(getFromAddress(hdPath));
         tx.setTo(object.getString("to"));
         BigDecimal amount = new BigDecimal(object.getString("value"));
@@ -278,14 +276,11 @@ public class Web3TxViewModel extends Base {
         return tx;
     }
 
-    private FeeMarketTxEntity generateFeeMarketTxEntity(JSONObject object) throws JSONException {
-        FeeMarketTxEntity tx = new FeeMarketTxEntity();
+    private GenericETHTxEntity generateGenericETHTxEntity(JSONObject object) throws JSONException {
+        GenericETHTxEntity tx = new GenericETHTxEntity();
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMaximumFractionDigits(20);
-        tx.setSignId(WatchWallet.METAMASK_SIGN_ID);
         tx.setTimeStamp(getUniversalSignIndex(getApplication()));
-        tx.setCoinCode(coinCode);
-        tx.setCoinId(Coins.ETH.coinId());
         tx.setFrom(getFromAddress(hdPath));
         tx.setTo(object.getString("to"));
         BigDecimal amount = new BigDecimal(object.getString("value"));
@@ -304,7 +299,7 @@ public class Web3TxViewModel extends Base {
                 .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
-    private void calculateDisplayEIP1559Fee(JSONObject ethTx, FeeMarketTxEntity tx) throws JSONException {
+    private void calculateDisplayEIP1559Fee(JSONObject ethTx, GenericETHTxEntity tx) throws JSONException {
         NumberFormat nf = NumberFormat.getInstance();
         BigDecimal gasPriorityPrice = new BigDecimal(ethTx.getString("maxPriorityFeePerGas"));
         BigDecimal gasLimitPrice = new BigDecimal(ethTx.getString("maxFeePerGas"));
@@ -374,13 +369,8 @@ public class Web3TxViewModel extends Base {
 
             @Override
             public void onSuccess(String txid, String signatureStr) {
-                txId = txid;
-                signature = signatureStr;
                 signState.postValue(STATE_SIGN_SUCCESS);
-//                insertDB();
-//                if (Coins.showPublicKey(tx.getCoinCode())) {
-//                    persistAddress(tx.getCoinCode(), tx.getCoinId(), tx.getFrom());
-//                }
+                insertDB();
                 new ClearTokenCallable().call();
             }
 
@@ -469,21 +459,20 @@ public class Web3TxViewModel extends Base {
     }
 
     private void insertDB() {
-        FeeMarketTxEntity tx = observableFeeTx.getValue();
-        Objects.requireNonNull(tx).setTxId(txId);
-        JSONObject signed = new JSONObject();
+        GenericETHTxEntity tx = observableFeeTx.getValue();
+        if (tx == null) return;
         try {
-            signed.put("signature", signature);
-            signed.put("signId", signId);
-            signed.put("chainId", chainId);
-            signed.put("abi", abi);
-            signed.put("inputData", inputData);
-            signed.put("isFromTFCard", isFromTFCard);
-            tx.setSignedHex(signed.toString());
+            tx.setTxId(txId);
+            tx.setSignedHex(signedTxHex);
+            tx.setFrom(fromAddress);
+            JSONObject addition = new JSONObject();
+            addition.put("isFromTFCard", isFromTFCard);
+            tx.setAddition(addition.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-//        mRepository.insertTx(tx);
+        mRepository.insertETHTx(tx);
+        mRepository.loadETHTxsSync();
     }
 
     private void signTransaction(@NonNull SignCallback callback, Signer signer) {
@@ -508,6 +497,9 @@ public class Web3TxViewModel extends Base {
         if (result == null) {
             callback.onFail();
         } else {
+            txId = result.txId;
+            signedTxHex = result.txHex;
+            signature = result.signaturHex;
             callback.onSuccess(result.txId, result.txHex);
         }
     }

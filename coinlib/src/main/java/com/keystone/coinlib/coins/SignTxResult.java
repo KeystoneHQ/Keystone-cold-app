@@ -22,10 +22,17 @@ import android.text.TextUtils;
 public class SignTxResult {
     public final String txId;
     public final String txHex;
+    public String signaturHex;
 
     public SignTxResult(String txId, String txHex) {
         this.txId = txId;
         this.txHex = txHex;
+    }
+
+    public SignTxResult(String txId, String txHex, String signaturHex) {
+        this.txId = txId;
+        this.txHex = txHex;
+        this.signaturHex = signaturHex;
     }
 
     public boolean isValid() {
