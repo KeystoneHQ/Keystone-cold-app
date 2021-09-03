@@ -24,25 +24,83 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.model.Tx;
+import com.keystone.cold.viewmodel.WatchWallet;
 
 @Entity(tableName = "ethtxs", indices = {@Index("txId")})
-public class ETHTxEntity implements Tx, FilterableItem {
+public class GenericETHTxEntity implements Tx {
 
     @PrimaryKey
     @NonNull
     private String txId;
-    private String coinId;
-    private String coinCode;
-    private String amount;
+    private String signedHex;
     private String from;
+    private long timeStamp;
+    private String addition;
+
+
+
+    private String amount;
+    private int chainId;
     private String to;
     private String fee;
-    private String signedHex;
-    private long timeStamp;
     private String memo;
-    private String signId;
     private String belongTo;
+    private String estimatedFee;
+    private String maxFee;
+    private String maxFeePerGas;
+    private String maxPriorityFeePerGas;
+    private String gasLimit;
+    private String signature;
+
+    public int getChainId() {
+        return chainId;
+    }
+
+    public void setChainId(int chainId) {
+        this.chainId = chainId;
+    }
+
+    public String getEstimatedFee() {
+        return estimatedFee;
+    }
+
+    public void setEstimatedFee(String estimatedFee) {
+        this.estimatedFee = estimatedFee;
+    }
+
+    public String getMaxFee() {
+        return maxFee;
+    }
+
+    public void setMaxFee(String maxFee) {
+        this.maxFee = maxFee;
+    }
+
+    public void setMaxFeePerGas(String maxFeePerGas) {
+        this.maxFeePerGas = maxFeePerGas;
+    }
+
+    public void setMaxPriorityFeePerGas(String maxPriorityFeePerGas) {
+        this.maxPriorityFeePerGas = maxPriorityFeePerGas;
+    }
+
+    public String getMaxFeePerGas() {
+        return maxFeePerGas;
+    }
+
+    public String getMaxPriorityFeePerGas() {
+        return maxPriorityFeePerGas;
+    }
+
+    public String getGasLimit() {
+        return gasLimit;
+    }
+
+    public void setGasLimit(String gasLimit) {
+        this.gasLimit = gasLimit;
+    }
 
     @Override
     public String getBelongTo() {
@@ -65,25 +123,17 @@ public class ETHTxEntity implements Tx, FilterableItem {
 
     @Override
     public String getCoinId() {
-        return coinId;
-    }
-
-    public void setCoinCode(String coinCode) {
-        this.coinCode = coinCode;
+        return Coins.ETH.coinId();
     }
 
     @Override
     public String getCoinCode() {
-        return coinCode;
+        return Coins.ETH.coinCode();
     }
 
     @Override
     public String getDisplayName() {
-        return coinCode;
-    }
-
-    public void setCoinId(String coinId) {
-        this.coinId = coinId;
+        return Coins.ETH.coinCode();
     }
 
     @Override
@@ -140,41 +190,28 @@ public class ETHTxEntity implements Tx, FilterableItem {
         this.memo = memo;
     }
 
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+
+
     @Override
     public String getMemo() {
         return memo;
     }
 
-    public void setSignId(String signId) {
-        this.signId = signId;
-    }
 
     @Override
     public String getSignId() {
-        return signId;
+        return WatchWallet.METAMASK_SIGN_ID;
     }
 
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "TxEntity{" +
-                "txId='" + txId + '\'' +
-                ", coinId='" + coinId + '\'' +
-                ", coinCode='" + coinCode + '\'' +
-                ", amount='" + amount + '\'' +
-                ", from='" + from + '\'' +
-                ", to='" + to + '\'' +
-                ", fee='" + fee + '\'' +
-                ", signedHex='" + signedHex + '\'' +
-                ", timeStamp=" + timeStamp +
-                ", memo='" + memo + '\'' +
-                ", signId='" + signId + '\'' +
-                ", belongTo='" + belongTo + '\'' +
-                '}';
     }
 
     @Override
@@ -188,5 +225,36 @@ public class ETHTxEntity implements Tx, FilterableItem {
                 || to.toLowerCase().contains(s)
                 || txId.toLowerCase().contains(s)
                 || memo.toLowerCase().contains(s);
+    }
+
+    public String getAddition() {
+        return addition;
+    }
+
+    public void setAddition(String addition) {
+        this.addition = addition;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "TxEntity{" +
+                "txId='" + getTxId() + '\'' +
+                ", coinId='" + getCoinId() + '\'' +
+                ", coinCode='" + getCoinCode() + '\'' +
+                ", amount='" + getAmount() + '\'' +
+                ", from='" + getFrom() + '\'' +
+                ", to='" + getTo() + '\'' +
+                ", estimatedFee='" + getEstimatedFee() + '\'' +
+                ", maxFee='" + getMaxFee() + '\'' +
+                ", maxFeePerGas='" + getMaxFeePerGas() + '\'' +
+                ", maxPriorityFeePerGas='" + getMaxPriorityFeePerGas() + '\'' +
+                ", signedHex='" + getSignedHex() + '\'' +
+                ", timeStamp=" + getTimeStamp() +
+                ", memo='" + getMemo() + '\'' +
+                ", signId='" + getSignId() + '\'' +
+                ", belongTo='" + getBelongTo() + '\'' +
+                ", addition='" + getAddition() + '\'' +
+                '}';
     }
 }
