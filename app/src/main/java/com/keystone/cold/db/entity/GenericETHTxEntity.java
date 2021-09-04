@@ -21,6 +21,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -28,31 +29,93 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.model.Tx;
 import com.keystone.cold.viewmodel.WatchWallet;
 
-@Entity(tableName = "ethtxs", indices = {@Index("txId")})
+@Entity(tableName = "ethtxs", indices = {@Index("id")})
 public class GenericETHTxEntity implements Tx {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     @NonNull
     private String txId;
     private String signedHex;
     private String from;
     private long timeStamp;
-    private String addition;
-
-
-
-    private String amount;
-    private int chainId;
-    private String to;
-    private String fee;
-    private String memo;
     private String belongTo;
+    private String addition;
+    @Ignore
+    private String amount;
+    @Ignore
+    private int chainId;
+    @Ignore
+    private String to;
+    @Ignore
+    private String fee;
+    @Ignore
+    private String memo;
+    @Ignore
     private String estimatedFee;
+    @Ignore
     private String maxFee;
+    @Ignore
     private String maxFeePerGas;
+    @Ignore
     private String maxPriorityFeePerGas;
+    @Ignore
     private String gasLimit;
+    @Ignore
     private String signature;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @NonNull
+    @Override
+    public String getTxId() {
+        return txId;
+    }
+
+    public void setTxId(@NonNull String txId) {
+        this.txId = txId;
+    }
+
+    @Override
+    public String getSignedHex() {
+        return signedHex;
+    }
+
+    public void setSignedHex(String signedHex) {
+        this.signedHex = signedHex;
+    }
+
+    @Override
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    @Override
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public String getAddition() {
+        return addition;
+    }
+
+    public void setAddition(String addition) {
+        this.addition = addition;
+    }
 
     public int getChainId() {
         return chainId;
@@ -111,16 +174,6 @@ public class GenericETHTxEntity implements Tx {
         this.belongTo = belongTo;
     }
 
-    @NonNull
-    @Override
-    public String getTxId() {
-        return txId;
-    }
-
-    public void setTxId(@NonNull String txId) {
-        this.txId = txId;
-    }
-
     @Override
     public String getCoinId() {
         return Coins.ETH.coinId();
@@ -146,15 +199,6 @@ public class GenericETHTxEntity implements Tx {
     }
 
     @Override
-    public String getFrom() {
-        return from;
-    }
-
-    public void setFrom(String from) {
-        this.from = from;
-    }
-
-    @Override
     public String getTo() {
         return to;
     }
@@ -170,20 +214,6 @@ public class GenericETHTxEntity implements Tx {
 
     public void setFee(String fee) {
         this.fee = fee;
-    }
-
-    @Override
-    public String getSignedHex() {
-        return signedHex;
-    }
-
-    public void setSignedHex(String signedHex) {
-        this.signedHex = signedHex;
-    }
-
-    @Override
-    public long getTimeStamp() {
-        return timeStamp;
     }
 
     public void setMemo(String memo) {
@@ -210,10 +240,6 @@ public class GenericETHTxEntity implements Tx {
         return WatchWallet.METAMASK_SIGN_ID;
     }
 
-    public void setTimeStamp(long timeStamp) {
-        this.timeStamp = timeStamp;
-    }
-
     @Override
     public boolean filter(String s) {
 
@@ -225,14 +251,6 @@ public class GenericETHTxEntity implements Tx {
                 || to.toLowerCase().contains(s)
                 || txId.toLowerCase().contains(s)
                 || memo.toLowerCase().contains(s);
-    }
-
-    public String getAddition() {
-        return addition;
-    }
-
-    public void setAddition(String addition) {
-        this.addition = addition;
     }
 
     @NonNull
@@ -255,6 +273,8 @@ public class GenericETHTxEntity implements Tx {
                 ", signId='" + getSignId() + '\'' +
                 ", belongTo='" + getBelongTo() + '\'' +
                 ", addition='" + getAddition() + '\'' +
+                ", signature='" + getSignature() + '\'' +
+                ", id='" + getId() + '\'' +
                 '}';
     }
 }

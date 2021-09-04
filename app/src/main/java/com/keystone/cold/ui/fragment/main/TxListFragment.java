@@ -89,20 +89,7 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
         if (watchWallet == WatchWallet.METAMASK) {
             viewModel.loadEthTxs()
                     .observe(this, ethTxEntities -> {
-                        txEntityComparator = (o1, o2) -> {
-                            if (o1.getSignId().equals(o2.getSignId())) {
-                                return (int) (o2.getTimeStamp() - o1.getTimeStamp());
-                            } else if (ELECTRUM_SIGN_ID.equals(o1.getSignId())) {
-                                return -1;
-                            } else {
-                                return 1;
-                            }
-                        };
-                        ethTxEntities = ethTxEntities.stream()
-                                .filter(this::shouldShow)
-                                .sorted(txEntityComparator)
-                                .collect(Collectors.toList());
-//                        adapter.setItems(ethTxEntities);
+                        adapter.setItems(ethTxEntities);
                     });
             txCallback = ethTx -> {
                 String signedHex = ethTx.getSignedHex();
@@ -143,17 +130,6 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
                 }
             }
         });
-    }
-
-    private boolean shouldShow(Tx tx) {
-        boolean shouldShow;
-        WatchWallet watchWallet = WatchWallet.getWatchWallet(mActivity);
-        if (watchWallet.equals(WatchWallet.KEYSTONE)) {
-             shouldShow = !tx.getSignId().contains("_sign_id");
-        } else {
-            shouldShow = tx.getSignId().equals(watchWallet.getSignId());
-        }
-        return shouldShow && Utilities.getCurrentBelongTo(mActivity).equals(tx.getBelongTo());
     }
 
     @Override

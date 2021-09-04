@@ -25,6 +25,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.keystone.cold.AppExecutors;
@@ -37,11 +38,12 @@ import com.keystone.cold.db.dao.WhiteListDao;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
+import com.keystone.cold.db.entity.GenericETHTxEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.db.entity.WhiteListEntity;
 
 @Database(entities = {CoinEntity.class, AddressEntity.class,
-        TxEntity.class, WhiteListEntity.class, AccountEntity.class}, version = 1)
+        TxEntity.class, WhiteListEntity.class, AccountEntity.class, GenericETHTxEntity.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
     private static final String DATABASE_NAME = "keystone-db";
     private static AppDatabase sInstance;
@@ -60,6 +62,18 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private final MutableLiveData<Boolean> mIsDatabaseCreated = new MutableLiveData<>();
 
+    private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            // Create new table ethtxs
+            database.execSQL(
+                    "CREATE TABLE IF NOT EXISTS ethtxs (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                            " txId TEXT NOT NULL, signedHex TEXT, 'from' TEXT, timeStamp INTEGER NOT NULL, " +
+                            "belongTo TEXT, addition TEXT)");
+            database.execSQL("CREATE INDEX index_ethtxs_id ON ethtxs (id)");
+        }
+    };
+
     public static AppDatabase getInstance(final Context context, final AppExecutors executors) {
         if (sInstance == null) {
             synchronized (AppDatabase.class) {
@@ -71,11 +85,11 @@ public abstract class AppDatabase extends RoomDatabase {
         }
         return sInstance;
     }
-
     private static AppDatabase buildDatabase(final Context appContext,
                                              final AppExecutors executors) {
 
         return Room.databaseBuilder(appContext, AppDatabase.class, DATABASE_NAME)
+                .addMigrations(MIGRATION_1_2)
                 .addCallback(new Callback() {
                     @Override
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {

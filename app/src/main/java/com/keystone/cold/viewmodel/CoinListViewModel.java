@@ -17,6 +17,8 @@
 
 package com.keystone.cold.viewmodel;
 
+import static com.keystone.cold.viewmodel.ElectrumViewModel.ELECTRUM_SIGN_ID;
+
 import android.app.Application;
 
 import androidx.annotation.NonNull;
@@ -30,11 +32,13 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.GenericETHTxEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.model.Coin;
+import com.keystone.cold.model.Tx;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +48,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CoinListViewModel extends AndroidViewModel {
 
@@ -171,20 +176,36 @@ public class CoinListViewModel extends AndroidViewModel {
 
 
     public LiveData<List<GenericETHTxEntity>> loadEthTxs() {
-        List<GenericETHTxEntity> ethTxEntityList = insertTxEntitytoETHTable();
-        MutableLiveData<List<GenericETHTxEntity>> listMutableLiveData = mRepository.loadETHTxsSync();
-        if (listMutableLiveData.getValue() != null) {
-            listMutableLiveData.getValue().addAll(ethTxEntityList);
-        } else {
-            listMutableLiveData = new MutableLiveData<>();
-            listMutableLiveData.postValue(ethTxEntityList);
-        }
-        return listMutableLiveData;
+        final MutableLiveData<List<GenericETHTxEntity>>[] listMutableLiveData = new MutableLiveData[]{new MutableLiveData<>()};
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            List<GenericETHTxEntity> ethTxEntityList = insertTxEntitytoETHTable();
+            List<GenericETHTxEntity> genericETHTxEntities = mRepository.loadETHTxsSync();
+            if (genericETHTxEntities != null) {
+                genericETHTxEntities.addAll(ethTxEntityList);
+            } else {
+                genericETHTxEntities = ethTxEntityList;
+            }
+            listMutableLiveData[0].postValue(genericETHTxEntities);
+        });
+        return listMutableLiveData[0];
     }
 
     private List<GenericETHTxEntity> insertTxEntitytoETHTable() {
         List<TxEntity> txEntities = mRepository.loadAllTxSync(Coins.ETH.coinId());
+        if (txEntities == null) return null;
         List<GenericETHTxEntity> ethTxEntityList = new ArrayList<>();
+        txEntities = txEntities.stream()
+                .filter(this::shouldShow)
+                .sorted((Comparator<Tx>) (o1, o2) -> {
+                    if (o1.getSignId().equals(o2.getSignId())) {
+                        return (int) (o2.getTimeStamp() - o1.getTimeStamp());
+                    } else if (ELECTRUM_SIGN_ID.equals(o1.getSignId())) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                })
+                .collect(Collectors.toList());
         for (TxEntity txEntity : txEntities) {
             GenericETHTxEntity genericETHTxEntity = new GenericETHTxEntity();
             genericETHTxEntity.setTxId(txEntity.getTxId());
@@ -192,6 +213,12 @@ public class CoinListViewModel extends AndroidViewModel {
             ethTxEntityList.add(genericETHTxEntity);
         }
         return ethTxEntityList;
+    }
+
+    private boolean shouldShow(Tx tx) {
+        WatchWallet watchWallet = WatchWallet.getWatchWallet(getApplication());
+        boolean shouldShow = tx.getSignId().equals(watchWallet.getSignId());
+        return shouldShow && Utilities.getCurrentBelongTo(getApplication()).equals(tx.getBelongTo());
     }
 
     public List<AccountEntity> loadAccountForCoin(CoinEntity coin) {

@@ -18,7 +18,7 @@
 package com.keystone.cold.db.dao;
 
 
-import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -30,15 +30,15 @@ import java.util.List;
 
 @Dao
 public interface ETHTxDao {
-    @Query("SELECT * FROM txs ORDER BY timeStamp DESC")
-    MutableLiveData<List<GenericETHTxEntity>> loadETHTxs();
+    @Query("SELECT * FROM ethtxs ORDER BY timeStamp DESC")
+    List<GenericETHTxEntity> loadETHTxsSync();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(GenericETHTxEntity tx);
 
-    @Query("SELECT * FROM txs WHERE txId = :id")
-    GenericETHTxEntity loadSync(String id);
+    @Query("SELECT * FROM ethtxs WHERE txId = :txId")
+    GenericETHTxEntity loadSync(String txId);
 
-    @Query("DELETE FROM txs WHERE belongTo = 'hidden'")
+    @Query("DELETE FROM ethtxs WHERE belongTo = 'hidden'")
     int deleteHidden();
 }

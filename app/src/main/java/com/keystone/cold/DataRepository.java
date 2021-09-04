@@ -218,6 +218,7 @@ public class DataRepository {
         mDb.txDao().deleteHidden();
         mDb.addressDao().deleteHidden();
         mDb.whiteListDao().deleteHidden();
+        mDb.ethTxDao().deleteHidden();
     }
 
     public void insertETHTx(GenericETHTxEntity tx) {
@@ -228,7 +229,7 @@ public class DataRepository {
         return mDb.ethTxDao().loadSync(txId);
     }
 
-    public MutableLiveData<List<GenericETHTxEntity>> loadETHTxsSync() {
-        return mDb.ethTxDao().loadETHTxs();
+    public List<GenericETHTxEntity> loadETHTxsSync() {
+        return mDb.ethTxDao().loadETHTxsSync();
     }
 }

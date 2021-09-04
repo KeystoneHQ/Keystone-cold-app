@@ -200,7 +200,7 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
                 mBinding.ethTx.undecodedData.setVisibility(View.GONE);
             }
         }
-        mBinding.ethTx.setTx(genericETHTxEntity);
+        mBinding.setTx(genericETHTxEntity);
         processAndUpdateTo();
     }
 

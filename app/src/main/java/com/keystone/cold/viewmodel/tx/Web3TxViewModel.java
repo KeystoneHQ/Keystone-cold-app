@@ -281,7 +281,8 @@ public class Web3TxViewModel extends Base {
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMaximumFractionDigits(20);
         tx.setTimeStamp(getUniversalSignIndex(getApplication()));
-        tx.setFrom(getFromAddress(hdPath));
+        fromAddress = getFromAddress(hdPath);
+        tx.setFrom(fromAddress);
         tx.setTo(object.getString("to"));
         BigDecimal amount = new BigDecimal(object.getString("value"));
         double value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -305,9 +306,9 @@ public class Web3TxViewModel extends Base {
         BigDecimal gasLimitPrice = new BigDecimal(ethTx.getString("maxFeePerGas"));
         BigDecimal gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
         BigDecimal estimatedFee = BigDecimal.valueOf(gasLimitPrice.multiply(gasLimit).doubleValue() - gasPriorityPrice.doubleValue())
-                .divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP);
+                .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
         BigDecimal maxFee = BigDecimal.valueOf(gasLimitPrice.multiply(gasLimit).doubleValue() - gasLimitPrice.doubleValue())
-                .divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP);
+                .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
         tx.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice) + " GWEI");
         tx.setMaxFeePerGas(nf.format(gasLimitPrice) + " GWEI");
         tx.setGasLimit(nf.format(gasLimit));
@@ -369,6 +370,8 @@ public class Web3TxViewModel extends Base {
 
             @Override
             public void onSuccess(String txid, String signatureStr) {
+                txId = txid;
+                signature = signatureStr;
                 signState.postValue(STATE_SIGN_SUCCESS);
                 insertDB();
                 new ClearTokenCallable().call();
@@ -463,6 +466,7 @@ public class Web3TxViewModel extends Base {
         if (tx == null) return;
         try {
             tx.setTxId(txId);
+            tx.setSignature(signature);
             tx.setSignedHex(signedTxHex);
             tx.setFrom(fromAddress);
             JSONObject addition = new JSONObject();
@@ -472,7 +476,6 @@ public class Web3TxViewModel extends Base {
             e.printStackTrace();
         }
         mRepository.insertETHTx(tx);
-        mRepository.loadETHTxsSync();
     }
 
     private void signTransaction(@NonNull SignCallback callback, Signer signer) {
