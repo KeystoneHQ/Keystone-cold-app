@@ -219,8 +219,8 @@
         android:name="com.keystone.cold.ui.fragment.main.web3.EthTxFragment"
         android:label="ethTxFragment" />
     <fragment
-        android:id="@+id/ethEIP1559TxFragment"
-        android:name="com.keystone.cold.ui.fragment.main.web3.EthEIP1559TxFragment"
+        android:id="@+id/ethFeeMarketTxFragment"
+        android:name="com.keystone.cold.ui.fragment.main.web3.EthFeeMarketTxFragment"
         android:label="ethEIP1559TxFragment" />
     <fragment
         android:id="@+id/newEthTxFragment"
@@ -464,15 +464,15 @@
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
         <action
-            android:id="@+id/action_to_ethEIP1559TxFragment"
-            app:destination="@id/ethTxFragment"
+            android:id="@+id/action_to_ethFeeMarketTxFragment"
+            app:destination="@id/ethFeeMarketTxFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_to_newEthTxFragment"
-            app:destination="@id/ethTxFragment"
+            app:destination="@id/newEthTxFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"

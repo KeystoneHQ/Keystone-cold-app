@@ -17,6 +17,10 @@
 
 package com.keystone.cold.ui.fragment.main;
 
+import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
+import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
+import static com.keystone.cold.ui.fragment.main.TxFragment.KEY_TX_ID;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -26,34 +30,24 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.keystone.cold.R;
-import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.TxListBinding;
 import com.keystone.cold.databinding.TxListItemBinding;
-import com.keystone.cold.db.entity.GenericETHTxEntity;
-import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.model.Tx;
 import com.keystone.cold.ui.common.FilterableBaseBindingAdapter;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-
-import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
-import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
-import static com.keystone.cold.ui.fragment.main.TxFragment.KEY_TX_ID;
-import static com.keystone.cold.viewmodel.ElectrumViewModel.ELECTRUM_SIGN_ID;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class TxListFragment extends BaseFragment<TxListBinding> {
 
@@ -101,13 +95,12 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
                 } catch (JSONException e) {
                     if (TextUtils.isEmpty(ethTx.getFee())) {
                         Log.i(TAG, "navigate: jump to ethEIP1559TxFragment");
-                        navigate(R.id.action_to_ethTxFragment, bundle);
+                        navigate(R.id.action_to_ethFeeMarketTxFragment, bundle);
                     } else {
                         Log.i(TAG, "navigate: jump to new ethTxFragment");
-                        navigate(R.id.action_to_ethTxFragment, bundle);
+                        navigate(R.id.action_to_newEthTxFragment, bundle);
                     }
 
-                    navigate(R.id.action_to_ethTxFragment, bundle);
                 }
             };
         } else if (watchWallet == WatchWallet.POLKADOT_JS) {

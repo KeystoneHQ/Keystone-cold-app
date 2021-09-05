@@ -164,9 +164,9 @@ public class CoinListViewModel extends AndroidViewModel {
         BigDecimal gasLimitPrice = new BigDecimal(ethTx.getString("maxFeePerGas"));
         BigDecimal gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
         BigDecimal estimatedFee = BigDecimal.valueOf(gasLimitPrice.multiply(gasLimit).doubleValue() - gasPriorityPrice.doubleValue())
-                .divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP);
+                .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
         BigDecimal maxFee = BigDecimal.valueOf(gasLimitPrice.multiply(gasLimit).doubleValue() - gasLimitPrice.doubleValue())
-                .divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP);
+                .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
         tx.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice) + " GWEI");
         tx.setMaxFeePerGas(nf.format(gasLimitPrice) + " GWEI");
         tx.setGasLimit(nf.format(gasLimit));

@@ -37,7 +37,6 @@ import com.keystone.cold.R;
 import com.keystone.cold.databinding.AbiItemBinding;
 import com.keystone.cold.databinding.AbiItemMethodBinding;
 import com.keystone.cold.databinding.EnsItemBinding;
-import com.keystone.cold.databinding.EthEip1559TxBinding;
 import com.keystone.cold.databinding.EthTxBinding;
 import com.keystone.cold.db.entity.GenericETHTxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;

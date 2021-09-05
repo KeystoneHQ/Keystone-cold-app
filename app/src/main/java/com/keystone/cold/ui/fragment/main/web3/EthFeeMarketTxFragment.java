@@ -37,7 +37,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.databinding.AbiItemBinding;
 import com.keystone.cold.databinding.AbiItemMethodBinding;
 import com.keystone.cold.databinding.EnsItemBinding;
-import com.keystone.cold.databinding.EthEip1559TxBinding;
+import com.keystone.cold.databinding.EthFeeMarketTxBinding;
 import com.keystone.cold.db.entity.GenericETHTxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
@@ -54,14 +54,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
-public class EthEIP1559TxFragment extends BaseFragment<EthEip1559TxBinding> {
+public class EthFeeMarketTxFragment extends BaseFragment<EthFeeMarketTxBinding> {
 
     private GenericETHTxEntity genericETHTxEntity;
     private Web3TxViewModel viewModel;
 
     @Override
     protected int setView() {
-        return R.layout.eth_eip1559_tx;
+        return R.layout.eth_fee_market_tx;
     }
 
     @Override
@@ -95,6 +95,10 @@ public class EthEIP1559TxFragment extends BaseFragment<EthEip1559TxBinding> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        mBinding.ethTx.feeEstimatedDetail.setText(String.format("Max Priority fee (%s) * Gas limit (%s)",
+                genericETHTxEntity.getMaxPriorityFeePerGas(), genericETHTxEntity.getGasLimit()));
+        mBinding.ethTx.feeMaxDetail.setText(String.format("Max fee (%s) * Gas limit (%s)",
+                genericETHTxEntity.getMaxFeePerGas(), genericETHTxEntity.getGasLimit()));
         mBinding.ethTx.network.setText(viewModel.getNetwork(genericETHTxEntity.getChainId()));
         showQrCode();
         updateAbiView(abi);
