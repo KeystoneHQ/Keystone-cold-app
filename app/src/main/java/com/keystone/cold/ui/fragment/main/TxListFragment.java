@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.TxListBinding;
 import com.keystone.cold.databinding.TxListItemBinding;
+import com.keystone.cold.db.entity.GenericETHTxEntity;
 import com.keystone.cold.model.Tx;
 import com.keystone.cold.ui.common.FilterableBaseBindingAdapter;
 import com.keystone.cold.ui.fragment.BaseFragment;
@@ -86,19 +87,26 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
                         adapter.setItems(ethTxEntities);
                     });
             txCallback = ethTx -> {
-                String signedHex = ethTx.getSignedHex();
+                GenericETHTxEntity ethTxEntity = (GenericETHTxEntity) ethTx;
+                String signedHex = ethTxEntity.getSignedHex();
                 Bundle bundle = new Bundle();
-                bundle.putString(KEY_TX_ID, ethTx.getTxId());
+                bundle.putString(KEY_TX_ID, ethTxEntity.getTxId());
                 try {
                     new JSONObject(signedHex);
                     navigate(R.id.action_to_ethTxFragment, bundle);
                 } catch (JSONException e) {
-                    if (TextUtils.isEmpty(ethTx.getFee())) {
-                        Log.i(TAG, "navigate: jump to ethEIP1559TxFragment");
-                        navigate(R.id.action_to_ethFeeMarketTxFragment, bundle);
-                    } else {
-                        Log.i(TAG, "navigate: jump to new ethTxFragment");
-                        navigate(R.id.action_to_newEthTxFragment, bundle);
+                    try {
+                        JSONObject addition = new JSONObject(ethTxEntity.getAddition());
+                        boolean isFeeMarket = addition.getBoolean("isFeeMarket");
+                        if (isFeeMarket) {
+                            Log.i(TAG, "navigate: jump to ethFeeMarketTxFragment");
+                            navigate(R.id.action_to_ethFeeMarketTxFragment, bundle);
+                        } else {
+                            Log.i(TAG, "navigate: jump to new ethTxFragment");
+                            navigate(R.id.action_to_newEthTxFragment, bundle);
+                        }
+                    } catch (JSONException jsonException) {
+                        jsonException.printStackTrace();
                     }
 
                 }

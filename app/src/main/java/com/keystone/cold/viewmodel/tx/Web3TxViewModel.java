@@ -265,7 +265,8 @@ public class Web3TxViewModel extends Base {
         nf.setMaximumFractionDigits(20);
         tx.setTimeStamp(getUniversalSignIndex(getApplication()));
         tx.setCoinCode(coinCode);
-        tx.setFrom(getFromAddress(hdPath));
+        fromAddress = getFromAddress(hdPath);
+        tx.setFrom(fromAddress);
         tx.setTo(object.getString("to"));
         BigDecimal amount = new BigDecimal(object.getString("value"));
         double value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -447,7 +448,7 @@ public class Web3TxViewModel extends Base {
         JSONObject signed = new JSONObject();
         signature = EthImpl.getSignature(rawTx);
         try {
-            signed.put("signature", EthImpl.getSignature(rawTx));
+            signed.put("signature", signature);
             signed.put("signId", signId);
             signed.put("chainId", chainId);
             signed.put("abi", abi);
@@ -457,25 +458,42 @@ public class Web3TxViewModel extends Base {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mRepository.insertTx(tx);
+
+        GenericETHTxEntity genericETHTxEntity = new GenericETHTxEntity();
+        try {
+            genericETHTxEntity.setTxId(tx.getTxId());
+            genericETHTxEntity.setSignature(signature);
+            genericETHTxEntity.setSignedHex(rawTx);
+            genericETHTxEntity.setFrom(fromAddress);
+            JSONObject addition = new JSONObject();
+            addition.put("isFromTFCard", isFromTFCard);
+            addition.put("isFeeMarket", false);
+            genericETHTxEntity.setAddition(addition.toString());
+            genericETHTxEntity.setBelongTo(tx.getBelongTo());
+            genericETHTxEntity.setTimeStamp(tx.getTimeStamp());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mRepository.insertETHTx(genericETHTxEntity);
         return tx;
     }
 
     private void insertDB() {
-        GenericETHTxEntity tx = observableFeeTx.getValue();
-        if (tx == null) return;
+        GenericETHTxEntity genericETHTxEntity = observableFeeTx.getValue();
+        if (genericETHTxEntity == null) return;
         try {
-            tx.setTxId(txId);
-            tx.setSignature(signature);
-            tx.setSignedHex(signedTxHex);
-            tx.setFrom(fromAddress);
+            genericETHTxEntity.setTxId(txId);
+            genericETHTxEntity.setSignature(signature);
+            genericETHTxEntity.setSignedHex(signedTxHex);
+            genericETHTxEntity.setFrom(fromAddress);
             JSONObject addition = new JSONObject();
             addition.put("isFromTFCard", isFromTFCard);
-            tx.setAddition(addition.toString());
+            addition.put("isFeeMarket", true);
+            genericETHTxEntity.setAddition(addition.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mRepository.insertETHTx(tx);
+        mRepository.insertETHTx(genericETHTxEntity);
     }
 
     private void signTransaction(@NonNull SignCallback callback, Signer signer) {

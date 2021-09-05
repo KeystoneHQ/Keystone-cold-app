@@ -58,6 +58,7 @@ public class NewEthTxFragment extends BaseFragment<EthTxBinding> {
 
     private GenericETHTxEntity genericETHTxEntity;
     private Web3TxViewModel viewModel;
+    private CoinListViewModel coinListViewModel;
 
     @Override
     protected int setView() {
@@ -69,8 +70,8 @@ public class NewEthTxFragment extends BaseFragment<EthTxBinding> {
         Bundle bundle = requireArguments();
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         mBinding.broadcastHint.setText(getString(R.string.please_broadcast_with_hot));
-        ViewModelProviders.of(mActivity).get(CoinListViewModel.class)
-                .loadETHTx(bundle.getString(KEY_TX_ID)).observe(this, genericETHTxEntity -> {
+        coinListViewModel = ViewModelProviders.of(mActivity).get(CoinListViewModel.class);
+        coinListViewModel.loadETHTx(bundle.getString(KEY_TX_ID)).observe(this, genericETHTxEntity -> {
             this.genericETHTxEntity = genericETHTxEntity;
             if (this.genericETHTxEntity != null) {
                 updateUI();
@@ -125,6 +126,9 @@ public class NewEthTxFragment extends BaseFragment<EthTxBinding> {
             e.printStackTrace();
         }
         if (abi != null) {
+            if (coinListViewModel.isFromTFCard()) {
+                mBinding.ethTx.tfcardTip.setVisibility(View.VISIBLE);
+            }
             String contract = abi.optString("contract");
             boolean isUniswap = contract.toLowerCase().contains("uniswap");
             List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(genericETHTxEntity.getFrom(), viewModel).adapt(abi);

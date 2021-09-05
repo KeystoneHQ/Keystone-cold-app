@@ -54,6 +54,7 @@ public class CoinListViewModel extends AndroidViewModel {
 
     private final DataRepository mRepository;
     private final MediatorLiveData<List<CoinEntity>> mObservableCoins;
+    private boolean isFromTFCard;
     public static final Comparator<CoinEntity> coinEntityComparator = (o1, o2) -> {
         if (o1.getCoinCode().equals(Coins.BTC.coinCode())) {
             return -1;
@@ -102,12 +103,12 @@ public class CoinListViewModel extends AndroidViewModel {
         AppExecutors.getInstance().diskIO().execute(() -> {
             try {
                 GenericETHTxEntity genericETHTxEntity = mRepository.loadETHTxSync(txId);
-                JSONObject ethTx = EthImpl.decodeEIP1559Transaction(genericETHTxEntity.getSignedHex(), null);
+                JSONObject ethTx = EthImpl.decodeTransaction(genericETHTxEntity.getSignedHex(), null);
                 if (ethTx == null) {
                     genericETHTxEntityLiveData.postValue(null);
                     return;
                 }
-                genericETHTxEntity.setChainId(ethTx.getInt("chainId"));
+                genericETHTxEntity.setChainId(getChainIdFromEIP155(ethTx.getInt("chainId")));
                 genericETHTxEntity.setSignature(EthImpl.getSignature(genericETHTxEntity.getSignedHex()));
                 genericETHTxEntity.setMemo(ethTx.getString("data"));
                 NumberFormat nf = NumberFormat.getInstance();
@@ -116,15 +117,25 @@ public class CoinListViewModel extends AndroidViewModel {
                 BigDecimal amount = new BigDecimal(ethTx.getString("value"));
                 double value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
                 genericETHTxEntity.setAmount(nf.format(value) + " ETH");
-                calculateDisplayEIP1559Fee(ethTx, genericETHTxEntity);
+                BigDecimal gasPrice = new BigDecimal(ethTx.getString("gasPrice"));
+                BigDecimal gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
+                Double fee = gasLimit.multiply(gasPrice)
+                        .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
+                genericETHTxEntity.setFee(nf.format(fee) + " ETH");
                 genericETHTxEntity.setMemo(ethTx.getString("data"));
                 genericETHTxEntity.setBelongTo(mRepository.getBelongTo());
+                JSONObject addition = new JSONObject(genericETHTxEntity.getAddition());
+                isFromTFCard = addition.getBoolean("isFromTFCard");
                 genericETHTxEntityLiveData.postValue(genericETHTxEntity);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         });
         return genericETHTxEntityLiveData;
+    }
+
+    private int getChainIdFromEIP155(int chainId) {
+        return (chainId - 8 - 27) / 2;
     }
 
     public LiveData<GenericETHTxEntity> loadEIP1559ETHTx(String txId) {
@@ -149,6 +160,8 @@ public class CoinListViewModel extends AndroidViewModel {
                 calculateDisplayEIP1559Fee(ethTx, genericETHTxEntity);
                 genericETHTxEntity.setMemo(ethTx.getString("data"));
                 genericETHTxEntity.setBelongTo(mRepository.getBelongTo());
+                JSONObject addition = new JSONObject(genericETHTxEntity.getAddition());
+                isFromTFCard = addition.getBoolean("isFromTFCard");
                 genericETHTxEntityLiveData.postValue(genericETHTxEntity);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -225,4 +238,7 @@ public class CoinListViewModel extends AndroidViewModel {
         return mRepository.loadAccountsForCoin(coin);
     }
 
+    public boolean isFromTFCard() {
+        return isFromTFCard;
+    }
 }
