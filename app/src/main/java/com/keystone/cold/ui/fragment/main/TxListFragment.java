@@ -36,12 +36,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.TxListBinding;
 import com.keystone.cold.databinding.TxListItemBinding;
-import com.keystone.cold.db.entity.GenericETHTxEntity;
 import com.keystone.cold.model.Tx;
 import com.keystone.cold.ui.common.FilterableBaseBindingAdapter;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
+import com.keystone.cold.viewmodel.tx.GenericETHTxEntity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,27 +95,21 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
                     new JSONObject(signedHex);
                     navigate(R.id.action_to_ethTxFragment, bundle);
                 } catch (JSONException e) {
-                    try {
-                        JSONObject addition = new JSONObject(ethTxEntity.getAddition());
-                        boolean isFeeMarket = addition.getBoolean("isFeeMarket");
-                        if (isFeeMarket) {
+                    switch (ethTxEntity.getTxType()) {
+                        case 0x00:
+                            Log.i(TAG, "navigate: jump to new ethLegacyTxFragment");
+                            navigate(R.id.action_to_ethLegacyTxFragment, bundle);
+                            break;
+                        case 0x02:
                             Log.i(TAG, "navigate: jump to ethFeeMarketTxFragment");
                             navigate(R.id.action_to_ethFeeMarketTxFragment, bundle);
-                        } else {
-                            Log.i(TAG, "navigate: jump to new ethTxFragment");
-                            navigate(R.id.action_to_newEthTxFragment, bundle);
-                        }
-                    } catch (JSONException jsonException) {
-                        jsonException.printStackTrace();
+                            break;
+                        default:
+                            break;
                     }
-
                 }
             };
-        } else if (watchWallet == WatchWallet.POLKADOT_JS) {
-            // do something
         }
-
-
         coinCode = requireArguments().getString(KEY_COIN_CODE);
 
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {

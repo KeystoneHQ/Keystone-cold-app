@@ -17,18 +17,20 @@
 
 package com.keystone.cold;
 
+import static com.keystone.coinlib.utils.Coins.DOT;
+import static com.keystone.coinlib.utils.Coins.KSM;
+
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.db.AppDatabase;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.db.entity.GenericETHTxEntity;
+import com.keystone.cold.db.entity.ETHTxDBEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.db.entity.WhiteListEntity;
 import com.keystone.cold.model.Coin;
@@ -36,9 +38,6 @@ import com.keystone.cold.model.Coin;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.keystone.coinlib.utils.Coins.DOT;
-import static com.keystone.coinlib.utils.Coins.KSM;
 
 public class DataRepository {
     private static DataRepository sInstance;
@@ -124,7 +123,7 @@ public class DataRepository {
     }
 
     public AddressEntity loadAddressBypath(String path) {
-        if ( path.equals(DOT.getAccounts()[0])|| path.equals(KSM.getAccounts()[0])) {
+        if (path.equals(DOT.getAccounts()[0]) || path.equals(KSM.getAccounts()[0])) {
             return mDb.addressDao().loadAddress(path, getBelongTo());
         }
         return mDb.addressDao().loadAddress(path.toUpperCase(), getBelongTo());
@@ -221,15 +220,15 @@ public class DataRepository {
         mDb.ethTxDao().deleteHidden();
     }
 
-    public void insertETHTx(GenericETHTxEntity tx) {
+    public void insertETHTx(ETHTxDBEntity tx) {
         mDb.ethTxDao().insert(tx);
     }
 
-    public GenericETHTxEntity loadETHTxSync(String txId) {
+    public ETHTxDBEntity loadETHTxSync(String txId) {
         return mDb.ethTxDao().loadSync(txId);
     }
 
-    public List<GenericETHTxEntity> loadETHTxsSync() {
+    public List<ETHTxDBEntity> loadETHTxsSync() {
         return mDb.ethTxDao().loadETHTxsSync();
     }
 }

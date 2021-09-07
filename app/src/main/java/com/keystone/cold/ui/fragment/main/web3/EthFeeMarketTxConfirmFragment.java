@@ -49,12 +49,12 @@ import com.keystone.cold.databinding.AbiItemBinding;
 import com.keystone.cold.databinding.AbiItemMethodBinding;
 import com.keystone.cold.databinding.EnsItemBinding;
 import com.keystone.cold.databinding.EthFeeMarketTxConfirmBinding;
-import com.keystone.cold.db.entity.GenericETHTxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
+import com.keystone.cold.viewmodel.tx.GenericETHTxEntity;
 import com.keystone.cold.viewmodel.tx.KeystoneTxViewModel;
 import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 

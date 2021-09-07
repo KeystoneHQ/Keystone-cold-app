@@ -27,7 +27,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
@@ -35,16 +34,12 @@ import com.keystone.cold.MainApplication;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.db.entity.GenericETHTxEntity;
+import com.keystone.cold.db.entity.ETHTxDBEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.model.Coin;
 import com.keystone.cold.model.Tx;
+import com.keystone.cold.viewmodel.tx.GenericETHTxEntity;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -101,100 +96,21 @@ public class CoinListViewModel extends AndroidViewModel {
     public LiveData<GenericETHTxEntity> loadETHTx(String txId) {
         MutableLiveData<GenericETHTxEntity> genericETHTxEntityLiveData = new MutableLiveData<>();
         AppExecutors.getInstance().diskIO().execute(() -> {
-            try {
-                GenericETHTxEntity genericETHTxEntity = mRepository.loadETHTxSync(txId);
-                JSONObject ethTx = EthImpl.decodeTransaction(genericETHTxEntity.getSignedHex(), null);
-                if (ethTx == null) {
-                    genericETHTxEntityLiveData.postValue(null);
-                    return;
-                }
-                genericETHTxEntity.setChainId(getChainIdFromEIP155(ethTx.getInt("chainId")));
-                genericETHTxEntity.setSignature(EthImpl.getSignature(genericETHTxEntity.getSignedHex()));
-                genericETHTxEntity.setMemo(ethTx.getString("data"));
-                NumberFormat nf = NumberFormat.getInstance();
-                nf.setMaximumFractionDigits(20);
-                genericETHTxEntity.setTo(ethTx.getString("to"));
-                BigDecimal amount = new BigDecimal(ethTx.getString("value"));
-                double value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
-                genericETHTxEntity.setAmount(nf.format(value) + " ETH");
-                BigDecimal gasPrice = new BigDecimal(ethTx.getString("gasPrice"));
-                BigDecimal gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
-                Double fee = gasLimit.multiply(gasPrice)
-                        .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
-                genericETHTxEntity.setFee(nf.format(fee) + " ETH");
-                genericETHTxEntity.setMemo(ethTx.getString("data"));
-                genericETHTxEntity.setBelongTo(mRepository.getBelongTo());
-                JSONObject addition = new JSONObject(genericETHTxEntity.getAddition());
-                isFromTFCard = addition.getBoolean("isFromTFCard");
-                genericETHTxEntityLiveData.postValue(genericETHTxEntity);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            GenericETHTxEntity genericETHTxEntity = GenericETHTxEntity.transformDbEntity(mRepository.loadETHTxSync(txId));
+            genericETHTxEntityLiveData.postValue(genericETHTxEntity);
         });
         return genericETHTxEntityLiveData;
     }
-
-    private int getChainIdFromEIP155(int chainId) {
-        return (chainId - 8 - 27) / 2;
-    }
-
-    public LiveData<GenericETHTxEntity> loadEIP1559ETHTx(String txId) {
-        MutableLiveData<GenericETHTxEntity> genericETHTxEntityLiveData = new MutableLiveData<>();
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            try {
-                GenericETHTxEntity genericETHTxEntity = mRepository.loadETHTxSync(txId);
-                JSONObject ethTx = EthImpl.decodeEIP1559Transaction(genericETHTxEntity.getSignedHex(), null);
-                if (ethTx == null) {
-                    genericETHTxEntityLiveData.postValue(null);
-                    return;
-                }
-                genericETHTxEntity.setChainId(ethTx.getInt("chainId"));
-                genericETHTxEntity.setSignature(EthImpl.getEIP1559Signature(genericETHTxEntity.getSignedHex()));
-                genericETHTxEntity.setMemo(ethTx.getString("data"));
-                NumberFormat nf = NumberFormat.getInstance();
-                nf.setMaximumFractionDigits(20);
-                genericETHTxEntity.setTo(ethTx.getString("to"));
-                BigDecimal amount = new BigDecimal(ethTx.getString("value"));
-                double value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
-                genericETHTxEntity.setAmount(nf.format(value) + " ETH");
-                calculateDisplayEIP1559Fee(ethTx, genericETHTxEntity);
-                genericETHTxEntity.setMemo(ethTx.getString("data"));
-                genericETHTxEntity.setBelongTo(mRepository.getBelongTo());
-                JSONObject addition = new JSONObject(genericETHTxEntity.getAddition());
-                isFromTFCard = addition.getBoolean("isFromTFCard");
-                genericETHTxEntityLiveData.postValue(genericETHTxEntity);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
-        return genericETHTxEntityLiveData;
-    }
-
-
-    private void calculateDisplayEIP1559Fee(JSONObject ethTx, GenericETHTxEntity tx) throws JSONException {
-        NumberFormat nf = NumberFormat.getInstance();
-        BigDecimal gasPriorityPrice = new BigDecimal(ethTx.getString("maxPriorityFeePerGas"));
-        BigDecimal gasLimitPrice = new BigDecimal(ethTx.getString("maxFeePerGas"));
-        BigDecimal gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
-        BigDecimal estimatedFee = BigDecimal.valueOf(gasLimitPrice.multiply(gasLimit).doubleValue() - gasPriorityPrice.doubleValue())
-                .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-        BigDecimal maxFee = BigDecimal.valueOf(gasLimitPrice.multiply(gasLimit).doubleValue() - gasLimitPrice.doubleValue())
-                .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-        tx.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice) + " GWEI");
-        tx.setMaxFeePerGas(nf.format(gasLimitPrice) + " GWEI");
-        tx.setGasLimit(nf.format(gasLimit));
-        tx.setEstimatedFee(nf.format(estimatedFee) + " ETH");
-        tx.setMaxFee(nf.format(maxFee) + " ETH");
-    }
-
 
     public LiveData<List<GenericETHTxEntity>> loadEthTxs() {
         final MutableLiveData<List<GenericETHTxEntity>>[] listMutableLiveData = new MutableLiveData[]{new MutableLiveData<>()};
         AppExecutors.getInstance().diskIO().execute(() -> {
-            List<GenericETHTxEntity> ethTxEntityList = insertTxEntitytoETHTable();
-            List<GenericETHTxEntity> genericETHTxEntities = mRepository.loadETHTxsSync();
+            List<GenericETHTxEntity> genericETHTxEntities = getGenericETHTxsFromETHTXDBEntities();
+            List<GenericETHTxEntity> ethTxEntityList = getGenericETHTxsFromTxEntities();
             if (genericETHTxEntities != null) {
-                genericETHTxEntities.addAll(ethTxEntityList);
+                if (ethTxEntityList != null) {
+                    genericETHTxEntities.addAll(ethTxEntityList);
+                }
             } else {
                 genericETHTxEntities = ethTxEntityList;
             }
@@ -203,7 +119,21 @@ public class CoinListViewModel extends AndroidViewModel {
         return listMutableLiveData[0];
     }
 
-    private List<GenericETHTxEntity> insertTxEntitytoETHTable() {
+    private List<GenericETHTxEntity> getGenericETHTxsFromETHTXDBEntities() {
+        List<ETHTxDBEntity> ethTxDBEntities = mRepository.loadETHTxsSync();
+        if (ethTxDBEntities == null) return null;
+        List<GenericETHTxEntity> ethTxEntityList = new ArrayList<>();
+        for (ETHTxDBEntity ethTxDBEntity : ethTxDBEntities) {
+            GenericETHTxEntity genericETHTxEntity = new GenericETHTxEntity();
+            genericETHTxEntity.setTxId(ethTxDBEntity.getTxId());
+            genericETHTxEntity.setTxType(ethTxDBEntity.getTxType());
+            genericETHTxEntity.setSignedHex(ethTxDBEntity.getSignedHex());
+            ethTxEntityList.add(genericETHTxEntity);
+        }
+        return ethTxEntityList;
+    }
+
+    private List<GenericETHTxEntity> getGenericETHTxsFromTxEntities() {
         List<TxEntity> txEntities = mRepository.loadAllTxSync(Coins.ETH.coinId());
         if (txEntities == null) return null;
         List<GenericETHTxEntity> ethTxEntityList = new ArrayList<>();

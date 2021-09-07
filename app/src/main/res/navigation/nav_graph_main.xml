@@ -223,8 +223,8 @@
         android:name="com.keystone.cold.ui.fragment.main.web3.EthFeeMarketTxFragment"
         android:label="ethEIP1559TxFragment" />
     <fragment
-        android:id="@+id/newEthTxFragment"
-        android:name="com.keystone.cold.ui.fragment.main.web3.NewEthTxFragment"
+        android:id="@+id/ethLegacyTxFragment"
+        android:name="com.keystone.cold.ui.fragment.main.web3.EthLegacyTxFragment"
         android:label="ethEIP1559TxFragment" />
 
     <fragment
@@ -471,8 +471,8 @@
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
         <action
-            android:id="@+id/action_to_newEthTxFragment"
-            app:destination="@id/newEthTxFragment"
+            android:id="@+id/action_to_ethLegacyTxFragment"
+            app:destination="@id/ethLegacyTxFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"

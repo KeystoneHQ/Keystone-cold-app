@@ -25,7 +25,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.BroadcastTxFragmentBinding;
-import com.keystone.cold.db.entity.TxEntity;
+import com.keystone.cold.model.Tx;
 import com.keystone.cold.protocol.builder.SignTxResultBuilder;
 import com.keystone.cold.ui.BindingAdapters;
 import com.keystone.cold.ui.fragment.BaseFragment;
@@ -35,15 +35,13 @@ import com.keystone.cold.viewmodel.WatchWallet;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Objects;
-
 public class BroadcastTxFragment extends BaseFragment<BroadcastTxFragmentBinding> {
 
     public static final String KEY_TXID = "txId";
 
     protected WatchWallet watchWallet;
 
-    protected TxEntity txEntity;
+    protected Tx txEntity;
 
     protected final View.OnClickListener goHome = v -> navigate(R.id.action_to_home);
 
@@ -98,7 +96,7 @@ public class BroadcastTxFragment extends BaseFragment<BroadcastTxFragmentBinding
     public String getSignedTxData() {
         if (watchWallet == WatchWallet.KEYSTONE) {
             return getSignTxJson(txEntity);
-        } else if(watchWallet == WatchWallet.POLKADOT_JS) {
+        } else if (watchWallet == WatchWallet.POLKADOT_JS) {
             try {
                 return new JSONObject(txEntity.getSignedHex())
                         .getString("signedHex");
@@ -109,7 +107,7 @@ public class BroadcastTxFragment extends BaseFragment<BroadcastTxFragmentBinding
         return "";
     }
 
-    protected String getSignTxJson(TxEntity txEntity) {
+    protected String getSignTxJson(Tx txEntity) {
         SignTxResultBuilder signTxResult = new SignTxResultBuilder();
         signTxResult.setRawTx(txEntity.getSignedHex())
                 .setSignId(txEntity.getSignId())

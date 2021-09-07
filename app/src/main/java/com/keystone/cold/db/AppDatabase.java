@@ -38,12 +38,13 @@ import com.keystone.cold.db.dao.WhiteListDao;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.db.entity.GenericETHTxEntity;
+import com.keystone.cold.db.entity.ETHMsgDBEntity;
+import com.keystone.cold.db.entity.ETHTxDBEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.db.entity.WhiteListEntity;
 
 @Database(entities = {CoinEntity.class, AddressEntity.class,
-        TxEntity.class, WhiteListEntity.class, AccountEntity.class, GenericETHTxEntity.class}, version = 2)
+        TxEntity.class, WhiteListEntity.class, AccountEntity.class, ETHTxDBEntity.class, ETHMsgDBEntity.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
     private static final String DATABASE_NAME = "keystone-db";
     private static AppDatabase sInstance;
@@ -65,12 +66,16 @@ public abstract class AppDatabase extends RoomDatabase {
     private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
-            // Create new table ethtxs
+            // Create new table ethtxs and ethmsgs
             database.execSQL(
                     "CREATE TABLE IF NOT EXISTS ethtxs (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                             " txId TEXT NOT NULL, signedHex TEXT, 'from' TEXT, timeStamp INTEGER NOT NULL, " +
-                            "belongTo TEXT, addition TEXT)");
+                            "belongTo TEXT, txType INTEGER NOT NULL, addition TEXT)");
             database.execSQL("CREATE INDEX index_ethtxs_id ON ethtxs (id)");
+            database.execSQL(
+                    "CREATE TABLE IF NOT EXISTS ethmsgs (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                            " msgId TEXT NOT NULL, signature TEXT, timeStamp INTEGER NOT NULL)");
+            database.execSQL("CREATE INDEX index_ethmsgs_id ON ethmsgs (id)");
         }
     };
 
@@ -85,6 +90,7 @@ public abstract class AppDatabase extends RoomDatabase {
         }
         return sInstance;
     }
+
     private static AppDatabase buildDatabase(final Context appContext,
                                              final AppExecutors executors) {
 

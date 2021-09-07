@@ -18,26 +18,25 @@
 package com.keystone.cold.db.dao;
 
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.keystone.cold.db.entity.GenericETHTxEntity;
+import com.keystone.cold.db.entity.ETHTxDBEntity;
 
 import java.util.List;
 
 @Dao
 public interface ETHTxDao {
     @Query("SELECT * FROM ethtxs ORDER BY timeStamp DESC")
-    List<GenericETHTxEntity> loadETHTxsSync();
+    List<ETHTxDBEntity> loadETHTxsSync();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(GenericETHTxEntity tx);
+    void insert(ETHTxDBEntity tx);
 
     @Query("SELECT * FROM ethtxs WHERE txId = :txId")
-    GenericETHTxEntity loadSync(String txId);
+    ETHTxDBEntity loadSync(String txId);
 
     @Query("DELETE FROM ethtxs WHERE belongTo = 'hidden'")
     int deleteHidden();

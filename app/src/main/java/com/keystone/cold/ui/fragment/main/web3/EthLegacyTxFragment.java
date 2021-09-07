@@ -38,10 +38,10 @@ import com.keystone.cold.databinding.AbiItemBinding;
 import com.keystone.cold.databinding.AbiItemMethodBinding;
 import com.keystone.cold.databinding.EnsItemBinding;
 import com.keystone.cold.databinding.EthTxBinding;
-import com.keystone.cold.db.entity.GenericETHTxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.viewmodel.CoinListViewModel;
+import com.keystone.cold.viewmodel.tx.GenericETHTxEntity;
 import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 import com.sparrowwallet.hummingbird.registry.EthSignature;
 
@@ -54,7 +54,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
-public class NewEthTxFragment extends BaseFragment<EthTxBinding> {
+public class EthLegacyTxFragment extends BaseFragment<EthTxBinding> {
 
     private GenericETHTxEntity genericETHTxEntity;
     private Web3TxViewModel viewModel;

@@ -27,7 +27,7 @@
 
         <variable
             name="tx"
-            type="com.keystone.cold.db.entity.GenericETHTxEntity" />
+            type="com.keystone.cold.viewmodel.tx.GenericETHTxEntity" />
     </data>
 
 

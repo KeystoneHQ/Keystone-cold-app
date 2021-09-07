@@ -38,10 +38,10 @@ import com.keystone.cold.databinding.AbiItemBinding;
 import com.keystone.cold.databinding.AbiItemMethodBinding;
 import com.keystone.cold.databinding.EnsItemBinding;
 import com.keystone.cold.databinding.EthFeeMarketTxBinding;
-import com.keystone.cold.db.entity.GenericETHTxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.viewmodel.CoinListViewModel;
+import com.keystone.cold.viewmodel.tx.GenericETHTxEntity;
 import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 import com.sparrowwallet.hummingbird.registry.EthSignature;
 
@@ -71,7 +71,7 @@ public class EthFeeMarketTxFragment extends BaseFragment<EthFeeMarketTxBinding> 
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         mBinding.broadcastHint.setText(getString(R.string.please_broadcast_with_hot));
         coinListViewModel = ViewModelProviders.of(mActivity).get(CoinListViewModel.class);
-        coinListViewModel.loadEIP1559ETHTx(bundle.getString(KEY_TX_ID)).observe(this, genericETHTxEntity -> {
+        coinListViewModel.loadETHTx(bundle.getString(KEY_TX_ID)).observe(this, genericETHTxEntity -> {
             this.genericETHTxEntity = genericETHTxEntity;
             if (this.genericETHTxEntity != null) {
                 updateUI();

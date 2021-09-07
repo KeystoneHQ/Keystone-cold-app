@@ -56,14 +56,16 @@ public class EthBroadcastTxFragment extends BroadcastTxFragment {
         String txId = data.getString(KEY_TXID);
         messageSignature = data.getString(KEY_SIGNATURE_JSON);
         mBinding.qrcodeLayout.qrcode.setData(getSignedTxData());
-//        if (!TextUtils.isEmpty(txId)) {
-//            ViewModelProviders.of(mActivity).get(CoinListViewModel.class)
-//                    .loadTx(data.getString(KEY_TXID)).observe(this, txEntity -> {
-//                mBinding.setCoinCode(txEntity.getCoinCode());
-//                this.txEntity = txEntity;
-//                refreshUI();
-//            });
-//        }
+        if (!TextUtils.isEmpty(txId)) {
+            ViewModelProviders.of(mActivity).get(CoinListViewModel.class)
+                    .loadETHTx(data.getString(KEY_TXID)).observe(this, genericETHTxEntity -> {
+                if (genericETHTxEntity != null) {
+                    mBinding.setCoinCode(genericETHTxEntity.getCoinCode());
+                    this.txEntity = genericETHTxEntity;
+                    refreshUI();
+                }
+            });
+        }
         mBinding.toolbar.setNavigationOnClickListener(v -> popBackStack(R.id.assetFragment, false));
         mBinding.broadcastHint.setText(R.string.sync_with_metamask);
         mBinding.icon.setImageDrawable(mActivity.getDrawable(R.drawable.coin_eth));

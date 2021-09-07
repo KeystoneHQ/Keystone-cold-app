@@ -48,7 +48,6 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.db.entity.AddressEntity;
-import com.keystone.cold.db.entity.GenericETHTxEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
 
@@ -462,19 +461,19 @@ public class Web3TxViewModel extends Base {
         GenericETHTxEntity genericETHTxEntity = new GenericETHTxEntity();
         try {
             genericETHTxEntity.setTxId(tx.getTxId());
-            genericETHTxEntity.setSignature(signature);
             genericETHTxEntity.setSignedHex(rawTx);
             genericETHTxEntity.setFrom(fromAddress);
+            genericETHTxEntity.setTimeStamp(tx.getTimeStamp());
+            genericETHTxEntity.setBelongTo(tx.getBelongTo());
+            genericETHTxEntity.setTxType(TransactionType.LEGACY.getType());
+            genericETHTxEntity.setSignature(signature);
             JSONObject addition = new JSONObject();
             addition.put("isFromTFCard", isFromTFCard);
-            addition.put("isFeeMarket", false);
             genericETHTxEntity.setAddition(addition.toString());
-            genericETHTxEntity.setBelongTo(tx.getBelongTo());
-            genericETHTxEntity.setTimeStamp(tx.getTimeStamp());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mRepository.insertETHTx(genericETHTxEntity);
+        mRepository.insertETHTx(GenericETHTxEntity.transToDbEntity(genericETHTxEntity));
         return tx;
     }
 
@@ -486,14 +485,14 @@ public class Web3TxViewModel extends Base {
             genericETHTxEntity.setSignature(signature);
             genericETHTxEntity.setSignedHex(signedTxHex);
             genericETHTxEntity.setFrom(fromAddress);
+            genericETHTxEntity.setTxType(TransactionType.FEE_MARKET.getType());
             JSONObject addition = new JSONObject();
             addition.put("isFromTFCard", isFromTFCard);
-            addition.put("isFeeMarket", true);
             genericETHTxEntity.setAddition(addition.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mRepository.insertETHTx(genericETHTxEntity);
+        mRepository.insertETHTx(GenericETHTxEntity.transToDbEntity(genericETHTxEntity));
     }
 
     private void signTransaction(@NonNull SignCallback callback, Signer signer) {
