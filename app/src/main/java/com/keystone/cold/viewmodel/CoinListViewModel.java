@@ -17,28 +17,39 @@
 
 package com.keystone.cold.viewmodel;
 
+import static com.keystone.cold.viewmodel.ElectrumViewModel.ELECTRUM_SIGN_ID;
+
 import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.utils.Coins;
+import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
+import com.keystone.cold.db.entity.Web3TxEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.model.Coin;
+import com.keystone.cold.model.Tx;
+import com.keystone.cold.viewmodel.tx.GenericETHTxEntity;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CoinListViewModel extends AndroidViewModel {
 
     private final DataRepository mRepository;
     private final MediatorLiveData<List<CoinEntity>> mObservableCoins;
+    private boolean isFromTFCard;
     public static final Comparator<CoinEntity> coinEntityComparator = (o1, o2) -> {
         if (o1.getCoinCode().equals(Coins.BTC.coinCode())) {
             return -1;
@@ -82,12 +93,82 @@ public class CoinListViewModel extends AndroidViewModel {
         return mRepository.loadTx(txId);
     }
 
-    public LiveData<List<TxEntity>> loadTxs(String coinId) {
-        return mRepository.loadTxs(coinId);
+    public LiveData<GenericETHTxEntity> loadETHTx(String txId) {
+        MutableLiveData<GenericETHTxEntity> genericETHTxEntityLiveData = new MutableLiveData<>();
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            GenericETHTxEntity genericETHTxEntity = GenericETHTxEntity.transformDbEntity(mRepository.loadETHTxSync(txId));
+            genericETHTxEntityLiveData.postValue(genericETHTxEntity);
+        });
+        return genericETHTxEntityLiveData;
+    }
+
+    public LiveData<List<GenericETHTxEntity>> loadEthTxs() {
+        final MutableLiveData<List<GenericETHTxEntity>>[] listMutableLiveData = new MutableLiveData[]{new MutableLiveData<>()};
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            List<GenericETHTxEntity> genericETHTxEntities = getGenericETHTxsFromETHTXDBEntities();
+            List<GenericETHTxEntity> ethTxEntityList = getGenericETHTxsFromTxEntities();
+            if (genericETHTxEntities != null) {
+                if (ethTxEntityList != null) {
+                    genericETHTxEntities.addAll(ethTxEntityList);
+                }
+            } else {
+                genericETHTxEntities = ethTxEntityList;
+            }
+            listMutableLiveData[0].postValue(genericETHTxEntities);
+        });
+        return listMutableLiveData[0];
+    }
+
+    private List<GenericETHTxEntity> getGenericETHTxsFromETHTXDBEntities() {
+        List<Web3TxEntity> ethTxDBEntities = mRepository.loadETHTxsSync();
+        if (ethTxDBEntities == null) return null;
+        List<GenericETHTxEntity> ethTxEntityList = new ArrayList<>();
+        for (Web3TxEntity web3TxEntity : ethTxDBEntities) {
+            GenericETHTxEntity genericETHTxEntity = new GenericETHTxEntity();
+            genericETHTxEntity.setTxId(web3TxEntity.getTxId());
+            genericETHTxEntity.setTxType(web3TxEntity.getTxType());
+            genericETHTxEntity.setSignedHex(web3TxEntity.getSignedHex());
+            ethTxEntityList.add(genericETHTxEntity);
+        }
+        return ethTxEntityList;
+    }
+
+    private List<GenericETHTxEntity> getGenericETHTxsFromTxEntities() {
+        List<TxEntity> txEntities = mRepository.loadAllTxSync(Coins.ETH.coinId());
+        if (txEntities == null) return null;
+        List<GenericETHTxEntity> ethTxEntityList = new ArrayList<>();
+        txEntities = txEntities.stream()
+                .filter(this::shouldShow)
+                .sorted((Comparator<Tx>) (o1, o2) -> {
+                    if (o1.getSignId().equals(o2.getSignId())) {
+                        return (int) (o2.getTimeStamp() - o1.getTimeStamp());
+                    } else if (ELECTRUM_SIGN_ID.equals(o1.getSignId())) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                })
+                .collect(Collectors.toList());
+        for (TxEntity txEntity : txEntities) {
+            GenericETHTxEntity genericETHTxEntity = new GenericETHTxEntity();
+            genericETHTxEntity.setTxId(txEntity.getTxId());
+            genericETHTxEntity.setSignedHex(txEntity.getSignedHex());
+            ethTxEntityList.add(genericETHTxEntity);
+        }
+        return ethTxEntityList;
+    }
+
+    private boolean shouldShow(Tx tx) {
+        WatchWallet watchWallet = WatchWallet.getWatchWallet(getApplication());
+        boolean shouldShow = tx.getSignId().equals(watchWallet.getSignId());
+        return shouldShow && Utilities.getCurrentBelongTo(getApplication()).equals(tx.getBelongTo());
     }
 
     public List<AccountEntity> loadAccountForCoin(CoinEntity coin) {
         return mRepository.loadAccountsForCoin(coin);
     }
 
+    public boolean isFromTFCard() {
+        return isFromTFCard;
+    }
 }

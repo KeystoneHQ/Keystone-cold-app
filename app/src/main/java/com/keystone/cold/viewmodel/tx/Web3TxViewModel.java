@@ -17,6 +17,11 @@
 
 package com.keystone.cold.viewmodel.tx;
 
+import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.HD_PATH;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.REQUEST_ID;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.SIGN_DATA;
+
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
@@ -45,7 +50,6 @@ import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
-import com.keystone.cold.viewmodel.WatchWallet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,17 +61,13 @@ import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.Objects;
 
-import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
-import static com.keystone.cold.ui.fragment.main.AssetFragment.HD_PATH;
-import static com.keystone.cold.ui.fragment.main.AssetFragment.REQUEST_ID;
-import static com.keystone.cold.ui.fragment.main.AssetFragment.SIGN_DATA;
-
 public class Web3TxViewModel extends Base {
     private JSONArray tokensMap;
     private String hdPath;
     private String signId;
     private String signature;
     private String txHex;
+    private String signedTxHex;
     private int chainId;
     private JSONObject abi;
     private String txId;
@@ -77,6 +77,7 @@ public class Web3TxViewModel extends Base {
     private String fromAddress;
     private String inputData;
     private boolean isFromTFCard;
+    private MutableLiveData<GenericETHTxEntity> observableFeeTx = new MutableLiveData<>();
 
     public Web3TxViewModel(@NonNull Application application) {
         super(application);
@@ -143,6 +144,10 @@ public class Web3TxViewModel extends Base {
         return observableTx;
     }
 
+    public MutableLiveData<GenericETHTxEntity> getObservableFeeTx() {
+        return observableFeeTx;
+    }
+
     public MutableLiveData<Exception> parseTxException() {
         return parseTxException;
     }
@@ -153,7 +158,7 @@ public class Web3TxViewModel extends Base {
                 txHex = bundle.getString(SIGN_DATA);
                 hdPath = bundle.getString(HD_PATH);
                 signId = bundle.getString(REQUEST_ID);
-                JSONObject ethTx = EthImpl.decodeRawTransaction(txHex, () -> isFromTFCard = true);
+                JSONObject ethTx = EthImpl.decodeTransaction(txHex, () -> isFromTFCard = true);
                 if (ethTx == null) {
                     observableTx.postValue(null);
                     parseTxException.postValue(new InvalidTransactionException("invalid transaction"));
@@ -168,6 +173,33 @@ public class Web3TxViewModel extends Base {
                 }
                 TxEntity tx = generateTxEntity(ethTx);
                 observableTx.postValue(tx);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void parseEIP1559TxData(Bundle bundle) {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            try {
+                txHex = bundle.getString(SIGN_DATA);
+                hdPath = bundle.getString(HD_PATH);
+                signId = bundle.getString(REQUEST_ID);
+                JSONObject ethTx = EthImpl.decodeEIP1559Transaction(txHex, () -> isFromTFCard = true);
+                if (ethTx == null) {
+                    observableTx.postValue(null);
+                    parseTxException.postValue(new InvalidTransactionException("invalid transaction"));
+                    return;
+                }
+                chainId = ethTx.getInt("chainId");
+                String data = ethTx.getString("data");
+                try {
+                    abi = new JSONObject(data);
+                } catch (JSONException ignore) {
+                    inputData = data;
+                }
+                GenericETHTxEntity tx = generateGenericETHTxEntity(ethTx);
+                observableFeeTx.postValue(tx);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -230,11 +262,10 @@ public class Web3TxViewModel extends Base {
         TxEntity tx = new TxEntity();
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMaximumFractionDigits(20);
-        tx.setSignId(WatchWallet.METAMASK_SIGN_ID);
         tx.setTimeStamp(getUniversalSignIndex(getApplication()));
         tx.setCoinCode(coinCode);
-        tx.setCoinId(Coins.ETH.coinId());
-        tx.setFrom(getFromAddress(hdPath));
+        fromAddress = getFromAddress(hdPath);
+        tx.setFrom(fromAddress);
         tx.setTo(object.getString("to"));
         BigDecimal amount = new BigDecimal(object.getString("value"));
         double value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -245,11 +276,44 @@ public class Web3TxViewModel extends Base {
         return tx;
     }
 
+    private GenericETHTxEntity generateGenericETHTxEntity(JSONObject object) throws JSONException {
+        GenericETHTxEntity tx = new GenericETHTxEntity();
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setMaximumFractionDigits(20);
+        tx.setTimeStamp(getUniversalSignIndex(getApplication()));
+        fromAddress = getFromAddress(hdPath);
+        tx.setFrom(fromAddress);
+        tx.setTo(object.getString("to"));
+        BigDecimal amount = new BigDecimal(object.getString("value"));
+        double value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
+        tx.setAmount(nf.format(value) + " ETH");
+        calculateDisplayEIP1559Fee(object, tx);
+        tx.setMemo(object.getString("data"));
+        tx.setBelongTo(mRepository.getBelongTo());
+        return tx;
+    }
+
     private double calculateDisplayFee(JSONObject ethTx) throws JSONException {
         BigDecimal gasPrice = new BigDecimal(ethTx.getString("gasPrice"));
         BigDecimal gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
         return gasLimit.multiply(gasPrice)
                 .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
+
+    private void calculateDisplayEIP1559Fee(JSONObject ethTx, GenericETHTxEntity tx) throws JSONException {
+        NumberFormat nf = NumberFormat.getInstance();
+        BigDecimal gasPriorityPrice = new BigDecimal(ethTx.getString("maxPriorityFeePerGas"));
+        BigDecimal gasLimitPrice = new BigDecimal(ethTx.getString("maxFeePerGas"));
+        BigDecimal gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
+        BigDecimal estimatedFee = BigDecimal.valueOf(gasLimitPrice.multiply(gasLimit).doubleValue() - gasPriorityPrice.doubleValue())
+                .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
+        BigDecimal maxFee = BigDecimal.valueOf(gasLimitPrice.multiply(gasLimit).doubleValue() - gasLimitPrice.doubleValue())
+                .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
+        tx.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice) + " GWEI");
+        tx.setMaxFeePerGas(nf.format(gasLimitPrice) + " GWEI");
+        tx.setGasLimit(nf.format(gasLimit));
+        tx.setEstimatedFee(nf.format(estimatedFee) + " ETH");
+        tx.setMaxFee(nf.format(maxFee) + " ETH");
     }
 
     public String getFromAddress(String path) {
@@ -280,6 +344,44 @@ public class Web3TxViewModel extends Base {
             Signer signer = initSigner();
             signTransaction(callback, signer);
         });
+    }
+
+    public void handleSignFeeMarket() {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            SignCallback callback = initSignEIP1559TxCallback();
+            callback.startSign();
+            Signer signer = initSigner();
+            signFeeMarketTransaction(callback, signer);
+        });
+    }
+
+    protected SignCallback initSignEIP1559TxCallback() {
+        return new SignCallback() {
+            @Override
+            public void startSign() {
+                signState.postValue(STATE_SIGNING);
+            }
+
+            @Override
+            public void onFail() {
+                signState.postValue(STATE_SIGN_FAIL);
+                new ClearTokenCallable().call();
+            }
+
+            @Override
+            public void onSuccess(String txid, String signatureStr) {
+                txId = txid;
+                signature = signatureStr;
+                signState.postValue(STATE_SIGN_SUCCESS);
+                insertDB();
+                new ClearTokenCallable().call();
+            }
+
+            @Override
+            public void postProgress(int progress) {
+
+            }
+        };
     }
 
     private SignCallback initialSignMessageCallback() {
@@ -345,7 +447,7 @@ public class Web3TxViewModel extends Base {
         JSONObject signed = new JSONObject();
         signature = EthImpl.getSignature(rawTx);
         try {
-            signed.put("signature", EthImpl.getSignature(rawTx));
+            signed.put("signature", signature);
             signed.put("signId", signId);
             signed.put("chainId", chainId);
             signed.put("abi", abi);
@@ -355,8 +457,40 @@ public class Web3TxViewModel extends Base {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mRepository.insertTx(tx);
+
+        GenericETHTxEntity genericETHTxEntity = new GenericETHTxEntity();
+        try {
+            genericETHTxEntity.setTxId(tx.getTxId());
+            genericETHTxEntity.setSignedHex(rawTx);
+            genericETHTxEntity.setFrom(fromAddress);
+            genericETHTxEntity.setTimeStamp(tx.getTimeStamp());
+            genericETHTxEntity.setBelongTo(tx.getBelongTo());
+            genericETHTxEntity.setTxType(TransactionType.LEGACY.getType());
+            JSONObject addition = new JSONObject();
+            addition.put("isFromTFCard", isFromTFCard);
+            genericETHTxEntity.setAddition(addition.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mRepository.insertETHTx(GenericETHTxEntity.transToDbEntity(genericETHTxEntity));
         return tx;
+    }
+
+    private void insertDB() {
+        GenericETHTxEntity genericETHTxEntity = observableFeeTx.getValue();
+        if (genericETHTxEntity == null) return;
+        try {
+            genericETHTxEntity.setTxId(txId);
+            genericETHTxEntity.setSignedHex(signedTxHex);
+            genericETHTxEntity.setFrom(fromAddress);
+            genericETHTxEntity.setTxType(TransactionType.FEE_MARKET.getType());
+            JSONObject addition = new JSONObject();
+            addition.put("isFromTFCard", isFromTFCard);
+            genericETHTxEntity.setAddition(addition.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mRepository.insertETHTx(GenericETHTxEntity.transToDbEntity(genericETHTxEntity));
     }
 
     private void signTransaction(@NonNull SignCallback callback, Signer signer) {
@@ -368,6 +502,22 @@ public class Web3TxViewModel extends Base {
         if (result == null) {
             callback.onFail();
         } else {
+            callback.onSuccess(result.txId, result.txHex);
+        }
+    }
+
+    private void signFeeMarketTransaction(@NonNull SignCallback callback, Signer signer) {
+        if (signer == null) {
+            callback.onFail();
+            return;
+        }
+        SignTxResult result = new EthImpl(chainId).signEIP1559Hex(txHex, signer);
+        if (result == null) {
+            callback.onFail();
+        } else {
+            txId = result.txId;
+            signedTxHex = result.txHex;
+            signature = result.signaturHex;
             callback.onSuccess(result.txId, result.txHex);
         }
     }

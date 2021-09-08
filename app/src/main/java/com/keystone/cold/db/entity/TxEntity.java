@@ -28,7 +28,7 @@ import com.keystone.cold.model.Tx;
 
 @Entity(tableName = "txs", indices = {@Index("txId")})
 
-public class TxEntity implements Tx, FilterableItem {
+public class TxEntity implements Tx {
 
     @PrimaryKey
     @NonNull

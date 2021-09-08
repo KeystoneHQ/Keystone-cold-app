@@ -22,7 +22,7 @@
 
         <variable
             name="tx"
-            type="com.keystone.cold.db.entity.TxEntity" />
+            type="com.keystone.cold.model.Tx" />
 
         <variable
             name="txCallback"
@@ -47,7 +47,7 @@
             android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="bold"
-            tools:text="0x4f7d6a…52ce9824" />
+            tools:text="@{tx.txId}" />
 
         <ImageView
             android:layout_width="wrap_content"

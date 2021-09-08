@@ -15,27 +15,29 @@
  * in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.keystone.coinlib.coins;
+package com.keystone.cold.db.dao;
 
-import android.text.TextUtils;
 
-public class SignTxResult {
-    public final String txId;
-    public final String txHex;
-    public String signaturHex;
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
 
-    public SignTxResult(String txId, String txHex) {
-        this.txId = txId;
-        this.txHex = txHex;
-    }
+import com.keystone.cold.db.entity.Web3TxEntity;
 
-    public SignTxResult(String txId, String txHex, String signaturHex) {
-        this.txId = txId;
-        this.txHex = txHex;
-        this.signaturHex = signaturHex;
-    }
+import java.util.List;
 
-    public boolean isValid() {
-        return !TextUtils.isEmpty(txId) && !TextUtils.isEmpty(txHex);
-    }
+@Dao
+public interface ETHTxDao {
+    @Query("SELECT * FROM ethtxs ORDER BY timeStamp DESC")
+    List<Web3TxEntity> loadETHTxsSync();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(Web3TxEntity tx);
+
+    @Query("SELECT * FROM ethtxs WHERE txId = :txId")
+    Web3TxEntity loadSync(String txId);
+
+    @Query("DELETE FROM ethtxs WHERE belongTo = 'hidden'")
+    int deleteHidden();
 }

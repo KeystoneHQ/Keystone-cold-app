@@ -262,7 +262,7 @@ public class Cfx extends AbsCoin implements Coin {
         public String derive(String accountXpub, int changeIndex, int addrIndex) {
             DeterministicKey address = getAddrDeterministicKey(accountXpub, changeIndex, addrIndex);
             //decompress
-            ECKey eckey = ECKey.fromPublicOnly(address.getPubKeyPoint());
+            ECKey eckey = ECKey.fromPublicOnly(address.getPubKeyPoint(), address.isCompressed());
             byte[] pubKey = eckey.decompress().getPubKey();
             byte[] hash = new byte[pubKey.length - 1];
             System.arraycopy(pubKey, 1, hash, 0, hash.length);

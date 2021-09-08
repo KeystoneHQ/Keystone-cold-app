@@ -93,7 +93,7 @@ public class Tron extends AbsCoin {
 
             DeterministicKey address = getAddrDeterministicKey(accountXpub, changeIndex, addrIndex);
 
-            ECKey eckey = ECKey.fromPublicOnly(address.getPubKeyPoint());
+            ECKey eckey = ECKey.fromPublicOnly(address.getPubKeyPoint(), address.isCompressed());
             byte[] pubKey = eckey.decompress().getPubKey();
             byte[] hash = new byte[pubKey.length - 1];
             System.arraycopy(pubKey, 1, hash, 0, hash.length);
@@ -105,7 +105,7 @@ public class Tron extends AbsCoin {
 
         @Override
         public String derive(String xPubKey) {
-            ECKey eckey = ECKey.fromPublicOnly(getDeterministicKey(xPubKey).getPubKeyPoint());
+            ECKey eckey = ECKey.fromPublicOnly(getDeterministicKey(xPubKey).getPubKeyPoint(), getDeterministicKey(xPubKey).isCompressed());
             byte[] pubKey = eckey.decompress().getPubKey();
             byte[] hash = new byte[pubKey.length - 1];
             System.arraycopy(pubKey, 1, hash, 0, hash.length);

@@ -57,6 +57,7 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.exceptions.UnExpectedQREx
 import com.keystone.cold.ui.modal.ProgressModalDialog;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.CoinViewModel;
+import com.keystone.cold.viewmodel.exceptions.UnknowQrCodeException;
 import com.keystone.cold.viewmodel.tx.PolkadotJsTxConfirmViewModel;
 import com.keystone.cold.viewmodel.PublicKeyViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
@@ -318,6 +319,16 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                         mFragment.navigate(R.id.action_to_ethSignTypedDataFragment, bundle);
                     } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.PERSONAL_MESSAGE.getType())) {
                         mFragment.navigate(R.id.action_to_ethSignMessageFragment, bundle);
+                    } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_TRANSACTION.getType())) {
+                        byte[] typedTransaction = ethSignRequest.getSignData();
+                        byte type = typedTransaction[0];
+                        switch (type) {
+                            case 0x02:
+                                mFragment.navigate(R.id.action_to_ethFeeMarketTxConfirmFragment, bundle);
+                                break;
+                            default:
+                                throw new UnknowQrCodeException("unknown transaction!");
+                        }
                     }
                 } else if (result.getType().equals(ScanResultTypes.UR_BYTES)) {
                     JSONObject object = new JSONObject(new String((byte[]) result.resolve(), StandardCharsets.UTF_8));

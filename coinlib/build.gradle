@@ -65,11 +65,12 @@ dependencies {
     implementation 'com.esaulpaugh:headlong:5.3.0'
     implementation 'com.google.code.gson:gson:2.8.7'
     implementation 'com.github.sealedtx:bitcoin-cash-converter:1.0'
-    implementation ('org.bitcoinj:bitcoinj-core:0.15.2'){
+    implementation('org.bitcoinj:bitcoinj-core:0.15.10') {
         exclude group: 'com.squareup.okhttp3'
     }
-    implementation ('org.web3j:core:4.6.0-android') {
+    implementation('org.web3j:core:4.8.7-android') {
         exclude group: 'com.squareup.okhttp3'
+        exclude group: 'org.bouncycastle'
     }
     implementation 'com.madgag.spongycastle:core:1.58.0.0@jar'
     implementation 'com.eclipsesource.j2v8:j2v8:6.2.0@aar'
@@ -82,5 +83,12 @@ dependencies {
     testImplementation 'org.json:json:20180813'
     implementation group: 'de.sfuhrm', name: 'saphir-hash-core', version: '3.0.5'
     testImplementation 'org.slf4j:slf4j-nop:1.7.25'
+}
+configurations.all {
+    resolutionStrategy {
+        // java.lang.RuntimeException: Failed to transform '/User/.../bcprov-jdk15on-1.68.jar' using Jetifier.Reason: IllegalArgumentException, message: Unsupported class file major version 59.
+        // Solve the above problems introduced by web3j 4.8.7
+        force 'org.bouncycastle:bcprov-jdk15to18:1.68'
+    }
 }
 

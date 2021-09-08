@@ -17,7 +17,9 @@
 
 package com.keystone.cold.model;
 
-public interface Tx {
+import com.keystone.cold.db.entity.FilterableItem;
+
+public interface Tx extends FilterableItem {
     String getTxId();
 
     String getCoinId();

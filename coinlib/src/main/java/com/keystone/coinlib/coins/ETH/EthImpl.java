@@ -20,6 +20,7 @@
 package com.keystone.coinlib.coins.ETH;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -47,6 +48,7 @@ import org.web3j.crypto.Sign;
 import org.web3j.crypto.SignedRawTransaction;
 import org.web3j.crypto.TransactionDecoder;
 import org.web3j.crypto.TransactionEncoder;
+import org.web3j.crypto.transaction.type.Transaction1559;
 import org.web3j.rlp.RlpEncoder;
 import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpType;
@@ -92,7 +94,6 @@ public class EthImpl implements Coin {
         }
     }
 
-
     protected RawTransaction createRawTransaction(JSONObject metaData) throws JSONException {
         String to = metaData.getString("to");
         BigInteger nonce = new BigInteger(String.valueOf(metaData.getInt("nonce")));
@@ -109,42 +110,63 @@ public class EthImpl implements Coin {
         return RawTransaction.createTransaction(nonce, gasPrice, gasLimit, to, value, data);
     }
 
-    public static JSONObject decodeRawTransaction(String txHex, Callback callback) {
+    public static JSONObject decodeTransaction(String txHex, Callback callback) {
         JSONObject metaData = new JSONObject();
         try {
             RawTransaction rawTx = TransactionDecoder.decode(txHex);
-            metaData.put("to", rawTx.getTo());
-            metaData.put("nonce", rawTx.getNonce().toString());
             metaData.put("gasPrice", rawTx.getGasPrice().toString());
-            metaData.put("gasLimit", rawTx.getGasLimit().toString());
-            metaData.put("value", rawTx.getValue().toString());
-            Contract contract = getContract(callback, rawTx.getTo());
-
-            //decode data
-            ABIReader abiReader = new ABIReader();
-            ABIReader.DecodedFunctionCall call = abiReader.decodeCall(rawTx.getData(), contract, rawTx.getTo());
-            if (call != null) {
-                JSONObject data = call.toJson();
-                data.put("contract", contract.getName());
-                metaData.put("data", data.toString());
-            } else {
-                metaData.put("data", rawTx.getData());
-            }
 
             //decode chainId
             if (rawTx instanceof SignedRawTransaction) {
                 Sign.SignatureData signatureData = ((SignedRawTransaction) rawTx).getSignatureData();
                 byte[] v = signatureData.getV();
-                metaData.put("chainId", new BigInteger(v).intValue());
+                metaData.put("chainId", new BigInteger(Hex.toHexString(v), 16).intValue());
             } else {
                 metaData.put("chainId", 1);
             }
-            metaData.put("signingData", txHex);
+            setMetaDataFromRawTx(txHex, metaData, rawTx, callback);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
         return metaData;
+    }
+
+    public static JSONObject decodeEIP1559Transaction(String txHex, Callback callback) {
+        JSONObject metaData = new JSONObject();
+        try {
+            RawTransaction rawTx = Transaction1559Decoder.decode(txHex);
+            Transaction1559 transaction1559 = (Transaction1559) rawTx.getTransaction();
+            metaData.put("maxPriorityFeePerGas", transaction1559.getMaxPriorityFeePerGas());
+            metaData.put("maxFeePerGas", transaction1559.getMaxFeePerGas());
+            metaData.put("chainId", transaction1559.getChainId());
+            setMetaDataFromRawTx(txHex, metaData, rawTx, callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return metaData;
+    }
+
+    private static void setMetaDataFromRawTx(String txHex, JSONObject metaData,
+                                             RawTransaction rawTx, Callback callback) throws Exception {
+        metaData.put("nonce", rawTx.getNonce().toString());
+        metaData.put("gasLimit", rawTx.getGasLimit().toString());
+        metaData.put("value", rawTx.getValue().toString());
+        metaData.put("to", rawTx.getTo());
+        Contract contract = getContract(callback, rawTx.getTo());
+
+        //decode data
+        ABIReader abiReader = new ABIReader();
+        ABIReader.DecodedFunctionCall call = abiReader.decodeCall(rawTx.getData(), contract, rawTx.getTo());
+        if (call != null) {
+            JSONObject data = call.toJson();
+            data.put("contract", contract.getName());
+            metaData.put("data", data.toString());
+        } else {
+            metaData.put("data", rawTx.getData());
+        }
+        metaData.put("signingData", txHex);
     }
 
     protected static Contract getContract(Callback callback, String address) {
@@ -156,21 +178,42 @@ public class EthImpl implements Coin {
         return contract;
     }
 
-    public static String getSignature(String signedHex) {
-        SignedRawTransaction signedTx = (SignedRawTransaction) TransactionDecoder.decode(signedHex);
-        Sign.SignatureData signatureData = signedTx.getSignatureData();
-        byte[] signatureBytes = concat(concat(signatureData.getR(), signatureData.getS()), signatureData.getV());
-        return Hex.toHexString(signatureBytes);
-    }
-
     public SignTxResult signHex(String hex, Signer signer) {
+        byte[] encodedTransaction = Hex.decode(hex);
+        byte[] transactionHash = Hash.sha3(encodedTransaction);
+
+        String signature = signer.sign(Hex.toHexString(transactionHash));
+
+        Sign.SignatureData signatureData = getSignatureData(signature);
+
         RawTransaction rawTx = TransactionDecoder.decode(hex);
 
-        byte[] signed = signTransaction(rawTx, signer);
+        byte[] signed = encodeSignedTransaction(rawTx, signatureData);
         if (signed != null) {
             String txId = "0x" + Hex.toHexString(Hash.sha3(signed));
             String txHex = "0x" + Hex.toHexString(signed);
             return new SignTxResult(txId, txHex);
+        } else {
+            return null;
+        }
+    }
+
+    public SignTxResult signEIP1559Hex(String hex, Signer signer) {
+        byte[] encodedTransaction = Hex.decode(hex);
+        byte[] transactionHash = Hash.sha3(encodedTransaction);
+
+        String signature = signer.sign(Hex.toHexString(transactionHash));
+
+        Sign.SignatureData signatureData = getEIP1559SignatureData(signature);
+        RawTransaction rawTx = Transaction1559Decoder.decode(hex);
+        byte[] signed = encodeSignedTransaction(rawTx, signatureData);
+        byte[] signatureBytes = concat(concat(signatureData.getR(), signatureData.getS()), new byte[]{(byte) Sign.getRecId(signatureData, ((Transaction1559) rawTx.getTransaction()).getChainId())});
+        if (signed != null) {
+            Log.d("sora", "signEIP1559Hex: " + Hex.toHexString(signed));
+            String txId = "0x" + Hex.toHexString(Hash.sha3(signed));
+            String signedTxHex = "02" + Hex.toHexString(signed);
+            String signatureHex = Hex.toHexString(signatureBytes);
+            return new SignTxResult(txId, signedTxHex, signatureHex);
         } else {
             return null;
         }
@@ -184,8 +227,25 @@ public class EthImpl implements Coin {
         return encodeSignedTransaction(transaction, signatureData);
     }
 
+    public static String getSignature(String signedHex) {
+        SignedRawTransaction signedTx = (SignedRawTransaction) TransactionDecoder.decode(signedHex);
+        Sign.SignatureData signatureData = signedTx.getSignatureData();
+        byte[] signatureBytes = concat(concat(signatureData.getR(), signatureData.getS()), signatureData.getV());
+        return Hex.toHexString(signatureBytes);
+    }
+
+    public static String getEIP1559Signature(String signedHex) {
+        Sign.SignatureData signatureData = Transaction1559Decoder.decodeSignature(signedHex);
+        byte[] signatureBytes = concat(concat(signatureData.getR(), signatureData.getS()), signatureData.getV());
+        return Hex.toHexString(signatureBytes);
+    }
+
     public Sign.SignatureData getSignatureData(String signature) {
         return getSignatureData(signature, true);
+    }
+
+    public Sign.SignatureData getEIP1559SignatureData(String signature) {
+        return getSignatureData(signature, false);
     }
 
     public Sign.SignatureData getSignatureData(String signature, boolean isEIP155) {
@@ -202,7 +262,7 @@ public class EthImpl implements Coin {
         if (chainId > 0 && isEIP155) {
             v += chainId * 2 + 8;
         }
-        return new Sign.SignatureData((byte) v, r, s);
+        return new Sign.SignatureData(BigInteger.valueOf(v).toByteArray(), r, s);
     }
 
     private byte[] encodeSignedTransaction(RawTransaction rawTransaction, Sign.SignatureData signatureData) {
