@@ -39,12 +39,12 @@ import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.ETHMsgDBEntity;
-import com.keystone.cold.db.entity.ETHTxDBEntity;
+import com.keystone.cold.db.entity.Web3TxEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.db.entity.WhiteListEntity;
 
 @Database(entities = {CoinEntity.class, AddressEntity.class,
-        TxEntity.class, WhiteListEntity.class, AccountEntity.class, ETHTxDBEntity.class, ETHMsgDBEntity.class}, version = 2)
+        TxEntity.class, WhiteListEntity.class, AccountEntity.class, Web3TxEntity.class, ETHMsgDBEntity.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
     private static final String DATABASE_NAME = "keystone-db";
     private static AppDatabase sInstance;

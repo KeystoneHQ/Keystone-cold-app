@@ -25,7 +25,7 @@ import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.Utilities;
-import com.keystone.cold.db.entity.ETHTxDBEntity;
+import com.keystone.cold.db.entity.Web3TxEntity;
 import com.keystone.cold.model.Tx;
 import com.keystone.cold.viewmodel.WatchWallet;
 
@@ -61,37 +61,37 @@ public class GenericETHTxEntity implements Tx {
     private int txType; // 0x00:legacy  0x02:feeMarket
     private boolean isFromTFCard;
 
-    public static GenericETHTxEntity transformDbEntity(ETHTxDBEntity ethTxDBEntity) {
+    public static GenericETHTxEntity transformDbEntity(Web3TxEntity web3TxEntity) {
         GenericETHTxEntity genericETHTxEntity = new GenericETHTxEntity();
         try {
             JSONObject ethTx;
-            int txType = ethTxDBEntity.getTxType();
+            int txType = web3TxEntity.getTxType();
             NumberFormat nf = NumberFormat.getInstance();
             BigDecimal gasLimit;
             switch (txType) {
                 case 0x00:
-                    ethTx = EthImpl.decodeTransaction(ethTxDBEntity.getSignedHex(), null);
+                    ethTx = EthImpl.decodeTransaction(web3TxEntity.getSignedHex(), null);
                     if (ethTx == null) {
                         return null;
                     }
-                    genericETHTxEntity = getGenericETHTxEntity(ethTx, ethTxDBEntity);
-                    genericETHTxEntity.setSignature(EthImpl.getSignature(ethTxDBEntity.getSignedHex()));
+                    genericETHTxEntity = getGenericETHTxEntity(ethTx, web3TxEntity);
+                    genericETHTxEntity.setSignature(EthImpl.getSignature(web3TxEntity.getSignedHex()));
                     genericETHTxEntity.setChainId(getChainIdByEIP155(ethTx.getInt("chainId")));
                     BigDecimal gasPrice = new BigDecimal(ethTx.getString("gasPrice"));
                     gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
                     Double fee = gasLimit.multiply(gasPrice)
                             .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
                     genericETHTxEntity.setFee(nf.format(fee) + " ETH");
-                    JSONObject addition = new JSONObject(ethTxDBEntity.getAddition());
+                    JSONObject addition = new JSONObject(web3TxEntity.getAddition());
                     genericETHTxEntity.setFromTFCard(addition.getBoolean("isFromTFCard"));
                     break;
                 case 0x02:
-                    ethTx = EthImpl.decodeEIP1559Transaction(ethTxDBEntity.getSignedHex(), null);
+                    ethTx = EthImpl.decodeEIP1559Transaction(web3TxEntity.getSignedHex(), null);
                     if (ethTx == null) {
                         return null;
                     }
-                    genericETHTxEntity = getGenericETHTxEntity(ethTx, ethTxDBEntity);
-                    genericETHTxEntity.setSignature(EthImpl.getEIP1559Signature(ethTxDBEntity.getSignedHex()));
+                    genericETHTxEntity = getGenericETHTxEntity(ethTx, web3TxEntity);
+                    genericETHTxEntity.setSignature(EthImpl.getEIP1559Signature(web3TxEntity.getSignedHex()));
                     genericETHTxEntity.setChainId(ethTx.getInt("chainId"));
                     BigDecimal gasPriorityPrice = new BigDecimal(ethTx.getString("maxPriorityFeePerGas"));
                     BigDecimal gasLimitPrice = new BigDecimal(ethTx.getString("maxFeePerGas"));
@@ -105,7 +105,7 @@ public class GenericETHTxEntity implements Tx {
                     genericETHTxEntity.setGasLimit(nf.format(gasLimit));
                     genericETHTxEntity.setEstimatedFee(nf.format(estimatedFee) + " ETH");
                     genericETHTxEntity.setMaxFee(nf.format(maxFee) + " ETH");
-                    JSONObject additionJson = new JSONObject(ethTxDBEntity.getAddition());
+                    JSONObject additionJson = new JSONObject(web3TxEntity.getAddition());
                     genericETHTxEntity.setFromTFCard(additionJson.getBoolean("isFromTFCard"));
                     break;
                 default:
@@ -117,27 +117,27 @@ public class GenericETHTxEntity implements Tx {
         return genericETHTxEntity;
     }
 
-    public static ETHTxDBEntity transToDbEntity(GenericETHTxEntity genericETHTxEntity) {
-        ETHTxDBEntity ethTxDBEntity = new ETHTxDBEntity();
-        ethTxDBEntity.setTxId(genericETHTxEntity.getTxId());
-        ethTxDBEntity.setSignedHex(genericETHTxEntity.getSignedHex());
-        ethTxDBEntity.setFrom(genericETHTxEntity.getFrom());
-        ethTxDBEntity.setTimeStamp(genericETHTxEntity.getTimeStamp());
-        ethTxDBEntity.setBelongTo(genericETHTxEntity.getBelongTo());
-        ethTxDBEntity.setTxType(genericETHTxEntity.getTxType());
-        ethTxDBEntity.setAddition(genericETHTxEntity.getAddition());
-        return ethTxDBEntity;
+    public static Web3TxEntity transToDbEntity(GenericETHTxEntity genericETHTxEntity) {
+        Web3TxEntity web3TxEntity = new Web3TxEntity();
+        web3TxEntity.setTxId(genericETHTxEntity.getTxId());
+        web3TxEntity.setSignedHex(genericETHTxEntity.getSignedHex());
+        web3TxEntity.setFrom(genericETHTxEntity.getFrom());
+        web3TxEntity.setTimeStamp(genericETHTxEntity.getTimeStamp());
+        web3TxEntity.setBelongTo(genericETHTxEntity.getBelongTo());
+        web3TxEntity.setTxType(genericETHTxEntity.getTxType());
+        web3TxEntity.setAddition(genericETHTxEntity.getAddition());
+        return web3TxEntity;
     }
 
-    private static GenericETHTxEntity getGenericETHTxEntity(JSONObject ethTx, ETHTxDBEntity ethTxDBEntity) throws JSONException {
+    private static GenericETHTxEntity getGenericETHTxEntity(JSONObject ethTx, Web3TxEntity web3TxEntity) throws JSONException {
         GenericETHTxEntity genericETHTxEntity = new GenericETHTxEntity();
-        genericETHTxEntity.setTxId(ethTxDBEntity.getTxId());
-        genericETHTxEntity.setSignedHex(ethTxDBEntity.getSignedHex());
-        genericETHTxEntity.setFrom(ethTxDBEntity.getFrom());
-        genericETHTxEntity.setTimeStamp(ethTxDBEntity.getTimeStamp());
-        genericETHTxEntity.setBelongTo(ethTxDBEntity.getBelongTo());
-        genericETHTxEntity.setTxType(ethTxDBEntity.getTxType());
-        genericETHTxEntity.setAddition(ethTxDBEntity.getAddition());
+        genericETHTxEntity.setTxId(web3TxEntity.getTxId());
+        genericETHTxEntity.setSignedHex(web3TxEntity.getSignedHex());
+        genericETHTxEntity.setFrom(web3TxEntity.getFrom());
+        genericETHTxEntity.setTimeStamp(web3TxEntity.getTimeStamp());
+        genericETHTxEntity.setBelongTo(web3TxEntity.getBelongTo());
+        genericETHTxEntity.setTxType(web3TxEntity.getTxType());
+        genericETHTxEntity.setAddition(web3TxEntity.getAddition());
         genericETHTxEntity.setMemo(ethTx.getString("data"));
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMaximumFractionDigits(20);

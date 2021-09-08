@@ -30,7 +30,7 @@ import com.keystone.cold.db.AppDatabase;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.db.entity.ETHTxDBEntity;
+import com.keystone.cold.db.entity.Web3TxEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.db.entity.WhiteListEntity;
 import com.keystone.cold.model.Coin;
@@ -220,15 +220,15 @@ public class DataRepository {
         mDb.ethTxDao().deleteHidden();
     }
 
-    public void insertETHTx(ETHTxDBEntity tx) {
+    public void insertETHTx(Web3TxEntity tx) {
         mDb.ethTxDao().insert(tx);
     }
 
-    public ETHTxDBEntity loadETHTxSync(String txId) {
+    public Web3TxEntity loadETHTxSync(String txId) {
         return mDb.ethTxDao().loadSync(txId);
     }
 
-    public List<ETHTxDBEntity> loadETHTxsSync() {
+    public List<Web3TxEntity> loadETHTxsSync() {
         return mDb.ethTxDao().loadETHTxsSync();
     }
 }

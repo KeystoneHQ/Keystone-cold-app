@@ -23,20 +23,20 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.keystone.cold.db.entity.ETHTxDBEntity;
+import com.keystone.cold.db.entity.Web3TxEntity;
 
 import java.util.List;
 
 @Dao
 public interface ETHTxDao {
     @Query("SELECT * FROM ethtxs ORDER BY timeStamp DESC")
-    List<ETHTxDBEntity> loadETHTxsSync();
+    List<Web3TxEntity> loadETHTxsSync();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(ETHTxDBEntity tx);
+    void insert(Web3TxEntity tx);
 
     @Query("SELECT * FROM ethtxs WHERE txId = :txId")
-    ETHTxDBEntity loadSync(String txId);
+    Web3TxEntity loadSync(String txId);
 
     @Query("DELETE FROM ethtxs WHERE belongTo = 'hidden'")
     int deleteHidden();

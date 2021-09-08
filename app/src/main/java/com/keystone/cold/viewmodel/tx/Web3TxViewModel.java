@@ -466,7 +466,6 @@ public class Web3TxViewModel extends Base {
             genericETHTxEntity.setTimeStamp(tx.getTimeStamp());
             genericETHTxEntity.setBelongTo(tx.getBelongTo());
             genericETHTxEntity.setTxType(TransactionType.LEGACY.getType());
-            genericETHTxEntity.setSignature(signature);
             JSONObject addition = new JSONObject();
             addition.put("isFromTFCard", isFromTFCard);
             genericETHTxEntity.setAddition(addition.toString());
@@ -482,7 +481,6 @@ public class Web3TxViewModel extends Base {
         if (genericETHTxEntity == null) return;
         try {
             genericETHTxEntity.setTxId(txId);
-            genericETHTxEntity.setSignature(signature);
             genericETHTxEntity.setSignedHex(signedTxHex);
             genericETHTxEntity.setFrom(fromAddress);
             genericETHTxEntity.setTxType(TransactionType.FEE_MARKET.getType());

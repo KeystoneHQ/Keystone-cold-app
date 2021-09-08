@@ -34,7 +34,7 @@ import com.keystone.cold.MainApplication;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.db.entity.ETHTxDBEntity;
+import com.keystone.cold.db.entity.Web3TxEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.model.Coin;
 import com.keystone.cold.model.Tx;
@@ -120,14 +120,14 @@ public class CoinListViewModel extends AndroidViewModel {
     }
 
     private List<GenericETHTxEntity> getGenericETHTxsFromETHTXDBEntities() {
-        List<ETHTxDBEntity> ethTxDBEntities = mRepository.loadETHTxsSync();
+        List<Web3TxEntity> ethTxDBEntities = mRepository.loadETHTxsSync();
         if (ethTxDBEntities == null) return null;
         List<GenericETHTxEntity> ethTxEntityList = new ArrayList<>();
-        for (ETHTxDBEntity ethTxDBEntity : ethTxDBEntities) {
+        for (Web3TxEntity web3TxEntity : ethTxDBEntities) {
             GenericETHTxEntity genericETHTxEntity = new GenericETHTxEntity();
-            genericETHTxEntity.setTxId(ethTxDBEntity.getTxId());
-            genericETHTxEntity.setTxType(ethTxDBEntity.getTxType());
-            genericETHTxEntity.setSignedHex(ethTxDBEntity.getSignedHex());
+            genericETHTxEntity.setTxId(web3TxEntity.getTxId());
+            genericETHTxEntity.setTxType(web3TxEntity.getTxType());
+            genericETHTxEntity.setSignedHex(web3TxEntity.getSignedHex());
             ethTxEntityList.add(genericETHTxEntity);
         }
         return ethTxEntityList;

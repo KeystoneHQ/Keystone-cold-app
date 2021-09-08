@@ -6,7 +6,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "ethtxs", indices = {@Index("id")})
-public class ETHTxDBEntity {
+public class Web3TxEntity {
     @PrimaryKey(autoGenerate = true)
     private int id;
     @NonNull

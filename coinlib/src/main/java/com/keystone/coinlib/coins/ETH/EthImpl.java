@@ -120,7 +120,7 @@ public class EthImpl implements Coin {
             if (rawTx instanceof SignedRawTransaction) {
                 Sign.SignatureData signatureData = ((SignedRawTransaction) rawTx).getSignatureData();
                 byte[] v = signatureData.getV();
-                metaData.put("chainId", new BigInteger(v).intValue());
+                metaData.put("chainId", new BigInteger(Hex.toHexString(v), 16).intValue());
             } else {
                 metaData.put("chainId", 1);
             }
@@ -179,9 +179,16 @@ public class EthImpl implements Coin {
     }
 
     public SignTxResult signHex(String hex, Signer signer) {
+        byte[] encodedTransaction = Hex.decode(hex);
+        byte[] transactionHash = Hash.sha3(encodedTransaction);
+
+        String signature = signer.sign(Hex.toHexString(transactionHash));
+
+        Sign.SignatureData signatureData = getSignatureData(signature);
+
         RawTransaction rawTx = TransactionDecoder.decode(hex);
 
-        byte[] signed = signTransaction(rawTx, signer);
+        byte[] signed = encodeSignedTransaction(rawTx, signatureData);
         if (signed != null) {
             String txId = "0x" + Hex.toHexString(Hash.sha3(signed));
             String txHex = "0x" + Hex.toHexString(signed);
@@ -194,9 +201,6 @@ public class EthImpl implements Coin {
     public SignTxResult signEIP1559Hex(String hex, Signer signer) {
         byte[] encodedTransaction = Hex.decode(hex);
         byte[] transactionHash = Hash.sha3(encodedTransaction);
-
-        Log.d("sora", "signEIP1559Hex: " + hex);
-        Log.d("sora", "signEIP1559Hex: " + Hex.toHexString(transactionHash));
 
         String signature = signer.sign(Hex.toHexString(transactionHash));
 
@@ -258,7 +262,7 @@ public class EthImpl implements Coin {
         if (chainId > 0 && isEIP155) {
             v += chainId * 2 + 8;
         }
-        return new Sign.SignatureData((byte) v, r, s);
+        return new Sign.SignatureData(BigInteger.valueOf(v).toByteArray(), r, s);
     }
 
     private byte[] encodeSignedTransaction(RawTransaction rawTransaction, Sign.SignatureData signatureData) {
