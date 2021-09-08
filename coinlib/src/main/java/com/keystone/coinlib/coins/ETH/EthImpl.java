@@ -49,8 +49,10 @@ import org.web3j.crypto.SignedRawTransaction;
 import org.web3j.crypto.TransactionDecoder;
 import org.web3j.crypto.TransactionEncoder;
 import org.web3j.crypto.transaction.type.Transaction1559;
+import org.web3j.rlp.RlpDecoder;
 import org.web3j.rlp.RlpEncoder;
 import org.web3j.rlp.RlpList;
+import org.web3j.rlp.RlpString;
 import org.web3j.rlp.RlpType;
 
 import java.io.IOException;
@@ -70,6 +72,12 @@ public class EthImpl implements Coin {
         this.chainId = chainId;
     }
 
+    public static byte[] decodeTransactionFromRlpValue(byte[] rlpTransaction) {
+        RlpList list = RlpDecoder.decode(rlpTransaction);
+        RlpString values = (RlpString) list.getValues().get(0);
+        return values.getBytes();
+    }
+    
     @Override
     public String coinCode() {
         return Coins.ETH.coinCode();
