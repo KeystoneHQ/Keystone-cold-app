@@ -100,8 +100,8 @@ public class GenericETHTxEntity implements Tx {
                             .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
                     BigDecimal maxFee = BigDecimal.valueOf(gasLimitPrice.multiply(gasLimit).doubleValue() - gasLimitPrice.doubleValue())
                             .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-                    genericETHTxEntity.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice) + " GWEI");
-                    genericETHTxEntity.setMaxFeePerGas(nf.format(gasLimitPrice) + " GWEI");
+                    genericETHTxEntity.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
+                    genericETHTxEntity.setMaxFeePerGas(nf.format(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
                     genericETHTxEntity.setGasLimit(nf.format(gasLimit));
                     genericETHTxEntity.setEstimatedFee(nf.format(estimatedFee) + " ETH");
                     genericETHTxEntity.setMaxFee(nf.format(maxFee) + " ETH");

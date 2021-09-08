@@ -38,6 +38,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.coins.polkadot.UOS.Extrinsic;
 import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
 import com.keystone.coinlib.utils.Coins;
@@ -320,7 +321,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.PERSONAL_MESSAGE.getType())) {
                         mFragment.navigate(R.id.action_to_ethSignMessageFragment, bundle);
                     } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_TRANSACTION.getType())) {
-                        byte[] typedTransaction = ethSignRequest.getSignData();
+                        byte[] rlpTransaction = ethSignRequest.getSignData();
+                        byte[] typedTransaction = EthImpl.decodeTransactionFromRlpValue(rlpTransaction);
                         byte type = typedTransaction[0];
                         switch (type) {
                             case 0x02:
