@@ -515,10 +515,8 @@ public class Web3TxViewModel extends Base {
         if (result == null) {
             callback.onFail();
         } else {
-            txId = result.txId;
             signedTxHex = result.txHex;
-            signature = result.signaturHex;
-            callback.onSuccess(result.txId, result.txHex);
+            callback.onSuccess(result.txId, result.signaturHex);
         }
     }
 
