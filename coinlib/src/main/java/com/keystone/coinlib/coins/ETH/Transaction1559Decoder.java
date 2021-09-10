@@ -42,7 +42,7 @@ public class Transaction1559Decoder {
                     Numeric.toBytesPadded(
                             Numeric.toBigInt(((RlpString) values.getValues().get(11)).getBytes()),
                             32);
-            signatureData =  new Sign.SignatureData(y, r, s);
+            signatureData = new Sign.SignatureData(y, r, s);
         }
         return signatureData;
     }

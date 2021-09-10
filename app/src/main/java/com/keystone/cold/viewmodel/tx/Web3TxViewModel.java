@@ -309,8 +309,8 @@ public class Web3TxViewModel extends Base {
                 .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
         BigDecimal maxFee = BigDecimal.valueOf(gasLimitPrice.multiply(gasLimit).doubleValue() - gasLimitPrice.doubleValue())
                 .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-        tx.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice) + " GWEI");
-        tx.setMaxFeePerGas(nf.format(gasLimitPrice) + " GWEI");
+        tx.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
+        tx.setMaxFeePerGas(nf.format(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
         tx.setGasLimit(nf.format(gasLimit));
         tx.setEstimatedFee(nf.format(estimatedFee) + " ETH");
         tx.setMaxFee(nf.format(maxFee) + " ETH");
@@ -515,10 +515,8 @@ public class Web3TxViewModel extends Base {
         if (result == null) {
             callback.onFail();
         } else {
-            txId = result.txId;
             signedTxHex = result.txHex;
-            signature = result.signaturHex;
-            callback.onSuccess(result.txId, result.txHex);
+            callback.onSuccess(result.txId, result.signaturHex);
         }
     }
 
