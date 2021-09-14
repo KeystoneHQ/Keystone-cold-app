@@ -145,7 +145,8 @@ public class XummTxConfirmViewModel extends Base {
         return txId;
     }
 
-    public void signXummTransaction(JSONObject txObj, SignCallback callback, Signer signer) {
-        new Xrp(new XrpImpl()).signTx(txObj, callback, signer);
+    public void signXummTransaction(JSONObject txObj, SignCallback callback, Signer signer ) {
+        XrpImpl xrp = new XrpImpl();
+        xrp.generateJsonTransaction(txObj, callback, signer);
     }
 }
