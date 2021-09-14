@@ -17,23 +17,73 @@
 
 package com.keystone.coinlib.coins.XRP;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
-import com.keystone.coinlib.coins.SignTxResult;
+import com.keystone.coinlib.coins.AbsTx;
+import com.keystone.coinlib.interfaces.Coin;
+import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
-import com.keystone.coinlib.v8.CoinImpl;
-import com.eclipsesource.v8.V8Object;
+import com.keystone.coinlib.utils.Coins;
 
 import org.json.JSONObject;
 
-public class XrpImpl extends CoinImpl {
+public class XrpImpl implements Coin {
+    private static final String TAG = "mengru";
+    public static final String WALLET_MODE_XRP_TOOL_KIT="XRP_TOOL_KIT";
+    public static final String WALLET_MODE_KEYSTONE="KEYSTONE";
+    private final String walletMode;
+    private static native Void nativeGenerateTransaction(final String tx, SignCallback sc, Signer signer);
 
-    public XrpImpl() {
-        super("XRP");
+    static {
+        System.loadLibrary("CryptoCoinKitXRP");
     }
 
-    SignTxResult signTx(@NonNull JSONObject object, Signer signer) {
-        V8Object txData = constructTxData(object);
-        return signTxImpl(txData, "generateTransactionFromJsonSync", signer);
+    public XrpImpl(String walletMode) {
+        this.walletMode = walletMode;
+    }
+
+    @Override
+    public String coinCode() {
+        return Coins.XRP.coinCode();
+    }
+
+    @Override
+    public void generateTransaction(@NonNull AbsTx tx, SignCallback callback, Signer... signers) {
+        JSONObject txObj = tx.getMetaData();
+        try {
+            txObj.put("mode",this.walletMode);
+            this.generateTransaction(txObj, callback, signers);
+        } catch (Exception e) {
+            e.printStackTrace();
+            callback.onFail();
+        }
+    }
+
+    @Override
+    public String signMessage(@NonNull String message, Signer signer) {
+        return null;
+    }
+
+    @Override
+    public String generateAddress(@NonNull String publicKey) {
+        return null;
+    }
+
+    @Override
+    public boolean isAddressValid(@NonNull String address) {
+        return false;
+    }
+
+    public void generateTransaction(JSONObject txObj, SignCallback callback, Signer... signers) {
+        try {
+            txObj.put("SigningPubKey", signers[0].getPublicKey());
+            String txStr = txObj.toString();
+            nativeGenerateTransaction(txStr,callback,signers[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
+            callback.onFail();
+        }
     }
 }
