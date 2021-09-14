@@ -17,23 +17,28 @@
 
 package com.keystone.coinlib.coins.XRP;
 
-import androidx.annotation.NonNull;
-
-import com.keystone.coinlib.coins.SignTxResult;
+import com.keystone.coinlib.CoinImpl;
+import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
-import com.keystone.coinlib.v8.CoinImpl;
-import com.eclipsesource.v8.V8Object;
+import com.keystone.coinlib.utils.Coins;
 
 import org.json.JSONObject;
 
 public class XrpImpl extends CoinImpl {
 
-    public XrpImpl() {
-        super("XRP");
+    @Override
+    public String coinCode() {
+        return Coins.XRP.coinCode();
     }
 
-    SignTxResult signTx(@NonNull JSONObject object, Signer signer) {
-        V8Object txData = constructTxData(object);
-        return signTxImpl(txData, "generateTransactionFromJsonSync", signer);
+    public void generateJsonTransaction(JSONObject txObj, SignCallback callback, Signer... signers) {
+        try {
+            txObj.put("SigningPubKey", signers[0].getPublicKey());
+            String txStr = txObj.toString();
+            super.nativeLegacyGenerateTransaction(txStr,callback,signers[0], this.coinCode());
+        } catch (Exception e) {
+            e.printStackTrace();
+            callback.onFail();
+        }
     }
 }
