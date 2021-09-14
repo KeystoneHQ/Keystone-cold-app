@@ -48,19 +48,6 @@ public class Xrp extends AbsCoin implements Coin {
         return Coins.XRP.coinCode();
     }
 
-    public void signTx(@NonNull JSONObject txObj, SignCallback callback, Signer signer) {
-        if (signer == null) {
-            callback.onFail();
-            return;
-        }
-        SignTxResult result = ((XrpImpl)impl).signTx(txObj, signer);
-        if (result != null && result.isValid()) {
-            callback.onSuccess(result.txId, result.txHex);
-        } else {
-            callback.onFail();
-        }
-    }
-
     public static String encodeAccount(String pubkey) {
         return new B58(DEFAULT_ALPHABET)
                 .encodeToStringChecked(Utils.sha256hash160(Hex.decode(pubkey)), 0);
