@@ -12,8 +12,8 @@ import java.math.BigInteger;
 
 public class Transaction1559Decoder {
 
-    public static RawTransaction decode(String rlpTransaction) {
-        final byte[] transaction = EthImpl.decodeTransactionFromRlpValue(Hex.decode(rlpTransaction));
+    public static RawTransaction decode(String hexTransaction) {
+        final byte[] transaction = Hex.decode(hexTransaction);
         final RlpList rlpList = RlpDecoder.decode(transaction);
         final RlpList values = (RlpList) rlpList.getValues().get(1);
         final long chainId = ((RlpString) values.getValues().get(0)).asPositiveBigInteger().longValue();
@@ -42,7 +42,7 @@ public class Transaction1559Decoder {
                     Numeric.toBytesPadded(
                             Numeric.toBigInt(((RlpString) values.getValues().get(11)).getBytes()),
                             32);
-            signatureData = new Sign.SignatureData(y, r, s);
+            signatureData =  new Sign.SignatureData(y, r, s);
         }
         return signatureData;
     }
