@@ -148,7 +148,7 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
         super.onResume();
         versionPreference = findPreference(SETTING_VERSION);
         if (versionPreference != null) {
-            versionPreference.setTitle(getString(R.string.version) + getAppVersion(mActivity));
+            versionPreference.setTitle(getString(R.string.version) + " " + getAppVersion(mActivity));
         }
 
         switchPreference = findPreference(SETTING_PATTERN_UNLOCK);
@@ -213,6 +213,10 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
         try {
             PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             version = info.versionName;
+            if (version != null && version.length() > 2) {
+                version = version.substring(2);
+            }
+            version = "M-" + version;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
