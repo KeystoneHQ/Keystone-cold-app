@@ -56,6 +56,11 @@ public class AboutViewModel extends AndroidViewModel {
     }
 
     public ObservableField<String> getAppVersion() {
+        String version = appVersion.get();
+        if (version != null && version.length() > 2) {
+            version = version.substring(2);
+        }
+        appVersion.set("M-" + version);
         return appVersion;
     }
 
