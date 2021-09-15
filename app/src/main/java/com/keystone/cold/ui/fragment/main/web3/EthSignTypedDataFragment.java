@@ -57,6 +57,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
 
     private Web3TxViewModel viewModel;
     private SigningDialog signingDialog;
+    private String fromAddress;
 
     private final Runnable forgetPassword = () -> {
         Bundle bundle = new Bundle();
@@ -91,6 +92,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
                 updateVerifyingContract(verifyingContract);
                 String message = messageData.getJSONObject("message").toString(2);
                 mBinding.message.setText(highLight(recognizeAddressInText(message)));
+                fromAddress = jsonObject.getString("fromAddress");
                 liveData.removeObservers(EthSignTypedDataFragment.this);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -154,7 +156,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
             result.append(address);
             if (symbol != null) {
                 result.append(String.format(" (%s)", symbol));
-            } else if (address.equalsIgnoreCase(viewModel.getFromAddress())) {
+            } else if (address.equalsIgnoreCase(fromAddress)) {
                 //do nothing
             } else {
 //                result.append(" [Unknown Address]");

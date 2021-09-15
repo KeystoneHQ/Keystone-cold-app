@@ -294,7 +294,7 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-        viewModel.getObservableFeeTx().observe(this, GenericETHTxEntity -> {
+        viewModel.getObservableEthTx().observe(this, GenericETHTxEntity -> {
             this.genericETHTxEntity = GenericETHTxEntity;
             if (this.genericETHTxEntity != null) {
                 updateUI();
