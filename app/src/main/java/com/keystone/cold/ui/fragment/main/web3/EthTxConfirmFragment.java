@@ -43,12 +43,12 @@ import com.keystone.cold.databinding.AbiItemBinding;
 import com.keystone.cold.databinding.AbiItemMethodBinding;
 import com.keystone.cold.databinding.EnsItemBinding;
 import com.keystone.cold.databinding.EthTxConfirmBinding;
-import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
+import com.keystone.cold.viewmodel.tx.GenericETHTxEntity;
 import com.keystone.cold.viewmodel.tx.KeystoneTxViewModel;
 import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 
@@ -68,7 +68,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     public static final String PREFERENCE_KEY_VISITS = "visits_times";
     private Web3TxViewModel viewModel;
     private SigningDialog signingDialog;
-    private TxEntity txEntity;
+    private GenericETHTxEntity genericETHTxEntity;
     private final Runnable forgetPassword = () -> {
         Bundle bundle = new Bundle();
         bundle.putString(ACTION, PreImportFragment.ACTION_RESET_PWD);
@@ -197,7 +197,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
                 mBinding.ethTx.undecodedData.setVisibility(View.GONE);
             }
         }
-        mBinding.ethTx.setTx(txEntity);
+        mBinding.ethTx.setTx(genericETHTxEntity);
         processAndUpdateTo();
     }
 
@@ -207,7 +207,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
 
     private void processAndUpdateTo() {
         AppExecutors.getInstance().diskIO().execute(() -> {
-            String to = txEntity.getTo();
+            String to = genericETHTxEntity.getTo();
             String ens = viewModel.loadEnsAddress(to);
             String addressSymbol = viewModel.recognizeAddress(to);
             if (!TextUtils.isEmpty(addressSymbol)) {
@@ -241,7 +241,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
             String contract = abi.optString("contract");
             boolean isUniswap = contract.toLowerCase().contains("uniswap");
             AppExecutors.getInstance().diskIO().execute(() -> {
-                List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(txEntity.getFrom(), viewModel).adapt(abi);
+                List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(genericETHTxEntity.getFrom(), viewModel).adapt(abi);
                 AppExecutors.getInstance().mainThread().execute(() -> addViewToData(isUniswap, itemList));
             });
         }
@@ -284,7 +284,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
                     R.layout.abi_item, null, false);
             binding.key.setText(item.key);
             if (isUniswap && "to".equals(item.key)) {
-                if (!item.value.equalsIgnoreCase(txEntity.getFrom())) {
+                if (!item.value.equalsIgnoreCase(genericETHTxEntity.getFrom())) {
                     item.value += String.format(" [%s]", getString(R.string.inconsistent_address));
                 }
             }
@@ -295,9 +295,9 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-        viewModel.getObservableTx().observe(this, txEntity -> {
-            this.txEntity = txEntity;
-            if (this.txEntity != null) {
+        viewModel.getObservableEthTx().observe(this, genericETHTxEntity -> {
+            this.genericETHTxEntity = genericETHTxEntity;
+            if (this.genericETHTxEntity != null) {
                 updateUI();
             }
         });

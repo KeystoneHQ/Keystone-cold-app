@@ -80,7 +80,8 @@ public class EthSignMessageFragment extends BaseFragment<EthSignMessageBinding> 
         if (jsonObject != null) {
             try {
                 String message = jsonObject.getString("data");
-                mBinding.address.setText(viewModel.getFromAddress());
+                String fromAddress = jsonObject.getString("fromAddress");
+                mBinding.address.setText(fromAddress);
 
                 String messageUtf8 = new String(Hex.decode(message), StandardCharsets.UTF_8);
                 if (isGarbled(messageUtf8)) {
