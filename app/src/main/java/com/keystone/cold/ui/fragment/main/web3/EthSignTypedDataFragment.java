@@ -39,6 +39,7 @@ import com.keystone.cold.ui.views.AuthenticateModal;
 import com.keystone.cold.viewmodel.tx.KeystoneTxViewModel;
 import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -83,22 +84,48 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
     private void onMessageParsed(LiveData<JSONObject> liveData, JSONObject jsonObject) {
         if (jsonObject != null) {
             try {
-                JSONObject messageData = new JSONObject(jsonObject.getString("data"));
-                JSONObject domain = messageData.getJSONObject("domain");
-                mBinding.primaryType.setText(messageData.getString("primaryType"));
-                mBinding.network.setText(viewModel.getNetwork(domain.optInt("chainId", 1)));
-                mBinding.name.setText(domain.optString("name"));
-                String verifyingContract = domain.optString("verifyingContract", "");
-                updateVerifyingContract(verifyingContract);
-                String message = messageData.getJSONObject("message").toString(2);
-                mBinding.message.setText(highLight(recognizeAddressInText(message)));
-                fromAddress = jsonObject.getString("fromAddress");
+                boolean isLegacy = jsonObject.getBoolean("isLegacy");
+                if (isLegacy) {
+                    JSONArray messageData = new JSONArray(jsonObject.getString("data"));
+                    mBinding.primaryTypeContainer.setVisibility(View.GONE);
+                    mBinding.network.setVisibility(View.GONE);
+                    mBinding.domainNameContainer.setVisibility(View.GONE);
+                    mBinding.verifyingContractContainer.setVisibility(View.GONE);
+                    String readableMessage = adaptLegacyData(messageData);
+                    fromAddress = jsonObject.getString("fromAddress");
+                    mBinding.message.setText(highLight(recognizeAddressInText(readableMessage)));
+                } else {
+                    JSONObject messageData = new JSONObject(jsonObject.getString("data"));
+                    JSONObject domain = messageData.getJSONObject("domain");
+                    mBinding.primaryType.setText(messageData.getString("primaryType"));
+                    mBinding.network.setText(viewModel.getNetwork(domain.optInt("chainId", 1)));
+                    mBinding.name.setText(domain.optString("name"));
+                    String verifyingContract = domain.optString("verifyingContract", "");
+                    updateVerifyingContract(verifyingContract);
+                    String message = messageData.getJSONObject("message").toString(2);
+                    mBinding.message.setText(highLight(recognizeAddressInText(message)));
+                    fromAddress = jsonObject.getString("fromAddress");
+                }
                 liveData.removeObservers(EthSignTypedDataFragment.this);
             } catch (JSONException e) {
                 e.printStackTrace();
                 handleParseException(e);
             }
         }
+    }
+
+    private String adaptLegacyData(JSONArray data) throws JSONException {
+        String result = "";
+        for (int i = 0; i < data.length(); i++) {
+            JSONObject object = data.getJSONObject(i);
+            if (object.has("type") && object.has("name") && object.has("value")) {
+                result += object.getString("name") + ":\n";
+                result += object.getString("value") + "\n";
+            } else {
+                throw new JSONException("invalid legacy typed data");
+            }
+        }
+        return result;
     }
 
     private void updateVerifyingContract(String verifyingContract) {
