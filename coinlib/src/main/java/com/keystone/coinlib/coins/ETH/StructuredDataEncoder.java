@@ -12,6 +12,7 @@
  */
 package com.keystone.coinlib.coins.ETH;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.web3j.abi.TypeEncoder;
@@ -42,6 +43,7 @@ import static org.web3j.crypto.Hash.sha3String;
 
 public class StructuredDataEncoder {
     public final StructuredData.EIP712Message jsonMessageObject;
+    public final List<StructuredData.LegacyTypedData> legacyTypedMessage;
 
     // Matches array declarations like arr[5][10], arr[][], arr[][34][], etc.
     // Doesn't match array declarations where there is a 0 in any dimension.
@@ -63,12 +65,18 @@ public class StructuredDataEncoder {
     final String typeRegex = "^[a-zA-Z_$][a-zA-Z_$0-9]*(\\[([1-9]\\d*)*\\])*$";
     final Pattern typePattern = Pattern.compile(typeRegex);
     // Identifier Regex matches to a valid name, but can't be an array declaration.
-    final String identifierRegex = "^[a-zA-Z_$][a-zA-Z_$0-9]*$";
+    final String identifierRegex = "^[a-zA-Z_$][a-zA-Z_$0-9 ]*$";
     final Pattern identifierPattern = Pattern.compile(identifierRegex);
 
     public StructuredDataEncoder(String jsonMessageInString) throws IOException, RuntimeException {
         // Parse String Message into object and validate
-        this.jsonMessageObject = parseJSONMessage(jsonMessageInString);
+        if (jsonMessageInString.startsWith("[")) {
+            this.legacyTypedMessage = parseLegacyMessage(jsonMessageInString);
+            this.jsonMessageObject = null;
+        } else {
+            this.jsonMessageObject = parseJSONMessage(jsonMessageInString);
+            this.legacyTypedMessage = null;
+        }
     }
 
     public Set<String> getDependencies(String primaryType) {
@@ -453,6 +461,26 @@ public class StructuredDataEncoder {
         }
     }
 
+    public void validateLegacyData(List<StructuredData.LegacyTypedData> jsonMessageArray) throws RuntimeException {
+        for (StructuredData.LegacyTypedData data :
+                jsonMessageArray) {
+            if (data.getName() == null || data.getType() == null || data.getValue() == null) {
+                throw new RuntimeException("Invalid Legacy Typed Data");
+            }
+            if (!identifierPattern.matcher(data.getName()).find()) {
+                // raise Error
+                throw new RuntimeException(
+                        String.format(
+                                "Invalid Identifier %s", data.getName()));
+            }
+            if (!typePattern.matcher(data.getType()).find()) {
+                // raise Error
+                throw new RuntimeException(
+                        String.format("Invalid Type %s", data.getType()));
+            }
+        }
+    }
+
     public StructuredData.EIP712Message parseJSONMessage(String jsonMessageInString)
             throws IOException, RuntimeException {
         ObjectMapper mapper = new ObjectMapper();
@@ -463,6 +491,15 @@ public class StructuredDataEncoder {
         validateStructuredData(tempJSONMessageObject);
 
         return tempJSONMessageObject;
+    }
+
+    public List<StructuredData.LegacyTypedData> parseLegacyMessage(String jsonMessageInString) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        List<StructuredData.LegacyTypedData> tempJSONMessageArray =
+                mapper.readValue(jsonMessageInString, new TypeReference<List<StructuredData.LegacyTypedData>>() {
+                });
+        validateLegacyData(tempJSONMessageArray);
+        return tempJSONMessageArray;
     }
 
     @SuppressWarnings("unchecked")
@@ -486,8 +523,13 @@ public class StructuredDataEncoder {
         return baos.toByteArray();
     }
 
+    public byte[] getLegacyStructuredDataHash() throws IOException {
+        return LegacyTypedDataEncoder.legacyTypedSignatureHash(legacyTypedMessage);
+    }
+
     @SuppressWarnings("unchecked")
-    public byte[] hashStructuredData() throws RuntimeException {
+    public byte[] hashStructuredData() throws RuntimeException, IOException {
+        if (legacyTypedMessage != null) return getLegacyStructuredDataHash();
         return sha3(getStructuredData());
     }
 

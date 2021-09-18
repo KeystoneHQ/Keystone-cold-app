@@ -132,4 +132,48 @@ public class StructuredData {
                     + '}';
         }
     }
+
+    static class LegacyTypedData {
+        private final String type;
+        private final String name;
+        private final Object value;
+
+        @JsonCreator
+        public LegacyTypedData(
+                @JsonProperty(value = "type") String type,
+                @JsonProperty(value = "name") String name,
+                @JsonProperty(value = "value") Object value) {
+            this.type = type;
+            this.name = name;
+            this.value = value;
+        }
+
+        public String getType() {
+            return this.type;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public Object getValue() {
+            return this.value;
+        }
+
+        @Override
+        public String toString() {
+            return "LegacyTypedMessage{"
+                    + "type='"
+                    + this.type
+                    + '\''
+                    + ", name='"
+                    + this.name
+                    + '\''
+                    + ", value='"
+                    + this.value
+                    + '\''
+                    + '}';
+        }
+    }
+
 }

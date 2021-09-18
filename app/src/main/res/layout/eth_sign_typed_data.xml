@@ -102,6 +102,7 @@
                             android:layout_alignParentBottom="true" />
                     </RelativeLayout>
                     <LinearLayout
+                        android:id="@+id/domainNameContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
@@ -193,6 +194,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/primaryTypeContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"

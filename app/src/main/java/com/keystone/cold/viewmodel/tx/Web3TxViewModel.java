@@ -72,6 +72,7 @@ public class Web3TxViewModel extends Base {
     private JSONObject abi;
     @SuppressLint("StaticFieldLeak")
     private final Context context;
+    private boolean isLegacyTypedData;
     private String inputData;
     private boolean isFromTFCard;
     private MutableLiveData<GenericETHTxEntity> observableEthTx = new MutableLiveData<>();
@@ -106,6 +107,7 @@ public class Web3TxViewModel extends Base {
     public Web3TxViewModel(@NonNull Application application) {
         super(application);
         context = application;
+        coinCode = "ETH";
         readPresetContractInfo();
     }
 
@@ -232,14 +234,19 @@ public class Web3TxViewModel extends Base {
                 signId = bundle.getString(REQUEST_ID);
                 String fromAddress = getFromAddress(hdPath);
                 messageData = new String(Hex.decode(typedDataHex), StandardCharsets.UTF_8);
-                JSONObject typedData = new JSONObject(messageData);
-                chainId = typedData.getJSONObject("domain").optInt("chainId", 1);
-
+                //LegacyTypedData is a JSON Array;
+                isLegacyTypedData = messageData.startsWith("[");
                 JSONObject object = new JSONObject();
                 object.put("hdPath", hdPath);
                 object.put("signId", signId);
+                object.put("isLegacy", isLegacyTypedData);
                 object.put("data", messageData);
                 object.put("fromAddress", fromAddress);
+                chainId = 1;
+                if (!isLegacyTypedData) {
+                    JSONObject typedData = new JSONObject(messageData);
+                    chainId = typedData.getJSONObject("domain").optInt("chainId", 1);
+                }
                 observableObject.postValue(object);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -481,9 +488,9 @@ public class Web3TxViewModel extends Base {
         void startSign();
 
         void onFail();
-        
+
         void onSignTxSuccess(String txId, String signedTxHex, String signatureHex);
-        
+
         void onSignMsgSuccess(String signatureHex);
     }
 }

@@ -210,7 +210,6 @@ public class EthImpl implements Coin {
         byte[] signed = encodeSignedTransaction(rawTx, signatureData);
         byte[] signatureBytes = concat(concat(signatureData.getR(), signatureData.getS()), new byte[]{(byte) Sign.getRecId(signatureData, ((Transaction1559) rawTx.getTransaction()).getChainId())});
         if (signed != null) {
-            Log.d("sora", "signEIP1559Hex: " + Hex.toHexString(signed));
             String txId = "0x" + Hex.toHexString(Hash.sha3(signed));
             String signedTxHex = "02" + Hex.toHexString(signed);
             String signatureHex = Hex.toHexString(signatureBytes);
