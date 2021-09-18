@@ -17,6 +17,10 @@
 
 package com.keystone.cold.viewmodel.tx;
 
+import static com.keystone.cold.ui.fragment.main.FeeAttackChecking.FeeAttackCheckingResult.DUPLICATE_TX;
+import static com.keystone.cold.ui.fragment.main.FeeAttackChecking.FeeAttackCheckingResult.NORMAL;
+import static com.keystone.cold.ui.fragment.main.FeeAttackChecking.FeeAttackCheckingResult.SAME_OUTPUTS;
+
 import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
@@ -28,7 +32,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.Util;
 import com.keystone.coinlib.coins.AbsCoin;
-import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.coins.AbsTx;
 import com.keystone.coinlib.coins.BTC.UtxoTx;
 import com.keystone.coinlib.coins.ETH.Eth;
@@ -39,7 +42,6 @@ import com.keystone.coinlib.exception.InvalidPathException;
 import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
-import com.keystone.coinlib.path.AddressIndex;
 import com.keystone.coinlib.path.CoinPath;
 import com.keystone.coinlib.utils.B58;
 import com.keystone.coinlib.utils.Coins;
@@ -49,7 +51,6 @@ import com.keystone.cold.callables.GetMessageCallable;
 import com.keystone.cold.callables.GetPasswordTokenCallable;
 import com.keystone.cold.callables.VerifyFingerprintCallable;
 import com.keystone.cold.db.entity.AddressEntity;
-import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
 import com.keystone.cold.ui.views.AuthenticateModal;
@@ -70,16 +71,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
-import static com.keystone.cold.ui.fragment.main.FeeAttackChecking.FeeAttackCheckingResult.DUPLICATE_TX;
-import static com.keystone.cold.ui.fragment.main.FeeAttackChecking.FeeAttackCheckingResult.NORMAL;
-import static com.keystone.cold.ui.fragment.main.FeeAttackChecking.FeeAttackCheckingResult.SAME_OUTPUTS;
-
 public class KeystoneTxViewModel extends Base {
 
     private final MutableLiveData<Integer> feeAttachCheckingResult = new MutableLiveData<>();
     private AbsTx transaction;
     protected String coinCode;
-    protected final MutableLiveData<String> signState = new MutableLiveData<>();
     protected AuthenticateModal.OnVerify.VerifyToken token;
     protected WatchWallet watchWallet;
 
@@ -249,10 +245,6 @@ public class KeystoneTxViewModel extends Base {
             e.printStackTrace();
         }
         return 0;
-    }
-
-    public MutableLiveData<String> getSignState() {
-        return signState;
     }
 
     public void setToken(AuthenticateModal.OnVerify.VerifyToken token) {
