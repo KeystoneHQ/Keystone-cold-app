@@ -75,7 +75,6 @@ public class KeystoneTxViewModel extends Base {
 
     private final MutableLiveData<Integer> feeAttachCheckingResult = new MutableLiveData<>();
     private AbsTx transaction;
-    protected String coinCode;
     protected AuthenticateModal.OnVerify.VerifyToken token;
     protected WatchWallet watchWallet;
 
