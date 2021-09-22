@@ -208,6 +208,9 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
     private void subscribeSignState() {
         viewModel.getSignState().observe(this, s -> {
             if (KeystoneTxViewModel.STATE_SIGNING.equals(s)) {
+                if (signingDialog != null) {
+                    signingDialog.dismiss();
+                }
                 signingDialog = SigningDialog.newInstance();
                 signingDialog.show(mActivity.getSupportFragmentManager(), "");
             } else if (KeystoneTxViewModel.STATE_SIGN_SUCCESS.equals(s)) {

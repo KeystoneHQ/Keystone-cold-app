@@ -19,8 +19,10 @@
 
 package com.keystone.coinlib.coins.ETH;
 
+import static com.keystone.coinlib.Util.concat;
+import static org.web3j.crypto.TransactionEncoder.asRlpValues;
+
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -53,15 +55,11 @@ import org.web3j.rlp.RlpEncoder;
 import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpType;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import static com.keystone.coinlib.Util.concat;
-import static org.web3j.crypto.TransactionEncoder.asRlpValues;
 
 public class EthImpl implements Coin {
     private final int chainId;
@@ -291,7 +289,7 @@ public class EthImpl implements Coin {
             Sign.SignatureData signatureData = getSignatureData(signature, false);
             byte[] sigBytes = concat(concat(signatureData.getR(), signatureData.getS()), signatureData.getV());
             return Hex.toHexString(sigBytes);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
