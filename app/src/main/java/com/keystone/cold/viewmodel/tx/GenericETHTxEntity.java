@@ -67,6 +67,7 @@ public class GenericETHTxEntity implements Tx {
             JSONObject ethTx;
             int txType = web3TxEntity.getTxType();
             NumberFormat nf = NumberFormat.getInstance();
+            nf.setMaximumFractionDigits(20);
             BigDecimal gasLimit;
             switch (txType) {
                 case 0x00:
@@ -79,8 +80,7 @@ public class GenericETHTxEntity implements Tx {
                     genericETHTxEntity.setChainId(getChainIdByEIP155(ethTx.getInt("chainId")));
                     BigDecimal gasPrice = new BigDecimal(ethTx.getString("gasPrice"));
                     gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
-                    Double fee = gasLimit.multiply(gasPrice)
-                            .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
+                    BigDecimal fee = gasLimit.multiply(gasPrice).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
                     genericETHTxEntity.setFee(nf.format(fee) + " ETH");
                     JSONObject addition = new JSONObject(web3TxEntity.getAddition());
                     genericETHTxEntity.setFromTFCard(addition.getBoolean("isFromTFCard"));
@@ -96,10 +96,8 @@ public class GenericETHTxEntity implements Tx {
                     BigDecimal gasPriorityPrice = new BigDecimal(ethTx.getString("maxPriorityFeePerGas"));
                     BigDecimal gasLimitPrice = new BigDecimal(ethTx.getString("maxFeePerGas"));
                     gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
-                    BigDecimal estimatedFee = BigDecimal.valueOf(gasLimitPrice.multiply(gasLimit).doubleValue() - gasPriorityPrice.doubleValue())
-                            .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-                    BigDecimal maxFee = BigDecimal.valueOf(gasLimitPrice.multiply(gasLimit).doubleValue() - gasLimitPrice.doubleValue())
-                            .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
+                    BigDecimal estimatedFee = gasPriorityPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
+                    BigDecimal maxFee = gasLimitPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
                     genericETHTxEntity.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
                     genericETHTxEntity.setMaxFeePerGas(nf.format(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
                     genericETHTxEntity.setGasLimit(nf.format(gasLimit));
@@ -143,7 +141,7 @@ public class GenericETHTxEntity implements Tx {
         nf.setMaximumFractionDigits(20);
         genericETHTxEntity.setTo(ethTx.getString("to"));
         BigDecimal amount = new BigDecimal(ethTx.getString("value"));
-        double value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
+        BigDecimal value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
         genericETHTxEntity.setAmount(nf.format(value) + " ETH");
         genericETHTxEntity.setMemo(ethTx.getString("data"));
         String currentBelongTo = Utilities.getCurrentBelongTo(MainApplication.getApplication());

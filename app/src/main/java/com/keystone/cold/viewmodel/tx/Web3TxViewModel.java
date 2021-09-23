@@ -331,7 +331,7 @@ public class Web3TxViewModel extends Base {
         tx.setTimeStamp(getUniversalSignIndex(getApplication()));
         tx.setTo(object.getString("to"));
         BigDecimal amount = new BigDecimal(object.getString("value"));
-        double value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
+        BigDecimal value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
         tx.setAmount(nf.format(value) + " ETH");
         calculateDisplayEIP1559Fee(object, tx);
         tx.setMemo(object.getString("data"));
@@ -349,13 +349,12 @@ public class Web3TxViewModel extends Base {
 
     private void calculateDisplayEIP1559Fee(JSONObject ethTx, GenericETHTxEntity tx) throws JSONException {
         NumberFormat nf = NumberFormat.getInstance();
+        nf.setMaximumFractionDigits(20);
         BigDecimal gasPriorityPrice = new BigDecimal(ethTx.getString("maxPriorityFeePerGas"));
         BigDecimal gasLimitPrice = new BigDecimal(ethTx.getString("maxFeePerGas"));
         BigDecimal gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
-        BigDecimal estimatedFee = BigDecimal.valueOf(gasLimitPrice.multiply(gasLimit).doubleValue() - gasPriorityPrice.doubleValue())
-                .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-        BigDecimal maxFee = BigDecimal.valueOf(gasLimitPrice.multiply(gasLimit).doubleValue() - gasLimitPrice.doubleValue())
-                .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
+        BigDecimal estimatedFee = gasPriorityPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
+        BigDecimal maxFee = gasLimitPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
         tx.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
         tx.setMaxFeePerGas(nf.format(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
         tx.setGasLimit(nf.format(gasLimit));
