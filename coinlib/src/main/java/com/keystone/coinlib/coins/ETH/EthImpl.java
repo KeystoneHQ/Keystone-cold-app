@@ -151,7 +151,7 @@ public class EthImpl implements Coin {
         metaData.put("nonce", rawTx.getNonce().toString());
         metaData.put("gasLimit", rawTx.getGasLimit().toString());
         metaData.put("value", rawTx.getValue().toString());
-        metaData.put("to", rawTx.getTo());
+        metaData.put("to", Eth.Deriver.toChecksumAddress(rawTx.getTo()));
         Contract contract = getContract(callback, rawTx.getTo());
 
         //decode data
