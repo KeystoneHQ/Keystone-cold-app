@@ -17,20 +17,36 @@
 
 package com.keystone.cold.ui.fragment.setup;
 
+import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
+import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.WebAuthBinding;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
+import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
+import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerState;
+import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerViewModel;
+import com.keystone.cold.viewmodel.exceptions.UnknowQrCodeException;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
-import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.Objects;
 
 public class WebAuthFragment extends BaseFragment<WebAuthBinding> {
     @Override
@@ -53,12 +69,8 @@ public class WebAuthFragment extends BaseFragment<WebAuthBinding> {
         AndPermission.with(this)
                 .permission(Permission.CAMERA, Permission.READ_EXTERNAL_STORAGE)
                 .onGranted(permissions -> {
-                    long startTime = System.currentTimeMillis();
-                    Bundle bundle = new Bundle();
-                    bundle.putLong("starttime", startTime);
-                    bundle.putBoolean(IS_SETUP_VAULT, true);
-                    bundle.putString("purpose", "webAuth");
-                    navigate(R.id.webAuth_to_QRCodeScan, bundle);
+                    initScanResult();
+                    navigate(R.id.action_to_scanner);
                 })
                 .onDenied(permissions -> {
                     Uri packageURI = Uri.parse("package:" + mActivity.getPackageName());
@@ -73,5 +85,38 @@ public class WebAuthFragment extends BaseFragment<WebAuthBinding> {
         Bundle bundle = new Bundle();
         bundle.putBoolean(IS_SETUP_VAULT, true);
         navigate(R.id.action_webAuthFragment_to_setPasswordFragment, bundle);
+    }
+
+
+    private void initScanResult() {
+        ViewModelProviders.of(mActivity).get(ScannerViewModel.class)
+                .setState(new ScannerState(Collections.singletonList(ScanResultTypes.UR_BYTES)) {
+                    @Override
+                    public void handleScanResult(ScanResult result) throws Exception {
+                        if (handleWebAuth(result)) return;
+                        throw new UnknowQrCodeException("Unknow qrcode");
+                    }
+
+                    @Override
+                    public boolean handleException(Exception e) {
+                        e.printStackTrace();
+                        mFragment.alert(getString(R.string.invalid_webauth_qrcode_hint));
+                        return true;
+                    }
+
+                    private boolean handleWebAuth(ScanResult result) throws JSONException {
+                        JSONObject object = new JSONObject(new String((byte[]) result.resolve(), StandardCharsets.UTF_8));
+                        JSONObject webAuth = object.optJSONObject("data");
+                        if (TextUtils.equals(Objects.requireNonNull(webAuth).optString("type"), "webAuth")) {
+                            String webAuthData = webAuth.getString("data");
+                            Bundle bundle = new Bundle();
+                            bundle.putString(WEB_AUTH_DATA, webAuthData);
+                            bundle.putBoolean(IS_SETUP_VAULT, true);
+                            mFragment.navigate(R.id.action_to_webAuthResultFragment, bundle);
+                            return true;
+                        }
+                        return false;
+                    }
+                });
     }
 }
