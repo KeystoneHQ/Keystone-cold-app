@@ -85,7 +85,7 @@ public final class CaptureHandler extends Handler {
                 break;
             case Constant.DECODE_FAILED:
                 state = State.PREVIEW;
-                cameraManager.requestPreviewFrame(decodeThread.getHandler(),Constant.DECODE);
+                cameraManager.requestPreviewFrame(decodeThread.getHandler(), Constant.DECODE);
                 break;
             case Constant.RETURN_SCAN_RESULT:
                 break;
@@ -93,10 +93,10 @@ public final class CaptureHandler extends Handler {
     }
 
     private void tryDecodeAsUR(String text) {
-        sExecutor.submit(()->{
+        sExecutor.submit(() -> {
             boolean canReceive;
             try {
-               canReceive = decoder.receivePart(text);
+                canReceive = decoder.receivePart(text);
             } catch (Exception e) {
                 e.printStackTrace();
                 canReceive = false;
@@ -107,8 +107,8 @@ public final class CaptureHandler extends Handler {
                     if (decoder.getResult().type == ResultType.SUCCESS) {
                         try {
                             byte[] data = decoder.getResult().ur.toBytes();
-                            decodeComplete(Hex.toHexString(data), QREncoding.UR );
-                        } catch (UR.InvalidCBORException e) {
+                            decodeComplete(Hex.toHexString(data), QREncoding.UR);
+                        } catch (UR.InvalidCBORException | IllegalArgumentException e) {
                             e.printStackTrace();
                             decodeComplete(text, QREncoding.PLAINTEXT);
                         }
@@ -121,7 +121,7 @@ public final class CaptureHandler extends Handler {
                     host.handleProgressPercent(decoder.getEstimatedPercentComplete());
                     cameraManager.requestPreviewFrame(decodeThread.getHandler(), Constant.DECODE);
                 }
-                return ;
+                return;
             } else {
                 // in UR scan progress and receive a invalid part
                 if (decoder.getProcessedPartsCount() != 0) {
@@ -134,7 +134,7 @@ public final class CaptureHandler extends Handler {
     }
 
     private void decodeComplete(String text, QREncoding codec) {
-        AppExecutors.getInstance().mainThread().execute(()->{
+        AppExecutors.getInstance().mainThread().execute(() -> {
             state = State.SUCCESS;
             host.handleDecode(text, codec);
         });

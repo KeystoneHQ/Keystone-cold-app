@@ -85,7 +85,14 @@ public final class CaptureHandler extends Handler {
 
     private void tryDecode(String text) {
         sExecutor.submit(() -> {
-            if (decoder.receivePart(text)) {
+            boolean canReceive;
+            try {
+                canReceive = decoder.receivePart(text);
+            } catch (Exception e) {
+                e.printStackTrace();
+                canReceive = false;
+            }
+            if (canReceive) {
                 //done scan
                 if (decoder.getResult() != null) {
                     if (decoder.getResult().type == ResultType.SUCCESS) {
