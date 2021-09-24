@@ -66,6 +66,7 @@ import com.keystone.cold.viewmodel.exceptions.UnsupportedSubstrateTxException;
 import com.keystone.cold.viewmodel.exceptions.XfpNotMatchException;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
@@ -295,10 +296,13 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 
     private void scanQrCode() {
         ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);
-        scannerViewModel.setState(new ScannerState(Arrays.asList(ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_BYTES, ScanResultTypes.UOS)) {
+        scannerViewModel.setState(new ScannerState(Arrays.asList(ScanResultTypes.PLAIN_TEXT,
+                ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_BYTES, ScanResultTypes.UOS)) {
             @Override
             public void handleScanResult(ScanResult result) throws Exception {
-                if (result.getType().equals(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
+                if (result.getType().equals(ScanResultTypes.PLAIN_TEXT)) {
+                    throw new UnknowQrCodeException("unknown transaction!");
+                } else if (result.getType().equals(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
                     EthSignRequest ethSignRequest = (EthSignRequest) result.resolve();
                     Bundle bundle = new Bundle();
                     ByteBuffer uuidBuffer = ByteBuffer.wrap(ethSignRequest.getRequestId());
@@ -376,6 +380,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 } else if (e instanceof UnknownSubstrateChainException) {
                     mFragment.alert(getString(R.string.unknown_substrate_chain_title),
                             getString(R.string.unknown_substrate_chain_content));
+                    return true;
+                } else if (e instanceof JSONException) {
+                    mFragment.alert(getString(R.string.unresolve_tx), getString(R.string.unresolve_tx_hint, watchWallet.getWalletName(mActivity)));
                     return true;
                 }
                 return false;

@@ -17,6 +17,13 @@
 
 package com.keystone.cold.viewmodel;
 
+import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.HD_PATH;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.REQUEST_ID;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.SIGN_DATA;
+import static com.keystone.cold.ui.fragment.main.keystone.TxConfirmFragment.KEY_TX_DATA;
+import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
+
 import android.app.Application;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -26,6 +33,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.exception.CoinNotFindException;
@@ -38,17 +46,11 @@ import com.keystone.cold.protocol.parser.ProtoParser;
 import com.keystone.cold.ui.fragment.main.QRCodeScanFragment;
 import com.keystone.cold.viewmodel.exceptions.UnknowQrCodeException;
 import com.keystone.cold.viewmodel.exceptions.XfpNotMatchException;
+import com.keystone.cold.viewmodel.tx.XummTxConfirmViewModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
-
-import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
-import static com.keystone.cold.ui.fragment.main.AssetFragment.HD_PATH;
-import static com.keystone.cold.ui.fragment.main.AssetFragment.REQUEST_ID;
-import static com.keystone.cold.ui.fragment.main.AssetFragment.SIGN_DATA;
-import static com.keystone.cold.ui.fragment.main.keystone.TxConfirmFragment.KEY_TX_DATA;
-import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
 
 public class QrScanViewModel extends AndroidViewModel {
 
@@ -56,6 +58,7 @@ public class QrScanViewModel extends AndroidViewModel {
 
     private final boolean isSetupVault;
     private QRCodeScanFragment fragment;
+    private XummTxConfirmViewModel xummTxConfirmViewModel;
 
     private QrScanViewModel(@NonNull Application application, boolean isSetupVault) {
         super(application);
@@ -135,6 +138,9 @@ public class QrScanViewModel extends AndroidViewModel {
                         AppExecutors.getInstance().mainThread().execute(() -> fragment.handleException(e));
                     }
                 });
+                break;
+            default:
+                throw new InvalidTransactionException("unknown qr code type");
         }
     }
 
@@ -173,9 +179,27 @@ public class QrScanViewModel extends AndroidViewModel {
     }
 
     private void handleSignXrpTx(JSONObject object) {
-        Bundle bundle = new Bundle();
-        bundle.putString(KEY_TX_DATA, object.toString());
-        fragment.navigate(R.id.action_to_xrpTxConfirmFragment, bundle);
+        fragment.showLoading("");
+        if (xummTxConfirmViewModel == null) {
+            xummTxConfirmViewModel = ViewModelProviders.of(fragment).get(XummTxConfirmViewModel.class);
+        }
+        xummTxConfirmViewModel.parseXummTxData(object);
+        xummTxConfirmViewModel.getObservableTx().observe(fragment, txEntity -> {
+            if (txEntity != null) {
+                xummTxConfirmViewModel.getObservableTx().postValue(null);
+                xummTxConfirmViewModel.getObservableTx().removeObservers(fragment);
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_TX_DATA, object.toString());
+                fragment.navigate(R.id.action_to_xrpTxConfirmFragment, bundle);
+            }
+        });
+        xummTxConfirmViewModel.parseTxException().observe(fragment, e -> {
+            if (e != null) {
+                xummTxConfirmViewModel.parseTxException().postValue(null);
+                xummTxConfirmViewModel.parseTxException().removeObservers(fragment);
+                fragment.handleException(e);
+            }
+        });
     }
 
     private void logObject(JSONObject object) {

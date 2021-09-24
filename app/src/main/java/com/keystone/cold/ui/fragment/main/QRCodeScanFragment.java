@@ -33,6 +33,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.keystone.coinlib.coins.polkadot.UOS.Extrinsic;
 import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
 import com.keystone.coinlib.exception.CoinNotFindException;
+import com.keystone.coinlib.exception.InvalidAccountException;
 import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.exception.InvalidUOSException;
 import com.keystone.cold.R;
@@ -217,6 +218,7 @@ public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
 
     public void handleException(Exception e) {
         e.printStackTrace();
+        dismissLoading();
         if (e instanceof InvalidTransactionException || e instanceof InvalidUOSException) {
             alert(getString(R.string.unresolve_tx),
                     getString(R.string.unresolve_tx_hint,
@@ -229,6 +231,12 @@ public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
             alert(getString(R.string.xfp_not_match));
         } else if (e instanceof UnknowQrCodeException) {
             alert(getString(R.string.unsupported_qrcode));
+        } else if (e instanceof InvalidAccountException) {
+            ModalDialog.showCommonModal(mActivity,
+                    getString(R.string.account_not_match),
+                    getString(R.string.account_not_match_detail) ,
+                    getString(R.string.confirm),
+                    null);
         }
     }
 
