@@ -36,6 +36,8 @@ import com.keystone.coinlib.coins.AbsTx;
 import com.keystone.coinlib.coins.BTC.UtxoTx;
 import com.keystone.coinlib.coins.ETH.Eth;
 import com.keystone.coinlib.coins.ETH.EthImpl;
+import com.keystone.coinlib.coins.TRON.Tron;
+import com.keystone.coinlib.coins.TRON.TronImpl;
 import com.keystone.coinlib.coins.XRP.Xrp;
 import com.keystone.coinlib.coins.XRP.XrpImpl;
 import com.keystone.coinlib.coins.polkadot.DOT.Dot;
@@ -306,6 +308,10 @@ public class KeystoneTxViewModel extends Base {
             case "XRP":
                 Xrp xrp = new Xrp(new XrpImpl());
                 xrp.generateTransaction(transaction, callback, signer);
+                break;
+            case "TRON":
+                Tron tron = new Tron(new TronImpl());
+                tron.generateTransaction(transaction, callback, signer);
                 break;
             default:
                 AbsCoin coin = AbsCoin.newInstance(coinCode);
