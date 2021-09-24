@@ -33,13 +33,16 @@ import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.CommonModalBinding;
 import com.keystone.cold.ui.modal.ModalDialog;
+import com.keystone.cold.ui.modal.ProgressModalDialog;
 
 public abstract class BaseFragment<T extends ViewDataBinding> extends Fragment {
     private static final boolean DEBUG = false;
     private ModalDialog dialog;
+    private ProgressModalDialog progressModalDialog;
     protected final String TAG = getClass().getSimpleName();
 
     protected T mBinding;
@@ -137,20 +140,17 @@ public abstract class BaseFragment<T extends ViewDataBinding> extends Fragment {
     }
 
     public void navigateUp() {
+        dismissLoading();
         NavHostFragment.findNavController(this).popBackStack();
     }
 
     public void navigate(@IdRes int id) {
-        try {
-            NavHostFragment.findNavController(this).navigate(id);
-        } catch (IllegalArgumentException|IllegalStateException e) {
-            e.printStackTrace();
-        }
-
+        navigate(id, null);
     }
 
     public void popBackStack(@IdRes int id, boolean inclusive) {
         try {
+            dismissLoading();
             NavHostFragment.findNavController(this).popBackStack(id, inclusive);
         } catch (IllegalArgumentException|IllegalStateException e) {
             e.printStackTrace();
@@ -159,6 +159,7 @@ public abstract class BaseFragment<T extends ViewDataBinding> extends Fragment {
 
     public void navigate(@IdRes int id, Bundle data) {
         try {
+            dismissLoading();
             NavHostFragment.findNavController(this).navigate(id, data);
         } catch (IllegalArgumentException|IllegalStateException e) {
             e.printStackTrace();
@@ -178,6 +179,7 @@ public abstract class BaseFragment<T extends ViewDataBinding> extends Fragment {
     }
 
     public void alert(String title, String message, Runnable run) {
+        dismissLoading();
         dialog = ModalDialog.newInstance();
         CommonModalBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
                 R.layout.common_modal, null, false);
@@ -197,5 +199,24 @@ public abstract class BaseFragment<T extends ViewDataBinding> extends Fragment {
         });
         dialog.setBinding(binding);
         dialog.show(mActivity.getSupportFragmentManager(), "failed");
+    }
+
+    public void showLoading(String tag) {
+        AppExecutors.getInstance().mainThread().execute(() -> {
+            if (progressModalDialog == null) {
+                progressModalDialog = ProgressModalDialog.newInstance();
+            } else {
+                progressModalDialog.dismiss();
+            }
+            progressModalDialog.show(mActivity.getSupportFragmentManager(), tag);
+        });
+    }
+
+    public void dismissLoading() {
+        AppExecutors.getInstance().mainThread().execute(() -> {
+            if (progressModalDialog != null) {
+                progressModalDialog.dismiss();
+            }
+        });
     }
 }
