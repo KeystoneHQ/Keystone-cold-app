@@ -28,6 +28,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.coinlib.coins.ETH.Eth;
 import com.keystone.coinlib.coins.ETH.GnosisHandler;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
@@ -189,6 +190,7 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
             if ("address".equals(item.type)) {
                 String ens = viewModel.loadEnsAddress(item.value);
                 String addressSymbol = viewModel.recognizeAddress(item.value);
+                item.value = Eth.Deriver.toChecksumAddress(item.value);
                 if (addressSymbol != null) {
                     item.value += String.format(" (%s)", addressSymbol);
                 } else if (!"to".equals(item.key)) {

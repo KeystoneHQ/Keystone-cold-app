@@ -81,7 +81,7 @@ public class EthBroadcastTxFragment extends BroadcastTxFragment {
         try {
             JSONObject messageSignatureJson = new JSONObject(messageSignature);
             byte[] signature = Hex.decode(messageSignatureJson.getString("signature"));
-            UUID uuid = UUID.fromString(messageSignatureJson.getString("signId"));
+            UUID uuid = UUID.fromString(messageSignatureJson.getString("requestId"));
             ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
             byteBuffer.putLong(uuid.getMostSignificantBits());
             byteBuffer.putLong(uuid.getLeastSignificantBits());

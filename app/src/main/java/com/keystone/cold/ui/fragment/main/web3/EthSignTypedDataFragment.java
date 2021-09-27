@@ -27,6 +27,7 @@ import android.view.View;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.coinlib.coins.ETH.Eth;
 import com.keystone.coinlib.coins.ETH.GnosisHandler;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
@@ -176,6 +177,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
             if (hasRepalcedAddress.contains(address)) continue;
             String ens = viewModel.loadEnsAddress(address);
             String symbol = viewModel.recognizeAddress(address);
+            address = Eth.Deriver.toChecksumAddress(address);
             StringBuilder result = new StringBuilder();
             if (!TextUtils.isEmpty(ens)) {
                 result.append(String.format("<%s>\n", ens));

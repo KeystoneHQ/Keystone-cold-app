@@ -31,6 +31,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.coinlib.coins.ETH.Eth;
 import com.keystone.coinlib.coins.ETH.GnosisHandler;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
@@ -106,7 +107,8 @@ public class EthLegacyTxFragment extends BaseFragment<EthTxBinding> {
     private void showQrCode() {
         try {
             byte[] signature = Hex.decode(genericETHTxEntity.getSignature());
-            UUID uuid = UUID.fromString(genericETHTxEntity.getSignId());
+            JSONObject addition = new JSONObject(genericETHTxEntity.getAddition());
+            UUID uuid = UUID.fromString(addition.optString("requestId"));
             ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
             byteBuffer.putLong(uuid.getMostSignificantBits());
             byteBuffer.putLong(uuid.getLeastSignificantBits());
@@ -119,12 +121,6 @@ public class EthLegacyTxFragment extends BaseFragment<EthTxBinding> {
     }
 
     private void updateAbiView(JSONObject abi) {
-        JSONObject signData = null;
-        try {
-            signData = new JSONObject(genericETHTxEntity.getSignedHex());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
         if (abi != null) {
             if (coinListViewModel.isFromTFCard()) {
                 mBinding.ethTx.tfcardTip.setVisibility(View.VISIBLE);
@@ -135,19 +131,21 @@ public class EthLegacyTxFragment extends BaseFragment<EthTxBinding> {
             addViewToData(isUniswap, itemList);
             mBinding.ethTx.data.setVisibility(View.VISIBLE);
             mBinding.ethTx.undecodedData.setVisibility(View.GONE);
-            if (signData != null) {
-                if (signData.optBoolean("isFromTFCard")) {
+            try {
+                if (new JSONObject(genericETHTxEntity.getAddition()).optBoolean("isFromTFCard")) {
                     mBinding.ethTx.tfcardTip.setVisibility(View.VISIBLE);
                 }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         } else {
-            if (signData != null && !TextUtils.isEmpty(signData.optString("inputData"))) {
-                mBinding.ethTx.data.setVisibility(View.GONE);
-                mBinding.ethTx.undecodedData.setVisibility(View.VISIBLE);
-                mBinding.ethTx.inputData.setText("0x" + signData.optString("inputData"));
-            } else {
+            if (TextUtils.isEmpty(genericETHTxEntity.getMemo())) {
                 mBinding.ethTx.data.setVisibility(View.GONE);
                 mBinding.ethTx.undecodedData.setVisibility(View.GONE);
+            } else {
+                mBinding.ethTx.data.setVisibility(View.GONE);
+                mBinding.ethTx.undecodedData.setVisibility(View.VISIBLE);
+                mBinding.ethTx.inputData.setText("0x" + genericETHTxEntity.getMemo());
             }
         }
     }
@@ -169,6 +167,7 @@ public class EthLegacyTxFragment extends BaseFragment<EthTxBinding> {
             if ("address".equals(item.type)) {
                 String ens = viewModel.loadEnsAddress(item.value);
                 String addressSymbol = viewModel.recognizeAddress(item.value);
+                item.value = Eth.Deriver.toChecksumAddress(item.value);
                 if (addressSymbol != null) {
                     item.value += String.format(" (%s)", addressSymbol);
                 } else if (!"to".equals(item.key)) {

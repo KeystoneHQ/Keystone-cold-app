@@ -46,7 +46,6 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.db.entity.AddressEntity;
-import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
 
 import org.json.JSONArray;
@@ -65,7 +64,7 @@ public class Web3TxViewModel extends Base {
     private String hdPath;
     private int chainId;
 
-    private String signId;
+    private String requestId;
     private String signature;
 
     private JSONArray tokensMap;
@@ -173,7 +172,7 @@ public class Web3TxViewModel extends Base {
             try {
                 txHex = bundle.getString(SIGN_DATA);
                 hdPath = bundle.getString(HD_PATH);
-                signId = bundle.getString(REQUEST_ID);
+                requestId = bundle.getString(REQUEST_ID);
                 JSONObject ethTx = EthImpl.decodeTransaction(txHex, () -> isFromTFCard = true);
                 if (ethTx == null) {
                     observableEthTx.postValue(null);
@@ -201,7 +200,7 @@ public class Web3TxViewModel extends Base {
         AppExecutors.getInstance().diskIO().execute(() -> {
             try {
                 txHex = bundle.getString(SIGN_DATA);
-                signId = bundle.getString(REQUEST_ID);
+                requestId = bundle.getString(REQUEST_ID);
                 hdPath = bundle.getString(HD_PATH);
                 JSONObject ethTx = EthImpl.decodeEIP1559Transaction(txHex, () -> isFromTFCard = true);
                 if (ethTx == null) {
@@ -231,14 +230,14 @@ public class Web3TxViewModel extends Base {
             try {
                 String typedDataHex = bundle.getString(SIGN_DATA);
                 hdPath = bundle.getString(HD_PATH);
-                signId = bundle.getString(REQUEST_ID);
+                requestId = bundle.getString(REQUEST_ID);
                 String fromAddress = getFromAddress(hdPath);
                 messageData = new String(Hex.decode(typedDataHex), StandardCharsets.UTF_8);
                 //LegacyTypedData is a JSON Array;
                 isLegacyTypedData = messageData.startsWith("[");
                 JSONObject object = new JSONObject();
                 object.put("hdPath", hdPath);
-                object.put("signId", signId);
+                object.put("requestId", requestId);
                 object.put("isLegacy", isLegacyTypedData);
                 object.put("data", messageData);
                 object.put("fromAddress", fromAddress);
@@ -262,12 +261,12 @@ public class Web3TxViewModel extends Base {
         AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 hdPath = bundle.getString(HD_PATH);
-                signId = bundle.getString(REQUEST_ID);
+                requestId = bundle.getString(REQUEST_ID);
                 messageData = bundle.getString(SIGN_DATA);
                 String fromAddress = getFromAddress(hdPath);
                 JSONObject object = new JSONObject();
                 object.put("hdPath", hdPath);
-                object.put("signId", signId);
+                object.put("requestId", requestId);
                 object.put("data", messageData);
                 object.put("fromAddress", fromAddress);
                 observableObject.postValue(object);
@@ -387,7 +386,7 @@ public class Web3TxViewModel extends Base {
         JSONObject signed = new JSONObject();
         try {
             signed.put("signature", signature);
-            signed.put("signId", signId);
+            signed.put("requestId", requestId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -403,6 +402,7 @@ public class Web3TxViewModel extends Base {
             genericETHTxEntity.setSignature(signatureHex);
             JSONObject addition = new JSONObject();
             addition.put("isFromTFCard", isFromTFCard);
+            addition.put("requestId", requestId);
             genericETHTxEntity.setAddition(addition.toString());
         } catch (JSONException e) {
             e.printStackTrace();
