@@ -237,7 +237,7 @@ public class Web3TxViewModel extends Base {
                 isLegacyTypedData = messageData.startsWith("[");
                 JSONObject object = new JSONObject();
                 object.put("hdPath", hdPath);
-                object.put("signId", requestId);
+                object.put("requestId", requestId);
                 object.put("isLegacy", isLegacyTypedData);
                 object.put("data", messageData);
                 object.put("fromAddress", fromAddress);
@@ -266,7 +266,7 @@ public class Web3TxViewModel extends Base {
                 String fromAddress = getFromAddress(hdPath);
                 JSONObject object = new JSONObject();
                 object.put("hdPath", hdPath);
-                object.put("signId", requestId);
+                object.put("requestId", requestId);
                 object.put("data", messageData);
                 object.put("fromAddress", fromAddress);
                 observableObject.postValue(object);
