@@ -17,6 +17,9 @@
 
 package com.keystone.coinlib.coins.ETH;
 
+import static com.keystone.coinlib.Util.cleanHexPrefix;
+import static com.keystone.coinlib.Util.sha3String;
+
 import android.text.TextUtils;
 
 import com.keystone.coinlib.coins.AbsCoin;
@@ -35,9 +38,8 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-
-import static com.keystone.coinlib.Util.cleanHexPrefix;
-import static com.keystone.coinlib.Util.sha3String;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Eth extends AbsCoin implements Coin {
 
@@ -157,6 +159,9 @@ public class Eth extends AbsCoin implements Coin {
         }
 
         public static String toChecksumAddress(String address) {
+            if (hasUpperCase(address)) {
+                return address;
+            }
             String lowercaseAddress = cleanHexPrefix(address).toLowerCase();
             String addressHash = cleanHexPrefix(sha3String(lowercaseAddress));
 
@@ -171,8 +176,13 @@ public class Eth extends AbsCoin implements Coin {
                     result.append(lowercaseAddress.charAt(i));
                 }
             }
-
             return result.toString();
+        }
+
+        public static boolean hasUpperCase(String address) {
+            String regex = ".*[A-F]+.*";
+            Matcher matcher = Pattern.compile(regex).matcher(address);
+            return matcher.matches();
         }
     }
 }
