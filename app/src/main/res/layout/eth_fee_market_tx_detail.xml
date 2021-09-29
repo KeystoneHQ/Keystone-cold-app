@@ -278,7 +278,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="14dp"
-                    android:text="Estimated gas fee"
+                    android:text="Max Priority fee"
                     android:textColor="@color/white40"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -298,7 +298,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
-                    android:text="Max Priority fee (0000) * Gas limit (0000)"
+                    android:text="Max Priority fee () * Gas limit ()"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -342,7 +342,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
-                    android:text="Max fee (0000) * Gas limit (0000) "
+                    android:text="Max fee () * Gas limit () "
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     android:textStyle="bold" />
