@@ -21,6 +21,7 @@ package com.keystone.cold.ui.fragment.main.web3;
 
 import android.text.TextUtils;
 
+import com.keystone.coinlib.coins.ETH.Eth;
 import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 
 import org.json.JSONArray;
@@ -85,6 +86,7 @@ public class AbiItemAdapter {
                     String address = arr.getString(j);
                     String ens = viewModel.loadEnsAddress(address);
                     String addressSymbol = viewModel.recognizeAddress(address);
+                    address = Eth.Deriver.toChecksumAddress(address);
                     if (!TextUtils.isEmpty(ens)) {
                         item.append(String.format("<%s>\n", ens));
                     }
