@@ -1,7 +1,5 @@
 package com.keystone.coinlib;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.keystone.coinlib.coins.AbsTx;
