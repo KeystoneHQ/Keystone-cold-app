@@ -36,6 +36,10 @@ import com.keystone.coinlib.coins.AbsTx;
 import com.keystone.coinlib.coins.BTC.UtxoTx;
 import com.keystone.coinlib.coins.ETH.Eth;
 import com.keystone.coinlib.coins.ETH.EthImpl;
+import com.keystone.coinlib.coins.TRON.Tron;
+import com.keystone.coinlib.coins.TRON.TronImpl;
+import com.keystone.coinlib.coins.XRP.Xrp;
+import com.keystone.coinlib.coins.XRP.XrpImpl;
 import com.keystone.coinlib.coins.polkadot.DOT.Dot;
 import com.keystone.coinlib.coins.polkadot.DOT.DotImpl;
 import com.keystone.coinlib.exception.InvalidPathException;
@@ -301,6 +305,14 @@ public class KeystoneTxViewModel extends Base {
 //                Etc etc = new Etc(new EthImpl(Etc.CHAIN_ID));
 //                etc.generateTransaction(transaction, callback, signer);
 //                break;
+            case "XRP":
+                Xrp xrp = new Xrp(new XrpImpl());
+                xrp.generateTransaction(transaction, callback, signer);
+                break;
+            case "TRON":
+                Tron tron = new Tron(new TronImpl());
+                tron.generateTransaction(transaction, callback, signer);
+                break;
             default:
                 AbsCoin coin = AbsCoin.newInstance(coinCode);
                 Objects.requireNonNull(coin).generateTransaction(transaction, callback, signer);
