@@ -40,6 +40,7 @@ import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.PASSWORD;
 public class SetupVaultActivity extends FullScreenActivity {
 
     public boolean isSetupVault;
+    private SetupVaultViewModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class SetupVaultActivity extends FullScreenActivity {
 
         if (getIntent() != null) {
             String password = getIntent().getStringExtra(PASSWORD);
-            SetupVaultViewModel model = ViewModelProviders.of(this).get(SetupVaultViewModel.class);
+            model = ViewModelProviders.of(this).get(SetupVaultViewModel.class);
             model.setPassword(password);
         }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -69,6 +70,28 @@ public class SetupVaultActivity extends FullScreenActivity {
         }
         if (!isSetupVault) {
             graph.setStartDestination(R.id.setupVaultFragment);
+        } else {
+            switch (model.getVaultCreateStep()) {
+                case SetupVaultViewModel.VAULT_CREATE_STEP_SET_PASSWORD: {
+                    graph.setStartDestination(R.id.setPasswordFragment);
+                    break;
+                }
+                case SetupVaultViewModel.VAULT_CREATE_STEP_FIRMWARE_UPGRADE: {
+                    graph.setStartDestination(R.id.firmwareUpgradeFragment);
+                    break;
+                }
+                case SetupVaultViewModel.VAULT_CREATE_STEP_WRITE_MNEMONIC: {
+                    graph.setStartDestination(R.id.setupVaultFragment);
+                    break;
+                }
+                case SetupVaultViewModel.VAULT_CREATE_STEP_CHOOSE_APP: {
+                    graph.setStartDestination(R.id.chooseWatchWalletFragment);
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
         }
         navHostFragment.getNavController().setGraph(graph);
     }

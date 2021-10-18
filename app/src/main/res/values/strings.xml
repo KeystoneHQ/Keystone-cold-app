@@ -207,6 +207,7 @@
     <string name="secret_modal_msg">Anyone with your recovery phrase has full access to your cryptocurrency. Please make sure there are no onlookers or cameras when you record your recovery phrase.</string>
     <string name="select_mnemonic_count">Recovery Phrase Length</string>
     <string name="set_password">Set Password</string>
+    <string name="firmware_upgrade">Firmware Upgrade</string>
     <string name="text_password_required">Must contain at least 10 characters and include upper and lower case letters and digits. Symbols are allowed. Case sensitive.</string>
     <string name="guide_completed_title">Congratulations! \nSetup is now complete!</string>
     <string name="guide_completed_remind"><![CDATA[You can create Passphrase(Hidden Wallet) or reset your password in Settings. \n Read the enclosed Quick Guide or visit our website to learn more: <br> <font color="#00cdc3"><u>https://keyst.one</u><font/>]]></string>

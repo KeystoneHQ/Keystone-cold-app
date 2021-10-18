@@ -221,7 +221,7 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
                         action = () -> {
                             Bundle data = new Bundle();
                             data.putBoolean(IS_SETUP_VAULT, true);
-                            navigate(R.id.action_setPasswordFragment_to_setupVaultFragment, data);
+                            navigate(R.id.action_to_firmwareUpgradeFragment, data);
                         };
                     } else {
                         handleSeStateAbnormal(mActivity);

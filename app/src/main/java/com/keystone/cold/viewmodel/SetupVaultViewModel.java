@@ -35,6 +35,7 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.BuildConfig;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.callables.GetRandomEntropyCallable;
 import com.keystone.cold.callables.GetVaultIdCallable;
@@ -75,6 +76,15 @@ public class SetupVaultViewModel extends AndroidViewModel {
     public static final int VAULT_STATE_CREATED = 2;
     public static final int VAULT_STATE_CREATING_FAILED = 3;
 
+    public static final int VAULT_CREATE_STEP_WEB_AUTH = 0;
+    public static final int VAULT_CREATE_STEP_SET_PASSWORD = 1;
+    public static final int VAULT_CREATE_STEP_FIRMWARE_UPGRADE = 2;
+    public static final int VAULT_CREATE_STEP_WRITE_MNEMONIC = 3;
+    public static final int VAULT_CREATE_STEP_CHOOSE_APP = 4;
+    public static final int VAULT_CREATE_STEP_DONE = 5;
+
+    public static final String VAULT_CREATE_STEP = "vault_create_step";
+
     private final ObservableField<String> pwd1 = new ObservableField<>("");
     private final ObservableField<String> pwd2 = new ObservableField<>("");
     private final MutableLiveData<String> webAuthCode = new MutableLiveData<>(null);
@@ -101,7 +111,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
         AppExecutors.getInstance().diskIO().execute(() -> {
             Bundle bundle = getApplication().getContentResolver().call(
                     Uri.parse("content://settings"), "web_auth_priv_key", null, null);
-            String rsaPrivKey = bundle == null? "null" :  bundle.getString("key");
+            String rsaPrivKey = bundle == null ? "null" : bundle.getString("key");
             String authCode = new WebAuthCallableUpgrade(Base64.decode(data),
                     rsaPrivKey,
                     Hex.decode(BuildConfig.WEB_AUTH_R1_PUBLIC_KEY)).call();
@@ -124,6 +134,14 @@ public class SetupVaultViewModel extends AndroidViewModel {
 
     public MutableLiveData<Integer> getVaultCreateState() {
         return vaultCreateState;
+    }
+
+    public Integer getVaultCreateStep() {
+        return Utilities.getVaultCreateStep(this.getApplication());
+    }
+
+    public void setVaultCreateStep(Integer step) {
+        Utilities.setVaultCreateStep(getApplication(), step);
     }
 
     public ObservableField<String> getPwd1() {
@@ -188,7 +206,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
             try {
                 byte[] masterSeed = new SharedSecret().combineWithoutDecrypt(shares.toArray(new String[0]));
                 vaultCreateState.postValue(VAULT_STATE_CREATING);
-                if(new WriteMnemonicCallable(masterSeed,
+                if (new WriteMnemonicCallable(masterSeed,
                         firstShare.id, firstShare.iteration_exponent, password).call()) {
                     vaultId = new GetVaultIdCallable().call();
                     mRepository.clearDb();
@@ -316,7 +334,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
     public void resetSharding() {
         sequence = 0;
         isShardingMnemonic = false;
-        if (shares!= null) {
+        if (shares != null) {
             shares.clear();
         }
         firstShare = null;
@@ -350,7 +368,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
     public void generateMnemonicFromDiceRolls(byte[] diceRolls) {
         //Use the same algorithm as https://iancoleman.io/bip39/
         StringBuilder rolls = new StringBuilder();
-        for (byte b: diceRolls) {
+        for (byte b : diceRolls) {
             rolls.append(b % 6);
         }
         String entropy = Hex.toHexString(Objects.requireNonNull(HashUtil.sha256(rolls.toString())));

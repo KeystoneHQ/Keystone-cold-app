@@ -33,6 +33,7 @@ import com.keystone.cold.ui.modal.ModalDialog;
 import static android.content.Context.MODE_PRIVATE;
 import static com.keystone.cold.ui.fragment.main.web3.EthTxConfirmFragment.PREFERENCE_KEY_VISITS;
 import static com.keystone.cold.ui.fragment.setting.FingerprintPreferenceFragment.FINGERPRINT_UNLOCK;
+import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_CREATE_STEP;
 
 public class Utilities {
     public static final String PREFERENCE_SECRET = "secret";
@@ -223,5 +224,15 @@ public class Utilities {
     public static void setVisitsTimes(Context context, int visits) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
         sp.edit().putInt(PREFERENCE_KEY_VISITS, visits).apply();
+    }
+
+    public static void setVaultCreateStep(Context context, int step) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        sp.edit().putInt(VAULT_CREATE_STEP, step).apply();
+    }
+
+    public static Integer getVaultCreateStep(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        return sp.getInt(VAULT_CREATE_STEP, 0);
     }
 }

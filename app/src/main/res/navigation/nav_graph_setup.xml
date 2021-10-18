@@ -132,7 +132,16 @@
         android:label="SetPasswordFragment"
         tools:layout="@layout/set_password">
         <action
-            android:id="@+id/action_setPasswordFragment_to_setupVaultFragment"
+            android:id="@+id/action_to_firmwareUpgradeFragment"
+            app:destination="@id/firmwareUpgradeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/firmwareUpgradeFragment"
+        android:name="com.keystone.cold.ui.fragment.setup.FirmwareUpgradeFragment"
+        android:label="FirmwareUpgradeFragment"
+        tools:layout="@layout/setup_firmware_upgrade">
+        <action
+            android:id="@+id/action_to_setupVaultFragment"
             app:destination="@id/setupVaultFragment" />
     </fragment>
     <fragment

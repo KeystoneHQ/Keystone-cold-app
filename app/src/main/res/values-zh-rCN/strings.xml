@@ -182,6 +182,7 @@
     <string name="secret_modal_msg">任何人获得了助记词，意味着获取了您的资产，请确保周围无人，无摄像头。</string>
     <string name="select_mnemonic_count">选择助记词数量</string>
     <string name="set_password">设置密码</string>
+    <string name="firmware_upgrade">固件升级</string>
     <string name="text_password_required">至少10个字符；必须同时包含大、小写字母和数字；可包含常用特殊字符</string>
     <string name="guide_completed_title">恭喜！铠石钱包已完成设置，\n  可以开始使用了！</string>
     <string name="guide_completed_remind"><![CDATA[更多钱包设置可点击菜单-设置，如手势解锁，创建Passphrase钱包。了解更多功能，请访问：\n <font color="#00cdc3">https://keyst.one<font/>]]></string>
