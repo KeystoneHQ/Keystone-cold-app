@@ -20,6 +20,7 @@ package com.keystone.cold.ui.fragment.main;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
 import static com.keystone.cold.ui.fragment.main.TxFragment.KEY_TX_ID;
+import static com.keystone.cold.viewmodel.ElectrumViewModel.ELECTRUM_SIGN_ID;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -34,8 +35,10 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.keystone.cold.R;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.TxListBinding;
 import com.keystone.cold.databinding.TxListItemBinding;
+import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.model.Tx;
 import com.keystone.cold.ui.common.FilterableBaseBindingAdapter;
 import com.keystone.cold.ui.fragment.BaseFragment;
@@ -49,6 +52,7 @@ import org.json.JSONObject;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class TxListFragment extends BaseFragment<TxListBinding> {
 
@@ -109,9 +113,41 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
                     }
                 }
             };
+        } else {
+            viewModel.loadTxs(requireArguments().getString(KEY_COIN_ID))
+                    .observe(this, txEntities -> {
+                        txEntityComparator = (o1, o2) -> {
+                            if (o1.getSignId().equals(o2.getSignId())) {
+                                return (int) (o2.getTimeStamp() - o1.getTimeStamp());
+                            } else if (ELECTRUM_SIGN_ID.equals(o1.getSignId())) {
+                                return -1;
+                            } else {
+                                return 1;
+                            }
+                        };
+                        txEntities = txEntities.stream()
+                                .filter(this::shouldShow)
+                                .sorted(txEntityComparator)
+                                .collect(Collectors.toList());
+                        adapter.setItems(txEntities);
+                    });
+            txCallback = tx -> {
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_TX_ID, tx.getTxId());
+                if (ELECTRUM_SIGN_ID.equals(tx.getSignId())) {
+                    navigate(R.id.action_to_electrumTxFragment, bundle);
+                } else if(WatchWallet.XRP_TOOLKIT_SIGN_ID.equals(tx.getSignId())){
+                    navigate(R.id.action_to_xummTxFragment, bundle);
+                } else if(WatchWallet.METAMASK_SIGN_ID.equals(tx.getSignId())){
+                    navigate(R.id.action_to_ethTxFragment, bundle);
+                }  else if(WatchWallet.POLKADOT_JS_SIGN_ID.equals(tx.getSignId())) {
+                    navigate(R.id.action_to_polkadotTxFragment, bundle);
+                }else {
+                    navigate(R.id.action_to_txFragment, bundle);
+                }
+            };
         }
         coinCode = requireArguments().getString(KEY_COIN_CODE);
-
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -125,6 +161,16 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
                 }
             }
         });
+    }
+
+    private boolean shouldShow(TxEntity tx) {
+        boolean shouldShow;
+        if (watchWallet.equals(WatchWallet.KEYSTONE)) {
+            shouldShow = !tx.getSignId().contains("_sign_id");
+        } else {
+            shouldShow = tx.getSignId().equals(watchWallet.getSignId());
+        }
+        return shouldShow && Utilities.getCurrentBelongTo(mActivity).equals(tx.getBelongTo());
     }
 
     @Override
