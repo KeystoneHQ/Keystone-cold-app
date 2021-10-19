@@ -95,6 +95,7 @@ public class MainApplication extends Application {
                 prefs.edit().putString(SETTING_CHOOSE_WATCH_WALLET, KEYSTONE.getWalletId()).apply();
                 break;
             case "1":
+            case "polkadotJs":
                 prefs.edit().putString(SETTING_CHOOSE_WATCH_WALLET, POLKADOT_JS.getWalletId()).apply();
                 break;
             case "2":
