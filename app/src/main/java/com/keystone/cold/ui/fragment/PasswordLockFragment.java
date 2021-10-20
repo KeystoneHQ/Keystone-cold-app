@@ -143,6 +143,7 @@ public class PasswordLockFragment extends BaseFragment<PasswordUnlockBinding> {
     }
 
     public static boolean verifyPasswordHash(String passwordHash) {
+        if(passwordHash.equals("")) return false;
         return new VerifyPasswordCallable(passwordHash).call();
     }
 }
