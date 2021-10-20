@@ -227,11 +227,9 @@ public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
             alert(getString(R.string.incorrect_qrcode));
         } else if (e instanceof CoinNotFindException) {
             alert(null, getString(R.string.unsupported_coin), null);
-        } else if (e instanceof XfpNotMatchException) {
-            alert(getString(R.string.xfp_not_match));
         } else if (e instanceof UnknowQrCodeException) {
             alert(getString(R.string.unsupported_qrcode));
-        } else if (e instanceof InvalidAccountException) {
+        } else if (e instanceof InvalidAccountException | e instanceof XfpNotMatchException ) {
             ModalDialog.showCommonModal(mActivity,
                     getString(R.string.account_not_match),
                     getString(R.string.account_not_match_detail) ,
@@ -301,7 +299,7 @@ public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
         if (title != null) {
             binding.title.setText(title);
         } else {
-            binding.title.setText(R.string.scan_failed);
+            binding.title.setText(R.string.invalid_data);
         }
         binding.subTitle.setText(message);
         binding.close.setVisibility(View.GONE);

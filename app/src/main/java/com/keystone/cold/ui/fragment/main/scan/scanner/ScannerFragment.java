@@ -209,7 +209,7 @@ public class ScannerFragment extends BaseFragment<ScannerFragmentBinding>
                     if (e instanceof UnExpectedQRException) {
                         alert(getString(R.string.unresolve_tx), getString(R.string.unresolve_tx_hint, watchWallet.getWalletName(mActivity)));
                     } else {
-                        alert(getString(R.string.scan_failed), getString(R.string.unsupported_qrcode));
+                        alert(getString(R.string.invalid_data), getString(R.string.unsupported_qrcode));
                     }
                 }
             }
@@ -232,7 +232,7 @@ public class ScannerFragment extends BaseFragment<ScannerFragmentBinding>
                     if (e instanceof UnExpectedQRException) {
                         alert(getString(R.string.unresolve_tx), getString(R.string.unresolve_tx_hint, watchWallet.getWalletName(mActivity)));
                     } else {
-                        alert(getString(R.string.scan_failed), getString(R.string.unsupported_qrcode));
+                        alert(getString(R.string.invalid_data), getString(R.string.unsupported_qrcode));
                     }
                 }
             }
@@ -255,7 +255,7 @@ public class ScannerFragment extends BaseFragment<ScannerFragmentBinding>
                     if (e instanceof UnExpectedQRException) {
                         alert(getString(R.string.unresolve_tx), getString(R.string.unresolve_tx_hint, watchWallet.getWalletName(mActivity)));
                     } else {
-                        alert(getString(R.string.scan_failed), getString(R.string.unsupported_qrcode));
+                        alert(getString(R.string.invalid_data), getString(R.string.unsupported_qrcode));
                     }
                 }
             }

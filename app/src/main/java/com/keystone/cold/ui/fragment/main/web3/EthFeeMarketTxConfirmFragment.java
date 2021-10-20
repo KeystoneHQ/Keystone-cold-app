@@ -115,7 +115,7 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
         if (ex != null) {
             ex.printStackTrace();
             ModalDialog.showCommonModal(mActivity,
-                    getString(R.string.scan_failed),
+                    getString(R.string.invalid_data),
                     getString(R.string.incorrect_tx_data),
                     getString(R.string.confirm),
                     null);
