@@ -89,7 +89,7 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
         super.onDetach();
     }
 
-    private void registerListeners () {
+    private void registerListeners() {
         mBinding.pwd1.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 if (!paused) {
@@ -152,10 +152,10 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
         mBinding.setViewModel(viewModel);
         Bundle bundle = getArguments();
         isSetupVault = bundle != null && bundle.getBoolean(IS_SETUP_VAULT);
-        currentPassword = bundle != null ? bundle.getString(PASSWORD): null;
-        mnemonic = bundle != null ? bundle.getString(MNEMONIC): null;
-        slip39MasterSeed = bundle != null ? bundle.getString(SLIP39_SEED): null;
-        slip39Id = bundle != null ? bundle.getInt(SLIP39_ID): 0;
+        currentPassword = bundle != null ? bundle.getString(PASSWORD) : null;
+        mnemonic = bundle != null ? bundle.getString(MNEMONIC) : null;
+        slip39MasterSeed = bundle != null ? bundle.getString(SLIP39_SEED) : null;
+        slip39Id = bundle != null ? bundle.getInt(SLIP39_ID) : 0;
         mBinding.pwd1.setFilters(new InputFilter[]{new InputFilter.LengthFilter(64)});
         mBinding.pwd2.setFilters(new InputFilter[]{new InputFilter.LengthFilter(64)});
 
@@ -216,13 +216,18 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
                 String password = Objects.requireNonNull(viewModel.getPwd1().get());
                 String passwordHash = Hex.toHexString(Objects.requireNonNull(HashUtil.twiceSha256(password)));
                 Runnable action;
+                boolean hasSetupFinished = Utilities.getVaultCreateStep(mActivity).equals(SetupVaultViewModel.VAULT_CREATE_STEP_DONE);
                 if (mActivity instanceof UnlockActivity) {
                     new ResetPasswordCallable(passwordHash, mnemonic, slip39MasterSeed, slip39Id).call();
                     action = () -> {
-                        Utilities.setPatternRetryTimes(mActivity,0);
+                        if (!hasSetupFinished) {
+                            Utilities.markPasswordSet(mActivity);
+                            viewModel.setPassword(passwordHash);
+                        }
+                        Utilities.setPatternRetryTimes(mActivity, 0);
                         mActivity.finish();
                     };
-                } else if(!isSetupVault) {
+                } else if (!isSetupVault) {
                     if (!TextUtils.isEmpty(currentPassword)) {
                         new ChangePasswordCallable(passwordHash, currentPassword).call();
                         action = this::navigateUp;

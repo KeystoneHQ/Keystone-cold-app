@@ -41,6 +41,7 @@ import com.keystone.cold.viewmodel.OneTimePasswordManager;
 
 import org.spongycastle.util.encoders.Hex;
 
+import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.Constants.IS_FORCE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_TITLE;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
@@ -108,9 +109,17 @@ public class PasswordLockFragment extends BaseFragment<PasswordUnlockBinding> {
         });
 
         Bundle bundle = new Bundle();
-        bundle.putString(KEY_TITLE, getString(R.string.verify_mnemonic));
-        bundle.putString(ACTION, PreImportFragment.ACTION_RESET_PWD);
-        mBinding.forget.setOnClickListener(v -> navigate(R.id.action_resetpassword_verifyMnemonic, bundle));
+
+        mBinding.forget.setOnClickListener(v -> {
+            if(hasVault) {
+                bundle.putString(KEY_TITLE, getString(R.string.verify_mnemonic));
+                bundle.putString(ACTION, PreImportFragment.ACTION_RESET_PWD);
+                navigate(R.id.action_resetpassword_verifyMnemonic, bundle);
+            }
+            else {
+                navigate(R.id.action_to_setPasswordFragment);
+            }
+        });
         Keyboard.show(mActivity, mBinding.passwordInput);
     }
 

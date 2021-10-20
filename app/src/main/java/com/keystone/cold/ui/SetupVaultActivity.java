@@ -19,7 +19,6 @@ package com.keystone.cold.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.AndroidRuntimeException;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
@@ -37,6 +36,7 @@ import java.util.Objects;
 
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.PASSWORD;
+import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.handleSeStateAbnormal;
 
 public class SetupVaultActivity extends FullScreenActivity {
 
@@ -99,7 +99,7 @@ public class SetupVaultActivity extends FullScreenActivity {
                     return;
                 }
                 default: {
-                    throw new AndroidRuntimeException("Invalid status: VAULT_CREATE_STEP should not be " + model.getVaultCreateStep());
+                    handleSeStateAbnormal(this);
                 }
             }
         }
