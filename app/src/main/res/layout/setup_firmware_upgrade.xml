@@ -34,42 +34,101 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <com.keystone.cold.ui.views.NewStepView
+            android:id="@+id/step"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:navigationIcon="@drawable/arrow_left"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34dp"
+            app:step="2" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="16dp"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            tools:ignore="RtlSymmetry">
 
             <TextView
-                android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/firmware_upgrade"
-                android:textColor="@android:color/white"
+                android:text="@string/firmware_upgrade1"
+                android:textColor="@color/white"
                 android:textSize="15sp"
-                tools:text="@string/firmware_upgrade" />
-        </androidx.appcompat.widget.Toolbar>
+                android:textStyle="bold" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginHorizontal="16dp"
-            android:background="@drawable/button_bg_pressed"
-            android:layout_marginTop="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:padding="5dp"
+                    android:src="@drawable/information" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/firmware_upgrade2"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:padding="5dp"
+                    android:src="@drawable/information" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/firmware_upgrade3"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <androidx.legacy.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.keystone.cold.ui.views.SpanedTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:lineSpacingExtra="8dp"
+                android:text="@string/firmware_upgrade4"
+                android:textColor="@color/white40"
+                android:textSize="13sp" />
 
             <Button
                 android:id="@+id/confirm"
                 style="@style/AcceptButton"
                 android:layout_width="match_parent"
-                android:enabled="true"
-                android:text="@string/complete"
-                android:textColor="@color/white"
-                android:textSize="12sp"
+                android:text="@string/firmware_upgrade_start" />
+
+            <Button
+                android:id="@+id/skip"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="6dp"
+                android:background="?attr/selectableItemBackground"
+                android:text="@string/skip"
+                android:textColor="@color/colorAccent"
+                android:textSize="14sp"
                 android:textStyle="bold" />
-        </RelativeLayout>
+        </LinearLayout>
 
 
     </LinearLayout>

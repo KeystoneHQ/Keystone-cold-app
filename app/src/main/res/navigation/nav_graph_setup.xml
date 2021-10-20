@@ -20,8 +20,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_main.xml"
-    app:startDestination="@id/webAuthFragment">
-
+    app:startDestination="@id/welcomeFragment">
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.keystone.cold.ui.fragment.setup.WelcomeFragment"
+        android:label="WelcomeFragment"
+        tools:layout="@layout/setup_welcome">
+        <action
+            android:id="@+id/action_to_webAuthFragment"
+            app:destination="@id/webAuthFragment"/>
+    </fragment>
     <fragment
         android:id="@+id/webAuthFragment"
         android:name="com.keystone.cold.ui.fragment.setup.WebAuthFragment"
@@ -94,7 +102,7 @@
             android:id="@id/action_to_manageCoinFragment"
             app:destination="@id/manageCoinFragment" />
         <action
-            android:id="@id/action_to_setupSyncFragment"
+            android:id="@id/action_to_setupWatchWalletFragment"
             app:destination="@id/SetupWatchWalletFragment" />
         <action
             android:id="@+id/action_to_generateMnemonicFragment"
@@ -257,7 +265,7 @@
             android:id="@id/action_to_manageCoinFragment"
             app:destination="@id/manageCoinFragment" />
         <action
-            android:id="@+id/action_to_setupSyncFragment"
+            android:id="@+id/action_to_setupWatchWalletFragment"
             app:destination="@id/SetupWatchWalletFragment" />
     </fragment>
     <fragment

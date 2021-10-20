@@ -40,6 +40,7 @@ public class Utilities {
     public static final String PREFERENCE_KEY_PASSWORD = "password";
     public static final String PREFERENCE_KEY_PATTERN = "pattern";
     public static final String PREFERENCE_KEY_VAULT_CREATED = "vault_created";
+    public static final String PREFERENCE_KEY_PASSWORD_SET = "password_set";
     public static final String PREFERENCE_KEY_LANGUAGE_SET = "language_set";
     public static final String PREFERENCE_KEY_VAULT_ID = "vault_id";
 
@@ -78,6 +79,16 @@ public class Utilities {
     public static void setVaultCreated(Activity activity) {
         SharedPreferences sp = activity.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
         sp.edit().putBoolean(PREFERENCE_KEY_VAULT_CREATED, true).apply();
+    }
+
+    public static boolean hasPasswordSet(Context activity) {
+        SharedPreferences sp = activity.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        return sp.getBoolean(PREFERENCE_KEY_PASSWORD_SET, false);
+    }
+
+    public static void setPasswordSet(Activity context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        sp.edit().putBoolean(PREFERENCE_KEY_PASSWORD_SET, true).apply();
     }
 
     public static void setLanguageSet(Activity activity) {

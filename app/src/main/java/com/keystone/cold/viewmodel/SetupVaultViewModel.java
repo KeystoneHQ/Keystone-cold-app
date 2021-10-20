@@ -18,10 +18,13 @@
 package com.keystone.cold.viewmodel;
 
 import android.app.Application;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
@@ -46,6 +49,7 @@ import com.keystone.cold.callables.WebAuthCallableUpgrade;
 import com.keystone.cold.callables.WriteMnemonicCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
+import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.util.HashUtil;
 
 import org.spongycastle.util.encoders.Base64;
@@ -99,7 +103,6 @@ public class SetupVaultViewModel extends AndroidViewModel {
     private String vaultId;
 
     private final DataRepository mRepository;
-    private String password;
     private String signature;
 
     public SetupVaultViewModel(@NonNull Application application) {
@@ -164,7 +167,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
 
     public void setPassword(String password) {
         if (TextUtils.isEmpty(password)) return;
-        this.password = password;
+        OneTimePasswordManager.getInstance().setPasswordHash(password);
     }
 
     public void setSignature(String signature) {
@@ -190,11 +193,10 @@ public class SetupVaultViewModel extends AndroidViewModel {
     public void writeMnemonic(String mnemonic) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             vaultCreateState.postValue(VAULT_STATE_CREATING);
-            if (new WriteMnemonicCallable(mnemonic, password).call()) {
+            if (new WriteMnemonicCallable(mnemonic, OneTimePasswordManager.getInstance().useAndDrop()).call()) {
                 vaultId = new GetVaultIdCallable().call();
                 mRepository.clearDb();
                 vaultCreateState.postValue(VAULT_STATE_CREATED);
-                password = null;
             } else {
                 vaultCreateState.postValue(VAULT_STATE_CREATING_FAILED);
             }
@@ -207,11 +209,10 @@ public class SetupVaultViewModel extends AndroidViewModel {
                 byte[] masterSeed = new SharedSecret().combineWithoutDecrypt(shares.toArray(new String[0]));
                 vaultCreateState.postValue(VAULT_STATE_CREATING);
                 if (new WriteMnemonicCallable(masterSeed,
-                        firstShare.id, firstShare.iteration_exponent, password).call()) {
+                        firstShare.id, firstShare.iteration_exponent, OneTimePasswordManager.getInstance().useAndDrop()).call()) {
                     vaultId = new GetVaultIdCallable().call();
                     mRepository.clearDb();
                     vaultCreateState.postValue(VAULT_STATE_CREATED);
-                    password = null;
                 } else {
                     vaultCreateState.postValue(VAULT_STATE_CREATING_FAILED);
                 }
@@ -243,7 +244,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
             if (TextUtils.isEmpty(passphrase)) {
                 success = new RestartSeCallable().call();
             } else {
-                success = new UpdatePassphraseCallable(passphrase, password, signature).call();
+                success = new UpdatePassphraseCallable(passphrase, OneTimePasswordManager.getInstance().useAndDrop(), signature).call();
             }
 
             try {
@@ -254,7 +255,6 @@ public class SetupVaultViewModel extends AndroidViewModel {
             if (success) {
                 vaultId = new GetVaultIdCallable().call();
                 deleteHiddenVaultData();
-                password = null;
                 signature = null;
                 vaultCreateState.postValue(VAULT_STATE_CREATED);
             } else {

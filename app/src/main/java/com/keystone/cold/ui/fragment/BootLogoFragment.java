@@ -37,8 +37,7 @@ public class BootLogoFragment extends BaseFragment<BootLogoBinding> {
     @Override
     protected void init(View view) {
         new Handler().postDelayed(()-> {
-            if (Utilities.hasLanguageSet(mActivity)
-                    && Utilities.hasVaultCreated(mActivity)) {
+            if (Utilities.hasLanguageSet(mActivity)) {
                 navigate(R.id.action_splash_to_securityCheck);
             } else {
                 navigate(R.id.action_splash_to_setupLanguage);

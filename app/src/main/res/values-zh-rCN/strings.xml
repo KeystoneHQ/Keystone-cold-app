@@ -15,7 +15,7 @@
   ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources >
+<resources>
     <string name="app_name">Keystone</string>
     <string name="action_scan_qr_code">Scan QR Code</string>
     <string name="drawer_menu_my_vault">我的铠石钱包</string>
@@ -55,15 +55,23 @@
     <string name="setting_vibrator">震动开关</string>
     <string name="setting_brightness">屏幕亮度</string>
     <string name="setting_screen_off_time">锁屏时间</string>
-    <string name="web_auth1"><![CDATA[1. 请打开 <font color="#00cdc3">https://keyst.one/auth<font/>；]]></string>
-    <string name="web_auth2"><![CDATA[2. 点击下方 <font color="#00cdc3">\"扫码验证\" <font/>按钮，扫描网站上的二维码；]]></string>
-    <string name="web_auth3">3.将扫描后的结果输入到网站，获取设备验证信息；</string>
-    <string name="web_auth4">4.如果扫描失败，您的设备可能已经被攻击，建议您停止使用该设备。</string>
+    <string name="web_auth1">1.点击下方按钮，扫描官网验证的二维码</string>
+    <string name="web_auth2">2.将扫描后的结果输入给网站</string>
+    <string name="web_auth3"><![CDATA[3.在网站上点击<font color="#00cdc3">"验证"<font/>获取结果]]></string>
+    <string name="web_auth4">如果扫描失败，您的设备可能已经被攻击，建议您停止使用该设备。</string>
+    <string name="web_auth5"><![CDATA[官网验证网站: <br> <font color="#00cdc3">https://keyst.one/setup/1<font/>]]></string>
+
+    <string name="firmware_upgrade1">为了使用新功能，建议您将固件升级到最新版本</string>
+    <string name="firmware_upgrade2">TF卡为FAT32格式，不超过512GB</string>
+    <string name="firmware_upgrade3">设备电量须超过70%</string>
+    <string name="firmware_upgrade4"><![CDATA[下载最新固件，请访问: <br> <font color="#00cdc3">https://keyst.one/setup/3<font/>]]></string>
+    <string name="firmware_upgrade_start">开始升级</string>
+
     <string name="skip">跳过</string>
     <string name="read_confirm"><![CDATA[我已阅读并同意 <u><font color="#00cdc3">\"服务条款\"<font/></u> ，和 <u><font color="#00cdc3">\"隐私政策\"<font/></u>]]></string>
     <string name="license">服务条款</string>
-    <string name="create_vault_hint"><![CDATA[1.您可以点击 <u><font color="#00cdc3">\"创建钱包\"<font/></u>，系统将为您新建一个全新的钱包]]></string>
-    <string name="import_vault_hint"><![CDATA[2.您也可以点击 <u><font color="#00cdc3">\"导入钱包\"<font/></u> ，通过助记词恢复已有的钱包]]></string>
+    <string name="create_vault_hint"><![CDATA[1.点击 <u><font color="#00cdc3">\"创建钱包\"<font/></u>按钮，将为您新建一个全新的钱包]]></string>
+    <string name="import_vault_hint"><![CDATA[2.点击 <u><font color="#00cdc3">\"导入钱包\"<font/></u>按钮，通过助记词恢复已有的钱包]]></string>
     <string name="setup_wallet_hint1">感谢您使用铠石钱包！</string>
     <string name="input_mnemonic_hint">请在下方表格中输入%d个助记词以恢复钱包</string>
     <string name="input_mnemonic">输入助记词</string>
@@ -92,11 +100,11 @@
     </string-array>
 
     <string-array name="step_label">
-        <item>"官网验证"</item>
-        <item>"密码设置"</item>
-        <item>"创建/导入钱包"</item>
-        <item>"创建观察钱包"</item>
-        <item>"开始使用"</item>
+        <item>官网验证</item>
+        <item>密码设置</item>
+        <item>固件升级</item>
+        <item>创建/导入钱包</item>
+        <item>选择配对应用</item>
     </string-array>
 
     <string name="sync_hint2"><![CDATA[铠石钱包移动端可在官网下载：<br><font color="#00cdc3"><u>https://keyst.one/app</u><font/><br>]]></string>
@@ -184,6 +192,10 @@
     <string name="set_password">设置密码</string>
     <string name="firmware_upgrade">固件升级</string>
     <string name="text_password_required">至少10个字符；必须同时包含大、小写字母和数字；可包含常用特殊字符</string>
+    <string name="welcome">欢迎使用铠石硬件钱包</string>
+    <string name="welcome_site"><![CDATA[请用电脑访问: <font color="#00cdc3"><u>https://keyst.one/setup</u><font/>]]></string>
+    <string name="welcome_text">我们将引导您对铠石硬件钱包进行初始化设置</string>
+    <string name="welcome_done">准备好了，开始</string>
     <string name="guide_completed_title">恭喜！铠石钱包已完成设置，\n  可以开始使用了！</string>
     <string name="guide_completed_remind"><![CDATA[更多钱包设置可点击菜单-设置，如手势解锁，创建Passphrase钱包。了解更多功能，请访问：\n <font color="#00cdc3">https://keyst.one<font/>]]></string>
     <string name="tx_id">交易ID</string>
@@ -400,7 +412,7 @@
         <item>Polkadot.js</item>
         <item>XRP Toolkit</item>
     </string-array>
-    <string-array name="watch_wallet_summury" >
+    <string-array name="watch_wallet_summury">
         <item>BTC、ETH等8条主链</item>
         <item>ETH</item>
         <item>DOT、KSM</item>

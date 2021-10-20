@@ -41,8 +41,6 @@ import com.keystone.cold.viewmodel.SharedDataViewModel;
 
 import org.spongycastle.util.encoders.Hex;
 
-import java.util.Objects;
-
 import iton.slip.secret.Share;
 import iton.slip.secret.SharedSecretException;
 import iton.slip.secret.words.Mnemonic;

@@ -36,6 +36,7 @@ import com.keystone.cold.databinding.WebAuthResultBinding;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
 import com.keystone.cold.util.DataCleaner;
+import com.keystone.cold.viewmodel.SetupVaultViewModel;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -111,6 +112,7 @@ public class WebAuthResultFragment extends SetupVaultBaseFragment<WebAuthResultB
 		if (isSetupVault) {
 			Bundle bundle = new Bundle();
 			bundle.putBoolean(IS_SETUP_VAULT, true);
+			viewModel.setVaultCreateStep(SetupVaultViewModel.VAULT_CREATE_STEP_SET_PASSWORD);
 			navigate(R.id.action_webAuthResultFragment_to_setPasswordFragment, bundle);
 		} else {
 			navigate(R.id.action_auth_to_home);

@@ -17,6 +17,7 @@
 
 package com.keystone.cold.ui.fragment.setup;
 
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -24,6 +25,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.SetupSyncBinding;
+import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.viewmodel.SyncViewModel;
 
 public class SetupSyncFragment extends SetupVaultBaseFragment<SetupSyncBinding> {
@@ -41,7 +43,9 @@ public class SetupSyncFragment extends SetupVaultBaseFragment<SetupSyncBinding> 
     }
 
     private void complete(View view) {
-        navigate(R.id.action_to_setupCompleteFragment);
+        Intent intent = new Intent(mActivity, MainActivity.class);
+        startActivity(intent);
+        mActivity.finish();
     }
 
     private void generateSyncData() {

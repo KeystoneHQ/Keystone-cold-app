@@ -24,6 +24,7 @@ import android.view.View;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.SetupFirmwareUpgradeBinding;
+import com.keystone.cold.viewmodel.SetupVaultViewModel;
 
 public class FirmwareUpgradeFragment extends SetupVaultBaseFragment<SetupFirmwareUpgradeBinding> {
 
@@ -36,12 +37,11 @@ public class FirmwareUpgradeFragment extends SetupVaultBaseFragment<SetupFirmwar
     protected void init(View view) {
         super.init(view);
 
-        mBinding.confirm.setOnClickListener((v) -> {
+        mBinding.skip.setOnClickListener((v) -> {
             Bundle data = new Bundle();
             data.putBoolean(IS_SETUP_VAULT, true);
+            viewModel.setVaultCreateStep(SetupVaultViewModel.VAULT_CREATE_STEP_WRITE_MNEMONIC);
             navigate(R.id.action_to_setupVaultFragment, data);
         });
-        mBinding.toolbar.setVisibility(View.GONE);
-
     }
 }

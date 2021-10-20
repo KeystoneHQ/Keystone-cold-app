@@ -40,7 +40,6 @@ import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.PASSWORD;
 public class SetupVaultActivity extends FullScreenActivity {
 
     public boolean isSetupVault;
-    private SetupVaultViewModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +49,7 @@ public class SetupVaultActivity extends FullScreenActivity {
 
         if (getIntent() != null) {
             String password = getIntent().getStringExtra(PASSWORD);
-            model = ViewModelProviders.of(this).get(SetupVaultViewModel.class);
+            SetupVaultViewModel model = ViewModelProviders.of(this).get(SetupVaultViewModel.class);
             model.setPassword(password);
         }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -71,6 +70,7 @@ public class SetupVaultActivity extends FullScreenActivity {
         if (!isSetupVault) {
             graph.setStartDestination(R.id.setupVaultFragment);
         } else {
+            SetupVaultViewModel model = ViewModelProviders.of(this).get(SetupVaultViewModel.class);
             switch (model.getVaultCreateStep()) {
                 case SetupVaultViewModel.VAULT_CREATE_STEP_SET_PASSWORD: {
                     graph.setStartDestination(R.id.setPasswordFragment);
@@ -93,7 +93,9 @@ public class SetupVaultActivity extends FullScreenActivity {
                 }
             }
         }
-        navHostFragment.getNavController().setGraph(graph);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(IS_SETUP_VAULT, true);
+        navHostFragment.getNavController().setGraph(graph, bundle);
     }
 
     @Override

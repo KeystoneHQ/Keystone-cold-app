@@ -26,10 +26,11 @@ import com.keystone.cold.R;
 import com.keystone.cold.databinding.SyncWatchWalletGuideBinding;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.viewmodel.SetupVaultViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 
 
-public class SyncWatchWalletGuide extends BaseFragment<SyncWatchWalletGuideBinding> {
+public class SyncWatchWalletGuide extends SetupVaultBaseFragment<SyncWatchWalletGuideBinding> {
 
     private WatchWallet watchWallet;
     private String coinCode;
@@ -45,15 +46,13 @@ public class SyncWatchWalletGuide extends BaseFragment<SyncWatchWalletGuideBindi
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         mBinding.toolbarTitle.setText(R.string.sync_watch_wallet);
         coinCode = requireArguments().getString("coinCode");
-        if (mActivity instanceof MainActivity) {
-            mBinding.skip.setOnClickListener( v -> {
-                startActivity(new Intent(mActivity, MainActivity.class));
-                mActivity.finish();
-            });
-        } else {
+        if (!(mActivity instanceof MainActivity)) {
             mBinding.skip.setText(R.string.sync_later);
-            mBinding.skip.setOnClickListener(v -> navigate(R.id.action_to_setupCompleteFragment));
         }
+        mBinding.skip.setOnClickListener(v -> {
+            startActivity(new Intent(mActivity, MainActivity.class));
+            mActivity.finish();
+        });
 
         mBinding.text1.setText(getString(getSyncWatchWalletGuideTitle(watchWallet), coinCode));
         if (getSyncWatchWalletGuideHint(watchWallet) == 0) {
@@ -72,7 +71,7 @@ public class SyncWatchWalletGuide extends BaseFragment<SyncWatchWalletGuideBindi
     private String getText3() {
         if (watchWallet == WatchWallet.XRP_TOOLKIT) {
             mBinding.text3.setVisibility(View.VISIBLE);
-            return getString(R.string.sync_first_xrp_accout );
+            return getString(R.string.sync_first_xrp_accout);
         }
         return "";
     }
