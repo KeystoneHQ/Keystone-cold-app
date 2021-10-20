@@ -19,6 +19,7 @@ package com.keystone.cold.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.AndroidRuntimeException;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
@@ -72,6 +73,10 @@ public class SetupVaultActivity extends FullScreenActivity {
         } else {
             SetupVaultViewModel model = ViewModelProviders.of(this).get(SetupVaultViewModel.class);
             switch (model.getVaultCreateStep()) {
+                case SetupVaultViewModel.VAULT_CREATE_STEP_WEB_AUTH: {
+                    graph.setStartDestination(R.id.webAuthFragment);
+                    break;
+                }
                 case SetupVaultViewModel.VAULT_CREATE_STEP_SET_PASSWORD: {
                     graph.setStartDestination(R.id.setPasswordFragment);
                     break;
@@ -88,8 +93,13 @@ public class SetupVaultActivity extends FullScreenActivity {
                     graph.setStartDestination(R.id.SetupWatchWalletFragment);
                     break;
                 }
+                case SetupVaultViewModel.VAULT_CREATE_STEP_DONE: {
+                    startActivity(new Intent(this, MainActivity.class));
+                    this.finish();
+                    return;
+                }
                 default: {
-                    break;
+                    throw new AndroidRuntimeException("Invalid status: VAULT_CREATE_STEP should not be " + model.getVaultCreateStep());
                 }
             }
         }

@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.AndroidRuntimeException;
 import android.util.Log;
 
 import androidx.annotation.LongDef;
@@ -144,7 +145,21 @@ public class SetupVaultViewModel extends AndroidViewModel {
     }
 
     public void setVaultCreateStep(Integer step) {
-        Utilities.setVaultCreateStep(getApplication(), step);
+        switch (step) {
+            case SetupVaultViewModel.VAULT_CREATE_STEP_WEB_AUTH:
+            case SetupVaultViewModel.VAULT_CREATE_STEP_SET_PASSWORD:
+            case SetupVaultViewModel.VAULT_CREATE_STEP_FIRMWARE_UPGRADE:
+            case SetupVaultViewModel.VAULT_CREATE_STEP_WRITE_MNEMONIC:
+            case SetupVaultViewModel.VAULT_CREATE_STEP_CHOOSE_APP:
+            case SetupVaultViewModel.VAULT_CREATE_STEP_DONE:{
+                Utilities.setVaultCreateStep(getApplication(), step);
+                break;
+            }
+            default: {
+                throw new AndroidRuntimeException("Invalid Vault Create Step " + step + ", check code");
+            }
+        }
+
     }
 
     public ObservableField<String> getPwd1() {
