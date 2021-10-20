@@ -39,6 +39,7 @@
         <attr name="lineStrokeWidth" format="dimension" />
         <attr name="textMargin" format="dimension" />
         <attr name="textFontSize" format="dimension" />
+        <attr name="textFontSizeSmall" format="dimension" />
         <attr name="pointStart" format="dimension" />
         <attr name="lable" format="reference" />
         <attr name="step" format="integer" />

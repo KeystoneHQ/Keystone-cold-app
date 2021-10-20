@@ -85,7 +85,7 @@ public class SetupVaultActivity extends FullScreenActivity {
                     break;
                 }
                 case SetupVaultViewModel.VAULT_CREATE_STEP_CHOOSE_APP: {
-                    graph.setStartDestination(R.id.chooseWatchWalletFragment);
+                    graph.setStartDestination(R.id.SetupWatchWalletFragment);
                     break;
                 }
                 default: {

@@ -41,7 +41,6 @@ public class NewStepView extends View {
 
     private Paint mTextPaint;
     private int mTextHeight;
-    private int mTextWidth;
 
     private Paint mStepPaint;
 
@@ -67,7 +66,7 @@ public class NewStepView extends View {
                 getResources().getDimension(R.dimen.newstepview_text_margin));
         mTextSize = (int) ta.getDimension(R.styleable.StepView_textFontSize,
                 getResources().getDimension(R.dimen.newstepview_text_size));
-        mTextSmallSize = (int) ta.getDimension(R.styleable.StepView_textFontSize,
+        mTextSmallSize = (int) ta.getDimension(R.styleable.StepView_textFontSizeSmall,
                 getResources().getDimension(R.dimen.newstepview_text_small_size));
         mDoneTextColor = ta.getColor(R.styleable.StepView_doneTextColor,
                 getContext().getColor(R.color.stepview_done_color));
@@ -91,13 +90,12 @@ public class NewStepView extends View {
         Rect outRect = new Rect();
         mTextPaint.getTextBounds(mLabels[mCurrent], 0, mLabels[mCurrent].length(), outRect);
         mTextHeight = outRect.height();
-        mTextWidth = outRect.width();
         mTextPaint.setTextAlign(Paint.Align.LEFT);
 
         mStepPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mStepPaint.setTextSize(mTextSize);
+        mStepPaint.setTextSize(mTextSmallSize);
         mStepPaint.setColor(mDoneTextColor);
-        mStepPaint.setTextAlign(Paint.Align.RIGHT);
+        mStepPaint.setTextAlign(Paint.Align.LEFT);
     }
 
     @Override
@@ -107,17 +105,24 @@ public class NewStepView extends View {
     }
 
     private void drawText(Canvas canvas) {
-        mTextPaint.setColor(mTitleColor);
-        int stepWidth = mTextSize + 2 * mTextSmallSize;
-        int space = canvas.getWidth() - mPointStart - mTextWidth - stepWidth;
+        float titleWidth = mTextPaint.measureText(mLabels[mCurrent]);
+        float stepPart1 = mTextPaint.measureText("5");
+        float stepPart2 = mStepPaint.measureText("/5");
+        float space = canvas.getWidth() - 2 * mPointStart - titleWidth - stepPart1 - stepPart2;
 
-        canvas.drawText(mLabels[mCurrent], mPointStart, mTextHeight + mTextMargin, mTextPaint);
+        float x0 = mPointStart;
+        float x1 = x0 + titleWidth + space;
+        float x2 = x1 + stepPart1;
+
+        mTextPaint.setColor(mTitleColor);
+        canvas.drawText(mLabels[mCurrent], x0, mTextHeight + mTextMargin, mTextPaint);
 
         mTextPaint.setColor(mDoneTextColor);
-        canvas.drawText(String.valueOf(mCurrent+1), mPointStart + mTextWidth + space, mTextHeight + mTextMargin, mTextPaint);
+        canvas.drawText(String.valueOf(mCurrent+1), x1, mTextHeight + mTextMargin, mTextPaint);
+
         mStepPaint.setColor(mTitleColor);
-        mStepPaint.setTextSize(mTextSmallSize);
-        canvas.drawText("/"+ mLabels.length, mPointStart + mTextWidth + space + mTextSize, mTextHeight + mTextMargin, mStepPaint);
+        canvas.drawText("/"+ mLabels.length, x2, mTextHeight + mTextMargin, mStepPaint);
+
     }
 
     @Override

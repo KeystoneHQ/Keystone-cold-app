@@ -18,12 +18,17 @@
 package com.keystone.cold.ui.fragment.setup;
 
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
+import static com.keystone.cold.update.utils.Storage.hasSdcard;
 
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.SetupFirmwareUpgradeBinding;
+import com.keystone.cold.ui.views.UpdatingHelper;
+import com.keystone.cold.update.data.UpdateManifest;
 import com.keystone.cold.viewmodel.SetupVaultViewModel;
 
 public class FirmwareUpgradeFragment extends SetupVaultBaseFragment<SetupFirmwareUpgradeBinding> {
@@ -42,6 +47,19 @@ public class FirmwareUpgradeFragment extends SetupVaultBaseFragment<SetupFirmwar
             data.putBoolean(IS_SETUP_VAULT, true);
             viewModel.setVaultCreateStep(SetupVaultViewModel.VAULT_CREATE_STEP_WRITE_MNEMONIC);
             navigate(R.id.action_to_setupVaultFragment, data);
+        });
+
+        mBinding.confirm.setOnClickListener(v -> {
+            if (hasSdcard()) {
+                UpdatingHelper updatingHelper = new UpdatingHelper(mActivity);
+                MutableLiveData<UpdateManifest> manifestLiveData = updatingHelper.getUpdateManifest();
+                manifestLiveData.observe(this, updateManifest -> {
+                    if (updateManifest != null) {
+                        updatingHelper.onUpdatingDetect(updateManifest, true);
+                        manifestLiveData.removeObservers(this);
+                    }
+                });
+            }
         });
     }
 }
