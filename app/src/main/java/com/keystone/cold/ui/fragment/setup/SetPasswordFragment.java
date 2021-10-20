@@ -81,6 +81,15 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
     @Override
     public void onResume() {
         super.onResume();
+        registerListeners();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    private void registerListeners () {
         mBinding.pwd1.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 if (!paused) {
@@ -134,11 +143,7 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
                 }
             }
         });
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     @Override
@@ -154,60 +159,7 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
         mBinding.pwd1.setFilters(new InputFilter[]{new InputFilter.LengthFilter(64)});
         mBinding.pwd2.setFilters(new InputFilter[]{new InputFilter.LengthFilter(64)});
 
-        mBinding.pwd1.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                if (!paused) {
-                    SetupVaultViewModel.PasswordValidationResult result = viewModel.validatePassword();
-                    if (result != RESULT_OK) {
-                        mBinding.hint.setTextColor(mActivity.getColor(R.color.red));
-                        mBinding.hint.setText(getHint(result));
-                        deleteAll = true;
-                        inputValid = false;
-                    } else {
-                        inputValid = true;
-                    }
-                }
-            } else {
-                mBinding.hint.setTextColor(mActivity.getColor(R.color.white));
-                mBinding.hint.setText(R.string.text_password_required);
-            }
-        });
-
-        mBinding.pwd1.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_DEL) {
-                if (deleteAll) {
-                    mBinding.pwd1.setText("");
-                    deleteAll = false;
-                }
-            }
-            return false;
-        });
-
-        viewModel.getPwd2().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-
-                String password1 = viewModel.getPwd1().get();
-                String password2 = viewModel.getPwd2().get();
-                if (password2.length() >= password1.length()) {
-                    if (password1.equals(password2)) {
-                        if (inputValid) {
-                            mBinding.confirm.setEnabled(true);
-                        } else {
-                            mBinding.confirm.setEnabled(false);
-                        }
-                        mBinding.hint2.setVisibility(View.GONE);
-                    } else {
-                        mBinding.hint2.setVisibility(View.VISIBLE);
-                        mBinding.confirm.setEnabled(false);
-                    }
-                } else {
-                    mBinding.hint2.setVisibility(View.GONE);
-                    mBinding.confirm.setEnabled(false);
-                }
-            }
-        });
-
+        registerListeners();
 
         if (isSetupVault) {
             mBinding.toolbar.setVisibility(View.GONE);
@@ -280,7 +232,7 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
                     }
                 } else {
                     if (new ResetPasswordCallable(passwordHash, mnemonic, slip39MasterSeed, slip39Id).call()) {
-                        Utilities.setPasswordSet(mActivity);
+                        Utilities.markPasswordSet(mActivity);
                         viewModel.setPassword(passwordHash);
                         action = () -> {
                             Bundle data = new Bundle();

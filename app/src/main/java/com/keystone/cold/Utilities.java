@@ -86,7 +86,7 @@ public class Utilities {
         return sp.getBoolean(PREFERENCE_KEY_PASSWORD_SET, false);
     }
 
-    public static void setPasswordSet(Activity context) {
+    public static void markPasswordSet(Activity context) {
         SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
         sp.edit().putBoolean(PREFERENCE_KEY_PASSWORD_SET, true).apply();
     }
