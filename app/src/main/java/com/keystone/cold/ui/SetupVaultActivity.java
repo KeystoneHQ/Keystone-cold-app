@@ -41,7 +41,7 @@ import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.handleRunt
 
 public class SetupVaultActivity extends FullScreenActivity {
 
-    public boolean isSetupVault;
+    public boolean inSetupProcess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +65,11 @@ public class SetupVaultActivity extends FullScreenActivity {
         Intent intent = getIntent();
 
         if (savedInstanceState != null) {
-            isSetupVault = savedInstanceState.getBoolean(IS_SETUP_VAULT);
+            inSetupProcess = savedInstanceState.getBoolean(IS_SETUP_VAULT);
         } else {
-            isSetupVault = intent != null && intent.getBooleanExtra(IS_SETUP_VAULT, true);
+            inSetupProcess = intent != null && intent.getBooleanExtra(IS_SETUP_VAULT, true);
         }
-        if (!isSetupVault) {
+        if (!inSetupProcess) {
             graph.setStartDestination(R.id.setupVaultFragment);
         } else {
             SetupVaultViewModel model = ViewModelProviders.of(this).get(SetupVaultViewModel.class);
@@ -112,6 +112,6 @@ public class SetupVaultActivity extends FullScreenActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(IS_SETUP_VAULT, isSetupVault);
+        outState.putBoolean(IS_SETUP_VAULT, inSetupProcess);
     }
 }

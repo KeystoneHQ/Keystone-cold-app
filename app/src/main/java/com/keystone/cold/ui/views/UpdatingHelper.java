@@ -46,7 +46,9 @@ import com.keystone.cold.viewmodel.UpdatingViewModel;
 import java.util.Objects;
 
 import static android.content.Context.BATTERY_SERVICE;
+import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
+import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.SHOULD_POP_BACK;
 
 public class UpdatingHelper implements OnBatteryChangeListener {
 
@@ -85,7 +87,7 @@ public class UpdatingHelper implements OnBatteryChangeListener {
         this.onUpdatingDetect(manifest, false);
     }
 
-    public void onUpdatingDetect(UpdateManifest manifest, boolean isSetupVault) {
+    public void onUpdatingDetect(UpdateManifest manifest, boolean inSetupProcess) {
         BatteryManager manager = (BatteryManager) mActivity.getSystemService(BATTERY_SERVICE);
         int percent = batteryPercent != -1 ? batteryPercent :
                 Objects.requireNonNull(manager).getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
@@ -101,11 +103,6 @@ public class UpdatingHelper implements OnBatteryChangeListener {
         binding.subTitle.setText(mActivity.getString(R.string.new_version_hint_message,
                 getDisplayVersion(manifest)));
         binding.sha256.setText("\nsha256:\n" + manifest.sha256);
-        if (isSetupVault) {
-            binding.checkbox.setVisibility(View.GONE);
-            binding.agreeButton.setChecked(true);
-            binding.footer.setVisibility(View.GONE);
-        }
 
         if (percent < UpdatingViewModel.MIN_BATTERY_FOR_UPDATE) {
             String batterHint = mActivity.getString(R.string.update_alert_boot_low_battery_message,
@@ -118,23 +115,47 @@ public class UpdatingHelper implements OnBatteryChangeListener {
             binding.footer.setVisibility(View.GONE);
             binding.confirm.setOnClickListener(v -> dialog.dismiss());
         } else {
-            binding.confirm.setOnClickListener(v -> {
-                dialog.dismiss();
-                AuthenticateModal.show(mActivity,
-                        mActivity.getString(R.string.password_modal_title),
-                        "",
-                        password -> {
-                            updatingViewModel.doUpdate(password.password);
-                            subscribeUpdateState();
-                        },
-                        () -> {
-                            Bundle data = new Bundle();
-                            data.putString(ACTION, PreImportFragment.ACTION_RESET_PWD);
-                            Navigation.findNavController(mActivity, R.id.nav_host_fragment)
-                                    .navigate(R.id.action_to_preImportFragment, data);
-                        }
-                );
-            });
+            if (inSetupProcess) {
+                binding.checkbox.setVisibility(View.GONE);
+                binding.agreeButton.setChecked(true);
+                binding.footer.setVisibility(View.GONE);
+                binding.confirm.setOnClickListener(v -> {
+                    dialog.dismiss();
+                    AuthenticateModal.show(mActivity,
+                            mActivity.getString(R.string.password_modal_title),
+                            "",
+                            password -> {
+                                updatingViewModel.doUpdate(password.password);
+                                subscribeUpdateState();
+                            },
+                            () -> {
+                                Bundle data = new Bundle();
+                                data.putBoolean(IS_SETUP_VAULT, true);
+                                data.putBoolean(SHOULD_POP_BACK, true);
+                                Navigation.findNavController(mActivity, R.id.nav_host_fragment)
+                                        .navigate(R.id.global_action_to_setPasswordFragment, data);
+                            }
+                    );
+                });
+            } else {
+                binding.confirm.setOnClickListener(v -> {
+                    dialog.dismiss();
+                    AuthenticateModal.show(mActivity,
+                            mActivity.getString(R.string.password_modal_title),
+                            "",
+                            password -> {
+                                updatingViewModel.doUpdate(password.password);
+                                subscribeUpdateState();
+                            },
+                            () -> {
+                                Bundle data = new Bundle();
+                                data.putString(ACTION, PreImportFragment.ACTION_RESET_PWD);
+                                Navigation.findNavController(mActivity, R.id.nav_host_fragment)
+                                        .navigate(R.id.action_to_preImportFragment, data);
+                            }
+                    );
+                });
+            }
 
         }
         dialog.show(mActivity.getSupportFragmentManager(), "");

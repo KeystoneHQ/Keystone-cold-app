@@ -21,12 +21,16 @@ import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.update.utils.Storage.hasSdcard;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.SetupFirmwareUpgradeBinding;
+import com.keystone.cold.databinding.UpdateHintModalBinding;
+import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.views.UpdatingHelper;
 import com.keystone.cold.update.data.UpdateManifest;
 import com.keystone.cold.viewmodel.SetupVaultViewModel;
@@ -59,7 +63,13 @@ public class FirmwareUpgradeFragment extends SetupVaultBaseFragment<SetupFirmwar
                         manifestLiveData.removeObservers(this);
                     }
                 });
+            } else {
+                showError();
             }
         });
+    }
+
+    private void showError() {
+        alert(getString(R.string.firmware_upgrade_unable), getString(R.string.firmware_upgrade_unable_description));
     }
 }
