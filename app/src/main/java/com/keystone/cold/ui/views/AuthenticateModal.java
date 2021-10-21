@@ -168,7 +168,7 @@ public class AuthenticateModal {
             binding.progress.setVisibility(View.VISIBLE);
             AppExecutors.getInstance().networkIO().execute(() -> {
                 String passwordHash = Hex.toHexString(HashUtil.twiceSha256(password.get()));
-                boolean verified = PasswordLockFragment.verifyPassword(password.get());
+                boolean verified = PasswordLockFragment.verifyPasswordHash(password.get());
 
                 if (verified) {
                     FingerprintKit.verifyPassword(activity);

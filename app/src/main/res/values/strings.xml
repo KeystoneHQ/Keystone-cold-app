@@ -45,11 +45,11 @@
     <string name="tab_transaction_history">SIGNATURES</string>
 
     <string-array name="step_label">
-        <item>Authentication</item>
+        <item>Web Authentication</item>
         <item>Set Password</item>
-        <item>Create Wallet</item>
-        <item>Watch-only Wallet</item>
-        <item>Complete</item>
+        <item>Firmware Upgrade</item>
+        <item>Create/Import Wallet</item>
+        <item>Choose Companion App</item>
     </string-array>
     <string name="create_addr">Create %s Address</string>
     <string name="signing_hint">Signing…</string>
@@ -94,10 +94,18 @@
     </string-array>
 
     <string name="tab_my_address">ADDRESSES</string>
-    <string name="web_auth1"><![CDATA[1. Please visit <font color="#00cdc3">https://keyst.one/auth<font/>]]></string>
-    <string name="web_auth2"><![CDATA[2. Click on <font color="#00cdc3">\"Scan QR Code\" <font/>below and scan the QR code displayed on the website]]></string>
-    <string name="web_auth3">3. Enter the code displayed on your Keystone on the official website for authentication;</string>
-    <string name="web_auth4">4. If authentication fails, do not use your device as it may have been compromised</string>
+    <string name="web_auth1">1.点击下方按钮，扫描官网验证的二维码</string>
+    <string name="web_auth2">2.将扫描后的结果输入给网站</string>
+    <string name="web_auth3"><![CDATA[3.在网站上点击<font color="#00cdc3">"验证"<font/>获取结果]]></string>
+    <string name="web_auth4">如果扫描失败，您的设备可能已经被攻击，建议您停止使用该设备。</string>
+    <string name="web_auth5"><![CDATA[官网验证网站: <br> <font color="#00cdc3">https://keyst.one/setup/1<font/>]]></string>
+
+    <string name="firmware_upgrade1">为了使用新功能，建议您将固件升级到最新版本</string>
+    <string name="firmware_upgrade2">TF卡为FAT32格式，不超过512GB</string>
+    <string name="firmware_upgrade3">设备电量须超过70%</string>
+    <string name="firmware_upgrade4"><![CDATA[下载最新固件，请访问: <br> <font color="#00cdc3">https://keyst.one/setup/3<font/>]]></string>
+    <string name="firmware_upgrade_start">开始升级</string>
+
     <string name="skip">Skip</string>
     <string name="read_confirm"><![CDATA[I\'ve read and agreed to the <font color="#00cdc3"><u>\"Terms of Service\"</u><font/>, and  <font color="#00cdc3"><u>\"Privacy Policy\"</u><font/> ]]></string>
     <string name="create_vault_hint"><![CDATA[1.Touch <font color="#00cdc3">\"Create Wallet\"<font/> to generate a new Wallet.]]></string>
@@ -207,7 +215,12 @@
     <string name="secret_modal_msg">Anyone with your recovery phrase has full access to your cryptocurrency. Please make sure there are no onlookers or cameras when you record your recovery phrase.</string>
     <string name="select_mnemonic_count">Recovery Phrase Length</string>
     <string name="set_password">Set Password</string>
+    <string name="firmware_upgrade">Firmware Upgrade</string>
     <string name="text_password_required">Must contain at least 10 characters and include upper and lower case letters and digits. Symbols are allowed. Case sensitive.</string>
+    <string name="welcome">Welcome to Keystone</string>
+    <string name="welcome_site"><![CDATA[Please open the following link using a PC: <font color="#00cdc3"><u>https://keyst.one/setup</u></font>]]></string>
+    <string name="welcome_text">This will help guide setting up your Keystone hardware wallet.</string>
+    <string name="welcome_done">It\'s ready, start</string>
     <string name="guide_completed_title">Congratulations! \nSetup is now complete!</string>
     <string name="guide_completed_remind"><![CDATA[You can create Passphrase(Hidden Wallet) or reset your password in Settings. \n Read the enclosed Quick Guide or visit our website to learn more: <br> <font color="#00cdc3"><u>https://keyst.one</u><font/>]]></string>
     <string name="tx_from">From</string>
@@ -420,7 +433,7 @@
     <string name="abnormal_state_title">Abnormal State</string>
 
     <string-array name="watch_wallet_list">
-        <item>Keystone App</item>
+        <item>Keystone Companion App</item>
         <item>Web3</item>
         <item>Polkadot.js</item>
         <item>XRP Toolkit</item>

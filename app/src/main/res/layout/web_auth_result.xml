@@ -54,7 +54,7 @@
             android:id="@+id/divider"
             layout="@layout/divider" />
 
-        <com.keystone.cold.ui.views.StepView
+        <com.keystone.cold.ui.views.NewStepView
             android:id="@+id/step"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

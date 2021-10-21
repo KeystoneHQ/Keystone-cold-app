@@ -33,12 +33,14 @@ import com.keystone.cold.ui.modal.ModalDialog;
 import static android.content.Context.MODE_PRIVATE;
 import static com.keystone.cold.ui.fragment.main.web3.EthTxConfirmFragment.PREFERENCE_KEY_VISITS;
 import static com.keystone.cold.ui.fragment.setting.FingerprintPreferenceFragment.FINGERPRINT_UNLOCK;
+import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_CREATE_STEP;
 
 public class Utilities {
     public static final String PREFERENCE_SECRET = "secret";
     public static final String PREFERENCE_KEY_PASSWORD = "password";
     public static final String PREFERENCE_KEY_PATTERN = "pattern";
     public static final String PREFERENCE_KEY_VAULT_CREATED = "vault_created";
+    public static final String PREFERENCE_KEY_PASSWORD_SET = "password_set";
     public static final String PREFERENCE_KEY_LANGUAGE_SET = "language_set";
     public static final String PREFERENCE_KEY_VAULT_ID = "vault_id";
 
@@ -77,6 +79,16 @@ public class Utilities {
     public static void setVaultCreated(Activity activity) {
         SharedPreferences sp = activity.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
         sp.edit().putBoolean(PREFERENCE_KEY_VAULT_CREATED, true).apply();
+    }
+
+    public static boolean hasPasswordSet(Context activity) {
+        SharedPreferences sp = activity.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        return sp.getBoolean(PREFERENCE_KEY_PASSWORD_SET, false);
+    }
+
+    public static void markPasswordSet(Activity context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        sp.edit().putBoolean(PREFERENCE_KEY_PASSWORD_SET, true).apply();
     }
 
     public static void setLanguageSet(Activity activity) {
@@ -223,5 +235,15 @@ public class Utilities {
     public static void setVisitsTimes(Context context, int visits) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
         sp.edit().putInt(PREFERENCE_KEY_VISITS, visits).apply();
+    }
+
+    public static void setVaultCreateStep(Context context, int step) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        sp.edit().putInt(VAULT_CREATE_STEP, step).apply();
+    }
+
+    public static Integer getVaultCreateStep(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        return sp.getInt(VAULT_CREATE_STEP, 0);
     }
 }

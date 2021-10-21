@@ -21,9 +21,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        1
-
         <variable
             name="viewModel"
             type="com.keystone.cold.viewmodel.SetupVaultViewModel" />

@@ -41,6 +41,7 @@ import java.util.concurrent.Executors;
 import static com.keystone.cold.selfcheck.SecurityCheck.CODE_FW_GET_STATUS_FAILED;
 import static com.keystone.cold.selfcheck.SecurityCheck.CODE_FW_IN_BOOTMODE;
 import static com.keystone.cold.selfcheck.SecurityCheck.CODE_STATUS_MIS_MATCH;
+import static com.keystone.cold.selfcheck.SecurityCheck.CODE_STATUS_RUNTIME_INVALID;
 import static com.keystone.cold.ui.fragment.setting.MainPreferenceFragment.removeAllFingerprint;
 import static com.keystone.cold.ui.fragment.setting.MainPreferenceFragment.reset;
 
@@ -70,7 +71,7 @@ public class AttackWarningFragment extends BaseFragment<AttackWarningBinding> {
         } else if(firmware == CODE_FW_GET_STATUS_FAILED) {
             mBinding.text1.setText(R.string.opration_failed);
             mBinding.hint.setText(getString(R.string.reboot_hint,formatErrorCode(data)));
-        } else if ((firmware & 0xff00) == CODE_STATUS_MIS_MATCH) {
+        } else if ((firmware & 0xff00) == CODE_STATUS_MIS_MATCH || (firmware & 0xff00) == CODE_STATUS_RUNTIME_INVALID) {
             mBinding.text1.setText(R.string.abnormal_state_title);
             mBinding.hint.setText(getString(R.string.abnormal_state_hint,formatErrorCode(data)));
         }

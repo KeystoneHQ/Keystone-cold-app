@@ -37,13 +37,12 @@ import com.keystone.cold.ui.fragment.setting.MainPreferenceFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.util.HashUtil;
 import com.keystone.cold.util.Keyboard;
+import com.keystone.cold.viewmodel.OneTimePasswordManager;
 
 import org.spongycastle.util.encoders.Hex;
 
-import java.util.Objects;
-
+import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.Constants.IS_FORCE;
-import static com.keystone.cold.ui.fragment.Constants.KEY_NAV_ID;
 import static com.keystone.cold.ui.fragment.Constants.KEY_TITLE;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
@@ -70,6 +69,7 @@ public class PasswordLockFragment extends BaseFragment<PasswordUnlockBinding> {
         } else {
             mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         }
+        boolean hasVault = Utilities.hasVaultCreated(mActivity);
         retryTimes = Utilities.getPasswordRetryTimes(mActivity);
         mBinding.passwordInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(64)});
         mBinding.setPassword(password);
@@ -78,11 +78,15 @@ public class PasswordLockFragment extends BaseFragment<PasswordUnlockBinding> {
             mBinding.progress.setVisibility(View.VISIBLE);
             mBinding.unlock.setVisibility(View.GONE);
             AppExecutors.getInstance().diskIO().execute(() -> {
-                boolean verified = verifyPassword(password.get());
+                String passwordHash = getPasswordHash(password.get());
+                boolean verified = verifyPasswordHash(passwordHash);
                 if (verified) {
                     Utilities.setPasswordRetryTimes(mActivity, 0);
                     Utilities.setPatternRetryTimes(mActivity, 0);
                     FingerprintKit.verifyPassword(mActivity);
+                    if (!hasVault) {
+                        OneTimePasswordManager.getInstance().setPasswordHash(passwordHash);
+                    }
                     mActivity.finish();
                 } else {
                     handler.post(() -> {
@@ -105,9 +109,17 @@ public class PasswordLockFragment extends BaseFragment<PasswordUnlockBinding> {
         });
 
         Bundle bundle = new Bundle();
-        bundle.putString(KEY_TITLE, getString(R.string.verify_mnemonic));
-        bundle.putString(ACTION, PreImportFragment.ACTION_RESET_PWD);
-        mBinding.forget.setOnClickListener(v -> navigate(R.id.action_resetpassword_verifyMnemonic, bundle));
+
+        mBinding.forget.setOnClickListener(v -> {
+            if(hasVault) {
+                bundle.putString(KEY_TITLE, getString(R.string.verify_mnemonic));
+                bundle.putString(ACTION, PreImportFragment.ACTION_RESET_PWD);
+                navigate(R.id.action_resetpassword_verifyMnemonic, bundle);
+            }
+            else {
+                navigate(R.id.action_to_setPasswordFragment);
+            }
+        });
         Keyboard.show(mActivity, mBinding.passwordInput);
     }
 
@@ -126,16 +138,21 @@ public class PasswordLockFragment extends BaseFragment<PasswordUnlockBinding> {
 
     }
 
-    public static boolean verifyPassword(String input) {
+    private String getPasswordHash(String input) {
         byte[] passwordHash;
         if (input == null) {
-            return false;
+            return "";
         } else {
-            passwordHash =  HashUtil.twiceSha256(input);
+            passwordHash = HashUtil.twiceSha256(input);
             if (passwordHash == null) {
-                return false;
+                return "";
             }
         }
-        return new VerifyPasswordCallable(Hex.toHexString(passwordHash)).call();
+        return Hex.toHexString(passwordHash);
+    }
+
+    public static boolean verifyPasswordHash(String passwordHash) {
+        if(passwordHash.equals("")) return false;
+        return new VerifyPasswordCallable(passwordHash).call();
     }
 }

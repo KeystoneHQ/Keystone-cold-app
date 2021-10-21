@@ -24,6 +24,7 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.SetupWatchWalletBinding;
 import com.keystone.cold.ui.SetupVaultActivity;
+import com.keystone.cold.viewmodel.SetupVaultViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
@@ -45,6 +46,7 @@ public class SetupWatchWalletFragment extends SetupVaultBaseFragment<SetupWatchW
         WatchWallet watchWallet = WatchWallet.getWatchWallet(mActivity);
         Bundle data = new Bundle();
         data.putBoolean(IS_SETUP_VAULT, ((SetupVaultActivity) mActivity).isSetupVault);
+        viewModel.setVaultCreateStep(SetupVaultViewModel.VAULT_CREATE_STEP_DONE);
         switch (watchWallet) {
             case KEYSTONE:
                 navigate(R.id.action_to_manageCoinFragment, data);

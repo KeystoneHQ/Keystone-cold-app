@@ -64,7 +64,7 @@ public class UpdatingHelper implements OnBatteryChangeListener {
     }
 
     public UpdatingHelper(AppCompatActivity activity) {
-        this(activity,false);
+        this(activity, false);
     }
 
     public MutableLiveData<UpdateManifest> getUpdateManifest() {
@@ -82,6 +82,10 @@ public class UpdatingHelper implements OnBatteryChangeListener {
     }
 
     public void onUpdatingDetect(UpdateManifest manifest) {
+        this.onUpdatingDetect(manifest, false);
+    }
+
+    public void onUpdatingDetect(UpdateManifest manifest, boolean isSetupVault) {
         BatteryManager manager = (BatteryManager) mActivity.getSystemService(BATTERY_SERVICE);
         int percent = batteryPercent != -1 ? batteryPercent :
                 Objects.requireNonNull(manager).getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
@@ -97,9 +101,15 @@ public class UpdatingHelper implements OnBatteryChangeListener {
         binding.subTitle.setText(mActivity.getString(R.string.new_version_hint_message,
                 getDisplayVersion(manifest)));
         binding.sha256.setText("\nsha256:\n" + manifest.sha256);
+        if (isSetupVault) {
+            binding.checkbox.setVisibility(View.GONE);
+            binding.agreeButton.setChecked(true);
+            binding.footer.setVisibility(View.GONE);
+        }
+
         if (percent < UpdatingViewModel.MIN_BATTERY_FOR_UPDATE) {
             String batterHint = mActivity.getString(R.string.update_alert_boot_low_battery_message,
-                    UpdatingViewModel.MIN_BATTERY_FOR_UPDATE + "%", percent +"%");
+                    UpdatingViewModel.MIN_BATTERY_FOR_UPDATE + "%", percent + "%");
             binding.subTitle.setText(batterHint);
             binding.sha256.setVisibility(View.GONE);
             binding.checkbox.setVisibility(View.GONE);
@@ -113,17 +123,17 @@ public class UpdatingHelper implements OnBatteryChangeListener {
                 AuthenticateModal.show(mActivity,
                         mActivity.getString(R.string.password_modal_title),
                         "",
-                        password->{
+                        password -> {
                             updatingViewModel.doUpdate(password.password);
                             subscribeUpdateState();
                         },
-                         () -> {
+                        () -> {
                             Bundle data = new Bundle();
                             data.putString(ACTION, PreImportFragment.ACTION_RESET_PWD);
                             Navigation.findNavController(mActivity, R.id.nav_host_fragment)
                                     .navigate(R.id.action_to_preImportFragment, data);
                         }
-                        );
+                );
             });
 
         }
@@ -133,14 +143,15 @@ public class UpdatingHelper implements OnBatteryChangeListener {
     private String getDisplayVersion(UpdateManifest manifest) {
         if (manifest == null) {
             return "";
-        } else if(manifest.app != null) {
+        } else if (manifest.app != null) {
             return manifest.app.displayVersion;
-        } else if(manifest.system != null) {
+        } else if (manifest.system != null) {
             return manifest.system.displayVersion;
         } else {
             return "";
         }
     }
+
     private void subscribeUpdateState() {
         ModalDialog dialog = new ModalDialog();
         UpdatingBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),

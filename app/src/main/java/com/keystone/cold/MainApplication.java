@@ -81,7 +81,7 @@ public class MainApplication extends Application {
         Coinlib.init(this);
 
         registerReceiver(mScreeOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
-        shouldLock = Utilities.hasVaultCreated(this);
+        shouldLock = Utilities.hasPasswordSet(this);
 
         startAttackCheckingService();
         RestartSe();
@@ -170,7 +170,7 @@ public class MainApplication extends Application {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(@NonNull Activity activity, Bundle savedInstanceState) {
-                if (activity instanceof MainActivity && savedInstanceState == null && shouldLock) {
+                if ((activity instanceof MainActivity || activity instanceof SetupVaultActivity) && savedInstanceState == null && shouldLock) {
                     Intent intent = new Intent(activity, UnlockActivity.class);
                     activity.startActivity(intent);
                     shouldLock = false;
@@ -219,7 +219,7 @@ public class MainApplication extends Application {
             if (Intent.ACTION_SCREEN_OFF.equals(action)) {
                 Activity activity = topActivity.get();
                 if (!(activity instanceof UnlockActivity)
-                        && Utilities.hasVaultCreated(activity)
+                        && Utilities.hasPasswordSet(activity)
                         && !Utilities.isAttackDetected(activity)) {
                     startActivity(new Intent(activity, UnlockActivity.class));
                 }

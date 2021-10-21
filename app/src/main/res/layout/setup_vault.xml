@@ -54,29 +54,19 @@
                 android:id="@+id/divider"
                 layout="@layout/divider" />
 
-            <com.keystone.cold.ui.views.StepView
+            <com.keystone.cold.ui.views.NewStepView
                 android:id="@+id/step"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="34dp"
-                app:step="2" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="44dp"
-                android:lineSpacingExtra="8dp"
-                android:text="@string/setup_wallet_hint1"
-                android:textColor="@color/white"
-                android:textSize="13sp" />
+                app:step="3" />
 
             <com.keystone.cold.ui.views.SpanedTextView
                 android:id="@+id/create_vault_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:lineSpacingExtra="8dp"
                 android:text="@string/create_vault_hint"
                 android:textColor="@color/white"

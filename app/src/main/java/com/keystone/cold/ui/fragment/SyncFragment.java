@@ -32,7 +32,9 @@ import com.keystone.cold.R;
 import com.keystone.cold.databinding.CommonModalBinding;
 import com.keystone.cold.databinding.SyncFragmentBinding;
 import com.keystone.cold.ui.MainActivity;
+import com.keystone.cold.ui.fragment.setup.SetupVaultBaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
+import com.keystone.cold.viewmodel.SetupVaultViewModel;
 import com.keystone.cold.viewmodel.SyncViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 
@@ -46,10 +48,10 @@ import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWa
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuideHint;
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuideTitle;
 
-public class SyncFragment extends BaseFragment<SyncFragmentBinding> {
+public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
 
     public static final String TAG = "SyncFragment";
-    private SyncViewModel viewModel;
+    private SyncViewModel syncViewModel;
     private WatchWallet watchWallet;
     private String coinCode;
     private boolean fromSyncGuide = false;
@@ -88,12 +90,13 @@ public class SyncFragment extends BaseFragment<SyncFragmentBinding> {
                     bundle.putString("coinCode", Coins.KSM.coinCode());
                     navigate(R.id.action_to_syncWatchWalletGuide, bundle);
                 } else {
-                    navigate(R.id.action_to_setupCompleteFragment);
+                    startActivity(new Intent(mActivity, MainActivity.class));
+                    mActivity.finish();
                 }
             }
         });
         setupUIWithWatchWallet();
-        viewModel = ViewModelProviders.of(mActivity).get(SyncViewModel.class);
+        syncViewModel = ViewModelProviders.of(mActivity).get(SyncViewModel.class);
         generateSyncData();
     }
 
@@ -108,7 +111,7 @@ public class SyncFragment extends BaseFragment<SyncFragmentBinding> {
                 mBinding.chain.setVisibility(View.VISIBLE);
                 if (coinCode.equals(Coins.DOT.coinCode())) {
                     mBinding.chain.setText(Coins.DOT.coinName());
-                } else if(coinCode.equals(Coins.KSM.coinCode())) {
+                } else if (coinCode.equals(Coins.KSM.coinCode())) {
                     mBinding.chain.setText(Coins.KSM.coinName());
                 }
                 break;
@@ -146,7 +149,7 @@ public class SyncFragment extends BaseFragment<SyncFragmentBinding> {
     private void generateSyncData() {
         switch (watchWallet) {
             case KEYSTONE:
-                viewModel.generateSyncKeystone().observe(this, sync -> {
+                syncViewModel.generateSyncKeystone().observe(this, sync -> {
                     if (!TextUtils.isEmpty(sync)) {
                         mBinding.dynamicQrcodeLayout.qrcode.setData(sync);
                     }
@@ -154,7 +157,7 @@ public class SyncFragment extends BaseFragment<SyncFragmentBinding> {
                 break;
             case XRP_TOOLKIT:
                 int index = getArguments().getInt("index");
-                viewModel.generateSyncXumm(index).observe(this, xrpSyncData -> {
+                syncViewModel.generateSyncXumm(index).observe(this, xrpSyncData -> {
                     if (xrpSyncData != null) {
                         mBinding.dynamicQrcodeLayout.qrcode.setData(generateXrpToolsSyncData(xrpSyncData));
                         mBinding.addressName.setText(xrpSyncData.addressEntity.getName());
@@ -165,7 +168,7 @@ public class SyncFragment extends BaseFragment<SyncFragmentBinding> {
                 });
                 break;
             case POLKADOT_JS:
-                viewModel.generateSyncPolkadotjs(coinCode).observe(this, s -> {
+                syncViewModel.generateSyncPolkadotjs(coinCode).observe(this, s -> {
                     if (!TextUtils.isEmpty(s)) {
                         mBinding.dynamicQrcodeLayout.qrcode.disableMultipart();
                         mBinding.dynamicQrcodeLayout.qrcode.setData(s);
@@ -173,7 +176,7 @@ public class SyncFragment extends BaseFragment<SyncFragmentBinding> {
                 });
                 break;
             case METAMASK:
-                viewModel.generateSyncMetamask().observe(this, s -> {
+                syncViewModel.generateSyncMetamask().observe(this, s -> {
                     if (!TextUtils.isEmpty(s)) {
                         mBinding.dynamicQrcodeLayout.qrcode.disableMultipart();
                         mBinding.dynamicQrcodeLayout.qrcode.setData(s);
