@@ -84,13 +84,6 @@ public class AuthenticateModal {
                                         OnVerify onVerify,
                                         PasswordInputModalBinding binding,
                                         ModalDialog dialog) {
-        FingerprintManager.CryptoObject cryptoObject = initCryptoObject();
-        if (cryptoObject == null) {
-            binding.fingerprintLayout.setVisibility(View.GONE);
-            binding.passwordLayout.setVisibility(View.VISIBLE);
-            Keyboard.show(activity, binding.input);
-            return;
-        }
         FingerprintKit fpKit = new FingerprintKit(activity);
         fpKit.startVerify(new VerifyListener() {
             @Override
@@ -102,13 +95,12 @@ public class AuthenticateModal {
 
             @Override
             public void onAuthenticationSucceeded(FingerprintManager.CryptoObject cryptoObject) {
-                Signature signature = cryptoObject.getSignature();
                 dialog.dismiss();
                 if (onVerify != null) {
-                    onVerify.onVerify(new OnVerify.VerifyToken(null, signature));
+                    onVerify.onVerify(new OnVerify.VerifyToken(null, getSignature()));
                 }
             }
-        }, initCryptoObject());
+        }, null);
         binding.fingerprintLayout.setVisibility(View.VISIBLE);
         binding.fingerprintLayout.setTag(fpKit);
         binding.passwordLayout.setVisibility(View.GONE);
@@ -120,19 +112,18 @@ public class AuthenticateModal {
         });
     }
 
-    private static FingerprintManager.CryptoObject initCryptoObject() {
+    private static Signature getSignature() {
         Signature signature;
         try {
             signature = Signature.getInstance("SHA256withECDSA");
+            // since setUserAuthenticationRequired is true, need to verify the fingerprint before query
             PrivateKey key = (PrivateKey) KeyStoreUtil.prepareKeyStore().getKey(SECP256R1,null);
             signature.initSign(key);
         } catch (NoSuchAlgorithmException | UnrecoverableKeyException | KeyStoreException | InvalidKeyException e) {
             e.printStackTrace();
             return null;
         }
-        FingerprintManager.CryptoObject cryptoObject = null;
-        cryptoObject = new FingerprintManager.CryptoObject(signature);
-        return cryptoObject;
+        return signature;
     }
 
     private static void initPassword(AppCompatActivity activity,

@@ -17,30 +17,26 @@
 
 package com.keystone.cold.ui.fragment.main;
 
+import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS;
+import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_INDEX;
+import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_NAME;
+import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_PATH;
+import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.databinding.DataBindingUtil;
 
-import com.keystone.coinlib.coins.BCH.Bch;
-import com.keystone.coinlib.coins.CFX.Cfx;
-import com.keystone.coinlib.coins.LTC.Ltc;
-import com.keystone.coinlib.utils.Coins;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.ReceiveFragmentBinding;
 import com.keystone.cold.databinding.XrpSyncMenuBinding;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.viewmodel.WatchWallet;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.Objects;
-
-import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS;
-import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_INDEX;
-import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_NAME;
-import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_PATH;
-import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
 
 public class ReceiveCoinFragment extends BaseFragment<ReceiveFragmentBinding> {
     private int index;
@@ -103,10 +99,10 @@ public class ReceiveCoinFragment extends BaseFragment<ReceiveFragmentBinding> {
             dialog.dismiss();
 
         });
-        binding.sparkTokenClaim.setOnClickListener(v -> {
-            syncSparkToken();
-            dialog.dismiss();
-        });
+//        binding.sparkTokenClaim.setOnClickListener(v -> {
+//            syncSparkToken();
+//            dialog.dismiss();
+//        });
         dialog.setContentView(binding.getRoot());
         dialog.show();
     }

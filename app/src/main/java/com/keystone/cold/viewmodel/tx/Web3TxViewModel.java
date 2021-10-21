@@ -315,8 +315,8 @@ public class Web3TxViewModel extends Base {
         tx.setTo(object.getString("to"));
         BigDecimal amount = new BigDecimal(object.getString("value"));
         double value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
-        tx.setAmount(nf.format(value) + " ETH");
-        tx.setFee(nf.format(calculateDisplayFee(object)) + " ETH");
+        tx.setAmount(nf.format(value));
+        tx.setFee(nf.format(calculateDisplayFee(object)));
         tx.setMemo(object.getString("data"));
         tx.setBelongTo(mRepository.getBelongTo());
         tx.setTxType(TransactionType.LEGACY.getType());
@@ -331,7 +331,7 @@ public class Web3TxViewModel extends Base {
         tx.setTo(object.getString("to"));
         BigDecimal amount = new BigDecimal(object.getString("value"));
         BigDecimal value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-        tx.setAmount(nf.format(value) + " ETH");
+        tx.setAmount(nf.format(value));
         calculateDisplayEIP1559Fee(object, tx);
         tx.setMemo(object.getString("data"));
         tx.setBelongTo(mRepository.getBelongTo());
@@ -354,11 +354,11 @@ public class Web3TxViewModel extends Base {
         BigDecimal gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
         BigDecimal estimatedFee = gasPriorityPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
         BigDecimal maxFee = gasLimitPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-        tx.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
-        tx.setMaxFeePerGas(nf.format(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
+        tx.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)));
+        tx.setMaxFeePerGas(nf.format(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)));
         tx.setGasLimit(nf.format(gasLimit));
-        tx.setEstimatedFee(nf.format(estimatedFee) + " ETH");
-        tx.setMaxFee(nf.format(maxFee) + " ETH");
+        tx.setEstimatedFee(nf.format(estimatedFee));
+        tx.setMaxFee(nf.format(maxFee));
     }
 
     public String getFromAddress(String path) {

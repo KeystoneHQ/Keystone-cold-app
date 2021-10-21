@@ -55,14 +55,16 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginHorizontal="16dp"
-            android:background="#12ffffff" />
+            android:background="#12ffffff"
+            android:visibility="gone"/>
 
         <RelativeLayout
             android:id="@+id/spark_token_claim"
             android:layout_width="match_parent"
             android:layout_height="53dp"
             android:background="?attr/selectableItemBackground"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"

@@ -230,9 +230,8 @@
     <string name="confirm_delete">确认删除</string>
     <string name="fingerprint_rename_subtitle">自定义指纹名称</string>
     <string name="enroll_complete_hint">恭喜！%s 成功录入</string>
-    <string name="unsupported_qrcode">二维码非法，请检查您扫描的二维码</string>
+    <string name="unsupported_qrcode">暂不支持扫描该二维码。</string>
     <string name="unsupported_coin">不支持此币种</string>
-    <string name="xfp_not_match">冷热端钱包不一致，请检查你扫描的二维码</string>
     <string name="incorrect_qrcode">二维码数据错误</string>
     <string name="incorrect_tx_data">非法交易数据</string>
     <string name="invalid_webauth_qrcode_hint">二维码非法，请按照指引扫码正确的二维码完成设备验证</string>
@@ -259,7 +258,7 @@
     <string name="serialno">序列号: %s</string>
     <string name="receive_address">收款地址%d</string>
     <string name="sync_in_progress">信息同步中</string>
-    <string name="scan_failed">扫描失败</string>
+    <string name="invalid_data">非法数据</string>
     <string name="version_not_match">固件版本和移动端版本不匹配，请升级双方版本至最新。</string>
     <string name="reset_hint">密码错误，机器将恢复出厂设置</string>
     <string name="set_passphrase">密语️(Passphrase)钱包</string>
@@ -411,7 +410,7 @@
     <string-array name="watch_wallet_list">
         <item>铠石钱包移动端</item>
         <item>Web3</item>
-        <item>Polkadot.js</item>
+        <item>Polkadot{.js}</item>
         <item>XRP Toolkit</item>
     </string-array>
     <string-array name="watch_wallet_summury">
@@ -427,7 +426,7 @@
     <string name="sync_keystone_wallet_guide_title">铠石钱包移动端导入指引：</string>
     <string name="sync_xumm_guide_title">XUMM 导入指引：</string>
     <string name="sync_xrp_toolkit_guide_title">XRP Toolkit 导入指引：</string>
-    <string name="sync_polkadotjs_wallet_guide_title">Polkadot.js 导入 %s 指引：</string>
+    <string name="sync_polkadotjs_wallet_guide_title">Polkadot{.js} 导入 %s 指引：</string>
     <string name="sync_metamask_guide_title">Web3钱包导入指引：</string>
     <string name="sync_keystone_wallet_guide_text"><![CDATA[
         1. 打开铠石钱包移动端，添加新钱包<br>
@@ -438,7 +437,7 @@
     ]]></string>
 
     <string name="sync_polkadot_js_guide_text"><![CDATA[
-        1. 打开 Polkadot.js，选择 <font color="#00cdc3">%s<font/><br>
+        1. 打开 Polkadot{.js}，选择 <font color="#00cdc3">%s<font/><br>
         2. 点击“<font color="#00cdc3">账户<font/>”，选择 “<font color="#00cdc3"> 账户<font/>”<br>
         3. 点击“<font color="#00cdc3">通过二维码添加<font/>”<br>
         4. 扫描 %s 的二维码<br>
@@ -470,19 +469,19 @@
     <string name="sync_xrp_toolkit_guide_button_text">查看地址二维码</string>
     <string name="sync_polkadot_js_guide_button_text">查看%s二维码</string>
     <string name="sync_metamask_guide_button_text">查看二维码</string>
-    <string name="sync_polkadot_hint">请注意：\n在Polkadot.js上，需分别创建 DOT、KSM 的观察钱包。</string>
+    <string name="sync_polkadot_hint">请注意：\n在Polkadot{.js}上，需分别创建 DOT、KSM 的观察钱包。</string>
     <string name="sync_with_keystone_vault">请使用铠石钱包移动端扫描二维码</string>
     <string name="sync_with_xumm">请使用 XUMM 扫描地址二维码</string>
     <string name="sync_with_xrp_toolkit">请使用 XRP Toolkit 扫描二维码</string>
     <string name="sync_with_metamask">请使用观察钱包扫描二维码</string>
-    <string name="sync_with_polkadot_js">请使用 Polkadot.js 扫描二维码</string>
+    <string name="sync_with_polkadot_js">请使用 Polkadot{.js} 扫描二维码</string>
     <string name="broadcast_xrp_toolkit_hint">请使用 XRP Toolkit 扫描二维码</string>
     <string name="sync_first_xrp_accout">将默认展示第一个地址的二维码，若您要同步其他地址，可进入钱包添加地址。</string>
     <string name="sync_xrp">同步账户</string>
-    <string name="unresolve_tx">无法解析该交易</string>
-    <string name="unresolve_tx_hint">当前钱包模式为%s，仅支持扫描对应观察钱包生成的二维码。</string>
+    <string name="unresolve_tx">非法数据</string>
+    <string name="unresolve_tx_hint">请扫描%s构造的二维码</string>
     <string name="account_not_match">非当前钱包交易</string>
-    <string name="account_not_match_detail">该交易不属于当前钱包，请检查交易信息。</string>
+    <string name="account_not_match_detail">该交易不属于当前钱包，请检查交易详情。</string>
     <string name="simple">简单</string>
     <string name="raw">原始</string>
     <string name="spark_token_claim_guide"><![CDATA[
@@ -501,10 +500,10 @@
     <string name="claim_spark_button_text">扫描 XRP Toolkit 二维码</string>
     <string name="pair_app">同步账户</string>
     <string name="unknown_substrate_chain_title">暂不支持该币种</string>
-    <string name="unknown_substrate_chain_content">Polkadot.js模式下暂不支持该币种</string>
+    <string name="unknown_substrate_chain_content">Polkadot{.js}模式下暂不支持该币种</string>
     <string name="unsupported_polka_tx_type_title">无法解析</string>
     <string name="unsupported_polka_tx_type_content">该交易类型暂不支持。</string>
-    <string name="enable_dot_for_polkadotjs">切换观察钱包为Polkadot.js，您需再次输入当前钱包的助记词。具体原因请访问：https://keyst.one/dot</string>
+    <string name="enable_dot_for_polkadotjs">切换观察钱包为Polkadot{.js}，您需再次输入当前钱包的助记词。具体原因请访问：https://keyst.one/dot</string>
     <string name="not_switch">暂不切换</string>
     <string name="confirm_switch">确认切换</string>
     <string name="keep_screen_on">请勿锁屏</string>

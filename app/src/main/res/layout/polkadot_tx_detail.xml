@@ -64,8 +64,8 @@
                     android:layout_toEndOf="@id/icon"
                     android:textColor="@color/white40"
                     android:textSize="12sp"
-                    tools:text="Polkadot"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="Polkadot{.js}" />
 
                 <include
                     layout="@layout/divider"

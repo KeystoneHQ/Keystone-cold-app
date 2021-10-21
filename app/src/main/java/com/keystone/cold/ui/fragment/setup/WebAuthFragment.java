@@ -103,7 +103,7 @@ public class WebAuthFragment extends SetupVaultBaseFragment<WebAuthBinding> {
                     @Override
                     public boolean handleException(Exception e) {
                         e.printStackTrace();
-                        mFragment.alert(getString(R.string.invalid_webauth_qrcode_hint));
+                        mFragment.alert(getString(R.string.invalid_data), getString(R.string.unsupported_qrcode));
                         return true;
                     }
 
