@@ -30,6 +30,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.db.PresetData;
 import com.keystone.cold.db.entity.CoinEntity;
+import com.keystone.cold.selfcheck.RuntimeStatusCode;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.SetupVaultActivity;
 import com.keystone.cold.util.Keyboard;
@@ -39,7 +40,7 @@ import com.keystone.cold.viewmodel.WatchWallet;
 import java.util.List;
 
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
-import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.handleSeStateAbnormal;
+import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.handleRuntimeStateAbnormal;
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_CREATE_STEP_CHOOSE_APP;
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATED;
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATING;
@@ -129,7 +130,7 @@ public class ConfirmMnemonicFragment extends MnemonicInputFragment {
                 if (dialog != null && dialog.getDialog() != null && dialog.getDialog().isShowing()) {
                     dialog.dismiss();
                 }
-                handleSeStateAbnormal(mActivity);
+                handleRuntimeStateAbnormal(mActivity, RuntimeStatusCode.RUNTIME_VAULT_CREATE_FAILED);
             }
         });
     }

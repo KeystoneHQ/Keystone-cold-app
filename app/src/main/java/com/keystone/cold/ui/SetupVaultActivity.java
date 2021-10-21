@@ -29,6 +29,7 @@ import androidx.navigation.NavInflater;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.keystone.cold.R;
+import com.keystone.cold.selfcheck.RuntimeStatusCode;
 import com.keystone.cold.ui.common.FullScreenActivity;
 import com.keystone.cold.viewmodel.SetupVaultViewModel;
 
@@ -36,7 +37,7 @@ import java.util.Objects;
 
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.PASSWORD;
-import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.handleSeStateAbnormal;
+import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.handleRuntimeStateAbnormal;
 
 public class SetupVaultActivity extends FullScreenActivity {
 
@@ -99,7 +100,7 @@ public class SetupVaultActivity extends FullScreenActivity {
                     return;
                 }
                 default: {
-                    handleSeStateAbnormal(this);
+                    handleRuntimeStateAbnormal(this, RuntimeStatusCode.RUNTIME_INVALID_VAULT_CREATE_STEP);
                 }
             }
         }

@@ -43,6 +43,7 @@ import com.keystone.cold.databinding.MnemonicInputFragmentBinding;
 import com.keystone.cold.databinding.ModalWithTwoButtonBinding;
 import com.keystone.cold.db.PresetData;
 import com.keystone.cold.db.entity.CoinEntity;
+import com.keystone.cold.selfcheck.RuntimeStatusCode;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.SetupVaultActivity;
 import com.keystone.cold.ui.fragment.unlock.VerifyMnemonicFragment;
@@ -62,7 +63,7 @@ import iton.slip.secret.words.Mnemonic;
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.mnemonic.MnemonicInputTable.TWENTYTHREE;
 import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.PASSWORD;
-import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.handleSeStateAbnormal;
+import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.handleRuntimeStateAbnormal;
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_CREATE_STEP_CHOOSE_APP;
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATED;
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATING;
@@ -315,7 +316,7 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
                 if (dialog != null && dialog.getDialog() != null && dialog.getDialog().isShowing()) {
                     dialog.dismiss();
                 }
-                handleSeStateAbnormal(mActivity);
+                handleRuntimeStateAbnormal(mActivity, RuntimeStatusCode.RUNTIME_VAULT_CREATE_FAILED);
             }
         });
     }

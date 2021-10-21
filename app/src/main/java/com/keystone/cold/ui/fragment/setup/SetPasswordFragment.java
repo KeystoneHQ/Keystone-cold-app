@@ -37,6 +37,7 @@ import com.keystone.cold.callables.ChangePasswordCallable;
 import com.keystone.cold.callables.ResetPasswordCallable;
 import com.keystone.cold.databinding.ModalBinding;
 import com.keystone.cold.databinding.SetPasswordBinding;
+import com.keystone.cold.selfcheck.RuntimeStatusCode;
 import com.keystone.cold.ui.AttackWarningActivity;
 import com.keystone.cold.ui.UnlockActivity;
 import com.keystone.cold.ui.modal.ModalDialog;
@@ -246,7 +247,7 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
                             navigate(R.id.action_to_firmwareUpgradeFragment, data);
                         };
                     } else {
-                        handleSeStateAbnormal(mActivity);
+                        handleRuntimeStateAbnormal(mActivity, RuntimeStatusCode.RUNTIME_WRITE_PASSWORD_FAILED);
                         return;
                     }
                 }
@@ -257,6 +258,17 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
                 });
             });
         }
+    }
+
+    public static void handleRuntimeStateAbnormal(Activity activity, int statusCode) {
+        Utilities.setAttackDetected(activity);
+        Bundle data = new Bundle();
+        data.putInt("firmware", statusCode);
+        data.putInt("system", 0);
+        data.putInt("signature", 0);
+        Intent intent = new Intent(activity, AttackWarningActivity.class);
+        intent.putExtras(data);
+        activity.startActivity(intent);
     }
 
     public static void handleSeStateAbnormal(Activity activity) {
