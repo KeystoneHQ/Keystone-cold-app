@@ -31,7 +31,7 @@ import static com.keystone.cold.ui.fragment.setting.MainPreferenceFragment.SETTI
 
 public enum WatchWallet {
     KEYSTONE("keystone"),
-    POLKADOT_JS("Polkadot{.js}"),
+    POLKADOT_JS("polkadotJs"),
     XRP_TOOLKIT("xrpToolkit"),
     METAMASK("metamask");
 
