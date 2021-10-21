@@ -56,13 +56,13 @@ public class QrScanViewModel extends AndroidViewModel {
 
     private static final String TAG = "Vault.Qrcode.QrScanViewModel";
 
-    private final boolean isSetupVault;
+    private final boolean inSetupProcess;
     private QRCodeScanFragment fragment;
     private XummTxConfirmViewModel xummTxConfirmViewModel;
 
-    private QrScanViewModel(@NonNull Application application, boolean isSetupVault) {
+    private QrScanViewModel(@NonNull Application application, boolean inSetupProcess) {
         super(application);
-        this.isSetupVault = isSetupVault;
+        this.inSetupProcess = inSetupProcess;
     }
 
     public void handleUrQrCode(QRCodeScanFragment owner, String hex) throws
@@ -214,8 +214,8 @@ public class QrScanViewModel extends AndroidViewModel {
         String data = object.getString("data");
         Bundle bundle = new Bundle();
         bundle.putString(WEB_AUTH_DATA, data);
-        bundle.putBoolean(IS_SETUP_VAULT, isSetupVault);
-        if (isSetupVault) {
+        bundle.putBoolean(IS_SETUP_VAULT, inSetupProcess);
+        if (inSetupProcess) {
             fragment.navigate(R.id.action_to_webAuthResultFragment, bundle);
         } else {
             fragment.navigate(R.id.action_QRCodeScan_to_result, bundle);

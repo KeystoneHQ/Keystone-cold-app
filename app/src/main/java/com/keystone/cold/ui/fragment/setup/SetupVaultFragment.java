@@ -23,9 +23,14 @@ import android.view.View;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.SetupVaultBinding;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.ui.views.AuthenticateModal;
+import com.keystone.cold.viewmodel.OneTimePasswordManager;
 
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
+import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.SHOULD_POP_BACK;
+
+import androidx.navigation.Navigation;
 
 public class SetupVaultFragment extends BaseFragment<SetupVaultBinding> {
 
@@ -55,13 +60,39 @@ public class SetupVaultFragment extends BaseFragment<SetupVaultBinding> {
     }
 
     private void createVault(View view) {
-        navigate(R.id.action_to_tabletQrcodeFragment);
+        AuthenticateModal.show(mActivity, mActivity.getString(R.string.password_modal_title),
+                "",
+                password -> {
+                    OneTimePasswordManager.getInstance().setPasswordHash(password.password);
+                    navigate(R.id.action_to_tabletQrcodeFragment);
+                },
+                () -> {
+                    Bundle data = new Bundle();
+                    data.putBoolean(IS_SETUP_VAULT, true);
+                    data.putBoolean(SHOULD_POP_BACK, true);
+                    Navigation.findNavController(mActivity, R.id.nav_host_fragment)
+                            .navigate(R.id.global_action_to_setPasswordFragment, data);
+                });
+
     }
 
     private void importVault(View view) {
-        Bundle data = new Bundle();
-        data.putString(ACTION,PreImportFragment.ACTION_IMPORT);
-        navigate(R.id.action_to_preImportFragment, data);
+        AuthenticateModal.show(mActivity, mActivity.getString(R.string.password_modal_title),
+                "",
+                password -> {
+                    OneTimePasswordManager.getInstance().setPasswordHash(password.password);
+                    Bundle data = new Bundle();
+                    data.putString(ACTION, PreImportFragment.ACTION_IMPORT);
+                    navigate(R.id.action_to_preImportFragment, data);
+                },
+                () -> {
+                    Bundle data = new Bundle();
+                    data.putBoolean(IS_SETUP_VAULT, true);
+                    data.putBoolean(SHOULD_POP_BACK, true);
+                    Navigation.findNavController(mActivity, R.id.nav_host_fragment)
+                            .navigate(R.id.global_action_to_setPasswordFragment, data);
+                });
+
     }
 
     @Override

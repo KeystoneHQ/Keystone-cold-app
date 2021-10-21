@@ -84,7 +84,7 @@ public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
 
     @Override
     protected void init(View view) {
-        boolean isSetupVault = getArguments() != null && getArguments().getBoolean(IS_SETUP_VAULT);
+        boolean inSetupProcess = getArguments() != null && getArguments().getBoolean(IS_SETUP_VAULT);
         watchWallet = WatchWallet.getWatchWallet(mActivity);
         purpose = getArguments() != null ? getArguments().getString("purpose") : "";
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
@@ -95,7 +95,7 @@ public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
         mCameraManager = new CameraManager(mActivity, mConfig);
         mBinding.frameView.setCameraManager(mCameraManager);
         mBinding.frameView.setZxingConfig(mConfig);
-        QrScanViewModel.Factory factory = new QrScanViewModel.Factory(mActivity.getApplication(), isSetupVault);
+        QrScanViewModel.Factory factory = new QrScanViewModel.Factory(mActivity.getApplication(), inSetupProcess);
         viewModel = ViewModelProviders.of(this, factory).get(QrScanViewModel.class);
 
 

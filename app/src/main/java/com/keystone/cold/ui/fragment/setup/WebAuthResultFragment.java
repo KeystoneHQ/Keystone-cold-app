@@ -20,7 +20,6 @@ package com.keystone.cold.ui.fragment.setup;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -49,7 +48,7 @@ public class WebAuthResultFragment extends SetupVaultBaseFragment<WebAuthResultB
 
     public static final String WEB_AUTH_DATA = "web_auth_data";
 
-	private boolean isSetupVault;
+	private boolean inSetupProcess;
 
 	@Override
 	protected int setView() {
@@ -60,13 +59,13 @@ public class WebAuthResultFragment extends SetupVaultBaseFragment<WebAuthResultB
 	protected void init(View view) {
 		super.init(view);
 		Bundle bundle = requireArguments();
-		isSetupVault = bundle.getBoolean(IS_SETUP_VAULT);
+		inSetupProcess = bundle.getBoolean(IS_SETUP_VAULT);
 		mBinding.setViewModel(viewModel);
 		viewModel.calcAuthCode(bundle.getString(WEB_AUTH_DATA));
 		mBinding.success.setOnClickListener(this::handleSuccess);
 		mBinding.fail.setOnClickListener(this::handleFail);
 
-		if (isSetupVault) {
+		if (inSetupProcess) {
 			mBinding.toolbar.setVisibility(View.GONE);
 			mBinding.divider.setVisibility(View.GONE);
 		} else {
@@ -97,7 +96,7 @@ public class WebAuthResultFragment extends SetupVaultBaseFragment<WebAuthResultB
 
 		binding.retry.setOnClickListener(v -> {
 			dialog.dismiss();
-			if (isSetupVault) {
+			if (inSetupProcess) {
 				navigate(R.id.action_webAuth_retry);
 			} else {
 				navigateUp();
@@ -109,7 +108,7 @@ public class WebAuthResultFragment extends SetupVaultBaseFragment<WebAuthResultB
 	}
 
 	private void handleSuccess(View view) {
-		if (isSetupVault) {
+		if (inSetupProcess) {
 			Bundle bundle = new Bundle();
 			bundle.putBoolean(IS_SETUP_VAULT, true);
 			viewModel.setVaultCreateStep(SetupVaultViewModel.VAULT_CREATE_STEP_SET_PASSWORD);

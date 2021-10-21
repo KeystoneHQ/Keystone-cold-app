@@ -292,7 +292,7 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
                     }
 
                     Bundle data = new Bundle();
-                    boolean isSetupProcess = ((SetupVaultActivity) mActivity).isSetupVault;
+                    boolean isSetupProcess = ((SetupVaultActivity) mActivity).inSetupProcess;
                     data.putBoolean(IS_SETUP_VAULT, isSetupProcess);
                     if (isSetupProcess) {
                         viewModel.setVaultCreateStep(VAULT_CREATE_STEP_CHOOSE_APP);

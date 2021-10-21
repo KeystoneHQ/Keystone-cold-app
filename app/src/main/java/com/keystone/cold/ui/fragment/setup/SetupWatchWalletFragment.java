@@ -45,7 +45,7 @@ public class SetupWatchWalletFragment extends SetupVaultBaseFragment<SetupWatchW
     private void onConfirm() {
         WatchWallet watchWallet = WatchWallet.getWatchWallet(mActivity);
         Bundle data = new Bundle();
-        data.putBoolean(IS_SETUP_VAULT, ((SetupVaultActivity) mActivity).isSetupVault);
+        data.putBoolean(IS_SETUP_VAULT, ((SetupVaultActivity) mActivity).inSetupProcess);
         viewModel.setVaultCreateStep(SetupVaultViewModel.VAULT_CREATE_STEP_DONE);
         switch (watchWallet) {
             case KEYSTONE:

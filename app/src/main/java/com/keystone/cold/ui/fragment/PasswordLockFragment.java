@@ -84,9 +84,6 @@ public class PasswordLockFragment extends BaseFragment<PasswordUnlockBinding> {
                     Utilities.setPasswordRetryTimes(mActivity, 0);
                     Utilities.setPatternRetryTimes(mActivity, 0);
                     FingerprintKit.verifyPassword(mActivity);
-                    if (!hasVault) {
-                        OneTimePasswordManager.getInstance().setPasswordHash(passwordHash);
-                    }
                     mActivity.finish();
                 } else {
                     handler.post(() -> {

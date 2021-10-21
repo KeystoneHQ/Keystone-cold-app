@@ -404,6 +404,14 @@
         app:popExitAnim="@android:anim/slide_out_right"/>
 
     <action
+        android:id="@+id/global_action_to_setPasswordFragment"
+        app:destination="@id/setPasswordFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
         android:id="@+id/action_to_syncWatchWalletGuide"
         app:destination="@id/syncWatchWalletGuide"
         app:enterAnim="@anim/slide_in_right"
