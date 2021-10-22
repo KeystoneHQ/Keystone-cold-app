@@ -188,7 +188,7 @@ public class ManageCoinFragment extends BaseFragment<ManageCoinFragmentBinding> 
                     } else {
                         navigate(R.id.action_to_syncWatchWalletGuide, data);
                     }
-                } else if(data.getBoolean(IS_SWITCH_WATCH_WALLET)){
+                } else if (data.getBoolean(IS_SWITCH_WATCH_WALLET)) {
                     navigate(R.id.action_to_syncWatchWalletGuide, data);
                 } else {
                     startActivity(new Intent(mActivity, MainActivity.class));

@@ -41,7 +41,7 @@ import java.util.List;
 
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.handleRuntimeStateAbnormal;
-import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_CREATE_STEP_CHOOSE_APP;
+import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_CREATE_STEP_DONE;
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATED;
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATING;
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATING_FAILED;
@@ -109,7 +109,7 @@ public class ConfirmMnemonicFragment extends MnemonicInputFragment {
                     boolean isSetupProcess = ((SetupVaultActivity) mActivity).inSetupProcess;
                     data.putBoolean(IS_SETUP_VAULT, isSetupProcess);
                     if (isSetupProcess) {
-                        viewModel.setVaultCreateStep(VAULT_CREATE_STEP_CHOOSE_APP);
+                        viewModel.setVaultCreateStep(VAULT_CREATE_STEP_DONE);
                         navigate(R.id.action_to_setupWatchWalletFragment, data);
                     } else {
                         if (WatchWallet.getWatchWallet(mActivity) == WatchWallet.KEYSTONE) {

@@ -38,7 +38,7 @@ public class Coins {
     public static final Coin DCR = new Coin("dcr", "DCR", "Dcr", 42);
     public static final Coin FIRO = new Coin("zcoin", "FIRO", "Zcoin", 136);
     public static final Coin XRP = new Coin("ripple", "XRP", "Ripple", 144);
-    public static final Coin IOST = new Coin("iost", "IOST", "IOST", 291, CURVE.ED25519,new String[]{""});
+    public static final Coin IOST = new Coin("iost", "IOST", "IOST", 291, CURVE.ED25519, new String[]{""});
     public static final Coin EOS = new Coin("eos", "EOS", "EOS", 194);
     public static final Coin XTN = new Coin("xtn", "XTN", "XTN", 1);
     public static final Coin DOT = new Coin("polkadot", "DOT", "Polkadot", 354, CURVE.SR25519,
@@ -203,6 +203,16 @@ public class Coins {
 
     public static boolean isPolkadotFamily(String coinCode) {
         return coinCode.equals(DOT.coinCode) || coinCode.equals(KSM.coinCode);
+    }
+
+    public static boolean isDefaultOpen(String coinCode) {
+        switch (coinCode) {
+            case "BTC":
+            case "ETH":
+                return true;
+            default:
+                return false;
+        }
     }
 
 }

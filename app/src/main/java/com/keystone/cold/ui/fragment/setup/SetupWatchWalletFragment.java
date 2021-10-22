@@ -46,7 +46,6 @@ public class SetupWatchWalletFragment extends SetupVaultBaseFragment<SetupWatchW
         WatchWallet watchWallet = WatchWallet.getWatchWallet(mActivity);
         Bundle data = new Bundle();
         data.putBoolean(IS_SETUP_VAULT, ((SetupVaultActivity) mActivity).inSetupProcess);
-        viewModel.setVaultCreateStep(SetupVaultViewModel.VAULT_CREATE_STEP_DONE);
         switch (watchWallet) {
             case KEYSTONE:
                 navigate(R.id.action_to_manageCoinFragment, data);

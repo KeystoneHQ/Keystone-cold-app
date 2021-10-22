@@ -85,8 +85,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
     public static final int VAULT_CREATE_STEP_SET_PASSWORD = 1;
     public static final int VAULT_CREATE_STEP_FIRMWARE_UPGRADE = 2;
     public static final int VAULT_CREATE_STEP_WRITE_MNEMONIC = 3;
-    public static final int VAULT_CREATE_STEP_CHOOSE_APP = 4;
-    public static final int VAULT_CREATE_STEP_DONE = 5;
+    public static final int VAULT_CREATE_STEP_DONE = 4;
 
     public static final String VAULT_CREATE_STEP = "vault_create_step";
 
@@ -150,7 +149,6 @@ public class SetupVaultViewModel extends AndroidViewModel {
             case SetupVaultViewModel.VAULT_CREATE_STEP_SET_PASSWORD:
             case SetupVaultViewModel.VAULT_CREATE_STEP_FIRMWARE_UPGRADE:
             case SetupVaultViewModel.VAULT_CREATE_STEP_WRITE_MNEMONIC:
-            case SetupVaultViewModel.VAULT_CREATE_STEP_CHOOSE_APP:
             case SetupVaultViewModel.VAULT_CREATE_STEP_DONE:{
                 Utilities.setVaultCreateStep(getApplication(), step);
                 break;
