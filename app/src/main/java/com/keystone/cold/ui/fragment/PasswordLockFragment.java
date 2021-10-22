@@ -114,7 +114,8 @@ public class PasswordLockFragment extends BaseFragment<PasswordUnlockBinding> {
                 navigate(R.id.action_resetpassword_verifyMnemonic, bundle);
             }
             else {
-                navigate(R.id.action_to_setPasswordFragment);
+                bundle.putBoolean(IS_SETUP_VAULT, true);
+                navigate(R.id.action_to_setPasswordFragment, bundle);
             }
         });
         Keyboard.show(mActivity, mBinding.passwordInput);

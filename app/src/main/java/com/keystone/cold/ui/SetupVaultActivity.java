@@ -36,6 +36,7 @@ import com.keystone.cold.viewmodel.SetupVaultViewModel;
 import java.util.Objects;
 
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
+import static com.keystone.cold.Utilities.hasPasswordSet;
 import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.PASSWORD;
 import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.handleRuntimeStateAbnormal;
 
@@ -64,6 +65,8 @@ public class SetupVaultActivity extends FullScreenActivity {
         NavGraph graph = inflater.inflate(R.navigation.nav_graph_setup);
         Intent intent = getIntent();
 
+        Bundle bundle = new Bundle();
+
         if (savedInstanceState != null) {
             inSetupProcess = savedInstanceState.getBoolean(IS_SETUP_VAULT);
         } else {
@@ -72,6 +75,7 @@ public class SetupVaultActivity extends FullScreenActivity {
         if (!inSetupProcess) {
             graph.setStartDestination(R.id.setupVaultFragment);
         } else {
+            bundle.putBoolean(IS_SETUP_VAULT, true);
             SetupVaultViewModel model = ViewModelProviders.of(this).get(SetupVaultViewModel.class);
             switch (model.getVaultCreateStep()) {
                 case SetupVaultViewModel.VAULT_CREATE_STEP_WEB_AUTH: {
@@ -90,10 +94,6 @@ public class SetupVaultActivity extends FullScreenActivity {
                     graph.setStartDestination(R.id.setupVaultFragment);
                     break;
                 }
-                case SetupVaultViewModel.VAULT_CREATE_STEP_CHOOSE_APP: {
-                    graph.setStartDestination(R.id.SetupWatchWalletFragment);
-                    break;
-                }
                 case SetupVaultViewModel.VAULT_CREATE_STEP_DONE: {
                     startActivity(new Intent(this, MainActivity.class));
                     this.finish();
@@ -104,8 +104,6 @@ public class SetupVaultActivity extends FullScreenActivity {
                 }
             }
         }
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(IS_SETUP_VAULT, true);
         navHostFragment.getNavController().setGraph(graph, bundle);
     }
 
@@ -113,5 +111,17 @@ public class SetupVaultActivity extends FullScreenActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(IS_SETUP_VAULT, inSetupProcess);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!hasPasswordSet(this)) {
+            NavHostFragment navHostFragment =
+                    (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+            Bundle data = new Bundle();
+            data.putBoolean(IS_SETUP_VAULT, true);
+            navHostFragment.getNavController().navigate(R.id.setPasswordFragment, data);
+        }
     }
 }

@@ -223,6 +223,9 @@ public class MainApplication extends Application {
                         && !Utilities.isAttackDetected(activity)) {
                     startActivity(new Intent(activity, UnlockActivity.class));
                 }
+                else if((activity instanceof UnlockActivity) && !Utilities.hasPasswordSet(activity)) {
+                    activity.finish();
+                }
             }
         }
     };

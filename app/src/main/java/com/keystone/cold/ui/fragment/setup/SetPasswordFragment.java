@@ -158,6 +158,10 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
         mBinding.setViewModel(viewModel);
         Bundle bundle = getArguments();
         inSetupProcess = bundle != null && bundle.getBoolean(IS_SETUP_VAULT);
+        if(inSetupProcess) {
+            viewModel.setVaultCreateStep(SetupVaultViewModel.VAULT_CREATE_STEP_SET_PASSWORD);
+            Utilities.clearPasswordSet(mActivity);
+        }
         shouldPopBack = bundle != null && bundle.getBoolean(SHOULD_POP_BACK);
         currentPassword = bundle != null ? bundle.getString(PASSWORD) : null;
         mnemonic = bundle != null ? bundle.getString(MNEMONIC) : null;

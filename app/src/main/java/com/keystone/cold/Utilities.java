@@ -91,6 +91,11 @@ public class Utilities {
         sp.edit().putBoolean(PREFERENCE_KEY_PASSWORD_SET, true).apply();
     }
 
+    public static void clearPasswordSet(Activity context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        sp.edit().putBoolean(PREFERENCE_KEY_PASSWORD_SET, false).apply();
+    }
+
     public static void setLanguageSet(Activity activity) {
         SharedPreferences sp = activity.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
         sp.edit().putBoolean(PREFERENCE_KEY_LANGUAGE_SET, true).apply();

@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import static com.keystone.coinlib.utils.Coins.DOT;
 import static com.keystone.coinlib.utils.Coins.KSM;
+import static com.keystone.coinlib.utils.Coins.isDefaultOpen;
 
 public class PresetData {
 
@@ -47,6 +48,7 @@ public class PresetData {
         entity.setIndex(coin.coinIndex());
         entity.setBelongTo(Utilities.getCurrentBelongTo(context));
         entity.setAddressCount(0);
+        entity.setShow(isDefaultOpen(coin.coinCode()));
         AccountEntity account = new AccountEntity();
         String defaultHdPath = CoinPath.M()
                 .purpose(Coins.purposeNumber(entity.getCoinCode()))
