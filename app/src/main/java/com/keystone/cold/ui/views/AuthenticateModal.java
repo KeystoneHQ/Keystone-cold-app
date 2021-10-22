@@ -143,6 +143,9 @@ public class AuthenticateModal {
                                      ModalDialog dialog) {
         ObservableField<String> password = new ObservableField<>();
         password.set("");
+        dialog.setRunOnResume(() -> {
+            password.set("");
+        });
         binding.setPassword(password);
         binding.title.setText(title);
         if (!TextUtils.isEmpty(subTitle)) {

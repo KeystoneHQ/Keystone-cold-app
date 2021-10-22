@@ -39,12 +39,18 @@ public class ModalDialog extends DialogFragment {
 
     private ViewDataBinding binding;
 
+    private Runnable runOnResume;
+
     public static ModalDialog newInstance() {
         return new ModalDialog();
     }
 
     public void setBinding(ViewDataBinding binding) {
         this.binding = binding;
+    }
+
+    public void setRunOnResume(Runnable runOnResume) {
+        this.runOnResume = runOnResume;
     }
 
     @Nullable
@@ -85,5 +91,13 @@ public class ModalDialog extends DialogFragment {
         dialog.setBinding(binding);
         dialog.show(activity.getSupportFragmentManager(), "");
         return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (this.runOnResume != null) {
+            runOnResume.run();
+        }
     }
 }
