@@ -58,7 +58,7 @@
                 android:id="@+id/step"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="34dp"
+                android:layout_marginTop="20dp"
                 app:step="3" />
 
             <com.keystone.cold.ui.views.SpanedTextView
@@ -66,7 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="4dp"
                 android:lineSpacingExtra="8dp"
                 android:text="@string/create_vault_hint"
                 android:textColor="@color/white"

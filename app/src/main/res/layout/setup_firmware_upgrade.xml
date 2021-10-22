@@ -38,14 +38,14 @@
             android:id="@+id/step"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="34dp"
+            android:layout_marginTop="20dp"
             app:step="2" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="4dp"
             android:orientation="vertical"
             tools:ignore="RtlSymmetry">
 
@@ -105,7 +105,7 @@
             <com.keystone.cold.ui.views.SpanedTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginBottom="20dp"
                 android:lineSpacingExtra="8dp"
                 android:text="@string/firmware_upgrade4"
                 android:textColor="@color/white40"

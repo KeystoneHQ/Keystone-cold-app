@@ -69,7 +69,6 @@ public class SetupVaultFragment extends BaseFragment<SetupVaultBinding> {
                 () -> {
                     Bundle data = new Bundle();
                     data.putBoolean(IS_SETUP_VAULT, true);
-                    data.putBoolean(SHOULD_POP_BACK, true);
                     Navigation.findNavController(mActivity, R.id.nav_host_fragment)
                             .navigate(R.id.global_action_to_setPasswordFragment, data);
                 });
@@ -88,7 +87,6 @@ public class SetupVaultFragment extends BaseFragment<SetupVaultBinding> {
                 () -> {
                     Bundle data = new Bundle();
                     data.putBoolean(IS_SETUP_VAULT, true);
-                    data.putBoolean(SHOULD_POP_BACK, true);
                     Navigation.findNavController(mActivity, R.id.nav_host_fragment)
                             .navigate(R.id.global_action_to_setPasswordFragment, data);
                 });

@@ -41,6 +41,7 @@ import com.keystone.cold.encryptioncore.utils.Preconditions;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.update.data.UpdateManifest;
+import com.keystone.cold.viewmodel.SetupVaultViewModel;
 import com.keystone.cold.viewmodel.UpdatingViewModel;
 
 import java.util.Objects;
@@ -53,6 +54,7 @@ import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.SHOULD_POP
 public class UpdatingHelper implements OnBatteryChangeListener {
 
     private final UpdatingViewModel updatingViewModel;
+    private final SetupVaultViewModel setupVaultViewModel;
     private final AppCompatActivity mActivity;
     private final boolean proactive;
     private int batteryPercent = -1;
@@ -62,6 +64,7 @@ public class UpdatingHelper implements OnBatteryChangeListener {
         mActivity = activity;
         this.proactive = proactive;
         updatingViewModel = ViewModelProviders.of(mActivity).get(UpdatingViewModel.class);
+        setupVaultViewModel = ViewModelProviders.of(mActivity).get(SetupVaultViewModel.class);
         registerBroadcastReceiver(activity);
     }
 
@@ -77,6 +80,9 @@ public class UpdatingHelper implements OnBatteryChangeListener {
             updatingViewModel.getUpdateManifest().observe(mActivity, updateManifest -> {
                 if (updateManifest != null) {
                     manifestLiveData.setValue(updateManifest);
+                }
+                else {
+                    manifestLiveData.setValue(null);
                 }
             });
         }
@@ -126,7 +132,7 @@ public class UpdatingHelper implements OnBatteryChangeListener {
                             "",
                             password -> {
                                 updatingViewModel.doUpdate(password.password);
-                                subscribeUpdateState();
+                                subscribeUpdateState(true);
                             },
                             () -> {
                                 Bundle data = new Bundle();
@@ -174,6 +180,10 @@ public class UpdatingHelper implements OnBatteryChangeListener {
     }
 
     private void subscribeUpdateState() {
+        subscribeUpdateState(false);
+    }
+
+    private void subscribeUpdateState(boolean inSetupProcess) {
         ModalDialog dialog = new ModalDialog();
         UpdatingBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
                 R.layout.updating, null, false);
@@ -183,7 +193,11 @@ public class UpdatingHelper implements OnBatteryChangeListener {
                 case UPDATING:
                     dialog.show(mActivity.getSupportFragmentManager(), "");
                     break;
-                case UPDATING_SUCCESS:
+                case UPDATING_SUCCESS: {
+                    if (inSetupProcess) {
+                        setupVaultViewModel.setVaultCreateStep(SetupVaultViewModel.VAULT_CREATE_STEP_WRITE_MNEMONIC);
+                    }
+                }
                 case UPDATING_FAILED:
                     if (dialog.getDialog() != null && dialog.getDialog().isShowing()) {
                         dialog.dismiss();

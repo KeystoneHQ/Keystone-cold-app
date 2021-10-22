@@ -66,8 +66,10 @@ public class WebAuthResultFragment extends SetupVaultBaseFragment<WebAuthResultB
 		mBinding.fail.setOnClickListener(this::handleFail);
 
 		if (inSetupProcess) {
-			mBinding.toolbar.setVisibility(View.GONE);
 			mBinding.divider.setVisibility(View.GONE);
+			mBinding.step.setVisibility(View.GONE);
+			mBinding.hint.setVisibility(View.GONE);
+			mBinding.toolbar.setNavigationOnClickListener(v ->navigateUp());
 		} else {
 			mBinding.step.setVisibility(View.GONE);
 			mBinding.toolbar.setNavigationOnClickListener(v ->navigate(R.id.action_auth_to_home));

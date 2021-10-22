@@ -60,8 +60,10 @@ public class FirmwareUpgradeFragment extends SetupVaultBaseFragment<SetupFirmwar
                 manifestLiveData.observe(this, updateManifest -> {
                     if (updateManifest != null) {
                         updatingHelper.onUpdatingDetect(updateManifest, true);
-                        manifestLiveData.removeObservers(this);
+                    } else {
+                        showError();
                     }
+                    manifestLiveData.removeObservers(this);
                 });
             } else {
                 showError();
