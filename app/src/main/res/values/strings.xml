@@ -442,7 +442,7 @@
     <string-array name="watch_wallet_list_values" translatable="false">
         <item>keystone</item>
         <item>metamask</item>
-        <item>Polkadot{.js}</item>
+        <item>polkadotJs</item>
         <item>xrpToolkit</item>
     </string-array>
     <string-array name="watch_wallet_summury" >
