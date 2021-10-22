@@ -146,6 +146,7 @@ public class ChooseWatchWalletFragment extends ListPreferenceFragment {
             String old = tempValue;
             value = getValueByPosition(index);
             if (!TextUtils.equals(old, value)) {
+                tempValue = value;
                 prefs.edit().putString(SETTING_CHOOSE_WATCH_WALLET, value).apply();
                 adapter.notifyDataSetChanged();
             }

@@ -85,7 +85,9 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
     @Override
     public void onResume() {
         super.onResume();
+        mBinding.confirm.setEnabled(false);
         registerListeners();
+        Keyboard.show(mActivity, mBinding.pwd1);
     }
 
     @Override
@@ -310,7 +312,6 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
         super.onPause();
         viewModel.getPwd1().set("");
         viewModel.getPwd2().set("");
-        mBinding.confirm.setEnabled(false);
         paused = true;
     }
 }

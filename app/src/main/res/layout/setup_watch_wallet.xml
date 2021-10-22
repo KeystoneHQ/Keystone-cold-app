@@ -38,7 +38,7 @@
             android:id="@+id/step"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="34dp"
+            android:layout_marginTop="20dp"
             app:step="4" />
 
         <fragment
@@ -46,7 +46,7 @@
             android:name="com.keystone.cold.ui.fragment.setup.ChooseWatchWalletFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="4dp"
             />
         <Space
             android:layout_width="match_parent"

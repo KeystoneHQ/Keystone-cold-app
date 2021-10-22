@@ -75,7 +75,7 @@ public class SetupVaultActivity extends FullScreenActivity {
             SetupVaultViewModel model = ViewModelProviders.of(this).get(SetupVaultViewModel.class);
             switch (model.getVaultCreateStep()) {
                 case SetupVaultViewModel.VAULT_CREATE_STEP_WEB_AUTH: {
-                    graph.setStartDestination(R.id.webAuthFragment);
+                    graph.setStartDestination(R.id.welcomeFragment);
                     break;
                 }
                 case SetupVaultViewModel.VAULT_CREATE_STEP_SET_PASSWORD: {
