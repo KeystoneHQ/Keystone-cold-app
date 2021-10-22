@@ -94,24 +94,23 @@
     </string-array>
 
     <string name="tab_my_address">ADDRESSES</string>
-    <string name="web_auth1">1.点击下方按钮，扫描官网验证的二维码</string>
-    <string name="web_auth2">2.将扫描后的结果输入给网站</string>
-    <string name="web_auth3"><![CDATA[3.在网站上点击<font color="#00cdc3">"验证"<font/>获取结果]]></string>
-    <string name="web_auth4">如果扫描失败，您的设备可能已经被攻击，建议您停止使用该设备。</string>
-    <string name="web_auth5"><![CDATA[官网验证网站: <br> <font color="#00cdc3">https://keyst.one/setup/1<font/>]]></string>
+    <string name="web_auth1"><![CDATA[1. Click on <font color="#00cdc3">"Scan QR Code"<font/> button below and scan the QR code displayed on the website]]></string>
+    <string name="web_auth2">2. Your Keystone would then display a code. Please enter that into the official website to verify the authenticity of your device</string>
+    <string name="web_auth3"><![CDATA[3. Click <font color="#00cdc3">"Verify"<font/> button on the website to see your result]]></string>
+    <string name="web_auth4">If the authentication fails, please do not use this device as it may have been compromised!</string>
+    <string name="web_auth5"><![CDATA[Web Auth Link: <br> <font color="#00cdc3">https://keyst.one/start/1<font/>]]></string>
 
-    <string name="firmware_upgrade1">为了使用新功能，建议您将固件升级到最新版本</string>
-    <string name="firmware_upgrade2">TF卡为FAT32格式，不超过512GB</string>
-    <string name="firmware_upgrade3">设备电量须超过70%</string>
-    <string name="firmware_upgrade4"><![CDATA[下载最新固件，请访问: <br> <font color="#00cdc3">https://keyst.one/setup/3<font/>]]></string>
-    <string name="firmware_upgrade_start">开始升级</string>
-    <string name="firmware_upgrade_unable">无法升级</string>
-    <string name="firmware_upgrade_unable_description">未检测到升级包，请确认是否将存有update.zip的TF卡（FAT32格式，不超过512GB）插入设备中。</string>
-
+    <string name="firmware_upgrade1">Upgrading your firmware to the latest version to benefit from new features is highly recommended.</string>
+    <string name="firmware_upgrade2">A microSD card in FAT32format with a maximum memory capacity of 512GB is required</string>
+    <string name="firmware_upgrade3">A minimum of 70% battery charge is required</string>
+    <string name="firmware_upgrade4"><![CDATA[To download the latest firmware, please visit: <br> <font color="#00cdc3">https://keyst.one/start/3<font/>]]></string>
+    <string name="firmware_upgrade_start">Update Now</string>
+    <string name="firmware_upgrade_unable">Error detected</string>
+    <string name="firmware_upgrade_unable_description">The new Firmware package was not detected.Please check whether your microSD card has been formatted to FAT32, has no more than 512GB of memory, and if the ‘update.zip’ file has been properly copied onto the card.</string>
     <string name="skip">Skip</string>
     <string name="read_confirm"><![CDATA[I\'ve read and agreed to the <font color="#00cdc3"><u>\"Terms of Service\"</u><font/>, and  <font color="#00cdc3"><u>\"Privacy Policy\"</u><font/> ]]></string>
-    <string name="create_vault_hint"><![CDATA[1.Touch <font color="#00cdc3">\"Create Wallet\"<font/> to generate a new Wallet.]]></string>
-    <string name="import_vault_hint"><![CDATA[2.Touch <font color="#00cdc3">\"Import Wallet\"<font/> to import an existing HD wallet.]]></string>
+    <string name="create_vault_hint"><![CDATA[1. Touch <font color="#00cdc3">\"Create Wallet\"<font/> to generate a new Wallet]]></string>
+    <string name="import_vault_hint"><![CDATA[2. Touch <font color="#00cdc3">\"Import Wallet\"<font/> to import an existing HD wallet]]></string>
     <string name="license">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="input_mnemonic_hint">Please enter your %d-word recovery phrase in the table below.</string>
@@ -219,8 +218,8 @@
     <string name="set_password">Set Password</string>
     <string name="firmware_upgrade">Firmware Upgrade</string>
     <string name="text_password_required">Must contain at least 10 characters and include upper and lower case letters and digits. Symbols are allowed. Case sensitive.</string>
-    <string name="welcome">Welcome to Keystone</string>
-    <string name="welcome_site"><![CDATA[Please open the following link using a PC: <font color="#00cdc3"><u>https://keyst.one/setup</u></font>]]></string>
+    <string name="welcome">Welcome to Keystone!</string>
+    <string name="welcome_site"><![CDATA[Please open the following link using a PC: <font color="#00cdc3"><u>https://keyst.one/start</u></font>]]></string>
     <string name="welcome_text">This will help guide setting up your Keystone hardware wallet.</string>
     <string name="welcome_done">It\'s ready, start</string>
     <string name="guide_completed_title">Congratulations! \nSetup is now complete!</string>
@@ -578,8 +577,8 @@
     <string name="confirm_format">Are you SURE ?</string>
     <string name="format_sd_card_hint">This operation will erase all files in the MicroSD Card and format the card into FAT32 format. Please back up the important files before formatting.</string>
     <string name="format_sdcard_title">Format Card</string>
-    <string name="format_sdcard_hint">You need to format the current microSD card to FAT32 format first, otherwise the files cannot be read/exported.</string>
-    <string name="format_sdcard_hint1">Hint: This operation will erase all files in the MicroSD Card. Please back up the important files before formatting.</string>
+    <string name="format_sdcard_hint">Please format the microSD card to FAT32 format. Otherwise, files cannot be read nor exported.</string>
+    <string name="format_sdcard_hint1">Note: proceeding will erase all files on this microSD card. Please ensure all of your files have been safely backed up prior to commencing with the formatting.</string>
     <string name="format_now">Format Now</string>
     <string name="format_sdcard_hint2">You can also go to Menu > Setting > System Setting > Format Card</string>
     <string name="format_success">Formatted successfully</string>
