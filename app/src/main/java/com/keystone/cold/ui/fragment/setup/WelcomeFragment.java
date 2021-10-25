@@ -6,8 +6,9 @@ import android.view.View;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.SetupWelcomeBinding;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.viewmodel.SetupVaultViewModel;
 
-public class WelcomeFragment extends BaseFragment<SetupWelcomeBinding> {
+public class WelcomeFragment extends SetupVaultBaseFragment<SetupWelcomeBinding> {
     @Override
     protected int setView() {
         return R.layout.setup_welcome;
@@ -16,6 +17,7 @@ public class WelcomeFragment extends BaseFragment<SetupWelcomeBinding> {
     @Override
     protected void init(View view) {
         mBinding.complete.setOnClickListener(v -> {
+            viewModel.setVaultCreateStep(SetupVaultViewModel.VAULT_CREATE_STEP_WEB_AUTH);
             navigate(R.id.action_to_webAuthFragment);
         });
     }
