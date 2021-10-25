@@ -43,16 +43,17 @@ import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.handleRunt
 public class SetupVaultActivity extends FullScreenActivity {
 
     public boolean inSetupProcess;
+    private SetupVaultViewModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DataBindingUtil.setContentView(this, R.layout.activity_setup_vault);
+        model = ViewModelProviders.of(this).get(SetupVaultViewModel.class);
         setupNavController(savedInstanceState);
 
         if (getIntent() != null) {
             String password = getIntent().getStringExtra(PASSWORD);
-            SetupVaultViewModel model = ViewModelProviders.of(this).get(SetupVaultViewModel.class);
             model.setPassword(password);
         }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -76,7 +77,6 @@ public class SetupVaultActivity extends FullScreenActivity {
             graph.setStartDestination(R.id.setupVaultFragment);
         } else {
             bundle.putBoolean(IS_SETUP_VAULT, true);
-            SetupVaultViewModel model = ViewModelProviders.of(this).get(SetupVaultViewModel.class);
             switch (model.getVaultCreateStep()) {
                 case SetupVaultViewModel.VAULT_CREATE_STEP_WEB_AUTH: {
                     graph.setStartDestination(R.id.welcomeFragment);
@@ -116,7 +116,7 @@ public class SetupVaultActivity extends FullScreenActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(!hasPasswordSet(this)) {
+        if (model.getVaultCreateStep() >= 2 && !hasPasswordSet(this)) {
             NavHostFragment navHostFragment =
                     (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
             Bundle data = new Bundle();
