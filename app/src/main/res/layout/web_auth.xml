@@ -39,7 +39,6 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="8dp"
-            android:lineSpacingExtra="8dp"
             android:text="@string/web_auth1"
             android:textColor="@color/white"
             android:textSize="13sp" />
@@ -50,7 +49,6 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="8dp"
-            android:lineSpacingExtra="8dp"
             android:text="@string/web_auth2"
             android:textColor="@color/white"
             android:textSize="13sp" />
@@ -60,7 +58,6 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="8dp"
-            android:lineSpacingExtra="8dp"
             android:text="@string/web_auth3"
             android:textColor="@color/white"
             android:textSize="13sp" />
@@ -70,7 +67,6 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
-            android:lineSpacingExtra="8dp"
             android:text="@string/web_auth4"
             android:textColor="@color/white40"
             android:textSize="13sp" />
@@ -84,7 +80,6 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="20dp"
-            android:lineSpacingExtra="8dp"
             android:text="@string/web_auth5"
             android:textColor="@color/white"
             android:textSize="13sp" />

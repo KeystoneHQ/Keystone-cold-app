@@ -60,8 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                tools:ignore="UseCompoundDrawables"
-                android:gravity="center_vertical">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="24dp"
@@ -73,14 +72,14 @@
                     android:layout_height="wrap_content"
                     android:text="@string/firmware_upgrade2"
                     android:textColor="@color/white"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"
+                    android:layout_marginTop="2dp"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                tools:ignore="UseCompoundDrawables"
                 android:gravity="center_vertical">
 
                 <ImageView
@@ -93,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/firmware_upgrade3"
                     android:textColor="@color/white"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"/>
             </LinearLayout>
 
             <androidx.legacy.widget.Space
@@ -105,7 +104,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:lineSpacingExtra="8dp"
                 android:text="@string/firmware_upgrade4"
                 android:textColor="@color/white"
                 android:textSize="13sp" />
