@@ -62,7 +62,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_marginBottom="40dp">
 
             <TextView
                 android:id="@+id/text"
@@ -74,7 +75,7 @@
                 android:text="@string/web_auth_code"
                 android:textColor="@color/white"
                 android:textSize="17sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <FrameLayout
                 android:id="@+id/fl"
@@ -107,7 +108,6 @@
                 android:layout_below="@+id/fl"
                 android:layout_centerHorizontal="true"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
                 android:text="@string/verify_code_hint"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
