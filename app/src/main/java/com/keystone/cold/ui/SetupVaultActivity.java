@@ -78,8 +78,12 @@ public class SetupVaultActivity extends FullScreenActivity {
         } else {
             bundle.putBoolean(IS_SETUP_VAULT, true);
             switch (model.getVaultCreateStep()) {
-                case SetupVaultViewModel.VAULT_CREATE_STEP_WEB_AUTH: {
+                case SetupVaultViewModel.VAULT_CREATE_STEP_WELCOME: {
                     graph.setStartDestination(R.id.welcomeFragment);
+                    break;
+                }
+                case SetupVaultViewModel.VAULT_CREATE_STEP_WEB_AUTH: {
+                    graph.setStartDestination(R.id.webAuthFragment);
                     break;
                 }
                 case SetupVaultViewModel.VAULT_CREATE_STEP_SET_PASSWORD: {

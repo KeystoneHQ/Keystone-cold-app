@@ -195,7 +195,7 @@
     <string name="firmware_upgrade">固件升级</string>
     <string name="text_password_required">至少10个字符；必须同时包含大、小写字母和数字；允许特殊字符</string>
     <string name="welcome">欢迎使用铠石硬件钱包！</string>
-    <string name="welcome_site"><![CDATA[请用电脑访问: <font color="#00cdc3"><u>https://keyst.one/start</u><font/>]]></string>
+    <string name="welcome_site"><![CDATA[请用电脑访问: <font color="#00cdc3">https://keyst.one/start<font/>]]></string>
     <string name="welcome_text">将引导您对铠石硬件钱包进行初始化设置</string>
     <string name="welcome_done">准备好了，开始</string>
     <string name="guide_completed_title">恭喜！铠石钱包已完成设置，\n  可以开始使用了！</string>
