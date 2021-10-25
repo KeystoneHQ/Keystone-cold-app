@@ -37,7 +37,7 @@ import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_PASSPHRASE;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.WRITE;
-import static com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement.PASSWORD;
+import static com.keystone.cold.ui.fragment.SetPasswordBaseFragement.PASSWORD;
 
 public class FingerprintPreferenceFragment extends PreferenceFragmentCompat {
 

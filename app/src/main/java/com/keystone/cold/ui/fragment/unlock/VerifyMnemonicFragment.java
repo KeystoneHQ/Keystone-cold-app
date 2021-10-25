@@ -48,9 +48,9 @@ import iton.slip.secret.words.Mnemonic;
 
 import static com.keystone.cold.ui.fragment.Constants.KEY_TITLE;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
-import static com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement.MNEMONIC;
-import static com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement.SLIP39_ID;
-import static com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement.SLIP39_SEED;
+import static com.keystone.cold.ui.fragment.SetPasswordBaseFragement.MNEMONIC;
+import static com.keystone.cold.ui.fragment.SetPasswordBaseFragement.SLIP39_ID;
+import static com.keystone.cold.ui.fragment.SetPasswordBaseFragement.SLIP39_SEED;
 
 public class VerifyMnemonicFragment extends MnemonicInputFragment {
 

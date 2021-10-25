@@ -3,9 +3,9 @@ package com.keystone.cold.ui.fragment.setting;
 import android.os.Bundle;
 import android.view.View;
 
-import com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement;
+import com.keystone.cold.ui.fragment.SetPasswordBaseFragement;
 
-public class ChangePasswordFragment extends BaseSetPasswordFragement {
+public class ChangePasswordFragment extends SetPasswordBaseFragement {
 
     private String currentPassword;
 
@@ -21,7 +21,7 @@ public class ChangePasswordFragment extends BaseSetPasswordFragement {
     protected void initData(Bundle savedInstanceState) {
         super.initData(savedInstanceState);
         Bundle bundle = getArguments();
-        currentPassword = bundle != null ? bundle.getString(BaseSetPasswordFragement.PASSWORD) : null;
+        currentPassword = bundle != null ? bundle.getString(SetPasswordBaseFragement.PASSWORD) : null;
     }
 
     @Override

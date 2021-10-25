@@ -7,10 +7,10 @@ import android.view.View;
 
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
-import com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement;
+import com.keystone.cold.ui.fragment.SetPasswordBaseFragement;
 import com.keystone.cold.viewmodel.SetupVaultViewModel;
 
-public class SetUpSetPasswordFragment extends BaseSetPasswordFragement {
+public class SetUpSetPasswordFragment extends SetPasswordBaseFragement {
 
     private boolean shouldPopBack;
 
@@ -28,7 +28,7 @@ public class SetUpSetPasswordFragment extends BaseSetPasswordFragement {
         viewModel.setVaultCreateStep(SetupVaultViewModel.VAULT_CREATE_STEP_SET_PASSWORD);
         Utilities.clearPasswordSet(mActivity);
         Bundle bundle = getArguments();
-        shouldPopBack = bundle != null && bundle.getBoolean(BaseSetPasswordFragement.SHOULD_POP_BACK);
+        shouldPopBack = bundle != null && bundle.getBoolean(SetPasswordBaseFragement.SHOULD_POP_BACK);
     }
 
     @Override

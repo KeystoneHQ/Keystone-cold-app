@@ -37,7 +37,7 @@ import java.util.Objects;
 
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.Utilities.hasPasswordSet;
-import static com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement.PASSWORD;
+import static com.keystone.cold.ui.fragment.SetPasswordBaseFragement.PASSWORD;
 import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.handleRuntimeStateAbnormal;
 
 public class SetupVaultActivity extends FullScreenActivity {

@@ -80,8 +80,8 @@ import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_PASSPHR
 import static com.keystone.cold.ui.fragment.setting.LicenseFragment.KEY_TITLE;
 import static com.keystone.cold.ui.fragment.setting.LicenseFragment.KEY_URL;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
-import static com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement.PASSWORD;
-import static com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement.SIGNATURE;
+import static com.keystone.cold.ui.fragment.SetPasswordBaseFragement.PASSWORD;
+import static com.keystone.cold.ui.fragment.SetPasswordBaseFragement.SIGNATURE;
 
 public class MainPreferenceFragment extends PreferenceFragmentCompat {
 

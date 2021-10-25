@@ -40,7 +40,7 @@ import com.keystone.cold.databinding.SetPasswordBinding;
 import com.keystone.cold.selfcheck.RuntimeStatusCode;
 import com.keystone.cold.ui.AttackWarningActivity;
 import com.keystone.cold.ui.UnlockActivity;
-import com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement;
+import com.keystone.cold.ui.fragment.SetPasswordBaseFragement;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.util.HashUtil;
 import com.keystone.cold.util.Keyboard;
@@ -177,11 +177,11 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
             viewModel.setVaultCreateStep(SetupVaultViewModel.VAULT_CREATE_STEP_SET_PASSWORD);
             Utilities.clearPasswordSet(mActivity);
         }
-        shouldPopBack = bundle != null && bundle.getBoolean(BaseSetPasswordFragement.SHOULD_POP_BACK);
-        currentPassword = bundle != null ? bundle.getString(BaseSetPasswordFragement.PASSWORD) : null;
-        mnemonic = bundle != null ? bundle.getString(BaseSetPasswordFragement.MNEMONIC) : null;
-        slip39MasterSeed = bundle != null ? bundle.getString(BaseSetPasswordFragement.SLIP39_SEED) : null;
-        slip39Id = bundle != null ? bundle.getInt(BaseSetPasswordFragement.SLIP39_ID) : 0;
+        shouldPopBack = bundle != null && bundle.getBoolean(SetPasswordBaseFragement.SHOULD_POP_BACK);
+        currentPassword = bundle != null ? bundle.getString(SetPasswordBaseFragement.PASSWORD) : null;
+        mnemonic = bundle != null ? bundle.getString(SetPasswordBaseFragement.MNEMONIC) : null;
+        slip39MasterSeed = bundle != null ? bundle.getString(SetPasswordBaseFragement.SLIP39_SEED) : null;
+        slip39Id = bundle != null ? bundle.getInt(SetPasswordBaseFragement.SLIP39_ID) : 0;
         mBinding.pwd1.setFilters(new InputFilter[]{new InputFilter.LengthFilter(64)});
         mBinding.pwd2.setFilters(new InputFilter[]{new InputFilter.LengthFilter(64)});
         boolean setupFinished = Utilities.getVaultCreateStep(mActivity).equals(SetupVaultViewModel.VAULT_CREATE_STEP_DONE);

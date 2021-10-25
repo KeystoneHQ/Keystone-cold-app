@@ -62,7 +62,7 @@ import iton.slip.secret.words.Mnemonic;
 
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.mnemonic.MnemonicInputTable.TWENTYTHREE;
-import static com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement.PASSWORD;
+import static com.keystone.cold.ui.fragment.SetPasswordBaseFragement.PASSWORD;
 import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.handleRuntimeStateAbnormal;
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_CREATE_STEP_DONE;
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATED;

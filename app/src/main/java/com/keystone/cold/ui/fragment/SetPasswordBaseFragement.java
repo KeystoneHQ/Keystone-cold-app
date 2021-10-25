@@ -1,4 +1,4 @@
-package com.keystone.cold.ui.fragment.setpassword;
+package com.keystone.cold.ui.fragment;
 
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.PasswordValidationResult.RESULT_OK;
 
@@ -36,7 +36,7 @@ import org.spongycastle.util.encoders.Hex;
 
 import java.util.Objects;
 
-public abstract class BaseSetPasswordFragement extends SetupVaultBaseFragment<SetPasswordBinding> {
+public abstract class SetPasswordBaseFragement extends SetupVaultBaseFragment<SetPasswordBinding> {
     public static final String PASSWORD = "password";
     public static final String SIGNATURE = "signature";
     public static final String MNEMONIC = "mnemonic";
