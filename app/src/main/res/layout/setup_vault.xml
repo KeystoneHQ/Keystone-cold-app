@@ -67,7 +67,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="8dp"
-                android:lineSpacingExtra="8dp"
                 android:text="@string/create_vault_hint"
                 android:textColor="@color/white"
                 android:textSize="13sp" />
@@ -78,7 +77,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="8dp"
-                android:lineSpacingExtra="8dp"
                 android:text="@string/import_vault_hint"
                 android:textColor="@color/white"
                 android:textSize="13sp" />
