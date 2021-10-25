@@ -81,11 +81,13 @@ public class SetupVaultViewModel extends AndroidViewModel {
     public static final int VAULT_STATE_CREATED = 2;
     public static final int VAULT_STATE_CREATING_FAILED = 3;
 
-    public static final int VAULT_CREATE_STEP_WEB_AUTH = 0;
-    public static final int VAULT_CREATE_STEP_SET_PASSWORD = 1;
-    public static final int VAULT_CREATE_STEP_FIRMWARE_UPGRADE = 2;
-    public static final int VAULT_CREATE_STEP_WRITE_MNEMONIC = 3;
-    public static final int VAULT_CREATE_STEP_DONE = 4;
+
+    public static final int VAULT_CREATE_STEP_WELCOME = 0;
+    public static final int VAULT_CREATE_STEP_WEB_AUTH = 1;
+    public static final int VAULT_CREATE_STEP_SET_PASSWORD = 2;
+    public static final int VAULT_CREATE_STEP_FIRMWARE_UPGRADE = 3;
+    public static final int VAULT_CREATE_STEP_WRITE_MNEMONIC = 4;
+    public static final int VAULT_CREATE_STEP_DONE = 5;
 
     public static final String VAULT_CREATE_STEP = "vault_create_step";
 
