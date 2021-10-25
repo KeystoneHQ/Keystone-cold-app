@@ -55,16 +55,16 @@
     <string name="setting_vibrator">震动开关</string>
     <string name="setting_brightness">屏幕亮度</string>
     <string name="setting_screen_off_time">锁屏时间</string>
-    <string name="web_auth1">1.点击下方按钮，扫描官网验证的二维码</string>
-    <string name="web_auth2">2.将扫描后的结果输入给网站</string>
-    <string name="web_auth3"><![CDATA[3.在网站上点击<font color="#00cdc3">"验证"<font/>获取结果]]></string>
-    <string name="web_auth4">如果扫描失败，您的设备可能已经被攻击，建议您停止使用该设备。</string>
-    <string name="web_auth5"><![CDATA[官网验证网站: <br> <font color="#00cdc3">https://keyst.one/setup/1<font/>]]></string>
+    <string name="web_auth1">1. 点击下方按钮，扫描官网验证的二维码</string>
+    <string name="web_auth2">2. 将扫描后的结果输入给网站</string>
+    <string name="web_auth3"><![CDATA[3. 在网站上点击<font color="#00cdc3">"验证"<font/>获取结果]]></string>
+    <string name="web_auth4">如果验证失败，您的设备可能已经被攻击，请停止使用该设备！</string>
+    <string name="web_auth5"><![CDATA[官网验证网站: <br> <font color="#00cdc3">https://keyst.one/start/1<font/>]]></string>
 
     <string name="firmware_upgrade1">为了使用新功能，建议您将固件升级到最新版本</string>
     <string name="firmware_upgrade2">TF卡为FAT32格式，不超过512GB</string>
-    <string name="firmware_upgrade3">设备电量须超过70%</string>
-    <string name="firmware_upgrade4"><![CDATA[下载最新固件，请访问: <br> <font color="#00cdc3">https://keyst.one/setup/3<font/>]]></string>
+    <string name="firmware_upgrade3">设备电量保持在70%以上</string>
+    <string name="firmware_upgrade4"><![CDATA[下载最新固件，请访问: <br> <font color="#00cdc3">https://keyst.one/start/3<font/>]]></string>
     <string name="firmware_upgrade_start">开始升级</string>
     <string name="firmware_upgrade_unable">无法升级</string>
     <string name="firmware_upgrade_unable_description">未检测到升级包，请确认是否将存有update.zip的TF卡（FAT32格式，不超过512GB）插入设备中。</string>
@@ -72,8 +72,8 @@
     <string name="skip">跳过</string>
     <string name="read_confirm"><![CDATA[我已阅读并同意 <u><font color="#00cdc3">\"服务条款\"<font/></u> ，和 <u><font color="#00cdc3">\"隐私政策\"<font/></u>]]></string>
     <string name="license">服务条款</string>
-    <string name="create_vault_hint"><![CDATA[1.点击 <u><font color="#00cdc3">\"创建钱包\"<font/></u>按钮，将为您新建一个全新的钱包]]></string>
-    <string name="import_vault_hint"><![CDATA[2.点击 <u><font color="#00cdc3">\"导入钱包\"<font/></u>按钮，通过助记词恢复已有的钱包]]></string>
+    <string name="create_vault_hint"><![CDATA[1. 点击 <u><font color="#00cdc3">\"创建钱包\"<font/></u>按钮，将为您新建一个全新的钱包]]></string>
+    <string name="import_vault_hint"><![CDATA[2. 点击 <u><font color="#00cdc3">\"导入钱包\"<font/></u>按钮，通过助记词恢复已有的钱包]]></string>
     <string name="setup_wallet_hint1">感谢您使用铠石钱包！</string>
     <string name="input_mnemonic_hint">请在下方表格中输入%d个助记词以恢复钱包</string>
     <string name="input_mnemonic">输入助记词</string>
@@ -193,10 +193,10 @@
     <string name="select_mnemonic_count">选择助记词数量</string>
     <string name="set_password">设置密码</string>
     <string name="firmware_upgrade">固件升级</string>
-    <string name="text_password_required">至少10个字符；必须同时包含大、小写字母和数字；可包含常用特殊字符</string>
-    <string name="welcome">欢迎使用铠石硬件钱包</string>
-    <string name="welcome_site"><![CDATA[请用电脑访问: <font color="#00cdc3"><u>https://keyst.one/setup</u><font/>]]></string>
-    <string name="welcome_text">我们将引导您对铠石硬件钱包进行初始化设置</string>
+    <string name="text_password_required">至少10个字符；必须同时包含大、小写字母和数字；允许特殊字符</string>
+    <string name="welcome">欢迎使用铠石硬件钱包！</string>
+    <string name="welcome_site"><![CDATA[请用电脑访问: <font color="#00cdc3"><u>https://keyst.one/start</u><font/>]]></string>
+    <string name="welcome_text">将引导您对铠石硬件钱包进行初始化设置</string>
     <string name="welcome_done">准备好了，开始</string>
     <string name="guide_completed_title">恭喜！铠石钱包已完成设置，\n  可以开始使用了！</string>
     <string name="guide_completed_remind"><![CDATA[更多钱包设置可点击菜单-设置，如手势解锁，创建Passphrase钱包。了解更多功能，请访问：\n <font color="#00cdc3">https://keyst.one<font/>]]></string>
@@ -220,9 +220,9 @@
     <string name="generate_mnemonic_hint">请正确记录并妥善保存好助记词；钱包生成后，无法再次查看助记词！</string>
     <string name="update_hint">请务必从上方铠石钱包官方网站下载安装包！</string>
     <string name="verify_code_hint">请将此验证码输入到网站获取验证结果</string>
-    <string name="update_alert_boot_low_battery_message">为保证升级顺利，设备电量需保持在%s以上可进行更新操作；当前设备电量为%s，您需要更换电池或充电后进行更新。</string>
+    <string name="update_alert_boot_low_battery_message">为保证升级顺利，设备电量需保持在%s以上方可更新；当前设备电量为%s，您需先更换电池或为电池充电。</string>
     <string name="update">检测到新版本</string>
-    <string name="new_version_hint_message">您有新的版本%s可以更新。对比以下sha256和官网下载包的sha256，确保一致后，点击“立即更新”按钮开始更新。</string>
+    <string name="new_version_hint_message">您有新的固件%s可以更新。对比以下sha256和官网下载包的sha256，确保一致后，点击“立即更新”按钮开始更新。</string>
     <string name="updating">正在升级</string>
     <string name="update_now">立即更新</string>
     <string name="delete_fingerprint">删除指纹</string>
