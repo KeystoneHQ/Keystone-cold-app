@@ -16,6 +16,7 @@ public class WelcomeFragment extends SetupVaultBaseFragment<SetupWelcomeBinding>
 
     @Override
     protected void init(View view) {
+        super.init(view);
         mBinding.complete.setOnClickListener(v -> {
             viewModel.setVaultCreateStep(SetupVaultViewModel.VAULT_CREATE_STEP_WEB_AUTH);
             navigate(R.id.action_to_webAuthFragment);
