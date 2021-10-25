@@ -319,7 +319,7 @@ public class MainActivity extends FullScreenActivity {
             R.id.fingerprintManageFragment,
             R.id.fingerprintEnrollFragment,
             R.id.fingerprintGuideFragment,
-            R.id.setPasswordFragment,
+            R.id.mainSetPasswordFragment,
             R.id.setPatternUnlockFragment);
 
     private final static Map<Integer, String> mMainFragments = new HashMap<>();

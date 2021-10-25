@@ -108,6 +108,7 @@ public abstract class BaseSetPasswordFragement extends SetupVaultBaseFragment<Se
     public void onResume() {
         super.onResume();
         mBinding.confirm.setEnabled(false);
+        paused = false;
         Keyboard.show(mActivity, mBinding.pwd1);
         mBinding.pwd1.setOnFocusChangeListener(onFocusChangeListener);
         mBinding.pwd1.setOnKeyListener(onKeyListener);
