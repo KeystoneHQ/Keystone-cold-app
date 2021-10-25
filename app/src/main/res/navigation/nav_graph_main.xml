@@ -636,8 +636,8 @@
         android:label="VerifyMnemonicFragment"
         tools:layout="@layout/verify_mnemonic">
         <action
-            android:id="@+id/action_to_setPasswordFragment"
-            app:destination="@id/setPasswordFragment"
+            android:id="@+id/action_to_main_setPasswordFragment"
+            app:destination="@id/mainSetPasswordFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
@@ -731,8 +731,8 @@
         tools:layout="@layout/set_pattern_unlock" />
 
     <fragment
-        android:id="@+id/setPasswordFragment"
-        android:name="com.keystone.cold.ui.fragment.setup.SetPasswordFragment"
+        android:id="@+id/mainSetPasswordFragment"
+        android:name="com.keystone.cold.ui.fragment.main.MainSetPasswordFragment"
         android:label="SetPasswordFragment"
         tools:layout="@layout/set_password" />
 

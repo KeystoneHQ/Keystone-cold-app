@@ -32,6 +32,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.VerifyOkBinding;
+import com.keystone.cold.ui.UnlockActivity;
 import com.keystone.cold.ui.fragment.setup.MnemonicInputFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
@@ -155,7 +156,11 @@ public class VerifyMnemonicFragment extends MnemonicInputFragment {
         if (match) {
             mBinding.table.getWordsList().clear();
             if (PreImportFragment.ACTION_RESET_PWD.equals(action)) {
-                navigate(R.id.action_to_setPasswordFragment, bundle);
+                if (mActivity instanceof UnlockActivity) {
+                    navigate(R.id.action_to_unlock_setPasswordFragment, bundle);
+                } else {
+                    navigate(R.id.action_to_main_setPasswordFragment, bundle);
+                }
             } else {
                 ModalDialog dialog = new ModalDialog();
                 VerifyOkBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
