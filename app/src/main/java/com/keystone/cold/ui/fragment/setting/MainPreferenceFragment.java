@@ -80,8 +80,8 @@ import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_PASSPHR
 import static com.keystone.cold.ui.fragment.setting.LicenseFragment.KEY_TITLE;
 import static com.keystone.cold.ui.fragment.setting.LicenseFragment.KEY_URL;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
-import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.PASSWORD;
-import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.SIGNATURE;
+import static com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement.PASSWORD;
+import static com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement.SIGNATURE;
 
 public class MainPreferenceFragment extends PreferenceFragmentCompat {
 
@@ -310,7 +310,7 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                     NavController navController = Navigation.findNavController(Objects.requireNonNull(getView()));
                     if (token.password != null) {
                         navController.navigate(R.id.action_settingFragment_to_passphraseFragment,
-                                Bundle.forPair(PASSWORD, token.password));
+                                forPair(PASSWORD, token.password));
                     } else if (token.signature != null) {
                         String message = new GetMessageCallable().call();
                         String signatureRS = null;
@@ -326,7 +326,7 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                         }
                         if (signatureRS != null) {
                             navController.navigate(R.id.action_settingFragment_to_passphraseFragment,
-                                    Bundle.forPair(SIGNATURE, signatureRS));
+                                    forPair(SIGNATURE, signatureRS));
                         }
                     }
                 }, forgetPassword);
@@ -345,7 +345,7 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                     }
 
                     Navigation.findNavController(Objects.requireNonNull(getView()))
-                            .navigate(navId, Bundle.forPair(PASSWORD, password.password));
+                            .navigate(navId, forPair(PASSWORD, password.password));
                 },
                 forgetPassword
         );
@@ -450,5 +450,11 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
         data.putString(KEY_TITLE, title);
         Navigation.findNavController(Objects.requireNonNull(getView()))
                 .navigate(R.id.action_to_licenseFragment, data);
+    }
+
+    private Bundle forPair(String key, String value) {
+        Bundle b = new Bundle(1);
+        b.putString(key, value);
+        return b;
     }
 }

@@ -49,7 +49,7 @@ import java.util.Objects;
 import static android.content.Context.BATTERY_SERVICE;
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
-import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.SHOULD_POP_BACK;
+import static com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement.SHOULD_POP_BACK;
 
 public class UpdatingHelper implements OnBatteryChangeListener {
 

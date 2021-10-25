@@ -51,8 +51,8 @@ import java.util.List;
 
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.Utilities.IS_SET_PASSPHRASE;
-import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.PASSWORD;
-import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.SIGNATURE;
+import static com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement.PASSWORD;
+import static com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement.SIGNATURE;
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATED;
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATING;
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATING_FAILED;

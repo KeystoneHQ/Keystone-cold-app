@@ -54,7 +54,7 @@ import java.security.spec.ECPoint;
 import java.util.List;
 import java.util.Objects;
 
-import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.PASSWORD;
+import static com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement.PASSWORD;
 import static com.keystone.cold.util.KeyStoreUtil.KEYSTORE_PROVIDER_NAME;
 
 public class FingerprintEnrollFragment extends BaseFragment<FingerprintEnrollBinding>

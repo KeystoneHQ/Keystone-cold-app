@@ -40,6 +40,7 @@ import com.keystone.cold.databinding.SetPasswordBinding;
 import com.keystone.cold.selfcheck.RuntimeStatusCode;
 import com.keystone.cold.ui.AttackWarningActivity;
 import com.keystone.cold.ui.UnlockActivity;
+import com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.util.HashUtil;
 import com.keystone.cold.util.Keyboard;
@@ -66,14 +67,6 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
     private int slip39Id;
 
     private String currentPassword; //old password hash
-
-    public static final String PASSWORD = "password";
-    public static final String SIGNATURE = "signature";
-    public static final String MNEMONIC = "mnemonic";
-    public static final String SLIP39_SEED = "slip39_seed";
-    public static final String SLIP39_ID = "slip39_id";
-
-    public static final String SHOULD_POP_BACK = "should_pop_back";
 
     private boolean paused;
 
@@ -184,11 +177,11 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
             viewModel.setVaultCreateStep(SetupVaultViewModel.VAULT_CREATE_STEP_SET_PASSWORD);
             Utilities.clearPasswordSet(mActivity);
         }
-        shouldPopBack = bundle != null && bundle.getBoolean(SHOULD_POP_BACK);
-        currentPassword = bundle != null ? bundle.getString(PASSWORD) : null;
-        mnemonic = bundle != null ? bundle.getString(MNEMONIC) : null;
-        slip39MasterSeed = bundle != null ? bundle.getString(SLIP39_SEED) : null;
-        slip39Id = bundle != null ? bundle.getInt(SLIP39_ID) : 0;
+        shouldPopBack = bundle != null && bundle.getBoolean(BaseSetPasswordFragement.SHOULD_POP_BACK);
+        currentPassword = bundle != null ? bundle.getString(BaseSetPasswordFragement.PASSWORD) : null;
+        mnemonic = bundle != null ? bundle.getString(BaseSetPasswordFragement.MNEMONIC) : null;
+        slip39MasterSeed = bundle != null ? bundle.getString(BaseSetPasswordFragement.SLIP39_SEED) : null;
+        slip39Id = bundle != null ? bundle.getInt(BaseSetPasswordFragement.SLIP39_ID) : 0;
         mBinding.pwd1.setFilters(new InputFilter[]{new InputFilter.LengthFilter(64)});
         mBinding.pwd2.setFilters(new InputFilter[]{new InputFilter.LengthFilter(64)});
         boolean setupFinished = Utilities.getVaultCreateStep(mActivity).equals(SetupVaultViewModel.VAULT_CREATE_STEP_DONE);

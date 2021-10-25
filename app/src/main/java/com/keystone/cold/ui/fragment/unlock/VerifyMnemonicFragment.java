@@ -47,9 +47,9 @@ import iton.slip.secret.words.Mnemonic;
 
 import static com.keystone.cold.ui.fragment.Constants.KEY_TITLE;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
-import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.MNEMONIC;
-import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.SLIP39_ID;
-import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.SLIP39_SEED;
+import static com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement.MNEMONIC;
+import static com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement.SLIP39_ID;
+import static com.keystone.cold.ui.fragment.setpassword.BaseSetPasswordFragement.SLIP39_SEED;
 
 public class VerifyMnemonicFragment extends MnemonicInputFragment {
 
@@ -119,7 +119,7 @@ public class VerifyMnemonicFragment extends MnemonicInputFragment {
         if (!isSharding) {
             SharedDataViewModel model = ViewModelProviders.of(mActivity).get(SharedDataViewModel.class);
             boolean match = model.verifyMnemonic(mnemonic);
-            handleVerifyResult(Bundle.forPair(MNEMONIC, mnemonic), match);
+            handleVerifyResult(forPair(MNEMONIC, mnemonic), match);
         } else {
             if (viewModel.getShares() == null || viewModel.getShares().size() == 0) {
                 int remainCount = 0;
@@ -198,5 +198,11 @@ public class VerifyMnemonicFragment extends MnemonicInputFragment {
     public void onPause() {
         super.onPause();
         Keyboard.hide(mActivity, getView());
+    }
+
+    private Bundle forPair(String key, String value) {
+        Bundle b = new Bundle(1);
+        b.putString(key, value);
+        return b;
     }
 }
