@@ -138,6 +138,7 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
                         } else {
                             mBinding.confirm.setEnabled(false);
                         }
+                        mBinding.hint2.setVisibility(View.GONE);
                     } else {
                         mBinding.confirm.setEnabled(false);
                     }

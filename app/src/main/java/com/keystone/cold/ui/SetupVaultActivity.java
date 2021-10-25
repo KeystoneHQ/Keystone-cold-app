@@ -116,7 +116,7 @@ public class SetupVaultActivity extends FullScreenActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (model.getVaultCreateStep() >= 2 && !hasPasswordSet(this)) {
+        if (model.getVaultCreateStep() >= SetupVaultViewModel.VAULT_CREATE_STEP_SET_PASSWORD && !hasPasswordSet(this)) {
             NavHostFragment navHostFragment =
                     (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
             Bundle data = new Bundle();
