@@ -83,7 +83,7 @@ public class SetupVaultActivity extends FullScreenActivity {
                     break;
                 }
                 case SetupVaultViewModel.VAULT_CREATE_STEP_SET_PASSWORD: {
-                    graph.setStartDestination(R.id.setPasswordFragment);
+                    graph.setStartDestination(R.id.setUpSetPasswordFragment);
                     break;
                 }
                 case SetupVaultViewModel.VAULT_CREATE_STEP_FIRMWARE_UPGRADE: {
@@ -121,7 +121,7 @@ public class SetupVaultActivity extends FullScreenActivity {
                     (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
             Bundle data = new Bundle();
             data.putBoolean(IS_SETUP_VAULT, true);
-            navHostFragment.getNavController().navigate(R.id.setPasswordFragment, data);
+            navHostFragment.getNavController().navigate(R.id.setUpSetPasswordFragment, data);
         }
     }
 }

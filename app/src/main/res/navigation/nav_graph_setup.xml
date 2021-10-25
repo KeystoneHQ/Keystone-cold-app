@@ -40,7 +40,7 @@
             app:destination="@id/ScannerFragment"/>
         <action
             android:id="@+id/action_webAuthFragment_to_setPasswordFragment"
-            app:destination="@id/setPasswordFragment" />
+            app:destination="@id/setUpSetPasswordFragment" />
     </fragment>
     <fragment
         android:id="@+id/ScannerFragment"
@@ -135,8 +135,8 @@
     </fragment>
 
     <fragment
-        android:id="@+id/setPasswordFragment"
-        android:name="com.keystone.cold.ui.fragment.setup.SetPasswordFragment"
+        android:id="@+id/setUpSetPasswordFragment"
+        android:name="com.keystone.cold.ui.fragment.setup.SetUpSetPasswordFragment"
         android:label="SetPasswordFragment"
         tools:layout="@layout/set_password">
         <action
@@ -292,7 +292,7 @@
             app:destination="@id/webAuthFragment" />
         <action
             android:id="@+id/action_webAuthResultFragment_to_setPasswordFragment"
-            app:destination="@id/setPasswordFragment" />
+            app:destination="@id/setUpSetPasswordFragment" />
     </fragment>
     <fragment
         android:id="@id/manageCoinFragment"
@@ -405,7 +405,7 @@
 
     <action
         android:id="@+id/global_action_to_setPasswordFragment"
-        app:destination="@id/setPasswordFragment"
+        app:destination="@id/setUpSetPasswordFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
