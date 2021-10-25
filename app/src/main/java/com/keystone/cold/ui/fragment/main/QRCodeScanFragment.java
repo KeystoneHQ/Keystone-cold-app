@@ -226,7 +226,7 @@ public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
         } else if (e instanceof JSONException) {
             alert(getString(R.string.incorrect_qrcode));
         } else if (e instanceof CoinNotFindException) {
-            alert(null, getString(R.string.unsupported_coin), null);
+            alert( getString(R.string.unsupported_coin));
         } else if (e instanceof UnknowQrCodeException) {
             alert(getString(R.string.unsupported_qrcode));
         } else if (e instanceof InvalidAccountException | e instanceof XfpNotMatchException ) {
@@ -234,7 +234,7 @@ public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
                     getString(R.string.account_not_match),
                     getString(R.string.account_not_match_detail) ,
                     getString(R.string.confirm),
-                    null);
+                    this::rescan);
         }
     }
 
@@ -309,16 +309,19 @@ public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
             if (run != null) {
                 run.run();
             } else {
-                mBinding.scanProgress.setText("");
-                if (mHandler != null) {
-                    mHandler.restartPreviewAndDecode();
-                }
+                rescan();
             }
         });
         dialog.setBinding(binding);
         dialog.show(mActivity.getSupportFragmentManager(), "scan fail");
     }
 
+    private void rescan() {
+        mBinding.scanProgress.setText("");
+        if (mHandler != null) {
+            mHandler.restartPreviewAndDecode();
+        }
+    }
 }
 
 
