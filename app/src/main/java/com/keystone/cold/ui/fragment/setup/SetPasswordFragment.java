@@ -125,6 +125,28 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
             return false;
         });
 
+        viewModel.getPwd1().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+
+                String password1 = viewModel.getPwd1().get();
+                String password2 = viewModel.getPwd2().get();
+                if (password2.length() >= password1.length()) {
+                    if (password1.equals(password2)) {
+                        if (inputValid) {
+                            mBinding.confirm.setEnabled(true);
+                        } else {
+                            mBinding.confirm.setEnabled(false);
+                        }
+                    } else {
+                        mBinding.confirm.setEnabled(false);
+                    }
+                } else {
+                    mBinding.confirm.setEnabled(false);
+                }
+            }
+        });
+
         viewModel.getPwd2().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
@@ -158,7 +180,7 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
         mBinding.setViewModel(viewModel);
         Bundle bundle = getArguments();
         inSetupProcess = bundle != null && bundle.getBoolean(IS_SETUP_VAULT);
-        if(inSetupProcess) {
+        if (inSetupProcess) {
             viewModel.setVaultCreateStep(SetupVaultViewModel.VAULT_CREATE_STEP_SET_PASSWORD);
             Utilities.clearPasswordSet(mActivity);
         }
