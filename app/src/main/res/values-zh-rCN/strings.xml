@@ -178,7 +178,7 @@
     <string name="creating_vault_hint">正在为您创建钱包，请勿锁屏</string>
     <string name="delete_white_list">删除白名单</string>
     <string name="self_check_under_disassemble">您的设备被攻击！</string>
-    <string name="self_check_alert_content">继续使用被攻击的机器可能导致您的资产丢失，为了您的资产安全，请清除设备所有信息并关机。如有任何问题，可联系微信客服：fatnene</string>
+    <string name="self_check_alert_content">继续使用被攻击的机器可能导致您的资产丢失，为了您的资产安全，请清除设备所有信息并关机。</string>
     <string name="web_auth_scan_agian">重新扫描二维码</string>
     <string name="clean_data_and_power_off">清除数据并关机</string>
     <string name="sign_success">签名成功</string>
@@ -332,7 +332,7 @@
     <string name="abnormal_tx">异常交易</string>
     <string name="fee_attack_warning">检测到该笔交易存在费用超付攻击风险，禁止对其签名，您可前往：https://keyst.one/fee-attack 了解详情，您也可邮件联系客服：support@keyst.one</string>
     <string name="already_signed">检测到您已对该笔交易签名，您可直接广播该交易</string>
-    <string name="contact_info">微博: @铠石钱包大掌柜\n邮箱: support@keyst.one</string>
+    <string name="contact_info">邮箱: support@keyst.one</string>
     <string name="keep_mnemonic_hint">*铠石钱包在任何情况下都不会询问您的助记词，请务必妥善保管好助记词，不要透露给任何人</string>
     <string name="contact_us">联系我们</string>
     <string name="current_device_info">设备信息</string>
