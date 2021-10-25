@@ -101,7 +101,7 @@
     <string name="web_auth5"><![CDATA[Web Auth Link: <br> <font color="#00cdc3">https://keyst.one/start/1<font/>]]></string>
 
     <string name="firmware_upgrade1">Upgrading your firmware to the latest version to benefit from new features is highly recommended.</string>
-    <string name="firmware_upgrade2">A microSD card in FAT32format with a maximum memory capacity of 512GB is required</string>
+    <string name="firmware_upgrade2">A microSD card in FAT32 format with a maximum memory capacity of 512GB is required</string>
     <string name="firmware_upgrade3">A minimum of 70% battery charge is required</string>
     <string name="firmware_upgrade4"><![CDATA[To download the latest firmware, please visit: <br> <font color="#00cdc3">https://keyst.one/start/3<font/>]]></string>
     <string name="firmware_upgrade_start">Update Now</string>

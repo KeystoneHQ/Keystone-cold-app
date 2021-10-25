@@ -249,6 +249,6 @@ public class Utilities {
 
     public static Integer getVaultCreateStep(Context context) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
-        return sp.getInt(VAULT_CREATE_STEP, 0);
+        return sp.getInt(VAULT_CREATE_STEP, -1);
     }
 }
