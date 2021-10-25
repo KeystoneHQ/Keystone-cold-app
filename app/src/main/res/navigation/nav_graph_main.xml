@@ -355,7 +355,7 @@
             app:popExitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_to_change_password"
-            app:destination="@id/setPasswordFragment"
+            app:destination="@id/changePasswordFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
@@ -734,6 +734,12 @@
         android:id="@+id/setPasswordFragment"
         android:name="com.keystone.cold.ui.fragment.setup.SetPasswordFragment"
         android:label="SetPasswordFragment"
+        tools:layout="@layout/set_password" />
+
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.keystone.cold.ui.fragment.setting.ChangePasswordFragment"
+        android:label="ChangePasswordFragment"
         tools:layout="@layout/set_password" />
     <fragment
         android:id="@+id/setupVaultFragment"
