@@ -24,6 +24,7 @@ import android.view.View;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.BootLogoBinding;
+import com.keystone.cold.viewmodel.SetupVaultViewModel;
 
 public class BootLogoFragment extends BaseFragment<BootLogoBinding> {
 
@@ -36,8 +37,8 @@ public class BootLogoFragment extends BaseFragment<BootLogoBinding> {
 
     @Override
     protected void init(View view) {
-        new Handler().postDelayed(()-> {
-            if (Utilities.hasLanguageSet(mActivity)) {
+        new Handler().postDelayed(() -> {
+            if (Utilities.hasLanguageSet(mActivity) && Utilities.getVaultCreateStep(mActivity) != SetupVaultViewModel.VAULT_CREATE_STEP_WELCOME) {
                 navigate(R.id.action_splash_to_securityCheck);
             } else {
                 navigate(R.id.action_splash_to_setupLanguage);
