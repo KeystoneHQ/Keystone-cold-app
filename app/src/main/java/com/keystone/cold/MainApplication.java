@@ -115,6 +115,9 @@ public class MainApplication extends Application {
         if(Utilities.hasVaultCreated(sApplication) && Utilities.getVaultCreateStep(sApplication) == SetupVaultViewModel.VAULT_CREATE_STEP_WELCOME) {
             Utilities.setVaultCreateStep(sApplication, SetupVaultViewModel.VAULT_CREATE_STEP_DONE);
         }
+        if(Utilities.hasVaultCreated(sApplication) && !Utilities.hasPasswordSet(sApplication)) {
+            Utilities.markPasswordSet(sApplication);
+        }
     }
 
     private void registerSdcardStatusMonitor() {
