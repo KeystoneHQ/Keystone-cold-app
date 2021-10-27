@@ -5,7 +5,6 @@ import android.view.View;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.SetupWelcomeBinding;
-import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.viewmodel.SetupVaultViewModel;
 
 public class WelcomeFragment extends SetupVaultBaseFragment<SetupWelcomeBinding> {

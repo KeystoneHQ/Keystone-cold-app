@@ -20,8 +20,10 @@ package com.keystone.cold;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,7 +35,16 @@ import com.keystone.cold.ui.modal.ModalDialog;
 import static android.content.Context.MODE_PRIVATE;
 import static com.keystone.cold.ui.fragment.main.web3.EthTxConfirmFragment.PREFERENCE_KEY_VISITS;
 import static com.keystone.cold.ui.fragment.setting.FingerprintPreferenceFragment.FINGERPRINT_UNLOCK;
+import static com.keystone.cold.util.DataCleaner.DATA_DIR;
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_CREATE_STEP_WELCOME;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class Utilities {
     public static final String PREFERENCE_SECRET = "secret";
@@ -230,7 +241,7 @@ public class Utilities {
 
     public static boolean isAttackDetected(Context context) {
         SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
-        return sp.getBoolean(ATTACK_DETECTED,false);
+        return sp.getBoolean(ATTACK_DETECTED, false);
     }
 
     public static int getVisitsTimes(Context context) {
@@ -244,8 +255,23 @@ public class Utilities {
     }
 
     public static void setVaultCreateStep(Context context, int step) {
+        Log.d("sora", "setVaultCreateStep: writing step " + step);
         SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
         sp.edit().putInt(PREFERENCE_KEY_VAULT_CREATE_STEP, step).apply();
+        File file = new File(DATA_DIR + context.getPackageName() + "/shared_prefs/secret.xml");
+        try {
+            InputStream inputStream = new FileInputStream(file);
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                Log.d("sora", "setVaultCreateStep: " + line);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Integer getVaultCreateStep(Context context) {

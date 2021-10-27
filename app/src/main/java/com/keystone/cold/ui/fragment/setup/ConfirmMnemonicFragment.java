@@ -19,6 +19,7 @@ package com.keystone.cold.ui.fragment.setup;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.databinding.ObservableField;
@@ -80,6 +81,7 @@ public class ConfirmMnemonicFragment extends MnemonicInputFragment {
             verifyMnemonic();
         });
         addMnemonicChangeCallback();
+        Log.d("sora", "init: " + Utilities.getVaultCreateStep(mActivity));
         subscribeVaultState(viewModel.getVaultCreateState());
     }
 

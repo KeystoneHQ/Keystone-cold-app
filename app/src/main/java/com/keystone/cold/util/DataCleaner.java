@@ -24,7 +24,7 @@ import android.text.TextUtils;
 import java.io.File;
 
 public class DataCleaner {
-    private static String DATA_DIR = "/data/user/0/";
+    public static String DATA_DIR = "/data/user/0/";
 
     private static void cleanInternalCache(Context context) {
         deleteFilesByDirectory(new File(DATA_DIR + context.getPackageName() + "/cache"));

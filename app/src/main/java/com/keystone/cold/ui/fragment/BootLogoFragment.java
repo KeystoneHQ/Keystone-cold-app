@@ -19,6 +19,7 @@ package com.keystone.cold.ui.fragment;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 
 import com.keystone.cold.R;
@@ -38,6 +39,10 @@ public class BootLogoFragment extends BaseFragment<BootLogoBinding> {
     @Override
     protected void init(View view) {
         new Handler().postDelayed(() -> {
+            Log.d("sora", "init: hasPasswordSet " + Utilities.hasPasswordSet(mActivity));
+            Log.d("sora", "init: hasVaultCreated " + Utilities.hasVaultCreated(mActivity));
+            Log.d("sora", "init: hasLanguageSet " + Utilities.hasLanguageSet(mActivity));
+            Log.d("sora", "init: getVaultCreateStep " + Utilities.getVaultCreateStep(mActivity.getApplication()));
             if (Utilities.hasLanguageSet(mActivity) && Utilities.getVaultCreateStep(mActivity.getApplication()) != SetupVaultViewModel.VAULT_CREATE_STEP_WELCOME) {
                 navigate(R.id.action_splash_to_securityCheck);
             } else {
