@@ -421,6 +421,12 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@id/action_to_home"
+            app:destination="@id/assetListFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/assetListFragment"
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment
