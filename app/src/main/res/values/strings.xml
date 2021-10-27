@@ -94,6 +94,7 @@
     </string-array>
 
     <string name="tab_my_address">ADDRESSES</string>
+    <string name="tab_my_account">Account</string>
     <string name="web_auth1"><![CDATA[1. Click on <font color="#00cdc3">"Scan QR Code"<font/> button below and scan the QR code displayed on the website]]></string>
     <string name="web_auth2">2. Your Keystone would then display a code. Please enter that into the official website to verify the authenticity of your device</string>
     <string name="web_auth3"><![CDATA[3. Click <font color="#00cdc3">"Verify"<font/> button on the website to see your result]]></string>
@@ -589,4 +590,11 @@
     <string name="fee_too_high">Fee is too high</string>
     <string name="atention">Atention</string>
     <string name="exceed_fee">The fee of this transaction is too high, Confirm whether to sign.</string>
+    <string name="companion_hint"><![CDATA[If you are importing Ledger\'s recovery phrase into Keystone, your assets may not be found in the above QR code,<font color="#00cdc3"><u>click here</u><font/>to switch the wallet QR code.]]></string>
+    <string name="select_wallet">Select Wallet</string>
+    <string name="ledger_live"><![CDATA[If you used <font color="#00cdc3">Ledger Live to connect to Ledger<font/>]]></string>
+    <string name="my_crypto_mew"><![CDATA[If you used <font color="#00cdc3">My Crypto, MEW to connect to Ledger<font/>]]></string>
+    <string name="metamusk_ledger"><![CDATA[If you used wallets such as <font color="#00cdc3">MetaMask, Ledger, etc.<font/>]]></string>
+    <string name="top_five_account">The first 5 accounts:</string>
+    <string name="show_this_qrcode">Display QR Code</string>
 </resources>

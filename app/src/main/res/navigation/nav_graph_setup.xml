@@ -390,9 +390,22 @@
     <fragment
         android:id="@+id/syncFragment"
         android:name="com.keystone.cold.ui.fragment.SyncFragment"
-        tools:layout="@layout/sync_fragment"
-        android:label="SyncFragment" />
+        android:label="SyncFragment"
+        tools:layout="@layout/sync_fragment">
+        <action
+            android:id="@+id/action_syncFragment_to_selectWalletFragment"
+            app:destination="@id/selectWalletFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/selectWalletFragment"
+        android:name="com.keystone.cold.ui.fragment.SelectWalletFragment"
+        android:label="SelectWalletFragment"
+        tools:layout="@layout/select_wallet_fragment"/>
     <!--global actions-->
 
     <action

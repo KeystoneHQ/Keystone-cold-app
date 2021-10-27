@@ -94,6 +94,15 @@ public class ChooseWatchWalletFragment extends ListPreferenceFragment {
                 updateCurrentWatchWallet();
                 break;
             case METAMASK:
+                int web3GuideTimes = Utilities.getWeb3GuideTimes(mActivity);
+                if (web3GuideTimes > 0 && mActivity instanceof MainActivity) {
+                    popBackStack(R.id.assetFragment, false);
+                } else {
+                    Utilities.setWeb3GuideTimes(mActivity, ++web3GuideTimes);
+                    navigate(R.id.action_to_syncWatchWalletGuide, bundle);
+                    updateCurrentWatchWallet();
+                }
+                break;
             case XRP_TOOLKIT:
                 navigate(R.id.action_to_syncWatchWalletGuide, bundle);
                 updateCurrentWatchWallet();
