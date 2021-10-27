@@ -43,6 +43,7 @@ import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.databinding.AssetFragmentBinding;
 import com.keystone.cold.databinding.DialogBottomSheetBinding;
@@ -183,9 +184,13 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private void initViewPager() {
-        String[] title = {showPublicKey && !hasAddress ? getString(R.string.tab_my_pubkey)
-                : getString(R.string.tab_my_address),
-                getString(R.string.tab_transaction_history)};
+        String tabOne = showPublicKey && !hasAddress ? getString(R.string.tab_my_pubkey)
+                : getString(R.string.tab_my_address);
+        if (watchWallet == WatchWallet.METAMASK) {
+            tabOne = getString(R.string.tab_my_account);
+        }
+        String tabTwo = getString(R.string.tab_transaction_history);
+        String[] title = {tabOne, tabTwo};
         if (fragments == null) {
             fragments = new Fragment[title.length];
             if (showPublicKey) {
@@ -457,27 +462,34 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     public void onValueSet(int value) {
         AddAddressViewModel viewModel = ViewModelProviders.of(this)
                 .get(AddAddressViewModel.class);
-
         ProgressModalDialog dialog = ProgressModalDialog.newInstance();
         dialog.show(Objects.requireNonNull(mActivity.getSupportFragmentManager()), "");
         Handler handler = new Handler();
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            CoinEntity coinEntity = viewModel.getCoin(coinId);
-            if (coinEntity != null) {
-                int addrCount = coinEntity.getAddressCount();
-                List<String> observableAddressNames = new ArrayList<>();
-                for (int i = addrCount; i < value + addrCount; i++) {
-                    String name = coinEntity.getDisplayName() + "-" + i;
-                    observableAddressNames.add(name);
-                }
-                viewModel.addAddress(observableAddressNames);
-
-                handler.post(() -> viewModel.getObservableAddState().observe(this, complete -> {
-                    if (complete) {
-                        handler.postDelayed(dialog::dismiss, 500);
+        if (watchWallet == WatchWallet.METAMASK) {
+            AppExecutors.getInstance().diskIO().execute(() -> {
+                CoinEntity coinEntity = viewModel.getCoin(coinId);
+                String path = Utilities.getCurrentEthAccount(mActivity);
+                viewModel.addEthAccountAddress(coinEntity, path, value, coinEntity.getBelongTo(), () -> handler.postDelayed(dialog::dismiss, 500));
+            });
+        } else {
+            AppExecutors.getInstance().diskIO().execute(() -> {
+                CoinEntity coinEntity = viewModel.getCoin(coinId);
+                if (coinEntity != null) {
+                    int addrCount = coinEntity.getAddressCount();
+                    List<String> observableAddressNames = new ArrayList<>();
+                    for (int i = addrCount; i < value + addrCount; i++) {
+                        String name = coinEntity.getDisplayName() + "-" + i;
+                        observableAddressNames.add(name);
                     }
-                }));
-            }
-        });
+                    viewModel.addAddress(observableAddressNames);
+
+                    handler.post(() -> viewModel.getObservableAddState().observe(this, complete -> {
+                        if (complete) {
+                            handler.postDelayed(dialog::dismiss, 500);
+                        }
+                    }));
+                }
+            });
+        }
     }
 }
