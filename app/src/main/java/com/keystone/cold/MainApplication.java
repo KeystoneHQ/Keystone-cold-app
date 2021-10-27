@@ -42,6 +42,7 @@ import com.keystone.cold.service.AttackCheckingService;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.SetupVaultActivity;
 import com.keystone.cold.ui.UnlockActivity;
+import com.keystone.cold.viewmodel.SetupVaultViewModel;
 
 import java.lang.ref.SoftReference;
 
@@ -71,6 +72,7 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
         compatibleWalletSp();
+        migrateVaultCreateFlag();
         mAppExecutors = AppExecutors.getInstance();
         EncryptionCoreProvider.getInstance().initialize(this);
         mAppExecutors.diskIO().execute(() -> {
@@ -106,6 +108,12 @@ public class MainApplication extends Application {
                 break;
             default:
                 break;
+        }
+    }
+
+    private void migrateVaultCreateFlag() {
+        if(Utilities.hasVaultCreated(sApplication) && Utilities.getVaultCreateStep(sApplication) == SetupVaultViewModel.VAULT_CREATE_STEP_WELCOME) {
+            Utilities.setVaultCreateStep(sApplication, SetupVaultViewModel.VAULT_CREATE_STEP_DONE);
         }
     }
 
