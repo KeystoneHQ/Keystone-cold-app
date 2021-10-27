@@ -50,7 +50,7 @@ public class SecurityCheck {
     private static final int CODE_FW_ERT_ATTACKED = 0x0400;
     public static final int CODE_FW_IN_BOOTMODE = 0x0500;
     public static final int CODE_STATUS_MIS_MATCH = 0x0600;
-    public static final int CODE_STATUS_RUNTIME_INVALID = 0x0700;
+    public static final int CODE_STATUS_RUNTIME_INVALID = 0x1000;
 
     public CheckResult doSelfCheck(AppCompatActivity context) {
         Log.i(TAG, "start self checking...");
