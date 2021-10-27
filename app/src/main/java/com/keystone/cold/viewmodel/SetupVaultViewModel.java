@@ -401,7 +401,17 @@ public class SetupVaultViewModel extends AndroidViewModel {
                 CoinEntity coinEntity = mRepository.loadCoinSync(coin.getCoinId());
                 if (coinEntity != null) {
                     List<AccountEntity> accountEntities = mRepository.loadAccountsForCoin(coinEntity);
-                    if (accountEntities.size() != 0) {
+                    if (coin.getIndex() == Coins.ETH.coinIndex()) {
+                        if (accountEntities.size() != coin.getAccounts().size()) {
+                            updateEthAccounts(accountEntities, coin);
+                        }
+                        continue;
+                    } else if (accountEntities.size() != 0) {
+                        continue;
+                    }
+                } else {
+                    if (coin.getIndex() == Coins.ETH.coinIndex()) {
+                        createEthAccounts(coin);
                         continue;
                     }
                 }
@@ -435,6 +445,35 @@ public class SetupVaultViewModel extends AndroidViewModel {
                 AppExecutors.getInstance().mainThread().execute(onComplete);
             }
         });
+    }
+
+    private void updateEthAccounts(List<AccountEntity> accountEntities, CoinEntity coin) {
+        for (int i = 0; i < accountEntities.size(); i++) {
+            for (AccountEntity account : coin.getAccounts()) {
+                if (!accountEntities.get(i).getHdPath().equals(account.getHdPath())) {
+                    String xPub = new GetExtendedPublicKeyCallable(account.getHdPath()).call();
+                    account.setExPub(xPub);
+                    account.setCoinId(coin.getId());
+                    long accountId = mRepository.insertAccount(account);
+                    account.setId(accountId);
+                    AddAddressViewModel.addEthAccountAddress(account, mRepository, 1, coin.getBelongTo(), null);
+                }
+            }
+        }
+    }
+
+    private void createEthAccounts(CoinEntity coin) {
+        String coinXpub = new GetExtendedPublicKeyCallable(coin.getAccounts().get(0).getHdPath()).call();
+        coin.setExPub(coinXpub);
+        long id = mRepository.insertCoin(coin);
+        for (AccountEntity account : coin.getAccounts()) {
+            String xPub = new GetExtendedPublicKeyCallable(account.getHdPath()).call();
+            account.setExPub(xPub);
+            account.setCoinId(id);
+            long accountId = mRepository.insertAccount(account);
+            account.setId(accountId);
+            AddAddressViewModel.addEthAccountAddress(account, mRepository, 1, coin.getBelongTo(), null);
+        }
     }
 
     private void deleteHiddenVaultData() {

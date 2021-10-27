@@ -195,8 +195,8 @@ public class DataRepository {
         return mDb.whiteListDao().queryAddress(address, Utilities.getCurrentBelongTo(context));
     }
 
-    public void insertAccount(AccountEntity account) {
-        mDb.accountDao().add(account);
+    public long insertAccount(AccountEntity account) {
+        return mDb.accountDao().add(account);
     }
 
     public void updateAccount(AccountEntity account) {
