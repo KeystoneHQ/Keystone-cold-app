@@ -1,7 +1,9 @@
 package com.keystone.coinlib.accounts;
 
 public enum Chains {
-    ETH("m/44'/60'/0'", 0x3c);
+    LEDGER_LIVE("M/44'/60'", 0x3c),
+    LEGACY("M/44'/60'/0'", 0x3c),
+    BIP44_STANDARD("M/44'/60'/0'/0", 0x3c);
 
     private String path;
     private int type;

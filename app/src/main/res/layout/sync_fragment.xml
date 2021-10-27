@@ -62,7 +62,6 @@
                     android:id="@+id/hint_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:gravity="center"
                     android:orientation="horizontal">
                     <TextView
@@ -119,11 +118,37 @@
                         android:gravity="center"/>
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/ll_hint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:background="@drawable/show_account_bg"
+                    android:padding="3dp"
+                    android:gravity="center_vertical"
+                    android:visibility="gone">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:padding="5dp"
+                        android:src="@drawable/information" />
+                    <com.keystone.cold.ui.views.SpanedTextView
+                        android:id="@+id/companion_hint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:layout_marginHorizontal="5dp"
+                        android:textSize="12sp"
+                        android:text="@string/companion_hint"/>
+                </LinearLayout>
+
                 <Button
                     android:id="@+id/complete"
                     android:layout_width="match_parent"
                     style="@style/AcceptButton"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginBottom="16dp"
                     android:text="@string/complete"/>

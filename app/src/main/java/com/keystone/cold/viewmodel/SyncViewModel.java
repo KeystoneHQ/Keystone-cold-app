@@ -19,6 +19,7 @@ package com.keystone.cold.viewmodel;
 
 import android.app.Application;
 import android.text.TextUtils;
+import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -27,10 +28,12 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.Util;
 import com.keystone.coinlib.accounts.Chains;
+import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
+import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
@@ -39,17 +42,24 @@ import com.keystone.cold.protocol.builder.SyncBuilder;
 import com.keystone.cold.util.URRegistryHelper;
 import com.sparrowwallet.hummingbird.registry.CryptoHDKey;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SyncViewModel extends AndroidViewModel {
 
     private final DataRepository mRepository;
+    private MutableLiveData<Chains> chainsMutableLiveData;
 
     public SyncViewModel(@NonNull Application application) {
         super(application);
         mRepository = ((MainApplication) application).getRepository();
+        chainsMutableLiveData = new MutableLiveData<>();
+        chainsMutableLiveData.postValue(Chains.LEGACY);
     }
 
+    public MutableLiveData<Chains> getChainsMutableLiveData() {
+        return chainsMutableLiveData;
+    }
 
     public List<AccountEntity> loadAccountForCoin(CoinEntity coin) {
         return mRepository.loadAccountsForCoin(coin);
@@ -134,18 +144,31 @@ public class SyncViewModel extends AndroidViewModel {
             String genesisHash = getGenesisHash(coinCode);
             String name = "keystone-"+Coins.coinNameFromCoinCode(coinCode);
             result.postValue(prefix + ":" + address + ":" + genesisHash + ":" + name);
-
         });
         return result;
     }
 
-    public LiveData<String> generateSyncMetamask() {
+    public LiveData<String> generateSyncMetamask(Chains chains) {
         MutableLiveData<String> result = new MutableLiveData<>();
         AppExecutors.getInstance().diskIO().execute(() -> {
-            CryptoHDKey cryptoHDKey = URRegistryHelper.generateCryptoHDKey(Chains.ETH);
+            CryptoHDKey cryptoHDKey = URRegistryHelper.generateCryptoHDKey(chains);
             result.postValue(cryptoHDKey.toUR().toString());
         });
         return result;
+    }
+
+    public MutableLiveData<List<Pair<String, String>>> getAccounts(Chains chains) {
+        MutableLiveData<List<Pair<String, String>>> mutableLiveData = new MutableLiveData<>();
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            List<Pair<String, String>> result = new ArrayList<>();
+            String xPub =  new GetExtendedPublicKeyCallable(chains.getPath()).call();
+            AbsDeriver deriver = AbsDeriver.newInstance("ETH");
+            for (int i = 0; i < 5; i++) {
+                result.add(i, Pair.create("Account " + i, deriver.derive(xPub, 0, i)));
+            }
+            mutableLiveData.postValue(result);
+        });
+        return mutableLiveData;
     }
 
     private String getGenesisHash(String coinCode) {

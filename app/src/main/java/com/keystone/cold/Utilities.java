@@ -28,6 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
+import com.keystone.coinlib.accounts.Chains;
 import com.keystone.cold.ui.modal.ModalDialog;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -60,6 +61,8 @@ public class Utilities {
     public static final String FINGERPRINT_PASSWORD = "fingerprint_password";
     public static final String ATTACK_DETECTED = "attack_detected";
     public static final String INPUT_SETTINGS_CLEARED = "input_settings_cleared";
+    public static final String ETH_CURRENT_ACCOUNT = "eth_current_account";
+    public static final String WEB3_GUIDE_TIMES = "web3_guide_times";
 
 
     public static void alert(AppCompatActivity activity,
@@ -251,5 +254,25 @@ public class Utilities {
     public static Integer getVaultCreateStep(Context context) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
         return sp.getInt(VAULT_CREATE_STEP, VAULT_CREATE_STEP_WELCOME);
+    }
+
+    public static void setWeb3GuideTimes(Context context, int times) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        sp.edit().putInt(WEB3_GUIDE_TIMES, times).apply();
+    }
+
+    public static int getWeb3GuideTimes(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        return sp.getInt(WEB3_GUIDE_TIMES, 0);
+    }
+
+    public static void setCurrentEthAccount(Context context, String hdPath) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        sp.edit().putString(ETH_CURRENT_ACCOUNT, hdPath).apply();
+    }
+
+    public static String getCurrentEthAccount(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        return sp.getString(ETH_CURRENT_ACCOUNT, Chains.LEGACY.getPath());
     }
 }
