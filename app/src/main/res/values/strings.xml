@@ -130,7 +130,7 @@
     <string name="confirm_input_mnemonic_hint">Please enter your %d-word recovery phrase in the table below.</string>
     <string name="complete">Done</string>
     <string name="password_verify_too_short">Too short</string>
-    <string name="sync_hint2"><![CDATA[Download Keystone Mobile:<br><font color="#00cdc3"><u>https://keyst.one/app</u><font/><br>]]></string>
+    <string name="sync_hint2"><![CDATA[Download Keystone Mobile:<br><font color="#00cdc3">https://keyst.one/app<font/><br>]]></string>
     <string name="sync_hint1"><![CDATA[Scan <font color="#00cdc3">QR Code<font/> with Keystone Mobile]]></string>
     <string name="wrong_mnemonic_please_check">recovery phrase incorrect, please try again.</string>
     <string name="dots_not_enough">Please connect at least 4 dots.</string>
@@ -219,11 +219,11 @@
     <string name="firmware_upgrade">Firmware Upgrade</string>
     <string name="text_password_required">Must contain at least 10 characters and include upper and lower case letters and digits. Symbols are allowed. Case sensitive.</string>
     <string name="welcome">Welcome to Keystone!</string>
-    <string name="welcome_site"><![CDATA[Please open the following link using a PC: <font color="#00cdc3"><u>https://keyst.one/start</u></font>]]></string>
+    <string name="welcome_site"><![CDATA[Please open the following link using a PC: <font color="#00cdc3">https://keyst.one/start</font>]]></string>
     <string name="welcome_text">This will help guide setting up your Keystone hardware wallet.</string>
     <string name="welcome_done">It\'s ready, start</string>
     <string name="guide_completed_title">Congratulations! \nSetup is now complete!</string>
-    <string name="guide_completed_remind"><![CDATA[You can create Passphrase(Hidden Wallet) or reset your password in Settings. \n Read the enclosed Quick Guide or visit our website to learn more: <br> <font color="#00cdc3"><u>https://keyst.one</u><font/>]]></string>
+    <string name="guide_completed_remind"><![CDATA[You can create Passphrase(Hidden Wallet) or reset your password in Settings. \n Read the enclosed Quick Guide or visit our website to learn more: <br> <font color="#00cdc3">https://keyst.one<font/>]]></string>
     <string name="tx_from">From</string>
     <string name="tx_to">To</string>
     <string name="tx_fee">Fee</string>
@@ -355,7 +355,7 @@
     <string name="start">Start</string>
     <string name="pattern_lock_hide_track">To prevent peeping, track will be hidden when unlocked</string>
     <string name="abnormal_tx">Abnormal Transaction</string>
-    <string name="fee_attack_warning">Detect that the transaction is risky and cannot be signed. You can go to: https// for details, or contact us: support@keyst.one</string>
+    <string name="fee_attack_warning">Detect that the transaction is risky and cannot be signed. You can go to: https://keyst.one/fee-attack for details, or contact us: support@keyst.one</string>
     <string name="already_signed">You have signed the transaction, can broadcast the transaction directly</string>
     <string name="contact_info">Twitter: @KeystoneWallet\nEmail：support@keyst.one</string>
     <string name="keep_mnemonic_hint">*Keystone will never ask for your Recovery Phrase under any circumstances, please be sure to keep your Recovery Phrase and don’t disclose them to anyone</string>

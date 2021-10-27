@@ -109,7 +109,7 @@
         <item>选择配对应用</item>
     </string-array>
 
-    <string name="sync_hint2"><![CDATA[铠石钱包移动端可在官网下载：<br><font color="#00cdc3"><u>https://keyst.one/app</u><font/><br>]]></string>
+    <string name="sync_hint2"><![CDATA[铠石钱包移动端可在官网下载：<br><font color="#00cdc3">https://keyst.one/app<font/><br>]]></string>
     <string name="sync_hint1"><![CDATA[请使用铠石钱包移动端扫描<font color="#00cdc3">动态二维码<font/>]]></string>
     <string name="wrong_mnemonic_please_check">助记词有误，请逐字检查</string>
     <string name="dots_not_enough">请至少连接四个点</string>
