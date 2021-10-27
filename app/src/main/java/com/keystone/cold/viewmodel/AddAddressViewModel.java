@@ -20,6 +20,7 @@ package com.keystone.cold.viewmodel;
 import android.app.Application;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
@@ -29,6 +30,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.utils.Coins;
+import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
@@ -74,6 +76,48 @@ public class AddAddressViewModel extends AndroidViewModel {
 
     public LiveData<Boolean> getObservableAddState() {
         return addComplete;
+    }
+
+    public void addEthAccountAddress(CoinEntity coin, String path, int number, String belongTo, Runnable onComplete) {
+        List<AccountEntity> accountEntityList = mRepo.loadAccountsForCoin(coin);
+        for (AccountEntity accountEntity : accountEntityList) {
+            if (accountEntity.getHdPath().equals(path)) {
+                addEthAccountAddress(accountEntity, mRepo, number, belongTo, onComplete);
+                return;
+            }
+        }
+        AppExecutors.getInstance().mainThread().execute(onComplete);
+    }
+
+    public static void addEthAccountAddress(AccountEntity accountEntity, DataRepository repository, int number, String belongTo, Runnable onComplete) {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            AbsDeriver deriver = AbsDeriver.newInstance("ETH");
+            if (deriver == null) {
+                Log.e("addEthAccountAddress", "deriver is null");
+            } else {
+                String hdPath = accountEntity.getHdPath();
+                int addressLength = accountEntity.getAddressLength();
+                List<AddressEntity> addressEntities = new ArrayList<>();
+                int targetAddressCount = addressLength + number;
+                for (int index = addressLength; index < targetAddressCount; index++) {
+                    AddressEntity addressEntity = new AddressEntity();
+                    int change = 0;
+                    addressEntity.setPath(String.format(hdPath + "/%s/%s", 0, index));
+                    String exPub = accountEntity.getExPub();
+                    String addr = deriver.derive(exPub, change, index);
+                    addressEntity.setAddressString(addr);
+                    addressEntity.setCoinId(Coins.ETH.coinId());
+                    addressEntity.setIndex(index);
+                    addressEntity.setName("Account " + index);
+                    addressEntity.setBelongTo(belongTo);
+                    addressEntities.add(addressEntity);
+                }
+                accountEntity.setAddressLength(targetAddressCount);
+                repository.updateAccount(accountEntity);
+                repository.insertAddress(addressEntities);
+            }
+            AppExecutors.getInstance().mainThread().execute(onComplete);
+        });
     }
 
     public static class AddAddressTask extends AsyncTask<String, Void, Void> {
