@@ -31,13 +31,4 @@ public class TronImpl extends CoinImpl {
         return Coins.TRON.coinCode();
     }
 
-    public void generateJsonTransaction(JSONObject txObj, SignCallback callback, Signer... signers) {
-        try {
-            String txStr = txObj.toString();
-            super.nativeLegacyGenerateTransaction(txStr,callback,signers[0], this.coinCode());
-        } catch (Exception e) {
-            e.printStackTrace();
-            callback.onFail();
-        }
-    }
 }
