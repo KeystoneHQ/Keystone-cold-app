@@ -47,6 +47,7 @@ import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.databinding.AssetFragmentBinding;
 import com.keystone.cold.databinding.DialogBottomSheetBinding;
+import com.keystone.cold.db.PresetData;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.fragment.BaseFragment;
@@ -58,6 +59,7 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.exceptions.UnExpectedQREx
 import com.keystone.cold.ui.modal.ProgressModalDialog;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.CoinViewModel;
+import com.keystone.cold.viewmodel.SetupVaultViewModel;
 import com.keystone.cold.viewmodel.exceptions.UnknowQrCodeException;
 import com.keystone.cold.viewmodel.tx.PolkadotJsTxConfirmViewModel;
 import com.keystone.cold.viewmodel.PublicKeyViewModel;
@@ -256,12 +258,22 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 
     @Override
     protected void initData(Bundle savedInstanceState) {
+        checkAndAddNewCoins();
         CoinViewModel.Factory factory = new CoinViewModel.Factory(mActivity.getApplication(), coinId);
         CoinViewModel viewModel = ViewModelProviders.of(this, factory)
                 .get(CoinViewModel.class);
 
         mBinding.setCoinViewModel(viewModel);
         subscribeUi(viewModel);
+    }
+
+    private void checkAndAddNewCoins() {
+        SetupVaultViewModel viewModel = ViewModelProviders.of(mActivity)
+                .get(SetupVaultViewModel.class);
+        AppExecutors.getInstance().diskIO().execute(()
+                -> viewModel.presetData(PresetData.generateCoins(mActivity), null)
+        );
+
     }
 
     private void subscribeUi(CoinViewModel viewModel) {

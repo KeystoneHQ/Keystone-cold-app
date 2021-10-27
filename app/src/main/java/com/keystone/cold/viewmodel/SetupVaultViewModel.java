@@ -49,8 +49,8 @@ import com.keystone.cold.callables.VerifyMnemonicCallable;
 import com.keystone.cold.callables.WebAuthCallableUpgrade;
 import com.keystone.cold.callables.WriteMnemonicCallable;
 import com.keystone.cold.db.entity.AccountEntity;
+import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.util.HashUtil;
 
 import org.spongycastle.util.encoders.Base64;
@@ -448,17 +448,25 @@ public class SetupVaultViewModel extends AndroidViewModel {
     }
 
     private void updateEthAccounts(List<AccountEntity> accountEntities, CoinEntity coin) {
+        long id = accountEntities.get(0).getId();
         for (int i = 0; i < accountEntities.size(); i++) {
             for (AccountEntity account : coin.getAccounts()) {
                 if (!accountEntities.get(i).getHdPath().equals(account.getHdPath())) {
                     String xPub = new GetExtendedPublicKeyCallable(account.getHdPath()).call();
                     account.setExPub(xPub);
-                    account.setCoinId(coin.getId());
+                    account.setCoinId(id);
                     long accountId = mRepository.insertAccount(account);
                     account.setId(accountId);
                     AddAddressViewModel.addEthAccountAddress(account, mRepository, 1, coin.getBelongTo(), null);
                 }
             }
+        }
+
+        List<AddressEntity> addressEntities = mRepository.loadAddressSync(Coins.ETH.coinId());
+        for (AddressEntity addressEntity : addressEntities) {
+            String name = addressEntity.getName();
+            addressEntity.setName(name.replace("ETH-", "Account "));
+            mRepository.updateAddress(addressEntity);
         }
     }
 
