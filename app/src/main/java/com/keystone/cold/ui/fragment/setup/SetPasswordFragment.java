@@ -192,7 +192,7 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
         slip39Id = bundle != null ? bundle.getInt(SLIP39_ID) : 0;
         mBinding.pwd1.setFilters(new InputFilter[]{new InputFilter.LengthFilter(64)});
         mBinding.pwd2.setFilters(new InputFilter[]{new InputFilter.LengthFilter(64)});
-        boolean setupFinished = Utilities.getVaultCreateStep(mActivity).equals(SetupVaultViewModel.VAULT_CREATE_STEP_DONE);
+        boolean setupFinished = Utilities.getVaultCreateStep(mActivity.getApplication()).equals(SetupVaultViewModel.VAULT_CREATE_STEP_DONE);
         registerListeners();
 
         if (inSetupProcess) {
@@ -253,7 +253,7 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
                 String password = Objects.requireNonNull(viewModel.getPwd1().get());
                 String passwordHash = Hex.toHexString(Objects.requireNonNull(HashUtil.twiceSha256(password)));
                 Runnable action;
-                boolean hasSetupFinished = Utilities.getVaultCreateStep(mActivity).equals(SetupVaultViewModel.VAULT_CREATE_STEP_DONE);
+                boolean hasSetupFinished = Utilities.getVaultCreateStep(mActivity.getApplication()).equals(SetupVaultViewModel.VAULT_CREATE_STEP_DONE);
                 if (mActivity instanceof UnlockActivity) {
                     new ResetPasswordCallable(passwordHash, mnemonic, slip39MasterSeed, slip39Id).call();
                     action = () -> {

@@ -89,7 +89,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
     public static final int VAULT_CREATE_STEP_WRITE_MNEMONIC = 40;
     public static final int VAULT_CREATE_STEP_DONE = 100;
 
-    public static final String VAULT_CREATE_STEP = "vault_create_step";
+
 
     private final ObservableField<String> pwd1 = new ObservableField<>("");
     private final ObservableField<String> pwd2 = new ObservableField<>("");

@@ -50,7 +50,7 @@ public class SecurityCheckFragment extends BaseFragment<SecurityCheckBinding> {
             SecurityCheck.CheckResult checkResult = new SecurityCheck().doSelfCheck(mActivity);
             handler.postDelayed(() -> {
                 if (checkResult.result == RESULT_OK) {
-                    boolean setupFinished = Utilities.getVaultCreateStep(mActivity).equals(SetupVaultViewModel.VAULT_CREATE_STEP_DONE);
+                    boolean setupFinished = Utilities.getVaultCreateStep(mActivity.getApplication()).equals(SetupVaultViewModel.VAULT_CREATE_STEP_DONE);
                     Utilities.setAttackDetected(mActivity, false);
                     Log.d(TAG, "setupFinished = " + setupFinished);
                     Intent intent;
