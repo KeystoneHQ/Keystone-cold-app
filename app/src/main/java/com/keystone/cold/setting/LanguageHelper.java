@@ -29,12 +29,21 @@ import java.util.Locale;
 public class LanguageHelper {
     public static final String ENGLISH = "en";
     public static final String SIMPLIFIED_CHINESE = "zh_rCN";
+    public static final String KOREA = "ko_rKR";
+    public static final String SPANISH = "es_rES";
+    public static final String GERMANY = "de_rDE";
+    public static final String RUSSIAN = "ru_rRU";
+    public static final String JAPAN = "ja_rJP";
     public static Locale defaultLocale = Locale.ENGLISH;
     private static final String TAG = "Vault.LanguageHelper";
     private static final HashMap<String, Locale> mAllLanguages = new HashMap<String, Locale>() {{
         put(ENGLISH, Locale.ENGLISH);
         put(SIMPLIFIED_CHINESE, Locale.SIMPLIFIED_CHINESE);
-
+        put(KOREA, Locale.KOREA);
+        put(SPANISH, new Locale("ES"));
+        put(GERMANY, Locale.GERMANY);
+        put(RUSSIAN, new Locale("RU"));
+        put(JAPAN, Locale.JAPAN);
     }};
 
     public static Context updateResources(Context context, String language) {
