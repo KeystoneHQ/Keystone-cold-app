@@ -178,7 +178,12 @@ public class DynamicQrCodeView extends LinearLayout implements QrCodeHolder {
             }
         } else {
             if (ViewCompat.isLaidOut(this)) {
-                mCache.offer(data, this);
+                if(data.toUpperCase().startsWith("UR:")) {
+                    mCache.offer(data.toUpperCase(), this);
+                }
+                else {
+                    mCache.offer(data, this);
+                }
             } else {
                 getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override

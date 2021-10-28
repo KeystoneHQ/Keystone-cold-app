@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class URRegistryHelper {
+    private static final String KEY_NAME = "Keystone";
+
     public static CryptoHDKey generateCryptoHDKey(Chains chains) {
         byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
         String xPub = new GetExtendedPublicKeyCallable(chains.getPath()).call();
@@ -25,7 +27,7 @@ public class URRegistryHelper {
         CryptoCoinInfo useInfo = new CryptoCoinInfo(chains.getType(), 0);
         CryptoKeypath origin = new CryptoKeypath(pathComponents, masterFingerprint, (int) extendedPublicKey.getDepth());
         byte[] parentFingerprint = extendedPublicKey.getParentFingerprint();
-        return new CryptoHDKey(false, key, chainCode, useInfo, origin, null, parentFingerprint);
+        return new CryptoHDKey(false, key, chainCode, useInfo, origin, null, parentFingerprint, KEY_NAME, "");
     }
 
     public static List<PathComponent> getPathComponents(Chains chains) {
