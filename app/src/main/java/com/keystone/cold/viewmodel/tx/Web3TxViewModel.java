@@ -75,6 +75,7 @@ public class Web3TxViewModel extends Base {
     private String inputData;
     private boolean isFromTFCard;
     private MutableLiveData<GenericETHTxEntity> observableEthTx = new MutableLiveData<>();
+    private static JSONObject chainIdJSONObject;
     private SignCallBack signCallBack = new SignCallBack() {
         @Override
         public void startSign() {
@@ -102,6 +103,14 @@ public class Web3TxViewModel extends Base {
             new ClearTokenCallable().call();
         }
     };
+
+    static {
+        try {
+            chainIdJSONObject = new JSONObject(readAsset("chain/chainId.json"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     public Web3TxViewModel(@NonNull Application application) {
         super(application);
@@ -149,10 +158,18 @@ public class Web3TxViewModel extends Base {
 
     public String getNetwork(int chainId) {
         Network network = Network.getNetwork(chainId);
+        String networkName = "";
         if (network == null) {
-            return String.format("chainId:%d", chainId);
+            if (chainIdJSONObject != null) {
+                networkName = chainIdJSONObject.optString(String.valueOf(chainId));
+            }
+            if (networkName.isEmpty()){
+                return String.format("chainId:%d", chainId);
+            } else {
+                return networkName;
+            }
         }
-        String networkName = network.name();
+        networkName = network.name();
         if (chainId != 1) {
             networkName += String.format(" (%s)", context.getString(R.string.testnet));
         }
