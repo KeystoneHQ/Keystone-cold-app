@@ -74,6 +74,7 @@ public class Web3TxViewModel extends Base {
     private boolean isLegacyTypedData;
     private String inputData;
     private boolean isFromTFCard;
+    private BigDecimal gasPrice;
     private MutableLiveData<GenericETHTxEntity> observableEthTx = new MutableLiveData<>();
     private SignCallBack signCallBack = new SignCallBack() {
         @Override
@@ -341,6 +342,7 @@ public class Web3TxViewModel extends Base {
 
     private double calculateDisplayFee(JSONObject ethTx) throws JSONException {
         BigDecimal gasPrice = new BigDecimal(ethTx.getString("gasPrice"));
+        this.gasPrice = gasPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP);
         BigDecimal gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
         return gasLimit.multiply(gasPrice)
                 .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -354,8 +356,8 @@ public class Web3TxViewModel extends Base {
         BigDecimal gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
         BigDecimal estimatedFee = gasPriorityPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
         BigDecimal maxFee = gasLimitPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-        tx.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)));
-        tx.setMaxFeePerGas(nf.format(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)));
+        tx.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
+        tx.setMaxFeePerGas(nf.format(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
         tx.setGasLimit(nf.format(gasLimit));
         tx.setEstimatedFee(nf.format(estimatedFee));
         tx.setMaxFee(nf.format(maxFee));
@@ -481,6 +483,10 @@ public class Web3TxViewModel extends Base {
 
     public boolean isFromTFCard() {
         return isFromTFCard;
+    }
+
+    public BigDecimal getGasPrice() {
+        return gasPrice;
     }
 
     interface SignCallBack {

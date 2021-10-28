@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <RelativeLayout
+            android:layout_width="288dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/modal_bg">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/black"
+                android:text="@string/tip"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <com.keystone.cold.ui.views.SpanedTextView
+                android:id="@+id/content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="12dp"
+                android:gravity="center_horizontal"
+                android:lineSpacingExtra="6dp"
+                android:maxLines="15"
+                android:textSize="14sp"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@id/content"
+                android:layout_marginVertical="16dp"
+                android:layout_marginHorizontal="16dp">
+                <Button
+                    android:id="@+id/bt1"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    style="@style/ContinueButton"
+                    android:text="@string/cancel"
+                    android:layout_marginEnd="16dp"/>
+                <Button
+                    android:id="@+id/bt2"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    style="@style/AcceptButton"
+                    android:text="@string/confirm" />
+            </LinearLayout>
+        </RelativeLayout>
+    </FrameLayout>
+</layout>
