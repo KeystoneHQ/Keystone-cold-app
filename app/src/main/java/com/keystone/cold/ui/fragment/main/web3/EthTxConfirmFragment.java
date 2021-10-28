@@ -79,6 +79,8 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     public static Pattern patternEns = Pattern.compile("(?<=\\<)[^\\>]+");
     public static Pattern pattern = Pattern.compile("(?<=\\()[^\\)]+");
     public static Pattern pattern1 = Pattern.compile("(?<=\\[)[^]]+");
+    public static int MAX_PER_GAS = 1000;
+    private boolean isExceed;
 
 
     @Override
@@ -91,7 +93,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
         mBinding.ethTx.checkInfo.setVisibility(View.VISIBLE);
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         viewModel = ViewModelProviders.of(this).get(Web3TxViewModel.class);
-        mBinding.sign.setOnClickListener(v -> handleSign());
+        mBinding.sign.setOnClickListener(v -> checkExceedFeeDialog());
         mBinding.ethTx.info.setOnClickListener(view1 -> realShowDialog());
         viewModel.parseTxData(requireArguments());
     }
@@ -182,6 +184,10 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
 
     private void updateUI() {
         updateNetworkName();
+        if (isExceed) {
+            mBinding.ethTx.fee.setTextColor(Color.RED);
+            mBinding.ethTx.feeTooHigh.setVisibility(View.VISIBLE);
+        }
         JSONObject abi = viewModel.getAbi();
         if (abi != null) {
             updateAbiView(abi);
@@ -300,10 +306,27 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
         viewModel.getObservableEthTx().observe(this, genericETHTxEntity -> {
             this.genericETHTxEntity = genericETHTxEntity;
             if (this.genericETHTxEntity != null) {
+                if (viewModel.getGasPrice().doubleValue() > MAX_PER_GAS) {
+                    isExceed = true;
+                }
                 updateUI();
             }
         });
         viewModel.parseTxException().observe(this, this::handleParseException);
+    }
+
+    private void checkExceedFeeDialog() {
+        if (isExceed) {
+            ModalDialog.showTwoButtonCommonModal(mActivity,
+                    getString(R.string.atention),
+                    getString(R.string.exceed_fee),
+                    getString(R.string.sign),
+                    getString(R.string.cancel),
+                    this::handleSign,
+                    null);
+            return;
+        }
+        handleSign();
     }
 
     public static SpannableStringBuilder highLight(String content) {

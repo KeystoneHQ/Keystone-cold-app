@@ -586,4 +586,7 @@
     <string name="retry_format">Is it reformatted?</string>
     <string name="retry">Retry</string>
     <string name="formatting">Formatting…</string>
+    <string name="fee_too_high">Fee is too high</string>
+    <string name="atention">Atention</string>
+    <string name="exceed_fee">The fee of this transaction is too high, Confirm whether to sign.</string>
 </resources>

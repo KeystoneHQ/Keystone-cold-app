@@ -78,6 +78,9 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
     public static Pattern patternEns = Pattern.compile("(?<=\\<)[^\\>]+");
     public static Pattern pattern = Pattern.compile("(?<=\\()[^\\)]+");
     public static Pattern pattern1 = Pattern.compile("(?<=\\[)[^]]+");
+    public static int MAX_PRIORITY_PER_GAS = 1000;
+    public static int MAX_FEE_PER_GAS = 10000;
+    private boolean isExceed;
 
 
     @Override
@@ -90,7 +93,7 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
         mBinding.ethTx.checkInfo.setVisibility(View.VISIBLE);
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         viewModel = ViewModelProviders.of(this).get(Web3TxViewModel.class);
-        mBinding.sign.setOnClickListener(v -> handleSign());
+        mBinding.sign.setOnClickListener(v -> checkExceedFeeDialog());
         mBinding.ethTx.info.setOnClickListener(view1 -> realShowDialog());
         viewModel.parseEIP1559TxData(requireArguments());
     }
@@ -181,10 +184,27 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
 
     private void updateUI() {
         mBinding.ethTx.network.setText(viewModel.getNetwork(viewModel.getChainId()));
-        mBinding.ethTx.feeEstimatedDetail.setText(String.format("Max Priority fee (%s) * Gas limit (%s)",
-                genericETHTxEntity.getMaxPriorityFeePerGas(), genericETHTxEntity.getGasLimit()));
-        mBinding.ethTx.feeMaxDetail.setText(String.format("Max fee (%s) * Gas limit (%s)",
-                genericETHTxEntity.getMaxFeePerGas(), genericETHTxEntity.getGasLimit()));
+        String feeEstimatedContent = String.format("Max Priority fee (%s) * Gas limit (%s)",
+                genericETHTxEntity.getMaxPriorityFeePerGas(), genericETHTxEntity.getGasLimit());
+        String feeMaxContent = String.format("Max fee (%s) * Gas limit (%s)",
+                genericETHTxEntity.getMaxFeePerGas(), genericETHTxEntity.getGasLimit());
+        if (isExceed) {
+            mBinding.ethTx.maxFeeTooHigh.setVisibility(View.VISIBLE);
+            mBinding.ethTx.priorityFeeTooHigh.setVisibility(View.VISIBLE);
+            mBinding.ethTx.feeEstimatedValue.setTextColor(Color.RED);
+            mBinding.ethTx.feeMaxValue.setTextColor(Color.RED);
+            SpannableStringBuilder spannableMaxEstimated = new SpannableStringBuilder(feeEstimatedContent);
+            spannableMaxEstimated.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.red)), 18 ,
+                    18 + genericETHTxEntity.getMaxPriorityFeePerGas().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            SpannableStringBuilder spannableMaxFee = new SpannableStringBuilder(feeMaxContent);
+            spannableMaxFee.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.red)), 9 ,
+                    9 + genericETHTxEntity.getMaxPriorityFeePerGas().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            mBinding.ethTx.feeEstimatedDetail.setText(spannableMaxEstimated);
+            mBinding.ethTx.feeMaxDetail.setText(spannableMaxFee);
+        } else {
+            mBinding.ethTx.feeEstimatedDetail.setText(feeEstimatedContent);
+            mBinding.ethTx.feeMaxDetail.setText(feeMaxContent);
+        }
         JSONObject abi = viewModel.getAbi();
         if (abi != null) {
             updateAbiView(abi);
@@ -296,13 +316,32 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-        viewModel.getObservableEthTx().observe(this, GenericETHTxEntity -> {
-            this.genericETHTxEntity = GenericETHTxEntity;
+        viewModel.getObservableEthTx().observe(this, genericETHTxEntity -> {
+            this.genericETHTxEntity = genericETHTxEntity;
             if (this.genericETHTxEntity != null) {
+                double maxPriorityFee = Double.parseDouble(genericETHTxEntity.getMaxPriorityFeePerGas().replace(" GWEI", ""));
+                boolean isExceedMaxPriorityFee = maxPriorityFee > MAX_PRIORITY_PER_GAS;
+                double maxfee = Double.parseDouble(genericETHTxEntity.getMaxFeePerGas().replace(" GWEI", ""));
+                boolean isExceedMaxFee = maxfee > MAX_FEE_PER_GAS;
+                isExceed = isExceedMaxPriorityFee || isExceedMaxFee;
                 updateUI();
             }
         });
         viewModel.parseTxException().observe(this, this::handleParseException);
+    }
+
+    private void checkExceedFeeDialog() {
+        if (isExceed) {
+            ModalDialog.showTwoButtonCommonModal(mActivity,
+                    getString(R.string.atention),
+                    getString(R.string.exceed_fee),
+                    getString(R.string.sign),
+                    getString(R.string.cancel),
+                    this::handleSign,
+                    null);
+            return;
+        }
+        handleSign();
     }
 
     public static SpannableStringBuilder highLight(String content) {

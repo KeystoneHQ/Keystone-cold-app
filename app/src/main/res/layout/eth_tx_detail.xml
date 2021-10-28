@@ -283,7 +283,7 @@
             <LinearLayout
                 android:id="@+id/fee_info"
                 android:layout_width="match_parent"
-                android:layout_height="49dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
@@ -306,6 +306,28 @@
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     tools:text="0.00006840 ETH" />
+
+                <LinearLayout
+                    android:id="@+id/fee_too_high"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="3dp"
+                    android:visibility="gone"
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/information"
+                        app:tint="@color/red" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fee_too_high"
+                        android:layout_marginStart="5dp"
+                        android:textColor="@color/red" />
+                </LinearLayout>
 
                 <include
                     layout="@layout/divider"
