@@ -35,7 +35,6 @@ import androidx.lifecycle.MutableLiveData;
 import com.keystone.coinlib.abi.AbiLoadManager;
 import com.keystone.coinlib.abi.Contract;
 import com.keystone.coinlib.coins.ETH.EthImpl;
-import com.keystone.coinlib.coins.ETH.Network;
 import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.ens.EnsLoadManager;
 import com.keystone.coinlib.exception.InvalidPathException;
@@ -43,7 +42,6 @@ import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.path.CoinPath;
 import com.keystone.cold.AppExecutors;
-import com.keystone.cold.R;
 import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.encryption.ChipSigner;
@@ -158,23 +156,15 @@ public class Web3TxViewModel extends Base {
     }
 
     public String getNetwork(int chainId) {
-        Network network = Network.getNetwork(chainId);
         String networkName = "";
-        if (network == null) {
-            if (chainIdJSONObject != null) {
-                networkName = chainIdJSONObject.optString(String.valueOf(chainId));
-            }
-            if (networkName.isEmpty()){
-                return String.format("chainId:%d", chainId);
-            } else {
-                return networkName;
-            }
+        if (chainIdJSONObject != null) {
+            networkName = chainIdJSONObject.optString(String.valueOf(chainId));
         }
-        networkName = network.name();
-        if (chainId != 1) {
-            networkName += String.format(" (%s)", context.getString(R.string.testnet));
+        if (networkName.isEmpty()){
+            return String.format("chainId:%d", chainId);
+        } else {
+            return networkName;
         }
-        return networkName;
     }
 
     public MutableLiveData<GenericETHTxEntity> getObservableEthTx() {
