@@ -28,7 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
-import com.keystone.coinlib.accounts.Chains;
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.cold.ui.modal.ModalDialog;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -273,6 +273,6 @@ public class Utilities {
 
     public static String getCurrentEthAccount(Context context) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
-        return sp.getString(ETH_CURRENT_ACCOUNT, Chains.LEGACY.getPath());
+        return sp.getString(ETH_CURRENT_ACCOUNT, ETHAccount.LEGACY.getPath());
     }
 }

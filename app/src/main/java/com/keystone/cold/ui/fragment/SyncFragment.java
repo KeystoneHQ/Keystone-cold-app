@@ -31,7 +31,7 @@ import android.view.View;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.keystone.coinlib.accounts.Chains;
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
@@ -204,7 +204,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        syncViewModel.getChainsMutableLiveData().postValue(Chains.LEGACY);
+        syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.LEGACY);
     }
 
     private String generateXrpToolsSyncData(SyncViewModel.XrpSyncData xrpSyncData) {

@@ -8,15 +8,13 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.keystone.coinlib.accounts.Chains;
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.AccountItemBinding;
 import com.keystone.cold.databinding.SelectWalletFragmentBinding;
 import com.keystone.cold.ui.common.BaseBindingAdapter;
-import com.keystone.cold.ui.fragment.setup.SetupVaultBaseFragment;
 import com.keystone.cold.viewmodel.SyncViewModel;
 
 import java.util.ArrayList;
@@ -37,15 +35,15 @@ public class SelectWalletFragment extends BaseFragment<SelectWalletFragmentBindi
         mBinding.close.setOnClickListener(v -> navigateUp());
         syncViewModel = ViewModelProviders.of(mActivity).get(SyncViewModel.class);;
         mBinding.btShowLedgerLive.setOnClickListener(v -> {
-            syncViewModel.getChainsMutableLiveData().postValue(Chains.LEDGER_LIVE);
+            syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.LEDGER_LIVE);
             navigateUp();
         });
         mBinding.btShowCrypto.setOnClickListener(v -> {
-            syncViewModel.getChainsMutableLiveData().postValue(Chains.LEGACY);
+            syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.LEGACY);
             navigateUp();
         });
         mBinding.btShowMetamask.setOnClickListener(v -> {
-            syncViewModel.getChainsMutableLiveData().postValue(Chains.BIP44_STANDARD);
+            syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.BIP44_STANDARD);
             navigateUp();
         });
     }
@@ -55,15 +53,15 @@ public class SelectWalletFragment extends BaseFragment<SelectWalletFragmentBindi
         ledgerLiveAdapter = new AccountAdapter(mActivity);
         myCryptoAdapter = new AccountAdapter(mActivity);
         metamaskAdapter = new AccountAdapter(mActivity);
-        syncViewModel.getAccounts(Chains.LEDGER_LIVE).observe(this, pairs -> {
+        syncViewModel.getAccounts(ETHAccount.LEDGER_LIVE).observe(this, pairs -> {
             ledgerLiveAdapter.setItems(pairs);
             mBinding.rlLedgerLive.setAdapter(ledgerLiveAdapter);
         });
-        syncViewModel.getAccounts(Chains.LEGACY).observe(this, pairs -> {
+        syncViewModel.getAccounts(ETHAccount.LEGACY).observe(this, pairs -> {
             myCryptoAdapter.setItems(pairs);
             mBinding.rlCrypto.setAdapter(myCryptoAdapter);
         });
-        syncViewModel.getAccounts(Chains.BIP44_STANDARD).observe(this, pairs -> {
+        syncViewModel.getAccounts(ETHAccount.BIP44_STANDARD).observe(this, pairs -> {
             metamaskAdapter.setItems(pairs);
             mBinding.rlMetamask.setAdapter(metamaskAdapter);
         });
