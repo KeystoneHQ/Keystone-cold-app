@@ -39,6 +39,7 @@
     <string name="mnemonic_hint2">请勿进行拍照等操作！如果他人获取您的助记词将直接获取您的资产！</string>
     <string name="saved">我已安全保存</string>
     <string name="tab_my_address">我的地址</string>
+    <string name="tab_my_account">我的账户</string>
     <string name="tab_my_pubkey">我的公钥</string>
     <string name="tab_transaction_history">签名记录</string>
     <string name="create_addr">创建 %s 地址</string>
@@ -530,7 +531,7 @@
     <string name="create_23_word">创建自己的助记词</string>
     <string name="create_23_word_title">创建自己的助记词</string>
     <string name="mnemonic_backuped">我已备份好助记词</string>
-    <string name="testnet">测试网</string>·
+    <string name="testnet">测试网</string>
     <string name="inconsistent_address">Inconsistent with "From" address</string>
     <string name="calc_mnemonic_warning">您触发了“创建自己的助记词”这一高级功能，请确保您已充分了解助记词生成的相关知识后，再使用本功能。否则请关闭当前页面。</string>
     <string name="calc_mnemonic_warning_checkbox">我已充分了解随机熵、BIP39、私钥生成等相关知识。</string>
@@ -557,4 +558,11 @@
     <string name="fee_too_high">交易费过高</string>
     <string name="atention">请注意</string>
     <string name="exceed_fee">该笔交易的fee过高，确认是否继续签名。</string>
+    <string name="companion_hint"><![CDATA[用配对应用扫描上方二维码后，若找不到您需要的账户，请<font color="#00cdc3"><u>点击此处</u><font/>切换钱包。]]></string>
+    <string name="select_wallet">选择钱包</string>
+    <string name="ledger_live"><![CDATA[如果你之前用 <font color="#00cdc3">Ledger Live 连接 Ledger<font/>]]></string>
+    <string name="my_crypto_mew"><![CDATA[如果你之前用 <font color="#00cdc3">My Crypto、MEW 连接 Ledger<font/>]]></string>
+    <string name="metamusk_ledger"><![CDATA[如果你之前用 <font color="#00cdc3">MetaMusk、Ledger 连接 Ledger<font/>]]></string>
+    <string name="top_five_account">钱包的前5个账户：</string>
+    <string name="show_this_qrcode">展示该钱包二维码</string>
 </resources>

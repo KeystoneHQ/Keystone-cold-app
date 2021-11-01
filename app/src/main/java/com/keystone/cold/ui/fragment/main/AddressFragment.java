@@ -17,6 +17,13 @@
 
 package com.keystone.cold.ui.fragment.main;
 
+import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS;
+import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_INDEX;
+import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_NAME;
+import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_PATH;
+import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
+import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -28,6 +35,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.keystone.cold.R;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.AddressFragmentBinding;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
@@ -36,13 +44,7 @@ import com.keystone.cold.viewmodel.CoinViewModel;
 
 import java.util.List;
 import java.util.Objects;
-
-import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS;
-import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_INDEX;
-import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_NAME;
-import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_PATH;
-import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
-import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
+import java.util.stream.Collectors;
 
 public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
 
@@ -125,7 +127,16 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
     }
 
     private void subscribeUi(LiveData<List<AddressEntity>> address) {
-        address.observe(this, mAddressAdapter::setItems);
+        address.observe(this, addressEntities -> {
+            if (requireArguments().getString(KEY_COIN_CODE).equals("ETH")) {
+                String accountHdPath = Utilities.getCurrentEthAccount(mActivity);
+                int size = accountHdPath.split("/").length;
+                addressEntities = addressEntities.stream()
+                        .filter(addressEntity -> addressEntity.getPath().split("/").length == (size + 2))
+                        .collect(Collectors.toList());
+            }
+            mAddressAdapter.setItems(addressEntities);
+        });
     }
 
     public void setQuery(String s) {

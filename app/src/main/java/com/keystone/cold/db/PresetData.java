@@ -50,19 +50,27 @@ public class PresetData {
         entity.setAddressCount(0);
         entity.setShow(isDefaultOpen(coin.coinCode()));
         AccountEntity account = new AccountEntity();
-        String defaultHdPath = CoinPath.M()
-                .purpose(Coins.purposeNumber(entity.getCoinCode()))
-                .coinType(entity.getIndex())
-                .account(0)
-                .toString();
 
-        if (Coins.isPolkadotFamily(coin.coinCode())) {
-            defaultHdPath = coin.getAccounts()[0];
-        } else if (Coins.CURVE.ED25519 == getCurveByPath(defaultHdPath)) {
-            defaultHdPath += "/0'/0'";
+        if (coin.coinIndex() == Coins.ETH.coinIndex()) {
+            for (int i = 0; i < coin.getAccounts().length; i++) {
+                account = new AccountEntity();
+                account.setHdPath(coin.getAccounts()[i]);
+                entity.addAccount(account);
+            }
+        } else {
+            String defaultHdPath = CoinPath.M()
+                    .purpose(Coins.purposeNumber(entity.getCoinCode()))
+                    .coinType(entity.getIndex())
+                    .account(0)
+                    .toString();
+            if (Coins.isPolkadotFamily(coin.coinCode())) {
+                defaultHdPath = coin.getAccounts()[0];
+            } else if (Coins.CURVE.ED25519 == getCurveByPath(defaultHdPath)) {
+                defaultHdPath += "/0'/0'";
+            }
+            account.setHdPath(defaultHdPath);
+            entity.addAccount(account);
         }
-        account.setHdPath(defaultHdPath);
-        entity.addAccount(account);
         return entity;
     }
 

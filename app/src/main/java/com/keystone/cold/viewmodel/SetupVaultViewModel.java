@@ -49,8 +49,8 @@ import com.keystone.cold.callables.VerifyMnemonicCallable;
 import com.keystone.cold.callables.WebAuthCallableUpgrade;
 import com.keystone.cold.callables.WriteMnemonicCallable;
 import com.keystone.cold.db.entity.AccountEntity;
+import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.util.HashUtil;
 
 import org.spongycastle.util.encoders.Base64;
@@ -401,7 +401,17 @@ public class SetupVaultViewModel extends AndroidViewModel {
                 CoinEntity coinEntity = mRepository.loadCoinSync(coin.getCoinId());
                 if (coinEntity != null) {
                     List<AccountEntity> accountEntities = mRepository.loadAccountsForCoin(coinEntity);
-                    if (accountEntities.size() != 0) {
+                    if (coin.getIndex() == Coins.ETH.coinIndex()) {
+                        if (accountEntities.size() != coin.getAccounts().size()) {
+                            updateEthAccounts(accountEntities, coin);
+                        }
+                        continue;
+                    } else if (accountEntities.size() != 0) {
+                        continue;
+                    }
+                } else {
+                    if (coin.getIndex() == Coins.ETH.coinIndex()) {
+                        createEthAccounts(coin);
                         continue;
                     }
                 }
@@ -435,6 +445,43 @@ public class SetupVaultViewModel extends AndroidViewModel {
                 AppExecutors.getInstance().mainThread().execute(onComplete);
             }
         });
+    }
+
+    private void updateEthAccounts(List<AccountEntity> accountEntities, CoinEntity coin) {
+        long coinId = accountEntities.get(0).getCoinId();
+        for (int i = 0; i < accountEntities.size(); i++) {
+            for (AccountEntity account : coin.getAccounts()) {
+                if (!accountEntities.get(i).getHdPath().equals(account.getHdPath())) {
+                    String xPub = new GetExtendedPublicKeyCallable(account.getHdPath()).call();
+                    account.setExPub(xPub);
+                    account.setCoinId(coinId);
+                    long accountId = mRepository.insertAccount(account);
+                    account.setId(accountId);
+                    AddAddressViewModel.addEthAccountAddress(account, mRepository, 1, coin.getBelongTo(), null);
+                }
+            }
+        }
+
+        List<AddressEntity> addressEntities = mRepository.loadAddressSync(Coins.ETH.coinId());
+        for (AddressEntity addressEntity : addressEntities) {
+            String name = addressEntity.getName();
+            addressEntity.setName(name.replace("ETH-", "Account "));
+            mRepository.updateAddress(addressEntity);
+        }
+    }
+
+    private void createEthAccounts(CoinEntity coin) {
+        String coinXpub = new GetExtendedPublicKeyCallable(coin.getAccounts().get(0).getHdPath()).call();
+        coin.setExPub(coinXpub);
+        long id = mRepository.insertCoin(coin);
+        for (AccountEntity account : coin.getAccounts()) {
+            String xPub = new GetExtendedPublicKeyCallable(account.getHdPath()).call();
+            account.setExPub(xPub);
+            account.setCoinId(id);
+            long accountId = mRepository.insertAccount(account);
+            account.setId(accountId);
+            AddAddressViewModel.addEthAccountAddress(account, mRepository, 1, coin.getBelongTo(), null);
+        }
     }
 
     private void deleteHiddenVaultData() {

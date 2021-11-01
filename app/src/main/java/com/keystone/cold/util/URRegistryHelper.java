@@ -1,6 +1,5 @@
 package com.keystone.cold.util;
 
-import com.keystone.coinlib.accounts.Chains;
 import com.keystone.coinlib.accounts.ExtendedPublicKey;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
@@ -17,22 +16,21 @@ import java.util.List;
 public class URRegistryHelper {
     private static final String KEY_NAME = "Keystone";
 
-    public static CryptoHDKey generateCryptoHDKey(Chains chains) {
+    public static CryptoHDKey generateCryptoHDKey(String path, int type) {
         byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
-        String xPub = new GetExtendedPublicKeyCallable(chains.getPath()).call();
+        String xPub = new GetExtendedPublicKeyCallable(path).call();
         ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(xPub);
-        List<PathComponent> pathComponents = getPathComponents(chains);
+        List<PathComponent> pathComponents = getPathComponents(path);
         byte[] key = extendedPublicKey.getKey();
         byte[] chainCode = extendedPublicKey.getChainCode();
-        CryptoCoinInfo useInfo = new CryptoCoinInfo(chains.getType(), 0);
+        CryptoCoinInfo useInfo = new CryptoCoinInfo(type, 0);
         CryptoKeypath origin = new CryptoKeypath(pathComponents, masterFingerprint, (int) extendedPublicKey.getDepth());
         byte[] parentFingerprint = extendedPublicKey.getParentFingerprint();
         return new CryptoHDKey(false, key, chainCode, useInfo, origin, null, parentFingerprint, KEY_NAME, "");
     }
 
-    public static List<PathComponent> getPathComponents(Chains chains) {
+    public static List<PathComponent> getPathComponents(String path) {
         List<PathComponent> pathComponents = new ArrayList<>();
-        String path = chains.getPath();
         if (path != null) {
             String dest = path.substring(2);
             String[] strings = dest.split("/");
