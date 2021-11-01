@@ -448,13 +448,13 @@ public class SetupVaultViewModel extends AndroidViewModel {
     }
 
     private void updateEthAccounts(List<AccountEntity> accountEntities, CoinEntity coin) {
-        long id = accountEntities.get(0).getId();
+        long coinId = accountEntities.get(0).getCoinId();
         for (int i = 0; i < accountEntities.size(); i++) {
             for (AccountEntity account : coin.getAccounts()) {
                 if (!accountEntities.get(i).getHdPath().equals(account.getHdPath())) {
                     String xPub = new GetExtendedPublicKeyCallable(account.getHdPath()).call();
                     account.setExPub(xPub);
-                    account.setCoinId(id);
+                    account.setCoinId(coinId);
                     long accountId = mRepository.insertAccount(account);
                     account.setId(accountId);
                     AddAddressViewModel.addEthAccountAddress(account, mRepository, 1, coin.getBelongTo(), null);

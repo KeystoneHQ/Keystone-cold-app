@@ -1,6 +1,5 @@
 package com.keystone.cold.util;
 
-import com.keystone.coinlib.accounts.Chains;
 import com.keystone.coinlib.accounts.ExtendedPublicKey;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
