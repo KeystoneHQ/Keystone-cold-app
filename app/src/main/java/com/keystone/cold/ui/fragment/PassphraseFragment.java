@@ -33,7 +33,7 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
 
-import com.keystone.coinlib.accounts.Chains;
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.ConfirmModalBinding;
@@ -149,7 +149,7 @@ public class PassphraseFragment extends SetupVaultBaseFragment<PassphraseBinding
                 Utilities.setVaultId(mActivity, viewModel.getVaultId());
                 Utilities.setCurrentBelongTo(mActivity,
                         TextUtils.isEmpty(passphrase1.get()) ? "main" : "hidden");
-                Utilities.setCurrentEthAccount(mActivity, Chains.LEGACY.getPath());
+                Utilities.setCurrentEthAccount(mActivity, ETHAccount.LEGACY.getPath());
                 stateLiveData.setValue(VAULT_STATE_NOT_CREATE);
                 viewModel.getVaultCreateState().removeObservers(this);
                 if (TextUtils.isEmpty(passphrase1.get())) {

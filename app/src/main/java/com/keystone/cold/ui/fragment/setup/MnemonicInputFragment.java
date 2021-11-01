@@ -36,7 +36,7 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
 
-import com.keystone.coinlib.accounts.Chains;
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.CreateVaultModalBinding;
@@ -287,7 +287,7 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
                 Utilities.setVaultCreated(mActivity);
                 Utilities.setVaultId(mActivity, viewModel.getVaultId());
                 Utilities.setCurrentBelongTo(mActivity, "main");
-                Utilities.setCurrentEthAccount(mActivity, Chains.LEGACY.getPath());
+                Utilities.setCurrentEthAccount(mActivity, ETHAccount.LEGACY.getPath());
                 Runnable onComplete = () -> {
                     if (dialog != null && dialog.getDialog() != null && dialog.getDialog().isShowing()) {
                         dialog.dismiss();

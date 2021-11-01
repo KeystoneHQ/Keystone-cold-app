@@ -27,7 +27,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.Util;
-import com.keystone.coinlib.accounts.Chains;
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
@@ -48,16 +48,16 @@ import java.util.List;
 public class SyncViewModel extends AndroidViewModel {
 
     private final DataRepository mRepository;
-    private MutableLiveData<Chains> chainsMutableLiveData;
+    private MutableLiveData<ETHAccount> chainsMutableLiveData;
 
     public SyncViewModel(@NonNull Application application) {
         super(application);
         mRepository = ((MainApplication) application).getRepository();
         chainsMutableLiveData = new MutableLiveData<>();
-        chainsMutableLiveData.postValue(Chains.LEGACY);
+        chainsMutableLiveData.postValue(ETHAccount.LEGACY);
     }
 
-    public MutableLiveData<Chains> getChainsMutableLiveData() {
+    public MutableLiveData<ETHAccount> getChainsMutableLiveData() {
         return chainsMutableLiveData;
     }
 
@@ -148,20 +148,20 @@ public class SyncViewModel extends AndroidViewModel {
         return result;
     }
 
-    public LiveData<String> generateSyncMetamask(Chains chains) {
+    public LiveData<String> generateSyncMetamask(ETHAccount ETHAccount) {
         MutableLiveData<String> result = new MutableLiveData<>();
         AppExecutors.getInstance().diskIO().execute(() -> {
-            CryptoHDKey cryptoHDKey = URRegistryHelper.generateCryptoHDKey(chains);
+            CryptoHDKey cryptoHDKey = URRegistryHelper.generateCryptoHDKey(ETHAccount.getPath(), ETHAccount.getType());
             result.postValue(cryptoHDKey.toUR().toString());
         });
         return result;
     }
 
-    public MutableLiveData<List<Pair<String, String>>> getAccounts(Chains chains) {
+    public MutableLiveData<List<Pair<String, String>>> getAccounts(ETHAccount ETHAccount) {
         MutableLiveData<List<Pair<String, String>>> mutableLiveData = new MutableLiveData<>();
         AppExecutors.getInstance().diskIO().execute(() -> {
             List<Pair<String, String>> result = new ArrayList<>();
-            String xPub =  new GetExtendedPublicKeyCallable(chains.getPath()).call();
+            String xPub =  new GetExtendedPublicKeyCallable(ETHAccount.getPath()).call();
             AbsDeriver deriver = AbsDeriver.newInstance("ETH");
             for (int i = 0; i < 5; i++) {
                 result.add(i, Pair.create("Account " + i, deriver.derive(xPub, 0, i)));
