@@ -18,7 +18,6 @@
 package com.keystone.cold.ui.fragment;
 
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuide;
-import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuideHint;
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuideTitle;
 
 import android.content.Intent;
@@ -135,11 +134,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 LayoutInflater.from(mActivity), R.layout.common_modal,
                 null, false);
         binding.title.setText(getString(getSyncWatchWalletGuideTitle(watchWallet), coinCode));
-        if (getSyncWatchWalletGuideHint(watchWallet) != 0) {
-            binding.subTitleHint.setText(getString(getSyncWatchWalletGuideHint(watchWallet)));
-            binding.subTitleHint.setVisibility(View.VISIBLE);
-            binding.subTitleHint.setGravity(Gravity.START);
-        }
+        binding.subTitleHint.setVisibility(View.GONE);
         binding.subTitle.setText(getString(getSyncWatchWalletGuide(watchWallet),
                 Coins.coinNameFromCoinCode(coinCode), coinCode));
         binding.subTitle.setGravity(Gravity.START);

@@ -104,6 +104,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1" />
+
+                <com.keystone.cold.ui.views.SpanedTextView
+                    android:id="@+id/text4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="@color/white"
+                    android:layout_marginBottom="10dp"
+                    android:visibility="gone"
+                    android:layout_marginHorizontal="16dp"/>
             </LinearLayout>
         </ScrollView>
         <Button

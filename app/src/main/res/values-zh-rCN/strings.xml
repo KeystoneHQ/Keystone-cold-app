@@ -428,7 +428,7 @@
     <string name="sync_xumm_guide_title">XUMM 导入指引：</string>
     <string name="sync_xrp_toolkit_guide_title">XRP Toolkit 导入指引：</string>
     <string name="sync_polkadotjs_wallet_guide_title">Polkadot{.js} 导入 %s 指引：</string>
-    <string name="sync_metamask_guide_title">Web3钱包导入指引：</string>
+    <string name="sync_metamask_guide_title">连接 MetaMask 指引：</string>
     <string name="sync_keystone_wallet_guide_text"><![CDATA[
         1. 打开铠石钱包移动端，添加新钱包<br>
         2. 选择“硬件钱包”，点击绑定按钮<br>
@@ -458,13 +458,15 @@
         3. 点击 “Scan Keystone”<br>
         4. 扫描地址二维码<br>
     ]]></string>
-    <string name="sync_metamask_guide_text_hint">以 Keystone Ethereum Extension 导入流程为例，其他钱包导入流程类似。</string>
     <string name="sync_metamask_guide_text"><![CDATA[
-        1. 前往 <font color="#00cdc3">https://keyst.one/mm<font/>，根据教程安装 Keystone Ethereum Extension 浏览器插件<br>
-        2. 进入 Keystone Ethereum Extension ，点击“开始使用”按钮后设置密码<br>
-        3. 进入同步铠石钱包页面后，扫描钱包二维码完成同步<br>
-        4. 选择账户后，进入观察钱包<br>
+        <font color="#00cdc3">① <font/>打开 MateMask，<b>连接硬件钱包</b><br>
+        <font color="#00cdc3">② <font/>选择 "<b>QR-based HW Wallet</b>"<br>
+        <font color="#00cdc3">③ <font/>点击 "<b>扫描二维码</b>" 按钮<br>
+        <font color="#00cdc3">④ <font/>扫描钱包二维码（点击下方按钮查看）<br>
+        <font color="#00cdc3">⑤ <font/>选择账户<br>
+        <font color="#00cdc3">⑥ <font/>进入观察钱包<br>
     ]]></string>
+    <string name="sync_metamask_hit"><![CDATA[和其他应用连接教程，请访问：<br><font color="#00cdc3">https://keyst.one/web3<font/>]]></string>
     <string name="sync_keystone_guide_button_text">查看钱包二维码</string>
     <string name="sync_xumm_guide_button_text">查看地址二维码</string>
     <string name="sync_xrp_toolkit_guide_button_text">查看地址二维码</string>
