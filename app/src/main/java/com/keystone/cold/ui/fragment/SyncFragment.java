@@ -81,6 +81,10 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                     Bundle bundle = getArguments();
                     bundle.putString("coinCode", Coins.KSM.coinCode());
                     navigate(R.id.action_to_syncWatchWalletGuide, bundle);
+                } else if (watchWallet == WatchWallet.METAMASK) {
+                    Utilities.setWeb3GuideTimes(mActivity, Utilities.getWeb3GuideTimes(mActivity) + 1);
+                    startActivity(new Intent(mActivity, MainActivity.class));
+                    mActivity.finish();
                 } else {
                     startActivity(new Intent(mActivity, MainActivity.class));
                     mActivity.finish();
