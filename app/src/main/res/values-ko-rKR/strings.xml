@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string-array name="create_vault_step">
+    <item>\"지갑 생성 중...\"</item>
+    <item>\"보안 검증 진행 중...\"</item>
+    <item>\"지갑 암호화 중…\"</item>
+    <item>\"보안 요소 확인 진행 중...\"</item>
+    <item>\"보안 요소 쓰기...\"</item>
+  </string-array>
+  <string-array name="screen_off_entries">
+    <item>15초</item>
+    <item>30초</item>
+    <item>1분</item>
+    <item>2분</item>
+    <item>5분</item>
+    <item>10분</item>
+  </string-array>
+  <string-array name="step_label">
+    <item>웹 인증</item>
+    <item>암호 설정</item>
+    <item>펌웨어 업그레이드</item>
+    <item>월렛 만들기/가져오기</item>
+    <item>지원 앱 선택</item>
+  </string-array>
+  <string-array name="watch_wallet_list">
+    <item>키스톤 모바일 앱</item>
+    <item>Web3</item>
+    <item>Polkadot{.js}</item>
+    <item>XRP Toolkit</item>
+  </string-array>
+  <string-array name="watch_wallet_summury">
+    <item>BTC, ETH 등을 포함한 8개의 메인 체인</item>
+    <item>ETH</item>
+    <item>DOT、KSM</item>
+    <item>XRP</item>
+  </string-array>
+  <string name="app_name">키스톤</string>
+  <string name="action_scan_qr_code">QR 코드 스캔</string>
+  <string name="drawer_menu_my_vault">나의 키스톤</string>
+  <string name="drawer_menu_add_remove">자산 추가/숨기기</string>
+  <string name="drawer_menu_sync">보기-전용 지갑</string>
+  <string name="drawer_menu_setting">설정</string>
+  <string name="drawer_menu_about">키스톤 정보</string>
+  <string name="title_about">키스톤 소개</string>
+  <string name="title_setting">설정</string>
+  <string name="title_sync">키스톤 모바일 앱 동기화</string>
+  <string name="add_remove_coin">자산 추가 / 숨기기</string>
+  <string name="scan">QR 코드 스캔</string>
+  <string name="scan_hint">스캔할 프레임 내에 QR 코드 정렬</string>
+  <string name="pattern_lock">패턴 잠금 해제</string>
+  <string name="pattern_lock_hint">잠금 해제 패턴을 그리십시오.</string>
+  <string name="switch_to_password">암호 잠금 해제로 전환</string>
+  <string name="device_info" formatted="false">일련 번호: %s
+펌웨어 버전: %s
+SE 펌웨어 버전: %s
+시스템 버전: %s</string>
+  <string name="asset_list_empty">필요한 자산을 추가하려면 [메뉴] - [자산 추가/숨기기]로 이동하십시오.</string>
+  <string name="mnemonic_hint1">\"복구 문구는 지갑을 복구하는 데 사용됩니다. 키스톤 타블렛을 사용하여 복구 문구 24개를 기록하고 안전하게 저장하십시오.\"</string>
+  <string name="mnemonic_hint2">복구 문구를 다른 사람과 공유하거나 사진을 찍지 마십시오. 만약 그것을 분실하거나 도난당한다면, 모든 자산은 회수될 수 없습니다.</string>
+  <string name="saved">복구 문구 저장됨</string>
+  <string name="tab_my_pubkey">나의 공개 키</string>
+  <string name="tab_transaction_history">서명</string>
+  <string name="create_addr">주소 %s 만들기</string>
+  <string name="signing_hint">서명 중...</string>
+  <string name="scan_progress">스캔을 계속하십시오: %s</string>
+  <string name="eos_hint">여기 %s개의 공개 키 \"공유해도 안전\"이 있습니다.</string>
+  <string name="eos_pubkey">공개 키 :
+%s</string>
+  <string name="receive_warning">이 주소는 %s용이며, 위 주소로 다른 디지털 자산을 보내면 자산은 분실됩니다.</string>
+  <string name="receive_coin">받기%s</string>
+  <string name="version_update_hint"><![CDATA[펌웨어 업데이트를 확인하려면 <font color=\"#00cdc3\">https://keyst.one/fw<font/>를 방문하십시오. 최신 펌웨어를 사용하지 않는 경우 키스톤 공식 웹 사이트에서 펌웨어를 다운로드하여 마이크로SD 카드(FAT32 형식)에 저장합니다. 아래 그림과 같이 파일을 장치로 전송합니다. (MicroSD 카드는 구매에 포함되지 않습니다.)]]></string>
+  <string name="version">버전</string>
+  <string name="setting_language">언어</string>
+  <string name="setting_vibrator">진동 켜기/끄기</string>
+  <string name="setting_brightness">화면 밝기</string>
+  <string name="setting_screen_off_time">화면 꺼짐 시간</string>
+  <string name="tab_my_address">주소</string>
+  <string name="web_auth1"><![CDATA[1. 아래 <font color=\"#00cdc3\">\"QR 코드 스캔\"<font/> 버튼을 클릭하고 웹 사이트에 표시된 QR 코드를 스캔합니다.]]></string>
+  <string name="web_auth2">2. 그러면 키스톤에 코드가 표시됩니다. 장치의 신뢰성을 확인하기 위해 공식 웹사이트에 입력하십시오.</string>
+  <string name="web_auth3"><![CDATA[3. 웹 사이트에서 <font color=\"#00cdc3\">\"Verify\"<font/> 버튼을 클릭하여 결과를 확인합니다.]]></string>
+  <string name="web_auth4">인증에 실패할 경우 장치가 손상되었을 수 있으므로 이 장치를 사용하지 마십시오!</string>
+  <string name="web_auth5"><![CDATA[웹 인증 링크: <br><font color=\"#00cdc3\">https://keyst.one/start/1<font/>]]></string>
+  <string name="firmware_upgrade1">펌웨어를 최신 버전으로 업그레이드하여 새로운 기능을 활용하는 것이 좋습니다.</string>
+  <string name="firmware_upgrade2">최대 메모리 용량이 512GB를 초과하지 않는 FAT32 형식의 microSD 카드가 필요합니다.</string>
+  <string name="firmware_upgrade3">최소 70%의 배터리 충전 필요</string>
+  <string name="firmware_upgrade4"><![CDATA[최신 펌웨어를 다운로드하려면 다음 웹 사이트를 방문하십시오. <br> <font color=\"#00cdc3\">https://keyst.one/start/<font/>]]></string>
+  <string name="firmware_upgrade_start">지금 업데이트</string>
+  <string name="firmware_upgrade_unable">오류가 감지됨</string>
+  <string name="firmware_upgrade_unable_description">새 펌웨어 패키지가 검색되지 않았습니다. microSD 카드가 FAT32로 포맷되었는지, 메모리가 512GB 이하인지, \'update.zip\' 파일이 카드에 제대로 복사되었는지 확인하십시오.</string>
+  <string name="skip">건너 뛰기</string>
+  <string name="read_confirm"><![CDATA[<font color=\"#00cdc3\"><u>\" 서비스 약관\"</u><font/>\", 및 <font color=\"#00cdc3\"><u>\"개인 정보 보호 정책\"</u>\"을 읽고 이에 동의했습니다.<font/>]]></string>
+  <string name="create_vault_hint"><![CDATA[1. <font color=\"#00cdc3\">\"지갑 생성\"<font/>을 눌러 새 지갑을 생성합니다.]]></string>
+  <string name="import_vault_hint"><![CDATA[2. <font color=\"#00cdc3\">\"지갑 가져오기\"<font/>를 눌러 기존 HD 지갑을 가져옵니다.]]></string>
+  <string name="license">서비스 약관</string>
+  <string name="privacy_policy">개인 정보 보호 정책</string>
+  <string name="input_mnemonic_hint">아래 표에 %d-단어의 복구 문구를 입력하십시오.</string>
+  <string name="input_mnemonic">복구 문구 입력</string>
+  <string name="pwd_again_hint">암호 확인</string>
+  <string name="pwd_hint">암호를 입력하십시오.</string>
+  <string name="password_verify_wrong">암호가 일치하지 않습니다.</string>
+  <string name="passphrase_not_match">비밀 문구가 일치하지 않습니다.</string>
+  <string name="password_input_wrong">대소문자 및 숫자를 포함해야 합니다.</string>
+  <string name="mnemonic_hint"><![CDATA[중요 정보: <br>1. 복구 문구는 자산을 복구하는 유일한 방법입니다. 복구 문구를 주의 깊게 기록하여 안전한 장소에 보관하십시오. <br><br>2. 인터넷에 연결된 장치에서 복구 문구를 저장하거나 사진을 찍지 마십시오. 복구 문구를 다른 사람과 절대로 공유하지 마십시오. <br><br>3. <font color=\"#00cdc3\">https://keyst.one/kt<font/>을 방문하여 키스톤 타블렛을 구입하여 복구 문구를 보다 높은 수준의 보안으로 저장하십시오.]]></string>
+  <string name="generate_mnemonic">복구 문구 생성</string>
+  <string name="next">다음</string>
+  <string name="and">그리고</string>
+  <string name="import_vault">지갑 가져오기</string>
+  <string name="create_vault">지갑 만들기</string>
+  <string name="confirm_mnemonic">복구 문구 확인</string>
+  <string name="confirm_input_mnemonic_hint">아래 표에 %d단어 복구 문구를 입력하십시오.</string>
+  <string name="complete">완료</string>
+  <string name="password_verify_too_short">너무 짧음</string>
+  <string name="sync_hint2"><![CDATA[키스톤 모바일 앱 다운로드:<br><font color=\"#00cdc3\"></u>https://keyst.one/app<u><font/><br>]]></string>
+  <string name="sync_hint1"><![CDATA[키스톤 모바일 앱으로 <font color=\"#00cdc3\">QR 코드<font/> 스캔]]></string>
+  <string name="wrong_mnemonic_please_check">복구 구문이 잘못되었습니다. 다시 시도하십시오.</string>
+  <string name="dots_not_enough">최소 4개 이상의 점을 연결해주세요.</string>
+  <string name="input_pattern_again">확인을 위해 다시 한번 그려주세요.</string>
+  <string name="two_pattern_not_match">패턴이 일치하지 않습니다. 다시 그려주세요.</string>
+  <string name="set_pattern_complete">패턴 기록됨</string>
+  <string name="retry_times_hint">암호가 틀립니다. %d번의 시도 횟수가 남았습니다.</string>
+  <string name="too_many_pattern_attempts">패턴이 너무 많이 틀렸습니다.
+암호로 잠금을 해제해 보십시오.</string>
+  <string name="wrong_pattern_hint">잘못된 패턴입니다. 다시 시도하십시오.</string>
+  <string name="factory_reset_hint">모든 데이터가 삭제됩니다. 이 작업은 취소할 수 없습니다.</string>
+  <string name="factory_reset_title">장치 지우기</string>
+  <string name="password_modal_title">비밀번호를 입력하세요.</string>
+  <string name="passphrase_hint3">암호 구문은 128자를 초과할 수 없습니다. 대문자와 소문자, 숫자, 기호, 공백으로 구성될 수 있습니다. 대소문자를 구분합니다.</string>
+  <string name="passphrase_hint2">암호 구문 입력(대소문자 구분)</string>
+  <string name="passphrase_hint_agian">암호 문구 다시 입력</string>
+  <string name="passphrase_hint1">중요 정보:
+1. 숨겨진 지갑을 만들면 비밀 문구를 변경할 수 없습니다. 비밀 문구를 분실하거나 잊어버린 경우 숨겨진 지갑과 해당 지갑의 모든 자산은 복구할 수 없습니다. 숨겨진 지갑을 만들기 전에 암호 문구를 안전하게 기록하고 저장하여야 합니다. 
+2. 암호 필드를 비워두면 기본 월렛으로 진입합니다.</string>
+  <string name="passphrase_hint">비밀 문구를 입력하십시오.</string>
+  <string name="passphrase_title">비밀 문구 지갑</string>
+  <string name="passphrase_confirm_modal_title">현재 지갑에서 전환</string>
+  <string name="passphrase_confirm_modal_hint">현재 지갑에서 새 지갑으로 전환하려면 확인합니다. 올바른 비밀 문구를 입력하여 임의의 월렛으로 돌아갈 수 있습니다. 기본 HD 지갑의 비밀 문구는 비어 있습니다.</string>
+  <string name="password_error_hint">암호가 틀립니다. %d번의 기회가 남아 있습니다.</string>
+  <string name="verify_mnemonic_hint">아래 표에 %d단어의 복구 문구를 입력하십시오.</string>
+  <string name="delete_white_list_hint">화이트리스트 주소 삭제 확인:%s?</string>
+  <string name="invalid_qrcode">잘못된 QR 코드!</string>
+  <string name="attack_warning">자산을 보호하기 위해 키스톤에서 모든 정보를 지웠습니다. 이 장치의 사용을 중지하고 즉시 고객 서비스에 문의하십시오.
+  상태 코드:%s</string>
+  <string name="verify_mnemonic">복구 문구 확인</string>
+  <string name="set_pattern">패턴 잠금 설정</string>
+  <string name="system_settings">시스템 설정</string>
+  <string name="white_list">화이트리스트</string>
+  <string name="create_import_vault">지갑 만들기/가져오기</string>
+  <string name="safety_instruction">보안 설명서</string>
+  <string name="setting_license">서비스 약관</string>
+  <string name="factory_reset">장치 지우기</string>
+  <string name="updatable">지금 업데이트</string>
+  <string name="password_input_hint">암호를 입력하십시오.</string>
+  <string name="password">암호</string>
+  <string name="confirm">확인</string>
+  <string name="wrong_password_retry_hint">암호가 올바르지 않습니다. 다시 시도하십시오.</string>
+  <string name="Update">업데이트</string>
+  <string name="draw_pattern_again">확인을 위해 다시 패턴을 그리십시오.</string>
+  <string name="scan_to_auth">QR 코드 스캔</string>
+  <string name="signing_history">서명 세부 정보</string>
+  <string name="add_coins">코인 추가</string>
+  <string name="not_in_whitelist_reject">수신 주소가 승인되지 않아 트랜잭션이 거부되었습니다.</string>
+  <string name="invalid_mnemonic">복구 문구가 잘못되었습니다. 다시 시도하십시오.</string>
+  <string name="scan_permission_denied">스캔 권한 거부</string>
+  <string name="wrong_mnemonic">복구 문구가 잘못되었습니다.</string>
+  <string name="too_many_passphrase">비밀 문구 지갑은 최대 5개까지만 사용할 수 있습니다.</string>
+  <string name="about_message">키스톤은 완전히 투명한 QR코드 데이터 전송을 사용하는 에어 갭 하드웨어 지갑으로, 무엇이 들어가고 나오는지 확인할 수 있습니다. 우리의 보안 요소는 실제 TRNG(난수 생성)를 수행하여 개인 키가 실제 물리적 엔트로피 소스로부터 제공되도록 합니다. 모든 트랜잭션 서명은 공격자가 장치에 물리적으로 액세스할 수 있는 경우 사용자를 보호하기 위한 최신 방어 기능을 갖춘 보안 요소 내에서 전적으로 수행됩니다.</string>
+  <string name="amount_hint">금액 설정</string>
+  <string name="setup_wallet_hint1">키스톤을 선택해 주셔서 감사합니다!</string>
+  <string name="change_password">비밀번호 변경</string>
+  <string name="self_checking">보안 확인 진행 중...</string>
+  <string name="text_create_address_main_text">주소 수 선택</string>
+  <string name="address_name_hint">주소를 만든 후에는 삭제할 수 없습니다. 알아볼 수 있는 이름을 선택하십시오.</string>
+  <string name="add_white_list">화이트리스트 추가</string>
+  <string name="search">검색</string>
+  <string name="cancel">취소</string>
+  <string name="device_under_attack">이 장치는 더 이상 사용하기에 안전하지 않습니다!</string>
+  <string name="power_off">전원 끄기</string>
+  <string name="create_new_address">주소 만들기</string>
+  <string name="screen_brightness_hint">화면 밝기를 조절하려면 슬라이드</string>
+  <string name="broadcast_tx">브로드캐스트 트랜잭션</string>
+  <string name="please_broadcast_with_hot">보기-전용 지갑으로 QR 코드를 스캔하여 서명 받으세요.</string>
+  <string name="please_confirm">확인 요청</string>
+  <string name="know">알겠습니다.</string>
+  <string name="creating_vault_hint">지갑을 만드는 중입니다. 화면을 계속 켜두십시오.</string>
+  <string name="delete_white_list">화이트리스트 삭제</string>
+  <string name="self_check_under_disassemble">누군가 장치를 해킹하려고 했습니다!</string>
+  <string name="self_check_alert_content">장치가 공격당했으며 손상되었을 수 있습니다. 이 장치를 계속 사용하면 중요한 정보가 노출되거나 자산이 손실될 위험이 있습니다. 장치에 있는 모든 개인 정보를 지우고 즉시 고객 서비스에 문의하는 것이 좋습니다.</string>
+  <string name="web_auth_scan_agian">다시 스캔</string>
+  <string name="clean_data_and_power_off">데이터 지우기 및 전원 끄기</string>
+  <string name="generate_mnemonic_hint">지갑이 만들어지면 복구 문구가 다시 표시되지 않습니다!</string>
+  <string name="sign_success">서명 성공</string>
+  <string name="sign_fail">서명 실패</string>
+  <string name="manage_white_list_hint">사용자는 화이트리스트에 저장된 주소로만 자산을 보낼 수 있습니다. 화이트리스트가 비어 있는 동안에는 모든 거래가 금지됩니다.</string>
+  <string name="password_unlock">암호 잠금 해제</string>
+  <string name="forget_password">암호를 잊으셨습니까?</string>
+  <string name="unlock">잠금 해제</string>
+  <string name="eos_pubkey_sign_only">1. 공개키에서 주소를 생성한 경우 키스톤 모바일앱에서 자금을 보내고 받을 수 있으며, 이 장치에 로그인할 때 계정 정보가 자동으로 동기화됩니다.
+2. 주소를 생성하지 않은 경우 %s을 가진 친구를 초대하여 이 공개키를 스캔하고 주소를 생성할 수 있습니다.</string>
+  <string name="secret_modal_title">주변을 확인해 주세요.</string>
+  <string name="secret_modal_msg">당신의 복구 문구가 있는 사람은 누구나 당신의 암호화폐에 접근할 수 있습니다. 복구 문구를 기록할 때 구경꾼이나 카메라가 없는지 확인하십시오.</string>
+  <string name="select_mnemonic_count">복구 문구 개수 선택</string>
+  <string name="set_password">암호 설정</string>
+  <string name="firmware_upgrade">펌웨어 업그레이드</string>
+  <string name="text_password_required">비밀번호는 10자 이상이어야 하며 숫자와 영문 대소문자를 구분하여 포함되어야 합니다. 기호도 사용이 가능합니다.</string>
+  <string name="welcome">키스톤에 오신 걸 환영합니다!</string>
+  <string name="welcome_site"><![CDATA[PC를 사용하여 다음 링크를 여십시오. <font color=\"#00cdc3\"><u>https://keyst.one/start</u></font>]]></string>
+  <string name="welcome_text">키스톤 하드웨어 월렛 설정을 안내합니다.</string>
+  <string name="welcome_done">준비됐어요. 시작.</string>
+  <string name="guide_completed_title">축하합니다!
+설치가 완료되었습니다!</string>
+  <string name="guide_completed_remind"><![CDATA[암호 문구(숨겨진 지갑)을 만들거나 설정에서 암호를 재설정할 수 있습니다.
+제품에 동봉된 퀵 가이드를 읽거나 웹 사이트를 방문하여 자세히 알아보십시오: <br><font color=\"#00cdc3\"><u>https://keyst.one</u><font/>]]></string>
+  <string name="tx_from">발신</string>
+  <string name="tx_to">수신</string>
+  <string name="tx_fee">수수료</string>
+  <string name="tx_memo">메모</string>
+  <string name="tx_confirm">지문 확인</string>
+  <string name="tx_confirm_title">트랜잭션 세부 정보 확인</string>
+  <string name="msg_confirm_title">메시지 세부 정보 확인</string>
+  <string name="sign">서명</string>
+  <string name="find_password">암호를 잊어버림</string>
+  <string name="update_hint">키스톤 공식 웹 사이트에서 다운로드한 펌웨어 업그레이드만 설치합니다.</string>
+  <string name="web_auth">웹 인증</string>
+  <string name="web_auth_code">장치 인증 코드는 다음과 같습니다.</string>
+  <string name="Success">성공</string>
+  <string name="fail">실패</string>
+  <string name="verify_way">검증 방법을 선택하십시오.</string>
+  <string name="verify_way_sharding">샤딩 검증</string>
+  <string name="verify_way_mnemonic">복구 문구 검증</string>
+  <string name="tx_id">트랜잭션 ID</string>
+  <string name="mnemonic_save_hint">복구 문구는 자산과 암호를 복구할 수 있는 유일한 방법입니다. 복구 문구가 손실되면 자산을 복구할 수 없으며 장치가 잠길 수 있습니다! (복구 문구는 장치가 초기화된 이후 다시 표시되지 않습니다.)</string>
+  <string name="verify_code_hint">공식 웹사이트의 웹 인증 페이지에 위 인증 코드를 입력하여 기기를 인증받으십시오.</string>
+  <string name="update_alert_boot_low_battery_message" formatted="false">업그레이드를 성공하려면 디바이스 전원 수준이 %s이상이어야 합니다. 현재 배터리 잔량은 %s입니다. 배터리를 교체하거나 충전하십시오.</string>
+  <string name="update">업데이트</string>
+  <string name="new_version_hint_message">새 버전 %s을 업데이트할 수 있습니다. 다음 sha256과 공식 웹 사이트의 다운로드 패키지의 sha256을 비교하여 일치하는지 확인한 후 \"지금 업데이트\"를 클릭하십시오.</string>
+  <string name="updating">업데이트중...</string>
+  <string name="update_now">지금 업데이트</string>
+  <string name="delete_fingerprint">지문 삭제</string>
+  <string name="rename_fingerprint">이름 변경</string>
+  <string name="confirm_delete">삭제 확인</string>
+  <string name="fingerprint_rename_subtitle">지문 이름 변경</string>
+  <string name="enroll_complete_hint">%s 지문이 등록되었습니다.</string>
+  <string name="unsupported_qrcode">이 QR 코드는 지원되지 않습니다.</string>
+  <string name="unsupported_coin">지원되지 않는 암호화폐</string>
+  <string name="incorrect_qrcode">잘못된 QR 코드</string>
+  <string name="incorrect_tx_data">잘못된 트랜잭션 데이터</string>
+  <string name="invalid_webauth_qrcode_hint">잘못된 QR 코드입니다. 지침에 따라 올바른 QR 코드를 스캔하여 인증을 완료하십시오.</string>
+  <string name="hint">팁들</string>
+  <string name="enlarge_qrcode">스캔하기 어렵습니까? 여기를 탭하여QR 코드를 조절합니다.</string>
+  <string name="enroll_fingerprint">지문 등록</string>
+  <string name="enroll_fingerprint_hint">지문 감지 부위에 손가락을 대고 진동이 느껴지면 떼었다 다시 대세요. 등록 프로세스가 완전히 완료될 때까지 반복합니다.</string>
+  <string name="complete_enroll">완료</string>
+  <string name="modify_fingerprint_name">이름 편집</string>
+  <string name="fingerprint_settings">지문 설정</string>
+  <string name="enroll_fingerprint_hint1">지문 감지 센서에 손가락을 대고 살짝 누릅니다.</string>
+  <string name="fingerprint_use_hint">지문은 거래에 서명하거나 장치의 잠금을 해제하는 데 사용될 수 있다.</string>
+  <string name="fingerprint_start_enroll">등록 시작</string>
+  <string name="delete">삭제</string>
+  <string name="rename">이름 변경</string>
+  <string name="fingerprint_unlock">지문 잠금 해제</string>
+  <string name="verify_fingerprint_hint">지문 확인</string>
+  <string name="add_fingerprint">지문 추가</string>
+  <string name="search_coin_no_result_hint">결과 없음</string>
+  <string name="verify_fingerprint_to_sign">트랜잭션에 서명하기 위해 지문을 확인합니다.</string>
+  <string name="switch_to_fingerprint_sign"><![CDATA[암호로 전환 >]]></string>
+  <string name="use_fingerprint_unlock">장치 잠금 해제</string>
+  <string name="use_fingerprint_sign">트랜잭션 서명</string>
+  <string name="serialno">일련 번호: %s</string>
+  <string name="receive_address">수신 주소%d</string>
+  <string name="sync_in_progress">동기화 진행 중</string>
+  <string name="invalid_data">오류</string>
+  <string name="version_not_match">키스톤 모바일 앱과 버전이 일치하지 않습니다. 키스톤 펌웨어와 모바일 앱을 최신으로 업데이트해 주세요.</string>
+  <string name="reset_hint">암호가 틀립니다. 이 장치는 지워집니다.</string>
+  <string name="set_passphrase">암호문 지갑</string>
+  <string name="tx_list_empty">결과 없음
+서명 키워드를 입력하십시오.</string>
+  <string name="address_list_empty">결과 없음
+주소 또는 이름의 키워드를 입력하십시오.</string>
+  <string name="tag">메</string>
+  <string name="confirm_to_verify_mnemonic">다음 단계</string>
+  <string name="pattern_unlock_hint">패턴 암호는 지갑 잠금을 해제하는 데 사용됩니다.</string>
+  <string name="new_version_footer_hint">나중에 [메뉴 &gt; 설정 &gt; 버전]으로 이동하여 \"지금 업데이트\"를 눌러도 됩니다.</string>
+  <string name="factory_reset_warning">모든 데이터가 삭제됩니다. 계속할지 여부를 확인하십시오.</string>
+  <string name="export_to_electrum">일렉트럼에서 보기-전용 지갑 만들기</string>
+  <string name="export_to_electrum_guide">1. Electrum을 열고 새 지갑을 만듭니다.
+2. \"Standard wallet\"을 선택합니다. 
+3. \"Use a master key\"을 선택합니다. 
+4. 아래에서 \"Show Master Public Key\"를 누른 다음 Electrum의 \"Create keystore from a master key\" 창에서 카메라 아이콘을 클릭하여 키스톤에 표시되는 QR 코드를 스캔합니다.
+ 
+5. 암호를 설정합니다. 
+6. 보기-전용 지갑을 입력합니다.</string>
+  <string name="export_xpub">마스터 공개 키 표시</string>
+  <string name="export_to_electrum_guide_hint">일렉트럼에서 보기-전용 지갑을 만드는 방법:</string>
+  <string name="send_address">발신 %d</string>
+  <string name="input">입력 %d</string>
+  <string name="output">출력 %d</string>
+  <string name="export_success">내보내기 성공</string>
+  <string name="read_sdcard">MicroSD 카드</string>
+  <string name="no_sdcard">MicroSD 카드를 찾을 수 없음</string>
+  <string name="no_sdcard_hint">FAT32 형식의 microSD 카드를 삽입했는지 확인하십시오.</string>
+  <string name="no_unsigned_txn">파일을 찾을 수 없음</string>
+  <string name="no_unsigned_txn_hint">서명할 파일이 microSD 카드에 성공적으로 저장되었는지 확인하십시오.</string>
+  <string name="electrum_broadcast_guide">브로드캐스트 방법</string>
+  <string name="electrum_broadcast_action_guide">일렉트럼에서 Tools &gt; Load Transaction &gt; From QR Code로 이동합니다.
+
+스캔하기 어렵습니까? 서명된 트랜잭션 데이터를 마이크로SD 카드를 사용하여 파일로 내보내고 일렉트럼을 사용하여 파일의 트랜잭션을 브로드캐스트할 수 있습니다.</string>
+  <string name="electrum_decode_txn_fail">읽기 오류</string>
+  <string name="electrum_import_xpub_guide_title">QR 코드 스캔 방법</string>
+  <string name="electrum_import_xpub_action_guide">1. 일렉트럼을 열고 새 지갑을 만듭니다.
+2. \"Standard wallet\"을 선택합니다.
+3. \"Use a master key\"을 선택합니다. 
+4. 일렉트럼의 \"Create keystore from master key\" 창에서 카메라 아이콘을 클릭하여 키스톤에 표시되는 QR 코드를 스캔합니다.
+
+스캔하기 어렵습니까? microSD 카드를 사용하여 마스터 공개 키 파일을 내보낼 수도 있습니다.</string>
+  <string name="error_txn_file">파일을 읽을 수 없습니다. 다시 가져오십시오.</string>
+  <string name="export_signed_txn">브로드캐스트로 파일 내보내기</string>
+  <string name="electrum_import_signed_txn">일렉트럼에서 Tools &gt; Load Transaction &gt; From File로 이동하여 파일을 엽니다.</string>
+  <string name="insert_sdcard_hint">FAT32 형식의 microSD 카드를 삽입했는지 확인하십시오.</string>
+  <string name="electrum_import_xpub_action">Electrum에 마스터 공개 키를 입력할 때 엽니다.</string>
+  <string name="transaction_source_label">지갑</string>
+  <string name="use_electrum_to_broadcast">QR 코드를 일렉트럼으로 스캔하여 브로드캐스트합니다.</string>
+  <string name="transaction_from_electrum">이 거래는 일렉트럼에서 합니다.</string>
+  <string name="add_address">주소 추가</string>
+  <string name="use_electrum_scan_xpub">일렉트럼을 사용하여 마스터 공개 키 스캔</string>
+  <string name="export_signed_txn_file">서명된 파일 내보내기</string>
+  <string name="export_signed_txn_action_guide">Electrum으로 브로드캐스트 하는 방법:
+Electrum에서 Tools &gt; Load Transaction &gt; From File로 이동합니다. 파일을 열고 \"브로드캐스트\"를 클릭합니다.</string>
+  <string name="export">내보내기</string>
+  <string name="export_xpub_text_file">마스터 공개 키 파일 내보내기</string>
+  <string name="file_name_label">파일 이름:</string>
+  <string name="master_xpub">마스터 공개키 (Nested SegWit)</string>
+  <string name="electrum_qrcode_hint"><![CDATA[스캔하기 어렵습니까?QR 코드를 눌러 확대<br>하거나 <u>여기를 터치하여 마이크로SD를 통해 내보내십시오.</u>]]></string>
+  <string name="scan_electrum_hint">스캔하기 어렵습니까? MicroSD 카드(Menu &gt; MicroSD Card)를 사용하여 Electrum에서 보류 중인 트랜잭션을 가져올 수 있습니다.</string>
+  <string name="sign_txn_in_sdcard">서명되지 않은 트랜잭션 파일</string>
+  <string name="master_pubkey_not_match">트랜잭션을 인식할 수 없습니다. 키스톤과 보기-전용 지갑이 성공적으로 페어링되지 않았습니다.</string>
+  <string name="change">변경</string>
+  <string name="electrum_compatibility">일렉트럼 보기-전용 지갑</string>
+  <string name="identification_failed">식별 실패</string>
+  <string name="from_electrum">일렉트럼으로부터</string>
+  <string name="update_failed">업데이트 실패</string>
+  <string name="contact_keystone_service">연락처: support@keyst.one
+ 상태 코드:%s</string>
+  <string name="keep_rolling">롤링 상태로 유지</string>
+  <string name="confirm_rolling">생성</string>
+  <string name="rolling_hint_less_than_99"><![CDATA[%d번 굴렸습니다. 256비트 <entropy class=\"\"/>의 경우 99회 롤링하는 것이 좋습니다.]]></string>
+  <string name="rolling_hint_less_than_50">%d번 굴렸습니다. 복구 문구를 생성하려면 50번 이상을 롤링하는 것이 좋습니다.</string>
+  <string name="rolling_not_enough">롤링 상태로 유지</string>
+  <string name="dice_rolls">주사위 굴리기</string>
+  <string name="dice_roll_guide"><![CDATA[키를 생성하기 위해 주사위를 사용하는 방법:<br><br> 1. 주사위를 50회 이상 굴립니다. 99회 롤링하여 256비트 엔트로피를 얻습니다(권장). 당신이 사용할 수 있는 롤 수에는 제한이 없습니다.<br>2. 주사위 던질 때마다 엔트로피를 높이기 위해 <font color=\"#00cdc3\">카지노 주사위<font/>를 사용할 것을 추천합니다.]]></string>
+  <string name="start">시작</string>
+  <string name="pattern_lock_hide_track">패턴 노출을 방지하기 위해 잠금 해제 시 트랙이 숨겨집니다.</string>
+  <string name="abnormal_tx">비정상 트랜잭션</string>
+  <string name="fee_attack_warning">트랜잭션이 위험하고 서명할 수 없음을 탐지합니다. 자세한 내용은 https://keyst.one/fee-attack 로 이동하거나 support@keyst.one으로 문의하십시오.</string>
+  <string name="already_signed">트랜잭션에 서명했습니다. 트랜잭션을 직접 브로드캐스트할 수 있습니다.</string>
+  <string name="contact_info">트위터: @KeystoneWallet
+이메일：support@keyst.one</string>
+  <string name="keep_mnemonic_hint">*키스톤은 어떠한 경우에도 귀하의 복구 문구를 요청하지 않습니다. 복구 문구를 보관하고 다른 사람에게 절대로 공개하지 마십시오.</string>
+  <string name="contact_us">연락처</string>
+  <string name="current_device_info">기기 정보</string>
+  <string name="switch_passphrase">암호 문구 지갑 입력</string>
+  <string name="check_mnemonic">복구 문구 검사</string>
+  <string name="check_failed">검사 실패</string>
+  <string name="check_mnemonic_failed">입력한 복구 문구가 키스톤의 복구 문구와 일치하지 않습니다. 유효한 백업이 확인될 때까지 장치를 재설정하지 마십시오.</string>
+  <string name="invalid_mnemonic_hint">잘못된 복구 문구를 입력했습니다. 다시 시도하십시오.</string>
+  <string name="check_successful">검사 성공</string>
+  <string name="check_successful_hint">입력한 복구 문구가 키스톤의 복구 문구와 일치합니다.</string>
+  <string name="notice">오류</string>
+  <string name="notice1">공지</string>
+  <string name="default_vault_notice">최신 버전으로 업그레이드했습니다. 자산을 보호하기 위해 장치를 다시 시작할 때마다 월렛이 자동으로 기본 지갑으로 재설정됩니다. 업그레이드, 종료 또는 재시작할 때도 마찬가지입니다.</string>
+  <string name="switching_to_main_vault">기본 지갑을 입력하세요. 화면을 계속 켜두세요.</string>
+  <string name="add_polkadot_hint" formatted="false">%s을 추가할 때 이 지갑의 복구 문구를 입력해야 합니다.자세한 내용은 https://keyst.one/%s을 참조하십시오.</string>
+  <string name="add_later">추가 안 함</string>
+  <string name="comfirm_add">추가 확인</string>
+  <string name="mnemonic_not_match">입력한 복구 문구가 키스톤의 복구 문구와 일치하지 않습니다. 다시 시도하십시오.</string>
+  <string name="adding_dot_hint">%s을 추가하고 있습니다. 화면을 계속 켜십시오.</string>
+  <string name="dot_tip">팁</string>
+  <string name="shading_guide"><![CDATA[1. <font color=\"#00cdc3\">%1$d<font/>/<font color=\"#00cdc3\">%2$d<font/> 샤미르 백업을 구축했습니다. <font color=\"#00cdc3\">%3$d<font/>개의 공유가 있는 샤미르 백업이며 지갑을 복구하려면 <font color=\"#00cdc3\">%4$d<font/>개의 공유가 필요합니다.<br><br>
+2. 다음으로 각 공유를 확인해야 합니다. 모든 자산이 다른 사람에 의해 보관되는 경우, 각 확인은 특정 사용자에 의해 수행되는지 확인하십시오.<br><br>
+3. 공유를 사진을 찍거나 온라인에 저장하지 마십시오. 다른 사람에게 공유하지 마세요. 그렇지 않으면 자산을 잃을 위험이 있습니다.]]></string>
+  <string name="generate_sharding_sequence" formatted="false">공유 #%d(전체 %d)</string>
+  <string name="generate_shading_hint">공유 #%d 자금 관리자인지 확인하십시오.</string>
+  <string name="cancel_create_sharding">취소</string>
+  <string name="input_sharding_mnemonic_hint"><![CDATA[<font color=\"#00cdc3\">공유 #%d<font/>에 대한 복구 문구를 아래 양식에 입력하십시오.]]></string>
+  <string name="verify_pass">확인 성공</string>
+  <string name="verify_sharding_pass_hint">이 공유의 복구 문구를 확인했습니다. 이제 다음 공유로 이동하십시오. 컨펌을 눌러 공유 넘버 #%d을 보관하는 두 번째 자금 관리인에게 넘깁니다.</string>
+  <string name="sharding_no">공유 #%d</string>
+  <string name="reset_password">암호 재설정</string>
+  <string name="first_sharding_hint">첫 번째 공유가 성공적으로 입력되었습니다. 입력하려면 공유 %d이 더 필요합니다.</string>
+  <string name="cancel_import_sharding">입력 취소</string>
+  <string name="continue_import_sharding">계속 입력</string>
+  <string name="sharding_repeat">공유를 이미 입력했습니다. 다른 공유를 입력하십시오.</string>
+  <string name="sharding_id_not_match">다른 샤미르 백업에서 공유를 입력했습니다.</string>
+  <string name="confirm_cancel_import_sharding">취소 확인</string>
+  <string name="continue_create_sharding">계속 입력</string>
+  <string name="invalid_shard">복구 문구가 잘못되었습니다. 확인하십시오.</string>
+  <string name="ask_confirm_cancel_import_sharding">지갑 가져오기를 취소하시겠습니까?</string>
+  <string name="ask_confirm_cancel_create_sharding">지갑 생성을 취소하시겠습니까?</string>
+  <string name="ask_confirm_cancel_check_sharding">복구 문구 검사를 취소하시겠습니까?</string>
+  <string name="ask_confirm_cancel_enter_sharding">복구 문구 입력을 취소하시겠습니까?</string>
+  <string name="cancel_import_sharding_notice">취소 후 확인된 공유는 손실됩니다. 정말 취소하시겠습니까?</string>
+  <string name="next_sharding">다음 공유</string>
+  <string name="not_support_multi_group_sharding">Super Shamir(샤미르 백업의 2단계 구성)를 입력했습니다. 키스톤은 현재 이 기능을 지원하지 않습니다.</string>
+  <string name="total_sharding_count">공유 개수</string>
+  <string name="sharding_threshold">임계값</string>
+  <string name="confirm_cancel_create_sharding_title">지갑 생성을 취소하시겠습니까?</string>
+  <string name="confirm_cancel_create_sharding">취소 후 확인된 공유는 손실됩니다. 정말 취소하시겠습니까?</string>
+  <string name="choose_check_type">검사 방법 선택</string>
+  <string name="choose_import_type">가져오기 방법 선택</string>
+  <string name="check_bip39_phrase">단일 백업으로 지갑 확인</string>
+  <string name="check_slip39_phrase">샤미르 백업으로 지갑 확인</string>
+  <string name="import_bip39_phrase">단일 백업으로 지갑 가져오기</string>
+  <string name="import_slip39_phrase">샤미르 백업으로 지갑 가져오기</string>
+  <string name="enter_bip39_phrase">일반 복구 문구 입력</string>
+  <string name="enter_slip39_phrase">샤미르 백업 입력</string>
+  <string name="reset_password_by_phrase">복구 문구를 통해 암호 재설정</string>
+  <string name="shamir_backup">샤미르 백업</string>
+  <string name="generate_slip39_phrase">샤미르 백업으로 지갑 만들기</string>
+  <string name="generate_bip39_phrase">단일 백업으로 지갑 생성</string>
+  <string name="shard_setting">설정</string>
+  <string name="previous_one">이전</string>
+  <string name="next_one">다음</string>
+  <string name="opration_failed">작업 실패</string>
+  <string name="reboot_hint">다시 시작하거나 support@keyst.one으로 문의하십시오.
+ 상태 코드:%s</string>
+  <string name="reboot">재시작</string>
+  <string name="clear_and_power_off">모든 정보 지우기 및 전원 끄기</string>
+  <string name="abnormal_state_hint">장치를 지운 다음 다시 설정하는 것이 좋습니다.반복된 재시도가 실패했습니다.
+support@keyst.one에 문의하십시오.
+  상태 코드:%s</string>
+  <string name="abnormal_state_title">이상 상태</string>
+  <string name="choose_watch_only_wallet">보기-전용 지갑</string>
+  <string name="sync_later">나중에 내보내기</string>
+  <string name="sync_watch_wallet">보기-전용 지갑 동기화</string>
+  <string name="sync_keystone_wallet_guide_title">키스톤 모바일 앱을 바인딩하는 방법:</string>
+  <string name="sync_xumm_guide_title">XUMM에서 읽기 전용 계정을 만드는 방법:</string>
+  <string name="sync_xrp_toolkit_guide_title">XRP Toolkit에서 보기-전용 계정을 만드는 방법:</string>
+  <string name="sync_polkadotjs_wallet_guide_title">Polkadot{.js}에서 %s보기-전용 지갑을 만드는 방법.</string>
+  <string name="sync_metamask_guide_title">보기-전용 지갑을 만드는 방법:</string>
+  <string name="sync_keystone_wallet_guide_text"><![CDATA[1. 키스톤 모바일 앱을 열고 새 지갑 추가<br>
+2. \"하드웨어 지갑\"을 선택하고 \"바인드\" 버튼<br>을 누릅니다.
+3. 아래 \"QR 코드 표시\"를 누른 다음 키스톤 앱<br>으로 QR 코드를 스캔하십시오.
+<br>
+<font color=\"#535353\">다운로드 키스톤 모바일 앱: <font/><br>
+<font color=\"#00cdc3\">https://keyst.one/app<font/>]]></string>
+  <string name="sync_polkadot_js_guide_text"><![CDATA[1. Polkadot{.js}을 열고 <font color=\"#00cdc3\">%s<font/> 선택합니다.<br>
+2. \"<font color=\"#00cdc3\">Accounts<font/>\"을 클릭하고 \"<font color=\"#00cdc3\">Accounts<font/>\"를 선택합니다.<br>
+3. \"<font color=\"#00cdc3\">Add via Qr<font/>\"를 클릭합니다.<br>
+4. 키스톤에 표시되는 QR 코드를 스캔합니다.<br>]]></string>
+  <string name="sync_xumm_guide_text"><![CDATA[1. XUMM을 열고 새 계정을 만듭니다.<br>
+2. \"기존 계정 가져오기\"을 선택합니다.<br>
+3. \"읽기 전용\"을 선택하고 \"다음\"을 누릅니다.<br>
+4. 키스톤에 표시된 QR 주소 코드를 스캔합니다.<br>
+<font color=\"#00cdc3\">기본적으로 첫 번째 주소(m/44\'/144\'/0\'/0/0/0)가 생성됩니다. 다른 주소를 동기화하려면 지갑 입력 후 주소를 추가하고 XUMM로 주소를 스캔하면 된다.<font/><br>
+5. \"다음\"을 누르고 읽기 전용 계정을 입력합니다.<br>]]></string>
+  <string name="sync_xrp_toolkit_guide_text"><![CDATA[1. XRP Toolkit을 열고 \"Connect Wallet\"을 클릭합니다.<br>
+2. \"Keystone Device\"를 선택합니다<br>
+3. XRP Toolkit에서 \"Scan Keystone\" 클릭<br>
+4. 아래 버튼을 누르고 QR 코드를 스캔하십시오.<br>]]></string>
+  <string name="sync_metamask_guide_text_hint">키스톤 이더리움 확장앱 가져오기 프로세스, 다른 지갑들의 가져오기 프로세스와 비슷합니다.</string>
+  <string name="sync_metamask_guide_text"><![CDATA[1. 튜토리얼<font color=\"#00cdc3\">https://keyst.one/mm<font/>로 이동하여 키스톤 이더리움 익스텐션을 설치합니다.<br>
+2. 키스톤 이더리움 익스텐션을 시작하여 \"Get Started\" 그리고 비밀번호를 설정합니다.<br>
+3. 키스톤에 표시된 지갑의 QR 코드를 스캔하십시오.<br>
+4. 계정을 선택하고 보기 전용 지갑을 시작합니다.<br>]]></string>
+  <string name="sync_keystone_guide_button_text">QR 코드 표시</string>
+  <string name="sync_xumm_guide_button_text">주소의 QR 코드 표시</string>
+  <string name="sync_xrp_toolkit_guide_button_text">QR 코드 표시</string>
+  <string name="sync_polkadot_js_guide_button_text">%s의 QR 코드 표시</string>
+  <string name="sync_metamask_guide_button_text">QR 코드 표시</string>
+  <string name="sync_polkadot_hint">참고:
+Polkadot{.js} 에서는 DOT와 KSM용 보기 전용 지갑을 별도로 생성해야 합니다.</string>
+  <string name="sync_with_keystone_vault">키스톤 앱으로 QR 코드를 스캔하십시오.</string>
+  <string name="sync_with_xumm">XUMM 앱으로 QR 코드를 스캔하십시오.</string>
+  <string name="sync_with_xrp_toolkit">XRP 툴킷으로 QR 코드를 스캔하십시오.</string>
+  <string name="sync_with_metamask">보기 전용 지갑으로 QR 코드를 스캔하십시오.</string>
+  <string name="sync_with_polkadot_js">Polkadot{.js}를 이용하여 QR 코드를 스캔하십시오.</string>
+  <string name="broadcast_xrp_toolkit_hint">XRP 툴킷으로 QR 코드 스캔하십시오.</string>
+  <string name="sync_first_xrp_accout">기본적으로 첫 번째 주소가 생성됩니다. 다른 주소를 동기화하려면 지갑 입력 후 주소를 추가할 수 있습니다.</string>
+  <string name="sync_xrp">페어 앱</string>
+  <string name="unresolve_tx">오류</string>
+  <string name="unresolve_tx_hint">%s에 의해 작성된 QR 코드를 스캔하십시오.</string>
+  <string name="account_not_match">오류</string>
+  <string name="account_not_match_detail">거래가 현재 지갑에 속하지 않습니다, 거래 정보를 확인해주세요.</string>
+  <string name="simple">간단한</string>
+  <string name="raw">소스 코드</string>
+  <string name="spark_token_claim_guide"><![CDATA[1. <font color=\"#00cdc3\">XRP 툴킷<font/> 을 엽니다.<br>
+2. 메뉴바에서 <font color=\"#00cdc3\">Account<font/>로 이동하여 <font color=\"#00cdc3\">Properties<font/>메뉴를 선택합니다.<br>
+3. Account Properties 페이지에서 <font color=\"#00cdc3\">Message Key<font/> 섹션.<br>
+4. 메세지 키 필드 안의 작은 <font color=\"#00cdc3\">QR 코드 아이콘<font/>을 클릭합니다.<br>
+5. 키스톤으로 메세지 키 QR 코드를 스캔합니다. <br>
+6. <font color=\"#00cdc3\">업데이트<font/> 버튼을 클릭합니다.<br>
+7. 트랜잭션 사인을 합니다.]]></string>
+  <string name="spark_token_prepare_title">스파크 토큰 청구 준비:</string>
+  <string name="claim_spark_token_button">메시지 키의 QR 코드 표시</string>
+  <string name="spark_token_title">메세지 키</string>
+  <string name="claim_spark">스파크 청구</string>
+  <string name="claim_spark_button_text">XRP 툴킷의 QR 코드 스캔</string>
+  <string name="pair_app">앱 페어링</string>
+  <string name="unknown_substrate_chain_title">이 코인은 현재 지원되지 않습니다.</string>
+  <string name="unknown_substrate_chain_content">폴카닷{.js} 보기 전용은 이 통화를 지원하지 않습니다.</string>
+  <string name="unsupported_polka_tx_type_title">해결되지 않은 트랜잭션</string>
+  <string name="unsupported_polka_tx_type_content">이 트랜잭션 유형은 현재 지원되지 않습니다.</string>
+  <string name="enable_dot_for_polkadotjs">폴카닷{.js} 보기 전용 지갑으로 전환할 때 이 지갑의 복구 문구를 입력해야 합니다. 자세한 내용은 https://keyst.one/dot 을 참조하십시오.</string>
+  <string name="not_switch">보류</string>
+  <string name="confirm_switch">확인</string>
+  <string name="keep_screen_on">화면을 주시하세요</string>
+  <string name="sync">싱크</string>
+  <string name="qrcode_capacity">QR 코드 화질 : %s</string>
+  <string name="qr_capacity_high">고화질</string>
+  <string name="qr_capacity_mid">중화질</string>
+  <string name="qr_capacity_low">저화질</string>
+  <string name="adjust_qr_capacity">스캔이 어려울 경우 QR 코드의 크기를 조절하여 QR코드의 화질을 높일 수 있습니다.</string>
+  <string name="create_mnemonic_guide_content"><![CDATA[1. 아래의 \"23단어 입력\" 버튼을 누릅니다.<br>
+2. 2048개의 공식 단어 목록에서 첫 번째 23개를 선택하고 입력합니다.<br>
+3. 키스톤이 24번째 단어를 계산합니다.<br>
+4. 복구 문구 백업<br>]]></string>
+  <string name="create_mnemonic_web_guide">2048개 단어 목록 및 자세한 내용은 다음 사이트를 참조하십시오: https://keyst.one/24th</string>
+  <string name="fill_23_words">23개의 단어를 채우세요.</string>
+  <string name="last_word_hint"><![CDATA[당신의 24번째 단어: <font color=\"#00cdc3\">%s<font/>]]></string>
+  <string name="please_input_23_words">처음 23개의 단어를 채우세요.</string>
+  <string name="calculate_24th_word">24번째 단어 계산</string>
+  <string name="create_23_word">자신만의 24단어 복구 문구 만들기</string>
+  <string name="create_23_word_title">복구 문구를 생성합니다.</string>
+  <string name="mnemonic_backuped">나는 복구 문구를 가지고 있습니다.</string>
+  <string name="testnet">테스트넷</string>
+  <string name="inconsistent_address">보낸 사람 주소와 일치하지 않습니다.</string>
+  <string name="calc_mnemonic_warning">\"복구 문구 만들기\"의 고급 기능을 선택했습니다. 이 기능을 사용하여 복구 문구를 생성하기 전에 이 기능의 위험성을 완전히 이해했는지 확인하십시오. 그렇게 하지 않으면 당신의 자금이 위험할 수 있습니다. 위험을 감수하고 진행하세요!</string>
+  <string name="calc_mnemonic_warning_checkbox">저는 복구 문구를 생성하기 위해 엔트로피, BIP39, 개인 키 생성 및 기타 관련 자료를 완벽히 이해합니다.</string>
+  <string name="note">위험!</string>
+  <string name="tip">참고</string>
+  <string name="learn_more"><![CDATA[<Data>키스톤은 디코딩 트랜잭션을 지원합니다. 자세한 내용은<font color=\"#00CDC3\"><b> https://keyst.one/eth </b></font>를 참조하십시오.</Data>]]></string>
+  <string name="check_info">* 서명하기 전 거래내역을 확인하시기 바랍니다.</string>
+  <string name="undecoded_tip">잠깐! 이것은 코드화되지 않은 데이터입니다.</string>
+  <string name="from_tfcard">(마이크로SD 카드에서 파생됨)</string>
+  <string name="select_last_word_hint">다음 단어 중 24번째 단어 하나를 선택하십시오.</string>
+  <string name="please_insert_sdcard">마이크로SD 카드를 삽입했는지 확인하십시오.</string>
+  <string name="confirm_format">정말 포맷하시겠습니까?</string>
+  <string name="format_sd_card_hint">이 작업을 수행하면 마이크로 SD 카드의 모든 파일이 삭제되고 카드가 FAT32 형식으로 포맷됩니다. 포맷하기 전 중요한 파일을 반드시 백업해 주세요.</string>
+  <string name="format_sdcard_title">카드 포맷</string>
+  <string name="format_sdcard_hint">마이크로 SD 카드를 FAT32 형식으로 포맷하십시오. 그렇지 않으면 파일을 읽거나 쓸 수 없습니다.</string>
+  <string name="format_sdcard_hint1">참고: 이 절차는 마이크로 SD 카드에 있는 모든 파일을 지울 것입니다. 포맷을 시작하기 전에 모든 파일이 안전하게 백업되었는지 확인하십시오.</string>
+  <string name="format_now">지금 포맷</string>
+  <string name="format_sdcard_hint2">메뉴&gt;설정&gt;시스템 설정&gt;카드 포맷으로 이동할 수 있습니다.</string>
+  <string name="format_success">포맷 성공</string>
+  <string name="format_failed">포맷 실패</string>
+  <string name="retry_format">다시 포맷하시겠습니까?</string>
+  <string name="retry">재시도</string>
+  <string name="formatting">포맷중...</string>
+</resources>

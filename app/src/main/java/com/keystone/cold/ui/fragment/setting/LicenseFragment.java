@@ -17,6 +17,9 @@
 
 package com.keystone.cold.ui.fragment.setting;
 
+import static android.text.Html.FROM_HTML_MODE_LEGACY;
+import static com.keystone.cold.ui.fragment.setting.SystemPreferenceFragment.SETTING_LANGUAGE;
+
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -31,15 +34,12 @@ import com.keystone.cold.ui.fragment.BaseFragment;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Objects;
-
-import static android.text.Html.FROM_HTML_MODE_LEGACY;
-import static com.keystone.cold.ui.fragment.setting.SystemPreferenceFragment.SETTING_LANGUAGE;
 
 public class LicenseFragment extends BaseFragment<PrivacyPolicyBinding> {
 
     public static final String KEY_URL = "url";
     public static final String KEY_TITLE = "title";
+    private String prefix;
 
     @Override
     protected int setView() {
@@ -51,9 +51,11 @@ public class LicenseFragment extends BaseFragment<PrivacyPolicyBinding> {
         requireArguments();
         mBinding.toolbar.setNavigationOnClickListener(view1 -> navigateUp());
         mBinding.toolbarTitle.setText(getArguments().getString(KEY_TITLE));
-        String prefix = Utilities.getPrefs(MainApplication.getApplication())
+        prefix = Utilities.getPrefs(MainApplication.getApplication())
                 .getString(SETTING_LANGUAGE, "zh_rCN");
-
+        if (!prefix.equals("zh_rCN")) {
+            prefix = "en";
+        }
         AppExecutors.getInstance().diskIO().execute(() -> {
             String text = readFromAssets(prefix + "_" + getArguments().getString(KEY_URL));
             AppExecutors.getInstance()
