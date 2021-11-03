@@ -404,7 +404,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
                     List<AccountEntity> accountEntities = mRepository.loadAccountsForCoin(coinEntity);
                     if (coin.getIndex() == Coins.ETH.coinIndex()) {
                         if (accountEntities.size() != coin.getAccounts().size()) {
-                            updateEthAccounts(coinEntity);
+                            updateEthAccounts(accountEntities, coinEntity);
                         }
                         continue;
                     } else if (accountEntities.size() != 0) {
@@ -448,22 +448,25 @@ public class SetupVaultViewModel extends AndroidViewModel {
         });
     }
 
-    private void updateEthAccounts(CoinEntity coinEntity) {
-        addAccount(ETHAccount.LEDGER_LIVE, coinEntity);
-        addAccount(ETHAccount.LEDGER_LEGACY, coinEntity);
-
+    private void updateEthAccounts(List<AccountEntity> accountEntities, CoinEntity coinEntity) {
+        AccountEntity accountEntity = accountEntities.get(0);
+        accountEntity.setHdPath(ETHAccount.BIP44_STANDARD.getPath());
+        mRepository.updateAccount(accountEntity);
         List<AddressEntity> addressEntities = mRepository.loadAddressSync(Coins.ETH.coinId());
         for (AddressEntity addressEntity : addressEntities) {
             String name = addressEntity.getName();
             addressEntity.setName(name.replace("ETH-", "Account "));
             mRepository.updateAddress(addressEntity);
         }
+        addAccount(ETHAccount.LEDGER_LIVE, coinEntity);
+        addAccount(ETHAccount.LEDGER_LEGACY, coinEntity);
     }
 
     private void addAccount(ETHAccount ethAccount, CoinEntity coin) {
         AccountEntity account = new AccountEntity();
         String xPub = new GetExtendedPublicKeyCallable(ethAccount.getPath()).call();
         account.setExPub(xPub);
+        account.setHdPath(ethAccount.getPath());
         account.setCoinId(coin.getId());
         long accountId = mRepository.insertAccount(account);
         account.setId(accountId);
