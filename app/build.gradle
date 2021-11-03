@@ -59,7 +59,7 @@ android {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
-        resConfigs "en", "zh-rCN", "ko-rKR", "es-rES", "de-rDE", "ru-rRU", "ja-rJP"
+        resConfigs "en", "zh-rCN", "ko-rKR", "es-rES"//, "de-rDE", "ru-rRU", "ja-rJP"
     }
 
 
