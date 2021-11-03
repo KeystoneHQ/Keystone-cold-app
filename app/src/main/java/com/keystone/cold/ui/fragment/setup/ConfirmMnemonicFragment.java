@@ -100,7 +100,7 @@ public class ConfirmMnemonicFragment extends MnemonicInputFragment {
                 Utilities.setVaultCreated(mActivity);
                 Utilities.setVaultId(mActivity, viewModel.getVaultId());
                 Utilities.setCurrentBelongTo(mActivity, "main");
-                Utilities.setCurrentEthAccount(mActivity, ETHAccount.LEGACY.getPath());
+                Utilities.setCurrentEthAccount(mActivity, ETHAccount.LEDGER_LEGACY.getPath());
 
                 Runnable onComplete = () -> {
                     if (dialog != null && dialog.getDialog() != null && dialog.getDialog().isShowing()) {

@@ -273,6 +273,6 @@ public class Utilities {
 
     public static String getCurrentEthAccount(Context context) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
-        return sp.getString(ETH_CURRENT_ACCOUNT, ETHAccount.LEGACY.getPath());
+        return sp.getString(ETH_CURRENT_ACCOUNT, ETHAccount.LEDGER_LEGACY.getPath());
     }
 }

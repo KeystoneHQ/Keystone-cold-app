@@ -39,7 +39,7 @@ public class SelectWalletFragment extends BaseFragment<SelectWalletFragmentBindi
             navigateUp();
         });
         mBinding.btShowCrypto.setOnClickListener(v -> {
-            syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.LEGACY);
+            syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.LEDGER_LEGACY);
             navigateUp();
         });
         mBinding.btShowMetamask.setOnClickListener(v -> {
@@ -57,7 +57,7 @@ public class SelectWalletFragment extends BaseFragment<SelectWalletFragmentBindi
             ledgerLiveAdapter.setItems(pairs);
             mBinding.rlLedgerLive.setAdapter(ledgerLiveAdapter);
         });
-        syncViewModel.getAccounts(ETHAccount.LEGACY).observe(this, pairs -> {
+        syncViewModel.getAccounts(ETHAccount.LEDGER_LEGACY).observe(this, pairs -> {
             myCryptoAdapter.setItems(pairs);
             mBinding.rlCrypto.setAdapter(myCryptoAdapter);
         });

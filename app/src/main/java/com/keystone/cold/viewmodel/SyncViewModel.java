@@ -54,7 +54,7 @@ public class SyncViewModel extends AndroidViewModel {
         super(application);
         mRepository = ((MainApplication) application).getRepository();
         chainsMutableLiveData = new MutableLiveData<>();
-        chainsMutableLiveData.postValue(ETHAccount.LEGACY);
+        chainsMutableLiveData.postValue(ETHAccount.LEDGER_LEGACY);
     }
 
     public MutableLiveData<ETHAccount> getChainsMutableLiveData() {
@@ -187,8 +187,8 @@ public class SyncViewModel extends AndroidViewModel {
                 xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
                 address = deriver.derive(xPub, 0 , 0);
                 break;
-            case LEGACY:
-                xPubPath = ETHAccount.LEGACY.getPath() + "/" + index;
+            case LEDGER_LEGACY:
+                xPubPath = ETHAccount.LEDGER_LEGACY.getPath() + "/" + index;
                 xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
                 address = deriver.derive(xPub);
                 break;

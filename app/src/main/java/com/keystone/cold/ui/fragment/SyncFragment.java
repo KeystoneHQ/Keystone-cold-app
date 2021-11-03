@@ -203,7 +203,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.LEGACY);
+        syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.LEDGER_LEGACY);
     }
 
     private String generateXrpToolsSyncData(SyncViewModel.XrpSyncData xrpSyncData) {
