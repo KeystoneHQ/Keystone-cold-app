@@ -51,6 +51,7 @@ import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.encryption.ChipSigner;
+import com.keystone.cold.ui.fragment.main.AddressFragment;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 
 import org.json.JSONArray;
@@ -427,6 +428,9 @@ public class Web3TxViewModel extends Base {
         ETHAccount ethAccount = AddAddressViewModel.getETHAccount(currentEthAccount);
         AddressEntity addressEntity = new AddressEntity();
         String addr = AddAddressViewModel.getAddress(ethAccount, addressIndex, addressEntity);
+        if (!AddressFragment.isCurrentETHAccountAddress(Utilities.getCurrentEthAccount(context), addressEntity)) {
+            throw new InvalidTransactionException("address does not belong to the current account");
+        }
         addressEntity.setAddressString(addr);
         addressEntity.setCoinId(Coins.ETH.coinId());
         addressEntity.setIndex(addressIndex);
