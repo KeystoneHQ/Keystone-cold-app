@@ -329,6 +329,7 @@
     <string name="use_electrum_to_broadcast">Scan the QR code with Electrum to broadcast</string>
     <string name="transaction_from_electrum">This transaction is from Electrum</string>
     <string name="add_address">Add Address</string>
+    <string name="add_account">Add Account</string>
     <string name="use_electrum_scan_xpub">Scan master public key using Electrum</string>
     <string name="export_signed_txn_file">Export Signed File</string>
     <string name="export_signed_txn_action_guide">How to broadcast with Electrum:\nIn Electrum, go to Tools > Load Transaction > From File. Open the file, and click "Broadcast".</string>

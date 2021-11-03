@@ -28,12 +28,11 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.Util;
 import com.keystone.coinlib.accounts.ETHAccount;
-import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
-import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
@@ -54,7 +53,7 @@ public class SyncViewModel extends AndroidViewModel {
         super(application);
         mRepository = ((MainApplication) application).getRepository();
         chainsMutableLiveData = new MutableLiveData<>();
-        chainsMutableLiveData.postValue(ETHAccount.LEDGER_LEGACY);
+        chainsMutableLiveData.postValue(AddAddressViewModel.getETHAccount(Utilities.getCurrentEthAccount(application)));
     }
 
     public MutableLiveData<ETHAccount> getChainsMutableLiveData() {
@@ -149,6 +148,7 @@ public class SyncViewModel extends AndroidViewModel {
     }
 
     public LiveData<String> generateSyncMetamask(ETHAccount ethAccount) {
+        chainsMutableLiveData.postValue(ethAccount);
         MutableLiveData<String> result = new MutableLiveData<>();
         AppExecutors.getInstance().diskIO().execute(() -> {
             CryptoHDKey cryptoHDKey = URRegistryHelper.generateCryptoHDKey(ethAccount.getPath(), ethAccount.getType());
@@ -170,37 +170,9 @@ public class SyncViewModel extends AndroidViewModel {
     private List<Pair<String, String>> getPairs(ETHAccount ethAccount) {
         List<Pair<String, String>> result = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            result.add(i, Pair.create("Account " + i, getAddress(ethAccount, i)));
+            result.add(i, Pair.create("Account " + i, AddAddressViewModel.getAddress(ethAccount, i, null)));
         }
         return result;
-    }
-
-    public String getAddress(ETHAccount ethAccount, int index) {
-        String address = "";
-        AbsDeriver deriver = AbsDeriver.newInstance("ETH");
-        if (deriver == null) return address;
-        String xPub;
-        String xPubPath;
-        switch (ethAccount) {
-            case LEDGER_LIVE:
-                xPubPath = ETHAccount.LEDGER_LIVE.getPath() + "/" + index + "'";
-                xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
-                address = deriver.derive(xPub, 0 , 0);
-                break;
-            case LEDGER_LEGACY:
-                xPubPath = ETHAccount.LEDGER_LEGACY.getPath() + "/" + index;
-                xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
-                address = deriver.derive(xPub);
-                break;
-            case BIP44_STANDARD:
-                xPubPath = ETHAccount.BIP44_STANDARD.getPath().substring(0, ETHAccount.BIP44_STANDARD.getPath().length() - 2);
-                xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
-                address = deriver.derive(xPub, 0, index);
-                break;
-            default:
-                break;
-        }
-        return address;
     }
 
     private String getGenesisHash(String coinCode) {

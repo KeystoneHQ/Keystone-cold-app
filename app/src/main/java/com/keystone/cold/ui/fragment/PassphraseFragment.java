@@ -149,7 +149,7 @@ public class PassphraseFragment extends SetupVaultBaseFragment<PassphraseBinding
                 Utilities.setVaultId(mActivity, viewModel.getVaultId());
                 Utilities.setCurrentBelongTo(mActivity,
                         TextUtils.isEmpty(passphrase1.get()) ? "main" : "hidden");
-                Utilities.setCurrentEthAccount(mActivity, ETHAccount.LEDGER_LEGACY.getPath());
+                Utilities.setCurrentEthAccount(mActivity, ETHAccount.BIP44_STANDARD.getPath());
                 stateLiveData.setValue(VAULT_STATE_NOT_CREATE);
                 viewModel.getVaultCreateState().removeObservers(this);
                 if (TextUtils.isEmpty(passphrase1.get())) {

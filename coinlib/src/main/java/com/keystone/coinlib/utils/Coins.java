@@ -34,7 +34,7 @@ public class Coins {
     public static final Coin DASH = new Coin("dash", "DASH", "Dash", 5);
     public static final Coin LTC = new Coin("litecoin", "LTC", "Litecoin", 2);
     public static final Coin ETH = new Coin("ethereum", "ETH", "Ethereum", 60,
-            CURVE.SECP256K1, new String[]{ETHAccount.LEDGER_LEGACY.getPath(), ETHAccount.LEDGER_LIVE.getPath(), ETHAccount.BIP44_STANDARD.getPath()});
+            CURVE.SECP256K1, new String[]{ETHAccount.BIP44_STANDARD.getPath(), ETHAccount.LEDGER_LEGACY.getPath(), ETHAccount.LEDGER_LIVE.getPath()});
     public static final Coin ETC = new Coin("ethereum_classic", "ETC", "Ethereum Classic", 61);
     public static final Coin CFX = new Coin("conflux_mainnet", "CFX", "Conflux", 503);
     public static final Coin TRON = new Coin("tron", "TRON", "Tron", 195);

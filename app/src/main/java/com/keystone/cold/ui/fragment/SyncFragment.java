@@ -200,12 +200,6 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
         isRefreshing = false;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.LEDGER_LEGACY);
-    }
-
     private String generateXrpToolsSyncData(SyncViewModel.XrpSyncData xrpSyncData) {
         JSONObject object = new JSONObject();
         try {

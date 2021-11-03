@@ -34,6 +34,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.AddressFragmentBinding;
@@ -130,13 +131,24 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
         address.observe(this, addressEntities -> {
             if (requireArguments().getString(KEY_COIN_CODE).equals("ETH")) {
                 String accountHdPath = Utilities.getCurrentEthAccount(mActivity);
-                int size = accountHdPath.split("/").length;
                 addressEntities = addressEntities.stream()
-                        .filter(addressEntity -> addressEntity.getPath().split("/").length == (size + 2))
+                        .filter(addressEntity -> isCurrentETHAccountAddress(accountHdPath, addressEntity))
                         .collect(Collectors.toList());
             }
             mAddressAdapter.setItems(addressEntities);
         });
+    }
+
+    public boolean isCurrentETHAccountAddress (String ethAccountPath, AddressEntity addressEntity) {
+        String[] split = addressEntity.getPath().split("/");
+        if (ethAccountPath.equals(ETHAccount.LEDGER_LIVE.getPath())) {
+            return split.length == 6 && split[5].equals("0");
+        } else if (ethAccountPath.equals(ETHAccount.LEDGER_LEGACY.getPath())) {
+            return split.length == 5;
+        } else if (ethAccountPath.equals(ETHAccount.BIP44_STANDARD.getPath())) {
+            return split.length == 6 && split[3].equals("0'");
+        }
+        return false;
     }
 
     public void setQuery(String s) {

@@ -304,6 +304,7 @@
     <string name="use_electrum_to_broadcast">请用 Electrum 扫描二维码广播</string>
     <string name="transaction_from_electrum">该笔交易热端来源于Electrum</string>
     <string name="add_address">添加地址</string>
+    <string name="add_account">添加账户</string>
     <string name="use_electrum_scan_xpub">请用 Electrum 扫描主公钥二维码</string>
     <string name="export_signed_txn_file">导出已签名文件</string>
     <string name="export_signed_txn_action_guide">导出后，用 Electrum 进行广播\n前往【Electrum--工具--加载交易--从文件】打开该文件</string>

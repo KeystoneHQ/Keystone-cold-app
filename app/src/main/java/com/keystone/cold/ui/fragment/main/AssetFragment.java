@@ -431,6 +431,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         BottomSheetDialog dialog = new BottomSheetDialog(mActivity);
         DialogBottomSheetBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
                 R.layout.dialog_bottom_sheet, null, false);
+        if (watchWallet == WatchWallet.METAMASK) {
+            binding.addText.setText(getString(R.string.add_account));
+        }
         binding.addAddress.setOnClickListener(v -> {
             handleAddAddress();
             dialog.dismiss();
