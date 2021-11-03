@@ -91,6 +91,7 @@
                     android:id="@+id/rl_ledger_live"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:minHeight="230dp"
                     android:nestedScrollingEnabled="false"
                     android:background="@drawable/show_account_bg"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
@@ -123,6 +124,7 @@
                     android:id="@+id/rl_crypto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:minHeight="230dp"
                     android:nestedScrollingEnabled="false"
                     android:background="@drawable/show_account_bg"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
@@ -154,6 +156,7 @@
                     android:id="@+id/rl_metamask"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:minHeight="230dp"
                     android:nestedScrollingEnabled="false"
                     android:background="@drawable/show_account_bg"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
