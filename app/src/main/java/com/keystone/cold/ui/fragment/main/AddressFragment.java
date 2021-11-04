@@ -139,7 +139,7 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
         });
     }
 
-    public static boolean isCurrentETHAccountAddress (String ethAccountPath, AddressEntity addressEntity) {
+    public static boolean isCurrentETHAccountAddress(String ethAccountPath, AddressEntity addressEntity) {
         String[] split = addressEntity.getPath().split("/");
         if (ethAccountPath.equals(ETHAccount.LEDGER_LIVE.getPath())) {
             return split.length == 6 && split[5].equals("0");
