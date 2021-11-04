@@ -486,6 +486,7 @@ public class Web3TxViewModel extends Base {
             JSONObject addition = new JSONObject();
             addition.put("isFromTFCard", isFromTFCard);
             addition.put("requestId", requestId);
+            addition.put("signBy", AddAddressViewModel.getETHAccount(Utilities.getCurrentEthAccount(context)).getName());
             genericETHTxEntity.setAddition(addition.toString());
         } catch (JSONException e) {
             e.printStackTrace();

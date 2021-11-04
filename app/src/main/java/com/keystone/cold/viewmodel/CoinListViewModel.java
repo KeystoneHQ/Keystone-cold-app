@@ -132,6 +132,7 @@ public class CoinListViewModel extends AndroidViewModel {
             genericETHTxEntity.setTxId(web3TxEntity.getTxId());
             genericETHTxEntity.setTxType(web3TxEntity.getTxType());
             genericETHTxEntity.setSignedHex(web3TxEntity.getSignedHex());
+            genericETHTxEntity.setAddition(web3TxEntity.getAddition());
             ethTxEntityList.add(genericETHTxEntity);
         }
         return ethTxEntityList;
