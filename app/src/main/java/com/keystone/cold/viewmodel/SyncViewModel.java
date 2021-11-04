@@ -169,7 +169,7 @@ public class SyncViewModel extends AndroidViewModel {
     @NonNull
     private List<Pair<String, String>> getPairs(ETHAccount ethAccount) {
         List<Pair<String, String>> result = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
             result.add(i, Pair.create("Account " + i, AddAddressViewModel.getAddress(ethAccount, i, null)));
         }
         return result;

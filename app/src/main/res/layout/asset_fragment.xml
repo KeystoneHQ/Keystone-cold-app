@@ -49,6 +49,7 @@
                 app:titleTextColor="@color/white"
                 app:titleTextAppearance="@style/Toolbar.TitleText"
                 app:navigationIcon="@drawable/arrow_left"
+                android:layout_marginStart="-3dp"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:contentInsetStartWithNavigation="0dp">
 
@@ -130,16 +131,28 @@
                 android:textColor="@color/colorAccent" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/header"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorAccent"
+            android:layout_marginHorizontal="16dp"
+            android:textSize="14sp"
+            android:visibility="gone"/>
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/header"
+            android:layout_below="@id/account"
             app:tabTextAppearance="@style/TabTextAppearance"
             app:tabIndicatorColor="@color/colorAccent"
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorHeight="2dp"
             app:tabMode="scrollable"
+            android:layout_marginStart="4dp"
             app:tabSelectedTextColor="@color/white"
             app:tabTextColor="@color/white40" />
 

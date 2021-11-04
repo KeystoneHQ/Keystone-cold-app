@@ -20,6 +20,7 @@ package com.keystone.cold.ui.fragment;
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuide;
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuideTitle;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -30,7 +31,6 @@ import android.view.View;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
@@ -39,6 +39,7 @@ import com.keystone.cold.databinding.SyncFragmentBinding;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.fragment.setup.SetupVaultBaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
+import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.SyncViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 
@@ -126,6 +127,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 break;
             case METAMASK:
                 mBinding.hint.setText(R.string.sync_with_metamask);
+                mBinding.chain.setVisibility(View.VISIBLE);
                 mBinding.llHint.setVisibility(View.VISIBLE);
                 mBinding.companionHint.setOnClickListener(v -> navigate(R.id.action_syncFragment_to_selectWalletFragment));
                 break;
@@ -184,6 +186,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                     if (isRefreshing) return;
                     isRefreshing = true;
                     Utilities.setCurrentEthAccount(mActivity, chains.getPath());
+                    mBinding.chain.setText(chains.getName());
                     syncViewModel.generateSyncMetamask(chains).observe(this, urData -> {
                         if (!TextUtils.isEmpty(urData)) {
                             mBinding.dynamicQrcodeLayout.qrcode.disableMultipart();

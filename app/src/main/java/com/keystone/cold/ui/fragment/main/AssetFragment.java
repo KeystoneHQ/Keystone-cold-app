@@ -17,6 +17,13 @@
 
 package com.keystone.cold.ui.fragment.main;
 
+import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
+import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
+import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
+import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
+import static com.keystone.cold.ui.fragment.main.keystone.TxConfirmFragment.KEY_TX_DATA;
+import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
@@ -59,14 +66,14 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.exceptions.UnExpectedQREx
 import com.keystone.cold.ui.modal.ProgressModalDialog;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.CoinViewModel;
-import com.keystone.cold.viewmodel.SetupVaultViewModel;
-import com.keystone.cold.viewmodel.exceptions.UnknowQrCodeException;
-import com.keystone.cold.viewmodel.tx.PolkadotJsTxConfirmViewModel;
 import com.keystone.cold.viewmodel.PublicKeyViewModel;
+import com.keystone.cold.viewmodel.SetupVaultViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
+import com.keystone.cold.viewmodel.exceptions.UnknowQrCodeException;
 import com.keystone.cold.viewmodel.exceptions.UnknownSubstrateChainException;
 import com.keystone.cold.viewmodel.exceptions.UnsupportedSubstrateTxException;
 import com.keystone.cold.viewmodel.exceptions.XfpNotMatchException;
+import com.keystone.cold.viewmodel.tx.PolkadotJsTxConfirmViewModel;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 
 import org.json.JSONException;
@@ -80,13 +87,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-
-import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
-import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
-import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
-import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
-import static com.keystone.cold.ui.fragment.main.keystone.TxConfirmFragment.KEY_TX_DATA;
-import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
 
 public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         implements Toolbar.OnMenuItemClickListener, NumberPickerCallback {
@@ -116,6 +116,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             mBinding.toolbar.setNavigationIcon(R.drawable.menu);
             mBinding.toolbar.setTitle(watchWallet.getWalletName(mActivity));
             mBinding.customTitle.setVisibility(View.GONE);
+            mBinding.account.setText(AddAddressViewModel.getETHAccount(Utilities.getCurrentEthAccount(mActivity)).getName());
+            mBinding.account.setVisibility(View.VISIBLE);
             coinId = Coins.ETH.coinId();
             coinCode = Coins.ETH.coinCode();
         } else if (watchWallet == WatchWallet.XRP_TOOLKIT) {

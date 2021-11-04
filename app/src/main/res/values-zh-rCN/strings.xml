@@ -566,6 +566,6 @@
     <string name="ledger_live"><![CDATA[如果你之前用 <font color="#00cdc3">Ledger Live 连接 Ledger<font/>]]></string>
     <string name="my_crypto_mew"><![CDATA[如果你之前用 <font color="#00cdc3">My Crypto、MEW 连接 Ledger<font/>]]></string>
     <string name="metamusk_ledger"><![CDATA[如果你之前用 <font color="#00cdc3">MetaMusk、Ledger 连接 Ledger<font/>]]></string>
-    <string name="top_five_account">钱包的前5个账户：</string>
+    <string name="top_account">钱包的前3个账户：</string>
     <string name="show_this_qrcode">展示该钱包二维码</string>
 </resources>

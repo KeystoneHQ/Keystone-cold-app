@@ -598,6 +598,6 @@
     <string name="ledger_live"><![CDATA[If you used <font color="#00cdc3">Ledger Live to connect to Ledger<font/>]]></string>
     <string name="my_crypto_mew"><![CDATA[If you used <font color="#00cdc3">My Crypto, MEW to connect to Ledger<font/>]]></string>
     <string name="metamusk_ledger"><![CDATA[If you used wallets such as <font color="#00cdc3">MetaMask, Ledger, etc.<font/>]]></string>
-    <string name="top_five_account">The first 5 accounts:</string>
+    <string name="top_account">The first 3 accounts:</string>
     <string name="show_this_qrcode">Display QR Code</string>
 </resources>
