@@ -23,9 +23,11 @@ import static com.keystone.cold.ui.fragment.main.TxFragment.KEY_TX_ID;
 import static com.keystone.cold.ui.fragment.main.web3.EthTxConfirmFragment.MAX_PER_GAS;
 import static com.keystone.cold.ui.fragment.main.web3.EthTxConfirmFragment.highLight;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -96,12 +98,20 @@ public class EthLegacyTxFragment extends BaseFragment<EthTxBinding> {
                 null);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void updateUI() {
         JSONObject abi = null;
         try {
             abi = new JSONObject(genericETHTxEntity.getMemo());
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+        try {
+            mBinding.ethTx.icon.setImageDrawable(mActivity.getDrawable(viewModel.getDrawableId(genericETHTxEntity.getChainId())));
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+            Log.e(TAG, "getDrawableId: ", e);
+            mBinding.ethTx.icon.setVisibility(View.INVISIBLE);
         }
         if (isExceed) {
             mBinding.ethTx.fee.setTextColor(Color.RED);

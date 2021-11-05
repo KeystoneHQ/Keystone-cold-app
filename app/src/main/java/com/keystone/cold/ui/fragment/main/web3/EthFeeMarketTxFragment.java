@@ -24,12 +24,14 @@ import static com.keystone.cold.ui.fragment.main.web3.EthFeeMarketTxConfirmFragm
 import static com.keystone.cold.ui.fragment.main.web3.EthFeeMarketTxConfirmFragment.MAX_PRIORITY_PER_GAS;
 import static com.keystone.cold.ui.fragment.main.web3.EthTxConfirmFragment.highLight;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -103,6 +105,7 @@ public class EthFeeMarketTxFragment extends BaseFragment<EthFeeMarketTxBinding> 
                 null);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void updateUI() {
         JSONObject abi = null;
         try {
@@ -114,6 +117,13 @@ public class EthFeeMarketTxFragment extends BaseFragment<EthFeeMarketTxBinding> 
                 genericETHTxEntity.getMaxPriorityFeePerGas(), genericETHTxEntity.getGasLimit());
         String feeMaxContent = String.format("Max fee (%s) * Gas limit (%s)",
                 genericETHTxEntity.getMaxFeePerGas(), genericETHTxEntity.getGasLimit());
+        try {
+            mBinding.ethTx.icon.setImageDrawable(mActivity.getDrawable(viewModel.getDrawableId(genericETHTxEntity.getChainId())));
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+            Log.e(TAG, "getDrawableId: ", e);
+            mBinding.ethTx.icon.setVisibility(View.INVISIBLE);
+        }
         if (isExceed) {
             mBinding.ethTx.maxFeeTooHigh.setVisibility(View.VISIBLE);
             mBinding.ethTx.priorityFeeTooHigh.setVisibility(View.VISIBLE);
