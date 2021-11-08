@@ -19,6 +19,7 @@
 
 package com.keystone.cold.ui.fragment.main.web3;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -54,12 +55,14 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.keystone.cold.ui.fragment.main.TxFragment.KEY_TX_ID;
+import static com.keystone.cold.ui.fragment.main.web3.EthTxConfirmFragment.MAX_PER_GAS;
 import static com.keystone.cold.ui.fragment.main.web3.EthTxConfirmFragment.highLight;
 
 public class EthTxFragment extends BaseFragment<EthTxBinding> {
 
     private TxEntity txEntity;
     private Web3TxViewModel viewModel;
+    private boolean isExceeded;
 
     @Override
     protected int setView() {
@@ -75,6 +78,9 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
                 .loadTx(bundle.getString(KEY_TX_ID)).observe(this, txEntity -> {
             this.txEntity = txEntity;
             if (this.txEntity != null) {
+                if (viewModel.getGasPrice().doubleValue() > MAX_PER_GAS) {
+                    isExceeded = true;
+                }
                 updateUI();
             }
         });
@@ -100,6 +106,10 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
             abi = signed.getJSONObject("abi");
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+        if (isExceeded) {
+            mBinding.ethTx.fee.setTextColor(Color.RED);
+            mBinding.ethTx.feeTooHigh.setVisibility(View.VISIBLE);
         }
         mBinding.ethTx.network.setText(viewModel.getNetwork(chainId));
         showQrCode(signed);

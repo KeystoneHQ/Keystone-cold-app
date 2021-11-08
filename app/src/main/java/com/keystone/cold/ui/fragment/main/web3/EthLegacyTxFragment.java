@@ -20,8 +20,11 @@
 package com.keystone.cold.ui.fragment.main.web3;
 
 import static com.keystone.cold.ui.fragment.main.TxFragment.KEY_TX_ID;
+import static com.keystone.cold.ui.fragment.main.web3.EthTxConfirmFragment.MAX_PER_GAS;
 import static com.keystone.cold.ui.fragment.main.web3.EthTxConfirmFragment.highLight;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -60,6 +63,7 @@ public class EthLegacyTxFragment extends BaseFragment<EthTxBinding> {
     private GenericETHTxEntity genericETHTxEntity;
     private Web3TxViewModel viewModel;
     private CoinListViewModel coinListViewModel;
+    private boolean isExceeded;
 
     @Override
     protected int setView() {
@@ -75,6 +79,9 @@ public class EthLegacyTxFragment extends BaseFragment<EthTxBinding> {
         coinListViewModel.loadETHTx(bundle.getString(KEY_TX_ID)).observe(this, genericETHTxEntity -> {
             this.genericETHTxEntity = genericETHTxEntity;
             if (this.genericETHTxEntity != null) {
+                if (viewModel.getGasPrice().doubleValue() > MAX_PER_GAS) {
+                    isExceeded = true;
+                }
                 updateUI();
             }
         });
@@ -90,12 +97,22 @@ public class EthLegacyTxFragment extends BaseFragment<EthTxBinding> {
                 null);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void updateUI() {
         JSONObject abi = null;
         try {
             abi = new JSONObject(genericETHTxEntity.getMemo());
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+        try {
+            mBinding.ethTx.icon.setImageDrawable(mActivity.getDrawable(viewModel.getDrawableId(genericETHTxEntity.getChainId())));
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        if (isExceeded) {
+            mBinding.ethTx.fee.setTextColor(Color.RED);
+            mBinding.ethTx.feeTooHigh.setVisibility(View.VISIBLE);
         }
         mBinding.ethTx.network.setText(viewModel.getNetwork(genericETHTxEntity.getChainId()));
         showQrCode();

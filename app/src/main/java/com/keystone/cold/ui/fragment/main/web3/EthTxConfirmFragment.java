@@ -19,6 +19,7 @@
 
 package com.keystone.cold.ui.fragment.main.web3;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -80,7 +81,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     public static Pattern pattern = Pattern.compile("(?<=\\()[^\\)]+");
     public static Pattern pattern1 = Pattern.compile("(?<=\\[)[^]]+");
     public static int MAX_PER_GAS = 1000;
-    private boolean isExceed;
+    private boolean isExceeded;
 
 
     @Override
@@ -182,9 +183,15 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
         viewModel.getSignState().removeObservers(this);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void updateUI() {
         updateNetworkName();
-        if (isExceed) {
+        try {
+            mBinding.ethTx.icon.setImageDrawable(mActivity.getDrawable(viewModel.getDrawableId(genericETHTxEntity.getChainId())));
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        if (isExceeded) {
             mBinding.ethTx.fee.setTextColor(Color.RED);
             mBinding.ethTx.feeTooHigh.setVisibility(View.VISIBLE);
         }
@@ -307,7 +314,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
             this.genericETHTxEntity = genericETHTxEntity;
             if (this.genericETHTxEntity != null) {
                 if (viewModel.getGasPrice().doubleValue() > MAX_PER_GAS) {
-                    isExceed = true;
+                    isExceeded = true;
                 }
                 updateUI();
             }
@@ -316,7 +323,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     }
 
     private void checkExceedFeeDialog() {
-        if (isExceed) {
+        if (isExceeded) {
             ModalDialog.showTwoButtonCommonModal(mActivity,
                     getString(R.string.atention),
                     getString(R.string.exceed_fee),

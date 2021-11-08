@@ -20,10 +20,17 @@
 package com.keystone.cold.ui.fragment.main.web3;
 
 import static com.keystone.cold.ui.fragment.main.TxFragment.KEY_TX_ID;
+import static com.keystone.cold.ui.fragment.main.web3.EthFeeMarketTxConfirmFragment.MAX_FEE_PER_GAS;
+import static com.keystone.cold.ui.fragment.main.web3.EthFeeMarketTxConfirmFragment.MAX_PRIORITY_PER_GAS;
 import static com.keystone.cold.ui.fragment.main.web3.EthTxConfirmFragment.highLight;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -34,6 +41,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.keystone.coinlib.coins.ETH.Eth;
 import com.keystone.coinlib.coins.ETH.GnosisHandler;
 import com.keystone.cold.AppExecutors;
+import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.AbiItemBinding;
 import com.keystone.cold.databinding.AbiItemMethodBinding;
@@ -60,6 +68,7 @@ public class EthFeeMarketTxFragment extends BaseFragment<EthFeeMarketTxBinding> 
     private GenericETHTxEntity genericETHTxEntity;
     private Web3TxViewModel viewModel;
     private CoinListViewModel coinListViewModel;
+    private boolean isExceeded;
 
     @Override
     protected int setView() {
@@ -75,6 +84,11 @@ public class EthFeeMarketTxFragment extends BaseFragment<EthFeeMarketTxBinding> 
         coinListViewModel.loadETHTx(bundle.getString(KEY_TX_ID)).observe(this, genericETHTxEntity -> {
             this.genericETHTxEntity = genericETHTxEntity;
             if (this.genericETHTxEntity != null) {
+                double maxPriorityFee = Double.parseDouble(genericETHTxEntity.getMaxPriorityFeePerGas().replaceAll("[^0-9\\\\.]", ""));
+                boolean isMaxPriorityFeeExceeded = maxPriorityFee > MAX_PRIORITY_PER_GAS;
+                double maxfee = Double.parseDouble(genericETHTxEntity.getMaxFeePerGas().replaceAll("[^0-9\\\\.]", ""));
+                boolean isMaxFeeExceeded = maxfee > MAX_FEE_PER_GAS;
+                isExceeded = isMaxPriorityFeeExceeded || isMaxFeeExceeded;
                 updateUI();
             }
         });
@@ -90,6 +104,7 @@ public class EthFeeMarketTxFragment extends BaseFragment<EthFeeMarketTxBinding> 
                 null);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void updateUI() {
         JSONObject abi = null;
         try {
@@ -97,10 +112,32 @@ public class EthFeeMarketTxFragment extends BaseFragment<EthFeeMarketTxBinding> 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mBinding.ethTx.feeEstimatedDetail.setText(String.format("Max Priority fee (%s) * Gas limit (%s)",
-                genericETHTxEntity.getMaxPriorityFeePerGas(), genericETHTxEntity.getGasLimit()));
-        mBinding.ethTx.feeMaxDetail.setText(String.format("Max fee (%s) * Gas limit (%s)",
-                genericETHTxEntity.getMaxFeePerGas(), genericETHTxEntity.getGasLimit()));
+        String feeEstimatedContent = String.format("Max Priority fee (%s) * Gas limit (%s)",
+                genericETHTxEntity.getMaxPriorityFeePerGas(), genericETHTxEntity.getGasLimit());
+        String feeMaxContent = String.format("Max fee (%s) * Gas limit (%s)",
+                genericETHTxEntity.getMaxFeePerGas(), genericETHTxEntity.getGasLimit());
+        try {
+            mBinding.ethTx.icon.setImageDrawable(mActivity.getDrawable(viewModel.getDrawableId(genericETHTxEntity.getChainId())));
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        if (isExceeded) {
+            mBinding.ethTx.maxFeeTooHigh.setVisibility(View.VISIBLE);
+            mBinding.ethTx.priorityFeeTooHigh.setVisibility(View.VISIBLE);
+            mBinding.ethTx.feeEstimatedValue.setTextColor(Color.RED);
+            mBinding.ethTx.feeMaxValue.setTextColor(Color.RED);
+            SpannableStringBuilder spannableMaxEstimated = new SpannableStringBuilder(feeEstimatedContent);
+            spannableMaxEstimated.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.red)), 18 ,
+                    18 + genericETHTxEntity.getMaxPriorityFeePerGas().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            SpannableStringBuilder spannableMaxFee = new SpannableStringBuilder(feeMaxContent);
+            spannableMaxFee.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.red)), 9 ,
+                    9 + genericETHTxEntity.getMaxPriorityFeePerGas().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            mBinding.ethTx.feeEstimatedDetail.setText(spannableMaxEstimated);
+            mBinding.ethTx.feeMaxDetail.setText(spannableMaxFee);
+        } else {
+            mBinding.ethTx.feeEstimatedDetail.setText(feeEstimatedContent);
+            mBinding.ethTx.feeMaxDetail.setText(feeMaxContent);
+        }
         mBinding.ethTx.network.setText(viewModel.getNetwork(genericETHTxEntity.getChainId()));
         showQrCode();
         updateAbiView(abi);

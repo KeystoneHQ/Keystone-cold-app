@@ -25,6 +25,7 @@ import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KE
 import static com.keystone.cold.ui.fragment.main.web3.EthBroadcastTxFragment.KEY_SIGNATURE_JSON;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -80,7 +81,7 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
     public static Pattern pattern1 = Pattern.compile("(?<=\\[)[^]]+");
     public static int MAX_PRIORITY_PER_GAS = 1000;
     public static int MAX_FEE_PER_GAS = 10000;
-    private boolean isExceed;
+    private boolean isExceeded;
 
 
     @Override
@@ -182,13 +183,19 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
         viewModel.getSignState().removeObservers(this);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void updateUI() {
         mBinding.ethTx.network.setText(viewModel.getNetwork(viewModel.getChainId()));
         String feeEstimatedContent = String.format("Max Priority fee (%s) * Gas limit (%s)",
                 genericETHTxEntity.getMaxPriorityFeePerGas(), genericETHTxEntity.getGasLimit());
         String feeMaxContent = String.format("Max fee (%s) * Gas limit (%s)",
                 genericETHTxEntity.getMaxFeePerGas(), genericETHTxEntity.getGasLimit());
-        if (isExceed) {
+        try {
+            mBinding.ethTx.icon.setImageDrawable(mActivity.getDrawable(viewModel.getDrawableId(genericETHTxEntity.getChainId())));
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        if (isExceeded) {
             mBinding.ethTx.maxFeeTooHigh.setVisibility(View.VISIBLE);
             mBinding.ethTx.priorityFeeTooHigh.setVisibility(View.VISIBLE);
             mBinding.ethTx.feeEstimatedValue.setTextColor(Color.RED);
@@ -320,10 +327,10 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
             this.genericETHTxEntity = genericETHTxEntity;
             if (this.genericETHTxEntity != null) {
                 double maxPriorityFee = Double.parseDouble(genericETHTxEntity.getMaxPriorityFeePerGas().replaceAll("[^0-9\\\\.]", ""));
-                boolean isExceedMaxPriorityFee = maxPriorityFee > MAX_PRIORITY_PER_GAS;
+                boolean isMaxPriorityFeeExceeded = maxPriorityFee > MAX_PRIORITY_PER_GAS;
                 double maxfee = Double.parseDouble(genericETHTxEntity.getMaxFeePerGas().replaceAll("[^0-9\\\\.]", ""));
-                boolean isExceedMaxFee = maxfee > MAX_FEE_PER_GAS;
-                isExceed = isExceedMaxPriorityFee || isExceedMaxFee;
+                boolean isMaxFeeExceeded = maxfee > MAX_FEE_PER_GAS;
+                isExceeded = isMaxPriorityFeeExceeded || isMaxFeeExceeded;
                 updateUI();
             }
         });
@@ -331,7 +338,7 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
     }
 
     private void checkExceedFeeDialog() {
-        if (isExceed) {
+        if (isExceeded) {
             ModalDialog.showTwoButtonCommonModal(mActivity,
                     getString(R.string.atention),
                     getString(R.string.exceed_fee),
