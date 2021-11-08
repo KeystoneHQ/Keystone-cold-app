@@ -42,6 +42,7 @@ import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.path.CoinPath;
 import com.keystone.cold.AppExecutors;
+import com.keystone.cold.R;
 import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.encryption.ChipSigner;
@@ -158,7 +159,10 @@ public class Web3TxViewModel extends Base {
     public String getNetwork(int chainId) {
         String networkName = "";
         if (chainIdJSONObject != null) {
-            networkName = chainIdJSONObject.optString(String.valueOf(chainId));
+            JSONObject jsonObject = chainIdJSONObject.optJSONObject(String.valueOf(chainId));
+            if (jsonObject != null) {
+                networkName = jsonObject.optString("name");
+            }
         }
         if (networkName.isEmpty()){
             return String.format("chainId:%d", chainId);
@@ -324,7 +328,7 @@ public class Web3TxViewModel extends Base {
         BigDecimal amount = new BigDecimal(object.getString("value"));
         double value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
         tx.setAmount(nf.format(value));
-        tx.setFee(nf.format(calculateDisplayFee(object)));
+        tx.setFee(nf.format(calculateDisplayFee(object)) + getSymbol(chainId) + " GWEI");
         tx.setMemo(object.getString("data"));
         tx.setBelongTo(mRepository.getBelongTo());
         tx.setTxType(TransactionType.LEGACY.getType());
@@ -366,8 +370,8 @@ public class Web3TxViewModel extends Base {
         tx.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
         tx.setMaxFeePerGas(nf.format(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
         tx.setGasLimit(nf.format(gasLimit));
-        tx.setEstimatedFee(nf.format(estimatedFee));
-        tx.setMaxFee(nf.format(maxFee));
+        tx.setEstimatedFee(nf.format(estimatedFee) + getSymbol(chainId));
+        tx.setMaxFee(nf.format(maxFee) + getSymbol(chainId));
     }
 
     public String getFromAddress(String path) {
@@ -494,6 +498,33 @@ public class Web3TxViewModel extends Base {
 
     public BigDecimal getGasPrice() {
         return gasPrice;
+    }
+
+    public int getDrawableId(int chainId) throws NoSuchFieldException, IllegalAccessException {
+        int drawableId = 0;
+        if (chainIdJSONObject != null) {
+            JSONObject jsonObject = chainIdJSONObject.optJSONObject(String.valueOf(chainId));
+            if (jsonObject != null) {
+                String drawableName = jsonObject.optString("drawableId");
+                drawableId = R.drawable.class.getField(drawableName).getInt(null);
+            }
+        }
+        if (drawableId == 0){
+            return R.drawable.coin_eth;
+        } else {
+            return drawableId;
+        }
+    }
+
+    public static String getSymbol(int chainId) {
+        String symbol = " ";
+        if (chainIdJSONObject != null) {
+            JSONObject jsonObject = chainIdJSONObject.optJSONObject(String.valueOf(chainId));
+            if (jsonObject != null) {
+                symbol += jsonObject.optString("symbol");
+            }
+        }
+        return symbol;
     }
 
     interface SignCallBack {

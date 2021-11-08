@@ -25,6 +25,7 @@ import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KE
 import static com.keystone.cold.ui.fragment.main.web3.EthBroadcastTxFragment.KEY_SIGNATURE_JSON;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +33,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -182,12 +184,19 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
         viewModel.getSignState().removeObservers(this);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void updateUI() {
         mBinding.ethTx.network.setText(viewModel.getNetwork(viewModel.getChainId()));
         String feeEstimatedContent = String.format("Max Priority fee (%s) * Gas limit (%s)",
                 genericETHTxEntity.getMaxPriorityFeePerGas(), genericETHTxEntity.getGasLimit());
         String feeMaxContent = String.format("Max fee (%s) * Gas limit (%s)",
                 genericETHTxEntity.getMaxFeePerGas(), genericETHTxEntity.getGasLimit());
+        try {
+            mBinding.ethTx.icon.setImageDrawable(mActivity.getDrawable(viewModel.getDrawableId(genericETHTxEntity.getChainId())));
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+            Log.e(TAG, "getDrawableId: ", e);
+        }
         if (isExceed) {
             mBinding.ethTx.maxFeeTooHigh.setVisibility(View.VISIBLE);
             mBinding.ethTx.priorityFeeTooHigh.setVisibility(View.VISIBLE);
