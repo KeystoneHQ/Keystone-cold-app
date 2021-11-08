@@ -287,7 +287,7 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
                 Utilities.setVaultCreated(mActivity);
                 Utilities.setVaultId(mActivity, viewModel.getVaultId());
                 Utilities.setCurrentBelongTo(mActivity, "main");
-                Utilities.setCurrentEthAccount(mActivity, ETHAccount.BIP44_STANDARD.getPath());
+                Utilities.setCurrentEthAccount(mActivity, ETHAccount.BIP44_STANDARD.getCode());
                 Runnable onComplete = () -> {
                     if (dialog != null && dialog.getDialog() != null && dialog.getDialog().isShowing()) {
                         dialog.dismiss();

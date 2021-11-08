@@ -170,7 +170,7 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
 
     private boolean getCurrenAccountTxs(GenericETHTxEntity ethTxEntitiy) {
         try {
-            ETHAccount currentAccount = AddAddressViewModel.getETHAccount(Utilities.getCurrentEthAccount(mActivity));
+            ETHAccount currentAccount = ETHAccount.ofCode(Utilities.getCurrentEthAccount(mActivity));
             if (ethTxEntitiy.getAddition() == null) {
                 if (currentAccount.getName().equals(ETHAccount.BIP44_STANDARD.getName())) {
                     return true;

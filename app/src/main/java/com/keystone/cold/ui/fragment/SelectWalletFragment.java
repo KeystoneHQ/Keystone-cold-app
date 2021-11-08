@@ -51,7 +51,7 @@ public class SelectWalletFragment extends BaseFragment<SelectWalletFragmentBindi
         mBinding.derivationLive.setText(DERIVATION_PATH + ETHAccount.LEDGER_LIVE.getPath());
         mBinding.derivationLegacy.setText(DERIVATION_PATH + ETHAccount.LEDGER_LEGACY.getPath());
         // both ledger legacy and bip44 standard use M/44'/60'/0
-        mBinding.derivationBip44.setText(DERIVATION_PATH + ETHAccount.LEDGER_LEGACY.getPath());
+        mBinding.derivationBip44.setText(DERIVATION_PATH + ETHAccount.BIP44_STANDARD.getPath());
     }
 
     @Override

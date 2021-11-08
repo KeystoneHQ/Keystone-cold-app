@@ -266,13 +266,13 @@ public class Utilities {
         return sp.getInt(WEB3_GUIDE_TIMES, 0);
     }
 
-    public static void setCurrentEthAccount(Context context, String hdPath) {
+    public static void setCurrentEthAccount(Context context, String code) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
-        sp.edit().putString(ETH_CURRENT_ACCOUNT, hdPath).apply();
+        sp.edit().putString(ETH_CURRENT_ACCOUNT, code).apply();
     }
 
     public static String getCurrentEthAccount(Context context) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
-        return sp.getString(ETH_CURRENT_ACCOUNT, ETHAccount.BIP44_STANDARD.getPath());
+        return sp.getString(ETH_CURRENT_ACCOUNT, ETHAccount.BIP44_STANDARD.getCode());
     }
 }

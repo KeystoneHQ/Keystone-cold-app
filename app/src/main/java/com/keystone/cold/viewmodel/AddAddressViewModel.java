@@ -142,7 +142,7 @@ public class AddAddressViewModel extends AndroidViewModel {
                 if (isSetPath) addressEntity.setPath(xPubPath);
                 break;
             case BIP44_STANDARD:
-                xPubPath = ETHAccount.BIP44_STANDARD.getPath().substring(0, ETHAccount.BIP44_STANDARD.getPath().length() - 2);
+                xPubPath = ETHAccount.BIP44_STANDARD.getPath();
                 xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
                 address = deriver.derive(xPub, 0, index);
                 if (isSetPath) addressEntity.setPath(xPubPath + "/0/" + index);

@@ -5,9 +5,11 @@ import com.keystone.coinlib.accounts.ExtendedPublicKey;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
+import com.sparrowwallet.hummingbird.registry.CryptoAccount;
 import com.sparrowwallet.hummingbird.registry.CryptoCoinInfo;
 import com.sparrowwallet.hummingbird.registry.CryptoHDKey;
 import com.sparrowwallet.hummingbird.registry.CryptoKeypath;
+import com.sparrowwallet.hummingbird.registry.CryptoOutput;
 import com.sparrowwallet.hummingbird.registry.PathComponent;
 
 import org.spongycastle.util.encoders.Hex;
@@ -19,12 +21,11 @@ public class URRegistryHelper {
     private static final String KEY_NAME = "Keystone";
 
     public static CryptoHDKey generateCryptoHDKey(String path, int type) {
+        return generateCryptoHDKeyWithChildren(path, type, null, null);
+    }
+
+    private static CryptoHDKey generateCryptoHDKeyWithChildren(String path, int type, CryptoKeypath children, String note) {
         byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
-        ETHAccount ethAccount = AddAddressViewModel.getETHAccount(path);
-        if (path.equals(ETHAccount.BIP44_STANDARD.getPath())) {
-            // both ledger legacy and bip44 standard use M/44'/60'/0
-            path = ETHAccount.LEDGER_LEGACY.getPath();
-        }
         String xPub = new GetExtendedPublicKeyCallable(path).call();
         ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(xPub);
         byte[] key = extendedPublicKey.getKey();
@@ -32,21 +33,26 @@ public class URRegistryHelper {
         CryptoCoinInfo useInfo = new CryptoCoinInfo(type, 0);
         byte[] parentFingerprint = extendedPublicKey.getParentFingerprint();
         CryptoKeypath origin = new CryptoKeypath(getPathComponents(path), masterFingerprint, (int) extendedPublicKey.getDepth());
-        CryptoKeypath children = null;
-        switch (ethAccount) {
-            case LEDGER_LIVE:
-                children = new CryptoKeypath(getPathComponents(path + "/*'/0/0"), masterFingerprint, (int) extendedPublicKey.getDepth());
-                break;
-            case LEDGER_LEGACY:
-                children = new CryptoKeypath(getPathComponents(path + "/*"), masterFingerprint, (int) extendedPublicKey.getDepth());
-                break;
-            case BIP44_STANDARD:
-                children = new CryptoKeypath(getPathComponents(path + "/0/*"), masterFingerprint, (int) extendedPublicKey.getDepth());
-                break;
-            default:
-                break;
-        }
-        return new CryptoHDKey(false, key, chainCode, useInfo, origin, children, parentFingerprint, KEY_NAME, "");
+        return new CryptoHDKey(false, key, chainCode, useInfo, origin, children, parentFingerprint, KEY_NAME, note);
+    }
+
+    public static CryptoHDKey generateCryptoHDKeyForLedgerLegacy() {
+        CryptoKeypath children = new CryptoKeypath(getPathComponents(ETHAccount.LEDGER_LEGACY.getPath() + "/*"), null);
+        return generateCryptoHDKeyWithChildren(ETHAccount.LEDGER_LEGACY.getPath(), ETHAccount.LEDGER_LIVE.getType(), children, "account.ledger_legacy");
+    }
+
+    public static CryptoHDKey generateCryptoHDKeyForETHStandard() {
+        CryptoKeypath children = new CryptoKeypath(getPathComponents(ETHAccount.BIP44_STANDARD.getPath() + "/0/*"), null);
+        return generateCryptoHDKeyWithChildren(ETHAccount.BIP44_STANDARD.getPath(), ETHAccount.BIP44_STANDARD.getType(), children, "account.standard");
+    }
+
+    private static CryptoHDKey generateRawKeyForLedgerLive(String path, String note) {
+        byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
+        String xPub = new GetExtendedPublicKeyCallable(path).call();
+        ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(xPub);
+        byte[] key = extendedPublicKey.getKey();
+        CryptoKeypath origin = new CryptoKeypath(getPathComponents(path), masterFingerprint, (int) extendedPublicKey.getDepth());
+        return new CryptoHDKey(false, key, null, null, origin, null, null, KEY_NAME, note);
     }
 
     public static List<PathComponent> getPathComponents(String path) {
@@ -72,4 +78,13 @@ public class URRegistryHelper {
         return pathComponents;
     }
 
+    public static CryptoAccount generateCryptoAccountForLedgerLive(int start, int end) {
+        byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
+        List<CryptoOutput> cryptoOutputs = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            CryptoOutput cryptoOutput = new CryptoOutput(new ArrayList<>(), generateRawKeyForLedgerLive(ETHAccount.LEDGER_LIVE.getPath() + "/" + i + "'" + "/0/0", "account.ledger_live"));
+            cryptoOutputs.add(cryptoOutput);
+        }
+        return new CryptoAccount(masterFingerprint, cryptoOutputs);
+    }
 }

@@ -181,15 +181,14 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 });
                 break;
             case METAMASK:
-                syncViewModel.getChainsMutableLiveData().observe(this, chains -> {
-                    if (chains == null) return;
+                syncViewModel.getChainsMutableLiveData().observe(this, ethAccount -> {
+                    if (ethAccount == null) return;
                     if (isRefreshing) return;
                     isRefreshing = true;
-                    Utilities.setCurrentEthAccount(mActivity, chains.getPath());
-                    mBinding.chain.setText(chains.getName());
-                    syncViewModel.generateSyncMetamask(chains).observe(this, urData -> {
+                    Utilities.setCurrentEthAccount(mActivity, ethAccount.getCode());
+                    mBinding.chain.setText(ethAccount.getName());
+                    syncViewModel.generateSyncMetamask(ethAccount).observe(this, urData -> {
                         if (!TextUtils.isEmpty(urData)) {
-                            mBinding.dynamicQrcodeLayout.qrcode.disableMultipart();
                             mBinding.dynamicQrcodeLayout.qrcode.setData(urData);
                         }
                     });

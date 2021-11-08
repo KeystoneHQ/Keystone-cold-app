@@ -118,7 +118,7 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
     @Override
     protected void initData(Bundle savedInstanceState) {
         Bundle data = requireArguments();
-        Objects.requireNonNull(getParentFragment());
+        requireParentFragment();
         CoinViewModel.Factory factory = new CoinViewModel.Factory(mActivity.getApplication(),
                 data.getString(KEY_COIN_ID));
         viewModel = ViewModelProviders.of(getParentFragment(), factory)
@@ -130,25 +130,18 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
     private void subscribeUi(LiveData<List<AddressEntity>> address) {
         address.observe(this, addressEntities -> {
             if (requireArguments().getString(KEY_COIN_CODE).equals("ETH")) {
-                String accountHdPath = Utilities.getCurrentEthAccount(mActivity);
+                String code = Utilities.getCurrentEthAccount(mActivity);
+                ETHAccount account = ETHAccount.ofCode(code);
                 addressEntities = addressEntities.stream()
-                        .filter(addressEntity -> isCurrentETHAccountAddress(accountHdPath, addressEntity))
+                        .filter(addressEntity -> isCurrentETHAccountAddress(account, addressEntity))
                         .collect(Collectors.toList());
             }
             mAddressAdapter.setItems(addressEntities);
         });
     }
 
-    public static boolean isCurrentETHAccountAddress(String ethAccountPath, AddressEntity addressEntity) {
-        String[] split = addressEntity.getPath().split("/");
-        if (ethAccountPath.equals(ETHAccount.LEDGER_LIVE.getPath())) {
-            return split.length == 6 && split[5].equals("0");
-        } else if (ethAccountPath.equals(ETHAccount.LEDGER_LEGACY.getPath())) {
-            return split.length == 5;
-        } else if (ethAccountPath.equals(ETHAccount.BIP44_STANDARD.getPath())) {
-            return split.length == 6 && split[3].equals("0'");
-        }
-        return false;
+    public static boolean isCurrentETHAccountAddress(ETHAccount account, AddressEntity addressEntity) {
+        return account.isChildrenPath(addressEntity.getPath());
     }
 
     public void setQuery(String s) {
@@ -165,6 +158,6 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
     @Override
     public void onStop() {
         super.onStop();
-        Keyboard.hide(mActivity, Objects.requireNonNull(getView()));
+        Keyboard.hide(mActivity, requireView());
     }
 }

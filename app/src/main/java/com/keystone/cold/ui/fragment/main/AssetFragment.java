@@ -45,6 +45,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.coins.polkadot.UOS.Extrinsic;
 import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
 import com.keystone.coinlib.utils.Coins;
@@ -116,7 +117,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             mBinding.toolbar.setNavigationIcon(R.drawable.menu);
             mBinding.toolbar.setTitle(watchWallet.getWalletName(mActivity));
             mBinding.customTitle.setVisibility(View.GONE);
-            mBinding.account.setText(AddAddressViewModel.getETHAccount(Utilities.getCurrentEthAccount(mActivity)).getName());
+            mBinding.account.setText(ETHAccount.ofCode(Utilities.getCurrentEthAccount(mActivity)).getName());
             mBinding.account.setVisibility(View.VISIBLE);
             coinId = Coins.ETH.coinId();
             coinCode = Coins.ETH.coinCode();
@@ -485,8 +486,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         if (watchWallet == WatchWallet.METAMASK) {
             AppExecutors.getInstance().diskIO().execute(() -> {
                 CoinEntity coinEntity = viewModel.getCoin(coinId);
-                String path = Utilities.getCurrentEthAccount(mActivity);
-                viewModel.addEthAccountAddress(coinEntity, path, value, coinEntity.getBelongTo(), () -> handler.postDelayed(dialog::dismiss, 500));
+                String code = Utilities.getCurrentEthAccount(mActivity);
+                viewModel.addEthAccountAddress(coinEntity, ETHAccount.ofCode(code).getPath(), value, coinEntity.getBelongTo(), () -> handler.postDelayed(dialog::dismiss, 500));
             });
         } else {
             AppExecutors.getInstance().diskIO().execute(() -> {

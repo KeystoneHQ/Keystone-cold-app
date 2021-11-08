@@ -39,6 +39,7 @@ import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.protocol.EncodeConfig;
 import com.keystone.cold.protocol.builder.SyncBuilder;
 import com.keystone.cold.util.URRegistryHelper;
+import com.sparrowwallet.hummingbird.registry.CryptoAccount;
 import com.sparrowwallet.hummingbird.registry.CryptoHDKey;
 
 import java.util.ArrayList;
@@ -151,8 +152,21 @@ public class SyncViewModel extends AndroidViewModel {
         chainsMutableLiveData.postValue(ethAccount);
         MutableLiveData<String> result = new MutableLiveData<>();
         AppExecutors.getInstance().diskIO().execute(() -> {
-            CryptoHDKey cryptoHDKey = URRegistryHelper.generateCryptoHDKey(ethAccount.getPath(), ethAccount.getType());
-            result.postValue(cryptoHDKey.toUR().toString());
+            String ur;
+            switch (ethAccount){
+                case LEDGER_LIVE: {
+                    ur = URRegistryHelper.generateCryptoAccountForLedgerLive(0, 10).toUR().toString();
+                    break;
+                }
+                case LEDGER_LEGACY: {
+                    ur = URRegistryHelper.generateCryptoHDKeyForLedgerLegacy().toUR().toString();
+                    break;
+                }
+                default: {
+                    ur = URRegistryHelper.generateCryptoHDKeyForETHStandard().toUR().toString();
+                }
+            }
+            result.postValue(ur);
         });
         return result;
     }

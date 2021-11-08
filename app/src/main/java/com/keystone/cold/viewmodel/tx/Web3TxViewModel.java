@@ -395,23 +395,23 @@ public class Web3TxViewModel extends Base {
     }
 
     private void ensureAddressExist(String path) throws InvalidTransactionException {
-        String currentEthAccountPath = Utilities.getCurrentEthAccount(context);
+        String code = Utilities.getCurrentEthAccount(context);
+        ETHAccount account = ETHAccount.ofCode(code);
         path = path.toUpperCase();
         AddressEntity addressEntity = new AddressEntity();
         addressEntity.setPath(path);
-        if (!AddressFragment.isCurrentETHAccountAddress(currentEthAccountPath, addressEntity)) {
+        if (!AddressFragment.isCurrentETHAccountAddress(account, addressEntity)) {
             throw new InvalidTransactionException("address does not belong to the current account");
         }
         AddressEntity address = mRepository.loadAddressBypath(path);
         if (address == null) {
-            updateAccountDb(getAddressIndex(currentEthAccountPath, path));
+            updateAccountDb(getAddressIndex(account, path));
         }
     }
 
-    private int getAddressIndex(String currentEthAccountPath, String hdPath) {
-        ETHAccount ethAccount = AddAddressViewModel.getETHAccount(currentEthAccountPath);
+    private int getAddressIndex(ETHAccount account, String hdPath) {
         int index = 0;
-        switch (ethAccount) {
+        switch (account) {
             case LEDGER_LIVE:
                 hdPath = hdPath.replace("'", "");
                 String[] split = hdPath.split("/");
@@ -439,9 +439,10 @@ public class Web3TxViewModel extends Base {
         CoinEntity coinEntity = mRepository.loadCoinSync(Coins.ETH.coinId());
         List<AccountEntity> accountEntityList = mRepository.loadAccountsForCoin(coinEntity);
         AccountEntity accountEntity = null;
-        String currentEthAccount = Utilities.getCurrentEthAccount(context);
+        String code = Utilities.getCurrentEthAccount(context);
+        ETHAccount account = ETHAccount.ofCode(code);
         for (int i = 0; i < accountEntityList.size(); i++) {
-            if (accountEntityList.get(i).getHdPath().equals(currentEthAccount)) {
+            if (accountEntityList.get(i).getHdPath().equals(account.getPath())) {
                 accountEntity = accountEntityList.get(i);
                 break;
             }
@@ -449,12 +450,8 @@ public class Web3TxViewModel extends Base {
         if (accountEntity == null) {
             throw new InvalidTransactionException("not have match account");
         }
-        ETHAccount ethAccount = AddAddressViewModel.getETHAccount(currentEthAccount);
-        if (!TextUtils.equals(Utilities.getCurrentEthAccount(context), ethAccount.getPath())) {
-            throw new InvalidTransactionException("address does not belong to the current account");
-        }
         AddressEntity addressEntity = new AddressEntity();
-        String addr = AddAddressViewModel.getAddress(ethAccount, addressIndex, addressEntity);
+        String addr = AddAddressViewModel.getAddress(account, addressIndex, addressEntity);
         addressEntity.setAddressString(addr);
         addressEntity.setCoinId(Coins.ETH.coinId());
         addressEntity.setIndex(addressIndex);
