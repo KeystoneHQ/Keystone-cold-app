@@ -31,7 +31,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -69,7 +68,7 @@ public class EthFeeMarketTxFragment extends BaseFragment<EthFeeMarketTxBinding> 
     private GenericETHTxEntity genericETHTxEntity;
     private Web3TxViewModel viewModel;
     private CoinListViewModel coinListViewModel;
-    private boolean isExceed;
+    private boolean isExceeded;
 
     @Override
     protected int setView() {
@@ -86,10 +85,10 @@ public class EthFeeMarketTxFragment extends BaseFragment<EthFeeMarketTxBinding> 
             this.genericETHTxEntity = genericETHTxEntity;
             if (this.genericETHTxEntity != null) {
                 double maxPriorityFee = Double.parseDouble(genericETHTxEntity.getMaxPriorityFeePerGas().replaceAll("[^0-9\\\\.]", ""));
-                boolean isExceedMaxPriorityFee = maxPriorityFee > MAX_PRIORITY_PER_GAS;
+                boolean isMaxPriorityFeeExceeded = maxPriorityFee > MAX_PRIORITY_PER_GAS;
                 double maxfee = Double.parseDouble(genericETHTxEntity.getMaxFeePerGas().replaceAll("[^0-9\\\\.]", ""));
-                boolean isExceedMaxFee = maxfee > MAX_FEE_PER_GAS;
-                isExceed = isExceedMaxPriorityFee || isExceedMaxFee;
+                boolean isMaxFeeExceeded = maxfee > MAX_FEE_PER_GAS;
+                isExceeded = isMaxPriorityFeeExceeded || isMaxFeeExceeded;
                 updateUI();
             }
         });
@@ -121,9 +120,8 @@ public class EthFeeMarketTxFragment extends BaseFragment<EthFeeMarketTxBinding> 
             mBinding.ethTx.icon.setImageDrawable(mActivity.getDrawable(viewModel.getDrawableId(genericETHTxEntity.getChainId())));
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
-            Log.e(TAG, "getDrawableId: ", e);
         }
-        if (isExceed) {
+        if (isExceeded) {
             mBinding.ethTx.maxFeeTooHigh.setVisibility(View.VISIBLE);
             mBinding.ethTx.priorityFeeTooHigh.setVisibility(View.VISIBLE);
             mBinding.ethTx.feeEstimatedValue.setTextColor(Color.RED);

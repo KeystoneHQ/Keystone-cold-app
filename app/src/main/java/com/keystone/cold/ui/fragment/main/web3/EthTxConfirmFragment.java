@@ -27,7 +27,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -82,7 +81,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     public static Pattern pattern = Pattern.compile("(?<=\\()[^\\)]+");
     public static Pattern pattern1 = Pattern.compile("(?<=\\[)[^]]+");
     public static int MAX_PER_GAS = 1000;
-    private boolean isExceed;
+    private boolean isExceeded;
 
 
     @Override
@@ -191,9 +190,8 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
             mBinding.ethTx.icon.setImageDrawable(mActivity.getDrawable(viewModel.getDrawableId(genericETHTxEntity.getChainId())));
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
-            Log.e(TAG, "getDrawableId: ", e);
         }
-        if (isExceed) {
+        if (isExceeded) {
             mBinding.ethTx.fee.setTextColor(Color.RED);
             mBinding.ethTx.feeTooHigh.setVisibility(View.VISIBLE);
         }
@@ -316,7 +314,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
             this.genericETHTxEntity = genericETHTxEntity;
             if (this.genericETHTxEntity != null) {
                 if (viewModel.getGasPrice().doubleValue() > MAX_PER_GAS) {
-                    isExceed = true;
+                    isExceeded = true;
                 }
                 updateUI();
             }
@@ -325,7 +323,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     }
 
     private void checkExceedFeeDialog() {
-        if (isExceed) {
+        if (isExceeded) {
             ModalDialog.showTwoButtonCommonModal(mActivity,
                     getString(R.string.atention),
                     getString(R.string.exceed_fee),
