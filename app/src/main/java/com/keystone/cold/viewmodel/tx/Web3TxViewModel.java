@@ -329,7 +329,7 @@ public class Web3TxViewModel extends Base {
         BigDecimal amount = new BigDecimal(object.getString("value"));
         double value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
         tx.setAmount(nf.format(value));
-        tx.setFee(nf.format(calculateDisplayFee(object)) + getSymbol(chainId));
+        tx.setFee(nf.format(calculateDisplayFee(object)) + getSymbol(chainId) + " GWEI");
         tx.setMemo(object.getString("data"));
         tx.setBelongTo(mRepository.getBelongTo());
         tx.setTxType(TransactionType.LEGACY.getType());
@@ -368,8 +368,8 @@ public class Web3TxViewModel extends Base {
         BigDecimal gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
         BigDecimal estimatedFee = gasPriorityPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
         BigDecimal maxFee = gasLimitPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-        tx.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)));
-        tx.setMaxFeePerGas(nf.format(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)));
+        tx.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
+        tx.setMaxFeePerGas(nf.format(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
         tx.setGasLimit(nf.format(gasLimit));
         tx.setEstimatedFee(nf.format(estimatedFee) + getSymbol(chainId));
         tx.setMaxFee(nf.format(maxFee) + getSymbol(chainId));
