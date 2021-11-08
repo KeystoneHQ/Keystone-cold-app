@@ -34,6 +34,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.AddressFragmentBinding;
@@ -117,7 +118,7 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
     @Override
     protected void initData(Bundle savedInstanceState) {
         Bundle data = requireArguments();
-        Objects.requireNonNull(getParentFragment());
+        requireParentFragment();
         CoinViewModel.Factory factory = new CoinViewModel.Factory(mActivity.getApplication(),
                 data.getString(KEY_COIN_ID));
         viewModel = ViewModelProviders.of(getParentFragment(), factory)
@@ -129,14 +130,18 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
     private void subscribeUi(LiveData<List<AddressEntity>> address) {
         address.observe(this, addressEntities -> {
             if (requireArguments().getString(KEY_COIN_CODE).equals("ETH")) {
-                String accountHdPath = Utilities.getCurrentEthAccount(mActivity);
-                int size = accountHdPath.split("/").length;
+                String code = Utilities.getCurrentEthAccount(mActivity);
+                ETHAccount account = ETHAccount.ofCode(code);
                 addressEntities = addressEntities.stream()
-                        .filter(addressEntity -> addressEntity.getPath().split("/").length == (size + 2))
+                        .filter(addressEntity -> isCurrentETHAccountAddress(account, addressEntity))
                         .collect(Collectors.toList());
             }
             mAddressAdapter.setItems(addressEntities);
         });
+    }
+
+    public static boolean isCurrentETHAccountAddress(ETHAccount account, AddressEntity addressEntity) {
+        return account.isChildrenPath(addressEntity.getPath());
     }
 
     public void setQuery(String s) {
@@ -153,6 +158,6 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
     @Override
     public void onStop() {
         super.onStop();
-        Keyboard.hide(mActivity, Objects.requireNonNull(getView()));
+        Keyboard.hide(mActivity, requireView());
     }
 }

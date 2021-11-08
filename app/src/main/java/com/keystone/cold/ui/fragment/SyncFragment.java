@@ -18,9 +18,9 @@
 package com.keystone.cold.ui.fragment;
 
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuide;
-import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuideHint;
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuideTitle;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -31,7 +31,6 @@ import android.view.View;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
@@ -40,6 +39,7 @@ import com.keystone.cold.databinding.SyncFragmentBinding;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.fragment.setup.SetupVaultBaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
+import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.SyncViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 
@@ -82,6 +82,10 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                     Bundle bundle = getArguments();
                     bundle.putString("coinCode", Coins.KSM.coinCode());
                     navigate(R.id.action_to_syncWatchWalletGuide, bundle);
+                } else if (watchWallet == WatchWallet.METAMASK) {
+                    Utilities.setWeb3GuideTimes(mActivity, Utilities.getWeb3GuideTimes(mActivity) + 1);
+                    startActivity(new Intent(mActivity, MainActivity.class));
+                    mActivity.finish();
                 } else {
                     startActivity(new Intent(mActivity, MainActivity.class));
                     mActivity.finish();
@@ -123,6 +127,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 break;
             case METAMASK:
                 mBinding.hint.setText(R.string.sync_with_metamask);
+                mBinding.chain.setVisibility(View.VISIBLE);
                 mBinding.llHint.setVisibility(View.VISIBLE);
                 mBinding.companionHint.setOnClickListener(v -> navigate(R.id.action_syncFragment_to_selectWalletFragment));
                 break;
@@ -135,11 +140,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 LayoutInflater.from(mActivity), R.layout.common_modal,
                 null, false);
         binding.title.setText(getString(getSyncWatchWalletGuideTitle(watchWallet), coinCode));
-        if (getSyncWatchWalletGuideHint(watchWallet) != 0) {
-            binding.subTitleHint.setText(getString(getSyncWatchWalletGuideHint(watchWallet)));
-            binding.subTitleHint.setVisibility(View.VISIBLE);
-            binding.subTitleHint.setGravity(Gravity.START);
-        }
+        binding.subTitleHint.setVisibility(View.GONE);
         binding.subTitle.setText(getString(getSyncWatchWalletGuide(watchWallet),
                 Coins.coinNameFromCoinCode(coinCode), coinCode));
         binding.subTitle.setGravity(Gravity.START);
@@ -180,14 +181,14 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 });
                 break;
             case METAMASK:
-                syncViewModel.getChainsMutableLiveData().observe(this, chains -> {
-                    if (chains == null) return;
+                syncViewModel.getChainsMutableLiveData().observe(this, ethAccount -> {
+                    if (ethAccount == null) return;
                     if (isRefreshing) return;
                     isRefreshing = true;
-                    Utilities.setCurrentEthAccount(mActivity, chains.getPath());
-                    syncViewModel.generateSyncMetamask(chains).observe(this, urData -> {
+                    Utilities.setCurrentEthAccount(mActivity, ethAccount.getCode());
+                    mBinding.chain.setText(ethAccount.getName());
+                    syncViewModel.generateSyncMetamask(ethAccount).observe(this, urData -> {
                         if (!TextUtils.isEmpty(urData)) {
-                            mBinding.dynamicQrcodeLayout.qrcode.disableMultipart();
                             mBinding.dynamicQrcodeLayout.qrcode.setData(urData);
                         }
                     });
@@ -199,12 +200,6 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
     public void onPause() {
         super.onPause();
         isRefreshing = false;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.LEGACY);
     }
 
     private String generateXrpToolsSyncData(SyncViewModel.XrpSyncData xrpSyncData) {

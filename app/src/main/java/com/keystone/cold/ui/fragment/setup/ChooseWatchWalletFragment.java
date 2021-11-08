@@ -98,10 +98,9 @@ public class ChooseWatchWalletFragment extends ListPreferenceFragment {
                 if (web3GuideTimes > 0 && mActivity instanceof MainActivity) {
                     navigate(R.id.action_to_home);
                 } else {
-                    Utilities.setWeb3GuideTimes(mActivity, ++web3GuideTimes);
-                    updateCurrentWatchWallet();
                     navigate(R.id.action_to_syncWatchWalletGuide, bundle);
                 }
+                updateCurrentWatchWallet();
                 break;
             case XRP_TOOLKIT:
                 navigate(R.id.action_to_syncWatchWalletGuide, bundle);

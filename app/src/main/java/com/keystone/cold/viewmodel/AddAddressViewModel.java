@@ -28,6 +28,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
@@ -95,21 +96,21 @@ public class AddAddressViewModel extends AndroidViewModel {
             if (deriver == null) {
                 Log.e("addEthAccountAddress", "deriver is null");
             } else {
-                String hdPath = accountEntity.getHdPath();
+                ETHAccount ethAccount = getETHAccount(accountEntity.getHdPath());
                 int addressLength = accountEntity.getAddressLength();
                 List<AddressEntity> addressEntities = new ArrayList<>();
                 int targetAddressCount = addressLength + number;
                 for (int index = addressLength; index < targetAddressCount; index++) {
                     AddressEntity addressEntity = new AddressEntity();
-                    int change = 0;
-                    addressEntity.setPath(String.format(hdPath + "/%s/%s", 0, index));
-                    String exPub = accountEntity.getExPub();
-                    String addr = deriver.derive(exPub, change, index);
+                    String addr = getAddress(ethAccount, index, addressEntity);
                     addressEntity.setAddressString(addr);
                     addressEntity.setCoinId(Coins.ETH.coinId());
                     addressEntity.setIndex(index);
                     addressEntity.setName("Account " + index);
                     addressEntity.setBelongTo(belongTo);
+                    if (repository.loadAddressBypath(addressEntity.getPath()) != null) {
+                        continue;
+                    }
                     addressEntities.add(addressEntity);
                 }
                 accountEntity.setAddressLength(targetAddressCount);
@@ -118,6 +119,49 @@ public class AddAddressViewModel extends AndroidViewModel {
             }
             AppExecutors.getInstance().mainThread().execute(onComplete);
         });
+    }
+
+    public static String getAddress(ETHAccount ethAccount, int index, AddressEntity addressEntity) {
+        boolean isSetPath = addressEntity != null;
+        String address = "";
+        AbsDeriver deriver = AbsDeriver.newInstance("ETH");
+        if (deriver == null) return address;
+        String xPub;
+        String xPubPath;
+        switch (ethAccount) {
+            case LEDGER_LIVE:
+                xPubPath = ETHAccount.LEDGER_LIVE.getPath() + "/" + index + "'";
+                xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
+                address = deriver.derive(xPub, 0 , 0);
+                if (isSetPath) addressEntity.setPath(xPubPath + "/0/0");
+                break;
+            case LEDGER_LEGACY:
+                xPubPath = ETHAccount.LEDGER_LEGACY.getPath() + "/" + index;
+                xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
+                address = deriver.derive(xPub);
+                if (isSetPath) addressEntity.setPath(xPubPath);
+                break;
+            case BIP44_STANDARD:
+                xPubPath = ETHAccount.BIP44_STANDARD.getPath();
+                xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
+                address = deriver.derive(xPub, 0, index);
+                if (isSetPath) addressEntity.setPath(xPubPath + "/0/" + index);
+                break;
+            default:
+                break;
+        }
+        return address;
+    }
+
+    public static ETHAccount getETHAccount(String hdPath) {
+        if (hdPath.equals(ETHAccount.LEDGER_LIVE.getPath())) {
+            return ETHAccount.LEDGER_LIVE;
+        } else if (hdPath.equals(ETHAccount.LEDGER_LEGACY.getPath())) {
+            return ETHAccount.LEDGER_LEGACY;
+        } else if (hdPath.equals(ETHAccount.BIP44_STANDARD.getPath())) {
+            return ETHAccount.BIP44_STANDARD;
+        }
+        return ETHAccount.BIP44_STANDARD;
     }
 
     public static class AddAddressTask extends AsyncTask<String, Void, Void> {

@@ -28,18 +28,18 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.Util;
 import com.keystone.coinlib.accounts.ETHAccount;
-import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
-import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.protocol.EncodeConfig;
 import com.keystone.cold.protocol.builder.SyncBuilder;
 import com.keystone.cold.util.URRegistryHelper;
+import com.sparrowwallet.hummingbird.registry.CryptoAccount;
 import com.sparrowwallet.hummingbird.registry.CryptoHDKey;
 
 import java.util.ArrayList;
@@ -48,13 +48,13 @@ import java.util.List;
 public class SyncViewModel extends AndroidViewModel {
 
     private final DataRepository mRepository;
-    private MutableLiveData<ETHAccount> chainsMutableLiveData;
+    private final MutableLiveData<ETHAccount> chainsMutableLiveData;
 
     public SyncViewModel(@NonNull Application application) {
         super(application);
         mRepository = ((MainApplication) application).getRepository();
         chainsMutableLiveData = new MutableLiveData<>();
-        chainsMutableLiveData.postValue(ETHAccount.LEGACY);
+        chainsMutableLiveData.postValue(AddAddressViewModel.getETHAccount(Utilities.getCurrentEthAccount(application)));
     }
 
     public MutableLiveData<ETHAccount> getChainsMutableLiveData() {
@@ -113,7 +113,7 @@ public class SyncViewModel extends AndroidViewModel {
 
     public LiveData<XrpSyncData> generateSyncXumm(final int index) {
         MutableLiveData<XrpSyncData> result = new MutableLiveData<>();
-        AppExecutors.getInstance().diskIO().execute(()->{
+        AppExecutors.getInstance().diskIO().execute(() -> {
             CoinEntity xrp = mRepository.loadCoinSync(Coins.XRP.coinId());
             String pubkey = Util.getPublicKeyHex(xrp.getExPub(), 0, index);
             for (AddressEntity addressEntity : mRepository.loadAddressSync(Coins.XRP.coinId())) {
@@ -137,38 +137,56 @@ public class SyncViewModel extends AndroidViewModel {
 
     public LiveData<String> generateSyncPolkadotjs(String coinCode) {
         MutableLiveData<String> result = new MutableLiveData<>();
-        AppExecutors.getInstance().diskIO().execute(()->{
+        AppExecutors.getInstance().diskIO().execute(() -> {
             AddressEntity addressEntity = mRepository.loadAddressSync(Coins.coinIdFromCoinCode(coinCode)).get(0);
             String prefix = "substrate";
             String address = addressEntity.getAddressString();
             String genesisHash = getGenesisHash(coinCode);
-            String name = "keystone-"+Coins.coinNameFromCoinCode(coinCode);
+            String name = "keystone-" + Coins.coinNameFromCoinCode(coinCode);
             result.postValue(prefix + ":" + address + ":" + genesisHash + ":" + name);
         });
         return result;
     }
 
-    public LiveData<String> generateSyncMetamask(ETHAccount ETHAccount) {
+    public LiveData<String> generateSyncMetamask(ETHAccount ethAccount) {
+        chainsMutableLiveData.postValue(ethAccount);
         MutableLiveData<String> result = new MutableLiveData<>();
         AppExecutors.getInstance().diskIO().execute(() -> {
-            CryptoHDKey cryptoHDKey = URRegistryHelper.generateCryptoHDKey(ETHAccount.getPath(), ETHAccount.getType());
-            result.postValue(cryptoHDKey.toUR().toString());
+            String ur;
+            switch (ethAccount){
+                case LEDGER_LIVE: {
+                    ur = URRegistryHelper.generateCryptoAccountForLedgerLive(0, 10).toUR().toString();
+                    break;
+                }
+                case LEDGER_LEGACY: {
+                    ur = URRegistryHelper.generateCryptoHDKeyForLedgerLegacy().toUR().toString();
+                    break;
+                }
+                default: {
+                    ur = URRegistryHelper.generateCryptoHDKeyForETHStandard().toUR().toString();
+                }
+            }
+            result.postValue(ur);
         });
         return result;
     }
 
-    public MutableLiveData<List<Pair<String, String>>> getAccounts(ETHAccount ETHAccount) {
+    public MutableLiveData<List<Pair<String, String>>> getAccounts(ETHAccount ethAccount) {
         MutableLiveData<List<Pair<String, String>>> mutableLiveData = new MutableLiveData<>();
         AppExecutors.getInstance().diskIO().execute(() -> {
-            List<Pair<String, String>> result = new ArrayList<>();
-            String xPub =  new GetExtendedPublicKeyCallable(ETHAccount.getPath()).call();
-            AbsDeriver deriver = AbsDeriver.newInstance("ETH");
-            for (int i = 0; i < 5; i++) {
-                result.add(i, Pair.create("Account " + i, deriver.derive(xPub, 0, i)));
-            }
+            List<Pair<String, String>> result = getPairs(ethAccount);
             mutableLiveData.postValue(result);
         });
         return mutableLiveData;
+    }
+
+    @NonNull
+    private List<Pair<String, String>> getPairs(ETHAccount ethAccount) {
+        List<Pair<String, String>> result = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            result.add(i, Pair.create("Account " + i, AddAddressViewModel.getAddress(ethAccount, i, null)));
+        }
+        return result;
     }
 
     private String getGenesisHash(String coinCode) {

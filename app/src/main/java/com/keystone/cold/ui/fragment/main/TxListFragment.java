@@ -34,6 +34,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.TxListBinding;
@@ -42,6 +43,7 @@ import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.model.Tx;
 import com.keystone.cold.ui.common.FilterableBaseBindingAdapter;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 import com.keystone.cold.viewmodel.tx.GenericETHTxEntity;
@@ -88,6 +90,9 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
         if (watchWallet == WatchWallet.METAMASK) {
             viewModel.loadEthTxs()
                     .observe(this, ethTxEntities -> {
+                        ethTxEntities = ethTxEntities.stream()
+                                .filter(this::getCurrenAccountTxs)
+                                .collect(Collectors.toList());
                         adapter.setItems(ethTxEntities);
                     });
             txCallback = ethTx -> {
@@ -136,13 +141,13 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
                 bundle.putString(KEY_TX_ID, tx.getTxId());
                 if (ELECTRUM_SIGN_ID.equals(tx.getSignId())) {
                     navigate(R.id.action_to_electrumTxFragment, bundle);
-                } else if(WatchWallet.XRP_TOOLKIT_SIGN_ID.equals(tx.getSignId())){
+                } else if (WatchWallet.XRP_TOOLKIT_SIGN_ID.equals(tx.getSignId())) {
                     navigate(R.id.action_to_xummTxFragment, bundle);
-                } else if(WatchWallet.METAMASK_SIGN_ID.equals(tx.getSignId())){
+                } else if (WatchWallet.METAMASK_SIGN_ID.equals(tx.getSignId())) {
                     navigate(R.id.action_to_ethTxFragment, bundle);
-                }  else if(WatchWallet.POLKADOT_JS_SIGN_ID.equals(tx.getSignId())) {
+                } else if (WatchWallet.POLKADOT_JS_SIGN_ID.equals(tx.getSignId())) {
                     navigate(R.id.action_to_polkadotTxFragment, bundle);
-                }else {
+                } else {
                     navigate(R.id.action_to_txFragment, bundle);
                 }
             };
@@ -161,6 +166,27 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
                 }
             }
         });
+    }
+
+    private boolean getCurrenAccountTxs(GenericETHTxEntity ethTxEntitiy) {
+        try {
+            ETHAccount currentAccount = ETHAccount.ofCode(Utilities.getCurrentEthAccount(mActivity));
+            if (ethTxEntitiy.getAddition() == null) {
+                if (currentAccount.getName().equals(ETHAccount.BIP44_STANDARD.getName())) {
+                    return true;
+                }
+                return false;
+            }
+            JSONObject jsonObject = new JSONObject(ethTxEntitiy.getAddition());
+            String signBy = jsonObject.optString("signBy");
+            if (signBy.isEmpty() && currentAccount.getName().equals(ETHAccount.BIP44_STANDARD.getName())) {
+                return true;
+            }
+            return signBy.equals(currentAccount.getName());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     private boolean shouldShow(TxEntity tx) {

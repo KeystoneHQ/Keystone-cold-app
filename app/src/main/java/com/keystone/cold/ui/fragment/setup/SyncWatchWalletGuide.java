@@ -55,15 +55,12 @@ public class SyncWatchWalletGuide extends SetupVaultBaseFragment<SyncWatchWallet
         });
 
         mBinding.text1.setText(getString(getSyncWatchWalletGuideTitle(watchWallet), coinCode));
-        if (getSyncWatchWalletGuideHint(watchWallet) == 0) {
-            mBinding.text2Hint.setVisibility(View.GONE);
-        } else {
-            mBinding.text2Hint.setText(getString(getSyncWatchWalletGuideHint(watchWallet)));
-        }
+        mBinding.text2Hint.setVisibility(View.GONE);
         mBinding.text2.setText(getString(getSyncWatchWalletGuide(watchWallet),
                 Coins.coinNameFromCoinCode(coinCode), coinCode));
 
         mBinding.text3.setText(getText3());
+        mBinding.text4.setText(getText4());
         mBinding.export.setText(getButtonText());
         mBinding.export.setOnClickListener(v -> export());
     }
@@ -72,6 +69,14 @@ public class SyncWatchWalletGuide extends SetupVaultBaseFragment<SyncWatchWallet
         if (watchWallet == WatchWallet.XRP_TOOLKIT) {
             mBinding.text3.setVisibility(View.VISIBLE);
             return getString(R.string.sync_first_xrp_accout);
+        }
+        return "";
+    }
+
+    private String getText4() {
+        if (watchWallet == WatchWallet.METAMASK) {
+            mBinding.text4.setVisibility(View.VISIBLE);
+            return getString(R.string.sync_metamask_hit);
         }
         return "";
     }
@@ -118,14 +123,6 @@ public class SyncWatchWalletGuide extends SetupVaultBaseFragment<SyncWatchWallet
                 return R.string.sync_polkadotjs_wallet_guide_title;
             case METAMASK:
                 return R.string.sync_metamask_guide_title;
-        }
-        return 0;
-    }
-
-    public static int getSyncWatchWalletGuideHint(WatchWallet watchWallet) {
-        switch (watchWallet) {
-            case METAMASK:
-                return R.string.sync_metamask_guide_text_hint;
         }
         return 0;
     }

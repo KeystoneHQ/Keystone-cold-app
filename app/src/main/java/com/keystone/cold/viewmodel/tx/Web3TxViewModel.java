@@ -34,6 +34,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.abi.AbiLoadManager;
 import com.keystone.coinlib.abi.Contract;
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.ens.EnsLoadManager;
@@ -41,11 +42,17 @@ import com.keystone.coinlib.exception.InvalidPathException;
 import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.path.CoinPath;
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.ClearTokenCallable;
+import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
+import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.encryption.ChipSigner;
+import com.keystone.cold.ui.fragment.main.AddressFragment;
+import com.keystone.cold.viewmodel.AddAddressViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,6 +62,8 @@ import org.spongycastle.util.encoders.Hex;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class Web3TxViewModel extends Base {
@@ -164,7 +173,7 @@ public class Web3TxViewModel extends Base {
                 networkName = jsonObject.optString("name");
             }
         }
-        if (networkName.isEmpty()){
+        if (networkName.isEmpty()) {
             return String.format("chainId:%d", chainId);
         } else {
             return networkName;
@@ -375,24 +384,82 @@ public class Web3TxViewModel extends Base {
     }
 
     public String getFromAddress(String path) {
-        ensureAddressExist(path);
-        return mRepository.loadAddressBypath(path).getAddressString();
-    }
-
-    private void ensureAddressExist(String path) {
-        AddressEntity address = mRepository.loadAddressBypath(path);
-        if (address == null) {
-            addAddress(getAddressIndex(path));
-        }
-    }
-
-    private int getAddressIndex(String hdPath) {
         try {
-            return CoinPath.parsePath(hdPath).getValue();
-        } catch (InvalidPathException e) {
+            ensureAddressExist(path);
+            return mRepository.loadAddressBypath(path).getAddressString();
+        } catch (InvalidTransactionException e) {
+            parseTxException.postValue(e);
             e.printStackTrace();
         }
-        return 0;
+        return "";
+    }
+
+    private void ensureAddressExist(String path) throws InvalidTransactionException {
+        String code = Utilities.getCurrentEthAccount(context);
+        ETHAccount account = ETHAccount.ofCode(code);
+        path = path.toUpperCase();
+        AddressEntity addressEntity = new AddressEntity();
+        addressEntity.setPath(path);
+        if (!AddressFragment.isCurrentETHAccountAddress(account, addressEntity)) {
+            throw new InvalidTransactionException("address does not belong to the current account");
+        }
+        AddressEntity address = mRepository.loadAddressBypath(path);
+        if (address == null) {
+            updateAccountDb(getAddressIndex(account, path));
+        }
+    }
+
+    private int getAddressIndex(ETHAccount account, String hdPath) {
+        int index = 0;
+        switch (account) {
+            case LEDGER_LIVE:
+                hdPath = hdPath.replace("'", "");
+                String[] split = hdPath.split("/");
+                index = Integer.parseInt(split[3]);
+                break;
+            case LEDGER_LEGACY:
+                hdPath = hdPath.replace("'", "");
+                String[] strings = hdPath.split("/");
+                index = Integer.parseInt(strings[4]);
+                break;
+            case BIP44_STANDARD:
+                try {
+                    index = CoinPath.parsePath(hdPath).getValue();
+                } catch (InvalidPathException e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                break;
+        }
+        return index;
+    }
+
+    protected void updateAccountDb(int addressIndex) throws InvalidTransactionException {
+        CoinEntity coinEntity = mRepository.loadCoinSync(Coins.ETH.coinId());
+        List<AccountEntity> accountEntityList = mRepository.loadAccountsForCoin(coinEntity);
+        AccountEntity accountEntity = null;
+        String code = Utilities.getCurrentEthAccount(context);
+        ETHAccount account = ETHAccount.ofCode(code);
+        for (int i = 0; i < accountEntityList.size(); i++) {
+            if (accountEntityList.get(i).getHdPath().equals(account.getPath())) {
+                accountEntity = accountEntityList.get(i);
+                break;
+            }
+        }
+        if (accountEntity == null) {
+            throw new InvalidTransactionException("not have match account");
+        }
+        AddressEntity addressEntity = new AddressEntity();
+        String addr = AddAddressViewModel.getAddress(account, addressIndex, addressEntity);
+        addressEntity.setAddressString(addr);
+        addressEntity.setCoinId(Coins.ETH.coinId());
+        addressEntity.setIndex(addressIndex);
+        addressEntity.setName("Account " + addressIndex);
+        addressEntity.setBelongTo(mRepository.getBelongTo());
+        accountEntity.setAddressLength(accountEntity.getAddressLength() + 1);
+        mRepository.updateAccount(accountEntity);
+        mRepository.insertAddress(Collections.singletonList(addressEntity));
     }
 
     public String getSignatureJson() {
@@ -416,6 +483,7 @@ public class Web3TxViewModel extends Base {
             JSONObject addition = new JSONObject();
             addition.put("isFromTFCard", isFromTFCard);
             addition.put("requestId", requestId);
+            addition.put("signBy", AddAddressViewModel.getETHAccount(Utilities.getCurrentEthAccount(context)).getName());
             genericETHTxEntity.setAddition(addition.toString());
         } catch (JSONException e) {
             e.printStackTrace();

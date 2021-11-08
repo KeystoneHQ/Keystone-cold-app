@@ -25,6 +25,8 @@ public class SelectWalletFragment extends BaseFragment<SelectWalletFragmentBindi
     private AccountAdapter myCryptoAdapter;
     private AccountAdapter metamaskAdapter;
     protected SyncViewModel syncViewModel;
+    private final static String DERIVATION_PATH = "Derivation Path: ";
+
     @Override
     protected int setView() {
         return R.layout.select_wallet_fragment;
@@ -33,19 +35,23 @@ public class SelectWalletFragment extends BaseFragment<SelectWalletFragmentBindi
     @Override
     protected void init(View view) {
         mBinding.close.setOnClickListener(v -> navigateUp());
-        syncViewModel = ViewModelProviders.of(mActivity).get(SyncViewModel.class);;
+        syncViewModel = ViewModelProviders.of(mActivity).get(SyncViewModel.class);
         mBinding.btShowLedgerLive.setOnClickListener(v -> {
             syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.LEDGER_LIVE);
             navigateUp();
         });
         mBinding.btShowCrypto.setOnClickListener(v -> {
-            syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.LEGACY);
+            syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.LEDGER_LEGACY);
             navigateUp();
         });
         mBinding.btShowMetamask.setOnClickListener(v -> {
             syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.BIP44_STANDARD);
             navigateUp();
         });
+        mBinding.derivationLive.setText(DERIVATION_PATH + ETHAccount.LEDGER_LIVE.getPath());
+        mBinding.derivationLegacy.setText(DERIVATION_PATH + ETHAccount.LEDGER_LEGACY.getPath());
+        // both ledger legacy and bip44 standard use M/44'/60'/0
+        mBinding.derivationBip44.setText(DERIVATION_PATH + ETHAccount.BIP44_STANDARD.getPath());
     }
 
     @Override
@@ -57,7 +63,7 @@ public class SelectWalletFragment extends BaseFragment<SelectWalletFragmentBindi
             ledgerLiveAdapter.setItems(pairs);
             mBinding.rlLedgerLive.setAdapter(ledgerLiveAdapter);
         });
-        syncViewModel.getAccounts(ETHAccount.LEGACY).observe(this, pairs -> {
+        syncViewModel.getAccounts(ETHAccount.LEDGER_LEGACY).observe(this, pairs -> {
             myCryptoAdapter.setItems(pairs);
             mBinding.rlCrypto.setAdapter(myCryptoAdapter);
         });
@@ -68,7 +74,6 @@ public class SelectWalletFragment extends BaseFragment<SelectWalletFragmentBindi
     }
 
     static class AccountAdapter extends BaseBindingAdapter<Pair<String, String>, AccountItemBinding> {
-        private List<Pair<String, String>> pairs = new ArrayList<>();
         AccountAdapter(Context context) {
             super(context);
         }
