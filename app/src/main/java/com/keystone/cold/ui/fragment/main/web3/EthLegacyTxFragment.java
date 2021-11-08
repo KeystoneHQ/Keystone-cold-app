@@ -79,7 +79,7 @@ public class EthLegacyTxFragment extends BaseFragment<EthTxBinding> {
         coinListViewModel.loadETHTx(bundle.getString(KEY_TX_ID)).observe(this, genericETHTxEntity -> {
             this.genericETHTxEntity = genericETHTxEntity;
             if (this.genericETHTxEntity != null) {
-                if (viewModel.getGasPrice().doubleValue() > MAX_PER_GAS) {
+                if (viewModel.getGasPrice(genericETHTxEntity.getFee(), genericETHTxEntity.getGasLimit()).doubleValue() > MAX_PER_GAS) {
                     isExceeded = true;
                 }
                 updateUI();
@@ -105,11 +105,8 @@ public class EthLegacyTxFragment extends BaseFragment<EthTxBinding> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        try {
-            mBinding.ethTx.icon.setImageDrawable(mActivity.getDrawable(viewModel.getDrawableId(genericETHTxEntity.getChainId())));
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        mBinding.ethTx.icon.setImageDrawable(mActivity.getDrawable(genericETHTxEntity.getChainId() == 1 ?
+                R.drawable.coin_eth : R.drawable.coin_eth_token));
         if (isExceeded) {
             mBinding.ethTx.fee.setTextColor(Color.RED);
             mBinding.ethTx.feeTooHigh.setVisibility(View.VISIBLE);

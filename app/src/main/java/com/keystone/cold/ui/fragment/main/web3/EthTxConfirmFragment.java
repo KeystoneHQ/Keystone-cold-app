@@ -19,6 +19,12 @@
 
 package com.keystone.cold.ui.fragment.main.web3;
 
+import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
+import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
+import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KEY_TXID;
+import static com.keystone.cold.ui.fragment.main.web3.EthBroadcastTxFragment.KEY_SIGNATURE_JSON;
+import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
+
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -59,12 +65,6 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
-import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
-import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KEY_TXID;
-import static com.keystone.cold.ui.fragment.main.web3.EthBroadcastTxFragment.KEY_SIGNATURE_JSON;
-import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
 public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     public static final String PREFERENCE_KEY_VISITS = "visits_times";
@@ -186,11 +186,8 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     @SuppressLint("UseCompatLoadingForDrawables")
     private void updateUI() {
         updateNetworkName();
-        try {
-            mBinding.ethTx.icon.setImageDrawable(mActivity.getDrawable(viewModel.getDrawableId(genericETHTxEntity.getChainId())));
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        mBinding.ethTx.icon.setImageDrawable(mActivity.getDrawable(genericETHTxEntity.getChainId() == 1 ?
+                R.drawable.coin_eth : R.drawable.coin_eth_token));
         if (isExceeded) {
             mBinding.ethTx.fee.setTextColor(Color.RED);
             mBinding.ethTx.feeTooHigh.setVisibility(View.VISIBLE);
@@ -313,7 +310,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
         viewModel.getObservableEthTx().observe(this, genericETHTxEntity -> {
             this.genericETHTxEntity = genericETHTxEntity;
             if (this.genericETHTxEntity != null) {
-                if (viewModel.getGasPrice().doubleValue() > MAX_PER_GAS) {
+                if (viewModel.getGasPrice(genericETHTxEntity.getFee(), genericETHTxEntity.getGasLimit()).doubleValue() > MAX_PER_GAS) {
                     isExceeded = true;
                 }
                 updateUI();

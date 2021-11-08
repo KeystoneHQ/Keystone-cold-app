@@ -190,21 +190,18 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
                 genericETHTxEntity.getMaxPriorityFeePerGas(), genericETHTxEntity.getGasLimit());
         String feeMaxContent = String.format("Max fee (%s) * Gas limit (%s)",
                 genericETHTxEntity.getMaxFeePerGas(), genericETHTxEntity.getGasLimit());
-        try {
-            mBinding.ethTx.icon.setImageDrawable(mActivity.getDrawable(viewModel.getDrawableId(genericETHTxEntity.getChainId())));
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        mBinding.ethTx.icon.setImageDrawable(mActivity.getDrawable(genericETHTxEntity.getChainId() == 1 ?
+                R.drawable.coin_eth : R.drawable.coin_eth_token));
         if (isExceeded) {
             mBinding.ethTx.maxFeeTooHigh.setVisibility(View.VISIBLE);
             mBinding.ethTx.priorityFeeTooHigh.setVisibility(View.VISIBLE);
             mBinding.ethTx.feeEstimatedValue.setTextColor(Color.RED);
             mBinding.ethTx.feeMaxValue.setTextColor(Color.RED);
             SpannableStringBuilder spannableMaxEstimated = new SpannableStringBuilder(feeEstimatedContent);
-            spannableMaxEstimated.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.red)), 18 ,
+            spannableMaxEstimated.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.red)), 18,
                     18 + genericETHTxEntity.getMaxPriorityFeePerGas().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
             SpannableStringBuilder spannableMaxFee = new SpannableStringBuilder(feeMaxContent);
-            spannableMaxFee.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.red)), 9 ,
+            spannableMaxFee.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.red)), 9,
                     9 + genericETHTxEntity.getMaxPriorityFeePerGas().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
             mBinding.ethTx.feeEstimatedDetail.setText(spannableMaxEstimated);
             mBinding.ethTx.feeMaxDetail.setText(spannableMaxFee);

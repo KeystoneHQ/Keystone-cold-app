@@ -44,7 +44,6 @@ import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.path.CoinPath;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
-import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.db.entity.AccountEntity;
@@ -82,7 +81,6 @@ public class Web3TxViewModel extends Base {
     private boolean isLegacyTypedData;
     private String inputData;
     private boolean isFromTFCard;
-    private BigDecimal gasPrice;
     private MutableLiveData<GenericETHTxEntity> observableEthTx = new MutableLiveData<>();
     private static JSONObject chainIdJSONObject;
     private SignCallBack signCallBack = new SignCallBack() {
@@ -210,6 +208,7 @@ public class Web3TxViewModel extends Base {
                 GenericETHTxEntity tx = generateGenericETHTxEntity(ethTx);
                 String fromAddress = getFromAddress(hdPath);
                 tx.setFrom(fromAddress);
+                tx.setChainId(chainId);
                 observableEthTx.postValue(tx);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -238,6 +237,7 @@ public class Web3TxViewModel extends Base {
                 }
                 GenericETHTxEntity tx = generateEIP1559ETHTxEntity(ethTx);
                 tx.setFrom(getFromAddress(hdPath));
+                tx.setChainId(chainId);
                 observableEthTx.postValue(tx);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -336,8 +336,9 @@ public class Web3TxViewModel extends Base {
         tx.setTo(object.getString("to"));
         BigDecimal amount = new BigDecimal(object.getString("value"));
         double value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
-        tx.setAmount(nf.format(value));
-        tx.setFee(nf.format(calculateDisplayFee(object)) + getSymbol(chainId) + " GWEI");
+        tx.setAmount(nf.format(value) + getSymbol(chainId));
+        tx.setFee(nf.format(calculateDisplayFee(object)) + getSymbol(chainId));
+        tx.setGasLimit(object.getString("gasLimit"));
         tx.setMemo(object.getString("data"));
         tx.setBelongTo(mRepository.getBelongTo());
         tx.setTxType(TransactionType.LEGACY.getType());
@@ -362,7 +363,6 @@ public class Web3TxViewModel extends Base {
 
     private double calculateDisplayFee(JSONObject ethTx) throws JSONException {
         BigDecimal gasPrice = new BigDecimal(ethTx.getString("gasPrice"));
-        this.gasPrice = gasPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP);
         BigDecimal gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
         return gasLimit.multiply(gasPrice)
                 .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -564,24 +564,11 @@ public class Web3TxViewModel extends Base {
         return isFromTFCard;
     }
 
-    public BigDecimal getGasPrice() {
-        return gasPrice;
-    }
-
-    public int getDrawableId(int chainId) throws NoSuchFieldException, IllegalAccessException {
-        int drawableId = 0;
-        if (chainIdJSONObject != null) {
-            JSONObject jsonObject = chainIdJSONObject.optJSONObject(String.valueOf(chainId));
-            if (jsonObject != null) {
-                String drawableName = jsonObject.optString("drawableId");
-                drawableId = R.drawable.class.getField(drawableName).getInt(null);
-            }
-        }
-        if (drawableId == 0){
-            return R.drawable.coin_eth;
-        } else {
-            return drawableId;
-        }
+    public BigDecimal getGasPrice(String fee, String limit) {
+        if (limit == null) return new BigDecimal(-1);
+        BigDecimal value = new BigDecimal(fee.replaceAll("[^0-9\\\\.]", "")).multiply(BigDecimal.TEN.pow(18));
+        BigDecimal gasLimit = new BigDecimal(limit.replaceAll("[^0-9\\\\.]", ""));
+        return value.divide(gasLimit.multiply(BigDecimal.TEN.pow(9)), 8, BigDecimal.ROUND_HALF_UP);
     }
 
     public static String getSymbol(int chainId) {

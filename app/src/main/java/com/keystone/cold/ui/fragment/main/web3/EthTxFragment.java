@@ -62,7 +62,6 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
 
     private TxEntity txEntity;
     private Web3TxViewModel viewModel;
-    private boolean isExceeded;
 
     @Override
     protected int setView() {
@@ -78,9 +77,6 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
                 .loadTx(bundle.getString(KEY_TX_ID)).observe(this, txEntity -> {
             this.txEntity = txEntity;
             if (this.txEntity != null) {
-                if (viewModel.getGasPrice().doubleValue() > MAX_PER_GAS) {
-                    isExceeded = true;
-                }
                 updateUI();
             }
         });
@@ -106,10 +102,6 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
             abi = signed.getJSONObject("abi");
         } catch (JSONException e) {
             e.printStackTrace();
-        }
-        if (isExceeded) {
-            mBinding.ethTx.fee.setTextColor(Color.RED);
-            mBinding.ethTx.feeTooHigh.setVisibility(View.VISIBLE);
         }
         mBinding.ethTx.network.setText(viewModel.getNetwork(chainId));
         showQrCode(signed);
