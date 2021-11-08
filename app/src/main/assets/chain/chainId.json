@@ -812,8 +812,8 @@
   "1285": {
     "symbol": "MOVR",
     "decimals": 18,
-    "drawableId": "coin_mriver",
-    "name": "Moonriver"
+    "drawableId": "coin_ksm",
+    "name": "Moonriver Kusama"
   },
   "170": {
     "symbol": "HOO",
@@ -824,8 +824,8 @@
   "1284": {
     "symbol": "GLMR",
     "decimals": 18,
-    "drawableId": "coin_mbeam",
-    "name": "Moonbeam"
+    "drawableId": "coin_dot",
+    "name": "Moonbeam Polkadot"
   },
   "172": {
     "symbol": "usd",
@@ -1070,7 +1070,7 @@
   "16000": {
     "symbol": "MTT",
     "decimals": 18,
-    "drawableId": "coin_mtt",
+    "drawableId": "coin_dot",
     "name": "MetaDot Mainnet"
   },
   "8029": {
@@ -1178,7 +1178,7 @@
   "10000": {
     "symbol": "BCH",
     "decimals": 18,
-    "drawableId": "coin_smartbch",
+    "drawableId": "coin_bch",
     "name": "Smart Bitcoin Cash"
   },
   "10001": {
