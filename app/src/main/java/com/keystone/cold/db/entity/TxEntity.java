@@ -45,6 +45,8 @@ public class TxEntity implements Tx {
     private String signId;
     private String belongTo;
 
+    private String addition;
+
     @Override
     public String getBelongTo() {
         return belongTo;
@@ -157,6 +159,14 @@ public class TxEntity implements Tx {
 
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public void setAddition(String json){
+        this.addition = json;
+    }
+
+    public String getAddition(){
+        return this.addition;
     }
 
     @NonNull

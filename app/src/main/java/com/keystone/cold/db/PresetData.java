@@ -19,6 +19,7 @@ package com.keystone.cold.db;
 
 import android.content.Context;
 
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.path.CoinPath;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.Utilities;
@@ -31,6 +32,9 @@ import java.util.stream.Collectors;
 import static com.keystone.coinlib.utils.Coins.DOT;
 import static com.keystone.coinlib.utils.Coins.KSM;
 import static com.keystone.coinlib.utils.Coins.isDefaultOpen;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class PresetData {
 
@@ -52,10 +56,27 @@ public class PresetData {
         AccountEntity account = new AccountEntity();
 
         if (coin.coinIndex() == Coins.ETH.coinIndex()) {
-            for (int i = 0; i < coin.getAccounts().length; i++) {
-                account = new AccountEntity();
-                account.setHdPath(coin.getAccounts()[i]);
-                entity.addAccount(account);
+            try {
+                boolean hasSetupStandard = false;
+                for (int i = 0; i < coin.getAccounts().length; i++) {
+                    account = new AccountEntity();
+                    JSONObject jsonObject = new JSONObject();
+                    if (coin.getAccounts()[i].equals(ETHAccount.LEDGER_LIVE.getPath())) {
+                        jsonObject.put("eth_account", ETHAccount.LEDGER_LIVE.getCode());
+                    } else if (coin.getAccounts()[i].equals(ETHAccount.BIP44_STANDARD.getPath())) {
+                        if (!hasSetupStandard) {
+                            hasSetupStandard = true;
+                            jsonObject.put("eth_account", ETHAccount.BIP44_STANDARD.getCode());
+                        } else {
+                            jsonObject.put("eth_account", ETHAccount.LEDGER_LEGACY.getCode());
+                        }
+                    }
+                    account.setAddition(jsonObject.toString());
+                    account.setHdPath(coin.getAccounts()[i]);
+                    entity.addAccount(account);
+                }
+            } catch (JSONException e){
+                e.printStackTrace();
             }
         } else {
             String defaultHdPath = CoinPath.M()

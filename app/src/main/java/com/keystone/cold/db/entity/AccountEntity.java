@@ -26,6 +26,8 @@ import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
 
+import org.json.JSONObject;
+
 @Entity(tableName = "accounts",
         foreignKeys = @ForeignKey(entity = CoinEntity.class,
                 parentColumns = "id",
@@ -42,6 +44,7 @@ public class AccountEntity {
     private int addressLength;
     private boolean isMultiSign;
     private long coinId;
+    private String addition;
 
     public AccountEntity(String hdPath, String exPub, int addressLength, boolean isMultiSign, long coinId) {
         this.hdPath = hdPath;
@@ -49,6 +52,7 @@ public class AccountEntity {
         this.addressLength = addressLength;
         this.isMultiSign = isMultiSign;
         this.coinId = coinId;
+        this.addition = new JSONObject().toString();
     }
 
     @Ignore
@@ -103,5 +107,13 @@ public class AccountEntity {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public void setAddition(String json){
+        this.addition = json;
+    }
+
+    public String getAddition(){
+        return this.addition;
     }
 }

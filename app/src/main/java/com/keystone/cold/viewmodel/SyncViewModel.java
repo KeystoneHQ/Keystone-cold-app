@@ -39,8 +39,6 @@ import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.protocol.EncodeConfig;
 import com.keystone.cold.protocol.builder.SyncBuilder;
 import com.keystone.cold.util.URRegistryHelper;
-import com.sparrowwallet.hummingbird.registry.CryptoAccount;
-import com.sparrowwallet.hummingbird.registry.CryptoHDKey;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -184,7 +182,7 @@ public class SyncViewModel extends AndroidViewModel {
     private List<Pair<String, String>> getPairs(ETHAccount ethAccount) {
         List<Pair<String, String>> result = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            result.add(i, Pair.create("Account " + i, AddAddressViewModel.getAddress(ethAccount, i, null)));
+            result.add(i, Pair.create("Account " + i, AddAddressViewModel.deriveETHAddress(ethAccount, i, null)));
         }
         return result;
     }

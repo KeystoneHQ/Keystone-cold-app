@@ -37,12 +37,12 @@ public class URRegistryHelper {
     }
 
     public static CryptoHDKey generateCryptoHDKeyForLedgerLegacy() {
-        CryptoKeypath children = new CryptoKeypath(getPathComponents(ETHAccount.LEDGER_LEGACY.getPath() + "/*"), null);
+        CryptoKeypath children = new CryptoKeypath(getPathComponents("M/*"), null);
         return generateCryptoHDKeyWithChildren(ETHAccount.LEDGER_LEGACY.getPath(), ETHAccount.LEDGER_LIVE.getType(), children, "account.ledger_legacy");
     }
 
     public static CryptoHDKey generateCryptoHDKeyForETHStandard() {
-        CryptoKeypath children = new CryptoKeypath(getPathComponents(ETHAccount.BIP44_STANDARD.getPath() + "/0/*"), null);
+        CryptoKeypath children = new CryptoKeypath(getPathComponents("M/0/*"), null);
         return generateCryptoHDKeyWithChildren(ETHAccount.BIP44_STANDARD.getPath(), ETHAccount.BIP44_STANDARD.getType(), children, "account.standard");
     }
 

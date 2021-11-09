@@ -44,7 +44,7 @@ import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.db.entity.WhiteListEntity;
 
 @Database(entities = {CoinEntity.class, AddressEntity.class,
-        TxEntity.class, WhiteListEntity.class, AccountEntity.class, Web3TxEntity.class, ETHMsgDBEntity.class}, version = 2)
+        TxEntity.class, WhiteListEntity.class, AccountEntity.class, Web3TxEntity.class, ETHMsgDBEntity.class}, version = 3)
 public abstract class AppDatabase extends RoomDatabase {
     private static final String DATABASE_NAME = "keystone-db";
     private static AppDatabase sInstance;
@@ -79,6 +79,17 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    private static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE accounts ADD addition TEXT DEFAULT '{}'");
+            database.execSQL("ALTER TABLE addresses ADD addition TEXT DEFAULT '{}'");
+            database.execSQL("ALTER TABLE coins ADD addition TEXT DEFAULT '{}'");
+            database.execSQL("ALTER TABLE ethmsgs ADD addition TEXT DEFAULT '{}'");
+            database.execSQL("ALTER TABLE txs ADD addition TEXT DEFAULT '{}'");
+        }
+    };
+
     public static AppDatabase getInstance(final Context context, final AppExecutors executors) {
         if (sInstance == null) {
             synchronized (AppDatabase.class) {
@@ -96,6 +107,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
         return Room.databaseBuilder(appContext, AppDatabase.class, DATABASE_NAME)
                 .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_2_3)
                 .addCallback(new Callback() {
                     @Override
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {

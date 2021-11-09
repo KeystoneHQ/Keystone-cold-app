@@ -27,6 +27,7 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.coins.AbsDeriver;
@@ -34,10 +35,14 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
+import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,13 +84,17 @@ public class AddAddressViewModel extends AndroidViewModel {
         return addComplete;
     }
 
-    public void addEthAccountAddress(CoinEntity coin, String path, int number, String belongTo, Runnable onComplete) {
-        List<AccountEntity> accountEntityList = mRepo.loadAccountsForCoin(coin);
-        for (AccountEntity accountEntity : accountEntityList) {
-            if (accountEntity.getHdPath().equals(path)) {
-                addEthAccountAddress(accountEntity, mRepo, number, belongTo, onComplete);
-                return;
-            }
+    public void addEthAccountAddress(int number, String belongTo, Runnable onComplete){
+        String code = Utilities.getCurrentEthAccount(getApplication());
+        ETHAccount account = ETHAccount.ofCode(code);
+        AccountEntity accountEntity = null;
+        try {
+            accountEntity = mRepo.loadTargetETHAccount(account);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if(accountEntity != null) {
+            addEthAccountAddress(accountEntity, mRepo, number, belongTo, onComplete);
         }
         AppExecutors.getInstance().mainThread().execute(onComplete);
     }
@@ -102,7 +111,7 @@ public class AddAddressViewModel extends AndroidViewModel {
                 int targetAddressCount = addressLength + number;
                 for (int index = addressLength; index < targetAddressCount; index++) {
                     AddressEntity addressEntity = new AddressEntity();
-                    String addr = getAddress(ethAccount, index, addressEntity);
+                    String addr = deriveETHAddress(ethAccount, index, addressEntity);
                     addressEntity.setAddressString(addr);
                     addressEntity.setCoinId(Coins.ETH.coinId());
                     addressEntity.setIndex(index);
@@ -121,7 +130,7 @@ public class AddAddressViewModel extends AndroidViewModel {
         });
     }
 
-    public static String getAddress(ETHAccount ethAccount, int index, AddressEntity addressEntity) {
+    public static String deriveETHAddress(ETHAccount ethAccount, int index, AddressEntity addressEntity) {
         boolean isSetPath = addressEntity != null;
         String address = "";
         AbsDeriver deriver = AbsDeriver.newInstance("ETH");

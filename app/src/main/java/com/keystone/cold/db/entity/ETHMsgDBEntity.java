@@ -13,6 +13,7 @@ public class ETHMsgDBEntity {
     private String msgId;
     private String signature;
     private long timeStamp;
+    private String addition;
 
     public int getId() {
         return id;
@@ -45,6 +46,14 @@ public class ETHMsgDBEntity {
 
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public void setAddition(String json){
+        this.addition = json;
+    }
+
+    public String getAddition(){
+        return this.addition;
     }
 
 }
