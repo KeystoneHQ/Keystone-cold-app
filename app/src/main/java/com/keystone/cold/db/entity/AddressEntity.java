@@ -37,6 +37,7 @@ public class AddressEntity implements Address, FilterableItem {
     private String name;
     private int index;
     private String belongTo;
+    private String addition;
 
     public AddressEntity() {
     }
@@ -113,6 +114,14 @@ public class AddressEntity implements Address, FilterableItem {
     @Override
     public String getCoinId() {
         return coinId;
+    }
+
+    public void setAddition(String json){
+        this.addition = json;
+    }
+
+    public String getAddition(){
+        return this.addition;
     }
 
     @NonNull

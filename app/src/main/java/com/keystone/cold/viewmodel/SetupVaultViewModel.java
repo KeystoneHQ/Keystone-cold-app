@@ -18,14 +18,11 @@
 package com.keystone.cold.viewmodel;
 
 import android.app.Application;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
-import android.util.Log;
 
-import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
@@ -54,6 +51,8 @@ import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.util.HashUtil;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.spongycastle.util.encoders.Base64;
 import org.spongycastle.util.encoders.Hex;
 
@@ -404,7 +403,11 @@ public class SetupVaultViewModel extends AndroidViewModel {
                     List<AccountEntity> accountEntities = mRepository.loadAccountsForCoin(coinEntity);
                     if (coin.getIndex() == Coins.ETH.coinIndex()) {
                         if (accountEntities.size() != coin.getAccounts().size()) {
-                            updateEthAccounts(accountEntities, coinEntity);
+                            try {
+                                updateEthAccounts(accountEntities, coinEntity);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                         continue;
                     } else if (accountEntities.size() != 0) {
@@ -448,8 +451,11 @@ public class SetupVaultViewModel extends AndroidViewModel {
         });
     }
 
-    private void updateEthAccounts(List<AccountEntity> accountEntities, CoinEntity coinEntity) {
+    private void updateEthAccounts(List<AccountEntity> accountEntities, CoinEntity coinEntity) throws JSONException {
         AccountEntity accountEntity = accountEntities.get(0);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("eth_account", ETHAccount.BIP44_STANDARD.getCode());
+        accountEntity.setAddition(jsonObject.toString());
         accountEntity.setHdPath(ETHAccount.BIP44_STANDARD.getPath());
         mRepository.updateAccount(accountEntity);
         List<AddressEntity> addressEntities = mRepository.loadAddressSync(Coins.ETH.coinId());
@@ -462,12 +468,15 @@ public class SetupVaultViewModel extends AndroidViewModel {
         addAccount(ETHAccount.LEDGER_LEGACY, coinEntity);
     }
 
-    private void addAccount(ETHAccount ethAccount, CoinEntity coin) {
+    private void addAccount(ETHAccount ethAccount, CoinEntity coin) throws JSONException {
         AccountEntity account = new AccountEntity();
         String xPub = new GetExtendedPublicKeyCallable(ethAccount.getPath()).call();
         account.setExPub(xPub);
         account.setHdPath(ethAccount.getPath());
         account.setCoinId(coin.getId());
+        JSONObject json = new JSONObject();
+        json.put("eth_account", ethAccount.getCode());
+        account.setAddition(json.toString());
         long accountId = mRepository.insertAccount(account);
         account.setId(accountId);
         AddAddressViewModel.addEthAccountAddress(account, mRepository, 1, coin.getBelongTo(), null);
