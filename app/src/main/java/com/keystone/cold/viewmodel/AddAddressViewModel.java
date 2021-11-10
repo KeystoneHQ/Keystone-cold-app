@@ -43,6 +43,7 @@ import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +106,12 @@ public class AddAddressViewModel extends AndroidViewModel {
             if (deriver == null) {
                 Log.e("addEthAccountAddress", "deriver is null");
             } else {
-                ETHAccount ethAccount = getETHAccount(accountEntity.getHdPath());
+                ETHAccount ethAccount = null;
+                try {
+                    ethAccount = ETHAccount.ofCode(accountEntity.getETHAccountCode());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 int addressLength = accountEntity.getAddressLength();
                 List<AddressEntity> addressEntities = new ArrayList<>();
                 int targetAddressCount = addressLength + number;
@@ -160,17 +166,6 @@ public class AddAddressViewModel extends AndroidViewModel {
                 break;
         }
         return address;
-    }
-
-    public static ETHAccount getETHAccount(String hdPath) {
-        if (hdPath.equals(ETHAccount.LEDGER_LIVE.getPath())) {
-            return ETHAccount.LEDGER_LIVE;
-        } else if (hdPath.equals(ETHAccount.LEDGER_LEGACY.getPath())) {
-            return ETHAccount.LEDGER_LEGACY;
-        } else if (hdPath.equals(ETHAccount.BIP44_STANDARD.getPath())) {
-            return ETHAccount.BIP44_STANDARD;
-        }
-        return ETHAccount.BIP44_STANDARD;
     }
 
     public static class AddAddressTask extends AsyncTask<String, Void, Void> {

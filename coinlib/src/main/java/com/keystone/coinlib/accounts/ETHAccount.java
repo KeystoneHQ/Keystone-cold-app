@@ -3,20 +3,22 @@ package com.keystone.coinlib.accounts;
 import java.util.regex.Pattern;
 
 public enum ETHAccount {
-    LEDGER_LIVE("M/44'/60'", 0x3c, "Ledger Live", "ledger_live"),
-    LEDGER_LEGACY("M/44'/60'/0'", 0x3c, "Ledger Legacy", "ledger_legacy"),
-    BIP44_STANDARD("M/44'/60'/0'", 0x3c, "BIP44 Standard", "standard");
+    LEDGER_LIVE("M/44'/60'", 0x3c, "Ledger Live", "ledger_live", "m/44'/60'/*'/0/0"),
+    LEDGER_LEGACY("M/44'/60'/0'", 0x3c, "Ledger Legacy", "ledger_legacy", "m/44'/60'/0'/*"),
+    BIP44_STANDARD("M/44'/60'/0'", 0x3c, "BIP44 Standard", "standard", "m/44'/60'/0'/0/*");
 
     private String path;
     private int type;
     private String name;
     private String code;
+    private String displayPath;
 
-    ETHAccount(String path, int type, String name, String code) {
+    ETHAccount(String path, int type, String name, String code, String displayPath) {
         this.path = path;
         this.type = type;
         this.name = name;
         this.code = code;
+        this.displayPath = displayPath;
     }
 
     public static ETHAccount ofCode(String code) {
@@ -67,5 +69,9 @@ public enum ETHAccount {
             default:
                 return isStandardChildren(path);
         }
+    }
+
+    public String getDisplayPath() {
+        return displayPath;
     }
 }

@@ -21,6 +21,7 @@ import static com.keystone.coinlib.utils.Coins.DOT;
 import static com.keystone.coinlib.utils.Coins.KSM;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;

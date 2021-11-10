@@ -48,10 +48,10 @@ public class SelectWalletFragment extends BaseFragment<SelectWalletFragmentBindi
             syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.BIP44_STANDARD);
             navigateUp();
         });
-        mBinding.derivationLive.setText(DERIVATION_PATH + ETHAccount.LEDGER_LIVE.getPath());
-        mBinding.derivationLegacy.setText(DERIVATION_PATH + ETHAccount.LEDGER_LEGACY.getPath());
+        mBinding.derivationLive.setText(DERIVATION_PATH + ETHAccount.LEDGER_LIVE.getDisplayPath());
+        mBinding.derivationLegacy.setText(DERIVATION_PATH + ETHAccount.LEDGER_LEGACY.getDisplayPath());
         // both ledger legacy and bip44 standard use M/44'/60'/0
-        mBinding.derivationBip44.setText(DERIVATION_PATH + ETHAccount.BIP44_STANDARD.getPath());
+        mBinding.derivationBip44.setText(DERIVATION_PATH + ETHAccount.BIP44_STANDARD.getDisplayPath());
     }
 
     @Override

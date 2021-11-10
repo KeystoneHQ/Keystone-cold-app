@@ -18,6 +18,7 @@
 package com.keystone.cold.db;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.path.CoinPath;

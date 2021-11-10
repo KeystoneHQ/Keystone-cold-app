@@ -52,7 +52,7 @@ public class SyncViewModel extends AndroidViewModel {
         super(application);
         mRepository = ((MainApplication) application).getRepository();
         chainsMutableLiveData = new MutableLiveData<>();
-        chainsMutableLiveData.postValue(AddAddressViewModel.getETHAccount(Utilities.getCurrentEthAccount(application)));
+        chainsMutableLiveData.postValue(ETHAccount.ofCode(Utilities.getCurrentEthAccount(application)));
     }
 
     public MutableLiveData<ETHAccount> getChainsMutableLiveData() {
