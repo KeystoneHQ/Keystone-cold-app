@@ -85,7 +85,7 @@ public class GenericETHTxEntity implements Tx {
                     BigDecimal fee = gasLimit.multiply(gasPrice).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
                     amount = new BigDecimal(ethTx.getString("value"));
                     value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-                    genericETHTxEntity.setAmount(nf.format(value) + Web3TxViewModel.getSymbol(chainId));
+                    genericETHTxEntity.setAmount(nf.format(value));
                     genericETHTxEntity.setFee(nf.format(fee) + Web3TxViewModel.getSymbol(chainId));
                     JSONObject addition = new JSONObject(web3TxEntity.getAddition());
                     genericETHTxEntity.setFromTFCard(addition.getBoolean("isFromTFCard"));
@@ -110,7 +110,7 @@ public class GenericETHTxEntity implements Tx {
                     genericETHTxEntity.setMaxFee(nf.format(maxFee) + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
                     amount = new BigDecimal(ethTx.getString("value"));
                     value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-                    genericETHTxEntity.setAmount(nf.format(value) + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
+                    genericETHTxEntity.setAmount(nf.format(value));
                     JSONObject additionJson = new JSONObject(web3TxEntity.getAddition());
                     genericETHTxEntity.setFromTFCard(additionJson.getBoolean("isFromTFCard"));
                     break;
