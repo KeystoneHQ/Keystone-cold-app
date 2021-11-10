@@ -336,7 +336,7 @@ public class Web3TxViewModel extends Base {
         tx.setTo(object.getString("to"));
         BigDecimal amount = new BigDecimal(object.getString("value"));
         double value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
-        tx.setAmount(nf.format(value) + getSymbol(chainId));
+        tx.setAmount(nf.format(value));
         tx.setFee(nf.format(calculateDisplayFee(object)) + getSymbol(chainId));
         tx.setGasLimit(object.getString("gasLimit"));
         tx.setMemo(object.getString("data"));
