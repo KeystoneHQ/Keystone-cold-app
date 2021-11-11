@@ -436,17 +436,12 @@ public class Web3TxViewModel extends Base {
     }
 
     protected void updateAccountDb(int addressIndex) throws InvalidTransactionException {
-        AccountEntity accountEntity = null;
-        try {
-            accountEntity = mRepository.loadTargetETHAccount(ETHAccount.ofCode(Utilities.getCurrentEthAccount(context)));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        AccountEntity accountEntity = mRepository.loadTargetETHAccount(ETHAccount.ofCode(Utilities.getCurrentEthAccount(context)));
         if (accountEntity == null) {
             throw new InvalidTransactionException("not have match account");
         }
         AddressEntity addressEntity = new AddressEntity();
-        String addr = AddAddressViewModel.deriveETHAddress(ETHAccount.ofCode(Utilities.getCurrentEthAccount(context)), addressIndex, addressEntity);
+        String addr = AddAddressViewModel.deriveETHAddress(accountEntity, addressIndex, addressEntity);
         addressEntity.setAddressString(addr);
         addressEntity.setCoinId(Coins.ETH.coinId());
         addressEntity.setIndex(addressIndex);

@@ -54,6 +54,11 @@ public abstract class AbsDeriver {
         return HDKeyDerivation.deriveChildKey(change, addressIndex);
     }
 
+    protected DeterministicKey deriveChild(String accountXpub, int index) {
+        DeterministicKey account = DeterministicKey.deserializeB58(accountXpub, MAINNET);
+        return HDKeyDerivation.deriveChildKey(account, index);
+    }
+
     protected DeterministicKey getDeterministicKey(String xPub) {
         return DeterministicKey.deserializeB58(xPub, MAINNET);
     }
@@ -61,4 +66,6 @@ public abstract class AbsDeriver {
     public abstract String derive(String xPubKey, int changeIndex, int addrIndex);
 
     public abstract String derive(String xPubKey);
+
+    public abstract String derive(String xPubKey, int index);
 }

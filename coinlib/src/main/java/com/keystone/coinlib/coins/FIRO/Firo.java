@@ -79,5 +79,10 @@ public class Firo extends AbsCoin implements Coin {
         public String derive(String xPubKey) {
             return Base58.encodeChecked(0x52, getDeterministicKey(xPubKey).getPubKeyHash());
         }
+
+        @Override
+        public String derive(String xPubKey, int index) {
+            throw new RuntimeException("not implemented");
+        }
     }
 }

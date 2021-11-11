@@ -40,6 +40,8 @@ import com.keystone.cold.protocol.EncodeConfig;
 import com.keystone.cold.protocol.builder.SyncBuilder;
 import com.keystone.cold.util.URRegistryHelper;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -181,8 +183,9 @@ public class SyncViewModel extends AndroidViewModel {
     @NonNull
     private List<Pair<String, String>> getPairs(ETHAccount ethAccount) {
         List<Pair<String, String>> result = new ArrayList<>();
+        AccountEntity accountEntity = mRepository.loadTargetETHAccount(ethAccount);
         for (int i = 0; i < 3; i++) {
-            result.add(i, Pair.create("Account " + i, AddAddressViewModel.deriveETHAddress(ethAccount, i, null)));
+            result.add(i, Pair.create("Account " + i, AddAddressViewModel.deriveETHAddress(accountEntity, i, null)));
         }
         return result;
     }

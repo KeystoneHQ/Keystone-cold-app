@@ -271,5 +271,10 @@ public class Btc extends AbsCoin {
         private Script segWitRedeemScript(byte[] pubKeyHash) {
             return new ScriptBuilder().smallNum(0).data(pubKeyHash).build();
         }
+
+        @Override
+        public String derive(String xPubKey, int index) {
+            throw new RuntimeException("not implemented");
+        }
     }
 }

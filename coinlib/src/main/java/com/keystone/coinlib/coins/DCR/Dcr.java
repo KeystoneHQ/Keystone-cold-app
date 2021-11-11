@@ -85,6 +85,10 @@ public class Dcr extends AbsCoin implements Coin {
             return encodeChecked(blake256Ripemd160(getDeterministicKey(xPubKey).getPubKey()));
         }
 
+        @Override
+        public String derive(String xPubKey, int index) {
+            throw new RuntimeException("not implemented");
+        }
 
         private byte[] blake256Ripemd160(byte[] publicKey) {
             Digest digestBlake256 = new BLAKE256().copy();

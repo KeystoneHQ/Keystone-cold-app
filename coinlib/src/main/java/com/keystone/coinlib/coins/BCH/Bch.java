@@ -101,5 +101,10 @@ public class Bch extends Btc {
             if (legacyAddress) return legacy;
             return Bch.toCashAddress(legacy);
         }
+
+        @Override
+        public String derive(String xPubKey, int index) {
+            throw new RuntimeException("not implemented");
+        }
     }
 }

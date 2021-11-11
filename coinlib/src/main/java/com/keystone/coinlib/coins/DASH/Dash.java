@@ -76,5 +76,10 @@ public class Dash extends Btc {
         public String derive(String xPubKey) {
             return Base58.encodeChecked(0x4c, getDeterministicKey(xPubKey).getPubKeyHash());
         }
+
+        @Override
+        public String derive(String xPubKey, int index) {
+            throw new RuntimeException("not implemented");
+        }
     }
 }

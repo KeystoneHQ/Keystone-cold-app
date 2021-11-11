@@ -112,5 +112,10 @@ public class Eos extends AbsCoin {
             System.arraycopy(src, start, dest, dstart, length);
             return dest;
         }
+
+        @Override
+        public String derive(String xPubKey, int index) {
+            throw new RuntimeException("not implemented");
+        }
     }
 }

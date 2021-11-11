@@ -81,5 +81,10 @@ public class Iost extends AbsCoin {
             byte[] pubKey = Arrays.copyOfRange(bytes,bytes.length - 4 - 32,bytes.length - 4);
             return new B58().encodeToString(pubKey);
         }
+
+        @Override
+        public String derive(String xPubKey, int index) {
+            throw new RuntimeException("not implemented");
+        }
     }
 }

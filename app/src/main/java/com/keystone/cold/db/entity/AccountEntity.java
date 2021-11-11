@@ -119,8 +119,13 @@ public class AccountEntity {
         return this.addition;
     }
 
-    public String getETHAccountCode() throws JSONException {
-        return new JSONObject(this.addition).getString("eth_account");
+    public String getETHAccountCode() {
+        try {
+            return new JSONObject(this.addition).getString("eth_account");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
