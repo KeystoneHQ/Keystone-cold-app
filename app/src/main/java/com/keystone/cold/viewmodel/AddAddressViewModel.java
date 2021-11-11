@@ -43,6 +43,7 @@ import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,12 +88,7 @@ public class AddAddressViewModel extends AndroidViewModel {
     public void addEthAccountAddress(int number, String belongTo, Runnable onComplete){
         String code = Utilities.getCurrentEthAccount(getApplication());
         ETHAccount account = ETHAccount.ofCode(code);
-        AccountEntity accountEntity = null;
-        try {
-            accountEntity = mRepo.loadTargetETHAccount(account);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        AccountEntity accountEntity = mRepo.loadTargetETHAccount(account);
         if(accountEntity != null) {
             addEthAccountAddress(accountEntity, mRepo, number, belongTo, onComplete);
         }
@@ -105,13 +101,12 @@ public class AddAddressViewModel extends AndroidViewModel {
             if (deriver == null) {
                 Log.e("addEthAccountAddress", "deriver is null");
             } else {
-                ETHAccount ethAccount = getETHAccount(accountEntity.getHdPath());
                 int addressLength = accountEntity.getAddressLength();
                 List<AddressEntity> addressEntities = new ArrayList<>();
                 int targetAddressCount = addressLength + number;
                 for (int index = addressLength; index < targetAddressCount; index++) {
                     AddressEntity addressEntity = new AddressEntity();
-                    String addr = deriveETHAddress(ethAccount, index, addressEntity);
+                    String addr = deriveETHAddress(accountEntity, index, addressEntity);
                     addressEntity.setAddressString(addr);
                     addressEntity.setCoinId(Coins.ETH.coinId());
                     addressEntity.setIndex(index);
@@ -130,7 +125,8 @@ public class AddAddressViewModel extends AndroidViewModel {
         });
     }
 
-    public static String deriveETHAddress(ETHAccount ethAccount, int index, AddressEntity addressEntity) {
+    public static String deriveETHAddress(AccountEntity accountEntity, int index, AddressEntity addressEntity) {
+        ETHAccount ethAccount = ETHAccount.ofCode(accountEntity.getETHAccountCode());
         boolean isSetPath = addressEntity != null;
         String address = "";
         AbsDeriver deriver = AbsDeriver.newInstance("ETH");
@@ -145,14 +141,14 @@ public class AddAddressViewModel extends AndroidViewModel {
                 if (isSetPath) addressEntity.setPath(xPubPath + "/0/0");
                 break;
             case LEDGER_LEGACY:
-                xPubPath = ETHAccount.LEDGER_LEGACY.getPath() + "/" + index;
-                xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
-                address = deriver.derive(xPub);
-                if (isSetPath) addressEntity.setPath(xPubPath);
+                xPubPath = ETHAccount.LEDGER_LEGACY.getPath();
+                xPub = accountEntity.getExPub();
+                address = deriver.derive(xPub, index);
+                if (isSetPath) addressEntity.setPath(xPubPath + "/" + index);
                 break;
             case BIP44_STANDARD:
                 xPubPath = ETHAccount.BIP44_STANDARD.getPath();
-                xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
+                xPub = accountEntity.getExPub();
                 address = deriver.derive(xPub, 0, index);
                 if (isSetPath) addressEntity.setPath(xPubPath + "/0/" + index);
                 break;
@@ -160,17 +156,6 @@ public class AddAddressViewModel extends AndroidViewModel {
                 break;
         }
         return address;
-    }
-
-    public static ETHAccount getETHAccount(String hdPath) {
-        if (hdPath.equals(ETHAccount.LEDGER_LIVE.getPath())) {
-            return ETHAccount.LEDGER_LIVE;
-        } else if (hdPath.equals(ETHAccount.LEDGER_LEGACY.getPath())) {
-            return ETHAccount.LEDGER_LEGACY;
-        } else if (hdPath.equals(ETHAccount.BIP44_STANDARD.getPath())) {
-            return ETHAccount.BIP44_STANDARD;
-        }
-        return ETHAccount.BIP44_STANDARD;
     }
 
     public static class AddAddressTask extends AsyncTask<String, Void, Void> {

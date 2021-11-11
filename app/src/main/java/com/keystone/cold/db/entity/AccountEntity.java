@@ -26,6 +26,7 @@ import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 @Entity(tableName = "accounts",
@@ -44,6 +45,7 @@ public class AccountEntity {
     private int addressLength;
     private boolean isMultiSign;
     private long coinId;
+    //{eth_account: string}
     private String addition;
 
     public AccountEntity(String hdPath, String exPub, int addressLength, boolean isMultiSign, long coinId) {
@@ -115,5 +117,27 @@ public class AccountEntity {
 
     public String getAddition(){
         return this.addition;
+    }
+
+    public String getETHAccountCode() {
+        try {
+            return new JSONObject(this.addition).getString("eth_account");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return "AccountEntity{" +
+                "id=" + id +
+                ", hdPath='" + hdPath + '\'' +
+                ", exPub='" + exPub + '\'' +
+                ", addressLength=" + addressLength +
+                ", isMultiSign=" + isMultiSign +
+                ", coinId=" + coinId +
+                ", addition='" + addition + '\'' +
+                '}';
     }
 }

@@ -84,5 +84,10 @@ public class Xrp extends AbsCoin implements Coin {
             return new B58(DEFAULT_ALPHABET)
                     .encodeToStringChecked(getDeterministicKey(xPubKey).getPubKeyHash(), 0);
         }
+
+        @Override
+        public String derive(String xPubKey, int index) {
+            throw new RuntimeException("not implemented");
+        }
     }
 }

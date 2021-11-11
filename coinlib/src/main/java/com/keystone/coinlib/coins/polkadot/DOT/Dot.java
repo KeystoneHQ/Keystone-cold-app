@@ -253,5 +253,10 @@ public class Dot extends AbsCoin {
             byte[] pubKey = Arrays.copyOfRange(bytes,bytes.length - 4 - 32,bytes.length - 4);
             return AddressCodec.encodeAddress(pubKey, prefix);
         }
+
+        @Override
+        public String derive(String xPubKey, int index) {
+            throw new RuntimeException("not implemented");
+        }
     }
 }

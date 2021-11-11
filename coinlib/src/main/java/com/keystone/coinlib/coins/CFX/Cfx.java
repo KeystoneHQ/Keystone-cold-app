@@ -284,5 +284,10 @@ public class Cfx extends AbsCoin implements Coin {
             String s = Hex.toHexString(getAddress(hash));
             return convertToBase32Address(s);
         }
+
+        @Override
+        public String derive(String xPubKey, int index) {
+            throw new RuntimeException("not implemented");
+        }
     }
 }

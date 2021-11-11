@@ -21,6 +21,7 @@ import static com.keystone.coinlib.utils.Coins.DOT;
 import static com.keystone.coinlib.utils.Coins.KSM;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -211,14 +212,18 @@ public class DataRepository {
         return mDb.accountDao().loadForCoin(coin.getId());
     }
 
-    public AccountEntity loadTargetETHAccount(ETHAccount account) throws JSONException {
-        CoinEntity coinEntity = this.loadCoinSync(Coins.ETH.coinId());
-        List<AccountEntity> accountEntityList = this.loadAccountsForCoin(coinEntity);
-        for (int i = 0; i < accountEntityList.size(); i++) {
-            JSONObject jsonObject = new JSONObject(accountEntityList.get(i).getAddition());
-            if (jsonObject.get("eth_account").equals(account.getCode())) {
-                return accountEntityList.get(i);
+    public AccountEntity loadTargetETHAccount(ETHAccount account){
+        try {
+            CoinEntity coinEntity = this.loadCoinSync(Coins.ETH.coinId());
+            List<AccountEntity> accountEntityList = this.loadAccountsForCoin(coinEntity);
+            for (int i = 0; i < accountEntityList.size(); i++) {
+                JSONObject jsonObject = new JSONObject(accountEntityList.get(i).getAddition());
+                if (jsonObject.get("eth_account").equals(account.getCode())) {
+                    return accountEntityList.get(i);
+                }
             }
+        }catch (JSONException e){
+            e.printStackTrace();
         }
         return null;
     }

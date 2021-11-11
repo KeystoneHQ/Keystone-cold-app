@@ -153,6 +153,21 @@ public class Eth extends AbsCoin implements Coin {
             return toChecksumAddress(s);
         }
 
+        @Override
+        public String derive(String xPubKey, int index) {
+            DeterministicKey address = deriveChild(xPubKey, index);
+            //decompress
+            ECKey eckey = ECKey.fromPublicOnly(address.getPubKeyPoint(), address.isCompressed());
+            byte[] pubKey = eckey.decompress().getPubKey();
+            byte[] hash = new byte[pubKey.length - 1];
+            System.arraycopy(pubKey, 1, hash, 0, hash.length);
+
+            String s = Hex.toHexString(getAddress(hash));
+
+            //checksum
+            return toChecksumAddress(s);
+        }
+
         public static byte[] getAddress(byte[] publicKey) {
             byte[] hash = new Keccak.Digest256().digest(publicKey);
             return Arrays.copyOfRange(hash, hash.length - 20, hash.length);  // right most 160 bits

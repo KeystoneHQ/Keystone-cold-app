@@ -43,7 +43,6 @@ import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.model.Tx;
 import com.keystone.cold.ui.common.FilterableBaseBindingAdapter;
 import com.keystone.cold.ui.fragment.BaseFragment;
-import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 import com.keystone.cold.viewmodel.tx.GenericETHTxEntity;
@@ -91,7 +90,7 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
             viewModel.loadEthTxs()
                     .observe(this, ethTxEntities -> {
                         ethTxEntities = ethTxEntities.stream()
-                                .filter(this::getCurrenAccountTxs)
+                                .filter(this::isCurrentAccountTx)
                                 .collect(Collectors.toList());
                         adapter.setItems(ethTxEntities);
                     });
@@ -168,21 +167,21 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
         });
     }
 
-    private boolean getCurrenAccountTxs(GenericETHTxEntity ethTxEntitiy) {
+    private boolean isCurrentAccountTx(GenericETHTxEntity ethTxEntitiy) {
         try {
             ETHAccount currentAccount = ETHAccount.ofCode(Utilities.getCurrentEthAccount(mActivity));
             if (ethTxEntitiy.getAddition() == null) {
-                if (currentAccount.getName().equals(ETHAccount.BIP44_STANDARD.getName())) {
+                if (currentAccount.equals(ETHAccount.BIP44_STANDARD)) {
                     return true;
                 }
                 return false;
             }
             JSONObject jsonObject = new JSONObject(ethTxEntitiy.getAddition());
             String signBy = jsonObject.optString("signBy");
-            if (signBy.isEmpty() && currentAccount.getName().equals(ETHAccount.BIP44_STANDARD.getName())) {
+            if (signBy.isEmpty() && currentAccount.equals(ETHAccount.BIP44_STANDARD)) {
                 return true;
             }
-            return signBy.equals(currentAccount.getName());
+            return signBy.equals(currentAccount.getCode());
         } catch (JSONException e) {
             e.printStackTrace();
             return false;

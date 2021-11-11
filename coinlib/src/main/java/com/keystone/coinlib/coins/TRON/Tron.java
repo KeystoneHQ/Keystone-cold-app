@@ -114,5 +114,10 @@ public class Tron extends AbsCoin {
 
             return Base58.encodeChecked(0x41, addr);
         }
+
+        @Override
+        public String derive(String xPubKey, int index) {
+            throw new RuntimeException("not implemented");
+        }
     }
 }
