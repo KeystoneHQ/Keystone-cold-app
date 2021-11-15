@@ -464,8 +464,7 @@ Email：support@keyst.one</string>
         3. Click \"Scan Keystone\" in XRP Toolkit<br>
         4. Tap the button below and scan the QR code<br>
     ]]></string>
-  <string name="sync_metamask_guide_text_hint">Take the Keystone Ethereum Extension import process as an example, the process of other wallets is similar.</string>
-  <string name="sync_metamask_guide_text"><![CDATA[
+   <string name="sync_metamask_guide_text"><![CDATA[
         1. Go to <font color=\"#00cdc3\">https://keyst.one/mm<font/> install Keystone Ethereum Extension according to the tutorial<br>
         2. Enter Keystone Ethereum Extension, click \"Get Started\" and set password<br>
         3. Scan the QR Code of wallet that displays on Keystone<br>
