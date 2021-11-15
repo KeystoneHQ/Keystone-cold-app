@@ -582,7 +582,8 @@
     <string name="calc_mnemonic_warning_checkbox">I fully understand entropy, BIP39, private key generation and other related material to generate my recovery phrase.</string>
     <string name="note">DANGER!</string>
     <string name="tip">Note</string>
-    <string name="learn_more"><Data><![CDATA[Keystone supports the decoding of transactions. Please visit<font color="#00CDC3"><b> https://keyst.one/eth </b></font>for more details.]]></Data></string>
+    <string name="learn_more"><Data><![CDATA[Keystone supports the decoding of transactions. Please visit<font color="#00CDC3"><b> https://keyst.one/abi </b></font>for more details.]]></Data></string>
+    <string name="learn_more_doc"><Data><![CDATA[Keystone supports the decoding of transactions. Please visit<font color="#00CDC3"><b> https://keyst.one/addabi </b></font>for more details.]]></Data></string>
     <string name="check_info">* Please check transaction details before signing</string>
     <string name="undecoded_tip">Attention! This is undecoded data.</string>
     <string name="from_tfcard">(Derived from your MicroSD Card)</string>

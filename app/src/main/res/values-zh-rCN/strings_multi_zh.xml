@@ -548,6 +548,15 @@
     <string name="please_insert_sdcard">請先將TF卡插入到設備中</string>
     <string name="confirm_format">確認是否格式化?</string>
     <string name="format_sd_card_hint">該操作將擦除卡內所有文件並將TF卡格式化為FAT32格式。卡內若有重要文件請及時備份，確認無誤後再進行該操作。</string>
+    <string name="learn_more"><Data><![CDATA[Keystone支持解析交易，您可前往<font color="#00CDC3"><b> https://keyst.one/abi </b></font>了解详情。]]></Data></string>
+    <string name="learn_more_doc"><Data><![CDATA[Keystone支持解析交易，您可前往<font color="#00CDC3"><b> https://keyst.one/addabi </b></font>了解详情。]]></Data></string>
+    <string name="undecoded_tip">注意！该数据未被解析。</string>
+    <string name="from_tfcard">（解码资源来源于TF卡）</string>
+    <string name="check_info">* 签名前，请仔细检查交易详情</string>
+    <string name="select_last_word_hint">请在以下单词中任选一个作为第24个单词</string>
+    <string name="please_insert_sdcard">请先将TF卡插入到设备中</string>
+    <string name="confirm_format">确认是否格式化?</string>
+    <string name="format_sd_card_hint">该操作将擦除卡内所有文件并将TF卡格式化为FAT32格式。卡内若有重要文件请及时备份，确认无误后再进行该操作。</string>
     <string name="format_sdcard_title">格式化TF卡</string>
     <string name="format_sdcard_hint">您需先將當前TF卡格式化為FAT32格式，否則無法讀取/導出文件。</string>
     <string name="format_sdcard_hint1">請註意：該操作將擦除卡內所有文件，卡內若有重要文件請及時備份，確認無誤後再進行該操作。</string>

@@ -102,7 +102,7 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
     private void showDialog() {
         int visits = Utilities.getVisitsTimes(mActivity);
         if (visits++ == 0) {
-            realShowDialog();
+            realShowDialog(getString(R.string.learn_more));
             Utilities.setVisitsTimes(mActivity, visits);
         }
     }
@@ -110,7 +110,15 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
     private void realShowDialog() {
         ModalDialog.showCommonModal((AppCompatActivity) getActivity(),
                 getString(R.string.tip),
-                getString(R.string.learn_more),
+                getString(R.string.learn_more_doc),
+                getString(R.string.know),
+                null);
+    }
+
+    private void realShowDialog(String subtitle) {
+        ModalDialog.showCommonModal((AppCompatActivity) getActivity(),
+                getString(R.string.tip),
+                subtitle,
                 getString(R.string.know),
                 null);
     }
