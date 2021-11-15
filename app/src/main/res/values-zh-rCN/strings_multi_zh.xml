@@ -568,4 +568,5 @@
     <string name="metamusk_ledger"><![CDATA[如果你之前用 <font color="#00cdc3">MetaMusk、Ledger 连接 Ledger<font/>]]></string>
     <string name="top_account">钱包的前3个账户：</string>
     <string name="show_this_qrcode">展示该钱包二维码</string>
+    <string name="sync_metamask_guide_text_hint">Take the Keystone Ethereum Extension import process as an example, the process of other wallets is similar.</string>
 </resources>
