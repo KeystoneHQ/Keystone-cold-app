@@ -26,43 +26,44 @@
             type="com.keystone.cold.viewmodel.AboutViewModel" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/set_lang_en"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="Please select language"
+            android:layout_centerHorizontal="true"
             android:textColor="@color/white"
             tools:ignore="HardcodedText" />
 
         <TextView
+            android:id="@+id/set_lang_cn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:text="请选择你要使用的语言"
+            android:layout_centerHorizontal="true"
             android:textColor="@color/white"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"
+            android:layout_below="@id/set_lang_en"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="32dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="2"
-            tools:listitem="@layout/setting_item_selectable" />
-
-        <androidx.legacy.widget.Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            tools:listitem="@layout/setting_item_selectable"
+            android:layout_below="@id/set_lang_cn"
+            android:layout_above="@+id/info"/>
 
         <TextView
+            android:id="@+id/info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
@@ -72,6 +73,7 @@
             android:gravity="center"
             android:textSize="12sp"
             android:lineSpacingExtra="4dp"
+            android:layout_above="@+id/next"
             android:text="@{@string/device_info(viewModel.sn,viewModel.appVersion,viewModel.firmwareAppVersion,viewModel.sysVersion)}" />
 
         <Button
@@ -80,7 +82,8 @@
             android:layout_width="match_parent"
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="20dp"
-            android:text="@string/next" />
+            android:text="@string/next"
+            android:layout_alignParentBottom="true"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 </layout>
