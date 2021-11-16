@@ -67,9 +67,9 @@
 
     <string-array name="language_entries" translatable="false">
         <item>English</item>
-        <item>中文</item>
         <item>한국어</item>
         <item>Español</item>
+        <item>中文繁体</item>
 <!--        <item>Deutsch</item>-->
 <!--        <item>Русский</item>-->
 <!--        <item>日本語</item>-->
@@ -77,9 +77,9 @@
 
     <string-array name="language_values" translatable="false">
         <item>en</item>
-        <item>zh_rCN</item>
         <item>ko_rKR</item>
         <item>es_rES</item>
+        <item>zh_rCN</item>
 <!--        <item>de_rDE</item>-->
 <!--        <item>ru_rRU</item>-->
 <!--        <item>ja_rJP</item>-->
