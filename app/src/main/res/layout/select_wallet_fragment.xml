@@ -75,7 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="4dp"
                     android:textSize="14sp"
                     android:text="@string/ledger_live"/>
 
@@ -83,23 +83,23 @@
                     android:id="@+id/derivation_live"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="4dp"
                     android:textColor="@color/white40"
-                    android:textSize="13sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
+                    android:layout_marginVertical="4dp"
                     android:textColor="@color/white40"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:text="@string/top_account" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rl_ledger_live"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="140dp"
+                    android:minHeight="75dp"
                     android:nestedScrollingEnabled="false"
                     android:background="@drawable/show_account_bg"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
@@ -116,7 +116,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
-                    android:layout_marginTop="20dp"
                     android:textSize="14sp"
                     android:text="@string/my_crypto_mew"/>
 
@@ -124,23 +123,23 @@
                     android:id="@+id/derivation_legacy"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="4dp"
                     android:textColor="@color/white40"
-                    android:textSize="13sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
+                    android:layout_marginVertical="4dp"
                     android:textColor="@color/white40"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:text="@string/top_account" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rl_crypto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="140dp"
+                    android:minHeight="75dp"
                     android:nestedScrollingEnabled="false"
                     android:background="@drawable/show_account_bg"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
@@ -156,7 +155,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="4dp"
                     android:textSize="14sp"
                     android:text="@string/metamusk_ledger"/>
 
@@ -164,23 +163,23 @@
                     android:id="@+id/derivation_bip44"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="4dp"
                     android:textColor="@color/white40"
-                    android:textSize="13sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
+                    android:layout_marginVertical="4dp"
                     android:textColor="@color/white40"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:text="@string/top_account" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rl_metamask"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="140dp"
+                    android:minHeight="75dp"
                     android:nestedScrollingEnabled="false"
                     android:background="@drawable/show_account_bg"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
@@ -190,7 +189,7 @@
                     style="@style/AcceptButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
+                    android:layout_marginVertical="4dp"
                     android:text="@string/show_this_qrcode" />
 
             </LinearLayout>

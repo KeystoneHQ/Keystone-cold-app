@@ -115,7 +115,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         watchWallet = WatchWallet.getWatchWallet(mActivity);
         if (watchWallet == WatchWallet.METAMASK) {
             mBinding.toolbar.setNavigationIcon(R.drawable.menu);
-            mBinding.toolbar.setTitle(watchWallet.getWalletName(mActivity));
+            mBinding.toolbar.setTitle(watchWallet.getWalletName(mActivity).replace("MetaMask", "MM"));
             mBinding.customTitle.setVisibility(View.GONE);
             mBinding.account.setText(ETHAccount.ofCode(Utilities.getCurrentEthAccount(mActivity)).getName());
             mBinding.account.setVisibility(View.VISIBLE);
