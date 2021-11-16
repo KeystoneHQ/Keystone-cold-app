@@ -610,4 +610,5 @@
     <string name="metamusk_ledger"><![CDATA[If you used wallets such as <font color="#00cdc3">MetaMask, Ledger, etc.<font/>]]></string>
     <string name="top_account">The first 3 accounts:</string>
     <string name="show_this_qrcode">Display QR Code</string>
+    <string name="sync_metamask_guide_text_hint">Take the Keystone Ethereum Extension import process as an example, the process of other wallets is similar.</string>
 </resources>
