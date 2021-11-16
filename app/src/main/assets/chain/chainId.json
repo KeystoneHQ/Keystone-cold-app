@@ -108,7 +108,7 @@
     "name": "Etho Protocol"
   },
   "3": {
-    "symbol": "ROP",
+    "symbol": "ETH",
     "name": "Ethereum Testnet Ropsten"
   },
   "124": {
@@ -116,7 +116,7 @@
     "name": "Decentralized Web Mainnet"
   },
   "4": {
-    "symbol": "RIN",
+    "symbol": "ETH",
     "name": "Ethereum Testnet Rinkeby"
   },
   "246": {
@@ -124,7 +124,7 @@
     "name": "Energy Web Chain"
   },
   "5": {
-    "symbol": "GOR",
+    "symbol": "ETH",
     "name": "Ethereum Testnet Görli"
   },
   "6": {
@@ -380,7 +380,7 @@
     "name": "Neon EVM TestNet"
   },
   "42": {
-    "symbol": "KOV",
+    "symbol": "ETH",
     "name": "Ethereum Testnet Kovan"
   },
   "43": {
