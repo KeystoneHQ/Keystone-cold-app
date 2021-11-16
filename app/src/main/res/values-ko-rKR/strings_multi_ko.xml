@@ -363,7 +363,7 @@
   </string-array>
   <string-array name="watch_wallet_list">
     <item>키스톤 모바일 앱</item>
-    <item>Web3</item>
+    <item>MetaMask / DeFi / Web3</item>
     <item>Polkadot{.js}</item>
     <item>XRP Toolkit</item>
   </string-array>
@@ -466,7 +466,7 @@
   <string name="sync_metamask_guide_text"><![CDATA[
     <font color="#00cdc3">① <font/>Open MetaMask and click \'<b>Connect Hardware Wallet</b>\'<br>
     <font color="#00cdc3">② <font/>Select \'<b>QR-based</b>\'<br>
-    <font color="#00cdc3">③ <font/>Click \'<b>Scan QR Code</b>\' button<br>
+    <font color="#00cdc3">③ <font/>Click \'<b>Continue</b>\' button<br>
     <font color="#00cdc3">④ <font/>Scan the QR Code of wallet<br>
     <font color="#00cdc3">⑤ <font/>Select account and unlock<br>
     <font color="#00cdc3">⑥ <font/>Enter account<br>

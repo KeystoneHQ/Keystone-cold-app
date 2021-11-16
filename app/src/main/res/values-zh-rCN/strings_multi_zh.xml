@@ -18,555 +18,555 @@
 <resources>
     <string name="app_name">Keystone</string>
     <string name="action_scan_qr_code">Scan QR Code</string>
-    <string name="drawer_menu_my_vault">我的铠石钱包</string>
-    <string name="drawer_menu_add_remove">添加 / 隐藏币种</string>
-    <string name="drawer_menu_sync">选择观察钱包</string>
-    <string name="drawer_menu_setting">设置</string>
-    <string name="drawer_menu_about">关于铠石钱包</string>
-    <string name="title_about">关于铠石钱包</string>
-    <string name="title_setting">设置</string>
-    <string name="add_remove_coin">添加 / 隐藏币种</string>
-    <string name="scan">扫描二维码</string>
-    <string name="scan_hint">将二维码放入框内，即可自动扫描</string>
-    <string name="title_sync">同步铠石钱包移动端</string>
-    <string name="pattern_lock">手势解锁</string>
-    <string name="pattern_lock_hint">请绘制解锁图案</string>
-    <string name="switch_to_password">切换至密码解锁</string>
-    <string name="about_message">铠石钱包是一款利用二维码作为信息传输媒介，从而实现100%完全脱网的硬件钱包产品。通过二维码，用户亦可方便地检查输入和输出的信息。我们的安全芯片通过物理震荡环生成真随机数（TRNG），从而充分保障了用户私钥的随机性。私钥派生，所有的交易签名全部在安全芯片内完成。从而将硬件钱包的安全性能推到一个前所未有的新高度。</string>
-    <string name="device_info">序列号: %s\n  固件版本：%s\n   芯片版本：%s\n  系统版本：%s  \n</string>
-    <string name="asset_list_empty">请到“菜单 - 添加 / 隐藏币种” 中添加所需币种</string>
-    <string name="mnemonic_hint1">助记词用于恢复钱包，请使用cryptosteel依次记录您的24个助记词，并保存到安全的地方。</string>
-    <string name="mnemonic_hint2">请勿进行拍照等操作！如果他人获取您的助记词将直接获取您的资产！</string>
+    <string name="drawer_menu_my_vault">我的鎧石錢包</string>
+    <string name="drawer_menu_add_remove">添加 / 隱藏幣種</string>
+    <string name="drawer_menu_sync">選擇觀察錢包</string>
+    <string name="drawer_menu_setting">設置</string>
+    <string name="drawer_menu_about">關於鎧石錢包</string>
+    <string name="title_about">關於鎧石錢包</string>
+    <string name="title_setting">設置</string>
+    <string name="add_remove_coin">添加 / 隱藏幣種</string>
+    <string name="scan">掃描二維碼</string>
+    <string name="scan_hint">將二維碼放入框內，即可自動掃描</string>
+    <string name="title_sync">同步鎧石錢包移動端</string>
+    <string name="pattern_lock">手勢解鎖</string>
+    <string name="pattern_lock_hint">請繪製解鎖圖案</string>
+    <string name="switch_to_password">切換至密碼解鎖</string>
+    <string name="about_message">鎧石錢包是一款利用二維碼作為信息傳輸媒介，從而實現100%完全脫網的硬件錢包產品。通過二維碼，用戶亦可方便地檢查輸入和輸出的信息。我們的安全芯片通過物理震蕩環生成真隨機數（TRNG），從而充分保障了用戶私鑰的隨機性。私鑰派生，所有的交易簽名全部在安全芯片內完成。從而將硬件錢包的安全性能推到一個前所未有的新高度。</string>
+    <string name="device_info">序列號: %s\n  固件版本：%s\n   芯片版本：%s\n  系統版本：%s  \n</string>
+    <string name="asset_list_empty">請到「菜單 - 添加 / 隱藏幣種」 中添加所需幣種</string>
+    <string name="mnemonic_hint1">助記詞用於恢復錢包，請使用cryptosteel依次記錄您的24個助記詞，並保存到安全的地方。</string>
+    <string name="mnemonic_hint2">請勿進行拍照等操作！如果他人獲取您的助記詞將直接獲取您的資產！</string>
     <string name="saved">我已安全保存</string>
     <string name="tab_my_address">我的地址</string>
-    <string name="tab_my_account">我的账户</string>
-    <string name="tab_my_pubkey">我的公钥</string>
-    <string name="tab_transaction_history">签名记录</string>
-    <string name="create_addr">创建 %s 地址</string>
-    <string name="signing_hint">正在签名…</string>
-    <string name="scan_progress">请持续扫描,当前进度%s</string>
-    <string name="eos_hint">以下是您的 %s 公钥（可安全分享）</string>
-    <string name="eos_pubkey">公钥：\n %s</string>
-    <string name="receive_warning">此地址只接收 %s 体系资产,\n发送其他体系币种到此地址将无法找回。</string>
+    <string name="tab_my_account">我的賬戶</string>
+    <string name="tab_my_pubkey">我的公鑰</string>
+    <string name="tab_transaction_history">簽名記錄</string>
+    <string name="create_addr">創建 %s 地址</string>
+    <string name="signing_hint">正在簽名…</string>
+    <string name="scan_progress">請持續掃描,當前進度%s</string>
+    <string name="eos_hint">以下是您的 %s 公鑰（可安全分享）</string>
+    <string name="eos_pubkey">公鑰：\n %s</string>
+    <string name="receive_warning">此地址只接收 %s 體系資產,\n發送其他體系幣種到此地址將無法找回。</string>
     <string name="receive_coin">接收 %s</string>
-    <string name="amount_hint">设置收币额度</string>
-    <string name="version_update_hint"><![CDATA[请访问: <font color="#00cdc3">https://keyst.one/fw<font/> 查看是否有更新。如需更新，请按下图依次取下电池和TF卡，下载最新安装包到TF卡根目录下（TF卡仅支持FAT32格式），插回卡后开机，按照系统提示更新。]]></string>
+    <string name="amount_hint">設置收幣額度</string>
+    <string name="version_update_hint"><![CDATA[請訪問: <font color="#00cdc3">https://keyst.one/fw<font/> 查看是否有更新。如需更新，請按下圖依次取下電池和TF卡，下載最新安裝包到TF卡根目錄下（TF卡僅支持FAT32格式），插回卡後開機，按照系統提示更新。]]></string>
     <string name="version">版本</string>
-    <string name="setting_language">语言设置</string>
-    <string name="setting_vibrator">震动开关</string>
+    <string name="setting_language">語言設置</string>
+    <string name="setting_vibrator">震動開關</string>
     <string name="setting_brightness">屏幕亮度</string>
-    <string name="setting_screen_off_time">锁屏时间</string>
-    <string name="web_auth1">1. 点击下方按钮，扫描官网验证的二维码</string>
-    <string name="web_auth2">2. 将扫描后的结果输入给网站</string>
-    <string name="web_auth3"><![CDATA[3. 在网站上点击<font color="#00cdc3">"验证"<font/>获取结果]]></string>
-    <string name="web_auth4">如果验证失败，您的设备可能已经被攻击，请停止使用该设备！</string>
-    <string name="web_auth5"><![CDATA[官网验证网站: <br> <font color="#00cdc3">https://keyst.one/start/1<font/>]]></string>
+    <string name="setting_screen_off_time">鎖屏時間</string>
+    <string name="web_auth1">1. 點擊下方按鈕，掃描官網驗證的二維碼</string>
+    <string name="web_auth2">2. 將掃描後的結果輸入給網站</string>
+    <string name="web_auth3"><![CDATA[3. 在網站上點擊<font color="#00cdc3">"驗證"<font/>獲取結果]]></string>
+    <string name="web_auth4">如果驗證失敗，您的設備可能已經被攻擊，請停止使用該設備！</string>
+    <string name="web_auth5"><![CDATA[官網驗證網站: <br> <font color="#00cdc3">https://keyst.one/start/1<font/>]]></string>
 
-    <string name="firmware_upgrade1">为了使用新功能，建议您将固件升级到最新版本</string>
-    <string name="firmware_upgrade2">TF卡为FAT32格式，不超过512GB</string>
-    <string name="firmware_upgrade3">设备电量保持在70%以上</string>
-    <string name="firmware_upgrade4"><![CDATA[下载最新固件，请访问: <br> <font color="#00cdc3">https://keyst.one/start/3<font/>]]></string>
-    <string name="firmware_upgrade_start">开始升级</string>
-    <string name="firmware_upgrade_unable">无法升级</string>
-    <string name="firmware_upgrade_unable_description">未检测到升级包，请确认是否将存有update.zip的TF卡（FAT32格式，不超过512GB）插入设备中。</string>
+    <string name="firmware_upgrade1">為了使用新功能，建議您將固件升級到最新版本</string>
+    <string name="firmware_upgrade2">TF卡為FAT32格式，不超過512GB</string>
+    <string name="firmware_upgrade3">設備電量保持在70%以上</string>
+    <string name="firmware_upgrade4"><![CDATA[下載最新固件，請訪問: <br> <font color="#00cdc3">https://keyst.one/start/3<font/>]]></string>
+    <string name="firmware_upgrade_start">開始升級</string>
+    <string name="firmware_upgrade_unable">無法升級</string>
+    <string name="firmware_upgrade_unable_description">未檢測到升級包，請確認是否將存有update.zip的TF卡（FAT32格式，不超過512GB）插入設備中。</string>
 
-    <string name="skip">跳过</string>
-    <string name="read_confirm"><![CDATA[我已阅读并同意 <u><font color="#00cdc3">\"服务条款\"<font/></u> ，和 <u><font color="#00cdc3">\"隐私政策\"<font/></u>]]></string>
-    <string name="license">服务条款</string>
-    <string name="create_vault_hint"><![CDATA[1. 点击 <u><font color="#00cdc3">\"创建钱包\"<font/></u>按钮，将为您新建一个全新的钱包]]></string>
-    <string name="import_vault_hint"><![CDATA[2. 点击 <u><font color="#00cdc3">\"导入钱包\"<font/></u>按钮，通过助记词恢复已有的钱包]]></string>
-    <string name="setup_wallet_hint1">感谢您使用铠石钱包！</string>
-    <string name="input_mnemonic_hint">请在下方表格中输入%d个助记词以恢复钱包</string>
-    <string name="input_mnemonic">输入助记词</string>
-    <string name="pwd_again_hint">请再次输入密码</string>
-    <string name="pwd_hint">请输入密码</string>
-    <string name="password_verify_wrong">两次输入不一致</string>
-    <string name="passphrase_not_match">两次输入不一致</string>
-    <string name="password_input_wrong">必须同时包含大、小写字母和数字</string>
-    <string name="mnemonic_hint"><![CDATA[提示：<br>1. 助记词为恢复资产的唯一途径，请按顺序正确记录，并妥善保管到安全的脱网环境中。  <br><br>2. 请勿将助记词拍照、储存在联网设备上或泄露给他人！助记词丢失或泄露将意味着资产丢失！  <br><br>3.您可访问 <font color="#00cdc3">https://keyst.one/kt<font/> 购买铠石助记板安全方便保存您的助记词。]]></string>
-    <string name="generate_mnemonic">生成助记词</string>
+    <string name="skip">跳過</string>
+    <string name="read_confirm"><![CDATA[我已閱讀並同意 <u><font color="#00cdc3">\"服務條款\"<font/></u> ，和 <u><font color="#00cdc3">\"隱私政策\"<font/></u>]]></string>
+    <string name="license">服務條款</string>
+    <string name="create_vault_hint"><![CDATA[1. 點擊 <u><font color="#00cdc3">\"創建錢包\"<font/></u>按鈕，將為您新建一個全新的錢包]]></string>
+    <string name="import_vault_hint"><![CDATA[2. 點擊 <u><font color="#00cdc3">\"導入錢包\"<font/></u>按鈕，通過助記詞恢復已有的錢包]]></string>
+    <string name="setup_wallet_hint1">感謝您使用鎧石錢包！</string>
+    <string name="input_mnemonic_hint">請在下方表格中輸入%d個助記詞以恢復錢包</string>
+    <string name="input_mnemonic">輸入助記詞</string>
+    <string name="pwd_again_hint">請再次輸入密碼</string>
+    <string name="pwd_hint">請輸入密碼</string>
+    <string name="password_verify_wrong">兩次輸入不一致</string>
+    <string name="passphrase_not_match">兩次輸入不一致</string>
+    <string name="password_input_wrong">必須同時包含大、小寫字母和數字</string>
+    <string name="mnemonic_hint"><![CDATA[提示：<br>1. 助記詞為恢復資產的唯一途徑，請按順序正確記錄，並妥善保管到安全的脫網環境中。  <br><br>2. 請勿將助記詞拍照、儲存在聯網設備上或泄露給他人！助記詞丟失或泄露將意味著資產丟失！  <br><br>3.您可訪問 <font color="#00cdc3">https://keyst.one/kt<font/> 購買鎧石助記板安全方便保存您的助記詞。]]></string>
+    <string name="generate_mnemonic">生成助記詞</string>
     <string name="next">下一步</string>
     <string name="and">和</string>
-    <string name="import_vault">导入钱包</string>
-    <string name="create_vault">创建钱包</string>
-    <string name="confirm_mnemonic">确认助记词</string>
-    <string name="confirm_input_mnemonic_hint">请在下方表格中输入%d个助记词。</string>
+    <string name="import_vault">導入錢包</string>
+    <string name="create_vault">創建錢包</string>
+    <string name="confirm_mnemonic">確認助記詞</string>
+    <string name="confirm_input_mnemonic_hint">請在下方表格中輸入%d個助記詞。</string>
     <string name="complete">完成</string>
-    <string name="password_verify_too_short">至少10个字符</string>
+    <string name="password_verify_too_short">至少10個字符</string>
     <string-array name="screen_off_entries">
         <item>15 秒</item>
         <item>30 秒</item>
-        <item>1 分钟</item>
-        <item>2 分钟</item>
-        <item>5 分钟</item>
-        <item>10 分钟</item>
+        <item>1 分鐘</item>
+        <item>2 分鐘</item>
+        <item>5 分鐘</item>
+        <item>10 分鐘</item>
     </string-array>
 
     <string-array name="step_label">
-        <item>官网验证</item>
-        <item>密码设置</item>
-        <item>固件升级</item>
-        <item>创建/导入钱包</item>
-        <item>选择配对应用</item>
+        <item>官網驗證</item>
+        <item>密碼設置</item>
+        <item>固件升級</item>
+        <item>創建/導入錢包</item>
+        <item>選擇配對應用</item>
     </string-array>
 
-    <string name="sync_hint2"><![CDATA[铠石钱包移动端可在官网下载：<br><font color="#00cdc3">https://keyst.one/app<font/><br>]]></string>
-    <string name="sync_hint1"><![CDATA[请使用铠石钱包移动端扫描<font color="#00cdc3">动态二维码<font/>]]></string>
-    <string name="wrong_mnemonic_please_check">助记词有误，请逐字检查</string>
-    <string name="dots_not_enough">请至少连接四个点</string>
-    <string name="input_pattern_again">请再次绘制解锁图案</string>
-    <string name="two_pattern_not_match">两次输入不一致，请重新输入</string>
-    <string name="set_pattern_complete">手势解锁设置成功</string>
-    <string name="retry_times_hint">密码错误，还可尝试 %d 次</string>
-    <string name="too_many_pattern_attempts">手势密码错误次数过多， \n已切换至密码解锁页面</string>
-    <string name="wrong_pattern_hint">手势错误，请重新尝试</string>
-    <string name="factory_reset_title">恢复出厂设置</string>
-    <string name="password_modal_title">请输入密码</string>
-    <string name="passphrase_hint3">密语长度不得超过128个字符；可用大小写字母、数字、符号、空格。</string>
-    <string name="passphrase_hint2">密语 (Passphrase)： 区分大小写</string>
-    <string name="passphrase_hint_agian">请再次输入密语</string>
-    <string name="passphrase_hint1">注意：\n1.隐藏钱包创建后，其对应的密语（Passphrase）不可修改；请牢记密语（Passphrase），忘记密语（Passphrase）将意味着隐藏钱包的资产丢失；\n2. 密语为空，直接点击确定按钮将进入到默认钱包</string>
-    <string name="passphrase_hint">请输入 密语 (Passphrase)</string>
-    <string name="passphrase_title">密语(Passphrase)钱包</string>
-    <string name="passphrase_confirm_modal_title">覆盖确认</string>
-    <string name="passphrase_confirm_modal_hint">确认后，当前钱包将被覆盖，您可以通过密语（Passphrase）钱包再次进入</string>
-    <string name="password_error_hint">密码错误，还有%d次机会\n机会用完后将恢复出厂设置</string>
-    <string name="verify_mnemonic_hint">请在下方表格中输入%d个助记词 </string>
-    <string name="delete_white_list_hint">确定要删除白名单地址:%s吗？</string>
-    <string name="invalid_qrcode">无效的二维码</string>
-    <string name="attack_warning">为了您的资产安全，已删除所有信息并冻结该设备。请立即联系客服\n 状态码:%s</string>
-    <string name="set_pattern">手势解锁</string>
-    <string name="system_settings">系统设置</string>
-    <string name="white_list">白名单</string>
-    <string name="create_import_vault">创建 / 导入钱包</string>
-    <string name="safety_instruction">安全须知</string>
-    <string name="setting_license">服务条款</string>
-    <string name="privacy_policy">隐私政策</string>
-    <string name="factory_reset">恢复出厂设置</string>
+    <string name="sync_hint2"><![CDATA[鎧石錢包移動端可在官網下載：<br><font color="#00cdc3">https://keyst.one/app<font/><br>]]></string>
+    <string name="sync_hint1"><![CDATA[請使用鎧石錢包移動端掃描<font color="#00cdc3">動態二維碼<font/>]]></string>
+    <string name="wrong_mnemonic_please_check">助記詞有誤，請逐字檢查</string>
+    <string name="dots_not_enough">請至少連接四個點</string>
+    <string name="input_pattern_again">請再次繪製解鎖圖案</string>
+    <string name="two_pattern_not_match">兩次輸入不一致，請重新輸入</string>
+    <string name="set_pattern_complete">手勢解鎖設置成功</string>
+    <string name="retry_times_hint">密碼錯誤，還可嘗試 %d 次</string>
+    <string name="too_many_pattern_attempts">手勢密碼錯誤次數過多， \n已切換至密碼解鎖頁面</string>
+    <string name="wrong_pattern_hint">手勢錯誤，請重新嘗試</string>
+    <string name="factory_reset_title">恢復出廠設置</string>
+    <string name="password_modal_title">請輸入密碼</string>
+    <string name="passphrase_hint3">密語長度不得超過128個字符；可用大小寫字母、數字、符號、空格。</string>
+    <string name="passphrase_hint2">密語 (Passphrase)： 區分大小寫</string>
+    <string name="passphrase_hint_agian">請再次輸入密語</string>
+    <string name="passphrase_hint1">註意：\n1.隱藏錢包創建後，其對應的密語（Passphrase）不可修改；請牢記密語（Passphrase），忘記密語（Passphrase）將意味著隱藏錢包的資產丟失；\n2. 密語為空，直接點擊確定按鈕將進入到默認錢包</string>
+    <string name="passphrase_hint">請輸入 密語 (Passphrase)</string>
+    <string name="passphrase_title">密語(Passphrase)錢包</string>
+    <string name="passphrase_confirm_modal_title">覆蓋確認</string>
+    <string name="passphrase_confirm_modal_hint">確認後，當前錢包將被覆蓋，您可以通過密語（Passphrase）錢包再次進入</string>
+    <string name="password_error_hint">密碼錯誤，還有%d次機會\n機會用完後將恢復出廠設置</string>
+    <string name="verify_mnemonic_hint">請在下方表格中輸入%d個助記詞 </string>
+    <string name="delete_white_list_hint">確定要刪除白名單地址:%s嗎？</string>
+    <string name="invalid_qrcode">無效的二維碼</string>
+    <string name="attack_warning">為了您的資產安全，已刪除所有信息並凍結該設備。請立即聯系客服\n 狀態碼:%s</string>
+    <string name="set_pattern">手勢解鎖</string>
+    <string name="system_settings">系統設置</string>
+    <string name="white_list">白名單</string>
+    <string name="create_import_vault">創建 / 導入錢包</string>
+    <string name="safety_instruction">安全須知</string>
+    <string name="setting_license">服務條款</string>
+    <string name="privacy_policy">隱私政策</string>
+    <string name="factory_reset">恢復出廠設置</string>
     <string name="updatable">可更新</string>
-    <string name="password_input_hint">请输入密码</string>
-    <string name="factory_reset_hint">将清除所有数据，此操作不可逆</string>
-    <string name="password">密码</string>
-    <string name="confirm">确认</string>
-    <string name="wrong_password_retry_hint">密码错误，请重新尝试</string>
+    <string name="password_input_hint">請輸入密碼</string>
+    <string name="factory_reset_hint">將清除所有數據，此操作不可逆</string>
+    <string name="password">密碼</string>
+    <string name="confirm">確認</string>
+    <string name="wrong_password_retry_hint">密碼錯誤，請重新嘗試</string>
     <string name="Update">版本更新</string>
-    <string name="draw_pattern_again">请再次绘制解锁图案</string>
-    <string name="scan_to_auth">扫码验证</string>
-    <string name="signing_history">签名记录</string>
-    <string name="add_coins">添加币种</string>
-    <string name="not_in_whitelist_reject">收币地址不在白名单上，拒绝签名!</string>
-    <string name="invalid_mnemonic">助记词有误，请仔细检查</string>
-    <string name="scan_permission_denied">没有权限无法扫描</string>
-    <string name="verify_mnemonic">验证助记词</string>
-    <string name="wrong_mnemonic">助记词输入有误</string>
-    <string name="too_many_passphrase">最多只能有5个密语</string>
-    <string name="address_name_hint">地址创建后不可被删除，有意义的名称可以更好的帮助您管理资产。</string>
-    <string name="change_password">修改密码</string>
-    <string name="self_checking">正在进行安全检查…</string>
-    <string name="text_create_address_main_text">请选择创建地址数量</string>
-    <string name="add_white_list">添加白名单</string>
+    <string name="draw_pattern_again">請再次繪製解鎖圖案</string>
+    <string name="scan_to_auth">掃碼驗證</string>
+    <string name="signing_history">簽名記錄</string>
+    <string name="add_coins">添加幣種</string>
+    <string name="not_in_whitelist_reject">收幣地址不在白名單上，拒絕簽名!</string>
+    <string name="invalid_mnemonic">助記詞有誤，請仔細檢查</string>
+    <string name="scan_permission_denied">沒有權限無法掃描</string>
+    <string name="verify_mnemonic">驗證助記詞</string>
+    <string name="wrong_mnemonic">助記詞輸入有誤</string>
+    <string name="too_many_passphrase">最多只能有5個密語</string>
+    <string name="address_name_hint">地址創建後不可被刪除，有意義的名稱可以更好的幫助您管理資產。</string>
+    <string name="change_password">修改密碼</string>
+    <string name="self_checking">正在進行安全檢查…</string>
+    <string name="text_create_address_main_text">請選擇創建地址數量</string>
+    <string name="add_white_list">添加白名單</string>
     <string name="search">搜索</string>
     <string name="cancel">取消</string>
-    <string name="device_under_attack">检测到系统被攻击!</string>
-    <string name="power_off">关机</string>
-    <string name="create_new_address">创建新地址</string>
-    <string name="screen_brightness_hint">滑动调整屏幕亮度</string>
-    <string name="broadcast_tx">广播交易</string>
-    <string name="please_broadcast_with_hot">使用观察钱包扫描二维码获取签名结果</string>
-    <string name="please_confirm">请确认</string>
-    <string name="mnemonic_save_hint">请确认您已妥善保管好助记词，一旦助记词丢失，资产将无法找回！（钱包生成后，无法再次查看助记词）</string>
+    <string name="device_under_attack">檢測到系統被攻擊!</string>
+    <string name="power_off">關機</string>
+    <string name="create_new_address">創建新地址</string>
+    <string name="screen_brightness_hint">滑動調整屏幕亮度</string>
+    <string name="broadcast_tx">廣播交易</string>
+    <string name="please_broadcast_with_hot">使用觀察錢包掃描二維碼獲取簽名結果</string>
+    <string name="please_confirm">請確認</string>
+    <string name="mnemonic_save_hint">請確認您已妥善保管好助記詞，一旦助記詞丟失，資產將無法找回！（錢包生成後，無法再次查看助記詞）</string>
     <string name="know">我知道了</string>
-    <string name="creating_vault_hint">正在为您创建钱包，请勿锁屏</string>
-    <string name="delete_white_list">删除白名单</string>
-    <string name="self_check_under_disassemble">您的设备被攻击！</string>
-    <string name="self_check_alert_content">继续使用被攻击的机器可能导致您的资产丢失，为了您的资产安全，请清除设备所有信息并关机。</string>
-    <string name="web_auth_scan_agian">重新扫描二维码</string>
-    <string name="clean_data_and_power_off">清除数据并关机</string>
-    <string name="sign_success">签名成功</string>
-    <string name="sign_fail">签名失败，请重试。\n如果多次失败，请联系客服处理。</string>
-    <string name="manage_white_list_hint">此钱包只可向白名单内的地址授权发币交易，白名单地址为空时，拒绝所有交易。</string>
-    <string name="password_unlock">密码解锁</string>
-    <string name="forget_password">忘记密码？</string>
-    <string name="unlock">解锁</string>
-    <string name="eos_pubkey_sign_only">1. 若您已经创建了该公钥的地址，您可在铠石钱包移动端进行收发币，用本设备签名时将自动同步账户信息\n2. 若您还未创建地址，您可邀请持有%s的朋友扫描以上公钥信息创建%s地址</string>
-    <string name="secret_modal_title">请环顾四周</string>
-    <string name="secret_modal_msg">任何人获得了助记词，意味着获取了您的资产，请确保周围无人，无摄像头。</string>
-    <string name="select_mnemonic_count">选择助记词数量</string>
-    <string name="set_password">设置密码</string>
-    <string name="firmware_upgrade">固件升级</string>
-    <string name="text_password_required">至少10个字符；必须同时包含大、小写字母和数字；允许特殊字符</string>
-    <string name="welcome">欢迎使用铠石硬件钱包！</string>
-    <string name="welcome_site"><![CDATA[请用电脑访问: <font color="#00cdc3">https://keyst.one/start<font/>]]></string>
-    <string name="welcome_text">将引导您对铠石硬件钱包进行初始化设置</string>
-    <string name="welcome_done">准备好了，开始</string>
-    <string name="guide_completed_title">恭喜！铠石钱包已完成设置，\n  可以开始使用了！</string>
-    <string name="guide_completed_remind"><![CDATA[更多钱包设置可点击菜单-设置，如手势解锁，创建Passphrase钱包。了解更多功能，请访问：\n <font color="#00cdc3">https://keyst.one<font/>]]></string>
+    <string name="creating_vault_hint">正在為您創建錢包，請勿鎖屏</string>
+    <string name="delete_white_list">刪除白名單</string>
+    <string name="self_check_under_disassemble">您的設備被攻擊！</string>
+    <string name="self_check_alert_content">繼續使用被攻擊的機器可能導致您的資產丟失，為了您的資產安全，請清除設備所有信息並關機。</string>
+    <string name="web_auth_scan_agian">重新掃描二維碼</string>
+    <string name="clean_data_and_power_off">清除數據並關機</string>
+    <string name="sign_success">簽名成功</string>
+    <string name="sign_fail">簽名失敗，請重試。\n如果多次失敗，請聯系客服處理。</string>
+    <string name="manage_white_list_hint">此錢包只可向白名單內的地址授權發幣交易，白名單地址為空時，拒絕所有交易。</string>
+    <string name="password_unlock">密碼解鎖</string>
+    <string name="forget_password">忘記密碼？</string>
+    <string name="unlock">解鎖</string>
+    <string name="eos_pubkey_sign_only">1. 若您已經創建了該公鑰的地址，您可在鎧石錢包移動端進行收發幣，用本設備簽名時將自動同步賬戶信息\n2. 若您還未創建地址，您可邀請持有%s的朋友掃描以上公鑰信息創建%s地址</string>
+    <string name="secret_modal_title">請環顧四周</string>
+    <string name="secret_modal_msg">任何人獲得了助記詞，意味著獲取了您的資產，請確保周圍無人，無攝像頭。</string>
+    <string name="select_mnemonic_count">選擇助記詞數量</string>
+    <string name="set_password">設置密碼</string>
+    <string name="firmware_upgrade">固件升級</string>
+    <string name="text_password_required">至少10個字符；必須同時包含大、小寫字母和數字；允許特殊字符</string>
+    <string name="welcome">歡迎使用鎧石硬件錢包！</string>
+    <string name="welcome_site"><![CDATA[請用電腦訪問: <font color="#00cdc3">https://keyst.one/start<font/>]]></string>
+    <string name="welcome_text">將引導您對鎧石硬件錢包進行初始化設置</string>
+    <string name="welcome_done">準備好了，開始</string>
+    <string name="guide_completed_title">恭喜！鎧石錢包已完成設置，\n  可以開始使用了！</string>
+    <string name="guide_completed_remind"><![CDATA[更多錢包設置可點擊菜單-設置，如手勢解鎖，創建Passphrase錢包。了解更多功能，請訪問：\n <font color="#00cdc3">https://keyst.one<font/>]]></string>
     <string name="tx_id">交易ID</string>
-    <string name="tx_from">来自</string>
-    <string name="tx_to">发送到</string>
-    <string name="tx_fee">交易费</string>
-    <string name="tx_memo">备注</string>
-    <string name="tx_confirm">指纹验证</string>
-    <string name="tx_confirm_title">确认交易详情</string>
-    <string name="msg_confirm_title">确认消息详情</string>
-    <string name="sign">签名</string>
-    <string name="find_password">密码找回</string>
-    <string name="web_auth">官网验证</string>
-    <string name="web_auth_code">您的设备验证码为</string>
+    <string name="tx_from">來自</string>
+    <string name="tx_to">發送到</string>
+    <string name="tx_fee">交易費</string>
+    <string name="tx_memo">備註</string>
+    <string name="tx_confirm">指紋驗證</string>
+    <string name="tx_confirm_title">確認交易詳情</string>
+    <string name="msg_confirm_title">確認消息詳情</string>
+    <string name="sign">簽名</string>
+    <string name="find_password">密碼找回</string>
+    <string name="web_auth">官網驗證</string>
+    <string name="web_auth_code">您的設備驗證碼為</string>
     <string name="Success">成功</string>
-    <string name="fail">失败</string>
-    <string name="verify_way">选择验证方式</string>
-    <string name="verify_way_mnemonic">助记词验证</string>
-    <string name="verify_way_sharding">助记词分片验证</string>
-    <string name="generate_mnemonic_hint">请正确记录并妥善保存好助记词；钱包生成后，无法再次查看助记词！</string>
-    <string name="update_hint">请务必从上方铠石钱包官方网站下载安装包！</string>
-    <string name="verify_code_hint">请将此验证码输入到网站获取验证结果</string>
-    <string name="update_alert_boot_low_battery_message">为保证升级顺利，设备电量需保持在%s以上方可更新；当前设备电量为%s，您需先更换电池或为电池充电。</string>
-    <string name="update">检测到新版本</string>
-    <string name="new_version_hint_message">您有新的固件%s可以更新。对比以下sha256和官网下载包的sha256，确保一致后，点击“立即更新”按钮开始更新。</string>
-    <string name="updating">正在升级</string>
+    <string name="fail">失敗</string>
+    <string name="verify_way">選擇驗證方式</string>
+    <string name="verify_way_mnemonic">助記詞驗證</string>
+    <string name="verify_way_sharding">助記詞分片驗證</string>
+    <string name="generate_mnemonic_hint">請正確記錄並妥善保存好助記詞；錢包生成後，無法再次查看助記詞！</string>
+    <string name="update_hint">請務必從上方鎧石錢包官方網站下載安裝包！</string>
+    <string name="verify_code_hint">請將此驗證碼輸入到網站獲取驗證結果</string>
+    <string name="update_alert_boot_low_battery_message">為保證升級順利，設備電量需保持在%s以上方可更新；當前設備電量為%s，您需先更換電池或為電池充電。</string>
+    <string name="update">檢測到新版本</string>
+    <string name="new_version_hint_message">您有新的固件%s可以更新。對比以下sha256和官網下載包的sha256，確保一致後，點擊「立即更新」按鈕開始更新。</string>
+    <string name="updating">正在升級</string>
     <string name="update_now">立即更新</string>
-    <string name="delete_fingerprint">删除指纹</string>
+    <string name="delete_fingerprint">刪除指紋</string>
     <string name="rename_fingerprint">重命名</string>
-    <string name="confirm_delete">确认删除</string>
-    <string name="fingerprint_rename_subtitle">自定义指纹名称</string>
-    <string name="enroll_complete_hint">恭喜！%s 成功录入</string>
-    <string name="unsupported_qrcode">暂不支持扫描该二维码。</string>
-    <string name="unsupported_coin">不支持此币种</string>
-    <string name="incorrect_qrcode">二维码数据错误</string>
-    <string name="incorrect_tx_data">非法交易数据</string>
-    <string name="invalid_webauth_qrcode_hint">二维码非法，请按照指引扫码正确的二维码完成设备验证</string>
+    <string name="confirm_delete">確認刪除</string>
+    <string name="fingerprint_rename_subtitle">自定義指紋名稱</string>
+    <string name="enroll_complete_hint">恭喜！%s 成功錄入</string>
+    <string name="unsupported_qrcode">暫不支持掃描該二維碼。</string>
+    <string name="unsupported_coin">不支持此幣種</string>
+    <string name="incorrect_qrcode">二維碼數據錯誤</string>
+    <string name="incorrect_tx_data">非法交易數據</string>
+    <string name="invalid_webauth_qrcode_hint">二維碼非法，請按照指引掃碼正確的二維碼完成設備驗證</string>
     <string name="hint">提示</string>
-    <string name="enlarge_qrcode">扫码困难？点击二维码进行调整</string>
-    <string name="enroll_fingerprint">指纹录入</string>
-    <string name="enroll_fingerprint_hint">将您的手指放在指纹传感器区，感受到震动后离开，重复此步骤直至指纹 100% 录入。</string>
+    <string name="enlarge_qrcode">掃碼困難？點擊二維碼進行調整</string>
+    <string name="enroll_fingerprint">指紋錄入</string>
+    <string name="enroll_fingerprint_hint">將您的手指放在指紋傳感器區，感受到震動後離開，重復此步驟直至指紋 100% 錄入。</string>
     <string name="complete_enroll">完成</string>
-    <string name="modify_fingerprint_name">自定义指纹名称</string>
-    <string name="fingerprint_settings">指纹设置</string>
-    <string name="enroll_fingerprint_hint1">手指放在指纹感应区，稍用力按压</string>
-    <string name="fingerprint_use_hint">签名或解锁该设备时，可使用指纹密码</string>
-    <string name="fingerprint_start_enroll">开始录入</string>
-    <string name="delete">删除</string>
+    <string name="modify_fingerprint_name">自定義指紋名稱</string>
+    <string name="fingerprint_settings">指紋設置</string>
+    <string name="enroll_fingerprint_hint1">手指放在指紋感應區，稍用力按壓</string>
+    <string name="fingerprint_use_hint">簽名或解鎖該設備時，可使用指紋密碼</string>
+    <string name="fingerprint_start_enroll">開始錄入</string>
+    <string name="delete">刪除</string>
     <string name="rename">重命名</string>
-    <string name="fingerprint_unlock">指纹解锁</string>
-    <string name="verify_fingerprint_hint">请验证指纹</string>
-    <string name="add_fingerprint">+添加指纹</string>
-    <string name="search_coin_no_result_hint">未找到您想添加的币种</string>
-    <string name="verify_fingerprint_to_sign">请验证已有的指纹，用于签名</string>
-    <string name="switch_to_fingerprint_sign"><![CDATA[切换至密码 >]]></string>
-    <string name="use_fingerprint_unlock">用于解锁设备</string>
-    <string name="use_fingerprint_sign">用于签名</string>
-    <string name="serialno">序列号: %s</string>
+    <string name="fingerprint_unlock">指紋解鎖</string>
+    <string name="verify_fingerprint_hint">請驗證指紋</string>
+    <string name="add_fingerprint">+添加指紋</string>
+    <string name="search_coin_no_result_hint">未找到您想添加的幣種</string>
+    <string name="verify_fingerprint_to_sign">請驗證已有的指紋，用於簽名</string>
+    <string name="switch_to_fingerprint_sign"><![CDATA[切換至密碼 >]]></string>
+    <string name="use_fingerprint_unlock">用於解鎖設備</string>
+    <string name="use_fingerprint_sign">用於簽名</string>
+    <string name="serialno">序列號: %s</string>
     <string name="receive_address">收款地址%d</string>
     <string name="sync_in_progress">信息同步中</string>
-    <string name="invalid_data">非法数据</string>
-    <string name="version_not_match">固件版本和移动端版本不匹配，请升级双方版本至最新。</string>
-    <string name="reset_hint">密码错误，机器将恢复出厂设置</string>
-    <string name="set_passphrase">密语️(Passphrase)钱包</string>
-    <string name="tx_list_empty">没有您搜索的结果\n请输入已签名交易或消息的相关信息</string>
-    <string name="address_list_empty">没有您搜索的结果\n请输入地址或地址名称关键字</string>
-    <string name="tag">标签</string>
-    <string name="confirm_to_verify_mnemonic">确认，去验证</string>
-    <string name="pattern_unlock_hint">手势密码将用于解锁设备</string>
-    <string name="new_version_footer_hint">弹框关闭后，您可前往【菜单—设置—版本】，点击“可更新”</string>
-    <string name="factory_reset_warning">将清除该设备的所有数据，设备会恢复到默认的出厂状态，确认是否继续该操作。</string>
+    <string name="invalid_data">非法數據</string>
+    <string name="version_not_match">固件版本和移動端版本不匹配，請升級雙方版本至最新。</string>
+    <string name="reset_hint">密碼錯誤，機器將恢復出廠設置</string>
+    <string name="set_passphrase">密語️(Passphrase)錢包</string>
+    <string name="tx_list_empty">沒有您搜索的結果\n請輸入已簽名交易或消息的相關信息</string>
+    <string name="address_list_empty">沒有您搜索的結果\n請輸入地址或地址名稱關鍵字</string>
+    <string name="tag">標簽</string>
+    <string name="confirm_to_verify_mnemonic">確認，去驗證</string>
+    <string name="pattern_unlock_hint">手勢密碼將用於解鎖設備</string>
+    <string name="new_version_footer_hint">彈框關閉後，您可前往【菜單—設置—版本】，點擊「可更新」</string>
+    <string name="factory_reset_warning">將清除該設備的所有數據，設備會恢復到默認的出廠狀態，確認是否繼續該操作。</string>
     <string-array name="create_vault_step">
-        <item>"钱包生成中…"</item>
-        <item>"系统安全检测中…"</item>
-        <item>"钱包加密中…"</item>
-        <item>"芯片安全检测中…"</item>
-        <item>"写入安全芯片…"</item>
+        <item>"錢包生成中…"</item>
+        <item>"系統安全檢測中…"</item>
+        <item>"錢包加密中…"</item>
+        <item>"芯片安全檢測中…"</item>
+        <item>"寫入安全芯片…"</item>
     </string-array>
-    <string name="export_to_electrum">在 Electrum 创建观察钱包</string>
-    <string name="export_to_electrum_guide">1. 打开 Electrum，新建钱包 \n2. 选择“标准钱包” \n3. 选择“使用主公钥” \n4. 在输入主公钥页面点击照相机按钮，扫描主公钥二维码（点击下方按钮查看二维码）\n5. 设置钱包密码 \n6. 进入观察钱包</string>
-    <string name="export_xpub">查看主公钥二维码</string>
-    <string name="export_to_electrum_guide_hint">Electrum 创建指引</string>
-    <string name="send_address">发送地址 %d</string>
-    <string name="input">输入 %d</string>
-    <string name="output">输出 %d</string>
-    <string name="export_success">导出成功</string>
-    <string name="read_sdcard">读取TF卡</string>
-    <string name="no_sdcard">未检测到TF卡</string>
-    <string name="no_sdcard_hint">请先插入TF卡（仅支持FAT32格式）</string>
-    <string name="no_unsigned_txn">未检测到待签文件</string>
-    <string name="no_unsigned_txn_hint">请检查TF卡中是否存有待签文件</string>
-    <string name="electrum_broadcast_guide">Electrum 广播指引</string>
-    <string name="electrum_broadcast_action_guide">打开 Electrum，点击【工具--加载交易--从二维码】扫描铠石钱包\n\n若扫码困难，可将已签名交易导出文件，从文件加载交易。</string>
-    <string name="electrum_decode_txn_fail">解析失败</string>
-    <string name="electrum_import_xpub_guide_title">Electrum 扫描主公钥二维码</string>
-    <string name="electrum_import_xpub_action_guide">1. 打开 Electrum，新建钱包\n2. 选择“标准钱包”\n3. 选择“使用主公钥”\n4. 在输入主公钥页面点击相机按钮，扫描主公钥二维码\n\n若扫码困难，可将主公钥导出文件。</string>
-    <string name="error_txn_file">请重新导出，导出时请不要更改文件内容或格式。</string>
-    <string name="export_signed_txn">导出文件进行广播</string>
-    <string name="electrum_import_signed_txn">导出后，前往【electrum--工具--加载交易--从文件】，打开该文件。</string>
-    <string name="insert_sdcard_hint">请先插入TF卡（仅支持FAT32格式）</string>
-    <string name="electrum_import_xpub_action">在 Electrum 输入主公钥页面打开该文件</string>
-    <string name="transaction_source_label">热端钱包</string>
-    <string name="use_electrum_to_broadcast">请用 Electrum 扫描二维码广播</string>
-    <string name="transaction_from_electrum">该笔交易热端来源于Electrum</string>
+    <string name="export_to_electrum">在 Electrum 創建觀察錢包</string>
+    <string name="export_to_electrum_guide">1. 打開 Electrum，新建錢包 \n2. 選擇「標準錢包」 \n3. 選擇「使用主公鑰」 \n4. 在輸入主公鑰頁面點擊照相機按鈕，掃描主公鑰二維碼（點擊下方按鈕查看二維碼）\n5. 設置錢包密碼 \n6. 進入觀察錢包</string>
+    <string name="export_xpub">查看主公鑰二維碼</string>
+    <string name="export_to_electrum_guide_hint">Electrum 創建指引</string>
+    <string name="send_address">發送地址 %d</string>
+    <string name="input">輸入 %d</string>
+    <string name="output">輸出 %d</string>
+    <string name="export_success">導出成功</string>
+    <string name="read_sdcard">讀取TF卡</string>
+    <string name="no_sdcard">未檢測到TF卡</string>
+    <string name="no_sdcard_hint">請先插入TF卡（僅支持FAT32格式）</string>
+    <string name="no_unsigned_txn">未檢測到待簽文件</string>
+    <string name="no_unsigned_txn_hint">請檢查TF卡中是否存有待簽文件</string>
+    <string name="electrum_broadcast_guide">Electrum 廣播指引</string>
+    <string name="electrum_broadcast_action_guide">打開 Electrum，點擊【工具--加載交易--從二維碼】掃描鎧石錢包\n\n若掃碼困難，可將已簽名交易導出文件，從文件加載交易。</string>
+    <string name="electrum_decode_txn_fail">解析失敗</string>
+    <string name="electrum_import_xpub_guide_title">Electrum 掃描主公鑰二維碼</string>
+    <string name="electrum_import_xpub_action_guide">1. 打開 Electrum，新建錢包\n2. 選擇「標準錢包」\n3. 選擇「使用主公鑰」\n4. 在輸入主公鑰頁面點擊相機按鈕，掃描主公鑰二維碼\n\n若掃碼困難，可將主公鑰導出文件。</string>
+    <string name="error_txn_file">請重新導出，導出時請不要更改文件內容或格式。</string>
+    <string name="export_signed_txn">導出文件進行廣播</string>
+    <string name="electrum_import_signed_txn">導出後，前往【electrum--工具--加載交易--從文件】，打開該文件。</string>
+    <string name="insert_sdcard_hint">請先插入TF卡（僅支持FAT32格式）</string>
+    <string name="electrum_import_xpub_action">在 Electrum 輸入主公鑰頁面打開該文件</string>
+    <string name="transaction_source_label">熱端錢包</string>
+    <string name="use_electrum_to_broadcast">請用 Electrum 掃描二維碼廣播</string>
+    <string name="transaction_from_electrum">該筆交易熱端來源於Electrum</string>
     <string name="add_address">添加地址</string>
-    <string name="add_account">添加账户</string>
-    <string name="use_electrum_scan_xpub">请用 Electrum 扫描主公钥二维码</string>
-    <string name="export_signed_txn_file">导出已签名文件</string>
-    <string name="export_signed_txn_action_guide">导出后，用 Electrum 进行广播\n前往【Electrum--工具--加载交易--从文件】打开该文件</string>
-    <string name="export">导出</string>
-    <string name="export_xpub_text_file">导出主公钥文件</string>
-    <string name="file_name_label">该文件的文件名为：</string>
-    <string name="master_xpub">主公钥（隔离见证兼容）</string>
-    <string name="electrum_qrcode_hint"><![CDATA[扫码困难？点击二维码进行放大<br>或<u>\点击此处导出文件\</u>]]></string>
-    <string name="scan_electrum_hint">若扫描 Electrum 困难，可将待签交易导出成文件，前往【菜单--读取TF卡】对文件签名。</string>
-    <string name="sign_txn_in_sdcard">对文件签名</string>
-    <string name="master_pubkey_not_match">该交易无法识别，您的铠石钱包与此观察钱包不匹配。</string>
+    <string name="add_account">添加賬戶</string>
+    <string name="use_electrum_scan_xpub">請用 Electrum 掃描主公鑰二維碼</string>
+    <string name="export_signed_txn_file">導出已簽名文件</string>
+    <string name="export_signed_txn_action_guide">導出後，用 Electrum 進行廣播\n前往【Electrum--工具--加載交易--從文件】打開該文件</string>
+    <string name="export">導出</string>
+    <string name="export_xpub_text_file">導出主公鑰文件</string>
+    <string name="file_name_label">該文件的文件名為：</string>
+    <string name="master_xpub">主公鑰（隔離見證兼容）</string>
+    <string name="electrum_qrcode_hint"><![CDATA[掃碼困難？點擊二維碼進行放大<br>或<u>\點擊此處導出文件\</u>]]></string>
+    <string name="scan_electrum_hint">若掃描 Electrum 困難，可將待簽交易導出成文件，前往【菜單--讀取TF卡】對文件簽名。</string>
+    <string name="sign_txn_in_sdcard">對文件簽名</string>
+    <string name="master_pubkey_not_match">該交易無法識別，您的鎧石錢包與此觀察錢包不匹配。</string>
     <string name="change">找零</string>
-    <string name="electrum_compatibility">适配 Electrum</string>
-    <string name="identification_failed">交易识别失败</string>
-    <string name="from_electrum">来自Electrum</string>
-    <string name="update_failed">升级失败</string>
-    <string name="contact_keystone_service">您可邮件联系客服：support@keyst.one\n 状态码:%s</string>
-    <string name="keep_rolling">继续投掷</string>
-    <string name="confirm_rolling">确认生成</string>
-    <string name="rolling_hint_less_than_99">您当前投掷的次数为%d；建议您最少投掷99次，获得256位的随机熵值。</string>
-    <string name="rolling_hint_less_than_50">您当前投掷的次数为%d；至少投掷50次，才能生成助记词。</string>
-    <string name="rolling_not_enough">投掷次数不足</string>
-    <string name="dice_rolls">骰子生成助记词</string>
-    <string name="dice_roll_guide"><![CDATA[请注意:<br><br> 1. 至少投掷50次，才能生成助记词；建议您最少投掷99次，获得256位的随机熵值；铠石钱包不限制您的最大投掷次数。<br>2. 建议您使用<font color="#00cdc3">赌场级骰子<font/>（六个面向上的概率相同），操作过程中确保骰子在空中得到足够的翻转，且避免总是从骰子特定面朝上进行投掷。]]></string>
-    <string name="start">开始</string>
-    <string name="pattern_lock_hide_track">为防偷窥，解锁时将隐藏轨迹</string>
-    <string name="abnormal_tx">异常交易</string>
-    <string name="fee_attack_warning">检测到该笔交易存在费用超付攻击风险，禁止对其签名，您可前往：https://keyst.one/fee-attack 了解详情，您也可邮件联系客服：support@keyst.one</string>
-    <string name="already_signed">检测到您已对该笔交易签名，您可直接广播该交易</string>
-    <string name="contact_info">邮箱: support@keyst.one</string>
-    <string name="keep_mnemonic_hint">*铠石钱包在任何情况下都不会询问您的助记词，请务必妥善保管好助记词，不要透露给任何人</string>
-    <string name="contact_us">联系我们</string>
-    <string name="current_device_info">设备信息</string>
-    <string name="switch_passphrase">进入密语钱包</string>
-    <string name="check_mnemonic">检查助记词</string>
-    <string name="check_failed">验证失败</string>
-    <string name="check_mnemonic_failed">输入的助记词和当前钱包的助记词不一致。</string>
-    <string name="invalid_mnemonic_hint">输入了无效的助记词，请逐字检查。</string>
-    <string name="check_successful">验证成功</string>
-    <string name="check_successful_hint">输入的助记词和当前钱包的助记词一致。</string>
+    <string name="electrum_compatibility">適配 Electrum</string>
+    <string name="identification_failed">交易識別失敗</string>
+    <string name="from_electrum">來自Electrum</string>
+    <string name="update_failed">升級失敗</string>
+    <string name="contact_keystone_service">您可郵件聯系客服：support@keyst.one\n 狀態碼:%s</string>
+    <string name="keep_rolling">繼續投擲</string>
+    <string name="confirm_rolling">確認生成</string>
+    <string name="rolling_hint_less_than_99">您當前投擲的次數為%d；建議您最少投擲99次，獲得256位的隨機熵值。</string>
+    <string name="rolling_hint_less_than_50">您當前投擲的次數為%d；至少投擲50次，才能生成助記詞。</string>
+    <string name="rolling_not_enough">投擲次數不足</string>
+    <string name="dice_rolls">骰子生成助記詞</string>
+    <string name="dice_roll_guide"><![CDATA[請註意:<br><br> 1. 至少投擲50次，才能生成助記詞；建議您最少投擲99次，獲得256位的隨機熵值；鎧石錢包不限製您的最大投擲次數。<br>2. 建議您使用<font color="#00cdc3">賭場級骰子<font/>（六個面向上的概率相同），操作過程中確保骰子在空中得到足夠的翻轉，且避免總是從骰子特定面朝上進行投擲。]]></string>
+    <string name="start">開始</string>
+    <string name="pattern_lock_hide_track">為防偷窺，解鎖時將隱藏軌跡</string>
+    <string name="abnormal_tx">異常交易</string>
+    <string name="fee_attack_warning">檢測到該筆交易存在費用超付攻擊風險，禁止對其簽名，您可前往：https://keyst.one/fee-attack 了解詳情，您也可郵件聯系客服：support@keyst.one</string>
+    <string name="already_signed">檢測到您已對該筆交易簽名，您可直接廣播該交易</string>
+    <string name="contact_info">郵箱: support@keyst.one</string>
+    <string name="keep_mnemonic_hint">*鎧石錢包在任何情況下都不會詢問您的助記詞，請務必妥善保管好助記詞，不要透露給任何人</string>
+    <string name="contact_us">聯系我們</string>
+    <string name="current_device_info">設備信息</string>
+    <string name="switch_passphrase">進入密語錢包</string>
+    <string name="check_mnemonic">檢查助記詞</string>
+    <string name="check_failed">驗證失敗</string>
+    <string name="check_mnemonic_failed">輸入的助記詞和當前錢包的助記詞不一致。</string>
+    <string name="invalid_mnemonic_hint">輸入了無效的助記詞，請逐字檢查。</string>
+    <string name="check_successful">驗證成功</string>
+    <string name="check_successful_hint">輸入的助記詞和當前錢包的助記詞一致。</string>
     <string name="notice">提示</string>
     <string name="notice1">提示</string>
-    <string name="default_vault_notice">您已升级到新版本，为了您的资产安全，设备每次重启后（包括升级、断电重启、关机重启等）将进入默认钱包。</string>
-    <string name="switching_to_main_vault">正在进入默认钱包，请勿锁屏</string>
-    <string name="add_polkadot_hint">添加%s，您需要再次输入当前钱包的助记词。具体原因访问：https://keyst.one/%s</string>
-    <string name="add_later">暂不添加</string>
-    <string name="comfirm_add">确认添加</string>
-    <string name="mnemonic_not_match">输入的助记词和当前钱包的不一致，请重新输入。</string>
-    <string name="adding_dot_hint">正在添加%s，请勿锁屏</string>
-    <string name="dot_tip">小费</string>
-    <string name="opration_failed">操作失败</string>
-    <string name="reboot_hint">请重新启动机器，多次重试未果请联系客服：support@keyst.one\n 状态码:%s</string>
-    <string name="reboot">重新启动</string>
-    <string name="clear_and_power_off">删除所有信息并关机</string>
+    <string name="default_vault_notice">您已升級到新版本，為了您的資產安全，設備每次重啟後（包括升級、斷電重啟、關機重啟等）將進入默認錢包。</string>
+    <string name="switching_to_main_vault">正在進入默認錢包，請勿鎖屏</string>
+    <string name="add_polkadot_hint">添加%s，您需要再次輸入當前錢包的助記詞。具體原因訪問：https://keyst.one/%s</string>
+    <string name="add_later">暫不添加</string>
+    <string name="comfirm_add">確認添加</string>
+    <string name="mnemonic_not_match">輸入的助記詞和當前錢包的不一致，請重新輸入。</string>
+    <string name="adding_dot_hint">正在添加%s，請勿鎖屏</string>
+    <string name="dot_tip">小費</string>
+    <string name="opration_failed">操作失敗</string>
+    <string name="reboot_hint">請重新啟動機器，多次重試未果請聯系客服：support@keyst.one\n 狀態碼:%s</string>
+    <string name="reboot">重新啟動</string>
+    <string name="clear_and_power_off">刪除所有信息並關機</string>
     <string name="shading_guide"><![CDATA[
-    1. 您创建的是<font color="#00cdc3">%1$d<font/>/<font color="#00cdc3">%2$d<font/>的分片助记词；总片数为<font color="#00cdc3">%3$d<font/>片，恢复助记词时最少需要<font color="#00cdc3">%4$d<font/>片。<br> <br>
-    2. 接下来展示和确认每一分片的助记词，若分片由多个管理员分别保管，请确认各片管理员的身份，确保是由本人进行操作。<br> <br>
-    3. 请勿将助记词拍照、存储在联网设备上，或泄露给他人！
+    1. 您創建的是<font color="#00cdc3">%1$d<font/>/<font color="#00cdc3">%2$d<font/>的分片助記詞；總片數為<font color="#00cdc3">%3$d<font/>片，恢復助記詞時最少需要<font color="#00cdc3">%4$d<font/>片。<br> <br>
+    2. 接下來展示和確認每一分片的助記詞，若分片由多個管理員分別保管，請確認各片管理員的身份，確保是由本人進行操作。<br> <br>
+    3. 請勿將助記詞拍照、存儲在聯網設備上，或泄露給他人！
     ]]></string>
     <string name="generate_sharding_sequence">第%d分片（共%d片）</string>
-    <string name="generate_shading_hint">请确认您是第%d分片的保管员</string>
-    <string name="cancel_create_sharding">取消创建</string>
-    <string name="input_sharding_mnemonic_hint"><![CDATA[请在下方表格中输入<font color="#00cdc3">第%d分片<font/>的助记词]]></string>
-    <string name="verify_pass">验证通过</string>
-    <string name="verify_sharding_pass_hint">该分片助记词验证正确，将展示下一分片助记词，点击确定后请将机器给到保管第%d分片的保管员。</string>
+    <string name="generate_shading_hint">請確認您是第%d分片的保管員</string>
+    <string name="cancel_create_sharding">取消創建</string>
+    <string name="input_sharding_mnemonic_hint"><![CDATA[請在下方表格中輸入<font color="#00cdc3">第%d分片<font/>的助記詞]]></string>
+    <string name="verify_pass">驗證通過</string>
+    <string name="verify_sharding_pass_hint">該分片助記詞驗證正確，將展示下一分片助記詞，點擊確定後請將機器給到保管第%d分片的保管員。</string>
     <string name="sharding_no">第%d分片</string>
-    <string name="reset_password">重置密码</string>
-    <string name="first_sharding_hint">第1分片信息输入正确，您还需要输入%d片。</string>
-    <string name="cancel_import_sharding">取消输入</string>
-    <string name="continue_import_sharding">继续输入</string>
-    <string name="sharding_repeat">该分片助记词已存在，请输入其他分片的助记词。</string>
-    <string name="sharding_id_not_match">您输入了其他助记词的分片助记词，请重新输入。</string>
-    <string name="confirm_cancel_import_sharding">确认取消</string>
-    <string name="continue_create_sharding">继续输入</string>
-    <string name="invalid_shard">该分片助记词错误，请逐字检查。</string>
-    <string name="ask_confirm_cancel_import_sharding">取消导入钱包?</string>
-    <string name="ask_confirm_cancel_create_sharding">取消创建钱包?</string>
-    <string name="ask_confirm_cancel_check_sharding">取消检查助记词？</string>
-    <string name="ask_confirm_cancel_enter_sharding">取消输入助记词？</string>
-    <string name="cancel_import_sharding_notice">取消后，已确认的分片信息将会丢失，确认是否取消？</string>
+    <string name="reset_password">重置密碼</string>
+    <string name="first_sharding_hint">第1分片信息輸入正確，您還需要輸入%d片。</string>
+    <string name="cancel_import_sharding">取消輸入</string>
+    <string name="continue_import_sharding">繼續輸入</string>
+    <string name="sharding_repeat">該分片助記詞已存在，請輸入其他分片的助記詞。</string>
+    <string name="sharding_id_not_match">您輸入了其他助記詞的分片助記詞，請重新輸入。</string>
+    <string name="confirm_cancel_import_sharding">確認取消</string>
+    <string name="continue_create_sharding">繼續輸入</string>
+    <string name="invalid_shard">該分片助記詞錯誤，請逐字檢查。</string>
+    <string name="ask_confirm_cancel_import_sharding">取消導入錢包?</string>
+    <string name="ask_confirm_cancel_create_sharding">取消創建錢包?</string>
+    <string name="ask_confirm_cancel_check_sharding">取消檢查助記詞？</string>
+    <string name="ask_confirm_cancel_enter_sharding">取消輸入助記詞？</string>
+    <string name="cancel_import_sharding_notice">取消後，已確認的分片信息將會丟失，確認是否取消？</string>
     <string name="next_sharding">下一分片</string>
-    <string name="not_support_multi_group_sharding">您输入的是超级分片，铠石钱包暂不支持。</string>
-    <string name="total_sharding_count">分片总数</string>
-    <string name="sharding_threshold">恢复助记词需要的最少片数</string>
-    <string name="confirm_cancel_create_sharding_title">取消创建钱包?</string>
-    <string name="confirm_cancel_create_sharding">取消后，已确认的分片信息将会丢失，确认是否取消创建？</string>
-    <string name="choose_check_type">选择检查方式</string>
-    <string name="choose_import_type">选择导入方式</string>
-    <string name="check_bip39_phrase">检查常规助记词</string>
-    <string name="check_slip39_phrase">检查分片助记词</string>
-    <string name="import_bip39_phrase">导入常规助记词</string>
-    <string name="import_slip39_phrase">导入分片助记词</string>
-    <string name="enter_bip39_phrase">输入常规助记词</string>
-    <string name="enter_slip39_phrase">输入分片助记词</string>
-    <string name="reset_password_by_phrase">通过输入当前钱包助记词重置密码</string>
-    <string name="shamir_backup">分片助记词</string>
-    <string name="generate_slip39_phrase">生成分片助记词</string>
-    <string name="generate_bip39_phrase">生成助记词</string>
-    <string name="shard_setting">助记词分片设置</string>
-    <string name="previous_one">上一个</string>
-    <string name="next_one">下一个</string>
-    <string name="abnormal_state_hint">建议您将设备恢复出厂（擦除设备的所有信息）后重新设置。多次重试未果，您可邮件联系客服：support@keyst.one\n状态码:%s</string>
-    <string name="abnormal_state_title">设备状态异常</string>
+    <string name="not_support_multi_group_sharding">您輸入的是超級分片，鎧石錢包暫不支持。</string>
+    <string name="total_sharding_count">分片總數</string>
+    <string name="sharding_threshold">恢復助記詞需要的最少片數</string>
+    <string name="confirm_cancel_create_sharding_title">取消創建錢包?</string>
+    <string name="confirm_cancel_create_sharding">取消後，已確認的分片信息將會丟失，確認是否取消創建？</string>
+    <string name="choose_check_type">選擇檢查方式</string>
+    <string name="choose_import_type">選擇導入方式</string>
+    <string name="check_bip39_phrase">檢查常規助記詞</string>
+    <string name="check_slip39_phrase">檢查分片助記詞</string>
+    <string name="import_bip39_phrase">導入常規助記詞</string>
+    <string name="import_slip39_phrase">導入分片助記詞</string>
+    <string name="enter_bip39_phrase">輸入常規助記詞</string>
+    <string name="enter_slip39_phrase">輸入分片助記詞</string>
+    <string name="reset_password_by_phrase">通過輸入當前錢包助記詞重置密碼</string>
+    <string name="shamir_backup">分片助記詞</string>
+    <string name="generate_slip39_phrase">生成分片助記詞</string>
+    <string name="generate_bip39_phrase">生成助記詞</string>
+    <string name="shard_setting">助記詞分片設置</string>
+    <string name="previous_one">上一個</string>
+    <string name="next_one">下一個</string>
+    <string name="abnormal_state_hint">建議您將設備恢復出廠（擦除設備的所有信息）後重新設置。多次重試未果，您可郵件聯系客服：support@keyst.one\n狀態碼:%s</string>
+    <string name="abnormal_state_title">設備狀態異常</string>
 
     <string-array name="watch_wallet_list">
-        <item>铠石钱包移动端</item>
-        <item>Web3</item>
+        <item>鎧石錢包移動端</item>
+        <item>MetaMask / DeFi / Web3</item>
         <item>Polkadot{.js}</item>
         <item>XRP Toolkit</item>
     </string-array>
     <string-array name="watch_wallet_summury">
-        <item>BTC、ETH等8条主链</item>
-        <item>ETH</item>
+        <item>BTC、ETH等8條主鏈</item>
+        <item>ETH、Polygon、Avalanche、BSC…</item>
         <item>DOT、KSM</item>
         <item>XRP</item>
     </string-array>
 
-    <string name="choose_watch_only_wallet">选择观察钱包</string>
-    <string name="sync_later">暂不同步</string>
-    <string name="sync_watch_wallet">同步观察钱包</string>
-    <string name="sync_keystone_wallet_guide_title">铠石钱包移动端导入指引：</string>
-    <string name="sync_xumm_guide_title">XUMM 导入指引：</string>
-    <string name="sync_xrp_toolkit_guide_title">XRP Toolkit 导入指引：</string>
-    <string name="sync_polkadotjs_wallet_guide_title">Polkadot{.js} 导入 %s 指引：</string>
-    <string name="sync_metamask_guide_title">连接 MetaMask 指引：</string>
+    <string name="choose_watch_only_wallet">選擇觀察錢包</string>
+    <string name="sync_later">暫不同步</string>
+    <string name="sync_watch_wallet">同步觀察錢包</string>
+    <string name="sync_keystone_wallet_guide_title">鎧石錢包移動端導入指引：</string>
+    <string name="sync_xumm_guide_title">XUMM 導入指引：</string>
+    <string name="sync_xrp_toolkit_guide_title">XRP Toolkit 導入指引：</string>
+    <string name="sync_polkadotjs_wallet_guide_title">Polkadot{.js} 導入 %s 指引：</string>
+    <string name="sync_metamask_guide_title">連接 MetaMask 指引：</string>
     <string name="sync_keystone_wallet_guide_text"><![CDATA[
-        1. 打开铠石钱包移动端，添加新钱包<br>
-        2. 选择“硬件钱包”，点击绑定按钮<br>
-        3. 勾选隐私协议和服务条款后，点击确定按钮，扫描钱包二维码<br><br>
-        <font color="#535353">铠石钱包移动端可在官网下载：<font/><br>
+        1. 打開鎧石錢包移動端，添加新錢包<br>
+        2. 選擇「硬件錢包」，點擊綁定按鈕<br>
+        3. 勾選隱私協議和服務條款後，點擊確定按鈕，掃描錢包二維碼<br><br>
+        <font color="#535353">鎧石錢包移動端可在官網下載：<font/><br>
         <font color="#00cdc3">https://keyst.one/app<font/>
     ]]></string>
 
     <string name="sync_polkadot_js_guide_text"><![CDATA[
-        1. 打开 Polkadot{.js}，选择 <font color="#00cdc3">%s<font/><br>
-        2. 点击“<font color="#00cdc3">账户<font/>”，选择 “<font color="#00cdc3"> 账户<font/>”<br>
-        3. 点击“<font color="#00cdc3">通过二维码添加<font/>”<br>
-        4. 扫描 %s 的二维码<br>
+        1. 打開 Polkadot{.js}，選擇 <font color="#00cdc3">%s<font/><br>
+        2. 點擊「<font color="#00cdc3">賬戶<font/>」，選擇 「<font color="#00cdc3"> 賬戶<font/>」<br>
+        3. 點擊「<font color="#00cdc3">通過二維碼添加<font/>」<br>
+        4. 掃描 %s 的二維碼<br>
     ]]></string>
     <string name="sync_xumm_guide_text"><![CDATA[
-        1. 打开 XUMM，新建账户<br>
-        2. 选择“导入已有账户”<br>
-        3. 选择“只读”后点击“下一步”<br>
-        4. 扫描地址二维码<br>
-        <font color="#00cdc3">默认生成第一个地址（m/44\'/144\’/0\’/0/0），若您想同步其他地址，可进入钱包后新增其他地址后用XUMM扫描该地址。<font/><br>
-        5. 点击“下一个”进入该账户<br>
+        1. 打開 XUMM，新建賬戶<br>
+        2. 選擇「導入已有賬戶」<br>
+        3. 選擇「只讀」後點擊「下一步」<br>
+        4. 掃描地址二維碼<br>
+        <font color="#00cdc3">默認生成第一個地址（m/44\'/144\’/0\’/0/0），若您想同步其他地址，可進入錢包後新增其他地址後用XUMM掃描該地址。<font/><br>
+        5. 點擊「下一個」進入該賬戶<br>
     ]]></string>
 
     <string name="sync_xrp_toolkit_guide_text"><![CDATA[
-        1. 打开 XRP Toolkit，点击 “Connect Wallet”<br>
-        2. 选择 “Keystone Device”<br>
-        3. 点击 “Scan Keystone”<br>
-        4. 扫描地址二维码<br>
+        1. 打開 XRP Toolkit，點擊 「Connect Wallet」<br>
+        2. 選擇 「Keystone Device」<br>
+        3. 點擊 「Scan Keystone」<br>
+        4. 掃描地址二維碼<br>
     ]]></string>
     <string name="sync_metamask_guide_text"><![CDATA[
-        <font color="#00cdc3">① <font/>打开 MateMask，<b>连接硬件钱包</b><br>
-        <font color="#00cdc3">② <font/>选择 "<b>QR-based HW Wallet</b>"<br>
-        <font color="#00cdc3">③ <font/>点击 "<b>扫描二维码</b>" 按钮<br>
-        <font color="#00cdc3">④ <font/>扫描钱包二维码（点击下方按钮查看）<br>
-        <font color="#00cdc3">⑤ <font/>选择账户<br>
-        <font color="#00cdc3">⑥ <font/>进入观察钱包<br>
+        <font color="#00cdc3">① <font/>打開 MetaMask，<b>連接硬件錢包</b><br>
+        <font color="#00cdc3">② <font/>選擇 \'<b>QR-based</b>\'<br>
+        <font color="#00cdc3">③ <font/>點擊 \'<b>繼續</b>\'按鈕<br>
+        <font color="#00cdc3">④ <font/>掃描錢包二維碼（點擊下方按鈕查看）<br>
+        <font color="#00cdc3">⑤ <font/>選擇賬戶<br>
+        <font color="#00cdc3">⑥ <font/>進入觀察錢包<br>
     ]]></string>
-    <string name="sync_metamask_hit"><![CDATA[和其他应用连接教程，请访问：<br><font color="#00cdc3">https://keyst.one/web3<font/>]]></string>
-    <string name="sync_keystone_guide_button_text">查看钱包二维码</string>
-    <string name="sync_xumm_guide_button_text">查看地址二维码</string>
-    <string name="sync_xrp_toolkit_guide_button_text">查看地址二维码</string>
-    <string name="sync_polkadot_js_guide_button_text">查看%s二维码</string>
-    <string name="sync_metamask_guide_button_text">查看二维码</string>
-    <string name="sync_polkadot_hint">请注意：\n在Polkadot{.js}上，需分别创建 DOT、KSM 的观察钱包。</string>
-    <string name="sync_with_keystone_vault">请使用铠石钱包移动端扫描二维码</string>
-    <string name="sync_with_xumm">请使用 XUMM 扫描地址二维码</string>
-    <string name="sync_with_xrp_toolkit">请使用 XRP Toolkit 扫描二维码</string>
-    <string name="sync_with_metamask">请使用观察钱包扫描二维码</string>
-    <string name="sync_with_polkadot_js">请使用 Polkadot{.js} 扫描二维码</string>
-    <string name="broadcast_xrp_toolkit_hint">请使用 XRP Toolkit 扫描二维码</string>
-    <string name="sync_first_xrp_accout">将默认展示第一个地址的二维码，若您要同步其他地址，可进入钱包添加地址。</string>
-    <string name="sync_xrp">同步账户</string>
-    <string name="unresolve_tx">非法数据</string>
-    <string name="unresolve_tx_hint">请扫描%s构造的二维码</string>
-    <string name="account_not_match">非当前钱包交易</string>
-    <string name="account_not_match_detail">该交易不属于当前钱包，请检查交易详情。</string>
-    <string name="simple">简单</string>
+    <string name="sync_metamask_hit"><![CDATA[和其他應用連接教程，請訪問：<br><font color="#00cdc3">https://keyst.one/web3<font/>]]></string>
+    <string name="sync_keystone_guide_button_text">查看錢包二維碼</string>
+    <string name="sync_xumm_guide_button_text">查看地址二維碼</string>
+    <string name="sync_xrp_toolkit_guide_button_text">查看地址二維碼</string>
+    <string name="sync_polkadot_js_guide_button_text">查看%s二維碼</string>
+    <string name="sync_metamask_guide_button_text">查看二維碼</string>
+    <string name="sync_polkadot_hint">請註意：\n在Polkadot{.js}上，需分別創建 DOT、KSM 的觀察錢包。</string>
+    <string name="sync_with_keystone_vault">請使用鎧石錢包移動端掃描二維碼</string>
+    <string name="sync_with_xumm">請使用 XUMM 掃描地址二維碼</string>
+    <string name="sync_with_xrp_toolkit">請使用 XRP Toolkit 掃描二維碼</string>
+    <string name="sync_with_metamask">請使用觀察錢包掃描二維碼</string>
+    <string name="sync_with_polkadot_js">請使用 Polkadot{.js} 掃描二維碼</string>
+    <string name="broadcast_xrp_toolkit_hint">請使用 XRP Toolkit 掃描二維碼</string>
+    <string name="sync_first_xrp_accout">將默認展示第一個地址的二維碼，若您要同步其他地址，可進入錢包添加地址。</string>
+    <string name="sync_xrp">同步賬戶</string>
+    <string name="unresolve_tx">非法數據</string>
+    <string name="unresolve_tx_hint">請掃描%s構造的二維碼</string>
+    <string name="account_not_match">非當前錢包交易</string>
+    <string name="account_not_match_detail">該交易不屬於當前錢包，請檢查交易詳情。</string>
+    <string name="simple">簡單</string>
     <string name="raw">原始</string>
     <string name="spark_token_claim_guide"><![CDATA[
-        1. 打开 <font color="#00cdc3">XRP Toolkit<font/> 进入账户<br>
-        2. 点击菜单栏中的 <font color="#00cdc3">Account<font/> <br>
-        3. 点击地址下方 <font color="#00cdc3">Message Key<font/> 的编辑按钮<br>
-        4. 在输入 Message Key 区域点击<font color="#00cdc3">二维码图标<font/><br>
-        5. 扫描展示在铠石钱包上的Message Key二维码<br>
-        6. 点击 <font color="#00cdc3">Update<font/> 按钮<br>
-        7. 对生成的交易签名并广播
+        1. 打開 <font color="#00cdc3">XRP Toolkit<font/> 進入賬戶<br>
+        2. 點擊菜單欄中的 <font color="#00cdc3">Account<font/> <br>
+        3. 點擊地址下方 <font color="#00cdc3">Message Key<font/> 的編輯按鈕<br>
+        4. 在輸入 Message Key 區域點擊<font color="#00cdc3">二維碼圖標<font/><br>
+        5. 掃描展示在鎧石錢包上的Message Key二維碼<br>
+        6. 點擊 <font color="#00cdc3">Update<font/> 按鈕<br>
+        7. 對生成的交易簽名並廣播
     ]]></string>
-    <string name="spark_token_prepare_title">获取 Spark tokens 准备工作：</string>
-    <string name="claim_spark_token_button">查看 Message Key 二维码</string>
+    <string name="spark_token_prepare_title">獲取 Spark tokens 準備工作：</string>
+    <string name="claim_spark_token_button">查看 Message Key 二維碼</string>
     <string name="spark_token_title">Message Key</string>
-    <string name="claim_spark">获取 Spark</string>
-    <string name="claim_spark_button_text">扫描 XRP Toolkit 二维码</string>
-    <string name="pair_app">同步账户</string>
-    <string name="unknown_substrate_chain_title">暂不支持该币种</string>
-    <string name="unknown_substrate_chain_content">Polkadot{.js}模式下暂不支持该币种</string>
-    <string name="unsupported_polka_tx_type_title">无法解析</string>
-    <string name="unsupported_polka_tx_type_content">该交易类型暂不支持。</string>
-    <string name="enable_dot_for_polkadotjs">切换观察钱包为Polkadot{.js}，您需再次输入当前钱包的助记词。具体原因请访问：https://keyst.one/dot</string>
-    <string name="not_switch">暂不切换</string>
-    <string name="confirm_switch">确认切换</string>
-    <string name="keep_screen_on">请勿锁屏</string>
-    <string name="sync">同步观察钱包</string>
-    <string name="qrcode_capacity">二维码密度：%s </string>
+    <string name="claim_spark">獲取 Spark</string>
+    <string name="claim_spark_button_text">掃描 XRP Toolkit 二維碼</string>
+    <string name="pair_app">同步賬戶</string>
+    <string name="unknown_substrate_chain_title">暫不支持該幣種</string>
+    <string name="unknown_substrate_chain_content">Polkadot{.js}模式下暫不支持該幣種</string>
+    <string name="unsupported_polka_tx_type_title">無法解析</string>
+    <string name="unsupported_polka_tx_type_content">該交易類型暫不支持。</string>
+    <string name="enable_dot_for_polkadotjs">切換觀察錢包為Polkadot{.js}，您需再次輸入當前錢包的助記詞。具體原因請訪問：https://keyst.one/dot</string>
+    <string name="not_switch">暫不切換</string>
+    <string name="confirm_switch">確認切換</string>
+    <string name="keep_screen_on">請勿鎖屏</string>
+    <string name="sync">同步觀察錢包</string>
+    <string name="qrcode_capacity">二維碼密度：%s </string>
     <string name="qr_capacity_high">高</string>
     <string name="qr_capacity_mid">中</string>
     <string name="qr_capacity_low">低</string>
-    <string name="adjust_qr_capacity">扫码困难？您可以调整二维码大小或调低二维码密度</string>
+    <string name="adjust_qr_capacity">掃碼困難？您可以調整二維碼大小或調低二維碼密度</string>
     <string name="create_mnemonic_guide_content"><![CDATA[
-        1. 点击下方按钮进入助记词填写页面 <br>
-        2. 在助记词官方词表中选择前23个单词填入<br>
-        3. 铠石钱包将帮您计算第24个单词 <br>
-        4. 备份助记词<br>
+        1. 點擊下方按鈕進入助記詞填寫頁面 <br>
+        2. 在助記詞官方詞表中選擇前23個單詞填入<br>
+        3. 鎧石錢包將幫您計算第24個單詞 <br>
+        4. 備份助記詞<br>
         ]]>
     </string>
-    <string name="create_mnemonic_web_guide">助记词官方词表和详情介绍，请访问：https://keyst.one/24th</string>
-    <string name="fill_23_words">填写前23个单词</string>
+    <string name="create_mnemonic_web_guide">助記詞官方詞表和詳情介紹，請訪問：https://keyst.one/24th</string>
+    <string name="fill_23_words">填寫前23個單詞</string>
     <string name="last_word_hint"><![CDATA[
-        第24个单词为：<font color="#00cdc3">%s<font/>
+        第24個單詞為：<font color="#00cdc3">%s<font/>
     ]]></string>
-    <string name="please_input_23_words">请在下方表格中输入前23个单词</string>
-    <string name="calculate_24th_word">计算第24个单词</string>
-    <string name="create_23_word">创建自己的助记词</string>
-    <string name="create_23_word_title">创建自己的助记词</string>
-    <string name="mnemonic_backuped">我已备份好助记词</string>
-    <string name="testnet">测试网</string>
+    <string name="please_input_23_words">請在下方表格中輸入前23個單詞</string>
+    <string name="calculate_24th_word">計算第24個單詞</string>
+    <string name="create_23_word">創建自己的助記詞</string>
+    <string name="create_23_word_title">創建自己的助記詞</string>
+    <string name="mnemonic_backuped">我已備份好助記詞</string>
+    <string name="testnet">測試網</string>
     <string name="inconsistent_address">Inconsistent with "From" address</string>
-    <string name="calc_mnemonic_warning">您触发了“创建自己的助记词”这一高级功能，请确保您已充分了解助记词生成的相关知识后，再使用本功能。否则请关闭当前页面。</string>
-    <string name="calc_mnemonic_warning_checkbox">我已充分了解随机熵、BIP39、私钥生成等相关知识。</string>
-    <string name="note">须知</string>
+    <string name="calc_mnemonic_warning">您觸發了「創建自己的助記詞」這一高級功能，請確保您已充分了解助記詞生成的相關知識後，再使用本功能。否則請關閉當前頁面。</string>
+    <string name="calc_mnemonic_warning_checkbox">我已充分了解隨機熵、BIP39、私鑰生成等相關知識。</string>
+    <string name="note">須知</string>
     <string name="tip">提示</string>
-    <string name="learn_more"><Data><![CDATA[Keystone支持解析交易，您可前往<font color="#00CDC3"><b> https://keyst.one/eth </b></font>了解详情。]]></Data></string>
-    <string name="undecoded_tip">注意！该数据未被解析。</string>
-    <string name="from_tfcard">（解码资源来源于TF卡）</string>
-    <string name="check_info">* 签名前，请仔细检查交易详情</string>
-    <string name="select_last_word_hint">请在以下单词中任选一个作为第24个单词</string>
-    <string name="please_insert_sdcard">请先将TF卡插入到设备中</string>
-    <string name="confirm_format">确认是否格式化?</string>
-    <string name="format_sd_card_hint">该操作将擦除卡内所有文件并将TF卡格式化为FAT32格式。卡内若有重要文件请及时备份，确认无误后再进行该操作。</string>
+    <string name="learn_more"><Data><![CDATA[Keystone支持解析交易，您可前往<font color="#00CDC3"><b> https://keyst.one/eth </b></font>了解詳情。]]></Data></string>
+    <string name="undecoded_tip">註意！該數據未被解析。</string>
+    <string name="from_tfcard">（解碼資源來源於TF卡）</string>
+    <string name="check_info">* 簽名前，請仔細檢查交易詳情</string>
+    <string name="select_last_word_hint">請在以下單詞中任選一個作為第24個單詞</string>
+    <string name="please_insert_sdcard">請先將TF卡插入到設備中</string>
+    <string name="confirm_format">確認是否格式化?</string>
+    <string name="format_sd_card_hint">該操作將擦除卡內所有文件並將TF卡格式化為FAT32格式。卡內若有重要文件請及時備份，確認無誤後再進行該操作。</string>
     <string name="format_sdcard_title">格式化TF卡</string>
-    <string name="format_sdcard_hint">您需先将当前TF卡格式化为FAT32格式，否则无法读取/导出文件。</string>
-    <string name="format_sdcard_hint1">请注意：该操作将擦除卡内所有文件，卡内若有重要文件请及时备份，确认无误后再进行该操作。</string>
+    <string name="format_sdcard_hint">您需先將當前TF卡格式化為FAT32格式，否則無法讀取/導出文件。</string>
+    <string name="format_sdcard_hint1">請註意：該操作將擦除卡內所有文件，卡內若有重要文件請及時備份，確認無誤後再進行該操作。</string>
     <string name="format_now">立即格式化</string>
-    <string name="format_sdcard_hint2">弹框关闭后，您可前往【菜单--设置—系统设置—格式化TF卡】，触发该操作</string>
+    <string name="format_sdcard_hint2">彈框關閉後，您可前往【菜單--設置—系統設置—格式化TF卡】，觸發該操作</string>
     <string name="format_success">格式化成功</string>
-    <string name="format_failed">格式化失败</string>
-    <string name="retry_format">确认是否重试？</string>
-    <string name="retry">重试</string>
+    <string name="format_failed">格式化失敗</string>
+    <string name="retry_format">確認是否重試？</string>
+    <string name="retry">重試</string>
     <string name="formatting">格式化中…</string>
-    <string name="fee_too_high">交易费过高</string>
-    <string name="atention">请注意</string>
-    <string name="exceed_fee">该笔交易的fee过高，确认是否继续签名。</string>
-    <string name="companion_hint"><![CDATA[用配对应用扫描上方二维码后，若找不到您需要的账户，请<font color="#00cdc3"><u>点击此处</u><font/>切换钱包。]]></string>
-    <string name="select_wallet">选择钱包</string>
-    <string name="ledger_live"><![CDATA[如果你之前用 <font color="#00cdc3">Ledger Live 连接 Ledger<font/>]]></string>
-    <string name="my_crypto_mew"><![CDATA[如果你之前用 <font color="#00cdc3">My Crypto、MEW 连接 Ledger<font/>]]></string>
-    <string name="metamusk_ledger"><![CDATA[如果你之前用 <font color="#00cdc3">MetaMusk、Ledger 连接 Ledger<font/>]]></string>
-    <string name="top_account">钱包的前3个账户：</string>
-    <string name="show_this_qrcode">展示该钱包二维码</string>
+    <string name="fee_too_high">交易費過高</string>
+    <string name="atention">請註意</string>
+    <string name="exceed_fee">該筆交易的fee過高，確認是否繼續簽名。</string>
+    <string name="companion_hint"><![CDATA[用配對應用掃描上方二維碼後，若找不到您需要的賬戶，請<font color="#00cdc3"><u>點擊此處</u><font/>切換錢包。]]></string>
+    <string name="select_wallet">選擇錢包</string>
+    <string name="ledger_live"><![CDATA[<font color="#00cdc3">Ledger Live<font/> 連接 Ledger]]></string>
+    <string name="my_crypto_mew"><![CDATA[<font color="#00cdc3">Legacy<font/>（My Crypto、MEW 連接 Ledger）]]></string>
+    <string name="metamusk_ledger"><![CDATA[<font color="#00cdc3">Standard<font/>（MetaMask、Ledger 連接 Ledger）]]></string>
+    <string name="top_account">錢包的前3個賬戶：</string>
+    <string name="show_this_qrcode">展示該錢包二維碼</string>
     <string name="sync_metamask_guide_text_hint">Take the Keystone Ethereum Extension import process as an example, the process of other wallets is similar.</string>
 </resources>
