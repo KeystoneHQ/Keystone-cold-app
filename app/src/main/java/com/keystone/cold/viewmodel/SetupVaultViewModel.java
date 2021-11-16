@@ -458,12 +458,6 @@ public class SetupVaultViewModel extends AndroidViewModel {
         accountEntity.setAddition(jsonObject.toString());
         accountEntity.setHdPath(ETHAccount.BIP44_STANDARD.getPath());
         mRepository.updateAccount(accountEntity);
-        List<AddressEntity> addressEntities = mRepository.loadAddressSync(Coins.ETH.coinId());
-        for (AddressEntity addressEntity : addressEntities) {
-            String name = addressEntity.getName();
-            addressEntity.setName(name.replace("ETH-", "Account "));
-            mRepository.updateAddress(addressEntity);
-        }
         addAccount(ETHAccount.LEDGER_LIVE, coinEntity);
         addAccount(ETHAccount.LEDGER_LEGACY, coinEntity);
     }
@@ -494,6 +488,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
             account.setId(accountId);
             AddAddressViewModel.addEthAccountAddress(account, mRepository, 1, coin.getBelongTo(), null);
         }
+        coin.setAddressCount(1);
     }
 
     private void deleteHiddenVaultData() {

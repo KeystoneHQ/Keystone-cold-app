@@ -21,6 +21,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.keystone.cold.model.Address;
@@ -39,6 +40,9 @@ public class AddressEntity implements Address, FilterableItem {
     private String belongTo;
     private String addition;
 
+    @Ignore
+    private String displayName;
+
     public AddressEntity() {
     }
 
@@ -50,6 +54,7 @@ public class AddressEntity implements Address, FilterableItem {
         addressString = address.getAddressString();
         name = address.getName();
         index = address.getIndex();
+        displayName = address.getName();
     }
 
     public void setPath(String path) {
@@ -147,5 +152,13 @@ public class AddressEntity implements Address, FilterableItem {
         s = s.toLowerCase();
         return name.toLowerCase().contains(s)
                 || addressString.toLowerCase().contains(s);
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 }

@@ -61,6 +61,7 @@ import org.spongycastle.util.encoders.Hex;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -440,16 +441,20 @@ public class Web3TxViewModel extends Base {
         if (accountEntity == null) {
             throw new InvalidTransactionException("not have match account");
         }
-        AddressEntity addressEntity = new AddressEntity();
-        String addr = AddAddressViewModel.deriveETHAddress(accountEntity, addressIndex, addressEntity);
-        addressEntity.setAddressString(addr);
-        addressEntity.setCoinId(Coins.ETH.coinId());
-        addressEntity.setIndex(addressIndex);
-        addressEntity.setName("Account " + addressIndex);
-        addressEntity.setBelongTo(mRepository.getBelongTo());
-        accountEntity.setAddressLength(accountEntity.getAddressLength() + 1);
+        List<AddressEntity> addressEntities = new ArrayList<>();
+        for(int i = accountEntity.getAddressLength(); i < addressIndex + 1; i++) {
+            AddressEntity addressEntity = new AddressEntity();
+            String addr = AddAddressViewModel.deriveETHAddress(accountEntity, i, addressEntity);
+            addressEntity.setAddressString(addr);
+            addressEntity.setCoinId(Coins.ETH.coinId());
+            addressEntity.setIndex(addressIndex);
+            addressEntity.setName("ETH" + i);
+            addressEntity.setBelongTo(mRepository.getBelongTo());
+            addressEntities.add(addressEntity);
+            accountEntity.setAddressLength(accountEntity.getAddressLength() + 1);
+        }
         mRepository.updateAccount(accountEntity);
-        mRepository.insertAddress(Collections.singletonList(addressEntity));
+        mRepository.insertAddress(addressEntities);
     }
 
     public String getSignatureJson() {

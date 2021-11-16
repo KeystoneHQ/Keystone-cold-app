@@ -42,6 +42,7 @@ import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.util.Keyboard;
 import com.keystone.cold.viewmodel.CoinViewModel;
+import com.keystone.cold.viewmodel.WatchWallet;
 
 import java.util.List;
 import java.util.Objects;
@@ -51,6 +52,7 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
 
     String query;
     private CoinViewModel viewModel;
+    private WatchWallet watchWallet;
     private final AddressCallback mAddrCallback = new AddressCallback() {
         @Override
         public void onClick(AddressEntity addr) {
@@ -98,6 +100,7 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
 
     @Override
     protected void init(View view) {
+        watchWallet = WatchWallet.getWatchWallet(mActivity);
         mAddressAdapter = new AddressAdapter(mActivity, mAddrCallback);
         mBinding.addrList.setAdapter(mAddressAdapter);
         mAddressAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -129,12 +132,23 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
 
     private void subscribeUi(LiveData<List<AddressEntity>> address) {
         address.observe(this, addressEntities -> {
-            if (requireArguments().getString(KEY_COIN_CODE).equals("ETH")) {
+            if (watchWallet.equals(WatchWallet.METAMASK)) {
                 String code = Utilities.getCurrentEthAccount(mActivity);
                 ETHAccount account = ETHAccount.ofCode(code);
                 addressEntities = addressEntities.stream()
                         .filter(addressEntity -> isCurrentETHAccountAddress(account, addressEntity))
+                        .peek(addressEntity -> {
+                            if (addressEntity.getName().startsWith("ETH-")) {
+                                addressEntity.setDisplayName(addressEntity.getName().replace("ETH-", "Account "));
+                            } else {
+                                addressEntity.setDisplayName(addressEntity.getName());
+                            }
+                        })
                         .collect(Collectors.toList());
+            } else {
+                addressEntities = addressEntities.stream().peek(addressEntity -> {
+                    addressEntity.setDisplayName(addressEntity.getName());
+                }).collect(Collectors.toList());
             }
             mAddressAdapter.setItems(addressEntities);
         });

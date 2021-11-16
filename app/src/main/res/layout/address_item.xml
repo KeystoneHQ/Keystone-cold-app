@@ -56,7 +56,7 @@
             android:background="@null"
             android:singleLine="true"
             android:clickable="false"
-            android:text="@={address.name}"
+            android:text="@={address.displayName}"
             android:imeOptions="actionDone"
             android:enabled="false"
             tools:ignore="LabelFor"
