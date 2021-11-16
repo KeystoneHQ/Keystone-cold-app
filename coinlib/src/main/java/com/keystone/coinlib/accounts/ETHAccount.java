@@ -22,9 +22,9 @@ public enum ETHAccount {
     }
 
     public static ETHAccount ofCode(String code) {
-        if(code.equals(LEDGER_LIVE.code)) return LEDGER_LIVE;
-        if(code.equals(LEDGER_LEGACY.code)) return LEDGER_LEGACY;
-        if(code.equals(BIP44_STANDARD.code)) return BIP44_STANDARD;
+        if (code.equals(LEDGER_LIVE.code)) return LEDGER_LIVE;
+        if (code.equals(LEDGER_LEGACY.code)) return LEDGER_LEGACY;
+        if (code.equals(BIP44_STANDARD.code)) return BIP44_STANDARD;
         throw new RuntimeException("invalid eth account code: " + code);
     }
 
@@ -44,15 +44,15 @@ public enum ETHAccount {
         return code;
     }
 
-    private boolean isLedgerLiveChildren(String path) {
+    private static boolean isLedgerLiveChildren(String path) {
         return Pattern.matches("^M/44'/60'/\\d+'/0/0", path);
     }
 
-    private boolean isLedgerLegacyChildren(String path) {
+    private static boolean isLedgerLegacyChildren(String path) {
         return Pattern.matches("^M/44'/60'/0'/\\d+", path);
     }
 
-    private boolean isStandardChildren(String path) {
+    private static boolean isStandardChildren(String path) {
         return Pattern.matches("^M/44'/60'/0'/0/\\d+", path);
     }
 
@@ -73,5 +73,15 @@ public enum ETHAccount {
 
     public String getDisplayPath() {
         return displayPath;
+    }
+
+    public static ETHAccount getAccountByPath(String path) {
+        if (!path.toUpperCase().startsWith("M/")) {
+            path = "M/" + path;
+        }
+        if (isStandardChildren(path)) return BIP44_STANDARD;
+        if (isLedgerLegacyChildren(path)) return LEDGER_LEGACY;
+        if (isLedgerLiveChildren(path)) return LEDGER_LIVE;
+        return null;
     }
 }

@@ -42,6 +42,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.coinlib.coins.ETH.Eth;
 import com.keystone.coinlib.coins.ETH.GnosisHandler;
+import com.keystone.coinlib.exception.InvalidETHAccountException;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
@@ -125,14 +126,28 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
 
     private void handleParseException(Exception ex) {
         if (ex != null) {
-            ex.printStackTrace();
-            ModalDialog.showCommonModal(mActivity,
-                    getString(R.string.invalid_data),
-                    getString(R.string.incorrect_tx_data),
-                    getString(R.string.confirm),
-                    null);
-            viewModel.parseTxException().setValue(null);
-            popBackStack(R.id.assetFragment, false);
+            if(ex instanceof InvalidETHAccountException) {
+                ex.printStackTrace();
+                ModalDialog.showTwoButtonCommonModal(mActivity,
+                        getString(R.string.invalid_data),
+                        getString(R.string.invalid_eth_account_tx, ((InvalidETHAccountException) ex).getAccount().getName(), ((InvalidETHAccountException) ex).getTarget().getName(), ((InvalidETHAccountException) ex).getAccount().getName()),
+                        getString(R.string.cancel),
+                        getString(R.string.switch_wallet),
+                        null, () -> {
+                            popBackStack(R.id.assetFragment, false);
+                            navigate(R.id.action_assetFragment_to_selectWalletFragment);
+                        });
+            }
+            else {
+                ex.printStackTrace();
+                ModalDialog.showCommonModal(mActivity,
+                        getString(R.string.invalid_data),
+                        getString(R.string.incorrect_tx_data),
+                        getString(R.string.confirm),
+                        null);
+                viewModel.parseTxException().setValue(null);
+                popBackStack(R.id.assetFragment, false);
+            }
         }
     }
 

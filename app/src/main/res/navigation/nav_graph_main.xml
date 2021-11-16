@@ -454,6 +454,13 @@
         android:label="AssetFragment"
         tools:layout="@layout/asset_fragment">
         <action
+            android:id="@+id/action_assetFragment_to_selectWalletFragment"
+            app:destination="@id/selectWalletFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
             android:id="@+id/action_to_receiveCoinFragment"
             app:destination="@id/receiveCoinFragment"
             app:enterAnim="@anim/slide_in_right"

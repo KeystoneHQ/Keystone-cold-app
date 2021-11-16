@@ -38,6 +38,7 @@ import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.ens.EnsLoadManager;
+import com.keystone.coinlib.exception.InvalidETHAccountException;
 import com.keystone.coinlib.exception.InvalidPathException;
 import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.Signer;
@@ -388,21 +389,25 @@ public class Web3TxViewModel extends Base {
         try {
             ensureAddressExist(path);
             return mRepository.loadAddressBypath(path).getAddressString();
-        } catch (InvalidTransactionException e) {
+        } catch (InvalidTransactionException | InvalidETHAccountException e) {
             parseTxException.postValue(e);
             e.printStackTrace();
         }
         return "";
     }
 
-    private void ensureAddressExist(String path) throws InvalidTransactionException {
+    private void ensureAddressExist(String path) throws InvalidETHAccountException, InvalidTransactionException {
         String code = Utilities.getCurrentEthAccount(context);
         ETHAccount account = ETHAccount.ofCode(code);
         path = path.toUpperCase();
         AddressEntity addressEntity = new AddressEntity();
         addressEntity.setPath(path);
-        if (!AddressFragment.isCurrentETHAccountAddress(account, addressEntity)) {
-            throw new InvalidTransactionException("address does not belong to the current account");
+        ETHAccount target =  ETHAccount.getAccountByPath(path);
+        if(target == null) {
+            throw new InvalidTransactionException("unknown hd path");
+        }
+        if (!target.equals(account)) {
+            throw new InvalidETHAccountException("account does not match", account, target);
         }
         AddressEntity address = mRepository.loadAddressBypath(path);
         if (address == null) {

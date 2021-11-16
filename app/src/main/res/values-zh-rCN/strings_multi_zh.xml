@@ -148,6 +148,7 @@
     <string name="factory_reset_hint">將清除所有數據，此操作不可逆</string>
     <string name="password">密碼</string>
     <string name="confirm">確認</string>
+    <string name="switch_wallet">切换钱包</string>
     <string name="wrong_password_retry_hint">密碼錯誤，請重新嘗試</string>
     <string name="Update">版本更新</string>
     <string name="draw_pattern_again">請再次繪製解鎖圖案</string>
@@ -484,6 +485,7 @@
     <string name="sync_xrp">同步賬戶</string>
     <string name="unresolve_tx">非法數據</string>
     <string name="unresolve_tx_hint">請掃描%s構造的二維碼</string>
+    <string name="invalid_eth_account_tx">当前钱包为%s, 您扫描的交易为%s. 请将钱包切换为%s后重试.</string>
     <string name="account_not_match">非當前錢包交易</string>
     <string name="account_not_match_detail">該交易不屬於當前錢包，請檢查交易詳情。</string>
     <string name="simple">簡單</string>
@@ -541,6 +543,7 @@
     <string name="note">須知</string>
     <string name="tip">提示</string>
     <string name="learn_more"><Data><![CDATA[Keystone支持解析交易，您可前往<font color="#00CDC3"><b> https://keyst.one/eth </b></font>了解詳情。]]></Data></string>
+    <string name="learn_more_doc"><Data><![CDATA[Keystone支持解析交易，您可前往<font color="#00CDC3"><b> https://keyst.one/addabi </b></font>了解详情。]]></Data></string>
     <string name="undecoded_tip">註意！該數據未被解析。</string>
     <string name="from_tfcard">（解碼資源來源於TF卡）</string>
     <string name="check_info">* 簽名前，請仔細檢查交易詳情</string>
@@ -548,15 +551,6 @@
     <string name="please_insert_sdcard">請先將TF卡插入到設備中</string>
     <string name="confirm_format">確認是否格式化?</string>
     <string name="format_sd_card_hint">該操作將擦除卡內所有文件並將TF卡格式化為FAT32格式。卡內若有重要文件請及時備份，確認無誤後再進行該操作。</string>
-    <string name="learn_more"><Data><![CDATA[Keystone支持解析交易，您可前往<font color="#00CDC3"><b> https://keyst.one/abi </b></font>了解详情。]]></Data></string>
-    <string name="learn_more_doc"><Data><![CDATA[Keystone支持解析交易，您可前往<font color="#00CDC3"><b> https://keyst.one/addabi </b></font>了解详情。]]></Data></string>
-    <string name="undecoded_tip">注意！该数据未被解析。</string>
-    <string name="from_tfcard">（解码资源来源于TF卡）</string>
-    <string name="check_info">* 签名前，请仔细检查交易详情</string>
-    <string name="select_last_word_hint">请在以下单词中任选一个作为第24个单词</string>
-    <string name="please_insert_sdcard">请先将TF卡插入到设备中</string>
-    <string name="confirm_format">确认是否格式化?</string>
-    <string name="format_sd_card_hint">该操作将擦除卡内所有文件并将TF卡格式化为FAT32格式。卡内若有重要文件请及时备份，确认无误后再进行该操作。</string>
     <string name="format_sdcard_title">格式化TF卡</string>
     <string name="format_sdcard_hint">您需先將當前TF卡格式化為FAT32格式，否則無法讀取/導出文件。</string>
     <string name="format_sdcard_hint1">請註意：該操作將擦除卡內所有文件，卡內若有重要文件請及時備份，確認無誤後再進行該操作。</string>
