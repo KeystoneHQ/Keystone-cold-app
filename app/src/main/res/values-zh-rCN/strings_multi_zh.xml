@@ -460,7 +460,7 @@
         4. 掃描地址二維碼<br>
     ]]></string>
     <string name="sync_metamask_guide_text"><![CDATA[
-        <font color="#00cdc3">① <font/>打開 MateMask，<b>連接硬件錢包</b><br>
+        <font color="#00cdc3">① <font/>打開 MetaMask，<b>連接硬件錢包</b><br>
         <font color="#00cdc3">② <font/>選擇 \'<b>QR-based</b>\'<br>
         <font color="#00cdc3">③ <font/>點擊 \'<b>繼續</b>\'按鈕<br>
         <font color="#00cdc3">④ <font/>掃描錢包二維碼（點擊下方按鈕查看）<br>
@@ -565,7 +565,7 @@
     <string name="select_wallet">選擇錢包</string>
     <string name="ledger_live"><![CDATA[<font color="#00cdc3">Ledger Live<font/> 連接 Ledger]]></string>
     <string name="my_crypto_mew"><![CDATA[<font color="#00cdc3">Legacy<font/>（My Crypto、MEW 連接 Ledger）]]></string>
-    <string name="metamusk_ledger"><![CDATA[<font color="#00cdc3">Standard<font/>（MetaMusk、Ledger 連接 Ledger）]]></string>
+    <string name="metamusk_ledger"><![CDATA[<font color="#00cdc3">Standard<font/>（MetaMask、Ledger 連接 Ledger）]]></string>
     <string name="top_account">錢包的前3個賬戶：</string>
     <string name="show_this_qrcode">展示該錢包二維碼</string>
     <string name="sync_metamask_guide_text_hint">Take the Keystone Ethereum Extension import process as an example, the process of other wallets is similar.</string>

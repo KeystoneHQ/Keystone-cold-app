@@ -606,7 +606,7 @@
     <string name="companion_hint"><![CDATA[If your recovery phrase was imported from a ledger device (ledger live/legacy), all of your assets might not be identified with the QR code above. Please <font color="#00cdc3"><u>click here</u><font/>to switch to the wallet QR code.]]></string>
     <string name="select_wallet">Select Wallet</string>
     <string name="ledger_live"><![CDATA[<font color="#00cdc3">Ledger Live<font/> to connect to Ledger]]></string>
-    <string name="my_crypto_mew"><![CDATA[<font color="#00cdc3">Legacy<font/> (My Crypto, MEW to connect to Ledger)]]></string>
+    <string name="my_crypto_mew"><![CDATA[<font color="#00cdc3">Legacy<font/> (My Crypto, MEW)]]></string>
     <string name="metamusk_ledger"><![CDATA[<font color="#00cdc3">Standard<font/> (MetaMask, Ledger, etc.)]]></string>
     <string name="top_account">The first 3 accounts:</string>
     <string name="show_this_qrcode">Display QR Code</string>
