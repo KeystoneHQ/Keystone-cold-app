@@ -485,7 +485,7 @@
     <string name="sync_xrp">同步賬戶</string>
     <string name="unresolve_tx">非法數據</string>
     <string name="unresolve_tx_hint">請掃描%s構造的二維碼</string>
-    <string name="invalid_eth_account_tx">当前钱包为%s, 您扫描的交易为%s. 请将钱包切换为%s后重试.</string>
+    <string name="invalid_eth_account_tx">當前錢包的path為%s, 您掃描的交易path为%s. 請講錢包切換為%s后重试.</string>
     <string name="account_not_match">非當前錢包交易</string>
     <string name="account_not_match_detail">該交易不屬於當前錢包，請檢查交易詳情。</string>
     <string name="simple">簡單</string>

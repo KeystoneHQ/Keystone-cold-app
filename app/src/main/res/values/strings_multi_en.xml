@@ -101,10 +101,11 @@
         <item>120000</item>
         <item>300000</item>
         <item>600000</item>
+
     </string-array>
 
     <string name="tab_my_address">ADDRESSES</string>
-    <string name="tab_my_account">Account</string>
+    <string name="tab_my_account">ACCOUNTS</string>
     <string name="web_auth1"><![CDATA[1. Click on <font color="#00cdc3">"Scan QR Code"<font/> button below and scan the QR code displayed on the website]]></string>
     <string name="web_auth2">2. Your Keystone would then display a code. Please enter that into the official website to verify the authenticity of your device</string>
     <string name="web_auth3"><![CDATA[3. Click <font color="#00cdc3">"Verify"<font/> button on the website to see your result]]></string>
@@ -459,7 +460,7 @@
     </string-array>
     <string-array name="watch_wallet_summury" >
         <item>8 main chains including BTC, ETH, etc</item>
-        <item>ETH、BSV、HECO</item>
+        <item>ETH, Polygon, Avalanche, BSC…</item>
         <item>DOT、KSM</item>
         <item>XRP</item>
     </string-array>
@@ -526,7 +527,7 @@
     <string name="sync_xrp">Pair App</string>
     <string name="unresolve_tx">Error</string>
     <string name="unresolve_tx_hint">Please scan QR Code built by %s</string>
-    <string name="invalid_eth_account_tx">The current wallet is %s, the transaction you scanned is %s. Please switch your wallet to %s and retry.</string>
+    <string name="invalid_eth_account_tx">The current wallet is using the %s Keystone derivation path. The transaction that you just scanned is a derivation path for %s. Please switch your wallet to %s and try again.</string>
     <string name="account_not_match">Error</string>
     <string name="account_not_match_detail">The transaction does not belong to the current wallet, please check the transaction information.</string>
     <string name="simple">Simple</string>
