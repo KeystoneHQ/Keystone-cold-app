@@ -85,9 +85,9 @@ public class GenericETHTxEntity implements Tx {
                     gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
                     genericETHTxEntity.setGasLimit(nf.format(gasLimit));
                     BigDecimal fee = gasLimit.multiply(gasPrice).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-                    amount = new BigDecimal(ethTx.getString("value") + Web3TxViewModel.getSymbol(chainId));
+                    amount = new BigDecimal(ethTx.getString("value"));
                     value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-                    genericETHTxEntity.setAmount(nf.format(value));
+                    genericETHTxEntity.setAmount(nf.format(value) + Web3TxViewModel.getSymbol(chainId));
                     genericETHTxEntity.setFee(nf.format(fee) + Web3TxViewModel.getSymbol(chainId));
                     JSONObject addition = new JSONObject(web3TxEntity.getAddition());
                     genericETHTxEntity.setFromTFCard(addition.getBoolean("isFromTFCard"));
@@ -110,9 +110,9 @@ public class GenericETHTxEntity implements Tx {
                     genericETHTxEntity.setGasLimit(nf.format(gasLimit));
                     genericETHTxEntity.setEstimatedFee(nf.format(estimatedFee) + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
                     genericETHTxEntity.setMaxFee(nf.format(maxFee) + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
-                    amount = new BigDecimal(ethTx.getString("value") + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
+                    amount = new BigDecimal(ethTx.getString("value"));
                     value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-                    genericETHTxEntity.setAmount(nf.format(value));
+                    genericETHTxEntity.setAmount(nf.format(value) + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
                     JSONObject additionJson = new JSONObject(web3TxEntity.getAddition());
                     genericETHTxEntity.setFromTFCard(additionJson.getBoolean("isFromTFCard"));
                     break;
