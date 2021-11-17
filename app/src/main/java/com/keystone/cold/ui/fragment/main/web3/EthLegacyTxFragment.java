@@ -92,7 +92,7 @@ public class EthLegacyTxFragment extends BaseFragment<EthTxBinding> {
     private void showDialog() {
         ModalDialog.showCommonModal((AppCompatActivity) getActivity(),
                 getString(R.string.tip),
-                getString(R.string.learn_more),
+                getString(R.string.learn_more_doc),
                 getString(R.string.know),
                 null);
     }

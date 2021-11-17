@@ -185,7 +185,7 @@ public class SyncViewModel extends AndroidViewModel {
         List<Pair<String, String>> result = new ArrayList<>();
         AccountEntity accountEntity = mRepository.loadTargetETHAccount(ethAccount);
         for (int i = 0; i < 3; i++) {
-            result.add(i, Pair.create("Account " + i, AddAddressViewModel.deriveETHAddress(accountEntity, i, null)));
+            result.add(i, Pair.create("" + i, AddAddressViewModel.deriveETHAddress(accountEntity, i, null)));
         }
         return result;
     }

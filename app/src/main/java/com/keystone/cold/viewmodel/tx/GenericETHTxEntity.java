@@ -17,6 +17,8 @@
 
 package com.keystone.cold.viewmodel.tx;
 
+import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
+
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -83,7 +85,7 @@ public class GenericETHTxEntity implements Tx {
                     gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
                     genericETHTxEntity.setGasLimit(nf.format(gasLimit));
                     BigDecimal fee = gasLimit.multiply(gasPrice).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-                    amount = new BigDecimal(ethTx.getString("value"));
+                    amount = new BigDecimal(ethTx.getString("value") + Web3TxViewModel.getSymbol(chainId));
                     value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
                     genericETHTxEntity.setAmount(nf.format(value));
                     genericETHTxEntity.setFee(nf.format(fee) + Web3TxViewModel.getSymbol(chainId));
@@ -108,7 +110,7 @@ public class GenericETHTxEntity implements Tx {
                     genericETHTxEntity.setGasLimit(nf.format(gasLimit));
                     genericETHTxEntity.setEstimatedFee(nf.format(estimatedFee) + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
                     genericETHTxEntity.setMaxFee(nf.format(maxFee) + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
-                    amount = new BigDecimal(ethTx.getString("value"));
+                    amount = new BigDecimal(ethTx.getString("value") + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
                     value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
                     genericETHTxEntity.setAmount(nf.format(value));
                     JSONObject additionJson = new JSONObject(web3TxEntity.getAddition());

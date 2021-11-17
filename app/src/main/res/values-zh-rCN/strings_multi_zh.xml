@@ -148,6 +148,7 @@
     <string name="factory_reset_hint">將清除所有數據，此操作不可逆</string>
     <string name="password">密碼</string>
     <string name="confirm">確認</string>
+    <string name="switch_wallet">切换钱包</string>
     <string name="wrong_password_retry_hint">密碼錯誤，請重新嘗試</string>
     <string name="Update">版本更新</string>
     <string name="draw_pattern_again">請再次繪製解鎖圖案</string>
@@ -484,6 +485,7 @@
     <string name="sync_xrp">同步賬戶</string>
     <string name="unresolve_tx">非法數據</string>
     <string name="unresolve_tx_hint">請掃描%s構造的二維碼</string>
+    <string name="invalid_eth_account_tx">当前钱包为%s, 您扫描的交易为%s. 请将钱包切换为%s后重试.</string>
     <string name="account_not_match">非當前錢包交易</string>
     <string name="account_not_match_detail">該交易不屬於當前錢包，請檢查交易詳情。</string>
     <string name="simple">簡單</string>
@@ -541,6 +543,7 @@
     <string name="note">須知</string>
     <string name="tip">提示</string>
     <string name="learn_more"><Data><![CDATA[Keystone支持解析交易，您可前往<font color="#00CDC3"><b> https://keyst.one/eth </b></font>了解詳情。]]></Data></string>
+    <string name="learn_more_doc"><Data><![CDATA[Keystone支持解析交易，您可前往<font color="#00CDC3"><b> https://keyst.one/addabi </b></font>了解详情。]]></Data></string>
     <string name="undecoded_tip">註意！該數據未被解析。</string>
     <string name="from_tfcard">（解碼資源來源於TF卡）</string>
     <string name="check_info">* 簽名前，請仔細檢查交易詳情</string>

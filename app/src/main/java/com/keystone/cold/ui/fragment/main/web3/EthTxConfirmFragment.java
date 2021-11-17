@@ -42,6 +42,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.coinlib.coins.ETH.Eth;
 import com.keystone.coinlib.coins.ETH.GnosisHandler;
+import com.keystone.coinlib.exception.InvalidETHAccountException;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
@@ -102,7 +103,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     private void showDialog() {
         int visits = Utilities.getVisitsTimes(mActivity);
         if (visits++ == 0) {
-            realShowDialog();
+            realShowDialog(getString(R.string.learn_more));
             Utilities.setVisitsTimes(mActivity, visits);
         }
     }
@@ -110,21 +111,43 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     private void realShowDialog() {
         ModalDialog.showCommonModal((AppCompatActivity) getActivity(),
                 getString(R.string.tip),
-                getString(R.string.learn_more),
+                getString(R.string.learn_more_doc),
+                getString(R.string.know),
+                null);
+    }
+
+    private void realShowDialog(String subtitle) {
+        ModalDialog.showCommonModal((AppCompatActivity) getActivity(),
+                getString(R.string.tip),
+                subtitle,
                 getString(R.string.know),
                 null);
     }
 
     private void handleParseException(Exception ex) {
         if (ex != null) {
-            ex.printStackTrace();
-            ModalDialog.showCommonModal(mActivity,
-                    getString(R.string.invalid_data),
-                    getString(R.string.incorrect_tx_data),
-                    getString(R.string.confirm),
-                    null);
-            viewModel.parseTxException().setValue(null);
-            popBackStack(R.id.assetFragment, false);
+            if (ex instanceof InvalidETHAccountException) {
+                ex.printStackTrace();
+                ModalDialog.showTwoButtonCommonModal(mActivity,
+                        getString(R.string.invalid_data),
+                        getString(R.string.invalid_eth_account_tx, ((InvalidETHAccountException) ex).getAccount().getName(), ((InvalidETHAccountException) ex).getTarget().getName(), ((InvalidETHAccountException) ex).getAccount().getName()),
+                        getString(R.string.cancel),
+                        getString(R.string.switch_wallet),
+                        null,
+                        () -> {
+                            popBackStack(R.id.assetFragment, false);
+                            navigate(R.id.action_assetFragment_to_selectWalletFragment);
+                        });
+            } else {
+                ex.printStackTrace();
+                ModalDialog.showCommonModal(mActivity,
+                        getString(R.string.invalid_data),
+                        getString(R.string.incorrect_tx_data),
+                        getString(R.string.confirm),
+                        null);
+                viewModel.parseTxException().setValue(null);
+                popBackStack(R.id.assetFragment, false);
+            }
         }
     }
 

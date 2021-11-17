@@ -20,13 +20,13 @@ package com.keystone.cold.ui.fragment;
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuide;
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuideTitle;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
@@ -39,7 +39,6 @@ import com.keystone.cold.databinding.SyncFragmentBinding;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.fragment.setup.SetupVaultBaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
-import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.SyncViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 
@@ -126,6 +125,9 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 mBinding.address.setVisibility(View.VISIBLE);
                 break;
             case METAMASK:
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0, 9, 0, 0);
+                mBinding.content.setLayoutParams(params);
                 mBinding.hint.setText(R.string.sync_with_metamask);
                 mBinding.chain.setVisibility(View.VISIBLE);
                 mBinding.llHint.setVisibility(View.VISIBLE);
