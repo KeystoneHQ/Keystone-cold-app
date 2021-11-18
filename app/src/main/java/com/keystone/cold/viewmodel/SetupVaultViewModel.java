@@ -473,22 +473,22 @@ public class SetupVaultViewModel extends AndroidViewModel {
         account.setAddition(json.toString());
         long accountId = mRepository.insertAccount(account);
         account.setId(accountId);
-        AddAddressViewModel.addEthAccountAddress(account, mRepository, 1, coin.getBelongTo(), null);
+        AddAddressViewModel.addEthAccountAddress(account, mRepository, 1, coin, null);
     }
 
     private void createEthAccounts(CoinEntity coin) {
         String coinXpub = new GetExtendedPublicKeyCallable(coin.getAccounts().get(0).getHdPath()).call();
         coin.setExPub(coinXpub);
         long id = mRepository.insertCoin(coin);
+        coin.setId(id);
         for (AccountEntity account : coin.getAccounts()) {
             String xPub = new GetExtendedPublicKeyCallable(account.getHdPath()).call();
             account.setExPub(xPub);
             account.setCoinId(id);
             long accountId = mRepository.insertAccount(account);
             account.setId(accountId);
-            AddAddressViewModel.addEthAccountAddress(account, mRepository, 1, coin.getBelongTo(), null);
+            AddAddressViewModel.addEthAccountAddress(account, mRepository, 1, coin, null);
         }
-        coin.setAddressCount(1);
     }
 
     private void deleteHiddenVaultData() {

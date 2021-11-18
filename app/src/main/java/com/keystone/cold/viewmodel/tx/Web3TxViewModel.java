@@ -446,6 +446,7 @@ public class Web3TxViewModel extends Base {
         if (accountEntity == null) {
             throw new InvalidTransactionException("not have match account");
         }
+        CoinEntity coin = mRepository.loadCoinEntityByCoinCode(Coins.ETH.coinCode());
         List<AddressEntity> addressEntities = new ArrayList<>();
         for(int i = accountEntity.getAddressLength(); i < addressIndex + 1; i++) {
             AddressEntity addressEntity = new AddressEntity();
@@ -453,13 +454,17 @@ public class Web3TxViewModel extends Base {
             addressEntity.setAddressString(addr);
             addressEntity.setCoinId(Coins.ETH.coinId());
             addressEntity.setIndex(addressIndex);
-            addressEntity.setName("ETH" + i);
+            addressEntity.setName("ETH-" + i);
             addressEntity.setBelongTo(mRepository.getBelongTo());
             addressEntities.add(addressEntity);
             accountEntity.setAddressLength(accountEntity.getAddressLength() + 1);
+            if(ETHAccount.isStandardChildren(addressEntity.getPath())) {
+                coin.setAddressCount(coin.getAddressCount() + 1);
+            }
         }
         mRepository.updateAccount(accountEntity);
         mRepository.insertAddress(addressEntities);
+        mRepository.updateCoin(coin);
     }
 
     public String getSignatureJson() {

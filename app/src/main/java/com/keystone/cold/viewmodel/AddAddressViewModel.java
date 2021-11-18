@@ -85,17 +85,17 @@ public class AddAddressViewModel extends AndroidViewModel {
         return addComplete;
     }
 
-    public void addEthAccountAddress(int number, String belongTo, Runnable onComplete){
+    public void addEthAccountAddress(int number, CoinEntity coinEntity, Runnable onComplete){
         String code = Utilities.getCurrentEthAccount(getApplication());
         ETHAccount account = ETHAccount.ofCode(code);
         AccountEntity accountEntity = mRepo.loadTargetETHAccount(account);
         if(accountEntity != null) {
-            addEthAccountAddress(accountEntity, mRepo, number, belongTo, onComplete);
+            addEthAccountAddress(accountEntity, mRepo, number, coinEntity, onComplete);
         }
         AppExecutors.getInstance().mainThread().execute(onComplete);
     }
 
-    public static void addEthAccountAddress(AccountEntity accountEntity, DataRepository repository, int number, String belongTo, Runnable onComplete) {
+    public static void addEthAccountAddress(AccountEntity accountEntity, DataRepository repository, int number, CoinEntity coinEntity, Runnable onComplete) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             AbsDeriver deriver = AbsDeriver.newInstance("ETH");
             if (deriver == null) {
@@ -110,16 +110,20 @@ public class AddAddressViewModel extends AndroidViewModel {
                     addressEntity.setAddressString(addr);
                     addressEntity.setCoinId(Coins.ETH.coinId());
                     addressEntity.setIndex(index);
-                    addressEntity.setName("Account " + index);
-                    addressEntity.setBelongTo(belongTo);
+                    addressEntity.setName("ETH-" + index);
+                    addressEntity.setBelongTo(coinEntity.getBelongTo());
                     if (repository.loadAddressBypath(addressEntity.getPath()) != null) {
                         continue;
                     }
                     addressEntities.add(addressEntity);
+                    if(ETHAccount.isStandardChildren(addressEntity.getPath())) {
+                        coinEntity.setAddressCount(coinEntity.getAddressCount() + 1);
+                    }
                 }
                 accountEntity.setAddressLength(targetAddressCount);
                 repository.updateAccount(accountEntity);
                 repository.insertAddress(addressEntities);
+                repository.updateCoin(coinEntity);
             }
             AppExecutors.getInstance().mainThread().execute(onComplete);
         });

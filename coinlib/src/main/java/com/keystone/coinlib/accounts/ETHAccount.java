@@ -44,18 +44,17 @@ public enum ETHAccount {
         return code;
     }
 
-    private static boolean isLedgerLiveChildren(String path) {
+    public static boolean isLedgerLiveChildren(String path) {
         return Pattern.matches("^M/44'/60'/\\d+'/0/0", path);
     }
 
-    private static boolean isLedgerLegacyChildren(String path) {
+    public static boolean isLedgerLegacyChildren(String path) {
         return Pattern.matches("^M/44'/60'/0'/\\d+", path);
     }
 
-    private static boolean isStandardChildren(String path) {
+    public static boolean isStandardChildren(String path) {
         return Pattern.matches("^M/44'/60'/0'/0/\\d+", path);
     }
-
 
     public boolean isChildrenPath(String path) {
         if (!path.toUpperCase().startsWith("M/")) {
