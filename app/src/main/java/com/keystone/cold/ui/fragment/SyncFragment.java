@@ -131,6 +131,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 mBinding.hint.setText(R.string.sync_with_metamask);
                 mBinding.chain.setVisibility(View.VISIBLE);
                 mBinding.llHint.setVisibility(View.VISIBLE);
+                mBinding.complete.setVisibility(View.VISIBLE);
                 mBinding.companionHint.setOnClickListener(v -> navigate(R.id.action_syncFragment_to_selectWalletFragment));
                 break;
         }

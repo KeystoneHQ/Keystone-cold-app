@@ -55,6 +55,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="5"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
                 android:ellipsize="middle"
                 android:gravity="center"
                 android:paddingHorizontal="2dp"
