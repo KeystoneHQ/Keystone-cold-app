@@ -486,7 +486,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         if (watchWallet == WatchWallet.METAMASK) {
             AppExecutors.getInstance().diskIO().execute(() -> {
                 CoinEntity coinEntity = viewModel.getCoin(coinId);
-                viewModel.addEthAccountAddress(value, coinEntity.getBelongTo(), () -> handler.postDelayed(dialog::dismiss, 500));
+                viewModel.addEthAccountAddress(value, coinEntity, () -> handler.postDelayed(dialog::dismiss, 500));
             });
         } else {
             AppExecutors.getInstance().diskIO().execute(() -> {

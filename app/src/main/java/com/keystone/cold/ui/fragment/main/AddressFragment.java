@@ -35,6 +35,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.AddressFragmentBinding;
@@ -149,6 +150,9 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
                 addressEntities = addressEntities.stream().peek(addressEntity -> {
                     addressEntity.setDisplayName(addressEntity.getName());
                 }).collect(Collectors.toList());
+                if (requireArguments().getString(KEY_COIN_CODE).equals(Coins.ETH.coinCode())) {
+                    addressEntities = addressEntities.stream().filter(addressEntity -> ETHAccount.isStandardChildren(addressEntity.getPath())).collect(Collectors.toList());
+                }
             }
             mAddressAdapter.setItems(addressEntities);
         });
