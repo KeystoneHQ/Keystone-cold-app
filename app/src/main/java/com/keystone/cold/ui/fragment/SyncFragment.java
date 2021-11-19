@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.coinlib.utils.Coins;
@@ -41,6 +42,7 @@ import com.keystone.cold.ui.fragment.setup.SetupVaultBaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.viewmodel.SyncViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
+import com.sparrowwallet.hummingbird.UR;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,6 +58,8 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
     private String coinCode;
     private boolean fromSyncGuide = false;
     private boolean isRefreshing = false;
+
+    private MutableLiveData<UR> URLiveData;
 
     @Override
     protected int setView() {
@@ -184,16 +188,21 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 });
                 break;
             case METAMASK:
+                if(URLiveData != null) {
+                    URLiveData.removeObservers(this);
+                }
                 syncViewModel.getChainsMutableLiveData().observe(this, ethAccount -> {
                     if (ethAccount == null) return;
                     if (isRefreshing) return;
                     isRefreshing = true;
                     Utilities.setCurrentEthAccount(mActivity, ethAccount.getCode());
                     mBinding.chain.setText(ethAccount.getName());
-                    syncViewModel.generateSyncMetamask(ethAccount).observe(this, urData -> {
-                        if (!TextUtils.isEmpty(urData)) {
-                            mBinding.dynamicQrcodeLayout.qrcode.setData(urData);
+                    URLiveData = syncViewModel.generateSyncMetamaskUR(ethAccount);
+                    URLiveData.observe(this, urData -> {
+                        if(urData != null) {
+                            mBinding.dynamicQrcodeLayout.qrcode.displayUR(urData);
                         }
+                        URLiveData.removeObservers(this);
                     });
                 });
         }
