@@ -41,9 +41,11 @@ public class GenericETHTxEntity implements Tx {
     // GenericTx params
     private String txId;
     private String amount;
+    private BigDecimal amountValue;
     private String from;
     private String to;
     private String fee;
+    private BigDecimal feeValue;
     private String signedHex;
     private long timeStamp;
     private String memo;
@@ -55,6 +57,12 @@ public class GenericETHTxEntity implements Tx {
     private String maxFeePerGas;
     private String maxPriorityFeePerGas;
     private String gasLimit;
+
+    private BigDecimal estimatedFeeValue;
+    private BigDecimal maxFeeValue;
+    private BigDecimal maxFeePerGasValue;
+    private BigDecimal maxPriorityFeePerGasValue;
+    private BigDecimal gasLimitValue;
 
     // another params
     private String signature;
@@ -84,9 +92,11 @@ public class GenericETHTxEntity implements Tx {
                     BigDecimal gasPrice = new BigDecimal(ethTx.getString("gasPrice"));
                     gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
                     genericETHTxEntity.setGasLimit(nf.format(gasLimit));
+                    genericETHTxEntity.setGasLimitValue(gasLimit);
                     BigDecimal fee = gasLimit.multiply(gasPrice).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
                     amount = new BigDecimal(ethTx.getString("value"));
                     value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
+                    genericETHTxEntity.setAmountValue(amount);
                     genericETHTxEntity.setAmount(nf.format(value) + Web3TxViewModel.getSymbol(chainId));
                     genericETHTxEntity.setFee(nf.format(fee) + Web3TxViewModel.getSymbol(chainId));
                     JSONObject addition = new JSONObject(web3TxEntity.getAddition());
@@ -105,9 +115,13 @@ public class GenericETHTxEntity implements Tx {
                     gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
                     BigDecimal estimatedFee = gasPriorityPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
                     BigDecimal maxFee = gasLimitPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
+                    genericETHTxEntity.setMaxFeeValue(maxFee);
+                    genericETHTxEntity.setMaxPriorityFeePerGasValue(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP));
                     genericETHTxEntity.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
+                    genericETHTxEntity.setMaxFeePerGasValue(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP));
                     genericETHTxEntity.setMaxFeePerGas(nf.format(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
                     genericETHTxEntity.setGasLimit(nf.format(gasLimit));
+                    genericETHTxEntity.setEstimatedFeeValue(estimatedFee);
                     genericETHTxEntity.setEstimatedFee(nf.format(estimatedFee) + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
                     genericETHTxEntity.setMaxFee(nf.format(maxFee) + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
                     amount = new BigDecimal(ethTx.getString("value"));
@@ -375,5 +389,61 @@ public class GenericETHTxEntity implements Tx {
                 ", addition='" + getAddition() + '\'' +
                 ", signature='" + getSignature() + '\'' +
                 '}';
+    }
+
+    public BigDecimal getEstimatedFeeValue() {
+        return estimatedFeeValue;
+    }
+
+    public void setEstimatedFeeValue(BigDecimal estimatedFeeValue) {
+        this.estimatedFeeValue = estimatedFeeValue;
+    }
+
+    public BigDecimal getMaxFeeValue() {
+        return maxFeeValue;
+    }
+
+    public void setMaxFeeValue(BigDecimal maxFeeValue) {
+        this.maxFeeValue = maxFeeValue;
+    }
+
+    public BigDecimal getMaxFeePerGasValue() {
+        return maxFeePerGasValue;
+    }
+
+    public void setMaxFeePerGasValue(BigDecimal maxFeePerGasValue) {
+        this.maxFeePerGasValue = maxFeePerGasValue;
+    }
+
+    public BigDecimal getMaxPriorityFeePerGasValue() {
+        return maxPriorityFeePerGasValue;
+    }
+
+    public void setMaxPriorityFeePerGasValue(BigDecimal maxPriorityFeePerGasValue) {
+        this.maxPriorityFeePerGasValue = maxPriorityFeePerGasValue;
+    }
+
+    public BigDecimal getGasLimitValue() {
+        return gasLimitValue;
+    }
+
+    public void setGasLimitValue(BigDecimal gasLimitValue) {
+        this.gasLimitValue = gasLimitValue;
+    }
+
+    public BigDecimal getAmountValue() {
+        return amountValue;
+    }
+
+    public void setAmountValue(BigDecimal amountValue) {
+        this.amountValue = amountValue;
+    }
+
+    public BigDecimal getFeeValue() {
+        return feeValue;
+    }
+
+    public void setFeeValue(BigDecimal feeValue) {
+        this.feeValue = feeValue;
     }
 }
