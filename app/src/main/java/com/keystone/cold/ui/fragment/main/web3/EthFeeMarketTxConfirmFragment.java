@@ -346,9 +346,9 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
         viewModel.getObservableEthTx().observe(this, genericETHTxEntity -> {
             this.genericETHTxEntity = genericETHTxEntity;
             if (this.genericETHTxEntity != null) {
-                double maxPriorityFee = Double.parseDouble(genericETHTxEntity.getMaxPriorityFeePerGas().replaceAll("[^0-9\\\\.]", ""));
+                double maxPriorityFee = genericETHTxEntity.getMaxPriorityFeePerGasValue().doubleValue();
                 boolean isMaxPriorityFeeExceeded = maxPriorityFee > MAX_PRIORITY_PER_GAS;
-                double maxfee = Double.parseDouble(genericETHTxEntity.getMaxFeePerGas().replaceAll("[^0-9\\\\.]", ""));
+                double maxfee = genericETHTxEntity.getMaxFeePerGasValue().doubleValue();
                 boolean isMaxFeeExceeded = maxfee > MAX_FEE_PER_GAS;
                 isExceeded = isMaxPriorityFeeExceeded || isMaxFeeExceeded;
                 updateUI();

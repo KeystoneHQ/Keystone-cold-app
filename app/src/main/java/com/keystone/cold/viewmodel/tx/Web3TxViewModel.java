@@ -338,7 +338,11 @@ public class Web3TxViewModel extends Base {
         tx.setTo(object.getString("to"));
         BigDecimal amount = new BigDecimal(object.getString("value"));
         double value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
+
+        tx.setAmountValue(amount);
         tx.setAmount(nf.format(value) + getSymbol(chainId));
+
+        tx.setFeeValue(BigDecimal.valueOf(calculateDisplayFee(object)));
         tx.setFee(nf.format(calculateDisplayFee(object)) + getSymbol(chainId));
         tx.setGasLimit(object.getString("gasLimit"));
         tx.setMemo(object.getString("data"));
@@ -355,7 +359,10 @@ public class Web3TxViewModel extends Base {
         tx.setTo(object.getString("to"));
         BigDecimal amount = new BigDecimal(object.getString("value"));
         BigDecimal value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
+
+        tx.setAmountValue(value);
         tx.setAmount(nf.format(value) + getSymbol(chainId));
+
         calculateDisplayEIP1559Fee(object, tx);
         tx.setMemo(object.getString("data"));
         tx.setBelongTo(mRepository.getBelongTo());
@@ -378,10 +385,19 @@ public class Web3TxViewModel extends Base {
         BigDecimal gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
         BigDecimal estimatedFee = gasPriorityPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
         BigDecimal maxFee = gasLimitPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
+        tx.setMaxPriorityFeePerGasValue(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP));
         tx.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
+
+        tx.setMaxFeePerGasValue(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP));
         tx.setMaxFeePerGas(nf.format(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
+
+        tx.setGasLimitValue(gasLimit);
         tx.setGasLimit(nf.format(gasLimit));
+
+        tx.setEstimatedFeeValue(estimatedFee);
         tx.setEstimatedFee(nf.format(estimatedFee) + getSymbol(chainId));
+
+        tx.setMaxFeeValue(maxFee);
         tx.setMaxFee(nf.format(maxFee) + getSymbol(chainId));
     }
 
