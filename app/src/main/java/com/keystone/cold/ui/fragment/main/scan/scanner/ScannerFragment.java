@@ -72,7 +72,9 @@ public class ScannerFragment extends BaseFragment<ScannerFragmentBinding>
     @Override
     public void onDestroy() {
         super.onDestroy();
-        scannerViewModel.reset();
+        if(scannerViewModel!=null){
+            scannerViewModel.reset();
+        }
     }
 
     @Override
