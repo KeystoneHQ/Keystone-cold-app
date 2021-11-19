@@ -91,6 +91,7 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
                     .observe(this, ethTxEntities -> {
                         ethTxEntities = ethTxEntities.stream()
                                 .filter(this::isCurrentAccountTx)
+                                .filter(ethTxEntity -> ethTxEntity.getBelongTo().equals(Utilities.getCurrentBelongTo(mActivity)))
                                 .collect(Collectors.toList());
                         adapter.setItems(ethTxEntities);
                     });

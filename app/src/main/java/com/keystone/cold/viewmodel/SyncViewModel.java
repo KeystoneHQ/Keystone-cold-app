@@ -39,6 +39,7 @@ import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.protocol.EncodeConfig;
 import com.keystone.cold.protocol.builder.SyncBuilder;
 import com.keystone.cold.util.URRegistryHelper;
+import com.sparrowwallet.hummingbird.UR;
 
 import org.json.JSONException;
 
@@ -146,6 +147,29 @@ public class SyncViewModel extends AndroidViewModel {
             result.postValue(prefix + ":" + address + ":" + genesisHash + ":" + name);
         });
         return result;
+    }
+
+    public MutableLiveData<UR> generateSyncMetamaskUR(ETHAccount ethAccount) {
+        chainsMutableLiveData.postValue(ethAccount);
+        MutableLiveData<UR> data = new MutableLiveData<>();
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            UR ur;
+            switch (ethAccount){
+                case LEDGER_LIVE: {
+                    ur = URRegistryHelper.generateCryptoAccountForLedgerLive(0, 10).toUR();
+                    break;
+                }
+                case LEDGER_LEGACY: {
+                    ur = URRegistryHelper.generateCryptoHDKeyForLedgerLegacy().toUR();
+                    break;
+                }
+                default: {
+                    ur = URRegistryHelper.generateCryptoHDKeyForETHStandard().toUR();
+                }
+            }
+            data.postValue(ur);
+        });
+        return data;
     }
 
     public LiveData<String> generateSyncMetamask(ETHAccount ethAccount) {

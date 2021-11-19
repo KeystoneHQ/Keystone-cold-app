@@ -83,4 +83,18 @@ public class Web3TxEntity {
     public void setAddition(String addition) {
         this.addition = addition;
     }
+
+    @Override
+    public String toString() {
+        return "Web3TxEntity{" +
+                "id=" + id +
+                ", txId='" + txId + '\'' +
+                ", signedHex='" + signedHex + '\'' +
+                ", from='" + from + '\'' +
+                ", timeStamp=" + timeStamp +
+                ", belongTo='" + belongTo + '\'' +
+                ", txType=" + txType +
+                ", addition='" + addition + '\'' +
+                '}';
+    }
 }
