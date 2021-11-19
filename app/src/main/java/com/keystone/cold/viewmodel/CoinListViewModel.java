@@ -133,6 +133,7 @@ public class CoinListViewModel extends AndroidViewModel {
             genericETHTxEntity.setTxType(web3TxEntity.getTxType());
             genericETHTxEntity.setSignedHex(web3TxEntity.getSignedHex());
             genericETHTxEntity.setAddition(web3TxEntity.getAddition());
+            genericETHTxEntity.setBelongTo(web3TxEntity.getBelongTo());
             ethTxEntityList.add(genericETHTxEntity);
         }
         return ethTxEntityList;
@@ -158,6 +159,7 @@ public class CoinListViewModel extends AndroidViewModel {
             GenericETHTxEntity genericETHTxEntity = new GenericETHTxEntity();
             genericETHTxEntity.setTxId(txEntity.getTxId());
             genericETHTxEntity.setSignedHex(txEntity.getSignedHex());
+            genericETHTxEntity.setBelongTo(txEntity.getBelongTo());
             ethTxEntityList.add(genericETHTxEntity);
         }
         return ethTxEntityList;
