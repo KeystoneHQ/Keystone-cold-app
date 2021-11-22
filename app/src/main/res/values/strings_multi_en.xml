@@ -104,7 +104,7 @@
     </string-array>
 
     <string name="tab_my_address">ADDRESSES</string>
-    <string name="tab_my_account">Account</string>
+    <string name="tab_my_account">ACCOUNTS</string>
     <string name="web_auth1"><![CDATA[1. Click on <font color="#00cdc3">"Scan QR Code"<font/> button below and scan the QR code displayed on the website]]></string>
     <string name="web_auth2">2. Your Keystone would then display a code. Please enter that into the official website to verify the authenticity of your device</string>
     <string name="web_auth3"><![CDATA[3. Click <font color="#00cdc3">"Verify"<font/> button on the website to see your result]]></string>
