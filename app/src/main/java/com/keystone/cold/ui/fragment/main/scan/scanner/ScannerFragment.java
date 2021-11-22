@@ -37,6 +37,7 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.bean.ZxingConfig;
 import com.keystone.cold.ui.fragment.main.scan.scanner.bean.ZxingConfigBuilder;
 import com.keystone.cold.ui.fragment.main.scan.scanner.camera.CameraManager;
 import com.keystone.cold.ui.fragment.main.scan.scanner.exceptions.UnExpectedQRException;
+import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.viewmodel.WatchWallet;
 import com.sparrowwallet.hummingbird.UR;
 
@@ -72,7 +73,7 @@ public class ScannerFragment extends BaseFragment<ScannerFragmentBinding>
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(scannerViewModel!=null){
+        if (scannerViewModel != null) {
             scannerViewModel.reset();
         }
     }
@@ -281,10 +282,33 @@ public class ScannerFragment extends BaseFragment<ScannerFragmentBinding>
                 if (run != null) {
                     run.run();
                 } else {
-                    mBinding.scanProgress.setText("");
-                    if (captureHandler != null) {
-                        captureHandler.restartPreviewAndDecode();
-                    }
+                    reset.run();
+                }
+            });
+        });
+    }
+
+    private Runnable reset = () -> {
+        mBinding.scanProgress.setText("");
+        if (captureHandler != null) {
+            captureHandler.restartPreviewAndDecode();
+        }
+    };
+
+    public void alertDoubleButtonModal(String title, String message, String btn1Text, String btn2Text, Runnable btn1Runnable, Runnable btn2Runnable) {
+        handler.post(() -> {
+            dismissLoading();
+            ModalDialog.showTwoButtonCommonModal(mActivity, title, message, btn1Text, btn2Text, () -> {
+                if (btn1Runnable != null) {
+                    btn1Runnable.run();
+                } else {
+                    reset.run();
+                }
+            }, () -> {
+                if (btn2Runnable != null) {
+                    btn2Runnable.run();
+                } else {
+                    reset.run();
                 }
             });
         });

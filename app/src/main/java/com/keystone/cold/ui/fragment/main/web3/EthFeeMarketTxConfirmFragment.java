@@ -126,28 +126,14 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
 
     private void handleParseException(Exception ex) {
         if (ex != null) {
-            if (ex instanceof InvalidETHAccountException) {
-                ex.printStackTrace();
-                ModalDialog.showTwoButtonCommonModal(mActivity,
-                        getString(R.string.invalid_data),
-                        getString(R.string.invalid_eth_account_tx, ((InvalidETHAccountException) ex).getAccount().getName(), ((InvalidETHAccountException) ex).getTarget().getName(), ((InvalidETHAccountException) ex).getTarget().getName()),
-                        getString(R.string.cancel),
-                        getString(R.string.switch_wallet),
-                        null, () -> {
-                            Utilities.setCurrentEthAccount(mActivity, ((InvalidETHAccountException) ex).getTarget().getCode());
-                        });
-                viewModel.parseTxException().setValue(null);
-                navigateUp();
-            } else {
-                ex.printStackTrace();
-                ModalDialog.showCommonModal(mActivity,
-                        getString(R.string.invalid_data),
-                        getString(R.string.incorrect_tx_data),
-                        getString(R.string.confirm),
-                        null);
-                viewModel.parseTxException().setValue(null);
-                popBackStack(R.id.assetFragment, false);
-            }
+            ex.printStackTrace();
+            ModalDialog.showCommonModal(mActivity,
+                    getString(R.string.invalid_data),
+                    getString(R.string.incorrect_tx_data),
+                    getString(R.string.confirm),
+                    null);
+            viewModel.parseTxException().setValue(null);
+            popBackStack(R.id.assetFragment, false);
         }
     }
 

@@ -48,6 +48,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.coins.polkadot.UOS.Extrinsic;
 import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
+import com.keystone.coinlib.exception.InvalidETHAccountException;
+import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
@@ -332,6 +334,19 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     bundle.putString(REQUEST_ID, uuid.toString());
                     bundle.putString(SIGN_DATA, Hex.toHexString(ethSignRequest.getSignData()));
                     bundle.putString(HD_PATH, "M/" + hdPath);
+
+                    ETHAccount current = ETHAccount.ofCode(Utilities.getCurrentEthAccount(mFragment.getActivity()));
+                    ETHAccount target = ETHAccount.getAccountByPath(hdPath);
+                    if (target == null) {
+                        throw new InvalidTransactionException("unknown hd path");
+                    }
+                    if (!target.equals(current)) {
+                        if(!current.isChildrenPath(hdPath)) {
+                            //standard and ledger_live has overlap of 1st address
+                            throw new InvalidETHAccountException("not expected ETH account", current, target);
+                        }
+                    }
+
                     String MFP = new GetMasterFingerprintCallable().call();
 
                     if (!requestMFP.equalsIgnoreCase(MFP)) {
@@ -403,6 +418,19 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     return true;
                 } else if (e instanceof JSONException) {
                     mFragment.alert(getString(R.string.unresolve_tx), getString(R.string.unresolve_tx_hint, watchWallet.getWalletName(mActivity)));
+                    return true;
+                } else if (e instanceof InvalidETHAccountException) {
+                    mFragment.alertDoubleButtonModal(getString(R.string.invalid_data),
+                            getString(R.string.invalid_eth_account_tx, ((InvalidETHAccountException) e).getAccount().getName(), ((InvalidETHAccountException) e).getTarget().getName(), ((InvalidETHAccountException) e).getTarget().getName()),
+                            getString(R.string.cancel),
+                            getString(R.string.switch_wallet),
+                            null, () -> {
+                                Utilities.setCurrentEthAccount(mActivity, ((InvalidETHAccountException) e).getTarget().getCode());
+                                popBackStack(R.id.assetFragment, false);
+                            });
+                    return true;
+                } else if (e instanceof InvalidTransactionException) {
+                    mFragment.alert(getString(R.string.invalid_data), getString(R.string.incorrect_tx_data));
                     return true;
                 }
                 return false;
