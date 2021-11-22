@@ -173,7 +173,7 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
 
         if (!firstShardingWords[index].startsWith(word)) {
             notMatch = true;
-            showDialog(mActivity,getString(R.string.notice),
+            dialog = showDialog(mActivity,getString(R.string.notice),
                     getString(R.string.sharding_id_not_match),
                     getString(R.string.cancel_import_sharding),
                     getString(R.string.confirm),
@@ -232,7 +232,7 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
             title = getString(R.string.ask_confirm_cancel_import_sharding);
         }
 
-        showDialog(mActivity, title,
+        dialog = showDialog(mActivity, title,
                 getString(R.string.cancel_import_sharding_notice),
                 getString(R.string.confirm_cancel_import_sharding),
                 getString(R.string.continue_import_sharding),
@@ -247,7 +247,7 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
         navigateUp();
     }
 
-    protected static void showDialog(AppCompatActivity activity, String title,
+    protected static ModalDialog showDialog(AppCompatActivity activity, String title,
                                      String text,
                                      String left,
                                      String right,
@@ -275,6 +275,7 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
         });
         dialog.setBinding(binding);
         dialog.show(activity.getSupportFragmentManager(), "");
+        return dialog;
     }
 
     void subscribeVaultState(MutableLiveData<Integer> vaultState) {
@@ -362,7 +363,7 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
             Share share = Mnemonic.INSTANCE.decode(mnemonic);
             if (share.group_count == 1) {
                 int remainCount = share.member_threshold - 1;
-                showDialog(mActivity,getString(R.string.verify_pass),
+                dialog = showDialog(mActivity,getString(R.string.verify_pass),
                         getString(R.string.first_sharding_hint,remainCount),
                         getString(R.string.cancel_import_sharding),
                         getString(R.string.continue_import_sharding),
@@ -370,7 +371,7 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
                         () -> addSharding(mnemonic));
             } else {
                 //current not support group_count > 1
-                showDialog(mActivity,getString(R.string.notice1),
+                dialog = showDialog(mActivity,getString(R.string.notice1),
                         getString(R.string.not_support_multi_group_sharding),
                         getString(R.string.cancel_import_sharding),
                         getString(R.string.confirm),
@@ -413,11 +414,11 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
                     break;
                 case RESULT_REPEAT:
                     text = getString(R.string.sharding_repeat);
-                    showDialog(mActivity,title, text, left, right, leftAction, rightAction);
+                    dialog = showDialog(mActivity,title, text, left, right, leftAction, rightAction);
                     break;
                 case RESULT_NOT_MATCH:
                     text = getString(R.string.sharding_id_not_match);
-                    showDialog(mActivity,title, text, left, right, leftAction, rightAction);
+                    dialog = showDialog(mActivity,title, text, left, right, leftAction, rightAction);
             }
         } catch (SharedSecretException e) {
             e.printStackTrace();
@@ -456,5 +457,13 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
             }
         };
         handler.post(runnable);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(this.dialog != null) {
+            this.dialog.dismiss();
+        }
     }
 }

@@ -125,6 +125,7 @@ public class SetupVaultActivity extends FullScreenActivity {
                     (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
             Bundle data = new Bundle();
             data.putBoolean(IS_SETUP_VAULT, true);
+            navHostFragment.getNavController().navigateUp();
             navHostFragment.getNavController().navigate(R.id.setPasswordFragment, data);
         }
     }
