@@ -59,10 +59,6 @@ public class SelectWalletFragment extends BaseFragment<SelectWalletFragmentBindi
         ledgerLiveAdapter = new AccountAdapter(mActivity);
         myCryptoAdapter = new AccountAdapter(mActivity);
         metamaskAdapter = new AccountAdapter(mActivity);
-        syncViewModel.getAccounts(ETHAccount.LEDGER_LIVE).observe(this, pairs -> {
-            ledgerLiveAdapter.setItems(pairs);
-            mBinding.rlLedgerLive.setAdapter(ledgerLiveAdapter);
-        });
         syncViewModel.getAccounts(ETHAccount.LEDGER_LEGACY).observe(this, pairs -> {
             myCryptoAdapter.setItems(pairs);
             mBinding.rlCrypto.setAdapter(myCryptoAdapter);
@@ -70,6 +66,10 @@ public class SelectWalletFragment extends BaseFragment<SelectWalletFragmentBindi
         syncViewModel.getAccounts(ETHAccount.BIP44_STANDARD).observe(this, pairs -> {
             metamaskAdapter.setItems(pairs);
             mBinding.rlMetamask.setAdapter(metamaskAdapter);
+        });
+        syncViewModel.getAccounts(ETHAccount.LEDGER_LIVE).observe(this, pairs -> {
+            ledgerLiveAdapter.setItems(pairs);
+            mBinding.rlLedgerLive.setAdapter(ledgerLiveAdapter);
         });
     }
 

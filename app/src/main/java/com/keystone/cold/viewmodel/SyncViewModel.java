@@ -152,7 +152,7 @@ public class SyncViewModel extends AndroidViewModel {
     public MutableLiveData<UR> generateSyncMetamaskUR(ETHAccount ethAccount) {
         chainsMutableLiveData.postValue(ethAccount);
         MutableLiveData<UR> data = new MutableLiveData<>();
-        AppExecutors.getInstance().diskIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             UR ur;
             switch (ethAccount){
                 case LEDGER_LIVE: {
