@@ -422,9 +422,6 @@ public class Web3TxViewModel extends Base {
         if(target == null) {
             throw new InvalidTransactionException("unknown hd path");
         }
-        if (!target.equals(account)) {
-            throw new InvalidETHAccountException("account does not match", account, target);
-        }
         AddressEntity address = mRepository.loadAddressBypath(path);
         if (address == null) {
             updateAccountDb(getAddressIndex(account, path));
