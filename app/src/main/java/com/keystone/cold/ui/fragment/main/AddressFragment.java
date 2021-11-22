@@ -26,6 +26,7 @@ import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;

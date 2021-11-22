@@ -59,7 +59,15 @@ public class CoinListViewModel extends AndroidViewModel {
             return -1;
         } else if (o2.getCoinCode().equals(Coins.ETH.coinCode())) {
             return 1;
-        } else {
+        } else if (o1.getCoinCode().equals(Coins.BTC_P2PKH.coinCode())) {
+            return -1;
+        } else if (o2.getCoinCode().equals(Coins.BTC_P2PKH.coinCode())) {
+            return 1;
+        }else if (o1.getCoinCode().equals(Coins.BTC_P2WPKH.coinCode())) {
+            return -1;
+        } else if (o2.getCoinCode().equals(Coins.BTC_P2WPKH.coinCode())) {
+            return 1;
+        }else {
             return o1.getCoinCode().compareTo(o2.getCoinCode());
         }
     };

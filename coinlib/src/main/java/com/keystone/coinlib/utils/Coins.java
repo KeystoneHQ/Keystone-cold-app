@@ -28,8 +28,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class Coins {
-
-    public static final Coin BTC = new Coin("bitcoin", "BTC", "Bitcoin", 0);
+    public static final Coin BTC = new Coin("bitcoin", "BTC", "Bitcoin Nested Segwit", 0); // AKA P2SH
+    public static final Coin BTC_P2PKH = new Coin("bitcoin_p2pkh", "BTC_P2PKH", "Bitcoin Legacy", 0);
+    public static final Coin BTC_P2WPKH = new Coin("bitcoin_p2wpkh", "BTC_P2WPKH", "Bitcoin Native Segwit", 0);
     public static final Coin BCH = new Coin("bitcoin_cash", "BCH", "Bitcoin Cash", 145);
     public static final Coin DASH = new Coin("dash", "DASH", "Dash", 5);
     public static final Coin LTC = new Coin("litecoin", "LTC", "Litecoin", 2);
@@ -51,6 +52,8 @@ public class Coins {
 
     public static final List<Coin> SUPPORTED_COINS = Arrays.asList(
             BTC,
+            BTC_P2PKH,
+            BTC_P2WPKH,
             ETC,
             ETH,
             BCH,
@@ -74,6 +77,8 @@ public class Coins {
     public static boolean supportMultiSigner(@NonNull String coinCode) {
         switch (coinCode) {
             case "BTC":
+            case "BTC_P2PKH":
+            case "BTC_P2WPKH":
             case "XTN":
             case "BCH":
             case "LTC":
@@ -189,6 +194,8 @@ public class Coins {
             case "XTN":
             case "LTC":
                 return 49;
+            case "BTC_P2WPKH":
+                return 84;
             default:
                 return 44;
         }
@@ -211,6 +218,8 @@ public class Coins {
     public static boolean isDefaultOpen(String coinCode) {
         switch (coinCode) {
             case "BTC":
+            case "BTC_P2PKH":
+            case "BTC_P2WPKH":
             case "ETH":
                 return true;
             default:
