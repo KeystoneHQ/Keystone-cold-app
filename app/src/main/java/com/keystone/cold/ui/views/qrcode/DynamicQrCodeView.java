@@ -126,6 +126,7 @@ public class DynamicQrCodeView extends LinearLayout implements QrCodeHolder {
     }
 
     public void displayUR(UR ur) {
+        data = ur.toString();
         AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 mCache.restart();
