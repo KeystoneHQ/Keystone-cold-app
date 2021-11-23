@@ -589,6 +589,12 @@ public class Web3TxViewModel extends Base {
         return value.divide(gasLimit.multiply(BigDecimal.TEN.pow(9)), 8, BigDecimal.ROUND_HALF_UP);
     }
 
+    public BigDecimal getGasPrice(BigDecimal feeValue, BigDecimal limitValue) {
+        if (limitValue == null) return new BigDecimal(-1);
+        BigDecimal value = feeValue.multiply(BigDecimal.TEN.pow(18));
+        return value.divide(limitValue.multiply(BigDecimal.TEN.pow(9)), 8, BigDecimal.ROUND_HALF_UP);
+    }
+
     public static String getSymbol(int chainId) {
         String symbol = " ";
         if (chainIdJSONObject != null) {

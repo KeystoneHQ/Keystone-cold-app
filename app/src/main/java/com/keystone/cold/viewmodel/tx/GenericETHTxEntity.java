@@ -99,6 +99,7 @@ public class GenericETHTxEntity implements Tx {
                     genericETHTxEntity.setAmountValue(amount);
                     genericETHTxEntity.setAmount(nf.format(value) + Web3TxViewModel.getSymbol(chainId));
                     genericETHTxEntity.setFee(nf.format(fee) + Web3TxViewModel.getSymbol(chainId));
+                    genericETHTxEntity.setFeeValue(fee);
                     JSONObject addition = new JSONObject(web3TxEntity.getAddition());
                     genericETHTxEntity.setFromTFCard(addition.getBoolean("isFromTFCard"));
                     break;
