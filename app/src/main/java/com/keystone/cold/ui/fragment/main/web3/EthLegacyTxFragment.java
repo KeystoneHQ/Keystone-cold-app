@@ -79,7 +79,7 @@ public class EthLegacyTxFragment extends BaseFragment<EthTxBinding> {
         coinListViewModel.loadETHTx(bundle.getString(KEY_TX_ID)).observe(this, genericETHTxEntity -> {
             this.genericETHTxEntity = genericETHTxEntity;
             if (this.genericETHTxEntity != null) {
-                if (viewModel.getGasPrice(genericETHTxEntity.getFee(), genericETHTxEntity.getGasLimit()).doubleValue() > MAX_PER_GAS) {
+                if (viewModel.getGasPrice(genericETHTxEntity.getFeeValue(), genericETHTxEntity.getGasLimitValue()).doubleValue() > MAX_PER_GAS) {
                     isExceeded = true;
                 }
                 updateUI();
