@@ -516,7 +516,8 @@
   <string name="testnet">테스트넷</string>
   <string name="inconsistent_address">보낸 사람 주소와 일치하지 않습니다.</string>
   <string name="tip">참고</string>
-  <string name="learn_more"><![CDATA[<Data>키스톤은 디코딩 트랜잭션을 지원합니다. 자세한 내용은<font color="#00CDC3"><b> https://keyst.one/eth </b></font>를 참조하십시오.</Data>]]></string>
+  <string name="learn_more"><![CDATA[<Data>키스톤은 디코딩 트랜잭션을 지원합니다. 자세한 내용은<font color="#00CDC3"><b> https://keyst.one/abi </b></font>를 참조하십시오.</Data>]]></string>
+  <string name="learn_more_doc"><![CDATA[<Data>키스톤은 디코딩 트랜잭션을 지원합니다. 자세한 내용은<font color="#00CDC3"><b> https://keyst.one/addabi </b></font>를 참조하십시오.</Data>]]></string>
   <string name="check_info">* 서명하기 전 거래내역을 확인하시기 바랍니다.</string>
   <string name="undecoded_tip">잠깐! 이것은 코드화되지 않은 데이터입니다.</string>
   <string name="from_tfcard">(마이크로SD 카드에서 파생됨)</string>

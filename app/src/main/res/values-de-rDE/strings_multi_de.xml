@@ -543,7 +543,8 @@ On Polkadot{.js}, you need to create watch-only wallets for DOT and KSM separate
   <string name="calc_mnemonic_warning_checkbox">Ich verstehe Entropie, BIP39, Private Schlüsselerstellung und anderes damit zusammenhängendes Material vollständig um meinen Wiederherstellungssatz zu erstellen.</string>
   <string name="note">GEFAHR!</string>
   <string name="tip">Hinweis</string>
-  <string name="learn_more"><![CDATA[<Data>Keystone unterstützt das Dekodieren von Transaktionen. Bitte besuchen Sie<font color=\"#00CDC3\"><b> https://keyst.one/eth </b></font>für mehr Details.</Data>]]></string>
+  <string name="learn_more"><![CDATA[<Data>Keystone unterstützt das Dekodieren von Transaktionen. Bitte besuchen Sie<font color="#00CDC3"><b> https://keyst.one/abi </b></font>für mehr Details.</Data>]]></string>
+  <string name="learn_more_doc"><![CDATA[<Data>Keystone unterstützt das Dekodieren von Transaktionen. Bitte besuchen Sie<font color="#00CDC3"><b> https://keyst.one/addabi </b></font>für mehr Details.</Data>]]></string>
   <string name="check_info">* Bitte überprüfen Sie die Details der Transaktion vor dem Signieren</string>
   <string name="undecoded_tip">Achtung! Das sind nicht dekodierte Daten.</string>
   <string name="from_tfcard">(Abgeleitet von Ihrer MicroSD Karte)</string>

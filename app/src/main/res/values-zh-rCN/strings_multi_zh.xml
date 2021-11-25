@@ -542,7 +542,7 @@
     <string name="calc_mnemonic_warning_checkbox">我已充分了解隨機熵、BIP39、私鑰生成等相關知識。</string>
     <string name="note">須知</string>
     <string name="tip">提示</string>
-    <string name="learn_more"><Data><![CDATA[Keystone支持解析交易，您可前往<font color="#00CDC3"><b> https://keyst.one/eth </b></font>了解詳情。]]></Data></string>
+    <string name="learn_more"><Data><![CDATA[Keystone支持解析交易，您可前往<font color="#00CDC3"><b> https://keyst.one/abi </b></font>了解詳情。]]></Data></string>
     <string name="learn_more_doc"><Data><![CDATA[Keystone支持解析交易，您可前往<font color="#00CDC3"><b> https://keyst.one/addabi </b></font>了解详情。]]></Data></string>
     <string name="undecoded_tip">註意！該數據未被解析。</string>
     <string name="from_tfcard">（解碼資源來源於TF卡）</string>
