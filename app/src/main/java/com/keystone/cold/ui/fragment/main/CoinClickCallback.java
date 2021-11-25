@@ -17,8 +17,8 @@
 
 package com.keystone.cold.ui.fragment.main;
 
-import com.keystone.cold.model.Coin;
+import com.keystone.cold.db.viewmodel.CoinModel;
 
 public interface CoinClickCallback {
-    void onClick(Coin coin);
+    void onClick(CoinModel coin);
 }
