@@ -247,7 +247,7 @@ public class ElectrumViewModel extends AndroidViewModel {
         }
 
         public ExpubInfo invoke() {
-            CoinEntity btc = mRepo.loadCoinSync(Coins.coinIdFromCoinCode("BTC"));
+            CoinEntity btc = mRepo.loadCoinSync(Coins.coinIdFromCoinCode(Coins.BTC_SEGWIT.coinCode()));
             AccountEntity accountEntity = mRepo.loadAccountsForCoin(btc).get(0);
             hdPath = accountEntity.getHdPath();
             expub = accountEntity.getExPub();

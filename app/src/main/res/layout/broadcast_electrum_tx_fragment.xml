@@ -67,7 +67,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginTop="20dp"
-                    android:src="@drawable/coin_btc"
+                    android:src="@drawable/coin_btc_segwit"
                     tools:ignore="ContentDescription" />
 
                 <LinearLayout

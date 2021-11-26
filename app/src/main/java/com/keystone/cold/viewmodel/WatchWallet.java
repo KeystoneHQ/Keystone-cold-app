@@ -87,7 +87,7 @@ public enum WatchWallet {
     public Coins.Coin[] getSupportedCoins() {
         switch (this) {
             case KEYSTONE:
-                return new Coins.Coin[]{Coins.BTC, Coins.BTC_P2PKH, Coins.BTC_P2WPKH, Coins.BCH, Coins.ETH, Coins.XRP, Coins.TRON, Coins.LTC, Coins.DASH, Coins.DOT};
+                return new Coins.Coin[]{Coins.BTC_SEGWIT, Coins.BTC_LEGACY, Coins.BTC_NATIVE_SEGWIT, Coins.BCH, Coins.ETH, Coins.XRP, Coins.TRON, Coins.LTC, Coins.DASH, Coins.DOT};
             case POLKADOT_JS:
                 return new Coins.Coin[]{Coins.DOT, Coins.KSM};
             case XRP_TOOLKIT:

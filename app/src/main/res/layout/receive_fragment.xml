@@ -88,7 +88,7 @@
             android:layout_height="28dp"
             android:layout_marginTop="28dp"
             app:icon="@{coinCode}"
-            tools:src="@drawable/coin_btc"
+            tools:src="@drawable/coin_btc_segwit"
             tools:ignore="ContentDescription" />
 
         <TextView

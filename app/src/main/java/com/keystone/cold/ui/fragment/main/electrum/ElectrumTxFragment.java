@@ -111,7 +111,7 @@ public class ElectrumTxFragment extends BaseFragment<ElectrumTxBinding> {
                 JSONObject out = outputs.getJSONObject(i);
                 items.add(new TransactionItem(i,
                         out.getLong("value"), out.getString("address"),
-                        Coins.BTC.coinCode()));
+                        Coins.BTC_SEGWIT.coinCode()));
             }
         } catch (JSONException e) {
             return;
@@ -139,7 +139,7 @@ public class ElectrumTxFragment extends BaseFragment<ElectrumTxBinding> {
                 items.add(new TransactionItem(i,
                         outputs.getJSONObject(i).getLong("value"),
                         outputs.getJSONObject(i).getString("address"),
-                        Coins.BTC.coinCode()
+                        Coins.BTC_SEGWIT.coinCode()
                 ));
             }
         } catch (JSONException e) {

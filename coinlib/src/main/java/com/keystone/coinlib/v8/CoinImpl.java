@@ -55,8 +55,8 @@ public class CoinImpl implements Coin {
         this.coinCode = coinCode;
 
         if (coinCode.equals(Coins.XTN.coinCode())) {
-            this.v8 = ScriptLoader.sInstance.loadByCoinCode(Coins.BTC.coinCode());
-            this.coin = v8.executeObjectScript("new " + Coins.BTC.coinCode() + "(\"testNet\")");
+            this.v8 = ScriptLoader.sInstance.loadByCoinCode(Coins.BTC_SEGWIT.coinCode());
+            this.coin = v8.executeObjectScript("new " + Coins.BTC_SEGWIT.coinCode() + "(\"testNet\")");
         } else {
             this.v8 = ScriptLoader.sInstance.loadByCoinCode(coinCode);
             this.coin = v8.executeObjectScript("new " + coinCode + "()");
@@ -103,7 +103,7 @@ public class CoinImpl implements Coin {
         } else {
             return null;
         }
-        if (Coins.BTC.coinCode().equals(coinCode)) {
+        if (Coins.BTC_SEGWIT.coinCode().equals(coinCode)) {
             params.push(false);
         } else {
             V8Object option = new V8Object(v8);
@@ -175,7 +175,7 @@ public class CoinImpl implements Coin {
 
     private void addOption(V8Array params) {
         switch (coinCode) {
-            case "BTC":
+            case "BTC_SEGWIT":
             case "LTC":
                 params.push("P2SH");
             case "BCH":

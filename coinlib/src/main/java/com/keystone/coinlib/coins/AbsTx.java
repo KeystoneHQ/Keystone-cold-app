@@ -57,7 +57,7 @@ public abstract class AbsTx {
         this.decimal = object.getInt("decimal");
 
         if (coinCode.equals(Coins.XTN.coinCode())) {
-           this.metaData =  extractMetaData(object, Coins.BTC.coinCode());
+           this.metaData =  extractMetaData(object, Coins.BTC_SEGWIT.coinCode());
         } else {
             this.metaData = extractMetaData(object, coinCode);
         }

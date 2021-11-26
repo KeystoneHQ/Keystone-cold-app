@@ -270,7 +270,7 @@ public class ElectrumTxConfirmFragment extends BaseFragment<ElectrumTxConfirmFra
                 items.add(new TransactionItem(i,
                         outputs.getJSONObject(i).getLong("value"),
                         outputs.getJSONObject(i).getString("address"),
-                        Coins.BTC.coinCode()
+                        Coins.BTC_SEGWIT.coinCode()
                 ));
             }
         } catch (JSONException e) {
@@ -295,7 +295,7 @@ public class ElectrumTxConfirmFragment extends BaseFragment<ElectrumTxConfirmFra
                 items.add(new TransactionItem(i,
                         out.getLong("value"),
                         out.getString("address"),
-                        Coins.BTC.coinCode()));
+                        Coins.BTC_SEGWIT.coinCode()));
             }
         } catch (JSONException e) {
             return;

@@ -17,12 +17,10 @@
 
 package com.keystone.coinlib.coins;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
-import com.keystone.coinlib.coins.BTC_P2PKH.BTC_P2PKH;
-import com.keystone.coinlib.coins.BTC_P2WPKH.BTC_P2WPKH;
+import com.keystone.coinlib.coins.BTC_LEGACY.BTC_LEGACY;
+import com.keystone.coinlib.coins.BTC_NATIVE_SEGWIT.BTC_NATIVE_SEGWIT;
 import com.keystone.coinlib.coins.polkadot.DOT.Dot;
 import com.keystone.coinlib.coins.polkadot.KSM.Ksm;
 import com.keystone.coinlib.utils.Coins;
@@ -38,8 +36,8 @@ public abstract class AbsDeriver {
         try {
             if (coinCode.equals(Coins.DOT.coinCode())) return new Dot.Deriver();
             else if (coinCode.equals(Coins.KSM.coinCode())) return new Ksm.Deriver();
-            else if(coinCode.equals(Coins.BTC_P2PKH.coinCode())) return new BTC_P2PKH.Deriver();
-            else if(coinCode.equals(Coins.BTC_P2WPKH.coinCode())) return new BTC_P2WPKH.Deriver();
+            else if(coinCode.equals(Coins.BTC_LEGACY.coinCode())) return new BTC_LEGACY.Deriver();
+            else if(coinCode.equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) return new BTC_NATIVE_SEGWIT.Deriver();
             else {
                 Class clazz = Class.forName(CoinReflect.getCoinClassByCoinCode(coinCode) + "$Deriver");
                 return (AbsDeriver) clazz.newInstance();
