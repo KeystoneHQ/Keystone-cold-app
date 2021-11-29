@@ -11,8 +11,10 @@ public class CoinModel {
     public String getTag() {
         switch (entity.getCoinCode()){
             case "BTC_LEGACY":
+            case "BTC_TESTNET_LEGACY":
                 return "Legacy";
             case "BTC_NATIVE_SEGWIT":
+            case "BTC_TESTNET_NATIVE_SEGWIT":
                 return "Native Segwit";
             default:
                 return "Nested Segwit";
@@ -21,8 +23,11 @@ public class CoinModel {
     public boolean hasTag() {
         switch (entity.getCoinCode()){
             case "BTC_LEGACY":
+            case "BTC_TESTNET_LEGACY":
             case "BTC_NATIVE_SEGWIT":
+            case "BTC_TESTNET_NATIVE_SEGWIT":
             case "BTC_SEGWIT":
+            case "BTC_TESTNET_SEGWIT":
                 return true;
             default:
                 return false;
@@ -55,6 +60,10 @@ public class CoinModel {
             case "BTC_LEGACY":
             case "BTC_NATIVE_SEGWIT":
                 return "BTC";
+            case "BTC_TESTNET_SEGWIT":
+            case "BTC_TESTNET_LEGACY":
+            case "BTC_TESTNET_NATIVE_SEGWIT":
+                return "XTN";
         }
         return entity.getDisplayName();
     }

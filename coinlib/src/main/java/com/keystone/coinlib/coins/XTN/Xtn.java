@@ -51,14 +51,14 @@ public class Xtn extends Btc {
         public String derive(String xPubKey, int changeIndex, int addrIndex) {
             DeterministicKey address = getAddrDeterministicKey(xPubKey, changeIndex, addrIndex);
 
-            LegacyAddress addr = LegacyAddress.fromScriptHash(TESTNET,
+            LegacyAddress addr = LegacyAddress.fromScriptHash(REGTEST,
                     segWitOutputScript(address.getPubKeyHash()).getPubKeyHash());
             return Base58.encodeChecked(0xc4, addr.getHash());
         }
 
         @Override
         public String derive(String xPubKey) {
-            LegacyAddress addr = LegacyAddress.fromScriptHash(TESTNET,
+            LegacyAddress addr = LegacyAddress.fromScriptHash(REGTEST,
                     segWitOutputScript(getDeterministicKey(xPubKey).getPubKeyHash()).getPubKeyHash());
             return Base58.encodeChecked(0xc4, addr.getHash());
         }

@@ -23,8 +23,10 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.keystone.coinlib.utils.Coins;
+import com.keystone.cold.BuildConfig;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
+import com.keystone.cold.config.FeatureFlags;
 import com.keystone.cold.scan.QREncoding;
 
 import static com.keystone.cold.ui.fragment.setting.MainPreferenceFragment.SETTING_CHOOSE_WATCH_WALLET;
@@ -87,7 +89,12 @@ public enum WatchWallet {
     public Coins.Coin[] getSupportedCoins() {
         switch (this) {
             case KEYSTONE:
-                return new Coins.Coin[]{Coins.BTC_SEGWIT, Coins.BTC_LEGACY, Coins.BTC_NATIVE_SEGWIT, Coins.BCH, Coins.ETH, Coins.XRP, Coins.TRON, Coins.LTC, Coins.DASH, Coins.DOT};
+                if(FeatureFlags.ENABLE_XTN) {
+                    return new Coins.Coin[]{Coins.BTC_SEGWIT, Coins.BTC_LEGACY, Coins.BTC_NATIVE_SEGWIT, Coins.BCH, Coins.ETH, Coins.XRP, Coins.TRON, Coins.LTC, Coins.DASH, Coins.DOT, Coins.BTC_TESTNET_LEGACY, Coins.BTC_TESTNET_SEGWIT, Coins.BTC_TESTNET_NATIVE_SEGWIT};
+                }
+                else {
+                    return new Coins.Coin[]{Coins.BTC_SEGWIT, Coins.BTC_LEGACY, Coins.BTC_NATIVE_SEGWIT, Coins.BCH, Coins.ETH, Coins.XRP, Coins.TRON, Coins.LTC, Coins.DASH, Coins.DOT};
+                }
             case POLKADOT_JS:
                 return new Coins.Coin[]{Coins.DOT, Coins.KSM};
             case XRP_TOOLKIT:
