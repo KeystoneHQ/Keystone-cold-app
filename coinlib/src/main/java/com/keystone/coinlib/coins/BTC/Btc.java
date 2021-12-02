@@ -48,7 +48,7 @@ public class Btc extends AbsCoin {
 
     @Override
     public String coinCode() {
-        return Coins.BTC.coinCode();
+        return Coins.BTC_SEGWIT.coinCode();
     }
 
     public void generateOmniTx(@NonNull AbsTx tx, SignCallback callback, Signer... signers) {

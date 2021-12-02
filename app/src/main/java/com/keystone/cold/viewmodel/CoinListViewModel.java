@@ -36,7 +36,7 @@ import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.Web3TxEntity;
 import com.keystone.cold.db.entity.TxEntity;
-import com.keystone.cold.model.Coin;
+import com.keystone.cold.db.viewmodel.CoinModel;
 import com.keystone.cold.model.Tx;
 import com.keystone.cold.viewmodel.tx.GenericETHTxEntity;
 
@@ -51,9 +51,17 @@ public class CoinListViewModel extends AndroidViewModel {
     private final MediatorLiveData<List<CoinEntity>> mObservableCoins;
     private boolean isFromTFCard;
     public static final Comparator<CoinEntity> coinEntityComparator = (o1, o2) -> {
-        if (o1.getCoinCode().equals(Coins.BTC.coinCode())) {
+        if (o1.getCoinCode().equals(Coins.BTC_SEGWIT.coinCode())) {
             return -1;
-        } else if (o2.getCoinCode().equals(Coins.BTC.coinCode())) {
+        } else if (o2.getCoinCode().equals(Coins.BTC_SEGWIT.coinCode())) {
+            return 1;
+        } else if (o1.getCoinCode().equals(Coins.BTC_LEGACY.coinCode())) {
+            return -1;
+        } else if (o2.getCoinCode().equals(Coins.BTC_LEGACY.coinCode())) {
+            return 1;
+        } else if (o1.getCoinCode().equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) {
+            return -1;
+        } else if (o2.getCoinCode().equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) {
             return 1;
         } else if (o1.getCoinCode().equals(Coins.ETH.coinCode())) {
             return -1;
@@ -79,7 +87,7 @@ public class CoinListViewModel extends AndroidViewModel {
         return mObservableCoins;
     }
 
-    public void toggleCoin(Coin coin) {
+    public void toggleCoin(CoinModel coin) {
         CoinEntity entity = new CoinEntity(coin);
         entity.setShow(!coin.isShow());
         mRepository.updateCoin(entity);

@@ -24,7 +24,7 @@
 
         <variable
             name="coin"
-            type="com.keystone.cold.model.Coin" />
+            type="com.keystone.cold.db.viewmodel.CoinModel" />
 
         <variable
             name="callback"
@@ -50,7 +50,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="14dp"
             app:icon="@{coin.coinCode}"
-            tools:src="@drawable/coin_btc"
+            tools:src="@drawable/coin_btc_segwit"
             tools:ignore="ContentDescription" />
 
 
@@ -61,15 +61,33 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/coinCode"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{coin.displayName}"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                tools:text="BTC" />
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/coinCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{coin.displayName}"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="BTC" />
+
+                <TextView
+                    android:layout_marginStart="12dp"
+                    visibleGone="@{coin.hasTag()}"
+                    android:id="@+id/tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{coin.tag}"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/round_color_text_bg"
+                    tools:text="Native Segwit" />
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/coinName"
@@ -111,15 +129,15 @@
             tools:text="1" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
+            visibleGone="@{isManage}"
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:layout_marginEnd="16dp"
+            android:button="@drawable/checkbox"
             android:checked="@{coin.show}"
-            visibleGone="@{isManage}"
-            android:clickable="false"
-            android:button="@drawable/checkbox" />
+            android:clickable="false" />
 
         <include
             layout="@layout/divider"

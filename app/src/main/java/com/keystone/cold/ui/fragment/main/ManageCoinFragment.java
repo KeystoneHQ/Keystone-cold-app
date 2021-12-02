@@ -23,9 +23,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,39 +31,31 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 import com.keystone.cold.config.FeatureFlags;
 import com.keystone.cold.databinding.ManageCoinFragmentBinding;
-import com.keystone.cold.databinding.ModalWithTwoButtonBinding;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.model.Coin;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.SetupVaultActivity;
 import com.keystone.cold.ui.fragment.BaseFragment;
-import com.keystone.cold.ui.modal.ModalDialog;
-import com.keystone.cold.ui.views.AuthenticateModal;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.Utilities.IS_SET_PASSPHRASE;
 import static com.keystone.cold.Utilities.IS_SWITCH_WATCH_WALLET;
 import static com.keystone.cold.ui.fragment.main.AssetListFragment.filterSupportedCoin;
-import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.PASSWORD;
 import static com.keystone.cold.viewmodel.CoinListViewModel.coinEntityComparator;
 
 public class ManageCoinFragment extends BaseFragment<ManageCoinFragmentBinding> {

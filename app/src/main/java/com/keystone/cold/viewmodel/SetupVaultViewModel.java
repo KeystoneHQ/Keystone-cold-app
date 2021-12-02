@@ -47,7 +47,6 @@ import com.keystone.cold.callables.VerifyMnemonicCallable;
 import com.keystone.cold.callables.WebAuthCallableUpgrade;
 import com.keystone.cold.callables.WriteMnemonicCallable;
 import com.keystone.cold.db.entity.AccountEntity;
-import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.util.HashUtil;
 
@@ -395,11 +394,20 @@ public class SetupVaultViewModel extends AndroidViewModel {
         return mnemonic;
     }
 
+    private void upgradeBTCtoBTCP2SH(CoinEntity btc) {
+        btc.setCoinCode(Coins.BTC_SEGWIT.coinCode());
+        btc.setName(Coins.BTC_SEGWIT.coinName());
+        mRepository.updateCoin(btc);
+    }
+
     public void presetData(List<CoinEntity> coins, final Runnable onComplete) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             for (CoinEntity coin : coins) {
                 CoinEntity coinEntity = mRepository.loadCoinSync(coin.getCoinId());
                 if (coinEntity != null) {
+                    if(coinEntity.getCoinId().equals(Coins.BTC_SEGWIT.coinId())) {
+                        upgradeBTCtoBTCP2SH(coinEntity);
+                    }
                     List<AccountEntity> accountEntities = mRepository.loadAccountsForCoin(coinEntity);
                     if (coin.getIndex() == Coins.ETH.coinIndex()) {
                         if (accountEntities.size() != coin.getAccounts().size()) {

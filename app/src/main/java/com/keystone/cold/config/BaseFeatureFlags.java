@@ -25,4 +25,5 @@ public abstract class BaseFeatureFlags {
     public static final boolean ENABLE_SHARDING_MNEMONIC = true;
     public static final boolean ENABLE_SYSTEM_UPDATE = true;
     public static final boolean ENABLE_SERIAL_UPDATE = true;
+    public static final boolean ENABLE_XTN = true;
 }

@@ -25,6 +25,7 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.keystone.cold.db.viewmodel.CoinModel;
 import com.keystone.cold.model.Coin;
 
 import java.util.ArrayList;
@@ -53,6 +54,19 @@ public class CoinEntity implements Coin, FilterableItem {
     }
 
     public CoinEntity(@NonNull Coin coin) {
+        id = coin.getId();
+        coinId = coin.getCoinId();
+        name = coin.getName();
+        iconResId = getIconResId();
+        show = coin.isShow();
+        addressCount = coin.getAddressCount();
+        coinCode = coin.getCoinCode();
+        belongTo = coin.getBelongTo();
+        exPub = coin.getExPub();
+        index = coin.getIndex();
+    }
+
+    public CoinEntity(@NonNull CoinModel coin) {
         id = coin.getId();
         coinId = coin.getCoinId();
         name = coin.getName();
@@ -200,5 +214,9 @@ public class CoinEntity implements Coin, FilterableItem {
         }
         s = s.toLowerCase();
         return name.toLowerCase().contains(s) || coinCode.toLowerCase().contains(s);
+    }
+
+    public CoinModel toCoinModel() {
+        return new CoinModel(this);
     }
 }
