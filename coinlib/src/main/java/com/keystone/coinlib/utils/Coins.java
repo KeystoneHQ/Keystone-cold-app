@@ -85,10 +85,35 @@ public class Coins {
             case "BTC_SEGWIT":
             case "BTC_LEGACY":
             case "BTC_NATIVE_SEGWIT":
+            case "BTC_TESTNET_SEGWIT":
+            case "BTC_TESTNET_LEGACY":
+            case "BTC_TESTNET_NATIVE_SEGWIT":
             case "XTN":
             case "BCH":
             case "LTC":
             case "DASH":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static boolean isBTCMainnet(@NonNull String coinCode) {
+        switch (coinCode) {
+            case "BTC_SEGWIT":
+            case "BTC_LEGACY":
+            case "BTC_NATIVE_SEGWIT":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static boolean isBTCTestnet(@NonNull String coinCode) {
+        switch (coinCode) {
+            case "BTC_TESTNET_SEGWIT":
+            case "BTC_TESTNET_LEGACY":
+            case "BTC_TESTNET_NATIVE_SEGWIT":
                 return true;
             default:
                 return false;

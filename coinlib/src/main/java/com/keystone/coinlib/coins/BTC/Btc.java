@@ -17,18 +17,13 @@
 
 package com.keystone.coinlib.coins.BTC;
 
-import androidx.annotation.NonNull;
-
 import com.keystone.coinlib.coins.AbsCoin;
 import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.coins.AbsTx;
 import com.keystone.coinlib.coins.BCH.Bch;
 import com.keystone.coinlib.coins.LTC.Ltc;
-import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.Coin;
-import com.keystone.coinlib.interfaces.SignCallback;
-import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.utils.Coins;
 
 import org.bitcoinj.core.LegacyAddress;
@@ -49,15 +44,6 @@ public class Btc extends AbsCoin {
     @Override
     public String coinCode() {
         return Coins.BTC_SEGWIT.coinCode();
-    }
-
-    public void generateOmniTx(@NonNull AbsTx tx, SignCallback callback, Signer... signers) {
-        SignTxResult result = ((BtcImpl) impl).generateOmniTx(tx, signers);
-        if (result != null && result.isValid()) {
-            callback.onSuccess(result.txId, result.txHex);
-        } else {
-            callback.onFail();
-        }
     }
 
     public static class Tx extends AbsTx implements UtxoTx {

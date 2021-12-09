@@ -35,6 +35,7 @@ import com.eclipsesource.v8.V8Function;
 import com.eclipsesource.v8.V8Object;
 import com.eclipsesource.v8.V8ScriptExecutionException;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.stream.Stream;
@@ -53,10 +54,12 @@ public class CoinImpl implements Coin {
     public CoinImpl(String coinCode) {
         super();
         this.coinCode = coinCode;
-
-        if (coinCode.equals(Coins.XTN.coinCode())) {
-            this.v8 = ScriptLoader.sInstance.loadByCoinCode(Coins.BTC_SEGWIT.coinCode());
-            this.coin = v8.executeObjectScript("new " + Coins.BTC_SEGWIT.coinCode() + "(\"testNet\")");
+        if (coinCode.equals(Coins.BTC_TESTNET_LEGACY.coinCode()) || coinCode.equals(Coins.BTC_TESTNET_SEGWIT.coinCode()) || coinCode.equals(Coins.BTC_TESTNET_NATIVE_SEGWIT.coinCode())) {
+            this.v8 = ScriptLoader.sInstance.loadByCoinCode("BTC");
+            this.coin = v8.executeObjectScript("new BTC(\"testNet\")");
+        } else if (coinCode.equals(Coins.BTC_LEGACY.coinCode()) || coinCode.equals(Coins.BTC_SEGWIT.coinCode()) || coinCode.equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) {
+            this.v8 = ScriptLoader.sInstance.loadByCoinCode("BTC");
+            this.coin = v8.executeObjectScript("new BTC()");
         } else {
             this.v8 = ScriptLoader.sInstance.loadByCoinCode(coinCode);
             this.coin = v8.executeObjectScript("new " + coinCode + "()");
@@ -66,8 +69,9 @@ public class CoinImpl implements Coin {
     }
 
     public SignTxResult signTxImpl(String signFunc, Signer... signers) {
-        return this.signTxImpl(null,signFunc,signers);
+        return this.signTxImpl(null, signFunc, signers);
     }
+
     /**
      * sign a tx
      *
@@ -79,7 +83,6 @@ public class CoinImpl implements Coin {
         if (this.signTxFunction == null) {
             this.signTxFunction = (V8Function) coin.get(signFunc);
         }
-
         v8.registerResource(txData);
         V8Array params = new V8Array(v8);
         v8.registerResource(params);
@@ -103,7 +106,8 @@ public class CoinImpl implements Coin {
         } else {
             return null;
         }
-        if (Coins.BTC_SEGWIT.coinCode().equals(coinCode)) {
+        if (Coins.BTC_SEGWIT.coinCode().equals(coinCode) || Coins.BTC_LEGACY.coinCode().equals(coinCode) || Coins.BTC_NATIVE_SEGWIT.coinCode().equals(coinCode) || Coins.BTC_TESTNET_SEGWIT.coinCode().equals(coinCode) ||
+                Coins.BTC_TESTNET_LEGACY.coinCode().equals(coinCode) || Coins.BTC_TESTNET_NATIVE_SEGWIT.coinCode().equals(coinCode)) {
             params.push(false);
         } else {
             V8Object option = new V8Object(v8);
@@ -201,8 +205,8 @@ public class CoinImpl implements Coin {
             if (TextUtils.isEmpty(signedStr)) {
                 return res;
             }
-            res.add("r",signedStr.substring(0,64));
-            res.add("s",signedStr.substring(64,128));
+            res.add("r", signedStr.substring(0, 64));
+            res.add("s", signedStr.substring(64, 128));
 
             int recId = 0;
             try {
@@ -235,12 +239,25 @@ public class CoinImpl implements Coin {
 
     @Override
     public void generateTransaction(@NonNull AbsTx tx, SignCallback callback, Signer... signers) {
-        Log.w("Vault.generateTransaction","txData = " + tx.getMetaData());
-        V8Object txData = constructTxData(tx.getMetaData());
-        SignTxResult res = signTxImpl(txData, "generateTransactionSync", signers);
-        if (res != null && res.isValid()) {
-            callback.onSuccess(res.txId, res.txHex);
-        } else {
+        try {
+            Log.w("Vault.generateTransaction", "txData = " + tx.getMetaData());
+            JSONObject txMeta = tx.getMetaData();
+            if (coinCode.equals(Coins.BTC_LEGACY.coinCode()) || coinCode.equals(Coins.BTC_TESTNET_LEGACY.coinCode())) {
+                txMeta.put("scriptType", "P2PKH");
+            } else if (coinCode.equals(Coins.BTC_SEGWIT.coinCode()) || coinCode.equals(Coins.BTC_TESTNET_SEGWIT.coinCode())) {
+                txMeta.put("scriptType", "P2SH");
+            } else if (coinCode.equals(Coins.BTC_NATIVE_SEGWIT.coinCode()) || coinCode.equals(Coins.BTC_TESTNET_NATIVE_SEGWIT.coinCode())) {
+                txMeta.put("scriptType", "P2WPKH");
+            }
+            V8Object txData = constructTxData(txMeta);
+            SignTxResult res = signTxImpl(txData, "generateTransactionSync", signers);
+            if (res != null && res.isValid()) {
+                callback.onSuccess(res.txId, res.txHex);
+            } else {
+                callback.onFail();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
             callback.onFail();
         }
     }

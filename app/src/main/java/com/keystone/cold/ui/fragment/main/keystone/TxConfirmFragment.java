@@ -152,6 +152,10 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
             if (txEntity != null) {
                 this.txEntity = txEntity;
                 mBinding.setTx(txEntity);
+                if(Coins.isBTCMainnet(txEntity.getCoinCode()) || Coins.isBTCTestnet(txEntity.getCoinCode())) {
+                    mBinding.txDetail.fromRow.setVisibility(View.GONE);
+                    mBinding.txDetail.arrowDown.setVisibility(View.GONE);
+                }
                 refreshAmount();
                 refreshFromList();
                 refreshReceiveList();

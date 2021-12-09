@@ -17,6 +17,14 @@
 
 package com.keystone.coinlib.coins;
 
+import android.util.Log;
+
+import com.keystone.coinlib.coins.BTC.Btc;
+import com.keystone.coinlib.coins.BTC_LEGACY.BTC_LEGACY;
+import com.keystone.coinlib.coins.BTC_NATIVE_SEGWIT.BTC_NATIVE_SEGWIT;
+import com.keystone.coinlib.coins.XTN_LEGACY.XTN_LEGACY;
+import com.keystone.coinlib.coins.XTN_NATIVE_SEGWIT.XTN_NATIVE_SEGWIT;
+import com.keystone.coinlib.coins.XTN_SEGWIT.XTN_SEGWIT;
 import com.keystone.coinlib.coins.polkadot.DOT.Dot;
 import com.keystone.coinlib.coins.polkadot.KSM.Ksm;
 import com.keystone.coinlib.exception.InvalidPathException;
@@ -86,7 +94,15 @@ public abstract class AbsTx {
             }
 
             CoinType coinType = account.getParent();
-            if (!coinCode.equals(Coins.coinCodeOfIndex(coinType.getValue()))) {
+            if ((coinType.getValue()!=0 && coinType.getValue() != 1) && !coinCode.equals(Coins.coinCodeOfIndex(coinType.getValue()))) {
+                throw new InvalidTransactionException("invalid hdPath, error coinIndex");
+            }
+
+            if(coinType.getValue() == 0 && !Coins.isBTCMainnet(coinCode)) {
+                throw new InvalidTransactionException("invalid hdPath, error coinIndex");
+            }
+
+            if(coinType.getValue() == 1 && !Coins.isBTCTestnet(coinCode)) {
                 throw new InvalidTransactionException("invalid hdPath, error coinIndex");
             }
 
@@ -106,6 +122,12 @@ public abstract class AbsTx {
         try {
             if (coinCode.equals(Coins.DOT.coinCode())) return new Dot.Tx(object, coinCode);
             else if (coinCode.equals(Coins.KSM.coinCode())) return new Ksm.Tx(object, coinCode);
+            else if(coinCode.equals(Coins.BTC_LEGACY.coinCode())) return new Btc.Tx(object, coinCode);
+            else if(coinCode.equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) return new Btc.Tx(object, coinCode);
+            else if(coinCode.equals(Coins.BTC_SEGWIT.coinCode())) return new Btc.Tx(object, coinCode);
+            else if(coinCode.equals(Coins.BTC_TESTNET_LEGACY.coinCode())) return new Btc.Tx(object, coinCode);
+            else if(coinCode.equals(Coins.BTC_TESTNET_NATIVE_SEGWIT.coinCode())) return new Btc.Tx(object, coinCode);
+            else if(coinCode.equals(Coins.BTC_TESTNET_SEGWIT.coinCode())) return new Btc.Tx(object, coinCode);
             Class<?> clazz = Class.forName(CoinReflect.getCoinClassByCoinCode(coinCode) + "$Tx");
             return (AbsTx) clazz.getDeclaredConstructor(JSONObject.class, String.class)
                     .newInstance(object, coinCode);

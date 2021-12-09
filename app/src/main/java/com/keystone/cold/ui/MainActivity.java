@@ -92,6 +92,7 @@ public class MainActivity extends FullScreenActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         watchWallet = WatchWallet.getWatchWallet(this);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
