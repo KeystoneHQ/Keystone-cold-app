@@ -45,7 +45,7 @@ public abstract class AbsCoin implements Coin {
         try {
             if(coinCode.equals(Coins.BTC_LEGACY.coinCode())) return new BTC_LEGACY(impl);
             else if(coinCode.equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) return new BTC_NATIVE_SEGWIT(impl);
-            else if(coinCode.equals(Coins.BTC_SEGWIT.coinCode())) return new Btc(impl);
+            else if(coinCode.equals(Coins.BTC.coinCode())) return new Btc(impl);
             else if(coinCode.equals(Coins.BTC_TESTNET_LEGACY.coinCode())) return new XTN_LEGACY(impl);
             else if(coinCode.equals(Coins.BTC_TESTNET_NATIVE_SEGWIT.coinCode())) return new XTN_NATIVE_SEGWIT(impl);
             else if(coinCode.equals(Coins.BTC_TESTNET_SEGWIT.coinCode())) return new XTN_SEGWIT(impl);

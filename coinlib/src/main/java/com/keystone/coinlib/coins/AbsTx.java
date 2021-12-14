@@ -65,7 +65,7 @@ public abstract class AbsTx {
         this.decimal = object.getInt("decimal");
 
         if (coinCode.equals(Coins.XTN.coinCode())) {
-           this.metaData =  extractMetaData(object, Coins.BTC_SEGWIT.coinCode());
+           this.metaData =  extractMetaData(object, Coins.BTC.coinCode());
         } else {
             this.metaData = extractMetaData(object, coinCode);
         }
@@ -124,7 +124,7 @@ public abstract class AbsTx {
             else if (coinCode.equals(Coins.KSM.coinCode())) return new Ksm.Tx(object, coinCode);
             else if(coinCode.equals(Coins.BTC_LEGACY.coinCode())) return new Btc.Tx(object, coinCode);
             else if(coinCode.equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) return new Btc.Tx(object, coinCode);
-            else if(coinCode.equals(Coins.BTC_SEGWIT.coinCode())) return new Btc.Tx(object, coinCode);
+            else if(coinCode.equals(Coins.BTC.coinCode())) return new Btc.Tx(object, coinCode);
             else if(coinCode.equals(Coins.BTC_TESTNET_LEGACY.coinCode())) return new Btc.Tx(object, coinCode);
             else if(coinCode.equals(Coins.BTC_TESTNET_NATIVE_SEGWIT.coinCode())) return new Btc.Tx(object, coinCode);
             else if(coinCode.equals(Coins.BTC_TESTNET_SEGWIT.coinCode())) return new Btc.Tx(object, coinCode);

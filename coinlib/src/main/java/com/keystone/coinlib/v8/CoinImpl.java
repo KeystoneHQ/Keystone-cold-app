@@ -57,7 +57,7 @@ public class CoinImpl implements Coin {
         if (coinCode.equals(Coins.BTC_TESTNET_LEGACY.coinCode()) || coinCode.equals(Coins.BTC_TESTNET_SEGWIT.coinCode()) || coinCode.equals(Coins.BTC_TESTNET_NATIVE_SEGWIT.coinCode())) {
             this.v8 = ScriptLoader.sInstance.loadByCoinCode("BTC");
             this.coin = v8.executeObjectScript("new BTC(\"testNet\")");
-        } else if (coinCode.equals(Coins.BTC_LEGACY.coinCode()) || coinCode.equals(Coins.BTC_SEGWIT.coinCode()) || coinCode.equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) {
+        } else if (coinCode.equals(Coins.BTC_LEGACY.coinCode()) || coinCode.equals(Coins.BTC.coinCode()) || coinCode.equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) {
             this.v8 = ScriptLoader.sInstance.loadByCoinCode("BTC");
             this.coin = v8.executeObjectScript("new BTC()");
         } else {
@@ -106,7 +106,7 @@ public class CoinImpl implements Coin {
         } else {
             return null;
         }
-        if (Coins.BTC_SEGWIT.coinCode().equals(coinCode) || Coins.BTC_LEGACY.coinCode().equals(coinCode) || Coins.BTC_NATIVE_SEGWIT.coinCode().equals(coinCode) || Coins.BTC_TESTNET_SEGWIT.coinCode().equals(coinCode) ||
+        if (Coins.BTC.coinCode().equals(coinCode) || Coins.BTC_LEGACY.coinCode().equals(coinCode) || Coins.BTC_NATIVE_SEGWIT.coinCode().equals(coinCode) || Coins.BTC_TESTNET_SEGWIT.coinCode().equals(coinCode) ||
                 Coins.BTC_TESTNET_LEGACY.coinCode().equals(coinCode) || Coins.BTC_TESTNET_NATIVE_SEGWIT.coinCode().equals(coinCode)) {
             params.push(false);
         } else {
@@ -179,7 +179,7 @@ public class CoinImpl implements Coin {
 
     private void addOption(V8Array params) {
         switch (coinCode) {
-            case "BTC_SEGWIT":
+            case "BTC":
             case "LTC":
                 params.push("P2SH");
             case "BCH":
@@ -244,7 +244,7 @@ public class CoinImpl implements Coin {
             JSONObject txMeta = tx.getMetaData();
             if (coinCode.equals(Coins.BTC_LEGACY.coinCode()) || coinCode.equals(Coins.BTC_TESTNET_LEGACY.coinCode())) {
                 txMeta.put("scriptType", "P2PKH");
-            } else if (coinCode.equals(Coins.BTC_SEGWIT.coinCode()) || coinCode.equals(Coins.BTC_TESTNET_SEGWIT.coinCode())) {
+            } else if (coinCode.equals(Coins.BTC.coinCode()) || coinCode.equals(Coins.BTC_TESTNET_SEGWIT.coinCode())) {
                 txMeta.put("scriptType", "P2SH");
             } else if (coinCode.equals(Coins.BTC_NATIVE_SEGWIT.coinCode()) || coinCode.equals(Coins.BTC_TESTNET_NATIVE_SEGWIT.coinCode())) {
                 txMeta.put("scriptType", "P2WPKH");

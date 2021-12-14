@@ -43,7 +43,7 @@ public abstract class AbsDeriver {
             else if (coinCode.equals(Coins.KSM.coinCode())) return new Ksm.Deriver();
             else if(coinCode.equals(Coins.BTC_LEGACY.coinCode())) return new BTC_LEGACY.Deriver();
             else if(coinCode.equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) return new BTC_NATIVE_SEGWIT.Deriver();
-            else if(coinCode.equals(Coins.BTC_SEGWIT.coinCode())) return new Btc.Deriver();
+            else if(coinCode.equals(Coins.BTC.coinCode())) return new Btc.Deriver();
             else if(coinCode.equals(Coins.BTC_TESTNET_LEGACY.coinCode())) return new XTN_LEGACY.Deriver();
             else if(coinCode.equals(Coins.BTC_TESTNET_NATIVE_SEGWIT.coinCode())) return new XTN_NATIVE_SEGWIT.Deriver();
             else if(coinCode.equals(Coins.BTC_TESTNET_SEGWIT.coinCode())) return new XTN_SEGWIT.Deriver();

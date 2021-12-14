@@ -43,7 +43,7 @@ public class Btc extends AbsCoin {
 
     @Override
     public String coinCode() {
-        return Coins.BTC_SEGWIT.coinCode();
+        return Coins.BTC.coinCode();
     }
 
     public static class Tx extends AbsTx implements UtxoTx {

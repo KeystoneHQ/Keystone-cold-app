@@ -37,7 +37,7 @@ public abstract class Signer {
 
     public static boolean shouldProvidePublicKey(@NonNull String coinCode) {
         switch (coinCode) {
-            case "BTC_SEGWIT":
+            case "BTC":
             case "BTC_LEGACY":
             case "BTC_NATIVE_SEGWIT":
             case "BTC_TESTNET_SEGWIT":
