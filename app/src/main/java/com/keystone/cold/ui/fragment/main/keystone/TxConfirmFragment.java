@@ -152,6 +152,10 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
             if (txEntity != null) {
                 this.txEntity = txEntity;
                 mBinding.setTx(txEntity);
+                if(Coins.isBTCMainnet(txEntity.getCoinCode()) || Coins.isBTCTestnet(txEntity.getCoinCode())) {
+                    mBinding.txDetail.fromRow.setVisibility(View.GONE);
+                    mBinding.txDetail.arrowDown.setVisibility(View.GONE);
+                }
                 refreshAmount();
                 refreshFromList();
                 refreshReceiveList();
@@ -217,7 +221,7 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
     }
 
     private void checkBtcFee() {
-        if (txEntity.getCoinCode().equals(Coins.BTC_SEGWIT.coinCode())) {
+        if (txEntity.getCoinCode().equals(Coins.BTC.coinCode())) {
             try {
                 Number parse = NumberFormat.getInstance().parse(txEntity.getFee().split(" ")[0]);
                 if (parse != null && parse.doubleValue() > 0.01) {

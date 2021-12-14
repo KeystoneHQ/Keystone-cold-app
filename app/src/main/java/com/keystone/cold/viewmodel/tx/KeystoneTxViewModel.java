@@ -109,7 +109,7 @@ public class KeystoneTxViewModel extends Base {
                 }
                 TxEntity tx = generateTxEntity(object);
                 observableTx.postValue(tx);
-                if (Coins.BTC_SEGWIT.coinCode().equals(transaction.getCoinCode())) {
+                if(Coins.isBTCTestnet(transaction.getCoinCode()) || Coins.isBTCMainnet(transaction.getCoinCode())) {
                     feeAttackChecking(tx);
                 }
             } catch (JSONException e) {
@@ -122,7 +122,7 @@ public class KeystoneTxViewModel extends Base {
         AppExecutors.getInstance().diskIO().execute(() -> {
             String inputs = txEntity.getFrom();
             String outputs = txEntity.getTo();
-            List<TxEntity> txs = mRepository.loadAllTxSync(Coins.BTC_SEGWIT.coinId());
+            List<TxEntity> txs = mRepository.loadAllTxSync(Coins.BTC.coinId());
             for (TxEntity tx : txs) {
                 if (inputs.equals(tx.getFrom()) && outputs.equals(tx.getTo())) {
                     feeAttachCheckingResult.postValue(DUPLICATE_TX);

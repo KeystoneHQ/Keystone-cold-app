@@ -26,7 +26,7 @@ public class CoinModel {
             case "BTC_TESTNET_LEGACY":
             case "BTC_NATIVE_SEGWIT":
             case "BTC_TESTNET_NATIVE_SEGWIT":
-            case "BTC_SEGWIT":
+            case "BTC":
             case "BTC_TESTNET_SEGWIT":
                 return true;
             default:
@@ -56,7 +56,7 @@ public class CoinModel {
 
     public String getDisplayName() {
         switch (entity.getCoinCode()) {
-            case "BTC_SEGWIT":
+            case "BTC":
             case "BTC_LEGACY":
             case "BTC_NATIVE_SEGWIT":
                 return "BTC";

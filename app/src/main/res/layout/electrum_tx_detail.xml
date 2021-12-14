@@ -43,7 +43,7 @@
                 android:layout_height="28dp"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="16dp"
-                android:src="@drawable/coin_btc_segwit"
+                android:src="@drawable/coin_btc"
                 tools:ignore="ContentDescription" />
 
             <TextView

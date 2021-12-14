@@ -98,6 +98,9 @@ public class SyncViewModel extends AndroidViewModel {
                     }
                     account.isMultiSign = false;
                     coin.addAccount(account);
+                    if(coin.coinCode.equals(Coins.ETH.coinCode())) {
+                        break;
+                    }
                 }
                 if (coin.accounts.size() > 0) {
                     syncBuilder.addCoin(coin);

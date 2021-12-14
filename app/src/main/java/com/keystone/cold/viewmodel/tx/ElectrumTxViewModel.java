@@ -29,7 +29,7 @@ public class ElectrumTxViewModel extends KeystoneTxViewModel {
     public void parseTxnData(String txnData) {
         AppExecutors.getInstance().networkIO().execute(() -> {
             try {
-                String xpub = mRepository.loadCoinEntityByCoinCode(Coins.BTC_SEGWIT.coinCode()).getExPub();
+                String xpub = mRepository.loadCoinEntityByCoinCode(Coins.BTC.coinCode()).getExPub();
                 ElectrumTx tx = ElectrumTx.parse(Hex.decode(txnData));
                 if (!isMasterPublicKeyMatch(xpub, tx)) {
                     throw new XpubNotMatchException("xpub not match");
@@ -50,7 +50,7 @@ public class ElectrumTxViewModel extends KeystoneTxViewModel {
     private JSONObject parseElectrumTxHex(ElectrumTx tx) throws JSONException {
         JSONObject btcTx = adapt(tx);
         TransactionProtoc.SignTransaction.Builder builder = TransactionProtoc.SignTransaction.newBuilder();
-        builder.setCoinCode(Coins.BTC_SEGWIT.coinCode())
+        builder.setCoinCode(Coins.BTC.coinCode())
                 .setSignId(ELECTRUM_SIGN_ID)
                 .setTimestamp(getUniversalSignIndex(getApplication()))
                 .setDecimal(8);

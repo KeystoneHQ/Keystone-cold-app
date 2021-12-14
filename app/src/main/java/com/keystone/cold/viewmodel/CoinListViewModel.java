@@ -51,9 +51,9 @@ public class CoinListViewModel extends AndroidViewModel {
     private final MediatorLiveData<List<CoinEntity>> mObservableCoins;
     private boolean isFromTFCard;
     public static final Comparator<CoinEntity> coinEntityComparator = (o1, o2) -> {
-        if (o1.getCoinCode().equals(Coins.BTC_SEGWIT.coinCode())) {
+        if (o1.getCoinCode().equals(Coins.BTC.coinCode())) {
             return -1;
-        } else if (o2.getCoinCode().equals(Coins.BTC_SEGWIT.coinCode())) {
+        } else if (o2.getCoinCode().equals(Coins.BTC.coinCode())) {
             return 1;
         } else if (o1.getCoinCode().equals(Coins.BTC_LEGACY.coinCode())) {
             return -1;

@@ -50,7 +50,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="14dp"
             app:icon="@{coin.coinCode}"
-            tools:src="@drawable/coin_btc_segwit"
+            tools:src="@drawable/coin_btc"
             tools:ignore="ContentDescription" />
 
 

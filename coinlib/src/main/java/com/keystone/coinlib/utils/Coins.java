@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class Coins {
-    public static final Coin BTC_SEGWIT = new Coin("bitcoin", "BTC_SEGWIT", "Bitcoin Nested Segwit", 0); // AKA P2SH
+    public static final Coin BTC = new Coin("bitcoin", "BTC", "Bitcoin Nested Segwit", 0); // AKA P2SH
     public static final Coin BTC_LEGACY = new Coin("bitcoin_legacy", "BTC_LEGACY", "Bitcoin Legacy", 0);
     public static final Coin BTC_NATIVE_SEGWIT = new Coin("bitcoin_native_segwit", "BTC_NATIVE_SEGWIT", "Bitcoin Native Segwit", 0);
     public static final Coin BTC_TESTNET_SEGWIT = new Coin("bitcoin_testnet", "BTC_TESTNET_SEGWIT", "Bitcoin Nested Segwit", 1); // AKA P2SH
@@ -54,7 +54,7 @@ public class Coins {
             new String[]{"//kusama"});
 
     public static final List<Coin> SUPPORTED_COINS = Arrays.asList(
-            BTC_SEGWIT,
+            BTC,
             BTC_LEGACY,
             BTC_NATIVE_SEGWIT,
             BTC_TESTNET_SEGWIT,
@@ -82,13 +82,38 @@ public class Coins {
 
     public static boolean supportMultiSigner(@NonNull String coinCode) {
         switch (coinCode) {
-            case "BTC_SEGWIT":
+            case "BTC":
             case "BTC_LEGACY":
             case "BTC_NATIVE_SEGWIT":
+            case "BTC_TESTNET_SEGWIT":
+            case "BTC_TESTNET_LEGACY":
+            case "BTC_TESTNET_NATIVE_SEGWIT":
             case "XTN":
             case "BCH":
             case "LTC":
             case "DASH":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static boolean isBTCMainnet(@NonNull String coinCode) {
+        switch (coinCode) {
+            case "BTC":
+            case "BTC_LEGACY":
+            case "BTC_NATIVE_SEGWIT":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static boolean isBTCTestnet(@NonNull String coinCode) {
+        switch (coinCode) {
+            case "BTC_TESTNET_SEGWIT":
+            case "BTC_TESTNET_LEGACY":
+            case "BTC_TESTNET_NATIVE_SEGWIT":
                 return true;
             default:
                 return false;
@@ -196,7 +221,7 @@ public class Coins {
 
     public static int purposeNumber(String coinCode) {
         switch (coinCode) {
-            case "BTC_SEGWIT":
+            case "BTC":
             case "BTC_TESTNET_SEGWIT":
             case "XTN":
             case "LTC":
@@ -225,7 +250,7 @@ public class Coins {
 
     public static boolean isDefaultOpen(String coinCode) {
         switch (coinCode) {
-            case "BTC_SEGWIT":
+            case "BTC":
             case "BTC_LEGACY":
             case "BTC_NATIVE_SEGWIT":
             case "ETH":
