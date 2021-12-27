@@ -73,7 +73,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="2dp"
-                        android:text="@{coinViewModel.coin.displayName}"
+                        android:text="@{coinViewModel.coin.toCoinModel().displayName}"
                         android:textColor="@android:color/white"
                         android:textSize="11sp"
                         android:textStyle="bold" />

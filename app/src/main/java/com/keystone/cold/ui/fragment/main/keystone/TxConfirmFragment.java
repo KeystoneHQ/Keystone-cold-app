@@ -152,7 +152,7 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
             if (txEntity != null) {
                 this.txEntity = txEntity;
                 mBinding.setTx(txEntity);
-                if(Coins.isBTCMainnet(txEntity.getCoinCode()) || Coins.isBTCTestnet(txEntity.getCoinCode())) {
+                if (Coins.isBTCMainnet(txEntity.getCoinCode()) || Coins.isBTCTestnet(txEntity.getCoinCode())) {
                     mBinding.txDetail.fromRow.setVisibility(View.GONE);
                     mBinding.txDetail.arrowDown.setVisibility(View.GONE);
                 }
@@ -249,11 +249,20 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
         if (TextUtils.isEmpty(assetCode)) {
             assetCode = txEntity.getCoinCode();
         }
-        BindingAdapters.setIcon(mBinding.txDetail.icon,
-                txEntity.getCoinCode(),
-                assetCode);
+        if (assetCode.startsWith("BTC")) {
+            BindingAdapters.setIcon(mBinding.txDetail.icon,
+                    "BTC");
+        } else {
+            BindingAdapters.setIcon(mBinding.txDetail.icon,
+                    txEntity.getCoinCode(),
+                    assetCode);
+        }
         if (!assetCode.equals(txEntity.getCoinCode())) {
-            mBinding.txDetail.coinId.setText(assetCode);
+            if (assetCode.startsWith("BTC")) {
+                mBinding.txDetail.coinId.setText("BTC");
+            } else {
+                mBinding.txDetail.coinId.setText(assetCode);
+            }
         } else {
             mBinding.txDetail.coinId.setText(Coins.coinNameOfCoinId(txEntity.getCoinId()));
         }

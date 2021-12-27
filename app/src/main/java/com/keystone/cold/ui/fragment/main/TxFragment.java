@@ -83,7 +83,7 @@ public class TxFragment extends BaseFragment<TxBinding> {
             }
             mBinding.setTx(txEntity);
             this.txEntity = txEntity;
-            new Handler().postDelayed(() ->  {
+            new Handler().postDelayed(() -> {
                 mBinding.qrcodeLayout.qrcode.setData(getSignedTxData());
             }, 500);
             refreshAmount();
@@ -134,7 +134,11 @@ public class TxFragment extends BaseFragment<TxBinding> {
                 txEntity.getCoinCode(),
                 assetCode);
         if (!assetCode.equals(txEntity.getCoinCode())) {
-            mBinding.txDetail.coinId.setText(assetCode);
+            if (assetCode.startsWith("BTC")) {
+                mBinding.txDetail.coinId.setText("BTC");
+            } else {
+                mBinding.txDetail.coinId.setText(assetCode);
+            }
         } else {
             mBinding.txDetail.coinId.setText(Coins.coinNameOfCoinId(txEntity.getCoinId()));
         }
@@ -148,10 +152,10 @@ public class TxFragment extends BaseFragment<TxBinding> {
             double amount = Double.parseDouble(txEntity.getAmount().split(" ")[0]);
             double tip = Double.parseDouble(txEntity.getFee().split(" ")[0]);
             double value = Arith.sub(amount, tip);
-            mBinding.txDetail.info.setText(decimalFormat.format(value) + " " +txEntity.getCoinCode() + "\n" + to);
+            mBinding.txDetail.info.setText(decimalFormat.format(value) + " " + txEntity.getCoinCode() + "\n" + to);
             return;
         } else {
-            mBinding.txDetail.info.setText(to.replace(",","\n\n"));
+            mBinding.txDetail.info.setText(to.replace(",", "\n\n"));
         }
         List<TransactionItem> items = new ArrayList<>();
         try {
@@ -166,11 +170,11 @@ public class TxFragment extends BaseFragment<TxBinding> {
                 Object valueObj = output.get("value");
                 if (valueObj instanceof Long) {
                     value = (Long) valueObj;
-                } else if(valueObj instanceof Integer) {
+                } else if (valueObj instanceof Integer) {
                     value = ((Integer) valueObj).longValue();
                 } else {
                     double satoshi = Double.parseDouble(((String) valueObj).split(" ")[0]);
-                    value = (long) (satoshi * Math.pow(10,8));
+                    value = (long) (satoshi * Math.pow(10, 8));
                 }
                 items.add(new TransactionItem(i,
                         value,
@@ -205,7 +209,8 @@ public class TxFragment extends BaseFragment<TxBinding> {
             }
             String fromAddress = inputs.getJSONObject(0).getString("address");
             mBinding.txDetail.from.setText(fromAddress);
-        } catch (JSONException ignore) {}
+        } catch (JSONException ignore) {
+        }
     }
 
     @Override
@@ -216,7 +221,7 @@ public class TxFragment extends BaseFragment<TxBinding> {
     public String getSignedTxData() {
         if (watchWallet == WatchWallet.KEYSTONE) {
             return getSignTxJson(txEntity);
-        } else if(watchWallet == WatchWallet.POLKADOT_JS) {
+        } else if (watchWallet == WatchWallet.POLKADOT_JS) {
             try {
                 return new JSONObject(txEntity.getSignedHex())
                         .getString("signedHex");
