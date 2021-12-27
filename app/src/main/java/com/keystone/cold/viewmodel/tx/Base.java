@@ -20,6 +20,7 @@ package com.keystone.cold.viewmodel.tx;
 import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -129,6 +130,7 @@ abstract class Base extends AndroidViewModel {
         TxEntity tx = observableTx.getValue();
         Objects.requireNonNull(tx).setTxId(txId);
         tx.setSignedHex(rawTx);
+        Log.d("sora", "onSignSuccess: " + tx.toString());
         mRepository.insertTx(tx);
         return tx;
     }

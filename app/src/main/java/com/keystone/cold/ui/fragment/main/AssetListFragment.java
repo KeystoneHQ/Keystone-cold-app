@@ -19,9 +19,11 @@ package com.keystone.cold.ui.fragment.main;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,12 +35,16 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.room.Room;
+import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
+import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.AssetListBottomMenuBinding;
 import com.keystone.cold.databinding.AssetListFragmentBinding;
+import com.keystone.cold.db.AppDatabase;
 import com.keystone.cold.db.PresetData;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.ui.MainActivity;
@@ -105,7 +111,6 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         AppExecutors.getInstance().diskIO().execute(()
                 -> viewModel.presetData(PresetData.generateCoins(mActivity), null)
         );
-
     }
 
     private void subscribeUi(LiveData<List<CoinEntity>> coins) {

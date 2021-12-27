@@ -119,8 +119,12 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
                 }
             };
         } else {
+            viewModel.loadAllTxs().observe(this, txEntities -> {
+                Log.d("sora", "init: " + txEntities);
+            });
             viewModel.loadTxs(requireArguments().getString(KEY_COIN_ID))
                     .observe(this, txEntities -> {
+                        Log.d("sora", "init: " + txEntities);
                         txEntityComparator = (o1, o2) -> {
                             if (o1.getSignId().equals(o2.getSignId())) {
                                 return (int) (o2.getTimeStamp() - o1.getTimeStamp());

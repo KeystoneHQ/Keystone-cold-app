@@ -162,10 +162,6 @@ public class TxFragment extends BaseFragment<TxBinding> {
             JSONArray outputs = new JSONArray(to);
             for (int i = 0; i < outputs.length(); i++) {
                 JSONObject output = outputs.getJSONObject(i);
-                if (output.optBoolean("isChange")) {
-                    continue;
-                }
-
                 long value;
                 Object valueObj = output.get("value");
                 if (valueObj instanceof Long) {
@@ -179,7 +175,7 @@ public class TxFragment extends BaseFragment<TxBinding> {
                 items.add(new TransactionItem(i,
                         value,
                         output.getString("address"),
-                        txEntity.getCoinCode()
+                        "BTC"
                 ));
             }
         } catch (JSONException e) {
@@ -187,7 +183,7 @@ public class TxFragment extends BaseFragment<TxBinding> {
         }
         TransactionItemAdapter adapter =
                 new TransactionItemAdapter(mActivity,
-                        TransactionItem.ItemType.TO);
+                        TransactionItem.ItemType.OUTPUT);
         adapter.setItems(items);
         mBinding.txDetail.toList.setVisibility(View.VISIBLE);
         mBinding.txDetail.toInfo.setVisibility(View.GONE);
@@ -196,20 +192,27 @@ public class TxFragment extends BaseFragment<TxBinding> {
 
     private void refreshFromList() {
         String from = txEntity.getFrom();
-        mBinding.txDetail.from.setText(from);
-        List<TransactionItem> items = new ArrayList<>();
-        try {
-            JSONArray inputs = new JSONArray(from);
-            for (int i = 0; i < inputs.length(); i++) {
-                items.add(new TransactionItem(i,
-                        inputs.getJSONObject(i).getLong("value"),
-                        inputs.getJSONObject(i).getString("address"),
-                        txEntity.getCoinCode()
-                ));
+        if (txEntity.getCoinCode().startsWith("BTC")) {
+            try {
+                List<TransactionItem> items = new ArrayList<>();
+                JSONArray inputs = new JSONArray(from);
+                for (int i = 0; i < inputs.length(); i++) {
+                    items.add(new TransactionItem(i,
+                            0,
+                            inputs.getJSONObject(i).getString("address"),
+                            "BTC"
+                    ));
+                }
+                TransactionItemAdapter adapter = new TransactionItemAdapter(mActivity,
+                        TransactionItem.ItemType.INPUT);
+                adapter.setItems(items);
+                mBinding.txDetail.fromList.setVisibility(View.VISIBLE);
+                mBinding.txDetail.fromRow.setVisibility(View.GONE);
+                mBinding.txDetail.fromList.setAdapter(adapter);
+            } catch (JSONException ignore) {
             }
-            String fromAddress = inputs.getJSONObject(0).getString("address");
-            mBinding.txDetail.from.setText(fromAddress);
-        } catch (JSONException ignore) {
+        } else {
+            mBinding.txDetail.from.setText(from);
         }
     }
 

@@ -105,6 +105,10 @@ public class CoinListViewModel extends AndroidViewModel {
         return mRepository.loadTxs(coinId);
     }
 
+    public LiveData<List<TxEntity>> loadAllTxs() {
+        return mRepository.loadAllTxs();
+    }
+
     public LiveData<GenericETHTxEntity> loadETHTx(String txId) {
         MutableLiveData<GenericETHTxEntity> genericETHTxEntityLiveData = new MutableLiveData<>();
         AppExecutors.getInstance().diskIO().execute(() -> {
