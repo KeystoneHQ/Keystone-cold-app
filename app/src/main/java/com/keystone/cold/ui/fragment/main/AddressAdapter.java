@@ -33,6 +33,8 @@ import com.keystone.cold.ui.common.FilterableBaseBindingAdapter;
 import com.keystone.cold.util.Keyboard;
 import com.keystone.cold.viewmodel.WatchWallet;
 
+import java.util.Objects;
+
 public class AddressAdapter extends FilterableBaseBindingAdapter<AddressEntity, AddressItemBinding> {
 
     private View focusView;
@@ -75,9 +77,13 @@ public class AddressAdapter extends FilterableBaseBindingAdapter<AddressEntity, 
 
         binding.name.setOnFocusChangeListener((view, hasFocus) -> {
             if (!hasFocus) {
+                if (Objects.requireNonNull(binding.name.getText()).toString() != null) {
+                    if (!binding.getAddress().getName().equals(binding.name.getText().toString()))
+                        binding.getAddress().setName(binding.name.getText().toString());
+                }
                 mAddressCallback.onNameChange(binding.getAddress());
             } else {
-                if (isEditing)  {
+                if (isEditing) {
                     view.setAlpha(1);
                     focusView = view;
                 }
@@ -98,7 +104,7 @@ public class AddressAdapter extends FilterableBaseBindingAdapter<AddressEntity, 
 
         if (WatchWallet.getWatchWallet(context) == WatchWallet.XRP_TOOLKIT) {
             binding.editIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.xrp_sync));
-            binding.editIcon.setOnClickListener(v-> {
+            binding.editIcon.setOnClickListener(v -> {
 
                 Bundle bundle = new Bundle();
                 bundle.putInt("index", item.getIndex());
