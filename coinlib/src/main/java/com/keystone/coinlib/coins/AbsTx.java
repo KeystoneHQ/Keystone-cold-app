@@ -201,6 +201,9 @@ public abstract class AbsTx {
         if (isToken) {
             return tokenName;
         } else {
+            if(coinCode.startsWith("BTC")) {
+                return "BTC";
+            }
             return coinCode;
         }
     }

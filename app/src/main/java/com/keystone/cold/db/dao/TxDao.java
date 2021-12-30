@@ -33,6 +33,9 @@ public interface TxDao {
     @Query("SELECT * FROM txs where coinId = :coinId ORDER BY timeStamp DESC")
     LiveData<List<TxEntity>> loadTxs(String coinId);
 
+    @Query("SELECT * FROM txs ORDER BY timeStamp DESC")
+    LiveData<List<TxEntity>> loadAllTxs();
+
     @Query("SELECT * FROM txs where coinId = :coinId and signId = 'electrum_sign_id' ORDER BY timeStamp DESC")
     List<TxEntity> loadElectrumTxsSync(String coinId);
 

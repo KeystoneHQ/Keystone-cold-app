@@ -52,8 +52,13 @@ public class ReceiveCoinFragment extends BaseFragment<ReceiveFragmentBinding> {
         Bundle data = getArguments();
         Objects.requireNonNull(data);
         String coinCode = data.getString(KEY_COIN_CODE);
+        if(coinCode.startsWith("BTC")) {
+            mBinding.setDisplayName("BTC");
+        }
+        else {
+            mBinding.setDisplayName(coinCode);
+        }
         mBinding.setCoinCode(coinCode);
-        mBinding.setDisplayName(coinCode);
         String address = data.getString(KEY_ADDRESS);
         index = data.getInt(KEY_ADDRESS_INDEX);
         mBinding.setAddress(address);

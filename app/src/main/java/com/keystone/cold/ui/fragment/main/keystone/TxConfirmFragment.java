@@ -24,6 +24,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -152,7 +153,7 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
             if (txEntity != null) {
                 this.txEntity = txEntity;
                 mBinding.setTx(txEntity);
-                if(Coins.isBTCMainnet(txEntity.getCoinCode()) || Coins.isBTCTestnet(txEntity.getCoinCode())) {
+                if (Coins.isBTCMainnet(txEntity.getCoinCode()) || Coins.isBTCTestnet(txEntity.getCoinCode())) {
                     mBinding.txDetail.fromRow.setVisibility(View.GONE);
                     mBinding.txDetail.arrowDown.setVisibility(View.GONE);
                 }
@@ -249,11 +250,20 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
         if (TextUtils.isEmpty(assetCode)) {
             assetCode = txEntity.getCoinCode();
         }
-        BindingAdapters.setIcon(mBinding.txDetail.icon,
-                txEntity.getCoinCode(),
-                assetCode);
+        if (assetCode.startsWith("BTC")) {
+            BindingAdapters.setIcon(mBinding.txDetail.icon,
+                    "BTC");
+        } else {
+            BindingAdapters.setIcon(mBinding.txDetail.icon,
+                    txEntity.getCoinCode(),
+                    assetCode);
+        }
         if (!assetCode.equals(txEntity.getCoinCode())) {
-            mBinding.txDetail.coinId.setText(assetCode);
+            if (assetCode.startsWith("BTC")) {
+                mBinding.txDetail.coinId.setText("BTC");
+            } else {
+                mBinding.txDetail.coinId.setText(assetCode);
+            }
         } else {
             mBinding.txDetail.coinId.setText(Coins.coinNameOfCoinId(txEntity.getCoinId()));
         }
@@ -277,20 +287,17 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
             JSONArray outputs = new JSONArray(to);
             for (int i = 0; i < outputs.length(); i++) {
                 JSONObject output = outputs.getJSONObject(i);
-                if (output.optBoolean("isChange")) {
-                    continue;
-                }
                 items.add(new TransactionItem(i,
                         output.getLong("value"),
                         output.getString("address"),
-                        txEntity.getCoinCode()
+                        "BTC"
                 ));
             }
         } catch (JSONException e) {
             return;
         }
         TransactionItemAdapter adapter = new TransactionItemAdapter(mActivity,
-                TransactionItem.ItemType.TO);
+                TransactionItem.ItemType.OUTPUT);
         adapter.setItems(items);
         mBinding.txDetail.toList.setVisibility(View.VISIBLE);
         mBinding.txDetail.toInfo.setVisibility(View.GONE);
@@ -299,20 +306,27 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
 
     private void refreshFromList() {
         String from = txEntity.getFrom();
-        mBinding.txDetail.from.setText(from);
-        List<TransactionItem> items = new ArrayList<>();
-        try {
-            JSONArray inputs = new JSONArray(from);
-            for (int i = 0; i < inputs.length(); i++) {
-                items.add(new TransactionItem(i,
-                        inputs.getJSONObject(i).getLong("value"),
-                        inputs.getJSONObject(i).getString("address"),
-                        txEntity.getCoinCode()
-                ));
+        if (txEntity.getCoinCode().startsWith("BTC")) {
+            try {
+                List<TransactionItem> items = new ArrayList<>();
+                JSONArray inputs = new JSONArray(from);
+                for (int i = 0; i < inputs.length(); i++) {
+                    items.add(new TransactionItem(i,
+                            0,
+                            inputs.getJSONObject(i).getString("address"),
+                            txEntity.getCoinCode()
+                    ));
+                }
+                TransactionItemAdapter adapter = new TransactionItemAdapter(mActivity,
+                        TransactionItem.ItemType.INPUT);
+                adapter.setItems(items);
+                mBinding.txDetail.fromList.setVisibility(View.VISIBLE);
+                mBinding.txDetail.fromRow.setVisibility(View.GONE);
+                mBinding.txDetail.fromList.setAdapter(adapter);
+            } catch (JSONException ignore) {
             }
-            String fromAddress = inputs.getJSONObject(0).getString("address");
-            mBinding.txDetail.from.setText(fromAddress);
-        } catch (JSONException ignore) {
+        } else {
+            mBinding.txDetail.from.setText(from);
         }
     }
 

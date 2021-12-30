@@ -82,6 +82,9 @@ public class TxEntity implements Tx {
 
     @Override
     public String getDisplayName() {
+        if(coinCode.startsWith("BTC")) {
+            return "BTC";
+        }
         return coinCode;
     }
 

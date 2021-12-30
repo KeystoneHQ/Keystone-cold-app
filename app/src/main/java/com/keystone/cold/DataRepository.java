@@ -142,6 +142,10 @@ public class DataRepository {
         return mDb.txDao().loadTxs(coinId);
     }
 
+    public LiveData<List<TxEntity>> loadAllTxs() {
+        return mDb.txDao().loadAllTxs();
+    }
+
     public List<TxEntity> loadElectrumTxsSync(String coinId) {
         return mDb.txDao().loadElectrumTxsSync(coinId);
     }

@@ -17,6 +17,8 @@
 
 package com.keystone.coinlib.coins.BTC;
 
+import android.util.Log;
+
 import com.keystone.coinlib.coins.AbsCoin;
 import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.coins.AbsTx;
@@ -115,47 +117,22 @@ public class Btc extends AbsCoin {
                 throws JSONException {
             if (signTxObject.has("btcTx")) {
                 return signTxObject.getJSONObject("btcTx");
-            } else if (signTxObject.has("omniTx")) {
-                return signTxObject.getJSONObject("omniTx");
             }
             return super.extractMetaData(signTxObject, coinCode);
         }
 
         @Override
         protected void parseMetaData() throws JSONException, InvalidTransactionException {
-            if (metaData.optLong("omniAmount") != 0) {
-                isToken = true;
-                parseInput();
-                txType = "OMNI";
-                int propertyId = metaData.optInt("propertyId", OMNI_USDT_PROPERTYID);
-                if (OMNI_USDT_PROPERTYID == propertyId) {
-                    txType = "OMNI_USDT";
-                    tokenName = "USDT";
-                }
-                fee = satoshiToBtc(metaData.getLong("fee"));
-                if (inputAmount < fee + DUST_AMOUNT) {
-                    throw new InvalidTransactionException("invalid omni tx");
-                }
-                amount = metaData.optLong("omniAmount") / Math.pow(10, decimal);
-                to = metaData.getString("to");
-                changeAddress = metaData.optString("changeAddress");
-                changeAmount = inputAmount - metaData.getLong("fee") - DUST_AMOUNT;
-            } else {
                 parseInput();
                 parseOutPut();
                 amount = calculateDisplayAmount();
                 memo = metaData.optString("memo");
                 fee = calculateDisplayFee();
-            }
         }
 
         @Override
         public double getAmount() {
-            if (isToken) {
-                return getAmountWithoutFee();
-            } else {
                 return super.getAmount();
-            }
         }
 
         private void parseOutPut() throws JSONException {
@@ -224,8 +201,7 @@ public class Btc extends AbsCoin {
         }
 
         private double calculateDisplayAmount() {
-            long changeAmount = changeAddressInfo != null ? changeAddressInfo.value : 0;
-            return satoshiToBtc(outputAmount - changeAmount);
+            return satoshiToBtc(outputAmount);
         }
 
         private double satoshiToBtc(long sat) {

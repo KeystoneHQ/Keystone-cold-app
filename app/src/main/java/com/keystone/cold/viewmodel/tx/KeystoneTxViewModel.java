@@ -32,7 +32,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.Util;
 import com.keystone.coinlib.coins.AbsCoin;
+import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.coins.AbsTx;
+import com.keystone.coinlib.coins.BTC.Btc;
 import com.keystone.coinlib.coins.BTC.UtxoTx;
 import com.keystone.coinlib.coins.ETH.Eth;
 import com.keystone.coinlib.coins.ETH.EthImpl;
@@ -54,7 +56,9 @@ import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetMessageCallable;
 import com.keystone.cold.callables.GetPasswordTokenCallable;
 import com.keystone.cold.callables.VerifyFingerprintCallable;
+import com.keystone.cold.config.FeatureFlags;
 import com.keystone.cold.db.entity.AddressEntity;
+import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
 import com.keystone.cold.ui.views.AuthenticateModal;
@@ -68,6 +72,7 @@ import org.spongycastle.util.encoders.Hex;
 import java.security.SignatureException;
 import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
@@ -81,11 +86,19 @@ public class KeystoneTxViewModel extends Base {
     private AbsTx transaction;
     protected AuthenticateModal.OnVerify.VerifyToken token;
     protected WatchWallet watchWallet;
+    protected HashMap<String, BTCDeriver> BTCXPubMap;
+    private static String BTC_SEGWIT_PATH = "M/49'/0'/0'/";
+    private static String BTC_LEGACY_PATH = "M/44'/0'/0'/";
+    private static String BTC_NATIVE_SEGWIT_PATH = "M/84'/0'/0'/";
+    private static String BTC_TESTNET_SEGWIT_PATH = "M/49'/1'/0'/";
+    private static String BTC_TESTNET_LEGACY_PATH = "M/44'/1'/0'/";
+    private static String BTC_TESTNET_NATIVE_SEGWIT_PATH = "M/84'/1'/0'/";
 
     public KeystoneTxViewModel(@NonNull Application application) {
         super(application);
         watchWallet = WatchWallet.getWatchWallet(application);
         observableTx.setValue(null);
+        BTCXPubMap = new HashMap<>();
     }
 
     public MutableLiveData<TxEntity> getObservableTx() {
@@ -109,7 +122,7 @@ public class KeystoneTxViewModel extends Base {
                 }
                 TxEntity tx = generateTxEntity(object);
                 observableTx.postValue(tx);
-                if(Coins.isBTCTestnet(transaction.getCoinCode()) || Coins.isBTCMainnet(transaction.getCoinCode())) {
+                if (Coins.isBTCTestnet(transaction.getCoinCode()) || Coins.isBTCMainnet(transaction.getCoinCode())) {
                     feeAttackChecking(tx);
                 }
             } catch (JSONException e) {
@@ -159,7 +172,11 @@ public class KeystoneTxViewModel extends Base {
         tx.setTimeStamp(object.optLong("timestamp"));
         tx.setCoinCode(coinCode);
         tx.setCoinId(Coins.coinIdFromCoinCode(coinCode));
-        tx.setFrom(getFromAddress());
+        if (coinCode.startsWith("BTC")) {
+            tx.setFrom(getBTCInputs().toString());
+        } else {
+            tx.setFrom(getFromAddress());
+        }
         tx.setTo(getToAddress());
         tx.setAmount(nf.format(transaction.getAmount()) + " " + transaction.getUnit());
         tx.setFee(nf.format(transaction.getFee()) + " " + tx.getDisplayName());
@@ -193,12 +210,23 @@ public class KeystoneTxViewModel extends Base {
                 .filter(this::isExternalPath)
                 .toArray(String[]::new);
         ensureAddressExist(externalPath);
+        JSONArray array = deriveAddresses(paths);
 
         return Stream.of(externalPath)
                 .distinct()
                 .map(path -> mRepository.loadAddressBypath(path).getAddressString())
                 .reduce((s1, s2) -> s1 + AbsTx.SEPARATOR + s2)
                 .orElse("");
+    }
+
+    private JSONArray getBTCInputs() {
+        String[] paths = transaction.getHdPath().split(AbsTx.SEPARATOR);
+        String[] externalPath = Stream.of(paths)
+                .filter(this::isExternalPath)
+                .toArray(String[]::new);
+        ensureAddressExist(externalPath);
+        JSONArray array = deriveAddresses(paths);
+        return array;
     }
 
     public static <T> T[] concat(T[] first, T[] second) {
@@ -235,6 +263,61 @@ public class KeystoneTxViewModel extends Base {
         if (address == null) {
             addAddress(getAddressIndex(maxIndexHdPath));
         }
+    }
+
+    private class BTCDeriver {
+        private String xPub;
+        private AbsDeriver deriver;
+
+        public BTCDeriver(String xPub, AbsDeriver deriver) {
+            this.xPub = xPub;
+            this.deriver = deriver;
+        }
+
+        public String derive(int change, int address) {
+            return deriver.derive(xPub, change, address);
+        }
+    }
+
+    private void initBTCXPubMap() {
+        if (this.BTCXPubMap.isEmpty()) {
+            this.BTCXPubMap.put(BTC_SEGWIT_PATH, new BTCDeriver(mRepository.loadCoinSync(Coins.BTC.coinId()).getExPub(), AbsDeriver.newInstance(Coins.BTC.coinCode())));
+            this.BTCXPubMap.put(BTC_LEGACY_PATH, new BTCDeriver(mRepository.loadCoinSync(Coins.BTC_LEGACY.coinId()).getExPub(), AbsDeriver.newInstance(Coins.BTC_LEGACY.coinCode())));
+            this.BTCXPubMap.put(BTC_NATIVE_SEGWIT_PATH, new BTCDeriver(mRepository.loadCoinSync(Coins.BTC_NATIVE_SEGWIT.coinId()).getExPub(), AbsDeriver.newInstance(Coins.BTC_NATIVE_SEGWIT.coinCode())));
+
+            if (FeatureFlags.ENABLE_XTN) {
+                this.BTCXPubMap.put(BTC_TESTNET_SEGWIT_PATH, new BTCDeriver(mRepository.loadCoinSync(Coins.BTC_TESTNET_SEGWIT.coinId()).getExPub(), AbsDeriver.newInstance(Coins.BTC_TESTNET_SEGWIT.coinCode())));
+                this.BTCXPubMap.put(BTC_TESTNET_LEGACY_PATH, new BTCDeriver(mRepository.loadCoinSync(Coins.BTC_TESTNET_LEGACY.coinId()).getExPub(), AbsDeriver.newInstance(Coins.BTC_TESTNET_LEGACY.coinCode())));
+                this.BTCXPubMap.put(BTC_TESTNET_NATIVE_SEGWIT_PATH, new BTCDeriver(mRepository.loadCoinSync(Coins.BTC_TESTNET_NATIVE_SEGWIT.coinId()).getExPub(), AbsDeriver.newInstance(Coins.BTC_TESTNET_NATIVE_SEGWIT.coinCode())));
+            }
+        }
+    }
+
+    public JSONArray deriveAddresses(String[] paths) {
+        initBTCXPubMap();
+        JSONArray jsonArray = new JSONArray();
+        BTCXPubMap.keySet().forEach(key -> {
+            Arrays.stream(paths).forEach(path -> {
+                if (path.startsWith(key)) {
+                    BTCDeriver deriver = BTCXPubMap.get(key);
+                    String rest = path.replace(key, "");
+                    int change = Integer.parseInt(rest.split("/")[0]);
+                    int addressIndex = Integer.parseInt(rest.split("/")[1]);
+                    assert deriver != null;
+                    String address = deriver.derive(change, addressIndex);
+                    JSONObject object = new JSONObject();
+                    try {
+                        object.put("isChange", change == 1);
+                        object.put("address", address);
+                        object.put("path", path);
+                        jsonArray.put(object);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        });
+        return jsonArray;
     }
 
     public LiveData<Boolean> getAddingAddressState() {

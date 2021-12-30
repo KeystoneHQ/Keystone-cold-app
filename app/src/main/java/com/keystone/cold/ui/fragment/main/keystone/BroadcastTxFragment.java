@@ -83,9 +83,15 @@ public class BroadcastTxFragment extends BaseFragment<BroadcastTxFragmentBinding
         if (TextUtils.isEmpty(assetCode)) {
             assetCode = txEntity.getCoinCode();
         }
-        BindingAdapters.setIcon(mBinding.icon,
-                txEntity.getCoinCode(),
-                assetCode);
+        if(txEntity.getCoinCode().startsWith("BTC")) {
+            BindingAdapters.setIcon(mBinding.icon,
+                    txEntity.getCoinCode());
+        }
+        else {
+            BindingAdapters.setIcon(mBinding.icon,
+                    txEntity.getCoinCode(),
+                    assetCode);
+        }
     }
 
     @Override

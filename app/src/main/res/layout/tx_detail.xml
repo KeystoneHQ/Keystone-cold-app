@@ -43,8 +43,8 @@
                 android:layout_height="28dp"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="16dp"
-                tools:src="@drawable/coin_btc"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"
+                tools:src="@drawable/coin_btc" />
 
             <TextView
                 android:id="@+id/coinId"
@@ -79,11 +79,11 @@
                 android:id="@+id/amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="14dp"
-                android:layout_toStartOf="@id/unit"
-                android:layout_alignParentEnd="true"
                 android:layout_marginEnd="16dp"
+                android:layout_toStartOf="@id/unit"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold"

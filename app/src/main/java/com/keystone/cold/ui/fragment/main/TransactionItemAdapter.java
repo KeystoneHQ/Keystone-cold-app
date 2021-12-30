@@ -52,7 +52,11 @@ public class TransactionItemAdapter extends BaseBindingAdapter<TransactionItem, 
     @Override
     protected void onBindItem(TxDetailItemBinding binding, TransactionItem item) {
         boolean isChange = changeAddress.contains(item.address);
-        if (getItemCount() == 1 && type == TransactionItem.ItemType.TO) {
+        if(type == TransactionItem.ItemType.INPUT) {
+            binding.info.setText(item.address);
+            binding.label.setText(getLabel(item.id));
+        }
+        else if (getItemCount() == 1 && type == TransactionItem.ItemType.TO) {
             binding.info.setText(item.address);
             binding.label.setText(context.getString(R.string.tx_to));
         } else {
