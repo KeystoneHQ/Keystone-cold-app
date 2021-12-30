@@ -130,7 +130,6 @@ abstract class Base extends AndroidViewModel {
         TxEntity tx = observableTx.getValue();
         Objects.requireNonNull(tx).setTxId(txId);
         tx.setSignedHex(rawTx);
-        Log.d("sora", "onSignSuccess: " + tx.toString());
         mRepository.insertTx(tx);
         return tx;
     }

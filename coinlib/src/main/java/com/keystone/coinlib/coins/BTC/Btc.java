@@ -201,8 +201,6 @@ public class Btc extends AbsCoin {
         }
 
         private double calculateDisplayAmount() {
-//            long changeAmount = changeAddressInfo != null ? changeAddressInfo.value : 0;
-//            return satoshiToBtc(outputAmount - changeAmount);
             return satoshiToBtc(outputAmount);
         }
 
