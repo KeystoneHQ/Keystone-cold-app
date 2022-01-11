@@ -145,6 +145,7 @@ public class Btc extends AbsCoin {
                 String newAddress = convertAddress(address);
                 outputAmount += output.getLong("value");
                 if (output.optBoolean("isChange") && output.has("changeAddressPath")) {
+                    changeAmount += output.getLong("value");
                     changeAddressInfo = new ChangeAddressInfo(
                             newAddress,
                             output.getString("changeAddressPath"),
@@ -201,7 +202,7 @@ public class Btc extends AbsCoin {
         }
 
         private double calculateDisplayAmount() {
-            return satoshiToBtc(outputAmount);
+            return satoshiToBtc(outputAmount - changeAmount);
         }
 
         private double satoshiToBtc(long sat) {
