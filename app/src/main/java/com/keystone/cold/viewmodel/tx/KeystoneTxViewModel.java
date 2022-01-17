@@ -298,6 +298,7 @@ public class KeystoneTxViewModel extends Base {
         JSONArray jsonArray = new JSONArray();
         BTCXPubMap.keySet().forEach(key -> {
             Arrays.stream(paths).forEach(path -> {
+                path = path.toUpperCase();
                 if (path.startsWith(key)) {
                     BTCDeriver deriver = BTCXPubMap.get(key);
                     String rest = path.replace(key, "");
