@@ -61,9 +61,9 @@
 
         <include layout="@layout/divider" />
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -84,7 +84,7 @@
                     android:layout_marginBottom="20dp"
                     android:text="@string/sign" />
             </LinearLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
     </LinearLayout>
 

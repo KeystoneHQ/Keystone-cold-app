@@ -178,6 +178,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/tx_detail_item"
             tools:itemCount="2"
+            android:nestedScrollingEnabled="false"
             android:visibility="gone" />
         <RelativeLayout
             android:layout_width="match_parent"
@@ -220,6 +221,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/to_list"
+            android:nestedScrollingEnabled="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
