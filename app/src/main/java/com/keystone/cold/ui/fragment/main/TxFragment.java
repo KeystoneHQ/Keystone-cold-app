@@ -163,6 +163,9 @@ public class TxFragment extends BaseFragment<TxBinding> {
             JSONArray outputs = new JSONArray(to);
             for (int i = 0; i < outputs.length(); i++) {
                 JSONObject output = outputs.getJSONObject(i);
+                if (output.optBoolean("isChange") && !(Coins.isBTCMainnet(txEntity.getCoinCode()) || Coins.isBTCTestnet(txEntity.getCoinCode()))) {
+                    continue;
+                }
                 long value;
                 Object valueObj = output.get("value");
                 if (valueObj instanceof Long) {
@@ -185,9 +188,15 @@ public class TxFragment extends BaseFragment<TxBinding> {
         } catch (JSONException e) {
             return;
         }
-        TransactionItemAdapter adapter =
-                new TransactionItemAdapter(mActivity,
-                        TransactionItem.ItemType.OUTPUT, changeAddresses);
+        TransactionItemAdapter adapter;
+        if (Coins.isBTCMainnet(txEntity.getCoinCode()) || Coins.isBTCTestnet(txEntity.getCoinCode())) {
+            adapter = new TransactionItemAdapter(mActivity,
+                    TransactionItem.ItemType.OUTPUT, changeAddresses);
+        } else {
+            adapter = new TransactionItemAdapter(mActivity,
+                    TransactionItem.ItemType.TO);
+            adapter.setItems(items);
+        }
         adapter.setItems(items);
         mBinding.txDetail.toList.setVisibility(View.VISIBLE);
         mBinding.txDetail.toInfo.setVisibility(View.GONE);
