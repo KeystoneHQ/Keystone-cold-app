@@ -283,21 +283,33 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
             mBinding.txDetail.info.setText(to.replace(",", "\n\n"));
         }
         List<TransactionItem> items = new ArrayList<>();
+
         try {
             JSONArray outputs = new JSONArray(to);
             for (int i = 0; i < outputs.length(); i++) {
                 JSONObject output = outputs.getJSONObject(i);
+                if (output.optBoolean("isChange") && !(Coins.isBTCMainnet(txEntity.getCoinCode()) || Coins.isBTCTestnet(txEntity.getCoinCode()))) {
+                    continue;
+                }
                 items.add(new TransactionItem(i,
                         output.getLong("value"),
                         output.getString("address"),
-                        "BTC"
+                        txEntity.getCoinCode()
                 ));
             }
         } catch (JSONException e) {
             return;
         }
-        TransactionItemAdapter adapter = new TransactionItemAdapter(mActivity,
-                TransactionItem.ItemType.OUTPUT, viewModel.getChangeAddresses());
+        TransactionItemAdapter adapter;
+        if (Coins.isBTCMainnet(txEntity.getCoinCode()) || Coins.isBTCTestnet(txEntity.getCoinCode())) {
+            adapter = new TransactionItemAdapter(mActivity,
+                    TransactionItem.ItemType.OUTPUT, viewModel.getChangeAddresses());
+        }
+        else {
+            adapter = new TransactionItemAdapter(mActivity,
+                    TransactionItem.ItemType.TO);
+            adapter.setItems(items);
+        }
         adapter.setItems(items);
         mBinding.txDetail.toList.setVisibility(View.VISIBLE);
         mBinding.txDetail.toInfo.setVisibility(View.GONE);
