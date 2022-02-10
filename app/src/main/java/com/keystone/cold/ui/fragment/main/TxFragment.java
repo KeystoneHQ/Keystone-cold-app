@@ -157,6 +157,7 @@ public class TxFragment extends BaseFragment<TxBinding> {
         } else {
             mBinding.txDetail.info.setText(to.replace(",", "\n\n"));
         }
+        List<String> changeAddresses = new ArrayList<>();
         List<TransactionItem> items = new ArrayList<>();
         try {
             JSONArray outputs = new JSONArray(to);
@@ -175,15 +176,18 @@ public class TxFragment extends BaseFragment<TxBinding> {
                 items.add(new TransactionItem(i,
                         value,
                         output.getString("address"),
-                        "BTC"
+                        txEntity.getCoinCode()
                 ));
+                if (output.optBoolean("isChange", false)) {
+                    changeAddresses.add(output.getString("address"));
+                }
             }
         } catch (JSONException e) {
             return;
         }
         TransactionItemAdapter adapter =
                 new TransactionItemAdapter(mActivity,
-                        TransactionItem.ItemType.OUTPUT);
+                        TransactionItem.ItemType.OUTPUT, changeAddresses);
         adapter.setItems(items);
         mBinding.txDetail.toList.setVisibility(View.VISIBLE);
         mBinding.txDetail.toInfo.setVisibility(View.GONE);

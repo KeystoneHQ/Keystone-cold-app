@@ -34,7 +34,6 @@ import com.keystone.coinlib.Util;
 import com.keystone.coinlib.coins.AbsCoin;
 import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.coins.AbsTx;
-import com.keystone.coinlib.coins.BTC.Btc;
 import com.keystone.coinlib.coins.BTC.UtxoTx;
 import com.keystone.coinlib.coins.ETH.Eth;
 import com.keystone.coinlib.coins.ETH.EthImpl;
@@ -48,6 +47,7 @@ import com.keystone.coinlib.exception.InvalidPathException;
 import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
+import com.keystone.coinlib.path.AddressIndex;
 import com.keystone.coinlib.path.CoinPath;
 import com.keystone.coinlib.utils.B58;
 import com.keystone.coinlib.utils.Coins;
@@ -58,7 +58,6 @@ import com.keystone.cold.callables.GetPasswordTokenCallable;
 import com.keystone.cold.callables.VerifyFingerprintCallable;
 import com.keystone.cold.config.FeatureFlags;
 import com.keystone.cold.db.entity.AddressEntity;
-import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
 import com.keystone.cold.ui.views.AuthenticateModal;
@@ -71,6 +70,7 @@ import org.spongycastle.util.encoders.Hex;
 
 import java.security.SignatureException;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -94,6 +94,8 @@ public class KeystoneTxViewModel extends Base {
     private static String BTC_TESTNET_LEGACY_PATH = "M/44'/1'/0'/";
     private static String BTC_TESTNET_NATIVE_SEGWIT_PATH = "M/84'/1'/0'/";
 
+    private List<String> changeAddresses = new ArrayList<>();
+
     public KeystoneTxViewModel(@NonNull Application application) {
         super(application);
         watchWallet = WatchWallet.getWatchWallet(application);
@@ -105,11 +107,16 @@ public class KeystoneTxViewModel extends Base {
         return observableTx;
     }
 
+    public List<String> getChangeAddresses() {
+        return changeAddresses;
+    }
+
     public MutableLiveData<Exception> parseTxException() {
         return parseTxException;
     }
 
     public void parseTxData(String json) {
+        changeAddresses = new ArrayList<>();
         AppExecutors.getInstance().diskIO().execute(() -> {
             try {
                 JSONObject object = new JSONObject(json);
@@ -124,11 +131,70 @@ public class KeystoneTxViewModel extends Base {
                 observableTx.postValue(tx);
                 if (Coins.isBTCTestnet(transaction.getCoinCode()) || Coins.isBTCMainnet(transaction.getCoinCode())) {
                     feeAttackChecking(tx);
+                    if (!checkAndSetBTCChangeAddress((UtxoTx) transaction)) {
+                        parseTxException.postValue(new InvalidTransactionException("invalid change address"));
+                    }
+                } else {
+                    if (transaction instanceof UtxoTx) {
+                        if (!checkChangeAddress(transaction)) {
+                            observableTx.postValue(null);
+                            parseTxException.postValue(new InvalidTransactionException("invalid change address"));
+                        }
+                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         });
+    }
+
+    private boolean checkChangeAddress(AbsTx utxoTx) {
+        UtxoTx.ChangeAddressInfo changeAddressInfo = ((UtxoTx) utxoTx).getChangeAddressInfo();
+        if (changeAddressInfo == null) {
+            return true;
+        }
+        String hdPath = changeAddressInfo.hdPath;
+        String address = changeAddressInfo.address;
+        String exPub = mRepository.loadCoinEntityByCoinCode(utxoTx.getCoinCode()).getExPub();
+        AbsDeriver deriver = AbsDeriver.newInstance(utxoTx.getCoinCode());
+
+        try {
+            AddressIndex addressIndex = CoinPath.parsePath(hdPath);
+            int change = addressIndex.getParent().getValue();
+            int index = addressIndex.getValue();
+            String expectAddress = Objects.requireNonNull(deriver).derive(exPub, change, index);
+            return address.equals(expectAddress);
+        } catch (InvalidPathException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean checkAndSetBTCChangeAddress(UtxoTx tx) {
+        boolean flag = true;
+        for (UtxoTx.ChangeAddressInfo changeAddress :
+                tx.getChangeAddressInfoList()) {
+            String hdPath = changeAddress.hdPath;
+            String address = changeAddress.address;
+            for (String key :
+                    BTCXPubMap.keySet()) {
+                String path = hdPath.toUpperCase();
+                if (hdPath.startsWith(key)) {
+                    BTCDeriver deriver = BTCXPubMap.get(key);
+                    String rest = path.replace(key, "");
+                    int change = Integer.parseInt(rest.split("/")[0]);
+                    int addressIndex = Integer.parseInt(rest.split("/")[1]);
+                    assert deriver != null;
+                    String derivedAddress = deriver.derive(change, addressIndex);
+                    if (!derivedAddress.equalsIgnoreCase(address)) {
+                        flag = false;
+                    } else {
+                        changeAddresses.add(derivedAddress);
+                    }
+                }
+            }
+        }
+        return flag;
     }
 
     private void feeAttackChecking(TxEntity txEntity) {
