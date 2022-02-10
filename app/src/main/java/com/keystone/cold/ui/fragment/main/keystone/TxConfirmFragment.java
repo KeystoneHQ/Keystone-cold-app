@@ -153,7 +153,7 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
             if (txEntity != null) {
                 this.txEntity = txEntity;
                 mBinding.setTx(txEntity);
-                if (Coins.isBTCMainnet(txEntity.getCoinCode()) || Coins.isBTCTestnet(txEntity.getCoinCode())) {
+                if (Coins.isBTCFamily(txEntity.getCoinCode())) {
                     mBinding.txDetail.fromRow.setVisibility(View.GONE);
                     mBinding.txDetail.arrowDown.setVisibility(View.GONE);
                 }
@@ -282,28 +282,32 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
         } else {
             mBinding.txDetail.info.setText(to.replace(",", "\n\n"));
         }
+        List<String> changeAddresses = new ArrayList<>();
         List<TransactionItem> items = new ArrayList<>();
 
         try {
             JSONArray outputs = new JSONArray(to);
             for (int i = 0; i < outputs.length(); i++) {
                 JSONObject output = outputs.getJSONObject(i);
-                if (output.optBoolean("isChange") && !(Coins.isBTCMainnet(txEntity.getCoinCode()) || Coins.isBTCTestnet(txEntity.getCoinCode()))) {
+                if (output.optBoolean("isChange") && !Coins.isBTCFamily(txEntity.getCoinCode())) {
                     continue;
                 }
                 items.add(new TransactionItem(i,
                         output.getLong("value"),
                         output.getString("address"),
-                        txEntity.getCoinCode()
+                        txEntity.getDisplayName()
                 ));
+                if (output.optBoolean("isChange", false)) {
+                    changeAddresses.add(output.getString("address"));
+                }
             }
         } catch (JSONException e) {
             return;
         }
         TransactionItemAdapter adapter;
-        if (Coins.isBTCMainnet(txEntity.getCoinCode()) || Coins.isBTCTestnet(txEntity.getCoinCode())) {
+        if (Coins.isBTCFamily(txEntity.getCoinCode())) {
             adapter = new TransactionItemAdapter(mActivity,
-                    TransactionItem.ItemType.OUTPUT, viewModel.getChangeAddresses());
+                    TransactionItem.ItemType.OUTPUT, changeAddresses);
         }
         else {
             adapter = new TransactionItemAdapter(mActivity,
@@ -326,7 +330,7 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
                     items.add(new TransactionItem(i,
                             0,
                             inputs.getJSONObject(i).getString("address"),
-                            txEntity.getCoinCode()
+                            txEntity.getDisplayName()
                     ));
                 }
                 TransactionItemAdapter adapter = new TransactionItemAdapter(mActivity,

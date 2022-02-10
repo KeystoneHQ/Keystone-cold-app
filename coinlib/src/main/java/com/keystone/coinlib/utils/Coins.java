@@ -98,6 +98,10 @@ public class Coins {
         }
     }
 
+    public static boolean isBTCFamily(@NonNull String coinCode) {
+        return isBTCTestnet(coinCode) || isBTCMainnet(coinCode);
+    }
+
     public static boolean isBTCMainnet(@NonNull String coinCode) {
         switch (coinCode) {
             case "BTC":

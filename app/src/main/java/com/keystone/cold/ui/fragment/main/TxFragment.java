@@ -163,7 +163,7 @@ public class TxFragment extends BaseFragment<TxBinding> {
             JSONArray outputs = new JSONArray(to);
             for (int i = 0; i < outputs.length(); i++) {
                 JSONObject output = outputs.getJSONObject(i);
-                if (output.optBoolean("isChange") && !(Coins.isBTCMainnet(txEntity.getCoinCode()) || Coins.isBTCTestnet(txEntity.getCoinCode()))) {
+                if (output.optBoolean("isChange") && !Coins.isBTCFamily(txEntity.getCoinCode())) {
                     continue;
                 }
                 long value;
@@ -179,7 +179,7 @@ public class TxFragment extends BaseFragment<TxBinding> {
                 items.add(new TransactionItem(i,
                         value,
                         output.getString("address"),
-                        txEntity.getCoinCode()
+                        txEntity.getDisplayName()
                 ));
                 if (output.optBoolean("isChange", false)) {
                     changeAddresses.add(output.getString("address"));
@@ -189,7 +189,7 @@ public class TxFragment extends BaseFragment<TxBinding> {
             return;
         }
         TransactionItemAdapter adapter;
-        if (Coins.isBTCMainnet(txEntity.getCoinCode()) || Coins.isBTCTestnet(txEntity.getCoinCode())) {
+        if (Coins.isBTCFamily(txEntity.getCoinCode())) {
             adapter = new TransactionItemAdapter(mActivity,
                     TransactionItem.ItemType.OUTPUT, changeAddresses);
         } else {
@@ -205,7 +205,7 @@ public class TxFragment extends BaseFragment<TxBinding> {
 
     private void refreshFromList() {
         String from = txEntity.getFrom();
-        if (txEntity.getCoinCode().startsWith("BTC")) {
+        if (Coins.isBTCFamily(txEntity.getCoinCode())) {
             try {
                 List<TransactionItem> items = new ArrayList<>();
                 JSONArray inputs = new JSONArray(from);
@@ -213,7 +213,7 @@ public class TxFragment extends BaseFragment<TxBinding> {
                     items.add(new TransactionItem(i,
                             0,
                             inputs.getJSONObject(i).getString("address"),
-                            "BTC"
+                            txEntity.getDisplayName()
                     ));
                 }
                 TransactionItemAdapter adapter = new TransactionItemAdapter(mActivity,
