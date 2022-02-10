@@ -56,7 +56,7 @@ public class Btc extends AbsCoin {
         private long outputAmount;
         private static final int DUST_AMOUNT = 546;
         private static final int OMNI_USDT_PROPERTYID = 31;
-        private List<ChangeAddressInfo> changeAddressInfoList = new ArrayList<>();
+        private List<ChangeAddressInfo> changeAddressInfoList;
 
         private String changeAddress;
         private long changeAmount;
@@ -143,6 +143,7 @@ public class Btc extends AbsCoin {
         }
 
         private void parseOutPut() throws JSONException {
+            changeAddressInfoList = new ArrayList<>();
             JSONArray outputs = metaData.getJSONArray("outputs");
             JSONArray outputsClone = new JSONArray(outputs.toString());
             StringBuilder destinations = new StringBuilder();
