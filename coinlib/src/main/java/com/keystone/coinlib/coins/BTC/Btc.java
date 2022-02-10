@@ -37,6 +37,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Btc extends AbsCoin {
     public Btc(Coin impl) {
@@ -54,7 +56,7 @@ public class Btc extends AbsCoin {
         private long outputAmount;
         private static final int DUST_AMOUNT = 546;
         private static final int OMNI_USDT_PROPERTYID = 31;
-        private ChangeAddressInfo changeAddressInfo;
+        private List<ChangeAddressInfo> changeAddressInfoList = new ArrayList<>();
 
         private String changeAddress;
         private long changeAmount;
@@ -69,7 +71,12 @@ public class Btc extends AbsCoin {
 
         @Override
         public ChangeAddressInfo getChangeAddressInfo() {
-            return changeAddressInfo;
+            return changeAddressInfoList.get(0);
+        }
+
+        @Override
+        public List<ChangeAddressInfo> getChangeAddressInfoList() {
+            return changeAddressInfoList;
         }
 
         @Override
@@ -146,10 +153,10 @@ public class Btc extends AbsCoin {
                 outputAmount += output.getLong("value");
                 if (output.optBoolean("isChange") && output.has("changeAddressPath")) {
                     changeAmount += output.getLong("value");
-                    changeAddressInfo = new ChangeAddressInfo(
+                    changeAddressInfoList.add(new ChangeAddressInfo(
                             newAddress,
                             output.getString("changeAddressPath"),
-                            output.getLong("value"));
+                            output.getLong("value")));
                     outputsClone.remove(i);
                     continue;
                 }

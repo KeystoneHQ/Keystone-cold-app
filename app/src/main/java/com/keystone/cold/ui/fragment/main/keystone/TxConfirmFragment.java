@@ -297,7 +297,7 @@ public class TxConfirmFragment extends BaseFragment<TxConfirmFragmentBinding> {
             return;
         }
         TransactionItemAdapter adapter = new TransactionItemAdapter(mActivity,
-                TransactionItem.ItemType.OUTPUT);
+                TransactionItem.ItemType.OUTPUT, viewModel.getChangeAddresses());
         adapter.setItems(items);
         mBinding.txDetail.toList.setVisibility(View.VISIBLE);
         mBinding.txDetail.toInfo.setVisibility(View.GONE);
