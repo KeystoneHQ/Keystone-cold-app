@@ -70,7 +70,6 @@ import org.spongycastle.util.encoders.Hex;
 
 import java.security.SignatureException;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -94,8 +93,6 @@ public class KeystoneTxViewModel extends Base {
     private static String BTC_TESTNET_LEGACY_PATH = "M/44'/1'/0'/";
     private static String BTC_TESTNET_NATIVE_SEGWIT_PATH = "M/84'/1'/0'/";
 
-    private List<String> changeAddresses = new ArrayList<>();
-
     public KeystoneTxViewModel(@NonNull Application application) {
         super(application);
         watchWallet = WatchWallet.getWatchWallet(application);
@@ -107,16 +104,11 @@ public class KeystoneTxViewModel extends Base {
         return observableTx;
     }
 
-    public List<String> getChangeAddresses() {
-        return changeAddresses;
-    }
-
     public MutableLiveData<Exception> parseTxException() {
         return parseTxException;
     }
 
     public void parseTxData(String json) {
-        changeAddresses = new ArrayList<>();
         AppExecutors.getInstance().diskIO().execute(() -> {
             try {
                 JSONObject object = new JSONObject(json);
@@ -129,9 +121,9 @@ public class KeystoneTxViewModel extends Base {
                 }
                 TxEntity tx = generateTxEntity(object);
                 observableTx.postValue(tx);
-                if (Coins.isBTCTestnet(transaction.getCoinCode()) || Coins.isBTCMainnet(transaction.getCoinCode())) {
+                if (Coins.isBTCFamily(transaction.getCoinCode())) {
                     feeAttackChecking(tx);
-                    if (!checkAndSetBTCChangeAddress((UtxoTx) transaction)) {
+                    if (!checkBTCChangeAddress((UtxoTx) transaction)) {
                         parseTxException.postValue(new InvalidTransactionException("invalid change address"));
                     }
                 } else {
@@ -170,7 +162,7 @@ public class KeystoneTxViewModel extends Base {
         }
     }
 
-    private boolean checkAndSetBTCChangeAddress(UtxoTx tx) {
+    private boolean checkBTCChangeAddress(UtxoTx tx) {
         boolean flag = true;
         for (UtxoTx.ChangeAddressInfo changeAddress :
                 tx.getChangeAddressInfoList()) {
@@ -188,8 +180,6 @@ public class KeystoneTxViewModel extends Base {
                     String derivedAddress = deriver.derive(change, addressIndex);
                     if (!derivedAddress.equalsIgnoreCase(address)) {
                         flag = false;
-                    } else {
-                        changeAddresses.add(derivedAddress);
                     }
                 }
             }
