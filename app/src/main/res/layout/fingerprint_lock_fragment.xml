@@ -46,9 +46,24 @@
                 android:textSize="15sp"
                 android:textColor="@android:color/white"
                 android:text="@string/fingerprint_unlock" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/nft_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                app:cardCornerRadius="40dp">
+                <ImageView
+                    android:id="@+id/nft_image"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:contentDescription="NFT image" />
+            </androidx.cardview.widget.CardView>
         </androidx.appcompat.widget.Toolbar>
 
         <include
+            android:id="@+id/divider"
             android:layout_below="@id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -56,24 +71,24 @@
 
         <TextView
             android:id="@+id/hint"
-            android:layout_below="@id/toolbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
-            android:textSize="17sp"
             android:layout_marginTop="45dp"
-            android:textStyle="bold"
+            android:text="@string/verify_fingerprint_hint"
             android:textColor="@android:color/white"
-            android:text="@string/verify_fingerprint_hint" />
+            android:textSize="17sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:layout_width="72dp"
             android:layout_height="72dp"
-            android:layout_gravity="center"
             android:layout_below="@id/hint"
-            android:layout_marginTop="90dp"
             android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="90dp"
             android:src="@drawable/fingerprint"
             tools:ignore="ContentDescription" />
 

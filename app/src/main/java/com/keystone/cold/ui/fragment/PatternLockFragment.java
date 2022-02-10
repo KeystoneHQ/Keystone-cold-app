@@ -17,10 +17,14 @@
 
 package com.keystone.cold.ui.fragment;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.andrognito.patternlockview.PatternLockView;
 import com.andrognito.patternlockview.listener.PatternLockViewListener;
@@ -65,6 +69,17 @@ public class PatternLockFragment extends BaseFragment<PatternLockFragmentBinding
         mBinding.lockView.setTactileFeedbackEnabled(false);
         mBinding.lockView.setInputEnabled(true);
         attemptTimes = Utilities.getPatternRetryTimes(mActivity);
+
+        Bitmap nftImage = Utilities.getNFTAvatarBitmap(mActivity);
+
+        if (nftImage != null) {
+            mBinding.toolbarTitle.setVisibility(View.GONE);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.nft_toolbar_height));
+            mBinding.toolbar.setLayoutParams(params);
+            mBinding.nftContainer.setVisibility(View.VISIBLE);
+            mBinding.nftImage.setImageBitmap(nftImage);
+            mBinding.divider.setVisibility(View.GONE);
+        }
 
         mBinding.lockView.addPatternLockListener(new PatternLockViewListener() {
 

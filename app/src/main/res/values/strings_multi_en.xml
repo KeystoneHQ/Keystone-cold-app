@@ -64,6 +64,10 @@
     <string name="setting_vibrator">Vibrate On / Off</string>
     <string name="setting_brightness">Screen Brightness</string>
     <string name="setting_screen_off_time">Screen Timeout Length</string>
+    <string name="import_nft">Import NFT to lock screen</string>
+    <string name="import_nft_contract_address">Contract Address</string>
+    <string name="import_nft_hint">*Please check your lock screen after confirm the import</string>
+    <string name="import_nft_error">Invalid NFT data</string>
 
     <string-array name="language_entries" translatable="false">
         <item>English</item>

@@ -2,6 +2,7 @@ package com.keystone.cold.ui.fragment.main.scan.scanner;
 
 import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
 import com.sparrowwallet.hummingbird.UR;
+import com.sparrowwallet.hummingbird.registry.EthNFTItem;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 
 import org.spongycastle.util.encoders.Hex;
@@ -19,7 +20,8 @@ public enum ScanResultTypes {
     UOS,
 
     UR_BYTES,
-    UR_ETH_SIGN_REQUEST;
+    UR_ETH_SIGN_REQUEST,
+    UR_ETH_NFT_ITEM;
 
 
     public boolean isType(String text) {
@@ -37,6 +39,8 @@ public enum ScanResultTypes {
                     return decodeResult instanceof EthSignRequest;
                 case UR_BYTES:
                     return decodeResult instanceof byte[];
+                case UR_ETH_NFT_ITEM:
+                    return decodeResult instanceof EthNFTItem;
                 default:
                     return false;
             }
@@ -61,6 +65,8 @@ public enum ScanResultTypes {
             switch (this) {
                 case UR_ETH_SIGN_REQUEST:
                     return EthSignRequest.fromCbor(dataItem);
+                case UR_ETH_NFT_ITEM:
+                    return EthNFTItem.fromCbor(dataItem);
                 case UR_BYTES:
                     return ((ByteString) dataItem).getBytes();
                 default:

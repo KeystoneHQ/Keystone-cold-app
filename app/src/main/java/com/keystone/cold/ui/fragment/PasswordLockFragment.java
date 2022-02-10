@@ -17,12 +17,15 @@
 
 package com.keystone.cold.ui.fragment;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputFilter;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import androidx.databinding.ObservableField;
 
@@ -64,11 +67,24 @@ public class PasswordLockFragment extends BaseFragment<PasswordUnlockBinding> {
     protected void init(View view) {
         Bundle data = requireArguments();
         boolean isForce = data.getBoolean(IS_FORCE);
+
+        Bitmap nftImage = Utilities.getNFTAvatarBitmap(mActivity);
+
         if (isForce) {
             mBinding.toolbar.setNavigationIcon(new ColorDrawable(Color.TRANSPARENT));
         } else {
             mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         }
+
+        if (nftImage != null) {
+            mBinding.toolbarTitle.setVisibility(View.GONE);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.nft_toolbar_height));
+            mBinding.toolbar.setLayoutParams(params);
+            mBinding.nftContainer.setVisibility(View.VISIBLE);
+            mBinding.nftImage.setImageBitmap(nftImage);
+            mBinding.divider.setVisibility(View.GONE);
+        }
+
         boolean hasVault = Utilities.hasVaultCreated(mActivity);
         retryTimes = Utilities.getPasswordRetryTimes(mActivity);
         mBinding.passwordInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(64)});
@@ -108,12 +124,11 @@ public class PasswordLockFragment extends BaseFragment<PasswordUnlockBinding> {
         Bundle bundle = new Bundle();
 
         mBinding.forget.setOnClickListener(v -> {
-            if(hasVault) {
+            if (hasVault) {
                 bundle.putString(KEY_TITLE, getString(R.string.verify_mnemonic));
                 bundle.putString(ACTION, PreImportFragment.ACTION_RESET_PWD);
                 navigate(R.id.action_resetpassword_verifyMnemonic, bundle);
-            }
-            else {
+            } else {
                 //turn to SetupActivity to set password
                 Utilities.clearPasswordSet(mActivity);
                 mActivity.finish();
@@ -153,7 +168,7 @@ public class PasswordLockFragment extends BaseFragment<PasswordUnlockBinding> {
     }
 
     public static boolean verifyPasswordHash(String passwordHash) {
-        if(passwordHash.equals("")) return false;
+        if (passwordHash.equals("")) return false;
         return new VerifyPasswordCallable(passwordHash).call();
     }
 }

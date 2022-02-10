@@ -42,15 +42,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textSize="15sp"
+                android:text="@string/pattern_lock"
                 android:textColor="@android:color/white"
-                android:text="@string/pattern_lock" />
+                android:textSize="15sp" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/nft_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                app:cardCornerRadius="40dp">
+                <ImageView
+                    android:id="@+id/nft_image"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:contentDescription="NFT image" />
+            </androidx.cardview.widget.CardView>
         </androidx.appcompat.widget.Toolbar>
 
         <include
             android:layout_below="@id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:id="@+id/divider"
             layout="@layout/divider" />
 
         <TextView

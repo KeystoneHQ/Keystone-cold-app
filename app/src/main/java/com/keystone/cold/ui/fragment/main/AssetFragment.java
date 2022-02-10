@@ -21,6 +21,11 @@ import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CU
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
+import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_CHAIN_ID;
+import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_CONTRACT_ADDRESS;
+import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_CONTRACT_NAME;
+import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_MEDIA_DATA;
+import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_NAME;
 import static com.keystone.cold.ui.fragment.main.keystone.TxConfirmFragment.KEY_TX_DATA;
 import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
 
@@ -29,6 +34,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -77,6 +83,7 @@ import com.keystone.cold.viewmodel.exceptions.UnknownSubstrateChainException;
 import com.keystone.cold.viewmodel.exceptions.UnsupportedSubstrateTxException;
 import com.keystone.cold.viewmodel.exceptions.XfpNotMatchException;
 import com.keystone.cold.viewmodel.tx.PolkadotJsTxConfirmViewModel;
+import com.sparrowwallet.hummingbird.registry.EthNFTItem;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 
 import org.json.JSONException;
@@ -319,7 +326,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     private void scanQrCode() {
         ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);
         scannerViewModel.setState(new ScannerState(Arrays.asList(ScanResultTypes.PLAIN_TEXT,
-                ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_BYTES, ScanResultTypes.UOS)) {
+                ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_ETH_NFT_ITEM, ScanResultTypes.UR_BYTES, ScanResultTypes.UOS)) {
             @Override
             public void handleScanResult(ScanResult result) throws Exception {
                 if (result.getType().equals(ScanResultTypes.PLAIN_TEXT)) {
@@ -399,6 +406,21 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                         bundle.putBoolean("substrateTx", true);
                         mFragment.navigate(R.id.action_to_polkadotTxConfirm, bundle);
                     }
+                } else if(result.getType().equals(ScanResultTypes.UR_ETH_NFT_ITEM)) {
+                    EthNFTItem ethnftItem = (EthNFTItem) result.resolve();
+                    String name = ethnftItem.getName();
+                    int chainId = ethnftItem.getChainId();
+                    String contractAddress = ethnftItem.getContractAddress();
+                    String contractName = ethnftItem.getContractName();
+                    String mediaData = ethnftItem.getMediaData();
+
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(KEY_CHAIN_ID, chainId);
+                    bundle.putString(KEY_CONTRACT_ADDRESS, contractAddress);
+                    bundle.putString(KEY_CONTRACT_NAME, contractName);
+                    bundle.putString(KEY_NAME, name);
+                    bundle.putString(KEY_MEDIA_DATA, mediaData);
+                    mFragment.navigate(R.id.action_QRCodeScan_to_nftConfirmFragment, bundle);
                 }
             }
 

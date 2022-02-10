@@ -17,8 +17,12 @@
 
 package com.keystone.cold.ui.fragment;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
@@ -49,6 +53,17 @@ public class FingerprintLockFragment extends BaseFragment<FingerprintLockFragmen
         mBinding.switchToPassword.setOnClickListener(gotoPasswordUnlock);
         attemptTimes = Utilities.getPatternRetryTimes(mActivity);
         ((UnlockActivity) mActivity).setStatusHint(mBinding.verifyHint);
+
+        Bitmap nftImage = Utilities.getNFTAvatarBitmap(mActivity);
+
+        if (nftImage != null) {
+            mBinding.toolbarTitle.setVisibility(View.GONE);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.nft_toolbar_height));
+            mBinding.toolbar.setLayoutParams(params);
+            mBinding.nftContainer.setVisibility(View.VISIBLE);
+            mBinding.nftImage.setImageBitmap(nftImage);
+            mBinding.divider.setVisibility(View.GONE);
+        }
     }
 
     @Override
