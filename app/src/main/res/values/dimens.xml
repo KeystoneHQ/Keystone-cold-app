@@ -44,4 +44,6 @@
 
     <dimen name="default_badge_size">10dp</dimen>
 
+    <dimen name="nft_toolbar_height">100dp</dimen>
+
 </resources>

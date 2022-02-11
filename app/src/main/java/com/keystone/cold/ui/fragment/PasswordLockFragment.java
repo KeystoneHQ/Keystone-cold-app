@@ -30,6 +30,7 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.VerifyPasswordCallable;
+import com.keystone.cold.databinding.NftAwareToolbarBinding;
 import com.keystone.cold.databinding.PasswordUnlockBinding;
 import com.keystone.cold.fingerprint.FingerprintKit;
 import com.keystone.cold.setting.VibratorHelper;
@@ -37,11 +38,9 @@ import com.keystone.cold.ui.fragment.setting.MainPreferenceFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.util.HashUtil;
 import com.keystone.cold.util.Keyboard;
-import com.keystone.cold.viewmodel.OneTimePasswordManager;
 
 import org.spongycastle.util.encoders.Hex;
 
-import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.Constants.IS_FORCE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_TITLE;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
@@ -64,11 +63,9 @@ public class PasswordLockFragment extends BaseFragment<PasswordUnlockBinding> {
     protected void init(View view) {
         Bundle data = requireArguments();
         boolean isForce = data.getBoolean(IS_FORCE);
-        if (isForce) {
-            mBinding.toolbar.setNavigationIcon(new ColorDrawable(Color.TRANSPARENT));
-        } else {
-            mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
-        }
+        NFTAwareToolbarFragment nftAwareToolbarFragment = new NFTAwareToolbarFragment(!isForce);
+        getChildFragmentManager().beginTransaction().replace(R.id.toolbar_container, nftAwareToolbarFragment).commit();
+
         boolean hasVault = Utilities.hasVaultCreated(mActivity);
         retryTimes = Utilities.getPasswordRetryTimes(mActivity);
         mBinding.passwordInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(64)});
@@ -108,12 +105,11 @@ public class PasswordLockFragment extends BaseFragment<PasswordUnlockBinding> {
         Bundle bundle = new Bundle();
 
         mBinding.forget.setOnClickListener(v -> {
-            if(hasVault) {
+            if (hasVault) {
                 bundle.putString(KEY_TITLE, getString(R.string.verify_mnemonic));
                 bundle.putString(ACTION, PreImportFragment.ACTION_RESET_PWD);
                 navigate(R.id.action_resetpassword_verifyMnemonic, bundle);
-            }
-            else {
+            } else {
                 //turn to SetupActivity to set password
                 Utilities.clearPasswordSet(mActivity);
                 mActivity.finish();
@@ -153,7 +149,7 @@ public class PasswordLockFragment extends BaseFragment<PasswordUnlockBinding> {
     }
 
     public static boolean verifyPasswordHash(String passwordHash) {
-        if(passwordHash.equals("")) return false;
+        if (passwordHash.equals("")) return false;
         return new VerifyPasswordCallable(passwordHash).call();
     }
 }

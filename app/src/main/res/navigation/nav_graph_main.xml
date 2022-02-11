@@ -400,7 +400,18 @@
         android:name="com.keystone.cold.ui.fragment.SelectWalletFragment"
         android:label="SelectWalletFragment"
         tools:layout="@layout/select_wallet_fragment"/>
-
+    <fragment
+        android:id="@+id/nftConfirmFragment"
+        android:label="NFTConfirmFragment"
+        android:name="com.keystone.cold.ui.fragment.main.NFTConfirmFragment"
+        tools:layout="@layout/nft_confirm_fragment">
+        <action
+            android:id="@+id/action_to_home"
+            app:destination="@id/assetFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/assetListFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
     <fragment
         android:id="@+id/chooseWatchWalletFragment"
         android:name="com.keystone.cold.ui.fragment.setup.ChooseWatchWalletFragment"
@@ -892,6 +903,9 @@
         <action
             android:id="@+id/action_QRCodeScan_to_result"
             app:destination="@id/webAuthResultFragment" />
+
+        <action android:id="@+id/action_QRCodeScan_to_nftConfirmFragment"
+            app:destination="@id/nftConfirmFragment" />
 
         <action
             android:id="@+id/action_to_ethFeeMarketTxConfirmFragment"

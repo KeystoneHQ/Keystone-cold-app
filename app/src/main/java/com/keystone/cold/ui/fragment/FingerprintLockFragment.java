@@ -17,12 +17,19 @@
 
 package com.keystone.cold.ui.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.FingerprintLockFragmentBinding;
+import com.keystone.cold.databinding.NftAwareToolbarBinding;
 import com.keystone.cold.ui.UnlockActivity;
 
 import static com.keystone.cold.ui.fragment.Constants.IS_FORCE;
@@ -46,6 +53,8 @@ public class FingerprintLockFragment extends BaseFragment<FingerprintLockFragmen
 
     @Override
     protected void init(View view) {
+        NFTAwareToolbarFragment nftAwareToolbarFragment = new NFTAwareToolbarFragment(false);
+        getChildFragmentManager().beginTransaction().replace(R.id.toolbar_container, nftAwareToolbarFragment).commit();
         mBinding.switchToPassword.setOnClickListener(gotoPasswordUnlock);
         attemptTimes = Utilities.getPatternRetryTimes(mActivity);
         ((UnlockActivity) mActivity).setStatusHint(mBinding.verifyHint);

@@ -17,6 +17,8 @@
 
 package com.keystone.cold.ui.fragment;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -27,6 +29,7 @@ import com.andrognito.patternlockview.listener.PatternLockViewListener;
 import com.andrognito.patternlockview.utils.PatternLockUtils;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
+import com.keystone.cold.databinding.NftAwareToolbarBinding;
 import com.keystone.cold.databinding.PatternLockFragmentBinding;
 import com.keystone.cold.fingerprint.FingerprintKit;
 import com.keystone.cold.setting.VibratorHelper;
@@ -61,6 +64,8 @@ public class PatternLockFragment extends BaseFragment<PatternLockFragmentBinding
 
     @Override
     protected void init(View view) {
+        NFTAwareToolbarFragment nftAwareToolbarFragment = new NFTAwareToolbarFragment(false);
+        getChildFragmentManager().beginTransaction().replace(R.id.toolbar_container, nftAwareToolbarFragment).commit();
         mBinding.switchToPassword.setOnClickListener(gotoPasswordUnlock);
         mBinding.lockView.setTactileFeedbackEnabled(false);
         mBinding.lockView.setInputEnabled(true);

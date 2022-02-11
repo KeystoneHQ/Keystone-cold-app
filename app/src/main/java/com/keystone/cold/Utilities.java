@@ -20,8 +20,11 @@ package com.keystone.cold;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Base64;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -63,6 +66,8 @@ public class Utilities {
     public static final String INPUT_SETTINGS_CLEARED = "input_settings_cleared";
     public static final String ETH_CURRENT_ACCOUNT = "eth_current_account";
     public static final String WEB3_GUIDE_TIMES = "web3_guide_times";
+
+    public static final String NFT_AVATAR_RESOURCE = "nft_avatar_resource";
 
 
     public static void alert(AppCompatActivity activity,
@@ -274,5 +279,26 @@ public class Utilities {
     public static String getCurrentEthAccount(Context context) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
         return sp.getString(ETH_CURRENT_ACCOUNT, ETHAccount.BIP44_STANDARD.getCode());
+    }
+
+    public static void setNftAvatarResource(Context context, String mediaData) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        sp.edit().putString(NFT_AVATAR_RESOURCE, mediaData).apply();
+    }
+
+    public static String getNftAvatarResource(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        return sp.getString(NFT_AVATAR_RESOURCE, null);
+    }
+
+    public static Bitmap getNFTAvatarBitmap(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        String mediaData = sp.getString(NFT_AVATAR_RESOURCE, null);
+        if(mediaData != null) {
+            byte[] decodedImage = Base64.decode(mediaData, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(decodedImage, 0, decodedImage.length);
+        }else {
+            return null;
+        }
     }
 }
