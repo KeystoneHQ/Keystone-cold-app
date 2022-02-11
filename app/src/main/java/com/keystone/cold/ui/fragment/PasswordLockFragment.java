@@ -17,15 +17,12 @@
 
 package com.keystone.cold.ui.fragment;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputFilter;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import androidx.databinding.ObservableField;
 
@@ -33,6 +30,7 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.VerifyPasswordCallable;
+import com.keystone.cold.databinding.NftAwareToolbarBinding;
 import com.keystone.cold.databinding.PasswordUnlockBinding;
 import com.keystone.cold.fingerprint.FingerprintKit;
 import com.keystone.cold.setting.VibratorHelper;
@@ -40,11 +38,9 @@ import com.keystone.cold.ui.fragment.setting.MainPreferenceFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.util.HashUtil;
 import com.keystone.cold.util.Keyboard;
-import com.keystone.cold.viewmodel.OneTimePasswordManager;
 
 import org.spongycastle.util.encoders.Hex;
 
-import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.Constants.IS_FORCE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_TITLE;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
@@ -67,23 +63,8 @@ public class PasswordLockFragment extends BaseFragment<PasswordUnlockBinding> {
     protected void init(View view) {
         Bundle data = requireArguments();
         boolean isForce = data.getBoolean(IS_FORCE);
-
-        Bitmap nftImage = Utilities.getNFTAvatarBitmap(mActivity);
-
-        if (isForce) {
-            mBinding.toolbar.setNavigationIcon(new ColorDrawable(Color.TRANSPARENT));
-        } else {
-            mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
-        }
-
-        if (nftImage != null) {
-            mBinding.toolbarTitle.setVisibility(View.GONE);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.nft_toolbar_height));
-            mBinding.toolbar.setLayoutParams(params);
-            mBinding.nftContainer.setVisibility(View.VISIBLE);
-            mBinding.nftImage.setImageBitmap(nftImage);
-            mBinding.divider.setVisibility(View.GONE);
-        }
+        NFTAwareToolbarFragment nftAwareToolbarFragment = new NFTAwareToolbarFragment(!isForce);
+        getChildFragmentManager().beginTransaction().replace(R.id.toolbar_container, nftAwareToolbarFragment).commit();
 
         boolean hasVault = Utilities.hasVaultCreated(mActivity);
         retryTimes = Utilities.getPasswordRetryTimes(mActivity);
