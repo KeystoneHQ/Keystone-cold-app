@@ -15,10 +15,18 @@ import com.keystone.cold.databinding.NftAwareToolbarBinding;
 public class NFTAwareToolbarFragment extends BaseFragment<NftAwareToolbarBinding> {
 
     private final boolean canGoBack;
+    private final String nonNFTTitle;
 
-    public NFTAwareToolbarFragment(boolean canGoBack) {
+    private boolean showNFT = false;
+
+    public NFTAwareToolbarFragment(boolean canGoBack, String nonNFTTitle) {
         super();
         this.canGoBack = canGoBack;
+        this.nonNFTTitle = nonNFTTitle;
+    }
+
+    public boolean isShowNFT() {
+        return this.showNFT;
     }
 
     @Override
@@ -29,13 +37,18 @@ public class NFTAwareToolbarFragment extends BaseFragment<NftAwareToolbarBinding
     @Override
     protected void init(View view) {
         Bitmap nftImage = Utilities.getNFTAvatarBitmap(mActivity);
+
         if (nftImage != null) {
+            this.showNFT = true;
             mBinding.toolbarTitle.setVisibility(View.GONE);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.nft_toolbar_height));
             mBinding.toolbar.setLayoutParams(params);
             mBinding.nftContainer.setVisibility(View.VISIBLE);
             mBinding.nftImage.setImageBitmap(nftImage);
             mBinding.divider.setVisibility(View.GONE);
+        }
+        else {
+            mBinding.toolbarTitle.setText(nonNFTTitle);
         }
         if (canGoBack) {
             mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());

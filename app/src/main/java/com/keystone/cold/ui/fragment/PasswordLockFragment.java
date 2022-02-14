@@ -17,8 +17,6 @@
 
 package com.keystone.cold.ui.fragment;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputFilter;
@@ -30,7 +28,6 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.VerifyPasswordCallable;
-import com.keystone.cold.databinding.NftAwareToolbarBinding;
 import com.keystone.cold.databinding.PasswordUnlockBinding;
 import com.keystone.cold.fingerprint.FingerprintKit;
 import com.keystone.cold.setting.VibratorHelper;
@@ -63,7 +60,7 @@ public class PasswordLockFragment extends BaseFragment<PasswordUnlockBinding> {
     protected void init(View view) {
         Bundle data = requireArguments();
         boolean isForce = data.getBoolean(IS_FORCE);
-        NFTAwareToolbarFragment nftAwareToolbarFragment = new NFTAwareToolbarFragment(!isForce);
+        NFTAwareToolbarFragment nftAwareToolbarFragment = new NFTAwareToolbarFragment(!isForce, getString(R.string.password_unlock));
         getChildFragmentManager().beginTransaction().replace(R.id.toolbar_container, nftAwareToolbarFragment).commit();
 
         boolean hasVault = Utilities.hasVaultCreated(mActivity);
