@@ -70,6 +70,10 @@
     <string name="firmware_upgrade_unable">無法升級</string>
     <string name="firmware_upgrade_unable_description">未檢測到升級包，請確認是否將存有update.zip的TF卡（FAT32格式，不超過512GB）插入設備中。</string>
 
+    <string name="import_nft">導入 NFT 至鎖屏界面</string>
+    <string name="import_nft_hint">* 確認導入後，請在鎖屏界面查看 NFT</string>
+    <string name="import_nft_error">非法 NFT 數據</string>
+
     <string name="skip">跳過</string>
     <string name="read_confirm"><![CDATA[我已閱讀並同意 <u><font color="#00cdc3">\"服務條款\"<font/></u> ，和 <u><font color="#00cdc3">\"隱私政策\"<font/></u>]]></string>
     <string name="license">服務條款</string>
