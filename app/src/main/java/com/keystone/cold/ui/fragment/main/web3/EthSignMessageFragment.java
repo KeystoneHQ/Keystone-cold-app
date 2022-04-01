@@ -78,20 +78,18 @@ public class EthSignMessageFragment extends BaseFragment<EthSignMessageBinding> 
 
     private void onMessageParsed(LiveData<JSONObject> liveData, JSONObject jsonObject) {
         if (jsonObject != null) {
+            String message = null;
             try {
-                String message = jsonObject.getString("data");
+                message = jsonObject.getString("data");
                 String fromAddress = jsonObject.getString("fromAddress");
                 mBinding.address.setText(fromAddress);
-
                 String messageUtf8 = new String(Hex.decode(message), StandardCharsets.UTF_8);
-                if (isGarbled(messageUtf8)) {
-                    mBinding.llMsgUtf8.setVisibility(View.GONE);
-                } else {
-                    mBinding.message.setText(messageUtf8);
-                }
-
+                mBinding.message.setText(messageUtf8);
                 mBinding.rawMessage.setText(message);
-
+                liveData.removeObservers(EthSignMessageFragment.this);
+            } catch (UnsupportedOperationException e) {
+                mBinding.message.setText(R.string.decode_as_utf8_failed_hint);
+                mBinding.rawMessage.setText(message);
                 liveData.removeObservers(EthSignMessageFragment.this);
             } catch (JSONException e) {
                 e.printStackTrace();
