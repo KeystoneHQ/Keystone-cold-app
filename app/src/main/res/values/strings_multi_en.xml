@@ -619,4 +619,5 @@
     <string name="top_account">The first 3 accounts:</string>
     <string name="show_this_qrcode">Display QR Code</string>
     <string name="sync_metamask_guide_text_hint">Take the Keystone Ethereum Extension import process as an example, the process of other wallets is similar.</string>
+    <string name="decode_as_utf8_failed_hint">Data can‘t be decoded as utf-8 string.</string>
 </resources>
