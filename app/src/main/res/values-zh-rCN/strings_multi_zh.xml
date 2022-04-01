@@ -576,4 +576,5 @@
     <string name="top_account">錢包的前3個賬戶：</string>
     <string name="show_this_qrcode">展示該錢包二維碼</string>
     <string name="sync_metamask_guide_text_hint">Take the Keystone Ethereum Extension import process as an example, the process of other wallets is similar.</string>
+    <string name="decode_as_utf8_failed_hint">數據無法解析成有效的utf-8字符。</string>
 </resources>
