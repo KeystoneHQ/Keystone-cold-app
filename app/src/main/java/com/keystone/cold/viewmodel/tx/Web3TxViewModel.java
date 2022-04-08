@@ -72,7 +72,7 @@ public class Web3TxViewModel extends Base {
     private String messageData;
     private String hdPath;
     private int chainId;
-    private String originalTo;
+    private String toAddress;
     private String toContractName;
 
     private String requestId;
@@ -154,7 +154,7 @@ public class Web3TxViewModel extends Base {
                 }
             }
             if (TextUtils.isEmpty(addressSymbol)) {
-                if (!TextUtils.isEmpty(originalTo) && originalTo.equalsIgnoreCase(to)){
+                if (!TextUtils.isEmpty(toAddress) && toAddress.equalsIgnoreCase(to)){
                     addressSymbol = toContractName;
                 } else {
                     List<Contract> contracts = new AbiLoadManager(to).loadAbi();
@@ -209,8 +209,8 @@ public class Web3TxViewModel extends Base {
                     return;
                 }
                 chainId = ethTx.getInt("chainId");
-                if (ethTx.has("originalTo") && ethTx.has("contract")) {
-                    originalTo = ethTx.getString("originalTo");
+                if (ethTx.has("to") && ethTx.has("contract")) {
+                    toAddress = ethTx.getString("to");
                     toContractName = ethTx.getString("contract");
                 }
                 String data = ethTx.getString("data");
@@ -242,8 +242,8 @@ public class Web3TxViewModel extends Base {
                     parseTxException.postValue(new InvalidTransactionException("invalid transaction"));
                     return;
                 }
-                if (ethTx.has("originalTo") && ethTx.has("contract")) {
-                    originalTo = ethTx.getString("originalTo");
+                if (ethTx.has("to") && ethTx.has("contract")) {
+                    toAddress = ethTx.getString("to");
                     toContractName = ethTx.getString("contract");
                 }
                 chainId = ethTx.getInt("chainId");
