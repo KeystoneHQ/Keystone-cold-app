@@ -85,6 +85,7 @@ import com.keystone.cold.viewmodel.exceptions.XfpNotMatchException;
 import com.keystone.cold.viewmodel.tx.PolkadotJsTxConfirmViewModel;
 import com.sparrowwallet.hummingbird.registry.EthNFTItem;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
+import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -326,7 +327,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     private void scanQrCode() {
         ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);
         scannerViewModel.setState(new ScannerState(Arrays.asList(ScanResultTypes.PLAIN_TEXT,
-                ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_ETH_NFT_ITEM, ScanResultTypes.UR_BYTES, ScanResultTypes.UOS)) {
+                ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_ETH_NFT_ITEM, ScanResultTypes.UR_BYTES, ScanResultTypes.UOS, ScanResultTypes.UR_SOL_SIGN_REQUEST)) {
             @Override
             public void handleScanResult(ScanResult result) throws Exception {
                 if (result.getType().equals(ScanResultTypes.PLAIN_TEXT)) {
@@ -421,7 +422,58 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     bundle.putString(KEY_NAME, name);
                     bundle.putString(KEY_MEDIA_DATA, mediaData);
                     mFragment.navigate(R.id.action_QRCodeScan_to_nftConfirmFragment, bundle);
+                } else if (result.getType().equals(ScanResultTypes.UR_SOL_SIGN_REQUEST)) {
+                    handleSolSignRequest(result);
                 }
+            }
+
+            private void handleSolSignRequest(ScanResult result) {
+                SolSignRequest solSignRequest = (SolSignRequest) result.resolve();
+                Bundle bundle = new Bundle();
+                ByteBuffer uuidBuffer = ByteBuffer.wrap(solSignRequest.getRequestId());
+                UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+                String hdPath = solSignRequest.getDerivationPath();
+                String requestMFP = Hex.toHexString(solSignRequest.getMasterFingerprint());
+                bundle.putString(REQUEST_ID, uuid.toString());
+                bundle.putString(SIGN_DATA, Hex.toHexString(solSignRequest.getSignData()));
+                bundle.putString(HD_PATH, "M/" + hdPath);
+
+                mFragment.navigate(R.id.action_to_solTxConfirmFragment, bundle);
+
+//                ETHAccount current = ETHAccount.ofCode(Utilities.getCurrentEthAccount(mFragment.getActivity()));
+//                ETHAccount target = ETHAccount.getAccountByPath(hdPath);
+//                if (target == null) {
+//                    throw new InvalidTransactionException("unknown hd path");
+//                }
+//                if (!target.equals(current)) {
+//                    if(!current.isChildrenPath(hdPath)) {
+//                        //standard and ledger_live has overlap of 1st address
+//                        throw new InvalidETHAccountException("not expected ETH account", current, target);
+//                    }
+//                }
+//
+//                String MFP = new GetMasterFingerprintCallable().call();
+//
+//                if (!requestMFP.equalsIgnoreCase(MFP)) {
+//                    throw new XfpNotMatchException("Master fingerprint not match");
+//                }
+//                if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TRANSACTION.getType())) {
+//                    mFragment.navigate(R.id.action_to_ethTxConfirmFragment, bundle);
+//                } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_DATA.getType())) {
+//                    mFragment.navigate(R.id.action_to_ethSignTypedDataFragment, bundle);
+//                } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.PERSONAL_MESSAGE.getType())) {
+//                    mFragment.navigate(R.id.action_to_ethSignMessageFragment, bundle);
+//                } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_TRANSACTION.getType())) {
+//                    byte[] typedTransaction = ethSignRequest.getSignData();
+//                    byte type = typedTransaction[0];
+//                    switch (type) {
+//                        case 0x02:
+//                            mFragment.navigate(R.id.action_to_ethFeeMarketTxConfirmFragment, bundle);
+//                            break;
+//                        default:
+//                            throw new UnknowQrCodeException("unknown transaction!");
+//                    }
+//                }
             }
 
             @Override

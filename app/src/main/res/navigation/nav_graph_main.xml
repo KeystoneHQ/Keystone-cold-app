@@ -147,8 +147,14 @@
     <fragment
         android:id="@+id/polkadotTxFragment"
         android:name="com.keystone.cold.ui.fragment.main.polkadot.PolkadotTxFragment"
-        android:label="ethTxConfirmFragment"
-        tools:layout="@layout/eth_tx_confirm"></fragment>
+        android:label="polkadotTxFragment"
+        tools:layout="@layout/eth_tx_confirm" />
+
+    <fragment
+        android:id="@+id/solTxFragment"
+        android:name="com.keystone.cold.ui.fragment.main.solana.SolTxConfirmFragment"
+        android:label="solTxFragment"
+        tools:layout="@layout/sol_tx_confirm" />
 
     <fragment
         android:id="@+id/ethSignTypedDataFragment"
@@ -956,7 +962,13 @@
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
         app:popExitAnim="@android:anim/slide_out_right" />
-
+    <action
+        android:id="@+id/action_to_solTxConfirmFragment"
+        app:destination="@id/solTxFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
     <action
         android:id="@+id/action_to_ethSignTypedDataFragment"
         app:destination="@id/ethSignTypedDataFragment"

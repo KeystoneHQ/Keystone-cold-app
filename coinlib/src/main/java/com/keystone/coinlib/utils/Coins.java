@@ -46,6 +46,7 @@ public class Coins {
     public static final Coin FIRO = new Coin("zcoin", "FIRO", "Zcoin", 136);
     public static final Coin XRP = new Coin("ripple", "XRP", "Ripple", 144);
     public static final Coin IOST = new Coin("iost", "IOST", "IOST", 291, CURVE.ED25519, new String[]{""});
+    public static final Coin SOL = new Coin("solana", "SOL", "Solana", 501, CURVE.ED25519, new String[]{""});
     public static final Coin EOS = new Coin("eos", "EOS", "EOS", 194);
     public static final Coin XTN = new Coin("xtn", "XTN", "XTN", 1);
     public static final Coin DOT = new Coin("polkadot", "DOT", "Polkadot", 354, CURVE.SR25519,
@@ -73,7 +74,8 @@ public class Coins {
             EOS,
             DOT,
             KSM,
-            CFX
+            CFX,
+            SOL
     );
 
     public static boolean isCoinSupported(@NonNull String coinCode) {
