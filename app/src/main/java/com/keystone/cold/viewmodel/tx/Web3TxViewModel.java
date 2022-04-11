@@ -72,6 +72,8 @@ public class Web3TxViewModel extends Base {
     private String messageData;
     private String hdPath;
     private int chainId;
+    private String toAddress;
+    private String toContractName;
 
     private String requestId;
     private String signature;
@@ -152,8 +154,14 @@ public class Web3TxViewModel extends Base {
                 }
             }
             if (TextUtils.isEmpty(addressSymbol)) {
-                Contract contract = new AbiLoadManager(to).loadAbi();
-                addressSymbol = contract.getName();
+                if (!TextUtils.isEmpty(toAddress) && toAddress.equalsIgnoreCase(to)){
+                    addressSymbol = toContractName;
+                } else {
+                    List<Contract> contracts = new AbiLoadManager(to).loadAbi();
+                    if (!contracts.isEmpty()){
+                        addressSymbol = contracts.get(0).getName();
+                    }
+                }
             }
             if (addressSymbol != null && addressSymbol.length() > 25) {
                 addressSymbol = addressSymbol.substring(0, 10) + "..." + addressSymbol.substring(addressSymbol.length() - 10);
@@ -201,6 +209,10 @@ public class Web3TxViewModel extends Base {
                     return;
                 }
                 chainId = ethTx.getInt("chainId");
+                if (ethTx.has("to") && ethTx.has("contract")) {
+                    toAddress = ethTx.getString("to");
+                    toContractName = ethTx.getString("contract");
+                }
                 String data = ethTx.getString("data");
                 try {
                     abi = new JSONObject(data);
@@ -229,6 +241,10 @@ public class Web3TxViewModel extends Base {
                     observableEthTx.postValue(null);
                     parseTxException.postValue(new InvalidTransactionException("invalid transaction"));
                     return;
+                }
+                if (ethTx.has("to") && ethTx.has("contract")) {
+                    toAddress = ethTx.getString("to");
+                    toContractName = ethTx.getString("contract");
                 }
                 chainId = ethTx.getInt("chainId");
                 String data = ethTx.getString("data");

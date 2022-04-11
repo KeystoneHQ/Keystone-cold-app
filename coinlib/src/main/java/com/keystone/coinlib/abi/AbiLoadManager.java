@@ -2,6 +2,7 @@ package com.keystone.coinlib.abi;
 
 import android.text.TextUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,18 +26,17 @@ public class AbiLoadManager {
         abiStoreEngineList = abiStoreEngines;
     }
 
-    public Contract loadAbi() {
-        Contract contract = new Contract();
+    public List<Contract>  loadAbi() {
+        List<Contract> contracts = new ArrayList<>();
         if (TextUtils.isEmpty(address)) {
-            return contract;
+            return contracts;
         }
         for (ABIStoreEngine abiStoreEngine : abiStoreEngineList) {
-            Contract load = abiStoreEngine.load(address);
-            if (!load.isEmpty()) {
-                contract = load;
-                break;
+            contracts.addAll(abiStoreEngine.load(address));
+            if (!contracts.isEmpty()){
+                return contracts;
             }
         }
-        return contract;
+        return contracts;
     }
 }

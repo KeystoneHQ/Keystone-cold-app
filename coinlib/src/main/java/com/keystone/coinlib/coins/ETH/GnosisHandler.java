@@ -33,7 +33,7 @@ public class GnosisHandler implements FallbackHandler {
             Object _singleton = decodedFunctionCall.callParameters.get(0);
             String address = "0x" + Hex.toHexString(
                     ByteUtil.bigIntegerToBytes(new BigInteger(String.valueOf(_singleton)), 20));
-            Contract contract = EthImpl.getContract(null, address);
+
             Object initializer = decodedFunctionCall.callParameters.get(1);
             String data = Hex.toHexString((byte[]) initializer);
             ABIReader.DecodedFunctionCall call = ABIReader.staticDecodeCall(data);
@@ -41,7 +41,10 @@ public class GnosisHandler implements FallbackHandler {
                 data = call.toJson().toString();
             }
             ABIReader abiReader = new ABIReader();
-            abiReader.decodeCall(data, contract, "");
+            List<Contract> contracts = EthImpl.getContract(address);
+            for (Contract contract: contracts){
+                abiReader.decodeCall(data, contract, "");
+            }
         }
     }
 }

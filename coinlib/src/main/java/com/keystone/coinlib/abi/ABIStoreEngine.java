@@ -1,5 +1,7 @@
 package com.keystone.coinlib.abi;
 
+import java.util.List;
+
 public interface ABIStoreEngine {
-    Contract load(String address);
+    List<Contract> load(String address);
 }

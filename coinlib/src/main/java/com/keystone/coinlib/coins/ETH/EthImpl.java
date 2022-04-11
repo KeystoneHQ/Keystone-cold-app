@@ -152,28 +152,35 @@ public class EthImpl implements Coin {
         metaData.put("gasLimit", rawTx.getGasLimit().toString());
         metaData.put("value", rawTx.getValue().toString());
         metaData.put("to", Eth.Deriver.toChecksumAddress(rawTx.getTo()));
-        Contract contract = getContract(callback, rawTx.getTo());
 
-        //decode data
+        List<Contract> contracts = getContract(rawTx.getTo());
+        Contract matchedContract = null;
+
         ABIReader abiReader = new ABIReader();
-        ABIReader.DecodedFunctionCall call = abiReader.decodeCall(rawTx.getData(), contract, rawTx.getTo());
-        if (call != null) {
-            JSONObject data = call.toJson();
-            data.put("contract", contract.getName());
-            metaData.put("data", data.toString());
-        } else {
+        for (Contract contract: contracts){
+            ABIReader.DecodedFunctionCall call = abiReader.decodeCall(rawTx.getData(), contract, rawTx.getTo());
+            if (call != null) {
+                JSONObject data = call.toJson();
+                data.put("contract", contract.getName());
+                metaData.put("data", data.toString());
+                metaData.put("contract", contract.getName());
+                matchedContract = contract;
+                break;
+            }
+        }
+        if (matchedContract == null) {
             metaData.put("data", rawTx.getData());
         }
         metaData.put("signingData", txHex);
-    }
 
-    protected static Contract getContract(Callback callback, String address) {
-        AbiLoadManager abiLoadManager = new AbiLoadManager(address);
-        Contract contract = abiLoadManager.loadAbi();
-        if (contract.isFromTFCard() && callback != null) {
+        if (matchedContract != null && matchedContract.isFromTFCard() && callback != null) {
             callback.fromTFCard();
         }
-        return contract;
+    }
+
+    protected static List<Contract> getContract(String address) {
+        AbiLoadManager abiLoadManager = new AbiLoadManager(address);
+        return abiLoadManager.loadAbi();
     }
 
     public SignTxResult signHex(String hex, Signer signer) {
