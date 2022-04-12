@@ -9,6 +9,7 @@ import android.view.View;
 
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.coinlib.coins.SOL.SolImpl;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.databinding.SolTxConfirmBinding;

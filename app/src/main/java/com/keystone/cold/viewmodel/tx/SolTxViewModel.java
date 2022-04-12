@@ -97,6 +97,8 @@ public class SolTxViewModel extends Base {
             txHex = bundle.getString(SIGN_DATA);
             hdPath = bundle.getString(HD_PATH);
             requestId = bundle.getString(REQUEST_ID);
+
+            SolImpl.parseMessage(txHex);
         });
     }
 }
