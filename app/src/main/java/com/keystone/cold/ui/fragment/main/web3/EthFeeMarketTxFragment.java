@@ -166,7 +166,18 @@ public class EthFeeMarketTxFragment extends BaseFragment<EthFeeMarketTxBinding> 
             String contract = abi.optString("contract");
             boolean isUniswap = contract.toLowerCase().contains("uniswap");
             List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(genericETHTxEntity.getFrom(), viewModel).adapt(abi);
-            addViewToData(isUniswap, itemList);
+            if (itemList == null) {
+                AbiItemMethodBinding abiItemMethodBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+                        R.layout.abi_item_method, null, false);
+                try {
+                    abiItemMethodBinding.value.setText(abi.toString(2));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                mBinding.ethTx.container.addView(abiItemMethodBinding.getRoot());
+            } else {
+                addViewToData(isUniswap, itemList);
+            }
             mBinding.ethTx.data.setVisibility(View.VISIBLE);
             mBinding.ethTx.undecodedData.setVisibility(View.GONE);
             try {
