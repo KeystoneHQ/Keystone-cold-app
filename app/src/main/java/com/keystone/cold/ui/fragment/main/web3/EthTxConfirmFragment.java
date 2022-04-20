@@ -61,6 +61,7 @@ import com.keystone.cold.viewmodel.tx.GenericETHTxEntity;
 import com.keystone.cold.viewmodel.tx.KeystoneTxViewModel;
 import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -262,7 +263,20 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
             boolean isUniswap = contract.toLowerCase().contains("uniswap");
             AppExecutors.getInstance().diskIO().execute(() -> {
                 List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(genericETHTxEntity.getFrom(), viewModel).adapt(abi);
-                AppExecutors.getInstance().mainThread().execute(() -> addViewToData(isUniswap, itemList));
+                AppExecutors.getInstance().mainThread().execute(() -> {
+                    if (itemList == null) {
+                        AbiItemMethodBinding abiItemMethodBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+                                R.layout.abi_item_method, null, false);
+                        try {
+                            abiItemMethodBinding.value.setText(abi.toString(2));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        mBinding.ethTx.container.addView(abiItemMethodBinding.getRoot());
+                    } else {
+                        addViewToData(isUniswap, itemList);
+                    }
+                });
             });
         }
     }
