@@ -1,7 +1,5 @@
 package com.keystone.coinlib.coins.SOL;
 
-import static com.keystone.coinlib.Util.concat;
-
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -13,14 +11,8 @@ import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.utils.Coins;
 
-import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.web3j.crypto.Hash;
-import org.web3j.crypto.RawTransaction;
-import org.web3j.crypto.Sign;
-import org.web3j.crypto.TransactionDecoder;
-
 
 
 public class SolImpl implements Coin {
@@ -64,16 +56,19 @@ public class SolImpl implements Coin {
         }
     }
 
-    public static void parseMessage(String message) {
-        SolImpl.nativeParseMessage(message, new ParseMessageCallback());
+    public static void parseMessage(String message, ParseMessageCallback parseMessageCallback) {
+        SolImpl.nativeParseMessage(message, parseMessageCallback);
     }
 
-    static class ParseMessageCallback {
+
+    public static class ParseMessageCallback {
+
         public void onSuccess(String json) throws JSONException {
             Log.d("sora", "onSuccess: " + json);
             Log.d("sora", "onSuccess: " + new JSONObject(json));
         }
         public void onFailed() {
+            Log.d("sora", "onFailed     ");
 
         }
     }
