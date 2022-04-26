@@ -154,7 +154,15 @@
         android:id="@+id/solTxFragment"
         android:name="com.keystone.cold.ui.fragment.main.solana.SolTxConfirmFragment"
         android:label="solTxFragment"
-        tools:layout="@layout/sol_tx_confirm" />
+        tools:layout="@layout/sol_tx_confirm">
+        <action
+            android:id="@+id/action_to_ethBroadcastTxFragment"
+            app:destination="@id/ethBroadcastTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/ethSignTypedDataFragment"
@@ -407,6 +415,11 @@
         android:label="SelectWalletFragment"
         tools:layout="@layout/select_wallet_fragment"/>
     <fragment
+        android:id="@+id/changeDerivePathFragment"
+        android:name="com.keystone.cold.ui.fragment.ChangeDerivePathFragment"
+        android:label="ChangeDerivetionFragment"
+        tools:layout="@layout/change_derivation_path_fragment"/>
+    <fragment
         android:id="@+id/nftConfirmFragment"
         android:label="NFTConfirmFragment"
         android:name="com.keystone.cold.ui.fragment.main.NFTConfirmFragment"
@@ -470,6 +483,21 @@
         android:name="com.keystone.cold.ui.fragment.main.AssetFragment"
         android:label="AssetFragment"
         tools:layout="@layout/asset_fragment">
+        <action
+            android:id="@+id/action_assetFragment_to_changeDerivePathFragment"
+            app:destination="@id/changeDerivePathFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
+            />
+        <action
+            android:id="@+id/action_assetFragment_to_addressSyncAddress"
+            app:destination="@id/addressSyncFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
         <action
             android:id="@+id/action_assetFragment_to_selectWalletFragment"
             app:destination="@id/selectWalletFragment"
@@ -920,6 +948,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addressSyncFragment"
+        android:name="com.keystone.cold.ui.fragment.main.solana.AddressSyncFragment"
+        android:label="AddressSyncFragment"
+        tools:layout="@layout/address_sync_fragment">
     </fragment>
 
     <!--global action-->

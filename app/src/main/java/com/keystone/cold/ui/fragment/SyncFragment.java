@@ -23,6 +23,7 @@ import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWa
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,11 +45,14 @@ import com.keystone.cold.viewmodel.SyncViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 import com.sparrowwallet.hummingbird.UR;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
 
@@ -60,6 +64,8 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
     private boolean isRefreshing = false;
 
     private MutableLiveData<UR> URLiveData;
+
+    private List<String> solSyncPaths = new ArrayList<>();
 
     @Override
     protected int setView() {
@@ -73,6 +79,11 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
         if (data != null) {
             coinCode = data.getString("coinCode");
             fromSyncGuide = getArguments().getBoolean("fromSyncGuide");
+
+            String syncPaths = getArguments().getString("sync_addresses");
+            if (!TextUtils.isEmpty(syncPaths)) {
+                solSyncPaths.addAll(collectSyncAddresses(syncPaths));
+            }
         }
         if (!fromSyncGuide) {
             mBinding.complete.setVisibility(View.GONE);
@@ -109,14 +120,27 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
         generateSyncData();
     }
 
+    private List<String> collectSyncAddresses(String syncPaths) {
+        List<String> paths = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(syncPaths);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                paths.add((String) jsonArray.get(i));
+            }
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+        return paths;
+    }
+
     private void setupUIWithWatchWallet() {
         mBinding.info.setOnClickListener(v -> showHint());
         switch (watchWallet) {
             case KEYSTONE:
-                mBinding.hint.setText(R.string.sync_with_keystone_vault);
+                //mBinding.hint.setText(R.string.sync_with_keystone_vault);
                 break;
             case POLKADOT_JS:
-                mBinding.hint.setText(R.string.sync_with_polkadot_js);
+                //mBinding.hint.setText(R.string.sync_with_polkadot_js);
                 mBinding.chain.setVisibility(View.VISIBLE);
                 if (coinCode.equals(Coins.DOT.coinCode())) {
                     mBinding.chain.setText(Coins.DOT.coinName());
@@ -125,18 +149,24 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 }
                 break;
             case XRP_TOOLKIT:
-                mBinding.hint.setText(R.string.sync_with_xrp_toolkit);
+                //mBinding.hint.setText(R.string.sync_with_xrp_toolkit);
                 mBinding.address.setVisibility(View.VISIBLE);
                 break;
             case METAMASK:
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 9, 0, 0);
                 mBinding.content.setLayoutParams(params);
-                mBinding.hint.setText(R.string.sync_with_metamask);
+                //mBinding.hint.setText(R.string.sync_with_metamask);
                 mBinding.chain.setVisibility(View.VISIBLE);
                 mBinding.llHint.setVisibility(View.VISIBLE);
                 mBinding.complete.setVisibility(View.VISIBLE);
                 mBinding.companionHint.setOnClickListener(v -> navigate(R.id.action_syncFragment_to_selectWalletFragment));
+                break;
+            case SOLANA:
+                FrameLayout.LayoutParams params1 = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+                params1.setMargins(0, 9, 0, 0);
+                mBinding.content.setLayoutParams(params1);
+                mBinding.complete.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -205,6 +235,25 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                         URLiveData.removeObservers(this);
                     });
                 });
+                break;
+            case SOLANA:
+                if (URLiveData != null) {
+                    URLiveData.removeObservers(this);
+                }
+                syncViewModel.getSolAccountMutableLiveData().observe(this, solAccount -> {
+                    if (solAccount == null) return;
+                    if (isRefreshing) return;
+                    isRefreshing = true;
+                    Utilities.setCurrentSolAccount(mActivity, solAccount.getCode());
+                    URLiveData = syncViewModel.generateSyncSolanaUR(solSyncPaths);
+                    URLiveData.observe(this, urData -> {
+                        if (urData != null) {
+                            mBinding.dynamicQrcodeLayout.qrcode.displayUR(urData);
+                        }
+                        URLiveData.removeObservers(this);
+                    });
+                });
+                break;
         }
     }
 

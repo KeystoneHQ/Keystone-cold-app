@@ -17,6 +17,7 @@
 
 package com.keystone.cold.ui.fragment.setup;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -25,8 +26,6 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.SyncWatchWalletGuideBinding;
 import com.keystone.cold.ui.MainActivity;
-import com.keystone.cold.ui.fragment.BaseFragment;
-import com.keystone.cold.viewmodel.SetupVaultViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 
 
@@ -87,6 +86,7 @@ public class SyncWatchWalletGuide extends SetupVaultBaseFragment<SyncWatchWallet
             case XRP_TOOLKIT:
             case POLKADOT_JS:
             case METAMASK:
+            case SOLANA:
                 Bundle bundle = requireArguments();
                 bundle.putBoolean("fromSyncGuide", true);
                 navigate(R.id.action_to_syncFragment, bundle);
@@ -94,6 +94,7 @@ public class SyncWatchWalletGuide extends SetupVaultBaseFragment<SyncWatchWallet
         }
     }
 
+    @SuppressLint("StringFormatInvalid")
     private String getButtonText() {
         int id = 0;
         switch (watchWallet) {
@@ -107,6 +108,9 @@ public class SyncWatchWalletGuide extends SetupVaultBaseFragment<SyncWatchWallet
                 id = R.string.sync_polkadot_js_guide_button_text;
                 break;
             case METAMASK:
+                id = R.string.sync_metamask_guide_button_text;
+                break;
+            case SOLANA:
                 id = R.string.sync_metamask_guide_button_text;
                 break;
         }
@@ -123,6 +127,8 @@ public class SyncWatchWalletGuide extends SetupVaultBaseFragment<SyncWatchWallet
                 return R.string.sync_polkadotjs_wallet_guide_title;
             case METAMASK:
                 return R.string.sync_metamask_guide_title;
+            case SOLANA:
+                return R.string.sync_solana_guide_title;
         }
         return 0;
     }
@@ -136,6 +142,8 @@ public class SyncWatchWalletGuide extends SetupVaultBaseFragment<SyncWatchWallet
             case POLKADOT_JS:
                 return R.string.sync_polkadot_js_guide_text;
             case METAMASK:
+                return R.string.sync_metamask_guide_text;
+            case SOLANA:
                 return R.string.sync_metamask_guide_text;
         }
         return 0;

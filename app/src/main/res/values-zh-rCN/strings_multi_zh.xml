@@ -203,7 +203,7 @@
     <string name="welcome">歡迎使用鎧石硬件錢包！</string>
     <string name="welcome_site"><![CDATA[請用電腦訪問: <font color="#00cdc3">https://keyst.one/start<font/>]]></string>
     <string name="welcome_text">將引導您對鎧石硬件錢包進行初始化設置</string>
-    <string name="welcome_done">準備好了，開始</string>
+    <string name="welcome_done">開始</string>
     <string name="guide_completed_title">恭喜！鎧石錢包已完成設置，\n  可以開始使用了！</string>
     <string name="guide_completed_remind"><![CDATA[更多錢包設置可點擊菜單-設置，如手勢解鎖，創建Passphrase錢包。了解更多功能，請訪問：\n <font color="#00cdc3">https://keyst.one<font/>]]></string>
     <string name="tx_id">交易ID</string>
@@ -242,7 +242,7 @@
     <string name="incorrect_tx_data">非法交易數據</string>
     <string name="invalid_webauth_qrcode_hint">二維碼非法，請按照指引掃碼正確的二維碼完成設備驗證</string>
     <string name="hint">提示</string>
-    <string name="enlarge_qrcode">掃碼困難？點擊二維碼進行調整</string>
+    <string name="enlarge_qrcode">如果掃描有困難，請點擊二維碼。</string>
     <string name="enroll_fingerprint">指紋錄入</string>
     <string name="enroll_fingerprint_hint">將您的手指放在指紋傳感器區，感受到震動後離開，重復此步驟直至指紋 100% 錄入。</string>
     <string name="complete_enroll">完成</string>
@@ -382,7 +382,7 @@
     <string name="continue_import_sharding">繼續輸入</string>
     <string name="sharding_repeat">該分片助記詞已存在，請輸入其他分片的助記詞。</string>
     <string name="sharding_id_not_match">您輸入了其他助記詞的分片助記詞，請重新輸入。</string>
-    <string name="confirm_cancel_import_sharding">確認取消</string>
+    <string name="confirm_cancel_import_sharding">取消</string>
     <string name="continue_create_sharding">繼續輸入</string>
     <string name="invalid_shard">該分片助記詞錯誤，請逐字檢查。</string>
     <string name="ask_confirm_cancel_import_sharding">取消導入錢包?</string>
@@ -419,17 +419,19 @@
         <item>MetaMask / DeFi / Web3</item>
         <item>Polkadot{.js}</item>
         <item>XRP Toolkit</item>
+        <item>Solana</item>>
     </string-array>
     <string-array name="watch_wallet_summury">
         <item>BTC、ETH等8條主鏈</item>
-        <item>ETH、Polygon、Avalanche、BSC…</item>
+        <item>ETH, AVAX, BSC and all EVM Chains</item>
         <item>DOT、KSM</item>
         <item>XRP</item>
+        <item>Solana</item>>
     </string-array>
 
     <string name="choose_watch_only_wallet">選擇觀察錢包</string>
     <string name="sync_later">暫不同步</string>
-    <string name="sync_watch_wallet">同步觀察錢包</string>
+    <string name="sync_watch_wallet">連接軟件錢包</string>
     <string name="sync_keystone_wallet_guide_title">鎧石錢包移動端導入指引：</string>
     <string name="sync_xumm_guide_title">XUMM 導入指引：</string>
     <string name="sync_xrp_toolkit_guide_title">XRP Toolkit 導入指引：</string>

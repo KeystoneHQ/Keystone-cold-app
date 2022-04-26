@@ -11,14 +11,13 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.coins.SOL.SolImpl;
 import com.keystone.coinlib.coins.SignTxResult;
-import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.encryption.ChipSigner;
+import com.keystone.cold.viewmodel.callback.ParseCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -92,13 +91,32 @@ public class SolTxViewModel extends Base {
         });
     }
 
-    public void parseTxData(Bundle bundle) {
+    public void parseTxData(Bundle bundle, final ParseCallback parseCallback) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             txHex = bundle.getString(SIGN_DATA);
             hdPath = bundle.getString(HD_PATH);
             requestId = bundle.getString(REQUEST_ID);
 
-            SolImpl.parseMessage(txHex);
+            SolImpl.parseMessage(txHex, new SolImpl.ParseMessageCallback(){
+                @Override
+                public void onSuccess(String json) throws JSONException {
+                    super.onSuccess(json);
+                    Log.d("sora", "parseTxData onSuccess: " + new JSONObject(json));
+                    AppExecutors.getInstance().mainThread().execute(() -> parseCallback.OnSuccess(json));
+                }
+            });
         });
+    }
+
+
+    public String getSignatureJson() {
+        JSONObject signed = new JSONObject();
+        try {
+            signed.put("signature", signature);
+            signed.put("requestId", requestId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return signed.toString();
     }
 }

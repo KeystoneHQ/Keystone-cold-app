@@ -31,10 +31,16 @@ import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -50,6 +56,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.allenliu.badgeview.BadgeFactory;
+import com.allenliu.badgeview.BadgeView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.coins.polkadot.UOS.Extrinsic;
@@ -137,6 +145,12 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             mBinding.customTitle.setVisibility(View.GONE);
             coinId = Coins.XRP.coinId();
             coinCode = Coins.XRP.coinCode();
+        } else if (watchWallet == WatchWallet.SOLANA) {
+            mBinding.toolbar.setNavigationIcon(R.drawable.menu);
+            mBinding.toolbar.setTitle(watchWallet.getWalletName(mActivity));
+            mBinding.customTitle.setVisibility(View.GONE);
+            coinId = Coins.SOL.coinId();
+            coinCode = Coins.SOL.coinCode();
         } else {
             Bundle data = requireArguments();
             coinId = data.getString(KEY_COIN_ID);
@@ -153,10 +167,21 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         } else {
             mBinding.toolbar.inflateMenu(getMenuResId());
             mBinding.button.setVisibility(View.GONE);
+            MenuItem menuItem = mBinding.toolbar.getMenu().findItem(R.id.action_more);
+            boolean isShowBadge = false;
+            if (watchWallet == WatchWallet.METAMASK && !Utilities.hasUserClickEthSyncLock(mActivity)) {
+                isShowBadge = true;
+            } else if (watchWallet == WatchWallet.SOLANA && !Utilities.hasUserClickSolSyncLock(mActivity)) {
+                isShowBadge = true;
+            }
+            if (isShowBadge) {
+                showBadge(menuItem);
+            }
         }
         mBinding.toolbar.setOnMenuItemClickListener(this);
         mBinding.toolbar.setNavigationOnClickListener(v -> {
-            if (watchWallet == WatchWallet.XRP_TOOLKIT || watchWallet == WatchWallet.METAMASK) {
+            if (watchWallet == WatchWallet.XRP_TOOLKIT || watchWallet == WatchWallet.METAMASK ||
+                    watchWallet == WatchWallet.SOLANA) {
                 ((MainActivity) mActivity).toggleDrawer(v);
             } else {
                 navigateUp();
@@ -177,6 +202,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             return R.menu.xrp_toolkit;
         }
         if (watchWallet == WatchWallet.METAMASK) {
+            return R.menu.metamask;
+        }
+        if (watchWallet == WatchWallet.SOLANA) {
             return R.menu.metamask;
         }
         return (showPublicKey || Coins.isPolkadotFamily(coinCode)) ? R.menu.asset_without_add : R.menu.asset;
@@ -278,7 +306,12 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 
         mBinding.setCoinViewModel(viewModel);
         subscribeUi(viewModel);
+
+        if (watchWallet == WatchWallet.SOLANA) {
+            viewModel.preGenerateSolDerivationAddress();
+        }
     }
+
 
     private void checkAndAddNewCoins() {
         SetupVaultViewModel viewModel = ViewModelProviders.of(mActivity)
@@ -308,7 +341,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 showBottomSheetMenu();
                 break;
             case R.id.action_scan:
-                if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.POLKADOT_JS) {
+                if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.POLKADOT_JS
+                        || watchWallet == WatchWallet.SOLANA) {
                     scanQrCode();
                 } else {
                     navigate(R.id.action_to_QRCodeScanFragment);
@@ -318,6 +352,30 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 break;
         }
         return true;
+    }
+
+    private void showBadge(MenuItem menuItem) {
+        Drawable menu = Objects.requireNonNull(menuItem).getIcon();
+        int badgeSize = (int) getResources().getDimension(R.dimen.default_badge_size);
+        int radius = badgeSize / 2;
+
+        int width = Objects.requireNonNull(menu).getIntrinsicWidth();
+        int height = menu.getIntrinsicHeight() + 2 * badgeSize;
+
+        final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+        final Canvas canvas = new Canvas(bitmap);
+        menu.setBounds(0, badgeSize, width, height - badgeSize);
+        menu.draw(canvas);
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.RED);
+        canvas.drawCircle(bitmap.getWidth() - radius, radius, radius, paint);
+        menuItem.setIcon(new BitmapDrawable(getResources(), bitmap));
+    }
+
+    private void hideBadge() {
+        MenuItem menuItem = mBinding.toolbar.getMenu().findItem(R.id.action_more);
+        menuItem.setIcon(R.drawable.more);
     }
 
     public static final String SIGN_DATA = "signData";
@@ -439,41 +497,6 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 bundle.putString(HD_PATH, "M/" + hdPath);
 
                 mFragment.navigate(R.id.action_to_solTxConfirmFragment, bundle);
-
-//                ETHAccount current = ETHAccount.ofCode(Utilities.getCurrentEthAccount(mFragment.getActivity()));
-//                ETHAccount target = ETHAccount.getAccountByPath(hdPath);
-//                if (target == null) {
-//                    throw new InvalidTransactionException("unknown hd path");
-//                }
-//                if (!target.equals(current)) {
-//                    if(!current.isChildrenPath(hdPath)) {
-//                        //standard and ledger_live has overlap of 1st address
-//                        throw new InvalidETHAccountException("not expected ETH account", current, target);
-//                    }
-//                }
-//
-//                String MFP = new GetMasterFingerprintCallable().call();
-//
-//                if (!requestMFP.equalsIgnoreCase(MFP)) {
-//                    throw new XfpNotMatchException("Master fingerprint not match");
-//                }
-//                if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TRANSACTION.getType())) {
-//                    mFragment.navigate(R.id.action_to_ethTxConfirmFragment, bundle);
-//                } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_DATA.getType())) {
-//                    mFragment.navigate(R.id.action_to_ethSignTypedDataFragment, bundle);
-//                } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.PERSONAL_MESSAGE.getType())) {
-//                    mFragment.navigate(R.id.action_to_ethSignMessageFragment, bundle);
-//                } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_TRANSACTION.getType())) {
-//                    byte[] typedTransaction = ethSignRequest.getSignData();
-//                    byte type = typedTransaction[0];
-//                    switch (type) {
-//                        case 0x02:
-//                            mFragment.navigate(R.id.action_to_ethFeeMarketTxConfirmFragment, bundle);
-//                            break;
-//                        default:
-//                            throw new UnknowQrCodeException("unknown transaction!");
-//                    }
-//                }
             }
 
             @Override
@@ -536,21 +559,83 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         BottomSheetDialog dialog = new BottomSheetDialog(mActivity);
         DialogBottomSheetBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
                 R.layout.dialog_bottom_sheet, null, false);
-        if (watchWallet == WatchWallet.METAMASK) {
-            binding.addText.setText(getString(R.string.add_account));
-        }
-        binding.addAddress.setOnClickListener(v -> {
-            handleAddAddress();
-            dialog.dismiss();
-
-        });
-        binding.sync.setOnClickListener(v -> {
-            navigate(R.id.action_to_syncFragment);
-            dialog.dismiss();
-        });
+        Runnable closeDialog = () -> {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        };
+        addClickAccountProcess(binding.addAddress, closeDialog);
+        addClickSyncProcess(binding.sync, binding.syncText, closeDialog);
+        addCLickChangePathProcess(binding.changePath, closeDialog);
+        addClickTutorialsProcess(binding.tutorials, closeDialog);
         dialog.setContentView(binding.getRoot());
         dialog.show();
     }
+
+    private void addClickTutorialsProcess(View view, Runnable additionProcess) {
+        view.setOnClickListener(v -> additionProcess.run());
+    }
+
+    private void addCLickChangePathProcess(View view, Runnable additionProcess) {
+        view.setOnClickListener(v -> {
+            if (watchWallet == WatchWallet.METAMASK) {
+                navigate(R.id.action_assetFragment_to_selectWalletFragment);
+            } else if (watchWallet == WatchWallet.SOLANA) {
+                navigate(R.id.action_assetFragment_to_changeDerivePathFragment);
+            }
+            additionProcess.run();
+        });
+    }
+
+    private void addClickSyncProcess(View view, View anchor, Runnable additionProcess) {
+        boolean isShowBadge = false;
+        BadgeView bgView = null;
+        if (watchWallet == WatchWallet.METAMASK && !Utilities.hasUserClickEthSyncLock(mActivity)) {
+            isShowBadge = true;
+        } else if (watchWallet == WatchWallet.SOLANA && !Utilities.hasUserClickSolSyncLock(mActivity)) {
+            isShowBadge = true;
+        }
+        if (isShowBadge) {
+            bgView = BadgeFactory.create(anchor.getContext())
+                    .setWidthAndHeight(10, 10)
+                    .setBadgeBackground(Color.RED)
+                    .setBadgeGravity(Gravity.END | Gravity.TOP)
+                    .setShape(BadgeView.SHAPE_CIRCLE)
+                    .setSpace(10, 0)
+                    .bind(anchor);
+        }
+
+        boolean finalIsShowBadge = isShowBadge;
+        BadgeView finalBgView = bgView;
+        view.setOnClickListener(v -> {
+            if (watchWallet == WatchWallet.METAMASK) {
+                navigate(R.id.action_to_syncFragment);
+                if (finalIsShowBadge) {
+                    Utilities.setUserClickEthSyncLock(mActivity);
+                }
+            } else if (watchWallet == WatchWallet.SOLANA) {
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_COIN_ID, coinId);
+                navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
+                if (finalIsShowBadge) {
+                    Utilities.setUserClickSolSyncLock(mActivity);
+                }
+            }
+            if (finalBgView != null) {
+                finalBgView.unbind();
+                hideBadge();
+            }
+            additionProcess.run();
+        });
+    }
+
+    private void addClickAccountProcess(View view, Runnable additionProcess) {
+        view.setOnClickListener(v -> {
+            handleAddAddress();
+            additionProcess.run();
+        });
+    }
+
 
     private void enterSearch() {
         isInSearch = true;
@@ -589,6 +674,11 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             AppExecutors.getInstance().diskIO().execute(() -> {
                 CoinEntity coinEntity = viewModel.getCoin(coinId);
                 viewModel.addEthAccountAddress(value, coinEntity, () -> handler.postDelayed(dialog::dismiss, 500));
+            });
+        } else if (watchWallet == WatchWallet.SOLANA) {
+            AppExecutors.getInstance().diskIO().execute(() -> {
+                CoinEntity coinEntity = viewModel.getCoin(coinId);
+                viewModel.addSolAccountAddress(value, coinEntity, () -> handler.postDelayed(dialog::dismiss, 500));
             });
         } else {
             AppExecutors.getInstance().diskIO().execute(() -> {

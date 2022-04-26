@@ -288,7 +288,7 @@
   <string name="continue_import_sharding">계속 입력</string>
   <string name="sharding_repeat">공유를 이미 입력했습니다. 다른 공유를 입력하십시오.</string>
   <string name="sharding_id_not_match">다른 샤미르 백업에서 공유를 입력했습니다.</string>
-  <string name="confirm_cancel_import_sharding">취소 확인</string>
+  <string name="confirm_cancel_import_sharding">취소</string>
   <string name="continue_create_sharding">계속 입력</string>
   <string name="invalid_shard">복구 문구가 잘못되었습니다. 확인하십시오.</string>
   <string name="ask_confirm_cancel_import_sharding">지갑 가져오기를 취소하시겠습니까?</string>
@@ -366,12 +366,14 @@
     <item>MetaMask / DeFi / Web3</item>
     <item>Polkadot{.js}</item>
     <item>XRP Toolkit</item>
+    <item>Solana</item>>
   </string-array>
   <string-array name="watch_wallet_summury">
     <item>BTC, ETH 등을 포함한 8개의 메인 체인</item>
-    <item>ETH, Polygon, Avalanche, BSC…</item>
+    <item>ETH, AVAX, BSC and all EVM Chains</item>
     <item>DOT, KSM</item>
     <item>XRP</item>
+    <item>Solana</item>>
   </string-array>
   <string name="drawer_menu_sync">보기-전용 지갑</string>
   <string name="title_sync">키스톤 모바일 앱 동기화</string>
@@ -403,9 +405,9 @@
   <string name="welcome">키스톤에 오신 걸 환영합니다!</string>
   <string name="welcome_site"><![CDATA[PC를 사용하여 다음 링크를 여십시오. <font color="#00cdc3">https://keyst.one/start</font>]]></string>
   <string name="welcome_text">키스톤 하드웨어 월렛 설정을 안내합니다.</string>
-  <string name="welcome_done">준비됐어요. 시작.</string>
+  <string name="welcome_done">시작</string>
   <string name="msg_confirm_title">메시지 세부 정보 확인</string>
-  <string name="enlarge_qrcode">스캔하기 어렵습니까? 여기를 탭하여QR 코드를 조절합니다.</string>
+  <string name="enlarge_qrcode">스캔이 어려우면 QR코드를 클릭하세요.</string>
   <string name="version_not_match">키스톤 모바일 앱과 버전이 일치하지 않습니다. 키스톤 펌웨어와 모바일 앱을 최신으로 업데이트해 주세요.</string>
   <string name="pattern_unlock_hint">패턴 암호는 지갑 잠금을 해제하는 데 사용됩니다.</string>
   <string name="new_version_footer_hint">나중에 [메뉴 > 설정 > 버전]으로 이동하여 "지금 업데이트"를 눌러도 됩니다.</string>
@@ -430,7 +432,7 @@
   <string name="next_one">다음</string>
   <string name="choose_watch_only_wallet">보기-전용 지갑</string>
   <string name="sync_later">나중에 내보내기</string>
-  <string name="sync_watch_wallet">보기-전용 지갑 동기화</string>
+  <string name="sync_watch_wallet">소프트웨어 지갑 연결</string>
   <string name="sync_keystone_wallet_guide_title">키스톤 모바일 앱을 바인딩하는 방법:</string>
   <string name="sync_xumm_guide_title">XUMM에서 읽기 전용 계정을 만드는 방법:</string>
   <string name="sync_xrp_toolkit_guide_title">XRP Toolkit에서 보기-전용 계정을 만드는 방법:</string>

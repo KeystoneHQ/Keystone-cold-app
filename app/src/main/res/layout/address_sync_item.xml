@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="position"
+            type="int" />
+
+        <variable
+            name="checked"
+            type="boolean" />
+
+        <variable
+            name="callback"
+            type="com.keystone.cold.ui.fragment.main.AddressSyncCallback" />
+
+        <variable
+            name="address"
+            type="com.keystone.cold.db.entity.AddressEntity" />
+
+    </data>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:onClick="@{()->callback.onClick(address, position)}"
+        android:background="?attr/selectableItemBackground"
+        android:layout_height="63dp"
+        android:focusable="true">
+
+        <com.keystone.cold.ui.views.MenuHidingEditText
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:layout_marginStart="16dp"
+            tools:text="BTC-1"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:background="@null"
+            android:singleLine="true"
+            android:clickable="false"
+            android:text="@={address.displayName}"
+            android:imeOptions="actionDone"
+            android:enabled="false"
+            tools:ignore="LabelFor"
+            android:importantForAutofill="no"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/addr"
+            android:layout_width="133dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:textSize="12sp"
+            android:textColor="@color/white40"
+            tools:text="0x4f77d6a…52ce9824"
+            android:layout_alignStart="@id/name"
+            android:text="@{address.addressString}"
+            android:layout_marginTop="4dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="16dp"
+            android:layout_centerVertical="true"
+            app:visibleGone="@{checked}"
+            android:src="@drawable/checked"
+            tools:ignore="ContentDescription"
+            app:tint="@color/colorAccent" />
+
+
+        <include
+            layout="@layout/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+</layout>

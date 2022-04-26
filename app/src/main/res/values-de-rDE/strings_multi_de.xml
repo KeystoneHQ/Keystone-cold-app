@@ -27,18 +27,20 @@
     <item>Web3</item>
     <item>Polkadot{.js}</item>
     <item>XRP Toolkit</item>
+    <item>Solana</item>>
   </string-array>
   <string-array name="watch_wallet_summury">
     <item>8 main chains including BTC, ETH, etc</item>
-    <item>ETH</item>
+    <item>ETH, AVAX, BSC and all EVM Chains</item>
     <item>DOT、KSM</item>
     <item>XRP</item>
+    <item>Solana</item>>
   </string-array>
   <string name="app_name">Keystone</string>
   <string name="action_scan_qr_code">Scan QR Code</string>
   <string name="drawer_menu_my_vault">My Keystone</string>
   <string name="drawer_menu_add_remove">Add / Hide Assets</string>
-  <string name="drawer_menu_sync">Watch-only Wallet</string>
+  <string name="drawer_menu_sync">Software Wallet</string>
   <string name="drawer_menu_setting">Settings</string>
   <string name="drawer_menu_about">About Keystone</string>
   <string name="title_about">About Keystone</string>
@@ -205,7 +207,7 @@
   <string name="welcome">Welcome to Keystone!</string>
   <string name="welcome_site"><![CDATA[Please open the following link using a PC: <font color=\"#00cdc3\"><u>https://keyst.one/start</u></font>]]></string>
   <string name="welcome_text">This will help guide setting up your Keystone hardware wallet.</string>
-  <string name="welcome_done">It\'s ready, start</string>
+  <string name="welcome_done">Start</string>
   <string name="guide_completed_title">Congratulations! 
 Setup is now complete!</string>
   <string name="guide_completed_remind"><![CDATA[You can create Passphrase(Hidden Wallet) or reset your password in Settings. 
@@ -246,7 +248,7 @@ Setup is now complete!</string>
   <string name="incorrect_tx_data">Invalid Transaction Data</string>
   <string name="invalid_webauth_qrcode_hint">Invalid QR Code. Please follow the instruction to scan the correct QR Code to complete authentication.</string>
   <string name="hint">Tips</string>
-  <string name="enlarge_qrcode">Difficulty scanning? Tap the QR code to adjust.</string>
+  <string name="enlarge_qrcode">Please tap the QR code if you have difficulty scanning.</string>
   <string name="enroll_fingerprint">Fingerprint Registration</string>
   <string name="enroll_fingerprint_hint">Place your finger on the fingerprint sensing area and remove it when you feel a vibration. Repeat until enrolling process is fully complete.</string>
   <string name="complete_enroll">Done</string>
@@ -392,7 +394,7 @@ Email：support@keyst.one</string>
   <string name="continue_import_sharding">Keep Entering</string>
   <string name="sharding_repeat">Share already entered, please enter a different share.</string>
   <string name="sharding_id_not_match">You have entered a share from another Shamir Backup.</string>
-  <string name="confirm_cancel_import_sharding">Confirm Cancel</string>
+  <string name="confirm_cancel_import_sharding">Cancel</string>
   <string name="continue_create_sharding">Keep Entering</string>
   <string name="invalid_shard">Recovery phrase incorrect, please check.</string>
   <string name="ask_confirm_cancel_import_sharding">Cancel import wallet？</string>
@@ -429,9 +431,9 @@ Email：support@keyst.one</string>
   <string name="abnormal_state_hint">It is recommended that you wipe the device and then reset it.Repeated retries failed, you can contact us：support@keyst.one
   Status Code:%s</string>
   <string name="abnormal_state_title">Abnormal State</string>
-  <string name="choose_watch_only_wallet">Watch-only Wallet</string>
+  <string name="choose_watch_only_wallet">Software Wallet</string>
   <string name="sync_later">Export Later</string>
-  <string name="sync_watch_wallet">Sync Watch-Only Wallet</string>
+  <string name="sync_watch_wallet">Connect Software Wallet</string>
   <string name="sync_keystone_wallet_guide_title">How to bind Keystone App：</string>
   <string name="sync_xumm_guide_title">How to create a Read only account in XUMM：</string>
   <string name="sync_xrp_toolkit_guide_title">How to create a watch-only account in XRP Toolkit：</string>
@@ -514,7 +516,7 @@ On Polkadot{.js}, you need to create watch-only wallets for DOT and KSM separate
   <string name="not_switch">Not Now</string>
   <string name="confirm_switch">Confirm</string>
   <string name="keep_screen_on">Please keep screen on</string>
-  <string name="sync">Sync</string>
+  <string name="sync">Connect Software Wallet</string>
   <string name="qrcode_capacity">QR Code Density：%s </string>
   <string name="qr_capacity_high">High</string>
   <string name="qr_capacity_mid">Medium</string>
