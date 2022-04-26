@@ -17,6 +17,12 @@
 
 package com.keystone.cold;
 
+import static android.content.Context.MODE_PRIVATE;
+import static com.keystone.cold.ui.fragment.main.web3.EthTxConfirmFragment.PREFERENCE_KEY_VISITS;
+import static com.keystone.cold.ui.fragment.setting.FingerprintPreferenceFragment.FINGERPRINT_UNLOCK;
+import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_CREATE_STEP;
+import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_CREATE_STEP_WELCOME;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -32,13 +38,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.cold.ui.modal.ModalDialog;
-
-import static android.content.Context.MODE_PRIVATE;
-import static com.keystone.cold.ui.fragment.main.web3.EthTxConfirmFragment.PREFERENCE_KEY_VISITS;
-import static com.keystone.cold.ui.fragment.setting.FingerprintPreferenceFragment.FINGERPRINT_UNLOCK;
-import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_CREATE_STEP;
-import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_CREATE_STEP_WELCOME;
 
 public class Utilities {
     public static final String PREFERENCE_SECRET = "secret";
@@ -65,9 +66,14 @@ public class Utilities {
     public static final String ATTACK_DETECTED = "attack_detected";
     public static final String INPUT_SETTINGS_CLEARED = "input_settings_cleared";
     public static final String ETH_CURRENT_ACCOUNT = "eth_current_account";
+    public static final String SOL_CURRENT_ACCOUNT = "sol_current_account";
     public static final String WEB3_GUIDE_TIMES = "web3_guide_times";
 
     public static final String NFT_AVATAR_RESOURCE = "nft_avatar_resource";
+
+    public static final String PREFERENCE_ETH_KEY_SYNCED = "user_click_eth_sync";
+    public static final String PREFERENCE_SOL_KEY_SYNCED = "user_click_sol_sync";
+    public static final String SOL_DERIVATION_PATHS = "sol_derivation_paths";
 
 
     public static void alert(AppCompatActivity activity,
@@ -218,6 +224,28 @@ public class Utilities {
         sp.edit().putBoolean(PATTERN_LOCK_CLICKED, true).apply();
     }
 
+    public static boolean hasUserClickEthSyncLock(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        return sp.getBoolean(PREFERENCE_ETH_KEY_SYNCED, false);
+    }
+
+    public static void setUserClickEthSyncLock(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        sp.edit().putBoolean(PREFERENCE_ETH_KEY_SYNCED, true).apply();
+    }
+
+
+    public static boolean hasUserClickSolSyncLock(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        return sp.getBoolean(PREFERENCE_SOL_KEY_SYNCED, false);
+    }
+
+    public static void setUserClickSolSyncLock(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        sp.edit().putBoolean(PREFERENCE_SOL_KEY_SYNCED, true).apply();
+    }
+
+
     public static String getFingerprintPassword(Context context) {
         return Settings.System.getString(context.getContentResolver(), FINGERPRINT_PASSWORD);
     }
@@ -279,6 +307,26 @@ public class Utilities {
     public static String getCurrentEthAccount(Context context) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
         return sp.getString(ETH_CURRENT_ACCOUNT, ETHAccount.BIP44_STANDARD.getCode());
+    }
+
+    public static void setCurrentSolAccount(Context context, String code) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        sp.edit().putString(SOL_CURRENT_ACCOUNT, code).apply();
+    }
+
+    public static String getCurrentSolAccount(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        return sp.getString(SOL_CURRENT_ACCOUNT, SOLAccount.SOLFLARE_BIP44.getCode());
+    }
+
+    public static void setSolDerivationPaths(Context context, String paths) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        sp.edit().putString(SOL_DERIVATION_PATHS, paths).apply();
+    }
+
+    public static String getSolDerivationPaths(Context context){
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        return sp.getString(SOL_DERIVATION_PATHS, "");
     }
 
     public static void setNftAvatarResource(Context context, String mediaData) {
