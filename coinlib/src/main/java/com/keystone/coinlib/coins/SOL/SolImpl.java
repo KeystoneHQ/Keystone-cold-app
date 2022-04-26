@@ -61,15 +61,11 @@ public class SolImpl implements Coin {
     }
 
 
-    public static class ParseMessageCallback {
+    public interface ParseMessageCallback {
 
-        public void onSuccess(String json) throws JSONException {
-            Log.d("sora", "onSuccess: " + json);
-            Log.d("sora", "onSuccess: " + new JSONObject(json));
-        }
-        public void onFailed() {
-            Log.d("sora", "onFailed     ");
+        void onSuccess(String json);
 
-        }
+        void onFailed();
+
     }
 }

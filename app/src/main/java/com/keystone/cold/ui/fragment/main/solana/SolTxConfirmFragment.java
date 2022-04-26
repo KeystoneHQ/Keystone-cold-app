@@ -9,7 +9,6 @@ import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
 
 import androidx.lifecycle.ViewModelProviders;

@@ -95,11 +95,15 @@ public class SolTxViewModel extends Base {
             hdPath = bundle.getString(HD_PATH);
             requestId = bundle.getString(REQUEST_ID);
 
-            SolImpl.parseMessage(txHex, new SolImpl.ParseMessageCallback(){
+            SolImpl.parseMessage(txHex, new SolImpl.ParseMessageCallback() {
                 @Override
-                public void onSuccess(String json) throws JSONException {
-                    super.onSuccess(json);
+                public void onSuccess(String json) {
                     AppExecutors.getInstance().mainThread().execute(() -> parseCallback.OnSuccess(json));
+                }
+
+                @Override
+                public void onFailed() {
+
                 }
             });
         });
