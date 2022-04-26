@@ -128,6 +128,14 @@ public class AccountEntity {
         return null;
     }
 
+    public String getSOLAccountCode() {
+        try {
+            return new JSONObject(this.addition).getString("sol_account");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     @Override
     public String toString() {
         return "AccountEntity{" +

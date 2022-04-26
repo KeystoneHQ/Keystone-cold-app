@@ -17,25 +17,25 @@
 
 package com.keystone.cold.db;
 
+import static com.keystone.coinlib.utils.Coins.DOT;
+import static com.keystone.coinlib.utils.Coins.KSM;
+import static com.keystone.coinlib.utils.Coins.isDefaultOpen;
+
 import android.content.Context;
-import android.util.Log;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.path.CoinPath;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.keystone.coinlib.utils.Coins.DOT;
-import static com.keystone.coinlib.utils.Coins.KSM;
-import static com.keystone.coinlib.utils.Coins.isDefaultOpen;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PresetData {
 
@@ -76,7 +76,20 @@ public class PresetData {
                     account.setHdPath(coin.getAccounts()[i]);
                     entity.addAccount(account);
                 }
-            } catch (JSONException e){
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else if (coin.coinIndex() == Coins.SOL.coinIndex()) {
+            try {
+                for (int i = 0; i < coin.getAccounts().length; i++) {
+                    account = new AccountEntity();
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("sol_account", coin.getAccounts()[i]);
+                    account.setAddition(jsonObject.toString());
+                    account.setHdPath(SOLAccount.getPathByCode(coin.getAccounts()[i]));
+                    entity.addAccount(account);
+                }
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
         } else {

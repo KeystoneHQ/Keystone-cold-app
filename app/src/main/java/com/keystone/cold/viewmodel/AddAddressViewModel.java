@@ -27,9 +27,9 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
@@ -40,8 +40,8 @@ import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -159,6 +159,108 @@ public class AddAddressViewModel extends AndroidViewModel {
             default:
                 break;
         }
+        return address;
+    }
+
+
+    public void addSolAccountAddress(int number, CoinEntity coinEntity, Runnable onComplete) {
+        String code = Utilities.getCurrentSolAccount(getApplication());
+        SOLAccount account = SOLAccount.ofCode(code);
+        AccountEntity accountEntity = mRepo.loadTargetSOLAccount(account);
+        if (accountEntity != null) {
+            addSolAccountAddress(accountEntity, mRepo, number, coinEntity, onComplete);
+        } else {
+            AppExecutors.getInstance().mainThread().execute(onComplete);
+        }
+    }
+
+    public static void addSolAccountAddress(AccountEntity accountEntity, DataRepository repository, int number, CoinEntity coinEntity, Runnable onComplete) {
+
+        AppExecutors.getInstance().diskIO().execute(() -> {
+
+            AbsDeriver deriver = AbsDeriver.newInstance("SOL");
+            if (deriver == null) {
+                Log.e("addSolAccountAddress", "deriver is null");
+            } else {
+                int addressLength = accountEntity.getAddressLength();
+                int targetAddressCount = addressLength + number;
+                List<AddressEntity> entities = new ArrayList<>();
+                for (int index = addressLength; index < targetAddressCount; index++) {
+                    AddressEntity addressEntity = new AddressEntity();
+                    String addr = deriveSolAddress(accountEntity, index, addressEntity);
+                    if (repository.loadAddressBypath(addressEntity.getPath()) != null) {
+                        continue;
+                    }
+                    addressEntity.setAddressString(addr);
+                    addressEntity.setCoinId(coinEntity.getCoinId());
+                    addressEntity.setIndex(index);
+                    addressEntity.setName("SOL-" + index);
+                    addressEntity.setBelongTo(coinEntity.getBelongTo());
+                    entities.add(addressEntity);
+                }
+                coinEntity.setAddressCount(targetAddressCount);
+                accountEntity.setAddressLength(targetAddressCount);
+                repository.updateAccount(accountEntity);
+                repository.updateCoin(coinEntity);
+                repository.insertAddress(entities);
+            }
+            AppExecutors.getInstance().mainThread().execute(onComplete);
+        });
+    }
+
+    public static String deriveSolAddress(AccountEntity accountEntity, int index, AddressEntity addressEntity) {
+        String address = "";
+        SOLAccount solAccount = SOLAccount.ofCode(accountEntity.getSOLAccountCode());
+        AbsDeriver deriver = AbsDeriver.newInstance("SOL");
+        if (deriver == null) {
+            return address;
+        }
+        boolean isSetPath = addressEntity != null;
+
+        String xPub = null;
+        String xPubPath = null;
+        switch (solAccount) {
+            case SOLFLARE_BIP44_ROOT:
+                xPubPath = "M/44'/501'";
+                break;
+            case SOLFLARE_BIP44:
+                xPubPath = "M/44'/501'" + "/" + index + "'";
+                break;
+            case SOLFLARE_BIP44_CHANGE:
+                xPubPath = "M/44'/501'" + "/" + index + "'/0'";
+                break;
+        }
+        xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
+        Log.d("zytest", " deriveSolAddress xPubPath is " + xPubPath);
+        Log.d("zytest", " deriveSolAddress xPub is " + xPub);
+        address = deriver.derive(xPub);
+
+
+//      addition 暂时用不到 用于防御后期可能要支持 派生模式不同但path相同 的情况
+//        {
+//            "addtions" : [ {"derivation_pattern": "solflare", "index" : "1"}, {"derivation_pattern": "phantom", "index" : "1"}]
+//
+//        }
+//        derivation_pattern 表示派生模式  index 表示为该派生模式下的第几个地址（path相同的地址，在不同模式下的索引号可能不同）
+
+        if (isSetPath){
+            addressEntity.setPath(xPubPath);
+
+            try {
+                JSONObject innerJson = new JSONObject();
+                innerJson.put("derivation_path", solAccount.getCode());
+                innerJson.put("index", index);
+                JSONArray jsonArray = new JSONArray();
+                jsonArray.put(innerJson);
+                JSONObject addition = new JSONObject();
+                addition.put("addition", jsonArray);
+
+                addressEntity.setAddition(addition.toString());
+            } catch (JSONException exception){
+                exception.printStackTrace();
+            }
+        }
+
         return address;
     }
 

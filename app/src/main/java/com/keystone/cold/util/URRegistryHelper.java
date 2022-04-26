@@ -4,13 +4,13 @@ import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.accounts.ExtendedPublicKey;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
-import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.sparrowwallet.hummingbird.registry.CryptoAccount;
 import com.sparrowwallet.hummingbird.registry.CryptoCoinInfo;
 import com.sparrowwallet.hummingbird.registry.CryptoHDKey;
 import com.sparrowwallet.hummingbird.registry.CryptoKeypath;
 import com.sparrowwallet.hummingbird.registry.CryptoOutput;
 import com.sparrowwallet.hummingbird.registry.PathComponent;
+import com.sparrowwallet.hummingbird.registry.solana.CryptoMultiAccounts;
 
 import org.spongycastle.util.encoders.Hex;
 
@@ -53,6 +53,16 @@ public class URRegistryHelper {
         byte[] key = extendedPublicKey.getKey();
         CryptoKeypath origin = new CryptoKeypath(getPathComponents(path), masterFingerprint, (int) extendedPublicKey.getDepth());
         return new CryptoHDKey(false, key, null, null, origin, null, null, KEY_NAME, note);
+    }
+
+    public static CryptoMultiAccounts generateCryptoMultiAccountsForSol(List<String> paths){
+        List<CryptoHDKey> cryptoHDKeyList = new ArrayList<>();
+        for (String path: paths) {
+            CryptoHDKey cryptoHDKey = generateRawKeyForLedgerLive(path, null);
+            cryptoHDKeyList.add(cryptoHDKey);
+        }
+        byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
+        return new CryptoMultiAccounts(masterFingerprint,cryptoHDKeyList, KEY_NAME);
     }
 
     public static List<PathComponent> getPathComponents(String path) {

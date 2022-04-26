@@ -21,19 +21,19 @@ import static com.keystone.coinlib.utils.Coins.DOT;
 import static com.keystone.coinlib.utils.Coins.KSM;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.db.AppDatabase;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.db.entity.Web3TxEntity;
 import com.keystone.cold.db.entity.TxEntity;
+import com.keystone.cold.db.entity.Web3TxEntity;
 import com.keystone.cold.db.entity.WhiteListEntity;
 import com.keystone.cold.model.Coin;
 
@@ -223,6 +223,22 @@ public class DataRepository {
             for (int i = 0; i < accountEntityList.size(); i++) {
                 JSONObject jsonObject = new JSONObject(accountEntityList.get(i).getAddition());
                 if (jsonObject.get("eth_account").equals(account.getCode())) {
+                    return accountEntityList.get(i);
+                }
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public AccountEntity loadTargetSOLAccount(SOLAccount account){
+        try {
+            CoinEntity coinEntity = this.loadCoinSync(Coins.SOL.coinId());
+            List<AccountEntity> accountEntityList = this.loadAccountsForCoin(coinEntity);
+            for (int i = 0; i < accountEntityList.size(); i++) {
+                JSONObject jsonObject = new JSONObject(accountEntityList.get(i).getAddition());
+                if (jsonObject.get("sol_account").equals(account.getCode())) {
                     return accountEntityList.get(i);
                 }
             }

@@ -17,9 +17,13 @@
 
 package com.keystone.cold.ui.fragment.main;
 
+import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
+import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
+import static com.keystone.cold.ui.fragment.Constants.KEY_ID;
+import static com.keystone.cold.viewmodel.CoinListViewModel.coinEntityComparator;
+
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -35,16 +39,13 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.room.Room;
-import androidx.sqlite.db.SimpleSQLiteQuery;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
-import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.AssetListBottomMenuBinding;
 import com.keystone.cold.databinding.AssetListFragmentBinding;
-import com.keystone.cold.db.AppDatabase;
 import com.keystone.cold.db.PresetData;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.ui.MainActivity;
@@ -52,7 +53,6 @@ import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 import com.keystone.cold.viewmodel.SetupVaultViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
@@ -60,11 +60,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
-import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
-import static com.keystone.cold.ui.fragment.Constants.KEY_ID;
-import static com.keystone.cold.viewmodel.CoinListViewModel.coinEntityComparator;
 
 public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
 
@@ -83,7 +78,8 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
     public void onAttach(@NonNull Context activity) {
         super.onAttach(activity);
         if (WatchWallet.getWatchWallet(mActivity) == WatchWallet.XRP_TOOLKIT ||
-                WatchWallet.getWatchWallet(mActivity) == WatchWallet.METAMASK) {
+                WatchWallet.getWatchWallet(mActivity) == WatchWallet.METAMASK ||
+                WatchWallet.getWatchWallet(mActivity) == WatchWallet.SOLANA ) {
             navigate(R.id.assetFragment);
         }
     }

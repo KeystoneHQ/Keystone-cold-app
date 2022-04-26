@@ -17,6 +17,16 @@
 
 package com.keystone.cold.ui.fragment.setup;
 
+import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
+import static com.keystone.cold.mnemonic.MnemonicInputTable.TWENTYTHREE;
+import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.PASSWORD;
+import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.handleRuntimeStateAbnormal;
+import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_CREATE_STEP_DONE;
+import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATED;
+import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATING;
+import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATING_FAILED;
+import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_NOT_CREATE;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -37,6 +47,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.CreateVaultModalBinding;
@@ -60,16 +71,6 @@ import java.util.List;
 import iton.slip.secret.Share;
 import iton.slip.secret.SharedSecretException;
 import iton.slip.secret.words.Mnemonic;
-
-import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
-import static com.keystone.cold.mnemonic.MnemonicInputTable.TWENTYTHREE;
-import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.PASSWORD;
-import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.handleRuntimeStateAbnormal;
-import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_CREATE_STEP_DONE;
-import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATED;
-import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATING;
-import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATING_FAILED;
-import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_NOT_CREATE;
 
 public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputFragmentBinding> {
 
@@ -289,6 +290,7 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
                 Utilities.setVaultId(mActivity, viewModel.getVaultId());
                 Utilities.setCurrentBelongTo(mActivity, "main");
                 Utilities.setCurrentEthAccount(mActivity, ETHAccount.BIP44_STANDARD.getCode());
+                Utilities.setCurrentSolAccount(mActivity, SOLAccount.SOLFLARE_BIP44.getCode());
                 Runnable onComplete = () -> {
                     if (dialog != null && dialog.getDialog() != null && dialog.getDialog().isShowing()) {
                         dialog.dismiss();
