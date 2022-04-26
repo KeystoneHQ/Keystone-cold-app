@@ -17,6 +17,14 @@
 
 package com.keystone.cold.ui.fragment.setup;
 
+import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
+import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.handleRuntimeStateAbnormal;
+import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_CREATE_STEP_DONE;
+import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATED;
+import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATING;
+import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATING_FAILED;
+import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_NOT_CREATE;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -27,6 +35,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.db.PresetData;
@@ -39,14 +48,6 @@ import com.keystone.cold.viewmodel.SetupVaultViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 
 import java.util.List;
-
-import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
-import static com.keystone.cold.ui.fragment.setup.SetPasswordFragment.handleRuntimeStateAbnormal;
-import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_CREATE_STEP_DONE;
-import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATED;
-import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATING;
-import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATING_FAILED;
-import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_NOT_CREATE;
 
 public class ConfirmMnemonicFragment extends MnemonicInputFragment {
 
@@ -101,7 +102,7 @@ public class ConfirmMnemonicFragment extends MnemonicInputFragment {
                 Utilities.setVaultId(mActivity, viewModel.getVaultId());
                 Utilities.setCurrentBelongTo(mActivity, "main");
                 Utilities.setCurrentEthAccount(mActivity, ETHAccount.BIP44_STANDARD.getCode());
-
+                Utilities.setCurrentSolAccount(mActivity, SOLAccount.SOLFLARE_BIP44.getCode());
                 Runnable onComplete = () -> {
                     if (dialog != null && dialog.getDialog() != null && dialog.getDialog().isShowing()) {
                         dialog.dismiss();

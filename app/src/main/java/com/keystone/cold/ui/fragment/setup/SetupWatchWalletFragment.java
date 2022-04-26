@@ -17,12 +17,14 @@
 
 package com.keystone.cold.ui.fragment.setup;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.SetupWatchWalletBinding;
+import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.SetupVaultActivity;
 import com.keystone.cold.viewmodel.SetupVaultViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
@@ -43,21 +45,29 @@ public class SetupWatchWalletFragment extends SetupVaultBaseFragment<SetupWatchW
     }
 
     private void onConfirm() {
-        WatchWallet watchWallet = WatchWallet.getWatchWallet(mActivity);
-        Bundle data = new Bundle();
-        data.putBoolean(IS_SETUP_VAULT, ((SetupVaultActivity) mActivity).inSetupProcess);
-        switch (watchWallet) {
-            case KEYSTONE:
-                navigate(R.id.action_to_manageCoinFragment, data);
-                break;
-            case METAMASK:
-            case XRP_TOOLKIT:
-                navigate(R.id.action_to_syncWatchWalletGuide, data);
-                break;
-            case POLKADOT_JS:
-                data.putString("coinCode", Coins.DOT.coinCode());
-                navigate(R.id.action_to_manageCoinFragment, data);
-                break;
-        }
+//        WatchWallet watchWallet = WatchWallet.getWatchWallet(mActivity);
+//        Bundle data = new Bundle();
+//        data.putBoolean(IS_SETUP_VAULT, ((SetupVaultActivity) mActivity).inSetupProcess);
+//        switch (watchWallet) {
+//            case KEYSTONE:
+//                navigate(R.id.action_to_manageCoinFragment, data);
+//                break;
+//            case METAMASK:
+//            case XRP_TOOLKIT:
+//            case SOLANA:
+//                navigate(R.id.action_to_syncWatchWalletGuide, data);
+//                break;
+//            case POLKADOT_JS:
+//                data.putString("coinCode", Coins.DOT.coinCode());
+//                navigate(R.id.action_to_manageCoinFragment, data);
+//                break;
+//        }
+
+        stepIntoMainActivity();
+    }
+
+    private void stepIntoMainActivity(){
+        startActivity(new Intent(mActivity, MainActivity.class));
+        mActivity.finish();
     }
 }

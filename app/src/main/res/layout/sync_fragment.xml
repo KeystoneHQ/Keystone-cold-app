@@ -74,7 +74,8 @@
                         android:textColor="@color/white"
                         android:textSize="15sp"
                         android:breakStrategy="simple"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:text="@string/tutorials"/>
 
                     <ImageView
                         android:id="@+id/info"

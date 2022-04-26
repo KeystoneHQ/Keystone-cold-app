@@ -17,6 +17,8 @@
 
 package com.keystone.cold.ui;
 
+import static com.keystone.cold.update.utils.Storage.hasSdcard;
+
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -70,8 +72,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-
-import static com.keystone.cold.update.utils.Storage.hasSdcard;
 
 public class MainActivity extends FullScreenActivity {
 
@@ -129,7 +129,9 @@ public class MainActivity extends FullScreenActivity {
         mNavController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             String label = Objects.requireNonNull(destination.getLabel()).toString();
             int index = getFragmentIndexByLabel(label);
-            if (((watchWallet == WatchWallet.XRP_TOOLKIT || watchWallet == WatchWallet.METAMASK)
+            if (((watchWallet == WatchWallet.XRP_TOOLKIT
+                    || watchWallet == WatchWallet.METAMASK
+                    || watchWallet == WatchWallet.SOLANA)
                     && label.equals(AssetFragment.TAG))) {
                 index = 0;
             }
@@ -211,7 +213,9 @@ public class MainActivity extends FullScreenActivity {
 
             switch (position) {
                 case R.id.drawer_wallet:
-                    if (watchWallet == WatchWallet.XRP_TOOLKIT || watchWallet == WatchWallet.METAMASK) {
+                    if (watchWallet == WatchWallet.XRP_TOOLKIT
+                            || watchWallet == WatchWallet.METAMASK
+                            || watchWallet == WatchWallet.SOLANA) {
                         NavOptions navOptions = new NavOptions.Builder()
                                 .setPopUpTo(R.id.assetListFragment, false)
                                 .build();

@@ -292,7 +292,7 @@
   <string name="continue_import_sharding">Sigue entrando</string>
   <string name="sharding_repeat">Parte ya introducida, por favor, introduce una parte diferente.</string>
   <string name="sharding_id_not_match">Has introducido una parte de otra copia de seguridad de Shamir.</string>
-  <string name="confirm_cancel_import_sharding">Confirmar cancelar</string>
+  <string name="confirm_cancel_import_sharding">Cancelar</string>
   <string name="continue_create_sharding">Sigue entrando</string>
   <string name="invalid_shard">Frase de recuperación incorrecta, verifica.</string>
   <string name="ask_confirm_cancel_import_sharding">¿Cancelar importar billetera?</string>
@@ -374,12 +374,14 @@
     <item>MetaMask / DeFi / Web3</item>
     <item>Polkadot{.js}</item>
     <item>XRP Toolkit</item>
+    <item>Solana</item>>
   </string-array>
   <string-array name="watch_wallet_summury">
     <item>8 cadenas principales que incluyen BTC, ETH, etc.</item>
-    <item>ETH, Polygon, Avalanche, BSC…</item>
+    <item>ETH, AVAX, BSC and all EVM Chains</item>
     <item>DOT, KSM</item>
     <item>XRP</item>
+    <item>Solana</item>>
   </string-array>
   <string name="drawer_menu_sync">Billetera watch-only</string>
   <string name="title_sync">Sincronizar Keystone Mobile</string>
@@ -411,9 +413,9 @@
   <string name="welcome">¡Bienvenido a Keystone!</string>
   <string name="welcome_site"><![CDATA[Abre el siguiente enlace con una PC: <font color="#00cdc3">https://keyst.one/start</font>]]></string>
   <string name="welcome_text">Esto ayudará a guiar la configuración de tu billetera de hardware Keystone.</string>
-  <string name="welcome_done">Está listo, empieza</string>
+  <string name="welcome_done">Empieza</string>
   <string name="msg_confirm_title">Confirmar los detalles del mensaje</string>
-  <string name="enlarge_qrcode">¿Dificultad para escanear? Toca el código QR para ajustar.</string>
+  <string name="enlarge_qrcode">Si el escaneo es difícil, haga clic en el Código QR.</string>
   <string name="version_not_match">La versión de la app no coincide. Actualiza el firmware y la app móvil a la última versión.</string>
   <string name="pattern_unlock_hint">El patrón se usa para desbloquear la billetera</string>
   <string name="new_version_footer_hint">También puedes ir a [Menú > Configuración > Versión] y tocar "Actualizar ahora" más tarde.</string>
@@ -438,7 +440,7 @@
   <string name="next_one">Siguiente</string>
   <string name="choose_watch_only_wallet">Billetera watch-only</string>
   <string name="sync_later">Exportar más tarde</string>
-  <string name="sync_watch_wallet">Sincronizar billetera watch-only</string>
+  <string name="sync_watch_wallet">Conectar cartera de software</string>
   <string name="sync_keystone_wallet_guide_title">Cómo enlazar la app Keystone:</string>
   <string name="sync_xumm_guide_title">Cómo crear una cuenta de solo lectura en XUMM:</string>
   <string name="sync_xrp_toolkit_guide_title">Cómo crear una billetera watch-only en XRP Toolkit:</string>

@@ -17,6 +17,9 @@
 
 package com.keystone.cold.viewmodel;
 
+import static com.keystone.cold.mnemonic.MnemonicInputTable.THIRTYTHREE;
+import static com.keystone.cold.mnemonic.MnemonicInputTable.TWEENTY;
+
 import android.app.Application;
 import android.net.Uri;
 import android.os.Bundle;
@@ -69,9 +72,6 @@ import iton.slip.secret.Share;
 import iton.slip.secret.SharedSecret;
 import iton.slip.secret.SharedSecretException;
 import iton.slip.secret.words.Mnemonic;
-
-import static com.keystone.cold.mnemonic.MnemonicInputTable.THIRTYTHREE;
-import static com.keystone.cold.mnemonic.MnemonicInputTable.TWEENTY;
 
 public class SetupVaultViewModel extends AndroidViewModel {
 
@@ -416,6 +416,9 @@ public class SetupVaultViewModel extends AndroidViewModel {
                     if (coin.getIndex() == Coins.ETH.coinIndex()) {
                         createEthAccounts(coin);
                         continue;
+                    } else if (coin.getIndex() == Coins.SOL.coinIndex()) {
+                        createSolAccounts(coin);
+                        continue;
                     }
                 }
                 String xPub = new GetExtendedPublicKeyCallable(coin.getAccounts().get(0).getHdPath()).call();
@@ -448,6 +451,21 @@ public class SetupVaultViewModel extends AndroidViewModel {
                 AppExecutors.getInstance().mainThread().execute(onComplete);
             }
         });
+    }
+
+    private void createSolAccounts(CoinEntity coin) {
+        String coinXpub = new GetExtendedPublicKeyCallable(coin.getAccounts().get(0).getHdPath()).call();
+        coin.setExPub(coinXpub);
+        long id = mRepository.insertCoin(coin);
+        coin.setId(id);
+        for (AccountEntity account : coin.getAccounts()) {
+            String xPub = new GetExtendedPublicKeyCallable(account.getHdPath()).call();
+            account.setExPub(xPub);
+            account.setCoinId(id);
+            long accountId = mRepository.insertAccount(account);
+            account.setId(accountId);
+            AddAddressViewModel.addSolAccountAddress(account, mRepository, 1, coin, null);
+        }
     }
 
     private void updateEthAccounts(List<AccountEntity> accountEntities, CoinEntity coinEntity) throws JSONException {

@@ -17,10 +17,14 @@
 
 package com.keystone.cold.ui.fragment.setup;
 
+import static com.keystone.cold.ui.fragment.setting.MainPreferenceFragment.SETTING_CHOOSE_WATCH_WALLET;
+
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 
@@ -40,8 +44,6 @@ import com.keystone.cold.viewmodel.WatchWallet;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.keystone.cold.ui.fragment.setting.MainPreferenceFragment.SETTING_CHOOSE_WATCH_WALLET;
 
 public class ChooseWatchWalletFragment extends ListPreferenceFragment {
 
@@ -100,14 +102,25 @@ public class ChooseWatchWalletFragment extends ListPreferenceFragment {
 //                } else {
 //                    navigate(R.id.action_to_syncWatchWalletGuide, bundle);
 //                }
-                navigate(R.id.action_to_syncWatchWalletGuide, bundle);
+                //navigate(R.id.action_to_syncWatchWalletGuide, bundle);
                 updateCurrentWatchWallet();
+                stepIntoMainActivity();
                 break;
             case XRP_TOOLKIT:
-                navigate(R.id.action_to_syncWatchWalletGuide, bundle);
+                //navigate(R.id.action_to_syncWatchWalletGuide, bundle);
                 updateCurrentWatchWallet();
+                stepIntoMainActivity();
+                break;
+            case SOLANA:
+                updateCurrentWatchWallet();
+                stepIntoMainActivity();
                 break;
         }
+    }
+
+    private void stepIntoMainActivity(){
+        startActivity(new Intent(mActivity, MainActivity.class));
+        mActivity.finish();
     }
 
     private void updateCurrentWatchWallet() {

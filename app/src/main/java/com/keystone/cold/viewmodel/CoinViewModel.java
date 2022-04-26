@@ -18,7 +18,7 @@
 package com.keystone.cold.viewmodel;
 
 import android.app.Application;
-import android.util.Log;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
@@ -27,11 +27,18 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
+import com.keystone.cold.Utilities;
+import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -66,6 +73,39 @@ public class CoinViewModel extends AndroidViewModel {
     public void updateAddress(AddressEntity addr) {
         AppExecutors.getInstance().diskIO().execute(() -> mRepository.updateAddress(addr));
     }
+
+    public void preGenerateSolDerivationAddress() {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            if (!TextUtils.isEmpty(Utilities.getSolDerivationPaths(getApplication()))) {
+                return;
+            }
+            try {
+                JSONObject derivationPaths = new JSONObject();
+                JSONObject accountPaths = new JSONObject();
+                SOLAccount[] solAccounts = new SOLAccount[]{SOLAccount.SOLFLARE_BIP44_ROOT, SOLAccount.SOLFLARE_BIP44, SOLAccount.SOLFLARE_BIP44_CHANGE};
+                for (int i = 0; i < solAccounts.length; i++) {
+                    JSONArray addresses = new JSONArray();
+                    AccountEntity accountEntity = mRepository.loadTargetSOLAccount(solAccounts[i]);
+                    int addressLength = 3;
+                    if (solAccounts[i] == SOLAccount.SOLFLARE_BIP44_ROOT) {
+                        addressLength = 1;
+                    }
+                    for (int index = 0; index < addressLength; index++) {
+                        String address = AddAddressViewModel.deriveSolAddress(accountEntity, index, null);
+                        addresses.put(address);
+                    }
+                    accountPaths.put(solAccounts[i].getCode(), addresses);
+                }
+                derivationPaths.put("sol_derivation_paths", accountPaths);
+                derivationPaths.put("version", 1);
+                Utilities.setSolDerivationPaths(getApplication(), derivationPaths.toString());
+            } catch (JSONException exception) {
+                exception.printStackTrace();
+            }
+        });
+
+    }
+
 
     public static class Factory extends ViewModelProvider.NewInstanceFactory {
         @NonNull

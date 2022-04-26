@@ -29,6 +29,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.Util;
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
@@ -42,7 +43,9 @@ import com.keystone.cold.protocol.builder.SyncBuilder;
 import com.keystone.cold.util.URRegistryHelper;
 import com.sparrowwallet.hummingbird.UR;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,16 +54,25 @@ public class SyncViewModel extends AndroidViewModel {
 
     private final DataRepository mRepository;
     private final MutableLiveData<ETHAccount> chainsMutableLiveData;
+    private final MutableLiveData<SOLAccount> solAccountMutableLiveData;
+
 
     public SyncViewModel(@NonNull Application application) {
         super(application);
         mRepository = ((MainApplication) application).getRepository();
         chainsMutableLiveData = new MutableLiveData<>();
         chainsMutableLiveData.postValue(ETHAccount.ofCode(Utilities.getCurrentEthAccount(application)));
+
+        solAccountMutableLiveData = new MutableLiveData<>();
+        solAccountMutableLiveData.postValue(SOLAccount.ofCode(Utilities.getCurrentSolAccount(application)));
     }
 
     public MutableLiveData<ETHAccount> getChainsMutableLiveData() {
         return chainsMutableLiveData;
+    }
+
+    public MutableLiveData<SOLAccount> getSolAccountMutableLiveData() {
+        return solAccountMutableLiveData;
     }
 
     public List<AccountEntity> loadAccountForCoin(CoinEntity coin) {
@@ -176,6 +188,16 @@ public class SyncViewModel extends AndroidViewModel {
         return data;
     }
 
+    public MutableLiveData<UR> generateSyncSolanaUR(List<String> paths) {
+        MutableLiveData<UR> data = new MutableLiveData<>();
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            UR ur;
+            ur = URRegistryHelper.generateCryptoMultiAccountsForSol(paths).toUR();
+            data.postValue(ur);
+        });
+        return data;
+    }
+
     public LiveData<String> generateSyncMetamask(ETHAccount ethAccount) {
         chainsMutableLiveData.postValue(ethAccount);
         MutableLiveData<String> result = new MutableLiveData<>();
@@ -214,6 +236,41 @@ public class SyncViewModel extends AndroidViewModel {
         AccountEntity accountEntity = mRepository.loadTargetETHAccount(ethAccount);
         for (int i = 0; i < 3; i++) {
             result.add(i, Pair.create("" + i, AddAddressViewModel.deriveETHAddress(accountEntity, i, null)));
+        }
+        return result;
+    }
+
+    public MutableLiveData<List<Pair<String, String>>> getSolAccounts(SOLAccount solAccount) {
+        MutableLiveData<List<Pair<String, String>>> mutableLiveData = new MutableLiveData<>();
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            List<Pair<String, String>> result = new ArrayList<>();
+            String solDerivationPath = Utilities.getSolDerivationPaths(getApplication());
+            if (!TextUtils.isEmpty(solDerivationPath)) {
+                try {
+                    JSONObject derivationPaths = new JSONObject(solDerivationPath);
+                    JSONObject accountPaths = (JSONObject) derivationPaths.get("sol_derivation_paths");
+                    JSONArray jsonArray = (JSONArray) accountPaths.get(solAccount.getCode());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        result.add(Pair.create("" + i, (String) jsonArray.get(i)));
+                    }
+                } catch (JSONException exception) {
+                    exception.printStackTrace();
+                }
+            } else {
+                result.addAll(getPairs(solAccount));
+            }
+            mutableLiveData.postValue(result);
+        });
+        return mutableLiveData;
+    }
+
+
+    @NonNull
+    private List<Pair<String, String>> getPairs(SOLAccount solAccount) {
+        List<Pair<String, String>> result = new ArrayList<>();
+        AccountEntity accountEntity = mRepository.loadTargetSOLAccount(solAccount);
+        for (int i = 0; i < 3; i++) {
+            result.add(i, Pair.create("" + i, AddAddressViewModel.deriveSolAddress(accountEntity, i, null)));
         }
         return result;
     }

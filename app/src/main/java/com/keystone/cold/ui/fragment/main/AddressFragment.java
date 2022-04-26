@@ -36,6 +36,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
@@ -47,7 +48,6 @@ import com.keystone.cold.viewmodel.CoinViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
@@ -147,6 +147,19 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
                             }
                         })
                         .collect(Collectors.toList());
+            } else if (watchWallet.equals(WatchWallet.SOLANA)) {
+                String code = Utilities.getCurrentSolAccount(mActivity);
+                SOLAccount account = SOLAccount.ofCode(code);
+                addressEntities = addressEntities.stream()
+                        .filter(addressEntity -> isCurrentSOLAccountAddress(account, addressEntity))
+                        .peek(addressEntity -> {
+                            if (addressEntity.getName().startsWith("SOL-")) {
+                                addressEntity.setDisplayName(addressEntity.getName().replace("SOL-", "Account "));
+                            } else {
+                                addressEntity.setDisplayName(addressEntity.getName());
+                            }
+                        })
+                        .collect(Collectors.toList());
             } else {
                 addressEntities = addressEntities.stream().peek(addressEntity -> {
                     addressEntity.setDisplayName(addressEntity.getName());
@@ -160,6 +173,10 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
     }
 
     public static boolean isCurrentETHAccountAddress(ETHAccount account, AddressEntity addressEntity) {
+        return account.isChildrenPath(addressEntity.getPath());
+    }
+
+    public static boolean isCurrentSOLAccountAddress(SOLAccount account, AddressEntity addressEntity){
         return account.isChildrenPath(addressEntity.getPath());
     }
 
