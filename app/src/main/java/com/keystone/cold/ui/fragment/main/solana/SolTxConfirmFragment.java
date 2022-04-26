@@ -8,6 +8,7 @@ import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 
@@ -47,16 +48,13 @@ public class SolTxConfirmFragment extends BaseFragment<SolTxConfirmBinding> {
             handleSign();
         });
         Bundle bundle = requireArguments();
+        mBinding.rawMessage.setMovementMethod(ScrollingMovementMethod.getInstance());
         viewModel.parseTxData(bundle, new ParseCallback(){
             @Override
             public void OnSuccess(String json) {
                 try{
-
-                    Log.d("sora", "init OnSuccess: " + new JSONObject(json));
-
                     JSONObject tx = new JSONObject(json);
                     mBinding.rawMessage.setText(tx.toString(2));
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

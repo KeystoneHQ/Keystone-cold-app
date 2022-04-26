@@ -66,11 +66,9 @@ public class SolTxViewModel extends Base {
     private void signTransaction(Signer signer) {
         signCallBack.startSign();
         SignTxResult result = new SolImpl().signHex(txHex, signer);
-        Log.d("sora", "signTransaction: " + result);
         if (result == null) {
             signCallBack.onFail();
         } else {
-            Log.d("sora", "signTransaction: " + result.signaturHex);
             signCallBack.onSignTxSuccess(result.txId, result.txHex, result.signaturHex);
         }
     }
@@ -101,7 +99,6 @@ public class SolTxViewModel extends Base {
                 @Override
                 public void onSuccess(String json) throws JSONException {
                     super.onSuccess(json);
-                    Log.d("sora", "parseTxData onSuccess: " + new JSONObject(json));
                     AppExecutors.getInstance().mainThread().execute(() -> parseCallback.OnSuccess(json));
                 }
             });

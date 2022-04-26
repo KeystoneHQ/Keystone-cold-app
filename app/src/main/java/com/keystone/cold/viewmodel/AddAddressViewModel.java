@@ -210,7 +210,7 @@ public class AddAddressViewModel extends AndroidViewModel {
 
     public static String deriveSolAddress(AccountEntity accountEntity, int index, AddressEntity addressEntity) {
         String address = "";
-        SOLAccount solAccount = SOLAccount.ofCode(accountEntity.getSOLAccountCode());
+        SOLAccount solAccount = SOLAccount.ofAddition(accountEntity.getAddition());
         AbsDeriver deriver = AbsDeriver.newInstance("SOL");
         if (deriver == null) {
             return address;
@@ -231,17 +231,7 @@ public class AddAddressViewModel extends AndroidViewModel {
                 break;
         }
         xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
-        Log.d("zytest", " deriveSolAddress xPubPath is " + xPubPath);
-        Log.d("zytest", " deriveSolAddress xPub is " + xPub);
         address = deriver.derive(xPub);
-
-
-//      addition 暂时用不到 用于防御后期可能要支持 派生模式不同但path相同 的情况
-//        {
-//            "addtions" : [ {"derivation_pattern": "solflare", "index" : "1"}, {"derivation_pattern": "phantom", "index" : "1"}]
-//
-//        }
-//        derivation_pattern 表示派生模式  index 表示为该派生模式下的第几个地址（path相同的地址，在不同模式下的索引号可能不同）
 
         if (isSetPath){
             addressEntity.setPath(xPubPath);
@@ -255,6 +245,7 @@ public class AddAddressViewModel extends AndroidViewModel {
                 JSONObject addition = new JSONObject();
                 addition.put("addition", jsonArray);
 
+                //json定义详见 com.keystone.cold.db.entity.AddressEntity addition字段
                 addressEntity.setAddition(addition.toString());
             } catch (JSONException exception){
                 exception.printStackTrace();

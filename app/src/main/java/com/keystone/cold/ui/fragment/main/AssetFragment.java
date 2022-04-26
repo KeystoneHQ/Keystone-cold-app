@@ -31,11 +31,7 @@ import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -81,6 +77,7 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerState;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerViewModel;
 import com.keystone.cold.ui.fragment.main.scan.scanner.exceptions.UnExpectedQRException;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
+import com.keystone.cold.util.ViewUtils;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.CoinViewModel;
 import com.keystone.cold.viewmodel.PublicKeyViewModel;
@@ -111,6 +108,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         implements Toolbar.OnMenuItemClickListener, NumberPickerCallback {
 
     public static final String TAG = "AssetFragment";
+
+    public static final int DIALOG_DISMISS_DELAY_TIME = 500;
 
     private final ObservableField<String> query = new ObservableField<>();
 
@@ -357,20 +356,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     private void showBadge(MenuItem menuItem) {
         Drawable menu = Objects.requireNonNull(menuItem).getIcon();
         int badgeSize = (int) getResources().getDimension(R.dimen.default_badge_size);
-        int radius = badgeSize / 2;
-
-        int width = Objects.requireNonNull(menu).getIntrinsicWidth();
-        int height = menu.getIntrinsicHeight() + 2 * badgeSize;
-
-        final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-        final Canvas canvas = new Canvas(bitmap);
-        menu.setBounds(0, badgeSize, width, height - badgeSize);
-        menu.draw(canvas);
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.RED);
-        canvas.drawCircle(bitmap.getWidth() - radius, radius, radius, paint);
-        menuItem.setIcon(new BitmapDrawable(getResources(), bitmap));
+        Drawable menuWithBadge = ViewUtils.addBadge(getResources(), menu, badgeSize);
+        menuItem.setIcon(menuWithBadge);
     }
 
     private void hideBadge() {
@@ -385,7 +372,11 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     private void scanQrCode() {
         ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);
         scannerViewModel.setState(new ScannerState(Arrays.asList(ScanResultTypes.PLAIN_TEXT,
-                ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_ETH_NFT_ITEM, ScanResultTypes.UR_BYTES, ScanResultTypes.UOS, ScanResultTypes.UR_SOL_SIGN_REQUEST)) {
+                ScanResultTypes.UR_ETH_SIGN_REQUEST,
+                ScanResultTypes.UR_ETH_NFT_ITEM,
+                ScanResultTypes.UR_BYTES,
+                ScanResultTypes.UOS,
+                ScanResultTypes.UR_SOL_SIGN_REQUEST)) {
             @Override
             public void handleScanResult(ScanResult result) throws Exception {
                 if (result.getType().equals(ScanResultTypes.PLAIN_TEXT)) {
@@ -407,7 +398,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                         throw new InvalidTransactionException("unknown hd path");
                     }
                     if (!target.equals(current)) {
-                        if(!current.isChildrenPath(hdPath)) {
+                        if (!current.isChildrenPath(hdPath)) {
                             //standard and ledger_live has overlap of 1st address
                             throw new InvalidETHAccountException("not expected ETH account", current, target);
                         }
@@ -465,7 +456,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                         bundle.putBoolean("substrateTx", true);
                         mFragment.navigate(R.id.action_to_polkadotTxConfirm, bundle);
                     }
-                } else if(result.getType().equals(ScanResultTypes.UR_ETH_NFT_ITEM)) {
+                } else if (result.getType().equals(ScanResultTypes.UR_ETH_NFT_ITEM)) {
                     EthNFTItem ethnftItem = (EthNFTItem) result.resolve();
                     String name = ethnftItem.getName();
                     int chainId = ethnftItem.getChainId();
@@ -673,12 +664,12 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         if (watchWallet == WatchWallet.METAMASK) {
             AppExecutors.getInstance().diskIO().execute(() -> {
                 CoinEntity coinEntity = viewModel.getCoin(coinId);
-                viewModel.addEthAccountAddress(value, coinEntity, () -> handler.postDelayed(dialog::dismiss, 500));
+                viewModel.addEthAccountAddress(value, coinEntity, () -> handler.postDelayed(dialog::dismiss, DIALOG_DISMISS_DELAY_TIME));
             });
         } else if (watchWallet == WatchWallet.SOLANA) {
             AppExecutors.getInstance().diskIO().execute(() -> {
                 CoinEntity coinEntity = viewModel.getCoin(coinId);
-                viewModel.addSolAccountAddress(value, coinEntity, () -> handler.postDelayed(dialog::dismiss, 500));
+                viewModel.addSolAccountAddress(value, coinEntity, () -> handler.postDelayed(dialog::dismiss, DIALOG_DISMISS_DELAY_TIME));
             });
         } else {
             AppExecutors.getInstance().diskIO().execute(() -> {
@@ -694,7 +685,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 
                     handler.post(() -> viewModel.getObservableAddState().observe(this, complete -> {
                         if (complete) {
-                            handler.postDelayed(dialog::dismiss, 500);
+                            handler.postDelayed(dialog::dismiss, DIALOG_DISMISS_DELAY_TIME);
                         }
                     }));
                 }

@@ -38,6 +38,15 @@ public class AddressEntity implements Address, FilterableItem {
     private String name;
     private int index;
     private String belongTo;
+
+    /**
+     * addition 暂时用不到 用于防御后期可能要支持 派生模式不同但path相同 的情况
+     * {
+     * "addtions" : [ {"derivation_pattern": "solflare", "index" : "1"}, {"derivation_pattern": "phantom", "index" : "1"}]
+     * }
+     * derivation_pattern 表示派生模式  index 表示为该派生模式下的第几个地址（path相同的地址，在不同模式下的索引号可能不同）
+     */
+
     private String addition;
 
     @Ignore
@@ -121,11 +130,11 @@ public class AddressEntity implements Address, FilterableItem {
         return coinId;
     }
 
-    public void setAddition(String json){
+    public void setAddition(String json) {
         this.addition = json;
     }
 
-    public String getAddition(){
+    public String getAddition() {
         return this.addition;
     }
 

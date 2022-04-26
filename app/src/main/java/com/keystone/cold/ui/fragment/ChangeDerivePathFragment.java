@@ -45,27 +45,27 @@ public class ChangeDerivePathFragment extends BaseFragment <ChangeDerivationPath
         watchWallet = WatchWallet.getWatchWallet(mActivity);
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         mBinding.btConfirm.setOnClickListener(v-> stepIntoMainActivity());
-        fillUI();
+        //fillUI();
 
         syncViewModel = ViewModelProviders.of(mActivity).get(SyncViewModel.class);
         String code = Utilities.getCurrentSolAccount(mActivity);
         setCardCheckedStatus(code);
 
-        mBinding.llPath1.setOnClickListener(v -> {
+        mBinding.bip44Card.setOnClickListener(v -> {
             syncViewModel.getSolAccountMutableLiveData().postValue(SOLAccount.SOLFLARE_BIP44);
             setCardCheckedStatus(SOLAccount.SOLFLARE_BIP44.getCode());
         });
-        mBinding.llPath2.setOnClickListener(v -> {
+        mBinding.bip44RootCard.setOnClickListener(v -> {
             syncViewModel.getSolAccountMutableLiveData().postValue(SOLAccount.SOLFLARE_BIP44_ROOT);
             setCardCheckedStatus(SOLAccount.SOLFLARE_BIP44_ROOT.getCode());
         });
-        mBinding.llPath3.setOnClickListener(v -> {
+        mBinding.bip44ChangeCard.setOnClickListener(v -> {
             syncViewModel.getSolAccountMutableLiveData().postValue(SOLAccount.SOLFLARE_BIP44_CHANGE);
             setCardCheckedStatus(SOLAccount.SOLFLARE_BIP44_CHANGE.getCode());
         });
-        mBinding.derivation1.setText(SOLAccount.SOLFLARE_BIP44.getDisplayPath());
-        mBinding.derivation2.setText(SOLAccount.SOLFLARE_BIP44_ROOT.getDisplayPath());
-        mBinding.derivation3.setText(SOLAccount.SOLFLARE_BIP44_CHANGE.getDisplayPath());
+        mBinding.derivationBip44.setText(SOLAccount.SOLFLARE_BIP44.getDisplayPath());
+        mBinding.derivationBip44Root.setText(SOLAccount.SOLFLARE_BIP44_ROOT.getDisplayPath());
+        mBinding.derivationBip44Change.setText(SOLAccount.SOLFLARE_BIP44_CHANGE.getDisplayPath());
 
     }
 
@@ -79,9 +79,9 @@ public class ChangeDerivePathFragment extends BaseFragment <ChangeDerivationPath
         } else if (code.equals(SOLAccount.SOLFLARE_BIP44_CHANGE.getCode())) {
             checkedIndex = 3;
         }
-        mBinding.llPath1.setBackgroundResource(checkedIndex == 1? R.drawable.bg_change_path_card : R.drawable.bg_change_path_card_unchecked);
-        mBinding.llPath2.setBackgroundResource(checkedIndex == 2? R.drawable.bg_change_path_card : R.drawable.bg_change_path_card_unchecked);
-        mBinding.llPath3.setBackgroundResource(checkedIndex == 3? R.drawable.bg_change_path_card : R.drawable.bg_change_path_card_unchecked);
+        mBinding.bip44Card.setBackgroundResource(checkedIndex == 1? R.drawable.bg_change_path_card : R.drawable.bg_change_path_card_unchecked);
+        mBinding.bip44RootCard.setBackgroundResource(checkedIndex == 2? R.drawable.bg_change_path_card : R.drawable.bg_change_path_card_unchecked);
+        mBinding.bip44ChangeCard.setBackgroundResource(checkedIndex == 3? R.drawable.bg_change_path_card : R.drawable.bg_change_path_card_unchecked);
     }
 
     private void stepIntoMainActivity(){
@@ -125,36 +125,36 @@ public class ChangeDerivePathFragment extends BaseFragment <ChangeDerivationPath
         accountAdapter2 = new AccountAdapter(mActivity);
         accountAdapter3 = new AccountAdapter(mActivity);
 
-        mBinding.rl1.setOnTouchListener((v, event) -> {
+        mBinding.bip44List.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP){
-                mBinding.llPath1.performClick();
+                mBinding.bip44Card.performClick();
             }
             return false;
         });
-        mBinding.rl2.setOnTouchListener((v, event) -> {
+        mBinding.bip44RootList.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP){
-                mBinding.llPath2.performClick();
+                mBinding.bip44RootCard.performClick();
             }
             return false;
         });
-        mBinding.rl3.setOnTouchListener((v, event) -> {
+        mBinding.bip44ChangeList.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP){
-                mBinding.llPath3.performClick();
+                mBinding.bip44ChangeCard.performClick();
             }
             return false;
         });
 
         syncViewModel.getSolAccounts(SOLAccount.SOLFLARE_BIP44).observe(this, pairs -> {
             accountAdapter1.setItems(pairs);
-            mBinding.rl1.setAdapter(accountAdapter1);
+            mBinding.bip44List.setAdapter(accountAdapter1);
         });
         syncViewModel.getSolAccounts(SOLAccount.SOLFLARE_BIP44_ROOT).observe(this, pairs -> {
             accountAdapter2.setItems(pairs);
-            mBinding.rl2.setAdapter(accountAdapter2);
+            mBinding.bip44RootList.setAdapter(accountAdapter2);
         });
         syncViewModel.getSolAccounts(SOLAccount.SOLFLARE_BIP44_CHANGE).observe(this, pairs -> {
             accountAdapter3.setItems(pairs);
-            mBinding.rl3.setAdapter(accountAdapter3);
+            mBinding.bip44ChangeList.setAdapter(accountAdapter3);
         });
     }
 

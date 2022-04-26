@@ -1,5 +1,8 @@
 package com.keystone.coinlib.accounts;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.regex.Pattern;
 
 public enum SOLAccount {
@@ -105,6 +108,15 @@ public enum SOLAccount {
         return path;
     }
 
+    public static SOLAccount ofAddition(String addition) {
+        String code = null;
+        try {
+             code = new JSONObject(addition).getString("sol_account");
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+        return ofCode(code);
+    }
 
     public static SOLAccount ofCode(String code){
         if (code == null) {

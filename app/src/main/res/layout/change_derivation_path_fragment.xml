@@ -93,7 +93,7 @@
                     android:textStyle="bold" />
 
                 <LinearLayout
-                    android:id="@+id/llPath1"
+                    android:id="@+id/bip44_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -102,7 +102,7 @@
                     android:padding="16dp">
 
                     <TextView
-                        android:id="@+id/derivation_1"
+                        android:id="@+id/derivation_bip44"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="m/44'/501'/*'"
@@ -111,7 +111,7 @@
                         android:textStyle="bold" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rl_1"
+                        android:id="@+id/bip44_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false"
@@ -120,7 +120,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/llPath2"
+                    android:id="@+id/bip44Root_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -129,7 +129,7 @@
                     android:padding="16dp">
 
                     <TextView
-                        android:id="@+id/derivation_2"
+                        android:id="@+id/derivation_bip44_root"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="m/44'/501'/*'"
@@ -138,7 +138,7 @@
                         android:textStyle="bold" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rl_2"
+                        android:id="@+id/bip44_root_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false"
@@ -147,7 +147,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/llPath3"
+                    android:id="@+id/bip44Change_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -157,7 +157,7 @@
                     android:padding="16dp">
 
                     <TextView
-                        android:id="@+id/derivation_3"
+                        android:id="@+id/derivation_bip44_change"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="m/44'/501'/*'"
@@ -166,7 +166,7 @@
                         android:textStyle="bold" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rl_3"
+                        android:id="@+id/bip44_change_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false"

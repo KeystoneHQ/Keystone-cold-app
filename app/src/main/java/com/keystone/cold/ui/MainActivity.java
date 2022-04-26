@@ -129,8 +129,9 @@ public class MainActivity extends FullScreenActivity {
         mNavController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             String label = Objects.requireNonNull(destination.getLabel()).toString();
             int index = getFragmentIndexByLabel(label);
-            if (((watchWallet == WatchWallet.XRP_TOOLKIT || watchWallet == WatchWallet.METAMASK
-                || watchWallet == WatchWallet.SOLANA)
+            if (((watchWallet == WatchWallet.XRP_TOOLKIT
+                    || watchWallet == WatchWallet.METAMASK
+                    || watchWallet == WatchWallet.SOLANA)
                     && label.equals(AssetFragment.TAG))) {
                 index = 0;
             }
@@ -212,8 +213,9 @@ public class MainActivity extends FullScreenActivity {
 
             switch (position) {
                 case R.id.drawer_wallet:
-                    if (watchWallet == WatchWallet.XRP_TOOLKIT || watchWallet == WatchWallet.METAMASK
-                        || watchWallet == WatchWallet.SOLANA) {
+                    if (watchWallet == WatchWallet.XRP_TOOLKIT
+                            || watchWallet == WatchWallet.METAMASK
+                            || watchWallet == WatchWallet.SOLANA) {
                         NavOptions navOptions = new NavOptions.Builder()
                                 .setPopUpTo(R.id.assetListFragment, false)
                                 .build();

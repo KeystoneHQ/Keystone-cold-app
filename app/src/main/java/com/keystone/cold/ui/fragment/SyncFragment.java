@@ -23,7 +23,6 @@ import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWa
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
