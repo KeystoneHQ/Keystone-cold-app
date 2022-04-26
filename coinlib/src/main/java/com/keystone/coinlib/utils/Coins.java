@@ -22,6 +22,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.SOLAccount;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +47,10 @@ public class Coins {
     public static final Coin FIRO = new Coin("zcoin", "FIRO", "Zcoin", 136);
     public static final Coin XRP = new Coin("ripple", "XRP", "Ripple", 144);
     public static final Coin IOST = new Coin("iost", "IOST", "IOST", 291, CURVE.ED25519, new String[]{""});
-    public static final Coin SOL = new Coin("solana", "SOL", "Solana", 501, CURVE.ED25519, new String[]{""});
+    public static final Coin SOL = new Coin("solana", "SOL", "Solana", 501, CURVE.ED25519, new String[]{
+            SOLAccount.SOLFLARE_BIP44.getCode(),
+            SOLAccount.SOLFLARE_BIP44_ROOT.getCode(),
+            SOLAccount.SOLFLARE_BIP44_CHANGE.getCode()});
     public static final Coin EOS = new Coin("eos", "EOS", "EOS", 194);
     public static final Coin XTN = new Coin("xtn", "XTN", "XTN", 1);
     public static final Coin DOT = new Coin("polkadot", "DOT", "Polkadot", 354, CURVE.SR25519,
@@ -252,6 +256,10 @@ public class Coins {
 
     public static boolean isPolkadotFamily(String coinCode) {
         return coinCode.equals(DOT.coinCode) || coinCode.equals(KSM.coinCode);
+    }
+
+    public static boolean isSolanaCoin(String coinCode) {
+        return coinCode.equals(SOL.coinCode);
     }
 
     public static boolean isDefaultOpen(String coinCode) {
