@@ -50,7 +50,14 @@ public class URRegistryHelper {
         byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
         String xPub = new GetExtendedPublicKeyCallable(path).call();
         ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(xPub);
-        byte[] key = extendedPublicKey.getKey();
+        byte[] tempKey = extendedPublicKey.getKey();
+        byte[] key;
+        if (tempKey[0] == 0x00) {
+            key = new byte[tempKey.length - 1];
+            System.arraycopy(tempKey,1, key, 0, key.length);
+        } else {
+            key = tempKey;
+        }
         CryptoKeypath origin = new CryptoKeypath(getPathComponents(path), masterFingerprint, (int) extendedPublicKey.getDepth());
         return new CryptoHDKey(false, key, null, null, origin, null, null, KEY_NAME, note);
     }
