@@ -14,13 +14,21 @@ import androidx.annotation.NonNull;
 import com.keystone.coinlib.coins.SOL.SolImpl;
 import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.interfaces.Signer;
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.ClearTokenCallable;
+import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
 import com.keystone.cold.viewmodel.callback.ParseCallback;
+import com.sparrowwallet.hummingbird.registry.solana.SolSignature;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.spongycastle.util.encoders.Hex;
+
+import java.nio.ByteBuffer;
+import java.util.UUID;
 
 public class SolTxViewModel extends Base {
     private String txHex;
@@ -31,12 +39,24 @@ public class SolTxViewModel extends Base {
     private String requestId;
     private String signature;
 
+    private String parsedMessage;
+
     public SolTxViewModel(@NonNull Application application) {
         super(application);
         coinCode = "SOL";
     }
 
-    private Web3TxViewModel.SignCallBack signCallBack = new Web3TxViewModel.SignCallBack() {
+    interface SignCallBack {
+        void startSign();
+
+        void onFail();
+
+        void onSignTxSuccess(String signatureHex);
+
+        void onSignMsgSuccess(String signatureHex);
+    }
+
+    private SignCallBack signCallBack = new SignCallBack() {
         @Override
         public void startSign() {
             signState.postValue(STATE_SIGNING);
@@ -49,9 +69,11 @@ public class SolTxViewModel extends Base {
         }
 
         @Override
-        public void onSignTxSuccess(String txId, String signedTxHex, String signatureHex) {
+        public void onSignTxSuccess(String signatureHex) {
             signature = signatureHex;
             signState.postValue(STATE_SIGN_SUCCESS);
+            //todo insertDB
+            insertDB(signature,txHex,parsedMessage);
             new ClearTokenCallable().call();
         }
 
@@ -69,7 +91,7 @@ public class SolTxViewModel extends Base {
         if (result == null) {
             signCallBack.onFail();
         } else {
-            signCallBack.onSignTxSuccess(result.txId, result.txHex, result.signaturHex);
+            signCallBack.onSignTxSuccess(result.signaturHex);
         }
     }
 
@@ -98,6 +120,7 @@ public class SolTxViewModel extends Base {
             SolImpl.parseMessage(txHex, new SolImpl.ParseMessageCallback() {
                 @Override
                 public void onSuccess(String json) {
+                    parsedMessage = json;
                     AppExecutors.getInstance().mainThread().execute(() -> parseCallback.OnSuccess(json));
                 }
 
@@ -119,5 +142,58 @@ public class SolTxViewModel extends Base {
             e.printStackTrace();
         }
         return signed.toString();
+    }
+
+
+    public String getSignatureUR(){
+        if (TextUtils.isEmpty(signature) || TextUtils.isEmpty(requestId)) {
+            return "";
+        }
+        byte[] signatureByte = Hex.decode(signature);
+        UUID uuid = UUID.fromString(requestId);
+        ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
+        byteBuffer.putLong(uuid.getMostSignificantBits());
+        byteBuffer.putLong(uuid.getLeastSignificantBits());
+        byte[] requestId = byteBuffer.array();
+        SolSignature solSignature = new SolSignature(signatureByte,requestId);
+        return solSignature.toUR().toString();
+    }
+
+
+    private void insertDB(String signature, String rawMessage, String parsedMessage){
+        TxEntity txEntity = generateSolTxEntity();
+        txEntity.setTxId(signature);
+        String additionsString = null;
+        try {
+            JSONObject addition = new JSONObject();
+            addition.put("signature", signature);
+            addition.put("raw_message", rawMessage);
+            addition.put("parsed_message", parsedMessage);
+            addition.put("sign_by",Utilities.getCurrentSolAccount(getApplication()));
+            JSONObject additions = new JSONObject();
+            additions.put("coin", Coins.SOL.coinId());
+            additions.put("addition", addition);
+            JSONObject root = new JSONObject();
+            root.put("additions", additions);
+            additionsString = root.toString();
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+        if (!TextUtils.isEmpty(additionsString)){
+            //addition结构详见 com.keystone.cold.db.entity.TxEntity addition字段
+            txEntity.setAddition(additionsString);
+            mRepository.insertTx(txEntity);
+        }
+    }
+
+    private TxEntity generateSolTxEntity(){
+        TxEntity txEntity = new TxEntity();
+        txEntity.setCoinId(Coins.SOL.coinId());
+        txEntity.setSignId(watchWallet.getSignId());
+        txEntity.setCoinCode(Coins.SOL.coinCode());
+        txEntity.setTimeStamp(getUniversalSignIndex(getApplication()));
+        txEntity.setBelongTo(mRepository.getBelongTo());
+        txEntity.setSignedHex(getSignatureUR());
+        return txEntity;
     }
 }

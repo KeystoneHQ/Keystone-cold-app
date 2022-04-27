@@ -2,8 +2,8 @@ package com.keystone.cold.ui.fragment.main.solana;
 
 import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
+import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KEY_SIGNATURE_UR;
 import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KEY_TXID;
-import static com.keystone.cold.ui.fragment.main.web3.EthBroadcastTxFragment.KEY_SIGNATURE_JSON;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
 import android.os.Bundle;
@@ -17,6 +17,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.databinding.SolTxConfirmBinding;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.ui.fragment.main.AssetFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
@@ -121,12 +122,12 @@ public class SolTxConfirmFragment extends BaseFragment<SolTxConfirmBinding> {
     }
 
     private void onSignSuccess() {
-        String txId = ""; //viewModel.getTxId();
-        String signature = viewModel.getSignatureJson();
+        String requestId = requireArguments().getString(AssetFragment.REQUEST_ID);
+        String signatureURString = viewModel.getSignatureUR();
         Bundle data = new Bundle();
-        data.putString(KEY_TXID, txId);
-        data.putString(KEY_SIGNATURE_JSON, signature);
-        navigate(R.id.action_to_ethBroadcastTxFragment, data);
+        data.putString(KEY_TXID, requestId);
+        data.putString(KEY_SIGNATURE_UR, signatureURString);
+        navigate(R.id.action_to_solBroadcastTxFragment, data);
         viewModel.getSignState().setValue("");
         viewModel.getSignState().removeObservers(this);
     }
