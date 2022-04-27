@@ -25,16 +25,16 @@
   <string-array name="watch_wallet_list">
     <item>Keystone Companion App</item>
     <item>Web3</item>
+    <item>Solflare / Slope</item>
     <item>Polkadot{.js}</item>
     <item>XRP Toolkit</item>
-    <item>Solana</item>>
   </string-array>
   <string-array name="watch_wallet_summury">
     <item>8 main chains including BTC, ETH, etc</item>
     <item>ETH, AVAX, BSC and all EVM Chains</item>
+    <item>Solana</item>
     <item>DOT、KSM</item>
     <item>XRP</item>
-    <item>Solana</item>>
   </string-array>
   <string name="app_name">Keystone</string>
   <string name="action_scan_qr_code">Scan QR Code</string>

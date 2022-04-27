@@ -417,16 +417,16 @@
     <string-array name="watch_wallet_list">
         <item>鎧石錢包移動端</item>
         <item>MetaMask / DeFi / Web3</item>
+        <item>Solflare / Slope</item>
         <item>Polkadot{.js}</item>
         <item>XRP Toolkit</item>
-        <item>Solana</item>>
     </string-array>
     <string-array name="watch_wallet_summury">
         <item>BTC、ETH等8條主鏈</item>
         <item>ETH, AVAX, BSC and all EVM Chains</item>
+        <item>Solana</item>
         <item>DOT、KSM</item>
         <item>XRP</item>
-        <item>Solana</item>>
     </string-array>
 
     <string name="choose_watch_only_wallet">選擇觀察錢包</string>
