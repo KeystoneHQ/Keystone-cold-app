@@ -55,10 +55,26 @@ public class URRegistryHelper {
         return new CryptoHDKey(false, key, null, null, origin, null, null, KEY_NAME, note);
     }
 
+    private static CryptoHDKey generateRawKeyForSol(String path, String note) {
+        byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
+        String xPub = new GetExtendedPublicKeyCallable(path).call();
+        ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(xPub);
+        byte[] tempKey = extendedPublicKey.getKey();
+        byte[] key;
+        if (tempKey.length == 33 && tempKey[0] == 0x00) {
+            key = new byte[tempKey.length - 1];
+            System.arraycopy(tempKey,1, key, 0, key.length);
+        } else {
+            key = tempKey;
+        }
+        CryptoKeypath origin = new CryptoKeypath(getPathComponents(path), masterFingerprint, (int) extendedPublicKey.getDepth());
+        return new CryptoHDKey(false, key, null, null, origin, null, null, KEY_NAME, note);
+    }
+
     public static CryptoMultiAccounts generateCryptoMultiAccountsForSol(List<String> paths){
         List<CryptoHDKey> cryptoHDKeyList = new ArrayList<>();
         for (String path: paths) {
-            CryptoHDKey cryptoHDKey = generateRawKeyForLedgerLive(path, null);
+            CryptoHDKey cryptoHDKey = generateRawKeyForSol(path, null);
             cryptoHDKeyList.add(cryptoHDKey);
         }
         byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
