@@ -516,7 +516,7 @@ On Polkadot{.js}, you need to create watch-only wallets for DOT and KSM separate
   <string name="not_switch">Not Now</string>
   <string name="confirm_switch">Confirm</string>
   <string name="keep_screen_on">Please keep screen on</string>
-  <string name="sync">Connect Software Wallet</string>
+  <string name="sync">Sync</string>
   <string name="qrcode_capacity">QR Code Density：%s </string>
   <string name="qr_capacity_high">High</string>
   <string name="qr_capacity_mid">Medium</string>
