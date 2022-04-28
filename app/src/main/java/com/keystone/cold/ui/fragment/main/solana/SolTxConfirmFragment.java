@@ -17,12 +17,10 @@ import com.keystone.cold.R;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.databinding.SolTxConfirmBinding;
 import com.keystone.cold.ui.fragment.BaseFragment;
-import com.keystone.cold.ui.fragment.main.AssetFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
 import com.keystone.cold.viewmodel.callback.ParseCallback;
-import com.keystone.cold.viewmodel.tx.KeystoneTxViewModel;
 import com.keystone.cold.viewmodel.tx.SolTxViewModel;
 
 import org.json.JSONException;
@@ -48,13 +46,13 @@ public class SolTxConfirmFragment extends BaseFragment<SolTxConfirmBinding> {
             handleSign();
         });
         Bundle bundle = requireArguments();
-        mBinding.rawMessage.setMovementMethod(ScrollingMovementMethod.getInstance());
+        mBinding.signMessage.setMovementMethod(ScrollingMovementMethod.getInstance());
         viewModel.parseTxData(bundle, new ParseCallback(){
             @Override
             public void OnSuccess(String json) {
                 try{
                     JSONObject tx = new JSONObject(json);
-                    mBinding.rawMessage.setText(tx.toString(2));
+                    mBinding.signMessage.setText(tx.toString(2));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -62,7 +60,7 @@ public class SolTxConfirmFragment extends BaseFragment<SolTxConfirmBinding> {
 
             @Override
             public void onFailed() {
-
+                mBinding.signMessage.setText(R.string.decode_failed_hint);
             }
         });
 
@@ -90,10 +88,10 @@ public class SolTxConfirmFragment extends BaseFragment<SolTxConfirmBinding> {
     SigningDialog signingDialog;
     private void subscribeSignState() {
         viewModel.getSignState().observe(this, s -> {
-            if (KeystoneTxViewModel.STATE_SIGNING.equals(s)) {
+            if (SolTxViewModel.STATE_SIGNING.equals(s)) {
                 signingDialog = SigningDialog.newInstance();
                 signingDialog.show(mActivity.getSupportFragmentManager(), "");
-            } else if (KeystoneTxViewModel.STATE_SIGN_SUCCESS.equals(s)) {
+            } else if (SolTxViewModel.STATE_SIGN_SUCCESS.equals(s)) {
                 if (signingDialog != null) {
                     signingDialog.setState(SigningDialog.STATE_SUCCESS);
                 }
@@ -104,7 +102,7 @@ public class SolTxConfirmFragment extends BaseFragment<SolTxConfirmBinding> {
                     signingDialog = null;
                     onSignSuccess();
                 }, 500);
-            } else if (KeystoneTxViewModel.STATE_SIGN_FAIL.equals(s)) {
+            } else if (SolTxViewModel.STATE_SIGN_FAIL.equals(s)) {
                 if (signingDialog == null) {
                     signingDialog = SigningDialog.newInstance();
                     signingDialog.show(mActivity.getSupportFragmentManager(), "");
@@ -122,10 +120,10 @@ public class SolTxConfirmFragment extends BaseFragment<SolTxConfirmBinding> {
     }
 
     private void onSignSuccess() {
-        String requestId = requireArguments().getString(AssetFragment.REQUEST_ID);
+        String txId = viewModel.getTxId();
         String signatureURString = viewModel.getSignatureUR();
         Bundle data = new Bundle();
-        data.putString(KEY_TXID, requestId);
+        data.putString(KEY_TXID, txId);
         data.putString(KEY_SIGNATURE_UR, signatureURString);
         navigate(R.id.action_to_solBroadcastTxFragment, data);
         viewModel.getSignState().setValue("");

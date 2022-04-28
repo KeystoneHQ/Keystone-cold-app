@@ -72,7 +72,6 @@ public class SolTxViewModel extends Base {
         public void onSignTxSuccess(String signatureHex) {
             signature = signatureHex;
             signState.postValue(STATE_SIGN_SUCCESS);
-            //todo insertDB
             insertDB(signature,txHex,parsedMessage);
             new ClearTokenCallable().call();
         }
@@ -126,7 +125,7 @@ public class SolTxViewModel extends Base {
 
                 @Override
                 public void onFailed() {
-
+                    AppExecutors.getInstance().mainThread().execute(() -> parseCallback.onFailed());
                 }
             });
         });
@@ -144,6 +143,10 @@ public class SolTxViewModel extends Base {
         return signed.toString();
     }
 
+    @Override
+    public String getTxId() {
+        return signature;
+    }
 
     public String getSignatureUR(){
         if (TextUtils.isEmpty(signature) || TextUtils.isEmpty(requestId)) {

@@ -156,8 +156,8 @@
         android:label="solTxFragment"
         tools:layout="@layout/sol_tx_confirm">
         <action
-            android:id="@+id/action_to_ethBroadcastTxFragment"
-            app:destination="@id/ethBroadcastTxFragment"
+            android:id="@+id/action_to_solBroadcastTxFragment"
+            app:destination="@id/solBroadcastTxFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
@@ -216,6 +216,18 @@
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
+    <fragment
+        android:id="@+id/solBroadcastTxFragment"
+        android:name="com.keystone.cold.ui.fragment.main.solana.SolBroadcastTxFragment"
+        android:label="solBroadcastTxFragment">
+        <action
+            android:id="@+id/action_to_home"
+            app:destination="@id/assetListFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/assetListFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
     <fragment
         android:id="@+id/ethBroadcastTxFragment"
         android:name="com.keystone.cold.ui.fragment.main.web3.EthBroadcastTxFragment"
