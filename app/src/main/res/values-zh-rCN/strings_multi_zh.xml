@@ -20,7 +20,7 @@
     <string name="action_scan_qr_code">Scan QR Code</string>
     <string name="drawer_menu_my_vault">我的鎧石錢包</string>
     <string name="drawer_menu_add_remove">添加 / 隱藏幣種</string>
-    <string name="drawer_menu_sync">選擇觀察錢包</string>
+    <string name="drawer_menu_sync">選擇軟件錢包</string>
     <string name="drawer_menu_setting">設置</string>
     <string name="drawer_menu_about">關於鎧石錢包</string>
     <string name="title_about">關於鎧石錢包</string>
@@ -177,7 +177,7 @@
     <string name="create_new_address">創建新地址</string>
     <string name="screen_brightness_hint">滑動調整屏幕亮度</string>
     <string name="broadcast_tx">廣播交易</string>
-    <string name="please_broadcast_with_hot">使用觀察錢包掃描二維碼獲取簽名結果</string>
+    <string name="please_broadcast_with_hot">使用軟件錢包掃描二維碼獲取簽名結果</string>
     <string name="please_confirm">請確認</string>
     <string name="mnemonic_save_hint">請確認您已妥善保管好助記詞，一旦助記詞丟失，資產將無法找回！（錢包生成後，無法再次查看助記詞）</string>
     <string name="know">我知道了</string>
@@ -282,8 +282,8 @@
         <item>"芯片安全檢測中…"</item>
         <item>"寫入安全芯片…"</item>
     </string-array>
-    <string name="export_to_electrum">在 Electrum 創建觀察錢包</string>
-    <string name="export_to_electrum_guide">1. 打開 Electrum，新建錢包 \n2. 選擇「標準錢包」 \n3. 選擇「使用主公鑰」 \n4. 在輸入主公鑰頁面點擊照相機按鈕，掃描主公鑰二維碼（點擊下方按鈕查看二維碼）\n5. 設置錢包密碼 \n6. 進入觀察錢包</string>
+    <string name="export_to_electrum">在 Electrum 創建軟件錢包</string>
+    <string name="export_to_electrum_guide">1. 打開 Electrum，新建錢包 \n2. 選擇「標準錢包」 \n3. 選擇「使用主公鑰」 \n4. 在輸入主公鑰頁面點擊照相機按鈕，掃描主公鑰二維碼（點擊下方按鈕查看二維碼）\n5. 設置錢包密碼 \n6. 進入軟件錢包</string>
     <string name="export_xpub">查看主公鑰二維碼</string>
     <string name="export_to_electrum_guide_hint">Electrum 創建指引</string>
     <string name="send_address">發送地址 %d</string>
@@ -320,7 +320,7 @@
     <string name="electrum_qrcode_hint"><![CDATA[掃碼困難？點擊二維碼進行放大<br>或<u>\點擊此處導出文件\</u>]]></string>
     <string name="scan_electrum_hint">若掃描 Electrum 困難，可將待簽交易導出成文件，前往【菜單--讀取TF卡】對文件簽名。</string>
     <string name="sign_txn_in_sdcard">對文件簽名</string>
-    <string name="master_pubkey_not_match">該交易無法識別，您的鎧石錢包與此觀察錢包不匹配。</string>
+    <string name="master_pubkey_not_match">該交易無法識別，您的鎧石錢包與此軟件錢包不匹配。</string>
     <string name="change">找零</string>
     <string name="electrum_compatibility">適配 Electrum</string>
     <string name="identification_failed">交易識別失敗</string>
@@ -417,19 +417,19 @@
     <string-array name="watch_wallet_list">
         <item>鎧石錢包移動端</item>
         <item>MetaMask / DeFi / Web3</item>
+        <item>Solflare / Slope</item>
         <item>Polkadot{.js}</item>
         <item>XRP Toolkit</item>
-        <item>Solana</item>>
     </string-array>
     <string-array name="watch_wallet_summury">
         <item>BTC、ETH等8條主鏈</item>
         <item>ETH, AVAX, BSC and all EVM Chains</item>
+        <item>Solana</item>
         <item>DOT、KSM</item>
         <item>XRP</item>
-        <item>Solana</item>>
     </string-array>
 
-    <string name="choose_watch_only_wallet">選擇觀察錢包</string>
+    <string name="choose_watch_only_wallet">選擇軟件錢包</string>
     <string name="sync_later">暫不同步</string>
     <string name="sync_watch_wallet">連接軟件錢包</string>
     <string name="sync_keystone_wallet_guide_title">鎧石錢包移動端導入指引：</string>
@@ -472,7 +472,7 @@
         <font color="#00cdc3">③ <font/>點擊 \'<b>繼續</b>\'按鈕<br>
         <font color="#00cdc3">④ <font/>掃描錢包二維碼（點擊下方按鈕查看）<br>
         <font color="#00cdc3">⑤ <font/>選擇賬戶<br>
-        <font color="#00cdc3">⑥ <font/>進入觀察錢包<br>
+        <font color="#00cdc3">⑥ <font/>進入軟件錢包<br>
     ]]></string>
     <string name="sync_metamask_hit"><![CDATA[和其他應用連接教程，請訪問：<br><font color="#00cdc3">https://keyst.one/web3<font/>]]></string>
     <string name="sync_keystone_guide_button_text">查看錢包二維碼</string>
@@ -480,11 +480,11 @@
     <string name="sync_xrp_toolkit_guide_button_text">查看地址二維碼</string>
     <string name="sync_polkadot_js_guide_button_text">查看%s二維碼</string>
     <string name="sync_metamask_guide_button_text">查看二維碼</string>
-    <string name="sync_polkadot_hint">請註意：\n在Polkadot{.js}上，需分別創建 DOT、KSM 的觀察錢包。</string>
+    <string name="sync_polkadot_hint">請註意：\n在Polkadot{.js}上，需分別創建 DOT、KSM 的軟件錢包。</string>
     <string name="sync_with_keystone_vault">請使用鎧石錢包移動端掃描二維碼</string>
     <string name="sync_with_xumm">請使用 XUMM 掃描地址二維碼</string>
     <string name="sync_with_xrp_toolkit">請使用 XRP Toolkit 掃描二維碼</string>
-    <string name="sync_with_metamask">請使用觀察錢包掃描二維碼</string>
+    <string name="sync_with_metamask">請使用軟件錢包掃描二維碼</string>
     <string name="sync_with_polkadot_js">請使用 Polkadot{.js} 掃描二維碼</string>
     <string name="broadcast_xrp_toolkit_hint">請使用 XRP Toolkit 掃描二維碼</string>
     <string name="sync_first_xrp_accout">將默認展示第一個地址的二維碼，若您要同步其他地址，可進入錢包添加地址。</string>
@@ -515,11 +515,11 @@
     <string name="unknown_substrate_chain_content">Polkadot{.js}模式下暫不支持該幣種</string>
     <string name="unsupported_polka_tx_type_title">無法解析</string>
     <string name="unsupported_polka_tx_type_content">該交易類型暫不支持。</string>
-    <string name="enable_dot_for_polkadotjs">切換觀察錢包為Polkadot{.js}，您需再次輸入當前錢包的助記詞。具體原因請訪問：https://keyst.one/dot</string>
+    <string name="enable_dot_for_polkadotjs">切換軟件錢包為Polkadot{.js}，您需再次輸入當前錢包的助記詞。具體原因請訪問：https://keyst.one/dot</string>
     <string name="not_switch">暫不切換</string>
     <string name="confirm_switch">確認切換</string>
     <string name="keep_screen_on">請勿鎖屏</string>
-    <string name="sync">同步觀察錢包</string>
+    <string name="sync">同步軟件錢包</string>
     <string name="qrcode_capacity">二維碼密度：%s </string>
     <string name="qr_capacity_high">高</string>
     <string name="qr_capacity_mid">中</string>

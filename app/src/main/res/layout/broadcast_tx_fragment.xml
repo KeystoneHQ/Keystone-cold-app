@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2021 Keystone
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -68,8 +67,9 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginTop="20dp"
-                    tools:src="@drawable/coin_btc"
-                    tools:ignore="ContentDescription" />
+                    app:icon="@{coinCode}"
+                    tools:ignore="ContentDescription"
+                    tools:src="@drawable/coin_btc" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -100,7 +100,7 @@
                         android:layout_height="30dp"
                         android:padding="5dp"
                         android:src="@drawable/info"
-                        android:visibility="invisible"/>
+                        android:visibility="invisible" />
 
                 </LinearLayout>
 

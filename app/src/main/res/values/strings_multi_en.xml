@@ -566,7 +566,7 @@
     <string name="not_switch">Not Now</string>
     <string name="confirm_switch">Confirm</string>
     <string name="keep_screen_on">Please keep screen on</string>
-    <string name="sync">Connect Software Wallet</string>
+    <string name="sync">Sync</string>
     <string name="change_software_wallet_path">Change Derivation Path</string>
     <string name="tutorials">Tutorials</string>
 
@@ -628,7 +628,9 @@
     <string name="metamusk_ledger"><![CDATA[<font color="#00cdc3">Standard<font/> (MetaMask, Ledger, etc.)]]></string>
     <string name="top_account">The first 3 accounts:</string>
     <string name="show_this_qrcode">Display QR Code</string>
+    <string name="change_path">Display QR Code</string>
     <string name="sync_metamask_guide_text_hint">Take the Keystone Ethereum Extension import process as an example, the process of other wallets is similar.</string>
     <string name="decode_as_utf8_failed_hint">Data can‘t be decoded as utf-8 string.</string>
     <string name="change_path_hint">Please select the derivation path you want to use. The first 3 accounts (addresses) are displayed for each path.</string>
+    <string name="decode_failed_hint">Data can‘t be decoded</string>
 </resources>

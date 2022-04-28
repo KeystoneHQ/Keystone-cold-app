@@ -53,26 +53,73 @@
 
         <include layout="@layout/divider" />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
 
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/coin_eth" />
+
+            <TextView
+                android:id="@+id/coinCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_toEndOf="@id/icon"
+                android:text="Solana"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/coinId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/coinCode"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="2dp"
+                android:layout_toEndOf="@id/icon"
+                android:text="solana"
+                android:textColor="@color/white40"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <include
+                layout="@layout/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true" />
+        </RelativeLayout>
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical">
+
+            <ScrollView
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+
+                <TextView
+                    android:id="@+id/sign_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:textColor="@color/white"/>
+            </ScrollView>
 
             <Button
                 android:id="@+id/sign"
                 style="@style/AcceptButton"
                 android:layout_width="match_parent"
-                android:layout_marginTop="16dp"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="20dp"
+                android:layout_margin="16dp"
                 android:text="@string/sign" />
-
-            <TextView
-                android:background="@color/white"
-                android:id="@+id/raw_message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
         </LinearLayout>
 
 

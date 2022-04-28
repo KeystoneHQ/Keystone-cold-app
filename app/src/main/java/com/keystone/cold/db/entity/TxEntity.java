@@ -45,6 +45,29 @@ public class TxEntity implements Tx {
     private String signId;
     private String belongTo;
 
+    /**
+     *
+     * TxEntity类的额外信息，内部是JSON
+     * 目前仅用于Solana  其他币种暂时没有用到
+     * @Solana {
+     *     {
+     *         "additioins":{
+     *              "coin":"solana",
+     *              "addition":{
+     *                  "signature":"adfas",
+     *                  "raw_message":"raw_message",
+     *                  "parsed_message":"parsed_message",
+     *                  "sign_by":"bip44"
+     *               }
+     *          }
+     *     }
+     * }
+     * @coin 表示币种
+     * @addition 表示附加信息
+     * @signature 表示签名
+     * @raw_message 表示原始信息
+     * @parsed_message 表示解析后的信息
+     */
     private String addition;
 
     @Override

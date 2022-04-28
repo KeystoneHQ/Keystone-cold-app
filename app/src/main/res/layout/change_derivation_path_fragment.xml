@@ -50,23 +50,19 @@
             </androidx.appcompat.widget.Toolbar>
 
 
-            <Button
+            <TextView
                 android:id="@+id/btConfirm"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="24dp"
+                android:paddingHorizontal="5dp"
                 android:layout_gravity="center_vertical|end"
-                android:layout_marginEnd="16dp"
                 android:background="@drawable/accept_button_bg"
                 android:gravity="center"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:paddingHorizontal="3dp"
-                android:paddingVertical="3dp"
-                android:text="@string/confirm"
                 android:textAllCaps="false"
+                android:layout_marginEnd="16dp"
+                android:text="@string/confirm"
                 android:textColor="@color/white"
-                android:textSize="12sp" />
-
+              />
         </FrameLayout>
 
         <include layout="@layout/divider" />
@@ -93,7 +89,7 @@
                     android:textStyle="bold" />
 
                 <LinearLayout
-                    android:id="@+id/bip44_card"
+                    android:id="@+id/pattern_card_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -102,7 +98,7 @@
                     android:padding="16dp">
 
                     <TextView
-                        android:id="@+id/derivation_bip44"
+                        android:id="@+id/derivation_pattern_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="m/44'/501'/*'"
@@ -111,7 +107,7 @@
                         android:textStyle="bold" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/bip44_list"
+                        android:id="@+id/address_list_1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false"
@@ -120,7 +116,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/bip44Root_card"
+                    android:id="@+id/pattern_card_2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -129,7 +125,7 @@
                     android:padding="16dp">
 
                     <TextView
-                        android:id="@+id/derivation_bip44_root"
+                        android:id="@+id/derivation_pattern_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="m/44'/501'/*'"
@@ -138,7 +134,7 @@
                         android:textStyle="bold" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/bip44_root_list"
+                        android:id="@+id/address_list_2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false"
@@ -147,7 +143,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/bip44Change_card"
+                    android:id="@+id/pattern_card_3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -157,7 +153,7 @@
                     android:padding="16dp">
 
                     <TextView
-                        android:id="@+id/derivation_bip44_change"
+                        android:id="@+id/derivation_pattern_3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="m/44'/501'/*'"
@@ -166,7 +162,7 @@
                         android:textStyle="bold" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/bip44_change_list"
+                        android:id="@+id/address_list_3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false"

@@ -372,16 +372,16 @@
   <string-array name="watch_wallet_list">
     <item>App complementaria Keystone</item>
     <item>MetaMask / DeFi / Web3</item>
+    <item>Solflare / Slope</item>
     <item>Polkadot{.js}</item>
     <item>XRP Toolkit</item>
-    <item>Solana</item>>
   </string-array>
   <string-array name="watch_wallet_summury">
     <item>8 cadenas principales que incluyen BTC, ETH, etc.</item>
     <item>ETH, AVAX, BSC and all EVM Chains</item>
-    <item>DOT, KSM</item>
+    <item>Solana</item>
+    <item>DOT、KSM</item>
     <item>XRP</item>
-    <item>Solana</item>>
   </string-array>
   <string name="drawer_menu_sync">Billetera watch-only</string>
   <string name="title_sync">Sincronizar Keystone Mobile</string>

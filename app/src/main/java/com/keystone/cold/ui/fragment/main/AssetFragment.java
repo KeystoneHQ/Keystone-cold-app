@@ -42,6 +42,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -56,6 +57,7 @@ import com.allenliu.badgeview.BadgeFactory;
 import com.allenliu.badgeview.BadgeView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.coins.polkadot.UOS.Extrinsic;
 import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
 import com.keystone.coinlib.exception.InvalidETHAccountException;
@@ -569,9 +571,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 
     private void addCLickChangePathProcess(View view, Runnable additionProcess) {
         view.setOnClickListener(v -> {
-            if (watchWallet == WatchWallet.METAMASK) {
-                navigate(R.id.action_assetFragment_to_selectWalletFragment);
-            } else if (watchWallet == WatchWallet.SOLANA) {
+            if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.SOLANA) {
                 navigate(R.id.action_assetFragment_to_changeDerivePathFragment);
             }
             additionProcess.run();
@@ -622,11 +622,19 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 
     private void addClickAccountProcess(View view, Runnable additionProcess) {
         view.setOnClickListener(v -> {
-            handleAddAddress();
+            if (canNotAddAddress()){
+                Toast.makeText(mActivity, "current pattern can't add accounts", Toast.LENGTH_SHORT).show();
+            } else {
+                handleAddAddress();
+            }
             additionProcess.run();
         });
     }
 
+    private boolean canNotAddAddress(){
+        return watchWallet == WatchWallet.SOLANA
+                && SOLAccount.ofCode(Utilities.getCurrentSolAccount(mActivity)) == SOLAccount.SOLFLARE_BIP44_ROOT;
+    }
 
     private void enterSearch() {
         isInSearch = true;

@@ -25,16 +25,16 @@
   <string-array name="watch_wallet_list">
     <item>Keystone Companion App</item>
     <item>Web3</item>
+    <item>Solflare / Slope</item>
     <item>Polkadot{.js}</item>
     <item>XRP Toolkit</item>
-    <item>Solana</item>>
   </string-array>
   <string-array name="watch_wallet_summury">
     <item>8 main chains including BTC, ETH, etc</item>
     <item>ETH, AVAX, BSC and all EVM Chains</item>
+    <item>Solana</item>
     <item>DOT、KSM</item>
     <item>XRP</item>
-    <item>Solana</item>>
   </string-array>
   <string name="app_name">Keystone</string>
   <string name="action_scan_qr_code">Scan QR Code</string>
@@ -516,7 +516,7 @@ On Polkadot{.js}, you need to create watch-only wallets for DOT and KSM separate
   <string name="not_switch">Not Now</string>
   <string name="confirm_switch">Confirm</string>
   <string name="keep_screen_on">Please keep screen on</string>
-  <string name="sync">Connect Software Wallet</string>
+  <string name="sync">Sync</string>
   <string name="qrcode_capacity">QR Code Density：%s </string>
   <string name="qr_capacity_high">High</string>
   <string name="qr_capacity_mid">Medium</string>

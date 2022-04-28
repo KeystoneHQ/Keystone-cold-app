@@ -70,7 +70,7 @@
                 android:id="@+id/sync_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sync"
+                android:text="@string/sync_watch_wallet"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="16dp"
                 android:textColor="@color/white" />

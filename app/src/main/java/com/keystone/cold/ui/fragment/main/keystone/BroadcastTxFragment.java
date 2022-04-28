@@ -38,6 +38,7 @@ import org.json.JSONObject;
 public class BroadcastTxFragment extends BaseFragment<BroadcastTxFragmentBinding> {
 
     public static final String KEY_TXID = "txId";
+    public static final String KEY_SIGNATURE_UR = "signature_ur";
 
     protected WatchWallet watchWallet;
 
