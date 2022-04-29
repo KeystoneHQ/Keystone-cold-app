@@ -44,9 +44,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:autoSizeMaxTextSize="14sp"
+                    android:autoSizeMinTextSize="10sp"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:maxWidth="200dp"
+                    android:maxLines="1"
                     android:text="@string/change_software_wallet_path"
                     android:textColor="@android:color/white"
-                    android:textSize="15sp" />
+                    android:textSize="14sp" />
             </androidx.appcompat.widget.Toolbar>
 
 
@@ -54,15 +60,19 @@
                 android:id="@+id/btConfirm"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
-                android:paddingHorizontal="5dp"
                 android:layout_gravity="center_vertical|end"
+                android:layout_marginEnd="16dp"
+                android:autoSizeMaxTextSize="13sp"
+                android:autoSizeMinTextSize="6sp"
+                android:autoSizeTextType="uniform"
                 android:background="@drawable/accept_button_bg"
                 android:gravity="center"
-                android:textAllCaps="false"
-                android:layout_marginEnd="16dp"
+                android:maxWidth="50dp"
+                android:maxLines="1"
+                android:paddingHorizontal="5dp"
                 android:text="@string/confirm"
                 android:textColor="@color/white"
-              />
+                android:textSize="13sp" />
         </FrameLayout>
 
         <include layout="@layout/divider" />

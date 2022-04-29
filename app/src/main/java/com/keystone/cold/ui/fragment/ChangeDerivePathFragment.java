@@ -57,7 +57,6 @@ public class ChangeDerivePathFragment extends BaseFragment<ChangeDerivationPathF
         watchWallet = WatchWallet.getWatchWallet(mActivity);
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         mBinding.btConfirm.setOnClickListener(v -> stepIntoMainActivity());
-        //fillUI();
         syncViewModel = ViewModelProviders.of(mActivity).get(SyncViewModel.class);
         if (watchWallet == WatchWallet.METAMASK) {
             setupMetaMaskUI();
