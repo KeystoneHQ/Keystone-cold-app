@@ -28,13 +28,17 @@ import java.util.stream.Collectors;
 public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding> implements Toolbar.OnMenuItemClickListener {
 
 
+    public static final String DERIVATION_PATH_KEY = "derivation_paths_key";
+    public static final String ADDRESS_KEY = "address_key";
+
     private CoinViewModel viewModel;
     private AddressSyncAdapter addressSyncAdapter;
 
     private final AddressSyncCallback addressSyncCallback = (addr, position) -> {
         addressSyncAdapter.toggleChecked(position);
         Bundle bundle = new Bundle();
-        bundle.putString("sync_addresses", addressSyncAdapter.getDerivationPaths());
+        bundle.putString(DERIVATION_PATH_KEY, addressSyncAdapter.getDerivationPaths());
+        bundle.putString(ADDRESS_KEY, addr.getAddressString());
         navigate(R.id.action_to_syncFragment, bundle);
     };
 
@@ -95,7 +99,7 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
         switch (id) {
             case R.id.action_confirm:
                 Bundle bundle = new Bundle();
-                bundle.putString("sync_addresses", addressSyncAdapter.getDerivationPaths());
+                bundle.putString(DERIVATION_PATH_KEY, addressSyncAdapter.getDerivationPaths());
                 navigate(R.id.action_to_syncFragment, bundle);
                 break;
             default:
