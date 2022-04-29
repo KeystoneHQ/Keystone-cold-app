@@ -88,7 +88,7 @@
             android:layout_height="28dp"
             android:layout_marginTop="28dp"
             app:icon="@{coinCode}"
-            tools:src="@drawable/coin_btc"
+            tools:src="@drawable/coin_sol"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -102,7 +102,7 @@
             tools:text="BTC-1" />
 
         <TextView
-            android:layout_width="148dp"
+            android:layout_width="@dimen/address_show_width"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:gravity="center_horizontal"

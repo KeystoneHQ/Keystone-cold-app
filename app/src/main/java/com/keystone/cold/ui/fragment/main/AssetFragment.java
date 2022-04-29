@@ -566,7 +566,10 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private void addClickTutorialsProcess(View view, Runnable additionProcess) {
-        view.setOnClickListener(v -> additionProcess.run());
+        view.setOnClickListener(v -> {
+            navigate(R.id.action_to_tutorialsFragment);
+            additionProcess.run();
+        });
     }
 
     private void addCLickChangePathProcess(View view, Runnable additionProcess) {
