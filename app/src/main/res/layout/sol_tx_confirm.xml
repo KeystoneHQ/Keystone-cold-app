@@ -22,9 +22,6 @@
 
     <data>
 
-        <variable
-            name="coinName"
-            type="String" />
     </data>
 
 
@@ -63,7 +60,7 @@
                 android:layout_height="28dp"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="16dp"
-                android:src="@drawable/coin_eth" />
+                android:src="@drawable/coin_sol" />
 
             <TextView
                 android:id="@+id/coinCode"

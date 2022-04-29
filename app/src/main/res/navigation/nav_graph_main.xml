@@ -229,6 +229,20 @@
     </fragment>
 
     <fragment
+        android:id="@+id/solTxDetailFragment"
+        android:name="com.keystone.cold.ui.fragment.main.solana.SolTxDetailFragment"
+        android:label="solTxDetailFragment"
+        tools:layout="@layout/fragment_sol_tx_detail">
+    </fragment>
+
+    <fragment
+        android:id="@+id/tutorialsFragment"
+        android:name="com.keystone.cold.ui.fragment.main.tutorials.TutorialsFragment"
+        android:label="tutorialsFragment"
+        tools:layout="@layout/fragment_tutorials">
+    </fragment>
+
+    <fragment
         android:id="@+id/ethBroadcastTxFragment"
         android:name="com.keystone.cold.ui.fragment.main.web3.EthBroadcastTxFragment"
         android:label="ethBroadcastTxFragment">
@@ -1016,6 +1030,15 @@
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
         app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_solTxDetailFragment"
+        app:destination="@id/solTxDetailFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
     <action
         android:id="@+id/action_to_ethSignTypedDataFragment"
         app:destination="@id/ethSignTypedDataFragment"
@@ -1032,4 +1055,13 @@
         app:popEnterAnim="@android:anim/slide_in_left"
         app:popExitAnim="@android:anim/slide_out_right" />
 
+    //
+
+    <action
+        android:id="@+id/action_to_tutorialsFragment"
+        app:destination="@id/tutorialsFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
 </navigation>

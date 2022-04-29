@@ -519,7 +519,7 @@
     <string name="not_switch">暫不切換</string>
     <string name="confirm_switch">確認切換</string>
     <string name="keep_screen_on">請勿鎖屏</string>
-    <string name="sync">同步軟件錢包</string>
+    <string name="sync">連接</string>
     <string name="qrcode_capacity">二維碼密度：%s </string>
     <string name="qr_capacity_high">高</string>
     <string name="qr_capacity_mid">中</string>

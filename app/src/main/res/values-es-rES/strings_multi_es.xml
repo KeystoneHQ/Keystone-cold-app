@@ -524,7 +524,7 @@
   <string name="not_switch">Ahora no</string>
   <string name="confirm_switch">Confirmar</string>
   <string name="keep_screen_on">Mantén la pantalla encendida</string>
-  <string name="sync">Sincronizar</string>
+  <string name="sync">Conexión</string>
   <string name="testnet">Testnet</string>
   <string name="inconsistent_address">Inconsistente con la dirección "De"</string>
   <string name="tip">Nota</string>
