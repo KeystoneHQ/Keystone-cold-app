@@ -35,6 +35,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.TxListBinding;
@@ -118,6 +119,31 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
                     }
                 }
             };
+        } else if (watchWallet == WatchWallet.SOLANA) {
+            viewModel.loadTxs(requireArguments().getString(KEY_COIN_ID))
+                    .observe(this, txEntities -> {
+                        txEntityComparator = (o1, o2) -> {
+                            if (o1.getSignId().equals(o2.getSignId())) {
+                                return (int) (o2.getTimeStamp() - o1.getTimeStamp());
+                            } else if (ELECTRUM_SIGN_ID.equals(o1.getSignId())) {
+                                return -1;
+                            } else {
+                                return 1;
+                            }
+                        };
+                        txEntities = txEntities.stream()
+                                .filter(this::shouldShow)
+                                .filter(this::isCurrentSolAccountTx)
+                                .sorted(txEntityComparator)
+                                .collect(Collectors.toList());
+                        adapter.setItems(txEntities);
+                    });
+
+            txCallback = tx -> {
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_TX_ID, tx.getTxId());
+                navigate(R.id.action_to_solTxDetailFragment, bundle);
+            };
         } else {
             viewModel.loadTxs(requireArguments().getString(KEY_COIN_ID))
                     .observe(this, txEntities -> {
@@ -187,6 +213,11 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
             e.printStackTrace();
             return false;
         }
+    }
+
+    private boolean isCurrentSolAccountTx(TxEntity txEntity){
+        SOLAccount solAccount = SOLAccount.ofCode(Utilities.getCurrentSolAccount(mActivity));
+        return solAccount.isBelongCurrentAccount(txEntity.getAddition());
     }
 
     private boolean shouldShow(TxEntity tx) {

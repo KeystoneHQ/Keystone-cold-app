@@ -17,6 +17,8 @@
 
 package com.keystone.cold.ui.fragment;
 
+import static com.keystone.cold.ui.fragment.main.solana.AddressSyncFragment.ADDRESS_KEY;
+import static com.keystone.cold.ui.fragment.main.solana.AddressSyncFragment.DERIVATION_PATH_KEY;
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuide;
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuideTitle;
 
@@ -32,6 +34,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
@@ -52,6 +55,7 @@ import org.spongycastle.util.encoders.Hex;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
 
@@ -65,6 +69,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
     private MutableLiveData<UR> URLiveData;
 
     private List<String> solSyncPaths = new ArrayList<>();
+    private String syncAddress;
 
     @Override
     protected int setView() {
@@ -79,10 +84,11 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
             coinCode = data.getString("coinCode");
             fromSyncGuide = getArguments().getBoolean("fromSyncGuide");
 
-            String syncPaths = getArguments().getString("sync_addresses");
+            String syncPaths = getArguments().getString(DERIVATION_PATH_KEY);
             if (!TextUtils.isEmpty(syncPaths)) {
                 solSyncPaths.addAll(collectSyncAddresses(syncPaths));
             }
+            syncAddress = getArguments().getString(ADDRESS_KEY);
         }
         if (!fromSyncGuide) {
             mBinding.complete.setVisibility(View.GONE);
@@ -133,13 +139,24 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
     }
 
     private void setupUIWithWatchWallet() {
-        mBinding.info.setOnClickListener(v -> showHint());
+        mBinding.info.setOnClickListener(v -> {
+            switch (watchWallet) {
+                case METAMASK:
+                case SOLANA:
+                case XRP_TOOLKIT:
+                case POLKADOT_JS:
+                    navigate(R.id.action_to_tutorialsFragment);
+                    break;
+                default:
+                    showHint();
+            }
+        });
         switch (watchWallet) {
             case KEYSTONE:
-                //mBinding.hint.setText(R.string.sync_with_keystone_vault);
+                mBinding.hint.setText(R.string.sync_with_keystone_vault);
                 break;
             case POLKADOT_JS:
-                //mBinding.hint.setText(R.string.sync_with_polkadot_js);
+                mBinding.hint.setText(R.string.sync_with_polkadot_js);
                 mBinding.chain.setVisibility(View.VISIBLE);
                 if (coinCode.equals(Coins.DOT.coinCode())) {
                     mBinding.chain.setText(Coins.DOT.coinName());
@@ -148,23 +165,14 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 }
                 break;
             case XRP_TOOLKIT:
-                //mBinding.hint.setText(R.string.sync_with_xrp_toolkit);
+                mBinding.hint.setText(R.string.sync_with_xrp_toolkit);
                 mBinding.address.setVisibility(View.VISIBLE);
                 break;
             case METAMASK:
+            case SOLANA:
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 9, 0, 0);
                 mBinding.content.setLayoutParams(params);
-                //mBinding.hint.setText(R.string.sync_with_metamask);
-                mBinding.chain.setVisibility(View.VISIBLE);
-                //mBinding.llHint.setVisibility(View.VISIBLE);
-                mBinding.complete.setVisibility(View.VISIBLE);
-                //mBinding.companionHint.setOnClickListener(v -> navigate(R.id.action_syncFragment_to_selectWalletFragment));
-                break;
-            case SOLANA:
-                FrameLayout.LayoutParams params1 = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-                params1.setMargins(0, 9, 0, 0);
-                mBinding.content.setLayoutParams(params1);
                 mBinding.complete.setVisibility(View.VISIBLE);
                 break;
         }
@@ -217,7 +225,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 });
                 break;
             case METAMASK:
-                if(URLiveData != null) {
+                if (URLiveData != null) {
                     URLiveData.removeObservers(this);
                 }
                 syncViewModel.getChainsMutableLiveData().observe(this, ethAccount -> {
@@ -228,8 +236,11 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                     mBinding.chain.setText(ethAccount.getName());
                     URLiveData = syncViewModel.generateSyncMetamaskUR(ethAccount);
                     URLiveData.observe(this, urData -> {
-                        if(urData != null) {
+                        if (urData != null) {
                             mBinding.dynamicQrcodeLayout.qrcode.displayUR(urData);
+                            mBinding.addressData.setVisibility(View.GONE);
+                            mBinding.derivationPattern.setVisibility(View.VISIBLE);
+                            mBinding.fromPath.setText(ethAccount.getName() + " Derivation Path: " + ethAccount.getDisplayPath());
                         }
                         URLiveData.removeObservers(this);
                     });
@@ -248,9 +259,13 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                     URLiveData.observe(this, urData -> {
                         if (urData != null) {
                             mBinding.dynamicQrcodeLayout.qrcode.displayUR(urData);
+                            mBinding.derivationPattern.setVisibility(View.VISIBLE);
+                            mBinding.addressData.setText(syncAddress);
+                            mBinding.fromPath.setText(solSyncPaths.get(0).toLowerCase());
                         }
                         URLiveData.removeObservers(this);
                     });
+
                 });
                 break;
         }

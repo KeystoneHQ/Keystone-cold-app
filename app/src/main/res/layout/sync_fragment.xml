@@ -17,7 +17,8 @@
   -->
 
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -92,6 +93,38 @@
                     android:textColor="@color/colorAccent"
                     android:textSize="15sp"
                     android:visibility="gone"/>
+
+                <LinearLayout
+                    android:id="@+id/derivation_pattern"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/address_data"
+                        android:layout_width="@dimen/address_show_width"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginBottom="6dp"
+                        android:gravity="center_horizontal"
+                        android:lineSpacingExtra="5dp"
+                        android:textColor="@color/white40"
+                        android:textSize="12sp"
+                        tools:text="19zhQ 2rKq Xm5r y1pj Co83 JbBK 5zUr bdKgc" />
+                    <TextView
+                        android:id="@+id/from_path"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:lineSpacingExtra="5dp"
+                        android:textColor="@color/white40"
+                        android:textSize="12sp"
+                        tools:text="m/49'/0'/0'" />
+
+                </LinearLayout>
                 <include
                     android:id="@+id/dynamic_qrcode_layout"
                     layout="@layout/dynamic_qrcode" />

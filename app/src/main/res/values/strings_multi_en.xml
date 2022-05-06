@@ -566,7 +566,7 @@
     <string name="not_switch">Not Now</string>
     <string name="confirm_switch">Confirm</string>
     <string name="keep_screen_on">Please keep screen on</string>
-    <string name="sync">Sync</string>
+    <string name="sync">Connect</string>
     <string name="change_software_wallet_path">Change Derivation Path</string>
     <string name="tutorials">Tutorials</string>
 
@@ -633,4 +633,48 @@
     <string name="decode_as_utf8_failed_hint">Data can‘t be decoded as utf-8 string.</string>
     <string name="change_path_hint">Please select the derivation path you want to use. The first 3 accounts (addresses) are displayed for each path.</string>
     <string name="decode_failed_hint">Data can‘t be decoded</string>
+    <string name="tutorials_hint">Please use your laptop or mobile phone to open the links below for detailed tutorials of how to use Keystone with specific companion software wallets.</string>
+
+    <string-array name="tutorials_name_sol">
+        <item>Solflare Extension</item>
+        <item>Solflare Mobile</item>
+        <item>Slope Wallet</item>
+    </string-array>
+
+    <string-array name="tutorials_link_sol">
+        <item><u>https://keyst.one/t/solflare</u></item>
+        <item><u>https://keyst.one/t/solflaremobile</u></item>
+        <item><u>https://keyst.one/t/slope</u></item>
+    </string-array>
+
+    <string-array name="tutorials_name_web3">
+        <item>MetaMask</item>
+        <item>MetaMask Mobile</item>
+        <item>Rabby Wallet</item>
+        <item>Dapp (DeFi)</item>
+    </string-array>
+
+    <string-array name="tutorials_link_web3">
+        <item><u>https://keyst.one/t/mm</u></item>
+        <item><u>https://keyst.one/t/mmm</u></item>
+        <item><u>https://keyst.one/t/rabby</u></item>
+        <item><u>https://keyst.one/t/dapp</u></item>
+    </string-array>
+
+    <string-array name="tutorials_name_polkadot">
+        <item>Polkadot{.js}(DOT/KSM)</item>
+    </string-array>
+
+    <string-array name="tutorials_link_polkadot">
+        <item><u>https://keyst.one/t/polkadot</u></item>
+    </string-array>
+
+    <string-array name="tutorials_name_xrp">
+        <item>XRP Toolkit</item>
+    </string-array>
+
+    <string-array name="tutorials_link_xrp">
+        <item><u>https://keyst.one/t/xrp</u></item>
+    </string-array>
+
 </resources>

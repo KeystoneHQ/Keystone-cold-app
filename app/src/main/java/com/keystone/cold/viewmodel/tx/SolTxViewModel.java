@@ -20,6 +20,7 @@ import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
+import com.keystone.cold.ui.fragment.main.solana.model.SolTxData;
 import com.keystone.cold.viewmodel.callback.ParseCallback;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignature;
 
@@ -162,6 +163,33 @@ public class SolTxViewModel extends Base {
         return solSignature.toUR().toString();
     }
 
+    public SolTxData parseSolTxEntity(TxEntity txEntity) {
+        String addition = txEntity.getAddition();
+        if (TextUtils.isEmpty(addition)) {
+            return null;
+        }
+        try {
+            JSONObject root = new JSONObject(addition);
+            JSONObject additions = root.getJSONObject("additions");
+            String coin = additions.getString("coin");
+            if (!TextUtils.isEmpty(coin) && coin.equals(Coins.SOL.coinId())) {
+                String signature = additions.getJSONObject("addition").getString("signature");
+                String rawMessage = additions.getJSONObject("addition").getString("raw_message");
+                String parsedMessage = additions.getJSONObject("addition").getString("parsed_message");
+                String signBy = additions.getJSONObject("addition").getString("sign_by");
+                SolTxData solTxData = new SolTxData();
+                solTxData.setSignature(signature);
+                solTxData.setRawMessage(rawMessage);
+                solTxData.setParsedMessage(parsedMessage);
+                solTxData.setSignBy(signBy);
+                solTxData.setSignatureUR(txEntity.getSignedHex());
+                return solTxData;
+            }
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+        return null;
+    }
 
     private void insertDB(String signature, String rawMessage, String parsedMessage){
         TxEntity txEntity = generateSolTxEntity();

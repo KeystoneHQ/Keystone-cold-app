@@ -514,7 +514,7 @@
   <string name="not_switch">보류</string>
   <string name="confirm_switch">확인</string>
   <string name="keep_screen_on">화면을 주시하세요</string>
-  <string name="sync">싱크</string>
+  <string name="sync">잇닿다</string>
   <string name="testnet">테스트넷</string>
   <string name="inconsistent_address">보낸 사람 주소와 일치하지 않습니다.</string>
   <string name="tip">참고</string>
