@@ -73,6 +73,70 @@ public enum SOLAccount {
         this.displayPath = displayPath;
     }
 
+    public boolean isChildrenPath(String path) {
+        if (!path.toUpperCase().startsWith("M/")) {
+            path = "M/" + path;
+        }
+        switch (this) {
+            case SOLFLARE_BIP44_ROOT:
+                return isLedgerRoot(path);
+            case SOLFLARE_BIP44:
+                return isLedgerBip44(path);
+            default:
+                return isLedgerBip44Change(path);
+        }
+    }
+
+    public boolean isBelongCurrentAccount(String addition) {
+        if (TextUtils.isEmpty(addition)) {
+            return false;
+        }
+        try {
+            JSONObject jsonObject = new JSONObject(addition);
+            JSONObject additions = (JSONObject) jsonObject.get("additions");
+            String coin = additions.getString("coin");
+            if (!TextUtils.isEmpty(coin) && coin.equals(Coins.SOL.coinId())) {
+                String signBy = ((JSONObject) additions.get("addition")).getString("sign_by");
+                if (!TextUtils.isEmpty(signBy) && signBy.equals(code)) {
+                    return true;
+                }
+            }
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+        return false;
+    }
+
+
+    public int getAddressIndexByPath(String path) {
+        int index = -1;
+        if (!path.toUpperCase().startsWith("M/")) {
+            path = "M/" + path;
+        }
+        String tempPath = path.replace("'", "");
+        String[] split = tempPath.split("/");
+        switch (this) {
+            case SOLFLARE_BIP44_ROOT:
+                if (isLedgerRoot(path)) {
+                    index = 0;
+                }
+                break;
+            case SOLFLARE_BIP44:
+                if (isLedgerBip44(path)) {
+                    String indexString = split[3];
+                    index = Integer.parseInt(indexString);
+                }
+                break;
+            case SOLFLARE_BIP44_CHANGE:
+                if (isLedgerBip44Change(path)) {
+                    String indexString = split[3];
+                    index = Integer.parseInt(indexString);
+                }
+                break;
+        }
+        return index;
+    }
+
 
     public static String getPathByCode(String code) {
         String path = SOLFLARE_BIP44_ROOT.getPath();
@@ -115,19 +179,19 @@ public enum SOLAccount {
     public static SOLAccount ofAddition(String addition) {
         String code = null;
         try {
-             code = new JSONObject(addition).getString("sol_account");
+            code = new JSONObject(addition).getString("sol_account");
         } catch (JSONException exception) {
             exception.printStackTrace();
         }
         return ofCode(code);
     }
 
-    public static SOLAccount ofCode(String code){
+    public static SOLAccount ofCode(String code) {
         if (code == null) {
             return SOLFLARE_BIP44_ROOT;
         }
         switch (code) {
-            case "solfare_bip44_root" :
+            case "solfare_bip44_root":
                 return SOLFLARE_BIP44_ROOT;
             case "solflare_bip44":
                 return SOLFLARE_BIP44;
@@ -149,39 +213,15 @@ public enum SOLAccount {
         return Pattern.matches("^M/44'/501'/\\d+'/0'", path);
     }
 
-
-    public boolean isChildrenPath(String path) {
+    public static SOLAccount getAccountByPath(String path) {
         if (!path.toUpperCase().startsWith("M/")) {
             path = "M/" + path;
         }
-        switch (this){
-            case SOLFLARE_BIP44_ROOT:
-                return isLedgerRoot(path);
-            case SOLFLARE_BIP44:
-                return isLedgerBip44(path);
-            default:
-                return isLedgerBip44Change(path);
-        }
+        if (isLedgerBip44(path)) return SOLFLARE_BIP44;
+        if (isLedgerRoot(path)) return SOLFLARE_BIP44_ROOT;
+        if (isLedgerBip44Change(path)) return SOLFLARE_BIP44_CHANGE;
+        return null;
     }
 
 
-    public boolean isBelongCurrentAccount(String addition) {
-        if (TextUtils.isEmpty(addition)) {
-            return false;
-        }
-        try {
-            JSONObject jsonObject = new JSONObject(addition);
-            JSONObject additions = (JSONObject) jsonObject.get("additions");
-            String coin = additions.getString("coin");
-            if (!TextUtils.isEmpty(coin) && coin.equals(Coins.SOL.coinId())) {
-                String signBy = ((JSONObject)additions.get("addition")).getString("sign_by");
-                if (!TextUtils.isEmpty(signBy) && signBy.equals(code)){
-                    return true;
-                }
-            }
-        } catch (JSONException exception) {
-            exception.printStackTrace();
-        }
-        return false;
-    }
 }

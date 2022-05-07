@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2021 Keystone
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -93,33 +92,37 @@
                 android:layout_height="1dp"
                 android:layout_alignParentBottom="true" />
         </RelativeLayout>
-        <LinearLayout
+
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:tabIndicatorColor="@color/colorAccent"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorHeight="2dp"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextAppearance="@style/TabTextAppearance"
+            app:tabTextColor="@color/white40" />
+
+        <include
+            layout="@layout/divider"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="1dp" />
 
-            <ScrollView
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="0dp">
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
-                <TextView
-                    android:id="@+id/sign_message"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:textColor="@color/white"/>
-            </ScrollView>
-
-            <Button
-                android:id="@+id/sign"
-                style="@style/AcceptButton"
-                android:layout_width="match_parent"
-                android:layout_margin="16dp"
-                android:text="@string/sign" />
-        </LinearLayout>
-
-
+        <Button
+            android:id="@+id/sign"
+            style="@style/AcceptButton"
+            android:layout_width="match_parent"
+            android:layout_margin="16dp"
+            android:text="@string/sign" />
     </LinearLayout>
 
 </layout>
