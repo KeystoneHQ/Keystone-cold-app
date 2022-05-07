@@ -1,7 +1,5 @@
 package com.keystone.coinlib.coins.SOL;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.keystone.coinlib.coins.AbsTx;
@@ -11,8 +9,6 @@ import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.utils.Coins;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 public class SolImpl implements Coin {
@@ -34,7 +30,7 @@ public class SolImpl implements Coin {
 
     @Override
     public String signMessage(@NonNull String message, Signer signer) {
-        return null;
+        return signPersonalMessage(message, signer);
     }
 
     @Override
@@ -54,6 +50,10 @@ public class SolImpl implements Coin {
         } else {
             return null;
         }
+    }
+
+    public String signPersonalMessage(String message, Signer signer) {
+        return signer.sign(message);
     }
 
     public static void parseMessage(String message, ParseMessageCallback parseMessageCallback) {

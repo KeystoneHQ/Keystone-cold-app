@@ -488,8 +488,11 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 bundle.putString(REQUEST_ID, uuid.toString());
                 bundle.putString(SIGN_DATA, Hex.toHexString(solSignRequest.getSignData()));
                 bundle.putString(HD_PATH, "M/" + hdPath);
-
-                mFragment.navigate(R.id.action_to_solTxConfirmFragment, bundle);
+                if (solSignRequest.getType().getType().equals(SolSignRequest.DataType.TRANSACTION.getType())){
+                    mFragment.navigate(R.id.action_to_solTxConfirmFragment, bundle);
+                } else if (solSignRequest.getType().getType().equals(SolSignRequest.DataType.MESSAGE.getType())) {
+                    mFragment.navigate(R.id.action_to_solSignMessageFragment, bundle);
+                }
             }
 
             @Override

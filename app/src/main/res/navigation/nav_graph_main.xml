@@ -216,6 +216,19 @@
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
+
+    <fragment
+        android:id="@+id/solSignMessageFragment"
+        android:name="com.keystone.cold.ui.fragment.main.solana.SolSignMessageFragment"
+        android:label="solSignMessageFragment">
+        <action
+            android:id="@+id/action_to_solBroadcastTxFragment"
+            app:destination="@id/solBroadcastTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
     <fragment
         android:id="@+id/solBroadcastTxFragment"
         android:name="com.keystone.cold.ui.fragment.main.solana.SolBroadcastTxFragment"
@@ -1026,6 +1039,14 @@
     <action
         android:id="@+id/action_to_solTxConfirmFragment"
         app:destination="@id/solTxFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_solSignMessageFragment"
+        app:destination="@id/solSignMessageFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
