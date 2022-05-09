@@ -9,7 +9,13 @@ public class ScannerState {
     private List<ScanResultTypes> desiredResults;
     protected ScannerFragment mFragment;
 
+    public ScannerState() {}
+
     public ScannerState(List<ScanResultTypes> desiredResults) {
+        this.desiredResults = desiredResults;
+    }
+
+    public void setDesiredResults(List<ScanResultTypes> desiredResults) {
         this.desiredResults = desiredResults;
     }
 

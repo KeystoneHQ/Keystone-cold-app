@@ -538,7 +538,7 @@
     <string name="sync_xrp">Pair App</string>
     <string name="unresolve_tx">Error</string>
     <string name="unresolve_tx_hint">Please scan QR Code built by %s</string>
-    <string name="invalid_eth_account_tx">The current wallet is using the %s Keystone derivation path. The transaction that you just scanned is a derivation path for %s. Please switch your wallet to %s and try again.</string>
+    <string name="invalid_account_tx">The current wallet is using the %s Keystone derivation path. The transaction that you just scanned is a derivation path for %s. Please switch your wallet to %s and try again.</string>
     <string name="account_not_match">Error</string>
     <string name="account_not_match_detail">The transaction does not belong to the current wallet, please check the transaction information.</string>
     <string name="simple">Simple</string>

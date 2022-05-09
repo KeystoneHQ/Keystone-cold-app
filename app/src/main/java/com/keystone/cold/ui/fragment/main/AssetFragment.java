@@ -61,6 +61,7 @@ import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.coins.polkadot.UOS.Extrinsic;
 import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
 import com.keystone.coinlib.exception.InvalidETHAccountException;
+import com.keystone.coinlib.exception.InvalidSOLAccountException;
 import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
@@ -372,13 +373,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     public static final String HD_PATH = "hdPath";
 
     private void scanQrCode() {
-        ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);
-        scannerViewModel.setState(new ScannerState(Arrays.asList(ScanResultTypes.PLAIN_TEXT,
-                ScanResultTypes.UR_ETH_SIGN_REQUEST,
-                ScanResultTypes.UR_ETH_NFT_ITEM,
-                ScanResultTypes.UR_BYTES,
-                ScanResultTypes.UOS,
-                ScanResultTypes.UR_SOL_SIGN_REQUEST)) {
+        ScannerState scannerState = new ScannerState() {
             @Override
             public void handleScanResult(ScanResult result) throws Exception {
                 if (result.getType().equals(ScanResultTypes.PLAIN_TEXT)) {
@@ -478,12 +473,22 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 }
             }
 
-            private void handleSolSignRequest(ScanResult result) {
+            private void handleSolSignRequest(ScanResult result) throws InvalidTransactionException, InvalidSOLAccountException {
                 SolSignRequest solSignRequest = (SolSignRequest) result.resolve();
                 Bundle bundle = new Bundle();
                 ByteBuffer uuidBuffer = ByteBuffer.wrap(solSignRequest.getRequestId());
                 UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
                 String hdPath = solSignRequest.getDerivationPath();
+                SOLAccount current = SOLAccount.ofCode(Utilities.getCurrentSolAccount(mFragment.getActivity()));
+                SOLAccount target = SOLAccount.getAccountByPath(hdPath);
+                if (target == null) {
+                    throw new InvalidTransactionException("unknown hd path");
+                }
+                if (!target.equals(current)) {
+                    if (!current.isChildrenPath(hdPath)) {
+                        throw new InvalidSOLAccountException("not expected SOL account", current, target);
+                    }
+                }
                 String requestMFP = Hex.toHexString(solSignRequest.getMasterFingerprint());
                 bundle.putString(REQUEST_ID, uuid.toString());
                 bundle.putString(SIGN_DATA, Hex.toHexString(solSignRequest.getSignData()));
@@ -514,7 +519,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     return true;
                 } else if (e instanceof InvalidETHAccountException) {
                     mFragment.alertDoubleButtonModal(getString(R.string.invalid_data),
-                            getString(R.string.invalid_eth_account_tx, ((InvalidETHAccountException) e).getAccount().getName(), ((InvalidETHAccountException) e).getTarget().getName(), ((InvalidETHAccountException) e).getTarget().getName()),
+                            getString(R.string.invalid_account_tx, ((InvalidETHAccountException) e).getAccount().getName(), ((InvalidETHAccountException) e).getTarget().getName(), ((InvalidETHAccountException) e).getTarget().getName()),
                             getString(R.string.cancel),
                             getString(R.string.switch_wallet),
                             null, () -> {
@@ -525,10 +530,31 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 } else if (e instanceof InvalidTransactionException) {
                     mFragment.alert(getString(R.string.invalid_data), getString(R.string.incorrect_tx_data));
                     return true;
+                } else if (e instanceof InvalidSOLAccountException) {
+                    mFragment.alertDoubleButtonModal(getString(R.string.invalid_data),
+                            getString(R.string.invalid_account_tx, ((InvalidSOLAccountException) e).getAccount().getName(), ((InvalidSOLAccountException) e).getTarget().getName(), ((InvalidSOLAccountException) e).getTarget().getName()),
+                            getString(R.string.cancel),
+                            getString(R.string.switch_wallet),
+                            null, () -> {
+                                Utilities.setCurrentSolAccount(mActivity, ((InvalidSOLAccountException) e).getTarget().getCode());
+                                popBackStack(R.id.assetFragment, false);
+                            });
+                    return true;
                 }
                 return false;
             }
-        });
+        };
+        if (watchWallet == WatchWallet.METAMASK) {
+            scannerState.setDesiredResults(Arrays.asList(ScanResultTypes.PLAIN_TEXT,
+                    ScanResultTypes.UR_ETH_SIGN_REQUEST,
+                    ScanResultTypes.UR_ETH_NFT_ITEM,
+                    ScanResultTypes.UR_BYTES,
+                    ScanResultTypes.UOS));
+        } else if (watchWallet == WatchWallet.SOLANA) {
+            scannerState.setDesiredResults(Arrays.asList(ScanResultTypes.UR_SOL_SIGN_REQUEST));
+        }
+        ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);
+        scannerViewModel.setState(scannerState);
         navigate(R.id.action_to_scanner);
     }
 
