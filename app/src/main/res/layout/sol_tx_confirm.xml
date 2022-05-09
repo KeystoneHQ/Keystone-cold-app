@@ -68,7 +68,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 android:layout_toEndOf="@id/icon"
-                android:text="Solana"
+                android:text="SOL"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -81,7 +81,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="2dp"
                 android:layout_toEndOf="@id/icon"
-                android:text="solana"
+                android:text="Solana"
                 android:textColor="@color/white40"
                 android:textSize="12sp"
                 android:textStyle="bold" />
