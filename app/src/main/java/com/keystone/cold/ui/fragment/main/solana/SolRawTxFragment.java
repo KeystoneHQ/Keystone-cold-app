@@ -44,12 +44,17 @@ public class SolRawTxFragment extends BaseFragment<FragmentSolRawTxBinding> {
             } else {
                 mBinding.rawTx.setText(R.string.decode_failed_hint);
             }
-            viewModel.getParseMessageJsonLiveData().removeObservers(this);
         });
     }
 
     @Override
     protected void initData(Bundle savedInstanceState) {
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        viewModel.getParseMessageJsonLiveData().removeObservers(this);
     }
 }
