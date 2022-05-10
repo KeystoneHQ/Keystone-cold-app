@@ -473,7 +473,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 }
             }
 
-            private void handleSolSignRequest(ScanResult result) throws InvalidTransactionException, InvalidSOLAccountException {
+            private void handleSolSignRequest(ScanResult result) throws InvalidTransactionException, InvalidSOLAccountException, XfpNotMatchException {
                 SolSignRequest solSignRequest = (SolSignRequest) result.resolve();
                 Bundle bundle = new Bundle();
                 ByteBuffer uuidBuffer = ByteBuffer.wrap(solSignRequest.getRequestId());
@@ -490,6 +490,10 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     }
                 }
                 String requestMFP = Hex.toHexString(solSignRequest.getMasterFingerprint());
+                String MFP = new GetMasterFingerprintCallable().call();
+                if (!requestMFP.equalsIgnoreCase(MFP)) {
+                    throw new XfpNotMatchException("Master fingerprint not match");
+                }
                 bundle.putString(REQUEST_ID, uuid.toString());
                 bundle.putString(SIGN_DATA, Hex.toHexString(solSignRequest.getSignData()));
                 bundle.putString(HD_PATH, "M/" + hdPath);
