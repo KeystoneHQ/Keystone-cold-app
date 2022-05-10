@@ -156,10 +156,11 @@ public class SolTxViewModel extends Base {
                 public void onSuccess(String json) {
                     parsedMessage = json;
                     try {
+                        ensureAddressExist(hdPath);
                         JSONObject jsonObject = new JSONObject(parsedMessage);
                         parseMessageJsonLiveData.postValue(jsonObject);
-                    } catch (JSONException exception) {
-                        exception.printStackTrace();
+                    } catch (InvalidTransactionException | JSONException e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -229,7 +230,7 @@ public class SolTxViewModel extends Base {
         }
     }
 
-    private void updateAccountDB(AccountEntity accountEntity, DataRepository repository, int number, CoinEntity coinEntity){
+    private void updateAccountDB(AccountEntity accountEntity, DataRepository repository, int number, CoinEntity coinEntity) {
         int addressLength = accountEntity.getAddressLength();
         int targetAddressCount = addressLength + number;
         List<AddressEntity> entities = new ArrayList<>();
