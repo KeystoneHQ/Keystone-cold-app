@@ -32,6 +32,7 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.Utilities;
+import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
@@ -76,8 +77,18 @@ public class CoinViewModel extends AndroidViewModel {
 
     public void preGenerateSolDerivationAddress() {
         AppExecutors.getInstance().diskIO().execute(() -> {
-            if (!TextUtils.isEmpty(Utilities.getSolDerivationPaths(getApplication()))) {
-                return;
+            String masterFingerPrint = new GetMasterFingerprintCallable().call();
+            String preDerivationPaths = Utilities.getSolDerivationPaths(getApplication());
+            if (!TextUtils.isEmpty(preDerivationPaths)) {
+                try {
+                    JSONObject jsonObject = new JSONObject(preDerivationPaths);
+                    String preMasterFingerprint = jsonObject.optString("master_fingerprint");
+                    if (masterFingerPrint.equalsIgnoreCase(preMasterFingerprint)) {
+                        return;
+                    }
+                } catch (JSONException exception) {
+                    exception.printStackTrace();
+                }
             }
             try {
                 JSONObject derivationPaths = new JSONObject();
@@ -98,6 +109,7 @@ public class CoinViewModel extends AndroidViewModel {
                 }
                 derivationPaths.put("sol_derivation_paths", accountPaths);
                 derivationPaths.put("version", 1);
+                derivationPaths.put("master_fingerprint", masterFingerPrint);
                 Utilities.setSolDerivationPaths(getApplication(), derivationPaths.toString());
             } catch (JSONException exception) {
                 exception.printStackTrace();

@@ -35,6 +35,7 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.Utilities;
+import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
@@ -246,12 +247,18 @@ public class SyncViewModel extends AndroidViewModel {
             List<Pair<String, String>> result = new ArrayList<>();
             String solDerivationPath = Utilities.getSolDerivationPaths(getApplication());
             if (!TextUtils.isEmpty(solDerivationPath)) {
+                String masterFingerPrint = new GetMasterFingerprintCallable().call();
                 try {
                     JSONObject derivationPaths = new JSONObject(solDerivationPath);
-                    JSONObject accountPaths = (JSONObject) derivationPaths.get("sol_derivation_paths");
-                    JSONArray jsonArray = (JSONArray) accountPaths.get(solAccount.getCode());
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        result.add(Pair.create("" + i, (String) jsonArray.get(i)));
+                    String preMasterFingerPrint = derivationPaths.optString("master_fingerprint");
+                    if (masterFingerPrint.equalsIgnoreCase(preMasterFingerPrint)) {
+                        JSONObject accountPaths = (JSONObject) derivationPaths.get("sol_derivation_paths");
+                        JSONArray jsonArray = (JSONArray) accountPaths.get(solAccount.getCode());
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            result.add(Pair.create("" + i, (String) jsonArray.get(i)));
+                        }
+                    } else {
+                        result.addAll(getPairs(solAccount));
                     }
                 } catch (JSONException exception) {
                     exception.printStackTrace();
