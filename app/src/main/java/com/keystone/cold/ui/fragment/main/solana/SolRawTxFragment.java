@@ -37,7 +37,7 @@ public class SolRawTxFragment extends BaseFragment<FragmentSolRawTxBinding> {
         viewModel = ViewModelProviders.of(mActivity).get(SolTxViewModel.class);
         viewModel.getParseMessageJsonLiveData().observe(this, jsonObject -> {
             if (jsonObject != null) {
-                if (jsonObject.toString().equals("{}")) {
+                if (jsonObject.toString().equals(new JSONObject().toString())) {
                     return;
                 }
                 try {
