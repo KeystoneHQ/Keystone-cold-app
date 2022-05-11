@@ -13,6 +13,7 @@ import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.viewmodel.tx.SolTxViewModel;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SolRawTxFragment extends BaseFragment<FragmentSolRawTxBinding> {
 
@@ -36,6 +37,9 @@ public class SolRawTxFragment extends BaseFragment<FragmentSolRawTxBinding> {
         viewModel = ViewModelProviders.of(mActivity).get(SolTxViewModel.class);
         viewModel.getParseMessageJsonLiveData().observe(this, jsonObject -> {
             if (jsonObject != null) {
+                if (jsonObject.toString().equals("{}")) {
+                    return;
+                }
                 try {
                     mBinding.rawTx.setText(jsonObject.toString(2));
                 } catch (JSONException exception) {
@@ -56,5 +60,6 @@ public class SolRawTxFragment extends BaseFragment<FragmentSolRawTxBinding> {
     public void onDestroyView() {
         super.onDestroyView();
         viewModel.getParseMessageJsonLiveData().removeObservers(this);
+        viewModel.getParseMessageJsonLiveData().setValue(new JSONObject());
     }
 }
