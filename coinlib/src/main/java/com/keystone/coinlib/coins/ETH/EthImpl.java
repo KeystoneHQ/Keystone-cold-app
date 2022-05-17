@@ -33,6 +33,8 @@ import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.interfaces.Coin;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
+import com.keystone.coinlib.selector.MethodSignature;
+import com.keystone.coinlib.selector.SelectorLoadManager;
 import com.keystone.coinlib.utils.Coins;
 
 import org.bouncycastle.util.encoders.Hex;
@@ -170,6 +172,12 @@ public class EthImpl implements Coin {
         }
         if (matchedContract == null) {
             metaData.put("data", rawTx.getData());
+            List<MethodSignature> methodSignatures = getSelector(rawTx.getData());
+            StringBuilder methods = new StringBuilder();
+            for (MethodSignature methodSignature: methodSignatures){
+                methods.append(methodSignature.getMethodName()).append(" ");
+            }
+            metaData.put("selectorMethodName", methods.toString());
         }
         metaData.put("signingData", txHex);
 
@@ -181,6 +189,11 @@ public class EthImpl implements Coin {
     protected static List<Contract> getContract(String address) {
         AbiLoadManager abiLoadManager = new AbiLoadManager(address);
         return abiLoadManager.loadAbi();
+    }
+
+    protected static List<MethodSignature> getSelector(String signature){
+        SelectorLoadManager selectorLoadManager = new SelectorLoadManager(signature);
+        return selectorLoadManager.loadSelector();
     }
 
     public SignTxResult signHex(String hex, Signer signer) {
