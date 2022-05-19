@@ -2,12 +2,9 @@ package com.keystone.cold.ui.fragment.main.solana;
 
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,21 +22,16 @@ import com.keystone.cold.viewmodel.CoinViewModel;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding> implements Toolbar.OnMenuItemClickListener {
+public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding> {
 
 
     public static final String DERIVATION_PATH_KEY = "derivation_paths_key";
-    public static final String ADDRESS_KEY = "address_key";
 
     private CoinViewModel viewModel;
     private AddressSyncAdapter addressSyncAdapter;
 
     private final AddressSyncCallback addressSyncCallback = (addr, position) -> {
         addressSyncAdapter.toggleChecked(position);
-        Bundle bundle = new Bundle();
-        bundle.putString(DERIVATION_PATH_KEY, addressSyncAdapter.getDerivationPaths());
-        bundle.putString(ADDRESS_KEY, addr.getAddressString());
-        navigate(R.id.action_to_syncFragment, bundle);
     };
 
 
@@ -50,7 +42,9 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
 
     @Override
     protected void init(View view) {
-        addressSyncAdapter = new AddressSyncAdapter(mActivity);
+        if (addressSyncAdapter == null) {
+            addressSyncAdapter = new AddressSyncAdapter(mActivity);
+        }
         addressSyncAdapter.setAddressSyncCallback(addressSyncCallback);
         mBinding.addrList.setAdapter(addressSyncAdapter);
         addressSyncAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -61,8 +55,11 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
                 mBinding.addrList.setVisibility(View.VISIBLE);
             }
         });
-        //mBinding.toolbar.inflateMenu(R.menu.confirm);
-        mBinding.toolbar.setOnMenuItemClickListener(this);
+        mBinding.tvConfirm.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putString(DERIVATION_PATH_KEY, addressSyncAdapter.getDerivationPaths());
+            navigate(R.id.action_to_syncFragment, bundle);
+        });
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
     }
 
@@ -91,20 +88,4 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
         });
     }
 
-
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.action_confirm:
-                Bundle bundle = new Bundle();
-                bundle.putString(DERIVATION_PATH_KEY, addressSyncAdapter.getDerivationPaths());
-                navigate(R.id.action_to_syncFragment, bundle);
-                break;
-            default:
-                break;
-        }
-        return true;
-    }
 }

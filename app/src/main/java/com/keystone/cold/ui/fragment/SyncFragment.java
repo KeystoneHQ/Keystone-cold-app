@@ -17,7 +17,6 @@
 
 package com.keystone.cold.ui.fragment;
 
-import static com.keystone.cold.ui.fragment.main.solana.AddressSyncFragment.ADDRESS_KEY;
 import static com.keystone.cold.ui.fragment.main.solana.AddressSyncFragment.DERIVATION_PATH_KEY;
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuide;
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuideTitle;
@@ -55,7 +54,6 @@ import org.spongycastle.util.encoders.Hex;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
 
@@ -69,7 +67,6 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
     private MutableLiveData<UR> URLiveData;
 
     private List<String> solSyncPaths = new ArrayList<>();
-    private String syncAddress;
 
     @Override
     protected int setView() {
@@ -88,7 +85,6 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
             if (!TextUtils.isEmpty(syncPaths)) {
                 solSyncPaths.addAll(collectSyncAddresses(syncPaths));
             }
-            syncAddress = getArguments().getString(ADDRESS_KEY);
         }
         if (!fromSyncGuide) {
             mBinding.complete.setVisibility(View.GONE);
@@ -260,7 +256,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                         if (urData != null) {
                             mBinding.dynamicQrcodeLayout.qrcode.displayUR(urData);
                             mBinding.derivationPattern.setVisibility(View.VISIBLE);
-                            mBinding.addressData.setText(syncAddress);
+                            mBinding.addressData.setVisibility(View.GONE);
                             mBinding.fromPath.setText(solSyncPaths.get(0).toLowerCase());
                         }
                         URLiveData.removeObservers(this);

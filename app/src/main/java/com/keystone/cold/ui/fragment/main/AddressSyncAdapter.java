@@ -49,7 +49,7 @@ public class AddressSyncAdapter extends BaseBindingAdapter<AddressEntity, Addres
 
     public boolean toggleChecked(int position) {
         checkedList.set(position, !checkedList.get(position));
-        //notifyItemChanged(position);
+        notifyItemChanged(position);
         return checkedList.get(position);
     }
 
