@@ -229,6 +229,10 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
                 mBinding.ethTx.data.setVisibility(View.GONE);
                 mBinding.ethTx.undecodedData.setVisibility(View.VISIBLE);
                 mBinding.ethTx.inputData.setText("0x" + viewModel.getInputData());
+                if (!TextUtils.isEmpty(viewModel.getSelectorMethodName())) {
+                    updateSelectorView();
+                    mBinding.ethTx.data.setVisibility(View.VISIBLE);
+                }
                 showDialog();
             } else {
                 mBinding.ethTx.data.setVisibility(View.GONE);
@@ -237,6 +241,16 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
         }
         mBinding.setTx(genericETHTxEntity);
         processAndUpdateTo();
+    }
+
+    private void updateSelectorView() {
+        AbiItemMethodBinding abiItemMethodBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+                R.layout.abi_item_method, null, false);
+        abiItemMethodBinding.key.setText("method");
+        abiItemMethodBinding.value.setText(viewModel.getSelectorMethodName());
+
+        abiItemMethodBinding.divider.setVisibility(View.GONE);
+        mBinding.ethTx.container.addView(abiItemMethodBinding.getRoot());
     }
 
     private void processAndUpdateTo() {
@@ -286,7 +300,7 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
                             e.printStackTrace();
                         }
                         mBinding.ethTx.container.addView(abiItemMethodBinding.getRoot());
-                    }else {
+                    } else {
                         addViewToData(isUniswap, itemList);
                     }
                 });

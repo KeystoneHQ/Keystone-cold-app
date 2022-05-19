@@ -84,6 +84,7 @@ public class Web3TxViewModel extends Base {
     private final Context context;
     private boolean isLegacyTypedData;
     private String inputData;
+    private String selectorMethodName;
     private boolean isFromTFCard;
     private MutableLiveData<GenericETHTxEntity> observableEthTx = new MutableLiveData<>();
     private static JSONObject chainIdJSONObject;
@@ -154,11 +155,11 @@ public class Web3TxViewModel extends Base {
                 }
             }
             if (TextUtils.isEmpty(addressSymbol)) {
-                if (!TextUtils.isEmpty(toAddress) && toAddress.equalsIgnoreCase(to)){
+                if (!TextUtils.isEmpty(toAddress) && toAddress.equalsIgnoreCase(to)) {
                     addressSymbol = toContractName;
                 } else {
                     List<Contract> contracts = new AbiLoadManager(to).loadAbi();
-                    if (!contracts.isEmpty()){
+                    if (!contracts.isEmpty()) {
                         addressSymbol = contracts.get(0).getName();
                     }
                 }
@@ -218,6 +219,7 @@ public class Web3TxViewModel extends Base {
                     abi = new JSONObject(data);
                 } catch (JSONException ignore) {
                     inputData = data;
+                    selectorMethodName = ethTx.optString("selectorMethodName");
                 }
                 GenericETHTxEntity tx = generateGenericETHTxEntity(ethTx);
                 String fromAddress = getFromAddress(hdPath);
@@ -252,6 +254,7 @@ public class Web3TxViewModel extends Base {
                     abi = new JSONObject(data);
                 } catch (JSONException ignore) {
                     inputData = data;
+                    selectorMethodName = ethTx.optString("selectorMethodName");
                 }
                 GenericETHTxEntity tx = generateEIP1559ETHTxEntity(ethTx);
                 tx.setFrom(getFromAddress(hdPath));
@@ -434,8 +437,8 @@ public class Web3TxViewModel extends Base {
         path = path.toUpperCase();
         AddressEntity addressEntity = new AddressEntity();
         addressEntity.setPath(path);
-        ETHAccount target =  ETHAccount.getAccountByPath(path);
-        if(target == null) {
+        ETHAccount target = ETHAccount.getAccountByPath(path);
+        if (target == null) {
             throw new InvalidTransactionException("unknown hd path");
         }
         AddressEntity address = mRepository.loadAddressBypath(path);
@@ -477,7 +480,7 @@ public class Web3TxViewModel extends Base {
         }
         CoinEntity coin = mRepository.loadCoinEntityByCoinCode(Coins.ETH.coinCode());
         List<AddressEntity> addressEntities = new ArrayList<>();
-        for(int i = accountEntity.getAddressLength(); i < addressIndex + 1; i++) {
+        for (int i = accountEntity.getAddressLength(); i < addressIndex + 1; i++) {
             AddressEntity addressEntity = new AddressEntity();
             String addr = AddAddressViewModel.deriveETHAddress(accountEntity, i, addressEntity);
             addressEntity.setAddressString(addr);
@@ -487,7 +490,7 @@ public class Web3TxViewModel extends Base {
             addressEntity.setBelongTo(mRepository.getBelongTo());
             addressEntities.add(addressEntity);
             accountEntity.setAddressLength(accountEntity.getAddressLength() + 1);
-            if(ETHAccount.isStandardChildren(addressEntity.getPath())) {
+            if (ETHAccount.isStandardChildren(addressEntity.getPath())) {
                 coin.setAddressCount(coin.getAddressCount() + 1);
             }
         }
@@ -592,6 +595,10 @@ public class Web3TxViewModel extends Base {
 
     public String getInputData() {
         return inputData;
+    }
+
+    public String getSelectorMethodName() {
+        return selectorMethodName;
     }
 
     public boolean isFromTFCard() {
