@@ -225,14 +225,14 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
             mBinding.ethTx.data.setVisibility(View.VISIBLE);
             mBinding.ethTx.undecodedData.setVisibility(View.GONE);
         } else {
-            if (!TextUtils.isEmpty(viewModel.getSelectorMethodName())) {
-                updateSelectorView();
-                mBinding.ethTx.data.setVisibility(View.VISIBLE);
-                mBinding.ethTx.undecodedData.setVisibility(View.GONE);
-            } else if (!TextUtils.isEmpty(viewModel.getInputData())) {
+            if (!TextUtils.isEmpty(viewModel.getInputData())) {
                 mBinding.ethTx.data.setVisibility(View.GONE);
                 mBinding.ethTx.undecodedData.setVisibility(View.VISIBLE);
                 mBinding.ethTx.inputData.setText("0x" + viewModel.getInputData());
+                if (!TextUtils.isEmpty(viewModel.getSelectorMethodName())) {
+                    updateSelectorView();
+                    mBinding.ethTx.data.setVisibility(View.VISIBLE);
+                }
                 showDialog();
             } else {
                 mBinding.ethTx.data.setVisibility(View.GONE);
@@ -300,7 +300,7 @@ public class EthFeeMarketTxConfirmFragment extends BaseFragment<EthFeeMarketTxCo
                             e.printStackTrace();
                         }
                         mBinding.ethTx.container.addView(abiItemMethodBinding.getRoot());
-                    }else {
+                    } else {
                         addViewToData(isUniswap, itemList);
                     }
                 });
