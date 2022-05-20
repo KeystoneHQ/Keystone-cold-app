@@ -57,7 +57,7 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
         });
         mBinding.tvConfirm.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
-            bundle.putString(DERIVATION_PATH_KEY, addressSyncAdapter.getDerivationPaths());
+            bundle.putString(DERIVATION_PATH_KEY, addressSyncAdapter.getDerivationInfo());
             navigate(R.id.action_to_syncFragment, bundle);
         });
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());

@@ -19,7 +19,6 @@ package com.keystone.cold.viewmodel;
 
 import android.app.Application;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 
 import androidx.annotation.NonNull;
@@ -189,11 +188,11 @@ public class SyncViewModel extends AndroidViewModel {
         return data;
     }
 
-    public MutableLiveData<UR> generateSyncSolanaUR(List<String> paths) {
+    public MutableLiveData<UR> generateSyncSolanaUR(List<Pair<String, String>> syncInfo) {
         MutableLiveData<UR> data = new MutableLiveData<>();
         AppExecutors.getInstance().networkIO().execute(() -> {
             UR ur;
-            ur = URRegistryHelper.generateCryptoMultiAccountsForSol(paths).toUR();
+            ur = URRegistryHelper.generateCryptoMultiAccountsForSolByAddress(syncInfo).toUR();
             data.postValue(ur);
         });
         return data;
