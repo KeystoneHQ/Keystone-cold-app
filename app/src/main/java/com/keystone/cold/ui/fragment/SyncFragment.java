@@ -24,6 +24,7 @@ import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWa
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,7 +67,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
 
     private MutableLiveData<UR> URLiveData;
 
-    private List<String> solSyncPaths = new ArrayList<>();
+    private List<Pair<String, String>> solSyncInfo = new ArrayList<>();
 
     @Override
     protected int setView() {
@@ -83,7 +84,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
 
             String syncPaths = getArguments().getString(DERIVATION_PATH_KEY);
             if (!TextUtils.isEmpty(syncPaths)) {
-                solSyncPaths.addAll(collectSyncAddresses(syncPaths));
+                solSyncInfo.addAll(collectSyncInfo(syncPaths));
             }
         }
         if (!fromSyncGuide) {
@@ -121,17 +122,21 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
         generateSyncData();
     }
 
-    private List<String> collectSyncAddresses(String syncPaths) {
-        List<String> paths = new ArrayList<>();
+    private List<Pair<String, String>> collectSyncInfo(String syncInfo) {
+        List<Pair<String, String>> infoList = new ArrayList<>();
         try {
-            JSONArray jsonArray = new JSONArray(syncPaths);
+            JSONArray jsonArray = new JSONArray(syncInfo);
             for (int i = 0; i < jsonArray.length(); i++) {
-                paths.add((String) jsonArray.get(i));
+                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                String path = jsonObject.getString("path");
+                String address = jsonObject.getString("address");
+                Pair<String, String> pathAddressPair = Pair.create(path, address);
+                infoList.add(pathAddressPair);
             }
         } catch (JSONException exception) {
             exception.printStackTrace();
         }
-        return paths;
+        return infoList;
     }
 
     private void setupUIWithWatchWallet() {
@@ -251,13 +256,13 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                     if (isRefreshing) return;
                     isRefreshing = true;
                     Utilities.setCurrentSolAccount(mActivity, solAccount.getCode());
-                    URLiveData = syncViewModel.generateSyncSolanaUR(solSyncPaths);
+                    URLiveData = syncViewModel.generateSyncSolanaUR(solSyncInfo);
                     URLiveData.observe(this, urData -> {
                         if (urData != null) {
                             mBinding.dynamicQrcodeLayout.qrcode.displayUR(urData);
                             mBinding.derivationPattern.setVisibility(View.VISIBLE);
                             mBinding.addressData.setVisibility(View.GONE);
-                            mBinding.fromPath.setText(solSyncPaths.get(0).toLowerCase());
+                            mBinding.fromPath.setText(solSyncInfo.get(0).first.toLowerCase());
                         }
                         URLiveData.removeObservers(this);
                     });

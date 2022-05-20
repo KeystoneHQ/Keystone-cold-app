@@ -12,6 +12,8 @@ import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.ui.common.BaseBindingAdapter;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,11 +56,18 @@ public class AddressSyncAdapter extends BaseBindingAdapter<AddressEntity, Addres
     }
 
 
-    public String getDerivationPaths() {
+    public String getDerivationInfo() {
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < checkedList.size(); i++) {
             if (checkedList.get(i)) {
-                jsonArray.put(getItems().get(i).getPath());
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("path", getItems().get(i).getPath());
+                    jsonObject.put("address", getItems().get(i).getAddressString());
+                    jsonArray.put(jsonObject);
+                } catch (JSONException exception) {
+                    exception.printStackTrace();
+                }
             }
         }
         return jsonArray.toString();

@@ -1,7 +1,11 @@
 package com.keystone.cold.util;
 
+import android.text.TextUtils;
+import android.util.Pair;
+
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.accounts.ExtendedPublicKey;
+import com.keystone.coinlib.utils.B58;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.sparrowwallet.hummingbird.registry.CryptoAccount;
@@ -63,7 +67,7 @@ public class URRegistryHelper {
         byte[] key;
         if (tempKey.length == 33 && tempKey[0] == 0x00) {
             key = new byte[tempKey.length - 1];
-            System.arraycopy(tempKey,1, key, 0, key.length);
+            System.arraycopy(tempKey, 1, key, 0, key.length);
         } else {
             key = tempKey;
         }
@@ -71,14 +75,31 @@ public class URRegistryHelper {
         return new CryptoHDKey(false, key, null, null, origin, null, null, KEY_NAME, note);
     }
 
-    public static CryptoMultiAccounts generateCryptoMultiAccountsForSol(List<String> paths){
+    private static CryptoHDKey generateRawKeyForSolByAddress(String path, String address, String note, byte[] masterFingerprint) {
+        byte[] key = getSolPublicKeyByAddress(address);
+        int depth = getPathDepth(path);
+        CryptoKeypath origin = new CryptoKeypath(getPathComponents(path), masterFingerprint, depth);
+        return new CryptoHDKey(false, key, null, null, origin, null, null, KEY_NAME, note);
+    }
+
+    public static CryptoMultiAccounts generateCryptoMultiAccountsForSol(List<String> paths) {
         List<CryptoHDKey> cryptoHDKeyList = new ArrayList<>();
-        for (String path: paths) {
+        for (String path : paths) {
             CryptoHDKey cryptoHDKey = generateRawKeyForSol(path, null);
             cryptoHDKeyList.add(cryptoHDKey);
         }
         byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
-        return new CryptoMultiAccounts(masterFingerprint,cryptoHDKeyList, KEY_NAME);
+        return new CryptoMultiAccounts(masterFingerprint, cryptoHDKeyList, KEY_NAME);
+    }
+
+    public static CryptoMultiAccounts generateCryptoMultiAccountsForSolByAddress(List<Pair<String, String>> syncInfo) {
+        List<CryptoHDKey> cryptoHDKeyList = new ArrayList<>();
+        byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
+        for (Pair<String, String> pathAddressPair : syncInfo) {
+            CryptoHDKey cryptoHDKey = generateRawKeyForSolByAddress(pathAddressPair.first, pathAddressPair.second, null, masterFingerprint);
+            cryptoHDKeyList.add(cryptoHDKey);
+        }
+        return new CryptoMultiAccounts(masterFingerprint, cryptoHDKeyList, KEY_NAME);
     }
 
     public static List<PathComponent> getPathComponents(String path) {
@@ -112,5 +133,19 @@ public class URRegistryHelper {
             cryptoOutputs.add(cryptoOutput);
         }
         return new CryptoAccount(masterFingerprint, cryptoOutputs);
+    }
+
+    private static int getPathDepth(String path) {
+        if (!path.toUpperCase().startsWith("M/")) {
+            path = "M/" + path;
+        }
+        return path.split("/").length;
+    }
+
+    private static byte[] getSolPublicKeyByAddress(String address) {
+        if (!TextUtils.isEmpty(address)) {
+            return new B58().decode(address);
+        }
+        return null;
     }
 }
