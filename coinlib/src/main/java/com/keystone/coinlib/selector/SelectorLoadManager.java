@@ -25,6 +25,9 @@ public class SelectorLoadManager {
         if (TextUtils.isEmpty(methodSignature)) {
             return methodSignatureList;
         }
+        if (methodSignature.toLowerCase().startsWith("0x")) {
+            methodSignature = methodSignature.substring(2);
+        }
         String fourBytes = methodSignature.substring(0, 8);
 
         for (SelectorStoreEngine selectorStoreEngine : selectorStoreEngineList) {

@@ -43,6 +43,8 @@ import com.keystone.coinlib.exception.InvalidPathException;
 import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.path.CoinPath;
+import com.keystone.coinlib.selector.MethodSignature;
+import com.keystone.coinlib.selector.SelectorLoadManager;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.Utilities;
@@ -51,7 +53,6 @@ import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.encryption.ChipSigner;
-import com.keystone.cold.ui.fragment.main.AddressFragment;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 
 import org.json.JSONArray;
@@ -63,7 +64,6 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -172,6 +172,15 @@ public class Web3TxViewModel extends Base {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public String recognizedSelector(String signature) {
+        List<MethodSignature> methodSignatures = new SelectorLoadManager(signature).loadSelector();
+        StringBuilder methods = new StringBuilder();
+        for (MethodSignature methodSignature: methodSignatures){
+            methods.append(methodSignature.getMethodName()).append(" ");
+        }
+        return methods.toString();
     }
 
     public String getNetwork(int chainId) {

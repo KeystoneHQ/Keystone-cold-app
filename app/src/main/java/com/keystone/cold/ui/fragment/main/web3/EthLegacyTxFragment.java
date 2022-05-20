@@ -171,8 +171,23 @@ public class EthLegacyTxFragment extends BaseFragment<EthTxBinding> {
                 mBinding.ethTx.data.setVisibility(View.GONE);
                 mBinding.ethTx.undecodedData.setVisibility(View.VISIBLE);
                 mBinding.ethTx.inputData.setText("0x" + genericETHTxEntity.getMemo());
+
+                String selector = viewModel.recognizedSelector(genericETHTxEntity.getMemo());
+                if (!TextUtils.isEmpty(selector)) {
+                    updateSelectorView(selector);
+                    mBinding.ethTx.data.setVisibility(View.VISIBLE);
+                }
             }
         }
+    }
+
+    private void updateSelectorView(String selector) {
+        AbiItemMethodBinding abiItemMethodBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+                R.layout.abi_item_method, null, false);
+        abiItemMethodBinding.key.setText("method");
+        abiItemMethodBinding.value.setText(selector);
+        abiItemMethodBinding.divider.setVisibility(View.GONE);
+        mBinding.ethTx.container.addView(abiItemMethodBinding.getRoot());
     }
 
     private void addViewToData(boolean isUniswap, List<AbiItemAdapter.AbiItem> itemList) {
