@@ -55,6 +55,9 @@ public class AddressSyncAdapter extends BaseBindingAdapter<AddressEntity, Addres
         return checkedList.get(position);
     }
 
+    public boolean exitSelectedAddress(){
+       return checkedList.contains(true);
+    }
 
     public String getDerivationInfo() {
         JSONArray jsonArray = new JSONArray();
