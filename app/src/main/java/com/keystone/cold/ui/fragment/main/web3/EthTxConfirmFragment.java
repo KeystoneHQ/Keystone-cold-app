@@ -214,7 +214,6 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
                 mBinding.ethTx.inputData.setText("0x" + viewModel.getInputData());
                 if (!TextUtils.isEmpty(viewModel.getSelectorMethodName())) {
                     updateSelectorView();
-                    mBinding.ethTx.data.setVisibility(View.VISIBLE);
                 }
                 showDialog();
             } else {
@@ -227,13 +226,8 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     }
 
     private void updateSelectorView() {
-        AbiItemMethodBinding abiItemMethodBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
-                R.layout.abi_item_method, null, false);
-        abiItemMethodBinding.key.setText(getResources().getString(R.string.tittle_eth_selector));
-        abiItemMethodBinding.value.setText(viewModel.getSelectorMethodName());
-
-        abiItemMethodBinding.divider.setVisibility(View.GONE);
-        mBinding.ethTx.container.addView(abiItemMethodBinding.getRoot());
+        mBinding.ethTx.tvSelector.setText(viewModel.getSelectorMethodName());
+        mBinding.ethTx.llSelector.setVisibility(View.VISIBLE);
     }
 
     private void updateNetworkName() {

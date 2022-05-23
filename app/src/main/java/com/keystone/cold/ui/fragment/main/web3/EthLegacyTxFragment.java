@@ -175,19 +175,14 @@ public class EthLegacyTxFragment extends BaseFragment<EthTxBinding> {
                 String selector = viewModel.recognizedSelector(genericETHTxEntity.getMemo());
                 if (!TextUtils.isEmpty(selector)) {
                     updateSelectorView(selector);
-                    mBinding.ethTx.data.setVisibility(View.VISIBLE);
                 }
             }
         }
     }
 
     private void updateSelectorView(String selector) {
-        AbiItemMethodBinding abiItemMethodBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
-                R.layout.abi_item_method, null, false);
-        abiItemMethodBinding.key.setText(getResources().getString(R.string.tittle_eth_selector));
-        abiItemMethodBinding.value.setText(selector);
-        abiItemMethodBinding.divider.setVisibility(View.GONE);
-        mBinding.ethTx.container.addView(abiItemMethodBinding.getRoot());
+        mBinding.ethTx.tvSelector.setText(selector);
+        mBinding.ethTx.llSelector.setVisibility(View.VISIBLE);
     }
 
     private void addViewToData(boolean isUniswap, List<AbiItemAdapter.AbiItem> itemList) {
