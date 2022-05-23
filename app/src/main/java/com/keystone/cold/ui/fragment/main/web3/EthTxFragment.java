@@ -183,7 +183,6 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
                 String selector = viewModel.recognizedSelector(signData.optString("inputData"));
                 if (!TextUtils.isEmpty(selector)) {
                     updateSelectorView(selector);
-                    mBinding.ethTx.data.setVisibility(View.VISIBLE);
                 }
             } else {
                 mBinding.ethTx.data.setVisibility(View.GONE);
@@ -193,12 +192,8 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
     }
 
     private void updateSelectorView(String selector) {
-        AbiItemMethodBinding abiItemMethodBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
-                R.layout.abi_item_method, null, false);
-        abiItemMethodBinding.key.setText("method");
-        abiItemMethodBinding.value.setText(selector);
-        abiItemMethodBinding.divider.setVisibility(View.GONE);
-        mBinding.ethTx.container.addView(abiItemMethodBinding.getRoot());
+        mBinding.ethTx.tvSelector.setText(selector);
+        mBinding.ethTx.llSelector.setVisibility(View.VISIBLE);
     }
 
     private void addViewToData(boolean isUniswap, List<AbiItemAdapter.AbiItem> itemList) {
