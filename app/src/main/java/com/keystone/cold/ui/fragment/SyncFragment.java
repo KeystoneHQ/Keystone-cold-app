@@ -34,7 +34,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
@@ -262,7 +262,13 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                             mBinding.dynamicQrcodeLayout.qrcode.displayUR(urData);
                             mBinding.derivationPattern.setVisibility(View.VISIBLE);
                             mBinding.addressData.setVisibility(View.GONE);
-                            mBinding.fromPath.setText(solSyncInfo.get(0).first.toLowerCase());
+                            if (solSyncInfo.size() == 1) {
+                                mBinding.fromPath.setText(solSyncInfo.get(0).first.toLowerCase());
+                            } else {
+                                String code = Utilities.getCurrentSolAccount(mActivity);
+                                SOLAccount account = SOLAccount.ofCode(code);
+                                mBinding.fromPath.setText(account.getDisplayPath().toLowerCase());
+                            }
                         }
                         URLiveData.removeObservers(this);
                     });

@@ -32,6 +32,7 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
 
     private final AddressSyncCallback addressSyncCallback = (addr, position) -> {
         addressSyncAdapter.toggleChecked(position);
+        mBinding.tvConfirm.setEnabled(addressSyncAdapter.exitSelectedAddress());
     };
 
 
@@ -44,6 +45,7 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
     protected void init(View view) {
         if (addressSyncAdapter == null) {
             addressSyncAdapter = new AddressSyncAdapter(mActivity);
+            mBinding.tvConfirm.setEnabled(false);
         }
         addressSyncAdapter.setAddressSyncCallback(addressSyncCallback);
         mBinding.addrList.setAdapter(addressSyncAdapter);
