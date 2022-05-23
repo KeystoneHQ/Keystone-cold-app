@@ -229,7 +229,7 @@ public class EthTxConfirmFragment extends BaseFragment<EthTxConfirmBinding> {
     private void updateSelectorView() {
         AbiItemMethodBinding abiItemMethodBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
                 R.layout.abi_item_method, null, false);
-        abiItemMethodBinding.key.setText("method");
+        abiItemMethodBinding.key.setText(getResources().getString(R.string.tittle_eth_selector));
         abiItemMethodBinding.value.setText(viewModel.getSelectorMethodName());
 
         abiItemMethodBinding.divider.setVisibility(View.GONE);

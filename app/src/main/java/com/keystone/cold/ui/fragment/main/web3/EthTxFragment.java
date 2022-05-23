@@ -195,7 +195,7 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
     private void updateSelectorView(String selector) {
         AbiItemMethodBinding abiItemMethodBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
                 R.layout.abi_item_method, null, false);
-        abiItemMethodBinding.key.setText("method");
+        abiItemMethodBinding.key.setText(getResources().getString(R.string.tittle_eth_selector));
         abiItemMethodBinding.value.setText(selector);
         abiItemMethodBinding.divider.setVisibility(View.GONE);
         mBinding.ethTx.container.addView(abiItemMethodBinding.getRoot());
