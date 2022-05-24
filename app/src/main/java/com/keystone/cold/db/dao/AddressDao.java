@@ -47,6 +47,9 @@ public interface AddressDao {
     @Update
     int update(AddressEntity addr);
 
+    @Query("DELETE FROM addresses WHERE coinId = :coinId AND belongTo = :belongTo")
+    int deleteAddressByCoin(String coinId, String belongTo);
+
     @Query("DELETE FROM addresses WHERE belongTo = 'hidden'")
     int deleteHidden();
 }

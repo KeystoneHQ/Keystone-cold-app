@@ -37,4 +37,7 @@ public interface AccountDao {
 
     @Update
     void update(AccountEntity account);
+
+    @Query("DELETE FROM accounts WHERE coinId=:id")
+    int deleteByCoin(long id);
 }

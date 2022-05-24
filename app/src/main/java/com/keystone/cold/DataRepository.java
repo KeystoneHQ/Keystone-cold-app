@@ -21,6 +21,7 @@ import static com.keystone.coinlib.utils.Coins.DOT;
 import static com.keystone.coinlib.utils.Coins.KSM;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -138,6 +139,10 @@ public class DataRepository {
         mDb.addressDao().update(addressEntity);
     }
 
+    public void deleteAddressByCoin(CoinEntity coin) {
+        mDb.addressDao().deleteAddressByCoin(coin.getCoinId(), getBelongTo());
+    }
+
     public LiveData<List<TxEntity>> loadTxs(String coinId) {
         return mDb.txDao().loadTxs(coinId);
     }
@@ -172,6 +177,10 @@ public class DataRepository {
 
     public long insertCoin(CoinEntity coin) {
         return mDb.coinDao().insert(coin);
+    }
+
+    public void deleteCoin(CoinEntity coin) {
+        mDb.coinDao().deleteCoin(coin.getCoinId(), getBelongTo());
     }
 
     public void clearDb() {
@@ -216,6 +225,10 @@ public class DataRepository {
         return mDb.accountDao().loadForCoin(coin.getId());
     }
 
+    public void deleteAccountsByCoin(CoinEntity coin){
+        mDb.accountDao().deleteByCoin(coin.getId());
+    }
+
     public AccountEntity loadTargetETHAccount(ETHAccount account){
         try {
             CoinEntity coinEntity = this.loadCoinSync(Coins.ETH.coinId());
@@ -235,9 +248,16 @@ public class DataRepository {
     public AccountEntity loadTargetSOLAccount(SOLAccount account){
         try {
             CoinEntity coinEntity = this.loadCoinSync(Coins.SOL.coinId());
+            if (coinEntity == null) {
+                return null;
+            }
             List<AccountEntity> accountEntityList = this.loadAccountsForCoin(coinEntity);
             for (int i = 0; i < accountEntityList.size(); i++) {
-                JSONObject jsonObject = new JSONObject(accountEntityList.get(i).getAddition());
+                String addition = accountEntityList.get(i).getAddition();
+                if (TextUtils.isEmpty(addition)) {
+                    continue;
+                }
+                JSONObject jsonObject = new JSONObject(addition);
                 if (jsonObject.get("sol_account").equals(account.getCode())) {
                     return accountEntityList.get(i);
                 }
