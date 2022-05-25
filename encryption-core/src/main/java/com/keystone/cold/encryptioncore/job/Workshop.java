@@ -73,7 +73,7 @@ class Workshop implements Callable<Packet> {
         Log.w(TAG, (isRequest ? "downstream: " : "upstream: ") + packet.toString());
     }
 
-    private void checkLength(byte[] outputBytes) throws ExceedMaxLengthException {
+    private void checkMessageLength(byte[] outputBytes) throws ExceedMaxLengthException {
         byte[] lengthBytes = Arrays.copyOfRange(outputBytes, 2, 4);
         int length = ByteFormatter.bytes2short(lengthBytes);
         if (length > MAX_PAYLOAD_LENGTH) {
@@ -87,7 +87,7 @@ class Workshop implements Callable<Packet> {
         final byte[] outputBytes = mPacker.serialize(mPacket);
         logBytes(true, id, outputBytes);
         logPacket(true, mPacket);
-        checkLength(outputBytes);
+        checkMessageLength(outputBytes);
         mPort.write(ByteBuffer.wrap(outputBytes), outputBytes.length);
 
         final Future<byte[]> future = sExecutor.submit(new SerialReader(mPort));
