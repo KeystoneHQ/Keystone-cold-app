@@ -20,7 +20,7 @@ package com.keystone.cold.encryptioncore.interfaces;
 public interface CONSTANTS {
     byte STX = 0x02;
     byte ETX = 0x03;
-    int MAX_BODY_SIZE = 2048;
+    int MAX_BODY_SIZE = 1024 - 6;
     int MIN_BUFFER_SIZE = 1 /*stx*/ + 1/*encryption*/ + 2 /*length*/ + 1 /*etx*/ + 1 /*lrc*/;
     int MAX_BUFFER_SIZE = MIN_BUFFER_SIZE + MAX_BODY_SIZE;
 
