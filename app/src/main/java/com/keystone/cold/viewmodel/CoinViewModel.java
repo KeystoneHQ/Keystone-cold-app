@@ -83,7 +83,11 @@ public class CoinViewModel extends AndroidViewModel {
                 try {
                     JSONObject jsonObject = new JSONObject(preDerivationPaths);
                     String preMasterFingerprint = jsonObject.optString("master_fingerprint");
-                    if (masterFingerPrint.equalsIgnoreCase(preMasterFingerprint)) {
+                    JSONObject accountPaths = jsonObject.optJSONObject("sol_derivation_paths");
+                    if (masterFingerPrint.equalsIgnoreCase(preMasterFingerprint)
+                            && accountPaths != null
+                            && !TextUtils.isEmpty(accountPaths.toString())
+                            && !accountPaths.toString().equals(new JSONObject().toString())) {
                         return;
                     }
                 } catch (JSONException exception) {
@@ -97,6 +101,9 @@ public class CoinViewModel extends AndroidViewModel {
                 for (int i = 0; i < solAccounts.length; i++) {
                     JSONArray addresses = new JSONArray();
                     AccountEntity accountEntity = mRepository.loadTargetSOLAccount(solAccounts[i]);
+                    if (accountEntity == null) {
+                        continue;
+                    }
                     int addressLength = 3;
                     if (solAccounts[i] == SOLAccount.SOLFLARE_BIP44_ROOT) {
                         addressLength = 1;

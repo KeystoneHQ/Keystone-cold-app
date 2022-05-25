@@ -409,6 +409,11 @@ public class SetupVaultViewModel extends AndroidViewModel {
                             }
                         }
                         continue;
+                    } else if (coin.getIndex() == Coins.SOL.coinIndex()) {
+                        if (accountEntities.size() != coin.getAccounts().size()) {
+                            updateSolAccounts(coin);
+                        }
+                        continue;
                     } else if (accountEntities.size() != 0) {
                         continue;
                     }
@@ -451,6 +456,13 @@ public class SetupVaultViewModel extends AndroidViewModel {
                 AppExecutors.getInstance().mainThread().execute(onComplete);
             }
         });
+    }
+
+    private void updateSolAccounts(CoinEntity coin) {
+        mRepository.deleteAccountsByCoin(coin);
+        mRepository.deleteCoin(coin);
+        mRepository.deleteAddressByCoin(coin);
+        createSolAccounts(coin);
     }
 
     private void createSolAccounts(CoinEntity coin) {

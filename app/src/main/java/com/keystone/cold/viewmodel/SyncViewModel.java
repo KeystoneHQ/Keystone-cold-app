@@ -275,8 +275,10 @@ public class SyncViewModel extends AndroidViewModel {
     private List<Pair<String, String>> getPairs(SOLAccount solAccount) {
         List<Pair<String, String>> result = new ArrayList<>();
         AccountEntity accountEntity = mRepository.loadTargetSOLAccount(solAccount);
-        for (int i = 0; i < 3; i++) {
-            result.add(i, Pair.create("" + i, AddAddressViewModel.deriveSolAddress(accountEntity, i, null)));
+        if (accountEntity != null) {
+            for (int i = 0; i < 3; i++) {
+                result.add(i, Pair.create("" + i, AddAddressViewModel.deriveSolAddress(accountEntity, i, null)));
+            }
         }
         return result;
     }
