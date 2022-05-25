@@ -54,6 +54,9 @@ public interface CoinDao {
     @Update
     int update(CoinEntity coinEntity);
 
+    @Query("DELETE FROM coins WHERE coinId = :coinId AND belongTo = :belongTo")
+    int deleteCoin(String coinId, String belongTo);
+
     @Query("DELETE FROM coins WHERE belongTo = 'hidden'")
     int deleteHidden();
 }
