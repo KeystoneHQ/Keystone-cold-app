@@ -23,12 +23,14 @@ import androidx.annotation.NonNull;
 
 import com.keystone.cold.encryptioncore.BuildConfig;
 import com.keystone.cold.encryptioncore.base.Packet;
+import com.keystone.cold.encryptioncore.exception.ExceedMaxLengthException;
 import com.keystone.cold.encryptioncore.interfaces.Packer;
 import com.keystone.cold.encryptioncore.interfaces.SerialPortProxy;
 import com.keystone.cold.encryptioncore.utils.ByteFormatter;
 import com.keystone.cold.encryptioncore.utils.Preconditions;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 class Workshop implements Callable<Packet> {
     private static final String TAG = "EncryptionCore.Workshop";
     private static final int DEFAULT_TIMEOUT = 60;
+    private static final int MAX_PAYLOAD_LENGTH = 1024;
     private final SerialPortProxy mPort;
     private final ExecutorService sExecutor = Executors.newSingleThreadExecutor();
     private final Packet mPacket;
@@ -70,12 +73,21 @@ class Workshop implements Callable<Packet> {
         Log.w(TAG, (isRequest ? "downstream: " : "upstream: ") + packet.toString());
     }
 
+    private void checkLength(byte[] outputBytes) throws ExceedMaxLengthException {
+        byte[] lengthBytes = Arrays.copyOfRange(outputBytes, 2, 4);
+        int length = ByteFormatter.bytes2short(lengthBytes);
+        if (length > MAX_PAYLOAD_LENGTH) {
+            throw new ExceedMaxLengthException("Current length is " + length + ", max length is " + MAX_PAYLOAD_LENGTH);
+        }
+    }
+
     @Override
     public Packet call() throws Exception {
         final String id = ByteFormatter.addHexPrefix(mPacket.getId());
         final byte[] outputBytes = mPacker.serialize(mPacket);
         logBytes(true, id, outputBytes);
         logPacket(true, mPacket);
+        checkLength(outputBytes);
         mPort.write(ByteBuffer.wrap(outputBytes), outputBytes.length);
 
         final Future<byte[]> future = sExecutor.submit(new SerialReader(mPort));
