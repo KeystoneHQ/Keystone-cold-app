@@ -224,7 +224,7 @@ public class SolTxViewModel extends Base {
             if (addressIndex != -1) {
                 AccountEntity accountEntity = mRepository.loadTargetSOLAccount(SOLAccount.ofCode(Utilities.getCurrentSolAccount(context)));
                 if (accountEntity == null) {
-                    throw new InvalidTransactionException("not have match account");
+                    throw new InvalidTransactionException("not having matched accounts.");
                 }
                 int addressNum = addressIndex - accountEntity.getAddressLength() + 1;
                 CoinEntity coin = mRepository.loadCoinEntityByCoinCode(Coins.SOL.coinCode());
