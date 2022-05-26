@@ -165,7 +165,7 @@ public class SolTxViewModel extends Base {
                 }
 
                 @Override
-                public void onFailed() {
+                public void onFailed(String error) {
                     parseMessageJsonLiveData.postValue(null);
                 }
             });

@@ -15,7 +15,7 @@ public class SolImpl implements Coin {
     protected static native Void nativeParseMessage(final String message, final ParseMessageCallback callback);
 
     static {
-        System.loadLibrary("CryptoCoinLib_v0_1_2");
+        System.loadLibrary("CryptoCoinLib_v0_1_3");
     }
 
     @Override
@@ -65,7 +65,7 @@ public class SolImpl implements Coin {
 
         void onSuccess(String json);
 
-        void onFailed();
+        void onFailed(String error);
 
     }
 }

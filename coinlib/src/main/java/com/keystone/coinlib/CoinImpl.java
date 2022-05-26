@@ -13,7 +13,7 @@ public class CoinImpl implements Coin{
     protected static native Void nativeLegacyGenerateTransaction(final String tx, SignCallback sc, Signer signer, String CoinCode);
 
     static {
-        System.loadLibrary("CryptoCoinLib_v0_1_2");
+        System.loadLibrary("CryptoCoinLib_v0_1_3");
     }
 
     @Override
