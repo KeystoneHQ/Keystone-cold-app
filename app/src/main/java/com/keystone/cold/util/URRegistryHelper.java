@@ -139,7 +139,7 @@ public class URRegistryHelper {
         if (!path.toUpperCase().startsWith("M/")) {
             path = "M/" + path;
         }
-        return path.split("/").length;
+        return path.split("/").length -1;
     }
 
     private static byte[] getSolPublicKeyByAddress(String address) {
