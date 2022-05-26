@@ -51,7 +51,7 @@ public class SolTxConfirmFragment extends BaseFragment<SolTxConfirmBinding> {
     @Override
     protected void init(View view) {
         bundle = requireArguments();
-        viewModel = ViewModelProviders.of(mActivity).get(SolTxViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(SolTxViewModel.class);
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         mBinding.sign.setOnClickListener(v -> {
             handleSign();
@@ -122,11 +122,11 @@ public class SolTxConfirmFragment extends BaseFragment<SolTxConfirmBinding> {
                     onSignSuccess();
                 }, SIGN_DIALOG_SUCCESS_DELAY);
             } else if (SolTxViewModel.STATE_SIGN_FAIL.equals(s)) {
-                if (signingDialog == null) {
-                    signingDialog = SigningDialog.newInstance();
-                    signingDialog.show(mActivity.getSupportFragmentManager(), "");
-                }
-                new Handler().postDelayed(() -> signingDialog.setState(SigningDialog.STATE_FAIL), SIGN_DIALOG_FAIL_DELAY);
+                new Handler().postDelayed(() -> {
+                    if (signingDialog != null) {
+                        signingDialog.setState(SigningDialog.STATE_FAIL);
+                    }
+                }, SIGN_DIALOG_FAIL_DELAY);
                 new Handler().postDelayed(() -> {
                     if (signingDialog != null) {
                         signingDialog.dismiss();
