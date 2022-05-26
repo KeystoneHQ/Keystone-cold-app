@@ -121,6 +121,10 @@ public class DataRepository {
         return mDb.coinDao().loadCoin(coinId, getBelongTo());
     }
 
+    /**
+     * 问题详见：https://keystonejira.atlassian.net/jira/software/c/projects/PRAD/boards/4?modal=detail&selectedIssue=PRAD-1430
+     * 将address的查询方式由@Query改为@RawQuery，尝试解决该问题。
+     */
     public LiveData<List<AddressEntity>> loadAddress(String coinId) {
         String sqlQueryAddress = "SELECT * FROM addresses WHERE coinId = ? AND belongTo = ?";
         return mDb.addressDao().loadAddressByRawQuery(new SimpleSQLiteQuery(sqlQueryAddress, new Object[]{coinId, getBelongTo()}));
