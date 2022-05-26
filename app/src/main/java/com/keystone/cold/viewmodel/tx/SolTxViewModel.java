@@ -44,6 +44,8 @@ import java.util.UUID;
 
 public class SolTxViewModel extends Base {
 
+    private static final String TAG = SolTxViewModel.class.getSimpleName();
+
     public static final String KEY_DATA = "data_key";
     public static final String KEY_FROM_ADDRESS = "from_address_key";
 
@@ -166,6 +168,7 @@ public class SolTxViewModel extends Base {
 
                 @Override
                 public void onFailed(String error) {
+                    Log.e(TAG, String.format("sign error is %s", error));
                     parseMessageJsonLiveData.postValue(null);
                 }
             });
