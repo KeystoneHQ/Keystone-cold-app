@@ -25,6 +25,7 @@ import android.text.TextUtils;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
+import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
@@ -120,8 +121,13 @@ public class DataRepository {
         return mDb.coinDao().loadCoin(coinId, getBelongTo());
     }
 
+    /**
+     * 问题详见：https://keystonejira.atlassian.net/jira/software/c/projects/PRAD/boards/4?modal=detail&selectedIssue=PRAD-1430
+     * 将address的查询方式由@Query改为@RawQuery，尝试解决该问题。
+     */
     public LiveData<List<AddressEntity>> loadAddress(String coinId) {
-        return mDb.addressDao().loadAddressForCoin(coinId, getBelongTo());
+        String sqlQueryAddress = "SELECT * FROM addresses WHERE coinId = ? AND belongTo = ?";
+        return mDb.addressDao().loadAddressByRawQuery(new SimpleSQLiteQuery(sqlQueryAddress, new Object[]{coinId, getBelongTo()}));
     }
 
     public List<AddressEntity> loadAddressSync(String coinId) {
