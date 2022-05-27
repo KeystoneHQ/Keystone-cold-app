@@ -55,6 +55,8 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
     String query;
     private CoinViewModel viewModel;
     private WatchWallet watchWallet;
+    private String coinId;
+    private LiveData<List<AddressEntity>> addressListLiveData;
     private final AddressCallback mAddrCallback = new AddressCallback() {
         @Override
         public void onClick(AddressEntity addr) {
@@ -123,13 +125,14 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
     @Override
     protected void initData(Bundle savedInstanceState) {
         Bundle data = requireArguments();
+        coinId = data.getString(KEY_COIN_ID);
         requireParentFragment();
         CoinViewModel.Factory factory = new CoinViewModel.Factory(mActivity.getApplication(),
-                data.getString(KEY_COIN_ID));
+                coinId);
         viewModel = ViewModelProviders.of(getParentFragment(), factory)
                 .get(CoinViewModel.class);
-        subscribeUi(viewModel.getAddress());
-
+        addressListLiveData = viewModel.getNewAddressLiveData(coinId);
+        subscribeUi(addressListLiveData);
     }
 
     private void subscribeUi(LiveData<List<AddressEntity>> address) {
@@ -176,7 +179,7 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
         return account.isChildrenPath(addressEntity.getPath());
     }
 
-    public static boolean isCurrentSOLAccountAddress(SOLAccount account, AddressEntity addressEntity){
+    public static boolean isCurrentSOLAccountAddress(SOLAccount account, AddressEntity addressEntity) {
         return account.isChildrenPath(addressEntity.getPath());
     }
 
@@ -195,5 +198,14 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
     public void onStop() {
         super.onStop();
         Keyboard.hide(mActivity, requireView());
+    }
+
+    public void updateAddressList() {
+        if (addressListLiveData != null) {
+            addressListLiveData.removeObservers(this);
+            addressListLiveData = null;
+        }
+        addressListLiveData = viewModel.getNewAddressLiveData(coinId);
+        subscribeUi(addressListLiveData);
     }
 }
