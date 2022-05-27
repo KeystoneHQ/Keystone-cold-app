@@ -21,9 +21,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.RawQuery;
 import androidx.room.Update;
-import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.keystone.cold.db.entity.AddressEntity;
 
@@ -33,9 +31,6 @@ import java.util.List;
 public interface AddressDao {
     @Query("SELECT * FROM addresses WHERE coinId = :coinId AND belongTo =:belongTo")
     LiveData<List<AddressEntity>> loadAddressForCoin(String coinId, String belongTo);
-
-    @RawQuery(observedEntities = AddressEntity.class)
-    LiveData<List<AddressEntity>> loadAddressByRawQuery(SupportSQLiteQuery query);
 
     @Query("SELECT * FROM addresses WHERE coinId = :coinId AND belongTo =:belongTo")
     List<AddressEntity> loadAddressSync(String coinId, String belongTo);
