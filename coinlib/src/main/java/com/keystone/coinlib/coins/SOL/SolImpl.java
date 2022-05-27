@@ -1,5 +1,7 @@
 package com.keystone.coinlib.coins.SOL;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.keystone.coinlib.coins.AbsTx;
@@ -12,7 +14,7 @@ import com.keystone.coinlib.utils.Coins;
 
 
 public class SolImpl implements Coin {
-    protected static native Void nativeParseMessage(final String message, final ParseMessageCallback callback);
+    protected static native Boolean nativeParseMessage(final String message, final ParseMessageCallback callback);
 
     static {
         System.loadLibrary("CryptoCoinLib_v0_1_3");
@@ -57,7 +59,8 @@ public class SolImpl implements Coin {
     }
 
     public static void parseMessage(String message, ParseMessageCallback parseMessageCallback) {
-        SolImpl.nativeParseMessage(message, parseMessageCallback);
+        Boolean status = SolImpl.nativeParseMessage(message, parseMessageCallback);
+        Log.w("Solana", "parseMessage: status=" + status);
     }
 
 
