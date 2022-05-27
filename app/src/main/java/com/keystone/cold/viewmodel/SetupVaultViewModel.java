@@ -150,7 +150,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
             case SetupVaultViewModel.VAULT_CREATE_STEP_SET_PASSWORD:
             case SetupVaultViewModel.VAULT_CREATE_STEP_FIRMWARE_UPGRADE:
             case SetupVaultViewModel.VAULT_CREATE_STEP_WRITE_MNEMONIC:
-            case SetupVaultViewModel.VAULT_CREATE_STEP_DONE:{
+            case SetupVaultViewModel.VAULT_CREATE_STEP_DONE: {
                 Utilities.setVaultCreateStep(getApplication(), step);
                 break;
             }
@@ -453,7 +453,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
                 }
             }
             if (onComplete != null) {
-                AppExecutors.getInstance().mainThread().execute(onComplete);
+                AppExecutors.getInstance().diskIO().execute(() -> AppExecutors.getInstance().mainThread().execute(onComplete));
             }
         });
     }

@@ -713,7 +713,12 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         } else if (watchWallet == WatchWallet.SOLANA) {
             AppExecutors.getInstance().diskIO().execute(() -> {
                 CoinEntity coinEntity = viewModel.getCoin(coinId);
-                viewModel.addSolAccountAddress(value, coinEntity, () -> handler.postDelayed(dialog::dismiss, DIALOG_DISMISS_DELAY_TIME));
+                viewModel.addSolAccountAddress(value, coinEntity, () -> {
+                    if (fragments[0] != null && fragments[0] instanceof AddressFragment) {
+                        ((AddressFragment) fragments[0]).updateAddressList();
+                    }
+                    handler.postDelayed(dialog::dismiss, DIALOG_DISMISS_DELAY_TIME);
+                });
             });
         } else {
             AppExecutors.getInstance().diskIO().execute(() -> {

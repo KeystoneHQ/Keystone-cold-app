@@ -67,6 +67,10 @@ public class CoinViewModel extends AndroidViewModel {
         return mObservableAddress;
     }
 
+    public LiveData<List<AddressEntity>> getNewAddressLiveData(String coinId) {
+        return mRepository.loadAddress(coinId);
+    }
+
     public void setCoin(CoinEntity coin) {
         this.coin.set(coin);
     }
