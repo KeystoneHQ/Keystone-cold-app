@@ -642,9 +642,9 @@
     </string-array>
 
     <string-array name="tutorials_link_sol">
-        <item><u>https://keyst.one/t/solflare</u></item>
-        <item><u>https://keyst.one/t/solflaremobile</u></item>
-        <item><u>https://keyst.one/t/slope</u></item>
+        <item><u>https://keyst.one/solflare</u></item>
+        <item><u>https://keyst.one/solflarem</u></item>
+        <item><u>https://keyst.one/slope</u></item>
     </string-array>
 
     <string-array name="tutorials_name_web3">
@@ -655,10 +655,10 @@
     </string-array>
 
     <string-array name="tutorials_link_web3">
-        <item><u>https://keyst.one/t/mm</u></item>
-        <item><u>https://keyst.one/t/mmm</u></item>
-        <item><u>https://keyst.one/t/rabby</u></item>
-        <item><u>https://keyst.one/t/dapp</u></item>
+        <item><u>https://keyst.one/mm</u></item>
+        <item><u>https://keyst.one/mmm</u></item>
+        <item><u>https://keyst.one/rabby</u></item>
+        <item><u>https://keyst.one/defi</u></item>
     </string-array>
 
     <string-array name="tutorials_name_polkadot">
@@ -666,7 +666,7 @@
     </string-array>
 
     <string-array name="tutorials_link_polkadot">
-        <item><u>https://keyst.one/t/polkadot</u></item>
+        <item><u>https://keyst.one/polkadot</u></item>
     </string-array>
 
     <string-array name="tutorials_name_xrp">
@@ -674,7 +674,7 @@
     </string-array>
 
     <string-array name="tutorials_link_xrp">
-        <item><u>https://keyst.one/t/xrp</u></item>
+        <item><u>https://keyst.one/xrp</u></item>
     </string-array>
 
     <string name="tittle_eth_selector">Possible Methods</string>
