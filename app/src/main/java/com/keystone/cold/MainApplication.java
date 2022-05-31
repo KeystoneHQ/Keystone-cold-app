@@ -228,7 +228,13 @@ public class MainApplication extends Application {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (Intent.ACTION_SCREEN_OFF.equals(action)) {
+                if (topActivity == null) {
+                    return;
+                }
                 Activity activity = topActivity.get();
+                if (activity == null) {
+                    return;
+                }
                 if (!(activity instanceof UnlockActivity)
                         && Utilities.hasPasswordSet(activity)
                         && !Utilities.isAttackDetected(activity)) {
