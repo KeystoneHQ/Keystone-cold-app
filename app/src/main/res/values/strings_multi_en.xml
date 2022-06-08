@@ -677,6 +677,6 @@
         <item><u>https://keyst.one/xrp</u></item>
     </string-array>
 
-    <string name="tittle_eth_selector">Possible Methods</string>
+    <string name="tittle_eth_selector">4-byte Function Signature</string>
 
 </resources>
