@@ -56,7 +56,7 @@ public class Btc extends AbsCoin {
         private long outputAmount;
         private static final int DUST_AMOUNT = 546;
         private static final int OMNI_USDT_PROPERTYID = 31;
-        private List<ChangeAddressInfo> changeAddressInfoList;
+        private List<ChangeAddressInfo> changeAddressInfoList = new ArrayList<>();
 
         private String changeAddress;
         private long changeAmount;
@@ -71,7 +71,7 @@ public class Btc extends AbsCoin {
 
         @Override
         public ChangeAddressInfo getChangeAddressInfo() {
-            return changeAddressInfoList.get(0);
+            return changeAddressInfoList.isEmpty() ? null : changeAddressInfoList.get(0);
         }
 
         @Override
@@ -88,6 +88,7 @@ public class Btc extends AbsCoin {
             }
             return null;
         }
+
         @Override
         public JSONArray getOutputs() {
             if (isToken) {
@@ -130,16 +131,16 @@ public class Btc extends AbsCoin {
 
         @Override
         protected void parseMetaData() throws JSONException, InvalidTransactionException {
-                parseInput();
-                parseOutPut();
-                amount = calculateDisplayAmount();
-                memo = metaData.optString("memo");
-                fee = calculateDisplayFee();
+            parseInput();
+            parseOutPut();
+            amount = calculateDisplayAmount();
+            memo = metaData.optString("memo");
+            fee = calculateDisplayFee();
         }
 
         @Override
         public double getAmount() {
-                return super.getAmount();
+            return super.getAmount();
         }
 
         private void parseOutPut() throws JSONException {
@@ -178,7 +179,7 @@ public class Btc extends AbsCoin {
         protected String convertAddress(String outAddress) {
             if (getCoinCode().equals(Coins.BCH.coinCode())) {
                 outAddress = Bch.toCashAddress(outAddress);
-            } else if(getCoinCode().equals(Coins.LTC.coinCode())) {
+            } else if (getCoinCode().equals(Coins.LTC.coinCode())) {
                 outAddress = Ltc.convertAddress(outAddress);
             }
             return outAddress;
@@ -189,7 +190,7 @@ public class Btc extends AbsCoin {
             StringBuilder paths = new StringBuilder();
             for (int i = 0; i < inputs.length(); i++) {
                 JSONObject input = inputs.getJSONObject(i);
-                input.put("bip32Derivation",new JSONArray());
+                input.put("bip32Derivation", new JSONArray());
                 String path = input.getString("ownerKeyPath");
                 checkHdPath(path, false);
                 paths.append(path).append(SEPARATOR);
