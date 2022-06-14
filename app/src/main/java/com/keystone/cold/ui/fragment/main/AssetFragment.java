@@ -435,24 +435,6 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     } else {
                         throw new UnExpectedQRException("cannot resolve ur bytes");
                     }
-                } else if (result.getType().equals(ScanResultTypes.UOS)) {
-                    SubstratePayload sp = new SubstratePayload(result.getData());
-                    PolkadotJsTxConfirmViewModel viewModel = ViewModelProviders.of(mActivity)
-                            .get(PolkadotJsTxConfirmViewModel.class);
-                    Extrinsic extrinsic = sp.extrinsic;
-                    if (!viewModel.isNetworkSupported(sp.network)) {
-                        throw new UnknownSubstrateChainException("unknown substrate chain");
-                    } else if (extrinsic == null ||
-                            !viewModel.isTransactionSupported(extrinsic.palletParameter)) {
-                        throw new UnsupportedSubstrateTxException("un supported substrate tx");
-                    } else if (!viewModel.isAccountMatch(sp.getAccount())) {
-                        throw new XfpNotMatchException("Substrate account not match");
-                    } else {
-                        Bundle bundle = new Bundle();
-                        bundle.putString(KEY_TX_DATA, result.getData());
-                        bundle.putBoolean("substrateTx", true);
-                        mFragment.navigate(R.id.action_to_polkadotTxConfirm, bundle);
-                    }
                 } else if (result.getType().equals(ScanResultTypes.UR_ETH_NFT_ITEM)) {
                     EthNFTItem ethnftItem = (EthNFTItem) result.resolve();
                     String name = ethnftItem.getName();
@@ -548,15 +530,13 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 return false;
             }
         };
+        List<ScanResultTypes> desiredResults = new ArrayList<>(Arrays.asList(ScanResultTypes.PLAIN_TEXT,ScanResultTypes.UR_BYTES));
         if (watchWallet == WatchWallet.METAMASK) {
-            scannerState.setDesiredResults(Arrays.asList(ScanResultTypes.PLAIN_TEXT,
-                    ScanResultTypes.UR_ETH_SIGN_REQUEST,
-                    ScanResultTypes.UR_ETH_NFT_ITEM,
-                    ScanResultTypes.UR_BYTES,
-                    ScanResultTypes.UOS));
+            desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_ETH_SIGN_REQUEST,ScanResultTypes.UR_ETH_NFT_ITEM));
         } else if (watchWallet == WatchWallet.SOLANA) {
-            scannerState.setDesiredResults(Arrays.asList(ScanResultTypes.UR_SOL_SIGN_REQUEST));
+            desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_SOL_SIGN_REQUEST));
         }
+        scannerState.setDesiredResults(desiredResults);
         ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);
         scannerViewModel.setState(scannerState);
         navigate(R.id.action_to_scanner);
