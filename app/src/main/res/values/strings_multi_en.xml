@@ -474,7 +474,7 @@
         <item>XRP</item>
     </string-array>
 
-    <string name="choose_watch_only_wallet">Software Wallet</string>
+    <string name="choose_watch_only_wallet">Select Software Wallet</string>
     <string name="sync_later">Export Later</string>
     <string name="sync_watch_wallet">Connect Software Wallet</string>
     <string name="sync_keystone_wallet_guide_title">How to bind Keystone App：</string>
