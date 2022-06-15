@@ -66,6 +66,7 @@
     <string name="setting_screen_off_time">Screen Timeout Length</string>
     <string name="import_nft">Import NFT to lock screen</string>
     <string name="import_nft_contract_address">Contract Address</string>
+    <string name="import_nft_mint_address">Mint Address</string>
     <string name="import_nft_hint">*Please check your lock screen after confirm the import</string>
     <string name="import_nft_error">Invalid NFT data</string>
 
