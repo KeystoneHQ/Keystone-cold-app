@@ -21,12 +21,16 @@ import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CU
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
+import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.ETH_NFT;
 import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_CHAIN_ID;
+import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_COLLECTION_NAME;
 import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_CONTRACT_ADDRESS;
 import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_CONTRACT_NAME;
 import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_MEDIA_DATA;
+import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_MINT_ADDRESS;
 import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_NAME;
-import static com.keystone.cold.ui.fragment.main.keystone.TxConfirmFragment.KEY_TX_DATA;
+import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_NFT_TYPE;
+import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.SOL_NFT;
 import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
 
 import android.annotation.SuppressLint;
@@ -58,8 +62,6 @@ import com.allenliu.badgeview.BadgeView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
-import com.keystone.coinlib.coins.polkadot.UOS.Extrinsic;
-import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
 import com.keystone.coinlib.exception.InvalidETHAccountException;
 import com.keystone.coinlib.exception.InvalidSOLAccountException;
 import com.keystone.coinlib.exception.InvalidTransactionException;
@@ -90,9 +92,9 @@ import com.keystone.cold.viewmodel.exceptions.UnknowQrCodeException;
 import com.keystone.cold.viewmodel.exceptions.UnknownSubstrateChainException;
 import com.keystone.cold.viewmodel.exceptions.UnsupportedSubstrateTxException;
 import com.keystone.cold.viewmodel.exceptions.XfpNotMatchException;
-import com.keystone.cold.viewmodel.tx.PolkadotJsTxConfirmViewModel;
 import com.sparrowwallet.hummingbird.registry.EthNFTItem;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
+import com.sparrowwallet.hummingbird.registry.solana.SolNFTItem;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
 
 import org.json.JSONException;
@@ -444,6 +446,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     String mediaData = ethnftItem.getMediaData();
 
                     Bundle bundle = new Bundle();
+                    bundle.putString(KEY_NFT_TYPE, ETH_NFT);
                     bundle.putInt(KEY_CHAIN_ID, chainId);
                     bundle.putString(KEY_CONTRACT_ADDRESS, contractAddress);
                     bundle.putString(KEY_CONTRACT_NAME, contractName);
@@ -452,7 +455,25 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     mFragment.navigate(R.id.action_QRCodeScan_to_nftConfirmFragment, bundle);
                 } else if (result.getType().equals(ScanResultTypes.UR_SOL_SIGN_REQUEST)) {
                     handleSolSignRequest(result);
+                } else if (result.getType().equals(ScanResultTypes.UR_SOL_NFT_ITEM)) {
+                    handleSolNFTItem(result);
                 }
+            }
+
+            private void handleSolNFTItem(ScanResult result) {
+                SolNFTItem solNFTItem = (SolNFTItem) result.resolve();
+                String mintAddress = solNFTItem.getMintAddress();
+                String collectionName = solNFTItem.getCollectionName();
+                String name = solNFTItem.getName();
+                String mediaData = solNFTItem.getMediaData();
+
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_NFT_TYPE, SOL_NFT);
+                bundle.putString(KEY_MINT_ADDRESS, mintAddress);
+                bundle.putString(KEY_COLLECTION_NAME, collectionName);
+                bundle.putString(KEY_NAME, name);
+                bundle.putString(KEY_MEDIA_DATA, mediaData);
+                mFragment.navigate(R.id.action_QRCodeScan_to_nftConfirmFragment, bundle);
             }
 
             private void handleSolSignRequest(ScanResult result) throws InvalidTransactionException, InvalidSOLAccountException, XfpNotMatchException {
@@ -530,11 +551,11 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 return false;
             }
         };
-        List<ScanResultTypes> desiredResults = new ArrayList<>(Arrays.asList(ScanResultTypes.PLAIN_TEXT,ScanResultTypes.UR_BYTES));
+        List<ScanResultTypes> desiredResults = new ArrayList<>(Arrays.asList(ScanResultTypes.PLAIN_TEXT, ScanResultTypes.UR_BYTES));
         if (watchWallet == WatchWallet.METAMASK) {
-            desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_ETH_SIGN_REQUEST,ScanResultTypes.UR_ETH_NFT_ITEM));
+            desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_ETH_NFT_ITEM));
         } else if (watchWallet == WatchWallet.SOLANA) {
-            desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_SOL_SIGN_REQUEST));
+            desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_SOL_SIGN_REQUEST, ScanResultTypes.UR_SOL_NFT_ITEM));
         }
         scannerState.setDesiredResults(desiredResults);
         ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);
