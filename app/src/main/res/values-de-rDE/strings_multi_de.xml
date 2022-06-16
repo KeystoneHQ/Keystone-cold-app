@@ -431,7 +431,7 @@ Email：support@keyst.one</string>
   <string name="abnormal_state_hint">It is recommended that you wipe the device and then reset it.Repeated retries failed, you can contact us：support@keyst.one
   Status Code:%s</string>
   <string name="abnormal_state_title">Abnormal State</string>
-  <string name="choose_watch_only_wallet">Software Wallet</string>
+  <string name="choose_watch_only_wallet">Select Software Wallet</string>
   <string name="sync_later">Export Later</string>
   <string name="sync_watch_wallet">Connect Software Wallet</string>
   <string name="sync_keystone_wallet_guide_title">How to bind Keystone App：</string>

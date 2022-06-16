@@ -520,6 +520,8 @@
     <string name="confirm_switch">確認切換</string>
     <string name="keep_screen_on">請勿鎖屏</string>
     <string name="sync">連接</string>
+    <string name="change_software_wallet_path">改變派生路徑</string>
+    <string name="tutorials">教程</string>
     <string name="qrcode_capacity">二維碼密度：%s </string>
     <string name="qr_capacity_high">高</string>
     <string name="qr_capacity_mid">中</string>
@@ -579,4 +581,8 @@
     <string name="show_this_qrcode">展示該錢包二維碼</string>
     <string name="sync_metamask_guide_text_hint">Take the Keystone Ethereum Extension import process as an example, the process of other wallets is similar.</string>
     <string name="decode_as_utf8_failed_hint">數據無法解析成有效的utf-8字符。</string>
+    <string name="change_path_hint">請選擇對應的派生路徑，每種派生路徑的前三個地址會被優先顯示。</string>
+    <string name="decode_failed_hint">無法解碼數據。</string>
+    <string name="tutorials_hint">想要了解 Keystone 如何連接軟件錢包的具體操作，請使用您的電腦或手機打開對應的教程鏈接。</string>
+
 </resources>
