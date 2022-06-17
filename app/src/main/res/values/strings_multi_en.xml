@@ -455,7 +455,7 @@
     <string-array name="watch_wallet_list">
         <item>Keystone Companion App</item>
         <item>MetaMask / Rabby / DeFi</item>
-        <item>Solflare / Slope</item>
+        <item>Solflare</item>
         <item>Polkadot{.js}</item>
         <item>XRP Toolkit</item>
     </string-array>
@@ -638,14 +638,10 @@
 
     <string-array name="tutorials_name_sol">
         <item>Solflare Extension</item>
-        <item>Solflare Mobile</item>
-        <item>Slope Wallet</item>
     </string-array>
 
     <string-array name="tutorials_link_sol">
         <item><u>https://keyst.one/solflare</u></item>
-        <item><u>https://keyst.one/solflarem</u></item>
-        <item><u>https://keyst.one/slope</u></item>
     </string-array>
 
     <string-array name="tutorials_name_web3">
