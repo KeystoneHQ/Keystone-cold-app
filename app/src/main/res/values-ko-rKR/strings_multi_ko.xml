@@ -364,7 +364,7 @@
   <string-array name="watch_wallet_list">
     <item>키스톤 모바일 앱</item>
     <item>MetaMask / Rabby / DeFi</item>
-    <item>Solflare / Slope</item>
+    <item>Solflare</item>
     <item>Polkadot{.js}</item>
     <item>XRP Toolkit</item>
   </string-array>
