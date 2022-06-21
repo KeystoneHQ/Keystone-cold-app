@@ -25,7 +25,7 @@
   <string-array name="watch_wallet_list">
     <item>Keystone Companion App</item>
     <item>MetaMask / Rabby / DeFi</item>
-    <item>Solflare / Slope</item>
+    <item>Solflare</item>
     <item>Polkadot{.js}</item>
     <item>XRP Toolkit</item>
   </string-array>
