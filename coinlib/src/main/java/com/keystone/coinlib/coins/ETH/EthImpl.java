@@ -57,6 +57,7 @@ import org.web3j.rlp.RlpEncoder;
 import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpType;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -305,10 +306,18 @@ public class EthImpl implements Coin {
         return signPersonalMessage(message, signer);
     }
 
+    private String getEip712TypeDataHash(@NonNull String message) throws IOException {
+        if (message.startsWith("[")){
+            byte[] messageHash = new StructuredDataEncoder(message).hashStructuredData();
+            return Hex.toHexString(messageHash);
+        }
+        return Eip712HashDataUtil.eip712Hash(message);
+    }
+
     public String signEIP712TypedData(@NonNull String message, Signer signer) {
         try {
-            byte[] messageHash = new StructuredDataEncoder(message).hashStructuredData();
-            String signature = signer.sign(Hex.toHexString(messageHash));
+            String messageHash = getEip712TypeDataHash(message);
+            String signature = signer.sign(messageHash);
             Sign.SignatureData signatureData = getSignatureData(signature, false);
             byte[] sigBytes = concat(concat(signatureData.getR(), signatureData.getS()), signatureData.getV());
             return Hex.toHexString(sigBytes);
