@@ -16,8 +16,15 @@ import com.keystone.coinlib.utils.Coins;
 public class SolImpl implements Coin {
     protected static native int nativeParseMessage(final String message, final ParseMessageCallback callback);
 
+    // @nativeValidateMessage
+    // possible return value:
+    // -1: invalid data provided to native;
+    // 0: not a valid transaction, can be treat as message;
+    // 1: a valid transaction;
+    protected static native int nativeValidateMessage(final String message);
+
     static {
-        System.loadLibrary("CryptoCoinLib_v0_1_3");
+        System.loadLibrary("CryptoCoinLib_v0_1_4");
     }
 
     @Override
@@ -61,6 +68,12 @@ public class SolImpl implements Coin {
     public static void parseMessage(String message, ParseMessageCallback parseMessageCallback) {
         int status = SolImpl.nativeParseMessage(message, parseMessageCallback);
         Log.w("Solana", "parseMessage: status=" + status);
+    }
+
+    public static int validateMessage(String message) {
+        int result = SolImpl.nativeValidateMessage(message);
+        Log.w("Solana", "validateMessage: result=" + result);
+        return result;
     }
 
 
