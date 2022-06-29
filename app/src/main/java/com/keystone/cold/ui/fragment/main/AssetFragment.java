@@ -82,6 +82,7 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerState;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerViewModel;
 import com.keystone.cold.ui.fragment.main.scan.scanner.exceptions.UnExpectedQRException;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
+import com.keystone.cold.util.SolMessageValidateUtil;
 import com.keystone.cold.util.ViewUtils;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.CoinViewModel;
@@ -498,11 +499,12 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     throw new XfpNotMatchException("Master fingerprint not match");
                 }
                 bundle.putString(REQUEST_ID, uuid.toString());
-                bundle.putString(SIGN_DATA, Hex.toHexString(solSignRequest.getSignData()));
+                String signData = Hex.toHexString(solSignRequest.getSignData());
+                bundle.putString(SIGN_DATA, signData);
                 bundle.putString(HD_PATH, "M/" + hdPath);
-                if (solSignRequest.getType().getType().equals(SolSignRequest.DataType.TRANSACTION.getType())){
+                if (SolMessageValidateUtil.isTransactionData(signData)) {
                     mFragment.navigate(R.id.action_to_solTxConfirmFragment, bundle);
-                } else if (solSignRequest.getType().getType().equals(SolSignRequest.DataType.MESSAGE.getType())) {
+                } else {
                     mFragment.navigate(R.id.action_to_solSignMessageFragment, bundle);
                 }
             }
