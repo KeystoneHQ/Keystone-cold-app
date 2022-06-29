@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.accounts.SOLAccount;
+import com.keystone.coinlib.coins.SOL.Sol;
 import com.keystone.coinlib.coins.SOL.SolImpl;
 import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.exception.InvalidTransactionException;
