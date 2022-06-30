@@ -502,10 +502,16 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 String signData = Hex.toHexString(solSignRequest.getSignData());
                 bundle.putString(SIGN_DATA, signData);
                 bundle.putString(HD_PATH, "M/" + hdPath);
-                if (SolMessageValidateUtil.isTransactionData(signData)) {
-                    mFragment.navigate(R.id.action_to_solTxConfirmFragment, bundle);
-                } else {
-                    mFragment.navigate(R.id.action_to_solSignMessageFragment, bundle);
+                SolMessageValidateUtil.DataType dataType = SolMessageValidateUtil.judgeDataType(signData);
+                switch (dataType) {
+                    case TRANSACTION:
+                        mFragment.navigate(R.id.action_to_solTxConfirmFragment, bundle);
+                        break;
+                    case MESSAGE:
+                        mFragment.navigate(R.id.action_to_solSignMessageFragment, bundle);
+                        break;
+                    case INVALIDATE:
+                        throw new InvalidTransactionException("Invalid sign data");
                 }
             }
 
