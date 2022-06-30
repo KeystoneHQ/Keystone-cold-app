@@ -638,10 +638,12 @@
 
     <string-array name="tutorials_name_sol">
         <item>Solflare Extension</item>
+        <item>Solflare Mobile</item>
     </string-array>
 
     <string-array name="tutorials_link_sol">
         <item><u>https://keyst.one/solflare</u></item>
+        <item><u>https://keyst.one/solflarem</u></item>
     </string-array>
 
     <string-array name="tutorials_name_web3">
