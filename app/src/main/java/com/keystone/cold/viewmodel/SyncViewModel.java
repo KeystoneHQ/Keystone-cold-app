@@ -40,6 +40,7 @@ import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.protocol.EncodeConfig;
 import com.keystone.cold.protocol.builder.SyncBuilder;
+import com.keystone.cold.util.Tuple;
 import com.keystone.cold.util.URRegistryHelper;
 import com.sparrowwallet.hummingbird.UR;
 
@@ -188,7 +189,7 @@ public class SyncViewModel extends AndroidViewModel {
         return data;
     }
 
-    public MutableLiveData<UR> generateSyncSolanaUR(List<Pair<String, String>> syncInfo) {
+    public MutableLiveData<UR> generateSyncSolanaUR(List<Tuple<String, String, String>> syncInfo) {
         MutableLiveData<UR> data = new MutableLiveData<>();
         AppExecutors.getInstance().networkIO().execute(() -> {
             UR ur;

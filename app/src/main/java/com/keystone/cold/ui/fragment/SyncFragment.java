@@ -43,6 +43,7 @@ import com.keystone.cold.databinding.SyncFragmentBinding;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.fragment.setup.SetupVaultBaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
+import com.keystone.cold.util.Tuple;
 import com.keystone.cold.viewmodel.SyncViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 import com.sparrowwallet.hummingbird.UR;
@@ -67,7 +68,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
 
     private MutableLiveData<UR> URLiveData;
 
-    private List<Pair<String, String>> solSyncInfo = new ArrayList<>();
+    private List<Tuple<String, String, String>> solSyncInfo = new ArrayList<>();
 
     @Override
     protected int setView() {
@@ -122,15 +123,16 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
         generateSyncData();
     }
 
-    private List<Pair<String, String>> collectSyncInfo(String syncInfo) {
-        List<Pair<String, String>> infoList = new ArrayList<>();
+    private List<Tuple<String, String, String>> collectSyncInfo(String syncInfo) {
+        List<Tuple<String, String, String>> infoList = new ArrayList<>();
         try {
             JSONArray jsonArray = new JSONArray(syncInfo);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = (JSONObject) jsonArray.get(i);
                 String path = jsonObject.getString("path");
                 String address = jsonObject.getString("address");
-                Pair<String, String> pathAddressPair = Pair.create(path, address);
+                String name = jsonObject.getString("name");
+                Tuple<String, String, String> pathAddressPair = Tuple.create(path, address, name);
                 infoList.add(pathAddressPair);
             }
         } catch (JSONException exception) {
