@@ -67,6 +67,7 @@ public class AddressSyncAdapter extends BaseBindingAdapter<AddressEntity, Addres
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("path", getItems().get(i).getPath());
                     jsonObject.put("address", getItems().get(i).getAddressString());
+                    jsonObject.put("name", getItems().get(i).getName());
                     jsonArray.put(jsonObject);
                 } catch (JSONException exception) {
                     exception.printStackTrace();

@@ -1,7 +1,6 @@
 package com.keystone.cold.util;
 
 import android.text.TextUtils;
-import android.util.Pair;
 
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.accounts.ExtendedPublicKey;
@@ -75,11 +74,11 @@ public class URRegistryHelper {
         return new CryptoHDKey(false, key, null, null, origin, null, null, KEY_NAME, note);
     }
 
-    private static CryptoHDKey generateRawKeyForSolByAddress(String path, String address, String note, byte[] masterFingerprint) {
+    private static CryptoHDKey generateRawKeyForSolByAddress(String path, String address, String note, String name, byte[] masterFingerprint) {
         byte[] key = getSolPublicKeyByAddress(address);
         int depth = getPathDepth(path);
         CryptoKeypath origin = new CryptoKeypath(getPathComponents(path), masterFingerprint, depth);
-        return new CryptoHDKey(false, key, null, null, origin, null, null, KEY_NAME, note);
+        return new CryptoHDKey(false, key, null, null, origin, null, null, name, note);
     }
 
     public static CryptoMultiAccounts generateCryptoMultiAccountsForSol(List<String> paths) {
@@ -92,11 +91,11 @@ public class URRegistryHelper {
         return new CryptoMultiAccounts(masterFingerprint, cryptoHDKeyList, KEY_NAME);
     }
 
-    public static CryptoMultiAccounts generateCryptoMultiAccountsForSolByAddress(List<Pair<String, String>> syncInfo) {
+    public static CryptoMultiAccounts generateCryptoMultiAccountsForSolByAddress(List<Tuple<String, String, String>> syncInfo) {
         List<CryptoHDKey> cryptoHDKeyList = new ArrayList<>();
         byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
-        for (Pair<String, String> pathAddressPair : syncInfo) {
-            CryptoHDKey cryptoHDKey = generateRawKeyForSolByAddress(pathAddressPair.first, pathAddressPair.second, null, masterFingerprint);
+        for (Tuple<String, String, String> tupleItem : syncInfo) {
+            CryptoHDKey cryptoHDKey = generateRawKeyForSolByAddress(tupleItem.first, tupleItem.second, null, tupleItem.third, masterFingerprint);
             cryptoHDKeyList.add(cryptoHDKey);
         }
         return new CryptoMultiAccounts(masterFingerprint, cryptoHDKeyList, KEY_NAME);
