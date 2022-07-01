@@ -22,8 +22,10 @@ import static com.keystone.coinlib.utils.Coins.KSM;
 import static com.keystone.coinlib.utils.Coins.isDefaultOpen;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.path.CoinPath;
 import com.keystone.coinlib.utils.Coins;
@@ -87,6 +89,20 @@ public class PresetData {
                     jsonObject.put("sol_account", coin.getAccounts()[i]);
                     account.setAddition(jsonObject.toString());
                     account.setHdPath(SOLAccount.getPathByCode(coin.getAccounts()[i]));
+                    entity.addAccount(account);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else if (coin.coinIndex() == Coins.NEAR.coinIndex()) {
+            try {
+                Log.d("near_develop", " account size is " + coin.getAccounts().length);
+                for (int i = 0; i < coin.getAccounts().length; i++) {
+                    account = new AccountEntity();
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("near_account", coin.getAccounts()[i]);
+                    account.setAddition(jsonObject.toString());
+                    account.setHdPath(NEARAccount.getPathByCode(coin.getAccounts()[i]));
                     entity.addAccount(account);
                 }
             } catch (JSONException e) {

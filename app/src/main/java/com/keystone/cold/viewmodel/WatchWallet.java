@@ -35,12 +35,14 @@ public enum WatchWallet {
     POLKADOT_JS("polkadotJs"),
     XRP_TOOLKIT("xrpToolkit"),
     METAMASK("metamask"),
-    SOLANA("solana");
+    SOLANA("solana"),
+    NEAR("near");
 
     public static final String XRP_TOOLKIT_SIGN_ID = "xrp_toolkit_sign_id";
     public static final String POLKADOT_JS_SIGN_ID = "polkadot_js_sign_id";
     public static final String METAMASK_SIGN_ID = "metamask_sign_id";
     public static final String SOLANA_SIGN_ID = "solana_sign_id";
+    public static final String NEAR_SIGN_ID = "near_sign_id";
 
     private final String walletId;
 
@@ -128,6 +130,8 @@ public enum WatchWallet {
                 return METAMASK_SIGN_ID;
             case SOLANA:
                 return SOLANA_SIGN_ID;
+            case NEAR:
+                return NEAR_SIGN_ID;
         }
         return null;
     }

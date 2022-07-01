@@ -458,6 +458,7 @@
         <item>Solflare</item>
         <item>Polkadot{.js}</item>
         <item>XRP Toolkit</item>
+        <item>Sender</item>
     </string-array>
     <string-array name="watch_wallet_list_values" translatable="false">
         <item>keystone</item>
@@ -465,6 +466,7 @@
         <item>solana</item>
         <item>polkadotJs</item>
         <item>xrpToolkit</item>
+        <item>near</item>
     </string-array>
     <string-array name="watch_wallet_summury" >
         <item>8 main chains including BTC, ETH, etc</item>
@@ -472,6 +474,7 @@
         <item>Solana</item>
         <item>DOT、KSM</item>
         <item>XRP</item>
+        <item>Near</item>
     </string-array>
 
     <string name="choose_watch_only_wallet">Select Software Wallet</string>
