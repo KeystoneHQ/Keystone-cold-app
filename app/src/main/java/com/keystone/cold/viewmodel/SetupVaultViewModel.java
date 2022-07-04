@@ -417,9 +417,9 @@ public class SetupVaultViewModel extends AndroidViewModel {
                         continue;
                     } else if (coin.getIndex() == Coins.NEAR.coinIndex()) {
                         Log.d("near_develop", "updateNearAccounts");
-                        //if (accountEntities.size() != coin.getAccounts().size()) {
+                        if (accountEntities.size() != coin.getAccounts().size()) {
                             updateNearAccounts(coin);
-                        //}
+                        }
                         continue;
                     } else if (accountEntities.size() != 0) {
                         continue;

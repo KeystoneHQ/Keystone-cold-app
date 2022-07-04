@@ -7,7 +7,7 @@ public enum NEARAccount {
 
     // m / purpose' / coin_type' / account' / change / address_index
     MNEMONIC("M/44'/397'/0'", "Near Mnemonic", "near_mnemonic", "M/44'/397'/0'"),
-    LEDGER("M/44'/397'/0'/0'/0","Near Ledger","near_ledger","M/44'/397'/0'/0'/*");
+    LEDGER("M/44'/397'/0'/0'/0'","Near Ledger","near_ledger","M/44'/397'/0'/0'/*'");
 
 
     private String path;
