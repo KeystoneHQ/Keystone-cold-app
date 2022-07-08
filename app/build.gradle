@@ -77,6 +77,13 @@ android {
     }
 
     signingConfigs {
+        debug {
+            def key = getTestKeystore()
+            storeFile key.store
+            storePassword key.storePassword
+            keyAlias key.alias
+            keyPassword key.keyPassword
+        }
         vault_v2 {
             def key = getReleaseKeystore()
             storeFile key.store
@@ -87,12 +94,21 @@ android {
     }
 
     buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled enableProguardInReleaseBuilds
+            shrinkResources enableProguardInReleaseBuilds
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+            proguardFiles 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
         release {
             debuggable false
             minifyEnabled enableProguardInReleaseBuilds
             shrinkResources enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile('proguard-android.txt')
             proguardFiles 'proguard-rules.pro'
+            signingConfig signingConfigs.vault_v2
         }
     }
     packagingOptions {
@@ -125,7 +141,6 @@ android {
             buildConfigField "String", "GIT_HASH", "\"${getGitHash()}\""
             buildConfigField "String", "UPDATE_PUBLIC_KEY", "\"308201a2300d06092a864886f70d01010105000382018f003082018a0282018100b21be9690c3da4c7d52dbe01d73369644369e395ae4a3475472a2b94e9fc91d8c3644cfd4ce81bde4dd29676c51cc1a968de596108e62449fbbf577dfb90a177ec2f0893367a608ac0387d2df4ec3cf77f420d18b3e0cf181ff8df8734935e54d0a7f53a095a8f68eff12bf0c923650843e1905a879029e975361cdca8c352176164a3f2fed9319d078d802d5f6639a8410a6a1e677655e6d7589038deceda9a963fae15b2ee2b93a6ee30ee6e455084d555e9ad0443d8a3f43c2fd1a00f7ade9711dd1d9bf2312af90904007d385f5e49dbb1f51e54472bba73eb810801f25c610c70a547950e9ee57c3d1ca9cf44bb79f5ef43338f0ab05e49cc42d10d2b0f911aa50b6c60dba3760bb8fdd8f7cc1bda4bd06c7553727f8e18de19e78a4e6251da9828315eb6a9e8d9bc506246ed0210b935eedbb15430c46213ec977541f15a1b574c64003746915a5100e8da4e0e022553230a0f569746bd38fc8819f8a1a60c61aa6587fd7bbcfccae464bf9a933464bf8639070c0d04af67652a1f2fc70203010001\""
             buildConfigField "String", "WEB_AUTH_R1_PUBLIC_KEY", "\"0437fcd35007cdd2b4e695514e9d9f059dd55919cc77bfe5f3a85276fac12c5883c7874c68e20859e9b70582e58347b5e97e75f4fbc50d71197ea27df416efa63c\""
-            signingConfig signingConfigs.vault_v2
         }
     }
     if (mIsVaultRelease) {
@@ -262,6 +277,34 @@ def getReleaseKeystore() {
     }
 
     def keystorePropsFile = new File(keystoreDir, "v2.properties")
+    if (!keystorePropsFile.exists()) {
+        throw new FileNotFoundException("could not find ${keystorePropsFile}")
+    }
+
+    def keystoreProps = new Properties()
+    keystoreProps.load(new FileInputStream(keystorePropsFile))
+
+    def keystoreFile = new File(keystoreDir, keystoreProps['key.store'])
+    if (!keystoreFile.exists()) {
+        throw new FileNotFoundException("could not find ${keystoreFile}")
+    }
+
+    return [
+            store        : keystoreFile,
+            alias        : keystoreProps['key.alias'],
+            storePassword: keystoreProps['key.store.password'],
+            keyPassword  : keystoreProps['key.alias.password']
+    ].asImmutable()
+}
+
+def getTestKeystore() {
+
+    def keystoreDir = new File(rootDir, "keystores")
+    if (!keystoreDir.exists()) {
+        throw new FileNotFoundException("could not find ${keystoreDir}")
+    }
+
+    def keystorePropsFile = new File(keystoreDir, "debug.properties")
     if (!keystorePropsFile.exists()) {
         throw new FileNotFoundException("could not find ${keystorePropsFile}")
     }
