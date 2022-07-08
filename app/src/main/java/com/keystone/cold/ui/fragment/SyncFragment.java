@@ -34,6 +34,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
@@ -269,6 +270,34 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                             } else {
                                 String code = Utilities.getCurrentSolAccount(mActivity);
                                 SOLAccount account = SOLAccount.ofCode(code);
+                                mBinding.fromPath.setText(account.getDisplayPath().toLowerCase());
+                            }
+                        }
+                        URLiveData.removeObservers(this);
+                    });
+
+                });
+                break;
+            case NEAR:
+                if (URLiveData != null) {
+                    URLiveData.removeObservers(this);
+                }
+                syncViewModel.getNearAccountMutableLiveData().observe(this, nearAccount -> {
+                    if (nearAccount == null) return;
+                    if (isRefreshing) return;
+                    isRefreshing = true;
+                    Utilities.setCurrentNearAccount(mActivity, nearAccount.getCode());
+                    URLiveData = syncViewModel.generateSyncNearUR(solSyncInfo);
+                    URLiveData.observe(this, urData -> {
+                        if (urData != null) {
+                            mBinding.dynamicQrcodeLayout.qrcode.displayUR(urData);
+                            mBinding.derivationPattern.setVisibility(View.VISIBLE);
+                            mBinding.addressData.setVisibility(View.GONE);
+                            if (solSyncInfo.size() == 1) {
+                                mBinding.fromPath.setText(solSyncInfo.get(0).first.toLowerCase());
+                            } else {
+                                String code = Utilities.getCurrentNearAccount(mActivity);
+                                NEARAccount account = NEARAccount.ofCode(code);
                                 mBinding.fromPath.setText(account.getDisplayPath().toLowerCase());
                             }
                         }

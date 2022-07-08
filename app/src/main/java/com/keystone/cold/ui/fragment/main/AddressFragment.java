@@ -36,6 +36,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
@@ -163,6 +164,19 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
                             }
                         })
                         .collect(Collectors.toList());
+            } else if (watchWallet.equals(WatchWallet.NEAR)) {
+                String code = Utilities.getCurrentNearAccount(mActivity);
+                NEARAccount account = NEARAccount.ofCode(code);
+                addressEntities = addressEntities.stream()
+                        .filter(addressEntity -> isCurrentNearAccountAddress(account, addressEntity))
+                        .peek(addressEntity -> {
+                            if (addressEntity.getName().startsWith("NEAR-")) {
+                                addressEntity.setDisplayName(addressEntity.getName().replace("NEAR-", "Account "));
+                            } else {
+                                addressEntity.setDisplayName(addressEntity.getName());
+                            }
+                        })
+                        .collect(Collectors.toList());
             } else {
                 addressEntities = addressEntities.stream().peek(addressEntity -> {
                     addressEntity.setDisplayName(addressEntity.getName());
@@ -180,6 +194,10 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
     }
 
     public static boolean isCurrentSOLAccountAddress(SOLAccount account, AddressEntity addressEntity) {
+        return account.isChildrenPath(addressEntity.getPath());
+    }
+
+    public static boolean isCurrentNearAccountAddress(NEARAccount account, AddressEntity addressEntity) {
         return account.isChildrenPath(addressEntity.getPath());
     }
 

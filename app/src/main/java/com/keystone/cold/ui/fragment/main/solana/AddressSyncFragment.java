@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
@@ -18,6 +19,7 @@ import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.main.AddressSyncAdapter;
 import com.keystone.cold.ui.fragment.main.AddressSyncCallback;
 import com.keystone.cold.viewmodel.CoinViewModel;
+import com.keystone.cold.viewmodel.WatchWallet;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +31,7 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
 
     private CoinViewModel viewModel;
     private AddressSyncAdapter addressSyncAdapter;
+    private WatchWallet watchWallet;
 
     private final AddressSyncCallback addressSyncCallback = (addr, position) -> {
         addressSyncAdapter.toggleChecked(position);
@@ -43,6 +46,8 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
 
     @Override
     protected void init(View view) {
+        watchWallet = WatchWallet.getWatchWallet(mActivity);
+
         if (addressSyncAdapter == null) {
             addressSyncAdapter = new AddressSyncAdapter(mActivity);
             mBinding.tvConfirm.setEnabled(false);
@@ -76,18 +81,27 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
     }
 
     private void subscribeUi(LiveData<List<AddressEntity>> address) {
-        String code = Utilities.getCurrentSolAccount(mActivity);
-        SOLAccount account = SOLAccount.ofCode(code);
-
         address.observe(this, addressEntities -> {
             addressEntities = addressEntities.stream()
-                    .filter(addressEntity ->
-                            account.isChildrenPath(addressEntity.getPath()))
+                    .filter(this::isBelongToCurrentAccount)
                     .peek(addressEntity -> {
                         addressEntity.setDisplayName(addressEntity.getName());
                     }).collect(Collectors.toList());
             addressSyncAdapter.setItems(addressEntities);
         });
+    }
+
+    private boolean isBelongToCurrentAccount(AddressEntity entity) {
+        if (watchWallet == WatchWallet.SOLANA) {
+            String code = Utilities.getCurrentSolAccount(mActivity);
+            SOLAccount account = SOLAccount.ofCode(code);
+            return account.isChildrenPath(entity.getPath());
+        } else if (watchWallet == WatchWallet.NEAR) {
+            String code = Utilities.getCurrentNearAccount(mActivity);
+            NEARAccount account = NEARAccount.ofCode(code);
+            return account.isChildrenPath(entity.getPath());
+        }
+        return false;
     }
 
 }

@@ -35,6 +35,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
@@ -103,6 +104,7 @@ public class ConfirmMnemonicFragment extends MnemonicInputFragment {
                 Utilities.setCurrentBelongTo(mActivity, "main");
                 Utilities.setCurrentEthAccount(mActivity, ETHAccount.BIP44_STANDARD.getCode());
                 Utilities.setCurrentSolAccount(mActivity, SOLAccount.SOLFLARE_BIP44.getCode());
+                Utilities.setCurrentNearAccount(mActivity, NEARAccount.MNEMONIC.getCode());
                 Runnable onComplete = () -> {
                     if (dialog != null && dialog.getDialog() != null && dialog.getDialog().isShowing()) {
                         dialog.dismiss();

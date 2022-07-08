@@ -38,6 +38,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.cold.ui.modal.ModalDialog;
 
@@ -67,6 +68,8 @@ public class Utilities {
     public static final String INPUT_SETTINGS_CLEARED = "input_settings_cleared";
     public static final String ETH_CURRENT_ACCOUNT = "eth_current_account";
     public static final String SOL_CURRENT_ACCOUNT = "sol_current_account";
+    public static final String NEAR_CURRENT_ACCOUNT = "near_current_account";
+
     public static final String WEB3_GUIDE_TIMES = "web3_guide_times";
 
     public static final String NFT_AVATAR_RESOURCE = "nft_avatar_resource";
@@ -317,6 +320,16 @@ public class Utilities {
     public static String getCurrentSolAccount(Context context) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
         return sp.getString(SOL_CURRENT_ACCOUNT, SOLAccount.SOLFLARE_BIP44.getCode());
+    }
+
+    public static void setCurrentNearAccount(Context context, String code) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        sp.edit().putString(NEAR_CURRENT_ACCOUNT, code).apply();
+    }
+
+    public static String getCurrentNearAccount(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        return sp.getString(NEAR_CURRENT_ACCOUNT, NEARAccount.MNEMONIC.getCode());
     }
 
     public static void setSolDerivationPaths(Context context, String paths) {

@@ -28,6 +28,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.Util;
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
@@ -56,6 +57,7 @@ public class SyncViewModel extends AndroidViewModel {
     private final DataRepository mRepository;
     private final MutableLiveData<ETHAccount> chainsMutableLiveData;
     private final MutableLiveData<SOLAccount> solAccountMutableLiveData;
+    private final MutableLiveData<NEARAccount> nearAccountMutableLiveData;
 
 
     public SyncViewModel(@NonNull Application application) {
@@ -66,6 +68,9 @@ public class SyncViewModel extends AndroidViewModel {
 
         solAccountMutableLiveData = new MutableLiveData<>();
         solAccountMutableLiveData.postValue(SOLAccount.ofCode(Utilities.getCurrentSolAccount(application)));
+
+        nearAccountMutableLiveData = new MutableLiveData<>();
+        nearAccountMutableLiveData.postValue(NEARAccount.ofCode(Utilities.getCurrentNearAccount(application)));
     }
 
     public MutableLiveData<ETHAccount> getChainsMutableLiveData() {
@@ -74,6 +79,10 @@ public class SyncViewModel extends AndroidViewModel {
 
     public MutableLiveData<SOLAccount> getSolAccountMutableLiveData() {
         return solAccountMutableLiveData;
+    }
+
+    public MutableLiveData<NEARAccount> getNearAccountMutableLiveData() {
+        return nearAccountMutableLiveData;
     }
 
     public List<AccountEntity> loadAccountForCoin(CoinEntity coin) {
@@ -198,6 +207,17 @@ public class SyncViewModel extends AndroidViewModel {
         });
         return data;
     }
+
+    public MutableLiveData<UR> generateSyncNearUR(List<Tuple<String, String, String>> syncInfo) {
+        MutableLiveData<UR> data = new MutableLiveData<>();
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            UR ur;
+            ur = URRegistryHelper.generateCryptoMultiAccountsForNearByAddress(syncInfo).toUR();
+            data.postValue(ur);
+        });
+        return data;
+    }
+
 
     public LiveData<String> generateSyncMetamask(ETHAccount ethAccount) {
         chainsMutableLiveData.postValue(ethAccount);

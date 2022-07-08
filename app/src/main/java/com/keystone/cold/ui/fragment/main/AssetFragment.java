@@ -156,6 +156,12 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             mBinding.customTitle.setVisibility(View.GONE);
             coinId = Coins.SOL.coinId();
             coinCode = Coins.SOL.coinCode();
+        } else if (watchWallet == WatchWallet.NEAR) {
+            mBinding.toolbar.setNavigationIcon(R.drawable.menu);
+            mBinding.toolbar.setTitle(watchWallet.getWalletName(mActivity));
+            mBinding.customTitle.setVisibility(View.GONE);
+            coinId = Coins.NEAR.coinId();
+            coinCode = Coins.NEAR.coinCode();
         } else {
             Bundle data = requireArguments();
             coinId = data.getString(KEY_COIN_ID);
@@ -186,7 +192,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         mBinding.toolbar.setOnMenuItemClickListener(this);
         mBinding.toolbar.setNavigationOnClickListener(v -> {
             if (watchWallet == WatchWallet.XRP_TOOLKIT || watchWallet == WatchWallet.METAMASK ||
-                    watchWallet == WatchWallet.SOLANA) {
+                    watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR) {
                 ((MainActivity) mActivity).toggleDrawer(v);
             } else {
                 navigateUp();
@@ -210,6 +216,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             return R.menu.metamask;
         }
         if (watchWallet == WatchWallet.SOLANA) {
+            return R.menu.metamask;
+        }
+        if (watchWallet == WatchWallet.NEAR) {
             return R.menu.metamask;
         }
         return (showPublicKey || Coins.isPolkadotFamily(coinCode)) ? R.menu.asset_without_add : R.menu.asset;
@@ -236,6 +245,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 : getString(R.string.tab_my_address);
         if (watchWallet == WatchWallet.METAMASK) {
             tabOne = getString(R.string.tab_my_account);
+        } else if (watchWallet == WatchWallet.NEAR) {
+            tabOne = getString(R.string.tab_my_pubkey);
         }
         String tabTwo = getString(R.string.tab_transaction_history);
         String[] title = {tabOne, tabTwo};
@@ -649,7 +660,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 if (finalIsShowBadge) {
                     Utilities.setUserClickEthSyncLock(mActivity);
                 }
-            } else if (watchWallet == WatchWallet.SOLANA) {
+            } else if (watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR) {
                 Bundle bundle = new Bundle();
                 bundle.putString(KEY_COIN_ID, coinId);
                 navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);

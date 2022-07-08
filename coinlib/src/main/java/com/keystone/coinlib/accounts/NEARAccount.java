@@ -3,6 +3,8 @@ package com.keystone.coinlib.accounts;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.regex.Pattern;
+
 public enum NEARAccount {
 
     // m / purpose' / coin_type' / account' / change / address_index
@@ -88,5 +90,28 @@ public enum NEARAccount {
                 break;
         }
         return path;
+    }
+
+    public boolean isChildrenPath(String path) {
+        if (!path.toUpperCase().startsWith("M/")) {
+            path = "M/" + path;
+        }
+        switch (this) {
+            case MNEMONIC:
+                return isMnemonic(path);
+            case LEDGER:
+                return isLedger(path);
+        }
+
+        return false;
+    }
+
+
+    public static boolean isMnemonic(String path) {
+        return Pattern.matches("^M/44'/397'/0'", path);
+    }
+
+    public static boolean isLedger(String path) {
+        return Pattern.matches("^M/44'/397'/0'/0'/\\d+'", path);
     }
 }

@@ -30,7 +30,7 @@ public class Near extends AbsCoin {
             Log.d("near_develop", " pubkey is " + Hex.toHexString(pubKey));
             String publicKey = "ed25519:" + new B58().encodeToString(pubKey);
             Log.d("near_develop", " publicKey is " + publicKey);
-            return publicKey;
+            return Hex.toHexString(pubKey);
         }
 
         @Override
@@ -41,7 +41,7 @@ public class Near extends AbsCoin {
             Log.d("near_develop", " pubkey is " + Hex.toHexString(pubKey));
             String publicKey = "ed25519:" + new B58().encodeToString(pubKey);
             Log.d("near_develop", " publicKey is " + publicKey);
-            return publicKey;
+            return Hex.toHexString(pubKey);
         }
 
         @Override
