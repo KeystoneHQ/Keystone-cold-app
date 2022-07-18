@@ -61,6 +61,7 @@ import com.allenliu.badgeview.BadgeFactory;
 import com.allenliu.badgeview.BadgeView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.exception.InvalidETHAccountException;
 import com.keystone.coinlib.exception.InvalidSOLAccountException;
@@ -179,13 +180,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             mBinding.toolbar.inflateMenu(getMenuResId());
             mBinding.button.setVisibility(View.GONE);
             MenuItem menuItem = mBinding.toolbar.getMenu().findItem(R.id.action_more);
-            boolean isShowBadge = false;
-            if (watchWallet == WatchWallet.METAMASK && !Utilities.hasUserClickEthSyncLock(mActivity)) {
-                isShowBadge = true;
-            } else if (watchWallet == WatchWallet.SOLANA && !Utilities.hasUserClickSolSyncLock(mActivity)) {
-                isShowBadge = true;
-            }
-            if (isShowBadge) {
+            if (isNeedShowBadge()) {
                 showBadge(menuItem);
             }
         }
@@ -200,6 +195,18 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         });
         initSearchView();
         initTabs();
+    }
+
+    private boolean isNeedShowBadge() {
+        boolean isShowBadge = false;
+        if (watchWallet == WatchWallet.METAMASK && !Utilities.hasUserClickEthSyncLock(mActivity)) {
+            isShowBadge = true;
+        } else if (watchWallet == WatchWallet.SOLANA && !Utilities.hasUserClickSolSyncLock(mActivity)) {
+            isShowBadge = true;
+        } else if (watchWallet == WatchWallet.NEAR && !Utilities.hasUserClickNearSyncLock(mActivity)) {
+            isShowBadge = true;
+        }
+        return isShowBadge;
     }
 
     private void syncPolkadot() {
@@ -246,7 +253,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         if (watchWallet == WatchWallet.METAMASK) {
             tabOne = getString(R.string.tab_my_account);
         } else if (watchWallet == WatchWallet.NEAR) {
-            tabOne = getString(R.string.tab_my_pubkey);
+            tabOne = getString(R.string.tab_public_key);
         }
         String tabTwo = getString(R.string.tab_transaction_history);
         String[] title = {tabOne, tabTwo};
@@ -325,6 +332,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 
         if (watchWallet == WatchWallet.SOLANA) {
             viewModel.preGenerateSolDerivationAddress();
+        } else if (watchWallet == WatchWallet.NEAR) {
+            viewModel.preGenerateNearDerivationAddress();
         }
     }
 
@@ -358,7 +367,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 break;
             case R.id.action_scan:
                 if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.POLKADOT_JS
-                        || watchWallet == WatchWallet.SOLANA) {
+                        || watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR) {
                     scanQrCode();
                 } else {
                     navigate(R.id.action_to_QRCodeScanFragment);
@@ -627,7 +636,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 
     private void addCLickChangePathProcess(View view, Runnable additionProcess) {
         view.setOnClickListener(v -> {
-            if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.SOLANA) {
+            if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR) {
                 navigate(R.id.action_assetFragment_to_changeDerivePathFragment);
             }
             additionProcess.run();
@@ -641,6 +650,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             isShowBadge = true;
         } else if (watchWallet == WatchWallet.SOLANA && !Utilities.hasUserClickSolSyncLock(mActivity)) {
             isShowBadge = true;
+        } else if (watchWallet == WatchWallet.NEAR && !Utilities.hasUserClickNearSyncLock(mActivity)) {
+            isShowBadge = true;
         }
         if (isShowBadge) {
             bgView = BadgeFactory.create(anchor.getContext())
@@ -651,7 +662,6 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     .setSpace(10, 0)
                     .bind(anchor);
         }
-
         boolean finalIsShowBadge = isShowBadge;
         BadgeView finalBgView = bgView;
         view.setOnClickListener(v -> {
@@ -660,12 +670,19 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 if (finalIsShowBadge) {
                     Utilities.setUserClickEthSyncLock(mActivity);
                 }
-            } else if (watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR) {
+            } else if (watchWallet == WatchWallet.SOLANA) {
                 Bundle bundle = new Bundle();
                 bundle.putString(KEY_COIN_ID, coinId);
                 navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
                 if (finalIsShowBadge) {
                     Utilities.setUserClickSolSyncLock(mActivity);
+                }
+            } else if (watchWallet == WatchWallet.NEAR) {
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_COIN_ID, coinId);
+                navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
+                if (finalIsShowBadge) {
+                    Utilities.setUserClickNearSyncLock(mActivity);
                 }
             }
             if (finalBgView != null) {
@@ -678,8 +695,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 
     private void addClickAccountProcess(View view, Runnable additionProcess) {
         view.setOnClickListener(v -> {
-            if (canNotAddAddress()){
-                Toast.makeText(mActivity, "current pattern can't add accounts", Toast.LENGTH_SHORT).show();
+            if (canNotAddAddress()) {
+                Toast.makeText(mActivity, "Current pattern can't add accounts", Toast.LENGTH_SHORT).show();
             } else {
                 handleAddAddress();
             }
@@ -687,9 +704,14 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         });
     }
 
-    private boolean canNotAddAddress(){
-        return watchWallet == WatchWallet.SOLANA
-                && SOLAccount.ofCode(Utilities.getCurrentSolAccount(mActivity)) == SOLAccount.SOLFLARE_BIP44_ROOT;
+    private boolean canNotAddAddress() {
+        boolean cannot = false;
+        if (watchWallet == WatchWallet.SOLANA && SOLAccount.ofCode(Utilities.getCurrentSolAccount(mActivity)) == SOLAccount.SOLFLARE_BIP44_ROOT) {
+            cannot = true;
+        } else if (watchWallet == WatchWallet.NEAR && NEARAccount.ofCode(Utilities.getCurrentNearAccount(mActivity)) == NEARAccount.MNEMONIC) {
+            cannot = true;
+        }
+        return cannot;
     }
 
     private void enterSearch() {
@@ -734,6 +756,16 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             AppExecutors.getInstance().diskIO().execute(() -> {
                 CoinEntity coinEntity = viewModel.getCoin(coinId);
                 viewModel.addSolAccountAddress(value, coinEntity, () -> {
+                    if (fragments[0] != null && fragments[0] instanceof AddressFragment) {
+                        ((AddressFragment) fragments[0]).updateAddressList();
+                    }
+                    handler.postDelayed(dialog::dismiss, DIALOG_DISMISS_DELAY_TIME);
+                });
+            });
+        } else if (watchWallet == WatchWallet.NEAR) {
+            AppExecutors.getInstance().diskIO().execute(() -> {
+                CoinEntity coinEntity = viewModel.getCoin(coinId);
+                viewModel.addNearAccountAddress(value, coinEntity, () -> {
                     if (fragments[0] != null && fragments[0] instanceof AddressFragment) {
                         ((AddressFragment) fragments[0]).updateAddressList();
                     }

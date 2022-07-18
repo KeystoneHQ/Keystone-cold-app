@@ -256,6 +256,17 @@ public class AddAddressViewModel extends AndroidViewModel {
         return address;
     }
 
+    public void addNearAccountAddress(int number, CoinEntity coinEntity, Runnable onComplete){
+        String code = Utilities.getCurrentNearAccount(getApplication());
+        NEARAccount account = NEARAccount.ofCode(code);
+        AccountEntity accountEntity = mRepo.loadTargetNearAccount(account);
+        if(accountEntity != null) {
+            addNearAccountAddress(accountEntity, mRepo, number, coinEntity, onComplete);
+        } else {
+            AppExecutors.getInstance().mainThread().execute(onComplete);
+        }
+    }
+
     public static void addNearAccountAddress(AccountEntity accountEntity, DataRepository repository, int number, CoinEntity coinEntity, Runnable onComplete) {
         AppExecutors.getInstance().diskIO().execute(() -> {
 
@@ -275,7 +286,8 @@ public class AddAddressViewModel extends AndroidViewModel {
                     addressEntity.setAddressString(addr);
                     addressEntity.setCoinId(coinEntity.getCoinId());
                     addressEntity.setIndex(index);
-                    addressEntity.setName("Near-" + index);
+                    addressEntity.setName("NEAR-" + index);
+                    addressEntity.setDisplayName("Account " + index);
                     addressEntity.setBelongTo(coinEntity.getBelongTo());
                     entities.add(addressEntity);
                 }

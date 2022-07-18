@@ -27,6 +27,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
@@ -122,6 +123,57 @@ public class CoinViewModel extends AndroidViewModel {
                 derivationPaths.put("version", 1);
                 derivationPaths.put("master_fingerprint", masterFingerPrint);
                 Utilities.setSolDerivationPaths(getApplication(), derivationPaths.toString());
+            } catch (JSONException exception) {
+                exception.printStackTrace();
+            }
+        });
+
+    }
+
+
+    public void preGenerateNearDerivationAddress() {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            String masterFingerPrint = new GetMasterFingerprintCallable().call();
+            String preDerivationPaths = Utilities.getNearDerivationPaths(getApplication());
+            if (!TextUtils.isEmpty(preDerivationPaths)) {
+                try {
+                    JSONObject jsonObject = new JSONObject(preDerivationPaths);
+                    String preMasterFingerprint = jsonObject.optString("master_fingerprint");
+                    JSONObject accountPaths = jsonObject.optJSONObject("near_derivation_paths");
+                    if (masterFingerPrint.equalsIgnoreCase(preMasterFingerprint)
+                            && accountPaths != null
+                            && !TextUtils.isEmpty(accountPaths.toString())
+                            && !accountPaths.toString().equals(new JSONObject().toString())) {
+                        return;
+                    }
+                } catch (JSONException exception) {
+                    exception.printStackTrace();
+                }
+            }
+            try {
+                JSONObject derivationPaths = new JSONObject();
+                JSONObject accountPaths = new JSONObject();
+                NEARAccount[] nearAccounts = new NEARAccount[]{NEARAccount.MNEMONIC, NEARAccount.LEDGER};
+                for (int i = 0; i < nearAccounts.length; i++) {
+                    JSONArray addresses = new JSONArray();
+                    AccountEntity accountEntity = mRepository.loadTargetNearAccount(nearAccounts[i]);
+                    if (accountEntity == null) {
+                        continue;
+                    }
+                    int addressLength = 3;
+                    if (nearAccounts[i] == NEARAccount.MNEMONIC) {
+                        addressLength = 1;
+                    }
+                    for (int index = 0; index < addressLength; index++) {
+                        String address = AddAddressViewModel.deriveNearAddress(accountEntity, index, null);
+                        addresses.put(address);
+                    }
+                    accountPaths.put(nearAccounts[i].getCode(), addresses);
+                }
+                derivationPaths.put("near_derivation_paths", accountPaths);
+                derivationPaths.put("version", 1);
+                derivationPaths.put("master_fingerprint", masterFingerPrint);
+                Utilities.setNearDerivationPaths(getApplication(), derivationPaths.toString());
             } catch (JSONException exception) {
                 exception.printStackTrace();
             }

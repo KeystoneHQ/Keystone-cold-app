@@ -76,7 +76,10 @@ public class Utilities {
 
     public static final String PREFERENCE_ETH_KEY_SYNCED = "user_click_eth_sync";
     public static final String PREFERENCE_SOL_KEY_SYNCED = "user_click_sol_sync";
+    public static final String PREFERENCE_NEAR_KEY_SYNCED = "user_click_near_sync";
+
     public static final String SOL_DERIVATION_PATHS = "sol_derivation_paths";
+    public static final String NEAR_DERIVATION_PATHS = "near_derivation_paths";
 
 
     public static void alert(AppCompatActivity activity,
@@ -248,6 +251,15 @@ public class Utilities {
         sp.edit().putBoolean(PREFERENCE_SOL_KEY_SYNCED, true).apply();
     }
 
+    public static boolean hasUserClickNearSyncLock(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        return sp.getBoolean(PREFERENCE_NEAR_KEY_SYNCED, false);
+    }
+
+    public static void setUserClickNearSyncLock(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        sp.edit().putBoolean(PREFERENCE_NEAR_KEY_SYNCED, true).apply();
+    }
 
     public static String getFingerprintPassword(Context context) {
         return Settings.System.getString(context.getContentResolver(), FINGERPRINT_PASSWORD);
@@ -340,6 +352,16 @@ public class Utilities {
     public static String getSolDerivationPaths(Context context){
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
         return sp.getString(SOL_DERIVATION_PATHS, "");
+    }
+
+    public static void setNearDerivationPaths(Context context, String paths) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        sp.edit().putString(NEAR_DERIVATION_PATHS, paths).apply();
+    }
+
+    public static String getNearDerivationPaths(Context context){
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        return sp.getString(NEAR_DERIVATION_PATHS, "");
     }
 
     public static void setNftAvatarResource(Context context, String mediaData) {

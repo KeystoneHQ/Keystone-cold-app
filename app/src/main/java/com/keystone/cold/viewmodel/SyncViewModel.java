@@ -304,6 +304,48 @@ public class SyncViewModel extends AndroidViewModel {
         return result;
     }
 
+    public MutableLiveData<List<Pair<String, String>>> getNearAccounts(NEARAccount nearAccount) {
+        MutableLiveData<List<Pair<String, String>>> mutableLiveData = new MutableLiveData<>();
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            List<Pair<String, String>> result = new ArrayList<>();
+            String nearDerivationPath = Utilities.getNearDerivationPaths(getApplication());
+            if (!TextUtils.isEmpty(nearDerivationPath)) {
+                String masterFingerPrint = new GetMasterFingerprintCallable().call();
+                try {
+                    JSONObject derivationPaths = new JSONObject(nearDerivationPath);
+                    String preMasterFingerPrint = derivationPaths.optString("master_fingerprint");
+                    if (masterFingerPrint.equalsIgnoreCase(preMasterFingerPrint)) {
+                        JSONObject accountPaths = (JSONObject) derivationPaths.get("near_derivation_paths");
+                        JSONArray jsonArray = (JSONArray) accountPaths.get(nearAccount.getCode());
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            result.add(Pair.create("" + i, (String) jsonArray.get(i)));
+                        }
+                    } else {
+                        result.addAll(getPairs(nearAccount));
+                    }
+                } catch (JSONException exception) {
+                    exception.printStackTrace();
+                }
+            } else {
+                result.addAll(getPairs(nearAccount));
+            }
+            mutableLiveData.postValue(result);
+        });
+        return mutableLiveData;
+    }
+
+    @NonNull
+    private List<Pair<String, String>> getPairs(NEARAccount nearAccount) {
+        List<Pair<String, String>> result = new ArrayList<>();
+        AccountEntity accountEntity = mRepository.loadTargetNearAccount(nearAccount);
+        if (accountEntity != null) {
+            for (int i = 0; i < 3; i++) {
+                result.add(i, Pair.create("" + i, AddAddressViewModel.deriveNearAddress(accountEntity, i, null)));
+            }
+        }
+        return result;
+    }
+
     private String getGenesisHash(String coinCode) {
         switch (coinCode) {
             case "DOT":

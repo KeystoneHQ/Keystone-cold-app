@@ -27,6 +27,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.db.AppDatabase;
@@ -259,6 +260,29 @@ public class DataRepository {
                 }
                 JSONObject jsonObject = new JSONObject(addition);
                 if (jsonObject.get("sol_account").equals(account.getCode())) {
+                    return accountEntityList.get(i);
+                }
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public AccountEntity loadTargetNearAccount(NEARAccount account){
+        try {
+            CoinEntity coinEntity = this.loadCoinSync(Coins.NEAR.coinId());
+            if (coinEntity == null) {
+                return null;
+            }
+            List<AccountEntity> accountEntityList = this.loadAccountsForCoin(coinEntity);
+            for (int i = 0; i < accountEntityList.size(); i++) {
+                String addition = accountEntityList.get(i).getAddition();
+                if (TextUtils.isEmpty(addition)) {
+                    continue;
+                }
+                JSONObject jsonObject = new JSONObject(addition);
+                if (jsonObject.get("near_account").equals(account.getCode())) {
                     return accountEntityList.get(i);
                 }
             }

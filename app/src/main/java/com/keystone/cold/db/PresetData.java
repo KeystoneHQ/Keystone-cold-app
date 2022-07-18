@@ -22,7 +22,6 @@ import static com.keystone.coinlib.utils.Coins.KSM;
 import static com.keystone.coinlib.utils.Coins.isDefaultOpen;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.accounts.NEARAccount;
@@ -96,7 +95,6 @@ public class PresetData {
             }
         } else if (coin.coinIndex() == Coins.NEAR.coinIndex()) {
             try {
-                Log.d("near_develop", " account size is " + coin.getAccounts().length);
                 for (int i = 0; i < coin.getAccounts().length; i++) {
                     account = new AccountEntity();
                     JSONObject jsonObject = new JSONObject();

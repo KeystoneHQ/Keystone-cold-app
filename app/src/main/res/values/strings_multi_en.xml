@@ -42,6 +42,7 @@
     <string name="mnemonic_hint2">Do not share your recovery phrase with anyone or take a picture of it. If it is lost or stolen, all assets are irretrievable.</string>
     <string name="saved">Recovery Phrase Saved</string>
     <string name="tab_my_pubkey">My PubKey</string>
+    <string name="tab_public_key">Public Key</string>
     <string name="tab_transaction_history">SIGNATURES</string>
 
     <string-array name="step_label">
@@ -456,25 +457,25 @@
         <item>Keystone Companion App</item>
         <item>MetaMask / Rabby / DeFi</item>
         <item>Solflare</item>
+        <item>Sender</item>
         <item>Polkadot{.js}</item>
         <item>XRP Toolkit</item>
-        <item>Sender</item>
     </string-array>
     <string-array name="watch_wallet_list_values" translatable="false">
         <item>keystone</item>
         <item>metamask</item>
         <item>solana</item>
+        <item>near</item>
         <item>polkadotJs</item>
         <item>xrpToolkit</item>
-        <item>near</item>
     </string-array>
     <string-array name="watch_wallet_summury" >
         <item>8 main chains including BTC, ETH, etc</item>
         <item>ETH, AVAX, BSC and all EVM Chains</item>
         <item>Solana</item>
+        <item>Near</item>
         <item>DOT、KSM</item>
         <item>XRP</item>
-        <item>Near</item>
     </string-array>
 
     <string name="choose_watch_only_wallet">Select Software Wallet</string>
@@ -638,6 +639,14 @@
     <string name="change_path_hint">Please select the derivation path you want to use. The first 3 accounts (addresses) are displayed for each path.</string>
     <string name="decode_failed_hint">Data can‘t be decoded</string>
     <string name="tutorials_hint">Please use your laptop or mobile phone to open the links below for detailed tutorials of how to use Keystone with specific companion software wallets.</string>
+
+    <string-array name="tutorials_name_sender">
+        <item>Sender Extension</item>
+    </string-array>
+
+    <string-array name="tutorials_link_sender">
+        <item><u>https://keyst.one/sender</u></item>
+    </string-array>
 
     <string-array name="tutorials_name_sol">
         <item>Solflare Extension</item>

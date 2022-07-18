@@ -1,4 +1,4 @@
-package com.keystone.cold.ui.fragment.main.solana;
+package com.keystone.cold.ui.fragment.main;
 
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
 
@@ -11,13 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
+import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.AddressSyncFragmentBinding;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
-import com.keystone.cold.ui.fragment.main.AddressSyncAdapter;
-import com.keystone.cold.ui.fragment.main.AddressSyncCallback;
 import com.keystone.cold.viewmodel.CoinViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 
@@ -35,7 +34,12 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
 
     private final AddressSyncCallback addressSyncCallback = (addr, position) -> {
         addressSyncAdapter.toggleChecked(position);
-        mBinding.tvConfirm.setEnabled(addressSyncAdapter.exitSelectedAddress());
+        if (watchWallet == WatchWallet.NEAR) {
+            stepIntoSync();
+            addressSyncAdapter.resetCheckStatus();
+        } else {
+            mBinding.tvConfirm.setEnabled(addressSyncAdapter.existSelectedAddress());
+        }
     };
 
 
@@ -63,11 +67,19 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
             }
         });
         mBinding.tvConfirm.setOnClickListener(v -> {
-            Bundle bundle = new Bundle();
-            bundle.putString(DERIVATION_PATH_KEY, addressSyncAdapter.getDerivationInfo());
-            navigate(R.id.action_to_syncFragment, bundle);
+            stepIntoSync();
         });
+        if (watchWallet == WatchWallet.NEAR) {
+            mBinding.tvConfirm.setVisibility(View.GONE);
+        }
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
+
+    }
+
+    private void stepIntoSync() {
+        Bundle bundle = new Bundle();
+        bundle.putString(DERIVATION_PATH_KEY, addressSyncAdapter.getDerivationInfo());
+        navigate(R.id.action_to_syncFragment, bundle);
     }
 
     @Override
@@ -84,24 +96,54 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
         address.observe(this, addressEntities -> {
             addressEntities = addressEntities.stream()
                     .filter(this::isBelongToCurrentAccount)
-                    .peek(addressEntity -> {
-                        addressEntity.setDisplayName(addressEntity.getName());
-                    }).collect(Collectors.toList());
+                    .peek(this::handleDisplayName)
+                    .collect(Collectors.toList());
             addressSyncAdapter.setItems(addressEntities);
+            if (watchWallet == WatchWallet.NEAR && isNearMnemonic()) {
+                AppExecutors.getInstance().mainThread().execute(() -> {
+                    addressSyncAdapter.toggleChecked(0);
+                    navigateUp();
+                    stepIntoSync();
+                });
+            }
         });
     }
 
-    private boolean isBelongToCurrentAccount(AddressEntity entity) {
-        if (watchWallet == WatchWallet.SOLANA) {
-            String code = Utilities.getCurrentSolAccount(mActivity);
-            SOLAccount account = SOLAccount.ofCode(code);
-            return account.isChildrenPath(entity.getPath());
-        } else if (watchWallet == WatchWallet.NEAR) {
-            String code = Utilities.getCurrentNearAccount(mActivity);
-            NEARAccount account = NEARAccount.ofCode(code);
-            return account.isChildrenPath(entity.getPath());
+    private void handleDisplayName(AddressEntity addressEntity) {
+        switch (watchWallet) {
+            case NEAR:
+                if (addressEntity.getName().startsWith("NEAR-")) {
+                    addressEntity.setDisplayName(addressEntity.getName().replace("NEAR-", "Account "));
+                } else {
+                    addressEntity.setDisplayName(addressEntity.getName());
+                }
+                break;
+            default:
+                addressEntity.setDisplayName(addressEntity.getName());
+                break;
         }
-        return false;
     }
 
+
+    private boolean isBelongToCurrentAccount(AddressEntity entity) {
+        switch (watchWallet) {
+            case SOLANA: {
+                String code = Utilities.getCurrentSolAccount(mActivity);
+                SOLAccount account = SOLAccount.ofCode(code);
+                return account.isChildrenPath(entity.getPath());
+            }
+            case NEAR: {
+                String code = Utilities.getCurrentNearAccount(mActivity);
+                NEARAccount account = NEARAccount.ofCode(code);
+                return account.isChildrenPath(entity.getPath());
+            }
+            default:
+                return false;
+        }
+    }
+
+    private boolean isNearMnemonic() {
+        String code = Utilities.getCurrentNearAccount(mActivity);
+        return NEARAccount.ofCode(code) == NEARAccount.MNEMONIC;
+    }
 }

@@ -17,14 +17,13 @@
 
 package com.keystone.cold.ui.fragment;
 
-import static com.keystone.cold.ui.fragment.main.solana.AddressSyncFragment.DERIVATION_PATH_KEY;
+import static com.keystone.cold.ui.fragment.main.AddressSyncFragment.DERIVATION_PATH_KEY;
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuide;
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuideTitle;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Pair;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,7 +68,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
 
     private MutableLiveData<UR> URLiveData;
 
-    private List<Tuple<String, String, String>> solSyncInfo = new ArrayList<>();
+    private List<Tuple<String, String, String>> syncInfo = new ArrayList<>();
 
     @Override
     protected int setView() {
@@ -86,7 +85,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
 
             String syncPaths = getArguments().getString(DERIVATION_PATH_KEY);
             if (!TextUtils.isEmpty(syncPaths)) {
-                solSyncInfo.addAll(collectSyncInfo(syncPaths));
+                syncInfo.addAll(collectSyncInfo(syncPaths));
             }
         }
         if (!fromSyncGuide) {
@@ -149,6 +148,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 case SOLANA:
                 case XRP_TOOLKIT:
                 case POLKADOT_JS:
+                case NEAR:
                     navigate(R.id.action_to_tutorialsFragment);
                     break;
                 default:
@@ -174,6 +174,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 break;
             case METAMASK:
             case SOLANA:
+            case NEAR:
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 9, 0, 0);
                 mBinding.content.setLayoutParams(params);
@@ -259,14 +260,14 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                     if (isRefreshing) return;
                     isRefreshing = true;
                     Utilities.setCurrentSolAccount(mActivity, solAccount.getCode());
-                    URLiveData = syncViewModel.generateSyncSolanaUR(solSyncInfo);
+                    URLiveData = syncViewModel.generateSyncSolanaUR(syncInfo);
                     URLiveData.observe(this, urData -> {
                         if (urData != null) {
                             mBinding.dynamicQrcodeLayout.qrcode.displayUR(urData);
                             mBinding.derivationPattern.setVisibility(View.VISIBLE);
                             mBinding.addressData.setVisibility(View.GONE);
-                            if (solSyncInfo.size() == 1) {
-                                mBinding.fromPath.setText(solSyncInfo.get(0).first.toLowerCase());
+                            if (syncInfo.size() == 1) {
+                                mBinding.fromPath.setText(syncInfo.get(0).first.toLowerCase());
                             } else {
                                 String code = Utilities.getCurrentSolAccount(mActivity);
                                 SOLAccount account = SOLAccount.ofCode(code);
@@ -287,14 +288,14 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                     if (isRefreshing) return;
                     isRefreshing = true;
                     Utilities.setCurrentNearAccount(mActivity, nearAccount.getCode());
-                    URLiveData = syncViewModel.generateSyncNearUR(solSyncInfo);
+                    URLiveData = syncViewModel.generateSyncNearUR(syncInfo);
                     URLiveData.observe(this, urData -> {
                         if (urData != null) {
                             mBinding.dynamicQrcodeLayout.qrcode.displayUR(urData);
                             mBinding.derivationPattern.setVisibility(View.VISIBLE);
                             mBinding.addressData.setVisibility(View.GONE);
-                            if (solSyncInfo.size() == 1) {
-                                mBinding.fromPath.setText(solSyncInfo.get(0).first.toLowerCase());
+                            if (syncInfo.size() == 1) {
+                                mBinding.fromPath.setText(syncInfo.get(0).first.toLowerCase());
                             } else {
                                 String code = Utilities.getCurrentNearAccount(mActivity);
                                 NEARAccount account = NEARAccount.ofCode(code);

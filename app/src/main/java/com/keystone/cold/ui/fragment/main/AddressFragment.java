@@ -63,6 +63,14 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
         public void onClick(AddressEntity addr) {
             if (mAddressAdapter.isEditing()) {
                 mAddressAdapter.exitEdit();
+            } else if (watchWallet == WatchWallet.NEAR) {
+                Bundle bundle = requireArguments();
+                Bundle data = new Bundle();
+                data.putString(KEY_COIN_CODE, bundle.getString(KEY_COIN_CODE));
+                data.putString(KEY_ADDRESS, addr.getAddressString());
+                data.putString(KEY_ADDRESS_NAME, addr.getDisplayName());
+                data.putString(KEY_ADDRESS_PATH, addr.getPath());
+                navigate(R.id.action_to_nearAccountInfoFragment, data);
             } else {
                 Bundle bundle = requireArguments();
                 Bundle data = new Bundle();
