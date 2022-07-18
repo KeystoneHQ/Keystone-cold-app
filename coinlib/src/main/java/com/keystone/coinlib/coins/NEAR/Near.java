@@ -27,9 +27,6 @@ public class Near extends AbsCoin {
         public String derive(String xPubKey, int changeIndex, int addrIndex) {
             byte[] bytes = new B58().decode(xPubKey);
             byte[] pubKey = org.bouncycastle.util.Arrays.copyOfRange(bytes, bytes.length - 4 - 32, bytes.length - 4);
-            Log.d("near_develop", " pubkey is " + Hex.toHexString(pubKey));
-            String publicKey = "ed25519:" + new B58().encodeToString(pubKey);
-            Log.d("near_develop", " publicKey is " + publicKey);
             return Hex.toHexString(pubKey);
         }
 
@@ -38,9 +35,6 @@ public class Near extends AbsCoin {
 
             byte[] bytes = new B58().decode(xPubKey);
             byte[] pubKey = org.bouncycastle.util.Arrays.copyOfRange(bytes, bytes.length - 4 - 32, bytes.length - 4);
-            Log.d("near_develop", " pubkey is " + Hex.toHexString(pubKey));
-            String publicKey = "ed25519:" + new B58().encodeToString(pubKey);
-            Log.d("near_develop", " publicKey is " + publicKey);
             return Hex.toHexString(pubKey);
         }
 

@@ -25,7 +25,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
@@ -416,7 +415,6 @@ public class SetupVaultViewModel extends AndroidViewModel {
                         }
                         continue;
                     } else if (coin.getIndex() == Coins.NEAR.coinIndex()) {
-                        Log.d("near_develop", "updateNearAccounts");
                         if (accountEntities.size() != coin.getAccounts().size()) {
                             updateNearAccounts(coin);
                         }
@@ -432,7 +430,6 @@ public class SetupVaultViewModel extends AndroidViewModel {
                         createSolAccounts(coin);
                         continue;
                     } else if (coin.getIndex() == Coins.NEAR.coinIndex()) {
-                        Log.d("near_develop", "createNearAccounts");
                         createNearAccounts(coin);
                         continue;
                     }
