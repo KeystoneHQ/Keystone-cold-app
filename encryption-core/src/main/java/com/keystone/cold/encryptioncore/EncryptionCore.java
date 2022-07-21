@@ -38,15 +38,23 @@ import com.keystone.cold.encryptioncore.utils.Preconditions;
 public class EncryptionCore implements JobScheduler {
     private static EncryptionCore sInstance;
     private final JobScheduler mImpl;
+    private final String portName;
 
     private EncryptionCore(@NonNull SerialManagerProxy serialManager, @NonNull Config config) {
         Preconditions.checkNotNull(serialManager);
-        mImpl = new JobSchedulerImpl(serialManager, getCipher(config.secretKey));
+        JobSchedulerImpl jsbImpl = new JobSchedulerImpl(serialManager, getCipher(config.secretKey));
+        mImpl = jsbImpl;
+        portName = jsbImpl.getUsedPort();
     }
 
     @NonNull
     public static EncryptionCore getInstance() {
         return Preconditions.checkNotNull(sInstance, "initialize first");
+    }
+
+    public String getPortName() {
+        Preconditions.checkNotNull(sInstance, "initialize first");
+        return portName;
     }
 
     public static void initialize(@NonNull Context context, @NonNull Config config) {
@@ -77,5 +85,9 @@ public class EncryptionCore implements JobScheduler {
         Preconditions.checkNotNull(callback);
 
         mImpl.offer(packet, callback);
+    }
+
+    public String getUsedPort() {
+        return ((JobSchedulerImpl) mImpl).getUsedPort();
     }
 }
