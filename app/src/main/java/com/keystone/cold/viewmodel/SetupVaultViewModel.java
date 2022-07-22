@@ -414,6 +414,11 @@ public class SetupVaultViewModel extends AndroidViewModel {
                             updateSolAccounts(coin);
                         }
                         continue;
+                    } else if (coin.getIndex() == Coins.NEAR.coinIndex()) {
+                        if (accountEntities.size() != coin.getAccounts().size()) {
+                            updateNearAccounts(coin);
+                        }
+                        continue;
                     } else if (accountEntities.size() != 0) {
                         continue;
                     }
@@ -423,6 +428,9 @@ public class SetupVaultViewModel extends AndroidViewModel {
                         continue;
                     } else if (coin.getIndex() == Coins.SOL.coinIndex()) {
                         createSolAccounts(coin);
+                        continue;
+                    } else if (coin.getIndex() == Coins.NEAR.coinIndex()) {
+                        createNearAccounts(coin);
                         continue;
                     }
                 }
@@ -458,12 +466,35 @@ public class SetupVaultViewModel extends AndroidViewModel {
         });
     }
 
+    private void updateNearAccounts(CoinEntity coin) {
+        mRepository.deleteAccountsByCoin(coin);
+        mRepository.deleteCoin(coin);
+        mRepository.deleteAddressByCoin(coin);
+        createNearAccounts(coin);
+    }
+
+    private void createNearAccounts(CoinEntity coin) {
+        String coinXpub = new GetExtendedPublicKeyCallable(coin.getAccounts().get(0).getHdPath()).call();
+        coin.setExPub(coinXpub);
+        long id = mRepository.insertCoin(coin);
+        coin.setId(id);
+        for (AccountEntity account : coin.getAccounts()) {
+            String xPub = new GetExtendedPublicKeyCallable(account.getHdPath()).call();
+            account.setExPub(xPub);
+            account.setCoinId(id);
+            long accountId = mRepository.insertAccount(account);
+            account.setId(accountId);
+            AddAddressViewModel.addNearAccountAddress(account, mRepository, 1, coin, null);
+        }
+    }
+
     private void updateSolAccounts(CoinEntity coin) {
         mRepository.deleteAccountsByCoin(coin);
         mRepository.deleteCoin(coin);
         mRepository.deleteAddressByCoin(coin);
         createSolAccounts(coin);
     }
+
 
     private void createSolAccounts(CoinEntity coin) {
         String coinXpub = new GetExtendedPublicKeyCallable(coin.getAccounts().get(0).getHdPath()).call();

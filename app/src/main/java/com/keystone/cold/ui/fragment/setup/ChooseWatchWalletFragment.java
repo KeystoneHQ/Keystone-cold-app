@@ -115,6 +115,10 @@ public class ChooseWatchWalletFragment extends ListPreferenceFragment {
                 updateCurrentWatchWallet();
                 stepIntoMainActivity();
                 break;
+            case NEAR:
+                updateCurrentWatchWallet();
+                stepIntoMainActivity();
+                break;
         }
     }
 

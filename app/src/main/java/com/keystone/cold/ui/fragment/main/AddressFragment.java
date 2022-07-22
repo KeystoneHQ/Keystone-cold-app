@@ -36,6 +36,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
@@ -62,6 +63,14 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
         public void onClick(AddressEntity addr) {
             if (mAddressAdapter.isEditing()) {
                 mAddressAdapter.exitEdit();
+            } else if (watchWallet == WatchWallet.NEAR) {
+                Bundle bundle = requireArguments();
+                Bundle data = new Bundle();
+                data.putString(KEY_COIN_CODE, bundle.getString(KEY_COIN_CODE));
+                data.putString(KEY_ADDRESS, addr.getAddressString());
+                data.putString(KEY_ADDRESS_NAME, addr.getDisplayName());
+                data.putString(KEY_ADDRESS_PATH, addr.getPath());
+                navigate(R.id.action_to_nearAccountInfoFragment, data);
             } else {
                 Bundle bundle = requireArguments();
                 Bundle data = new Bundle();
@@ -163,6 +172,19 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
                             }
                         })
                         .collect(Collectors.toList());
+            } else if (watchWallet.equals(WatchWallet.NEAR)) {
+                String code = Utilities.getCurrentNearAccount(mActivity);
+                NEARAccount account = NEARAccount.ofCode(code);
+                addressEntities = addressEntities.stream()
+                        .filter(addressEntity -> isCurrentNearAccountAddress(account, addressEntity))
+                        .peek(addressEntity -> {
+                            if (addressEntity.getName().startsWith("NEAR-")) {
+                                addressEntity.setDisplayName(addressEntity.getName().replace("NEAR-", "Account "));
+                            } else {
+                                addressEntity.setDisplayName(addressEntity.getName());
+                            }
+                        })
+                        .collect(Collectors.toList());
             } else {
                 addressEntities = addressEntities.stream().peek(addressEntity -> {
                     addressEntity.setDisplayName(addressEntity.getName());
@@ -180,6 +202,10 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
     }
 
     public static boolean isCurrentSOLAccountAddress(SOLAccount account, AddressEntity addressEntity) {
+        return account.isChildrenPath(addressEntity.getPath());
+    }
+
+    public static boolean isCurrentNearAccountAddress(NEARAccount account, AddressEntity addressEntity) {
         return account.isChildrenPath(addressEntity.getPath());
     }
 

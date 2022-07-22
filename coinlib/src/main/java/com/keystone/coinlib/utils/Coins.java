@@ -22,6 +22,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 
 import java.util.Arrays;
@@ -58,6 +59,10 @@ public class Coins {
     public static final Coin KSM = new Coin("kusama", "KSM", "Kusama", 434, CURVE.SR25519,
             new String[]{"//kusama"});
 
+    public static final Coin NEAR = new Coin("near", "NEAR", "Near", 397, CURVE.ED25519, new String[]{
+            NEARAccount.MNEMONIC.getCode(),
+            NEARAccount.LEDGER.getCode()});
+
     public static final List<Coin> SUPPORTED_COINS = Arrays.asList(
             BTC,
             BTC_LEGACY,
@@ -79,7 +84,8 @@ public class Coins {
             DOT,
             KSM,
             CFX,
-            SOL
+            SOL,
+            NEAR
     );
 
     public static boolean isCoinSupported(@NonNull String coinCode) {

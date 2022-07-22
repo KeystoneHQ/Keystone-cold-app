@@ -79,7 +79,8 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         super.onAttach(activity);
         if (WatchWallet.getWatchWallet(mActivity) == WatchWallet.XRP_TOOLKIT ||
                 WatchWallet.getWatchWallet(mActivity) == WatchWallet.METAMASK ||
-                WatchWallet.getWatchWallet(mActivity) == WatchWallet.SOLANA ) {
+                WatchWallet.getWatchWallet(mActivity) == WatchWallet.SOLANA ||
+                WatchWallet.getWatchWallet(mActivity) == WatchWallet.NEAR) {
             navigate(R.id.assetFragment);
         }
     }

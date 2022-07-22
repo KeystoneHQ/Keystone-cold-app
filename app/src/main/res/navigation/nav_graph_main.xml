@@ -552,6 +552,13 @@
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
         <action
+            android:id="@+id/action_to_nearAccountInfoFragment"
+            app:destination="@id/nearAccountInfoFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
             android:id="@+id/action_to_txFragment"
             app:destination="@id/txFragment"
             app:enterAnim="@anim/slide_in_right"
@@ -716,6 +723,12 @@
             app:popUpTo="@id/assetListFragment"
             app:popUpToInclusive="false" />
     </fragment>
+
+    <fragment
+        android:id="@+id/nearAccountInfoFragment"
+        android:name="com.keystone.cold.ui.fragment.main.near.NearAccountInformationFragment"
+        android:label="NearAccountInformationFragment"
+        tools:layout="@layout/fragment_near_account_info" />
 
     <fragment
         android:id="@+id/receiveCoinFragment"
@@ -991,7 +1004,7 @@
 
     <fragment
         android:id="@+id/addressSyncFragment"
-        android:name="com.keystone.cold.ui.fragment.main.solana.AddressSyncFragment"
+        android:name="com.keystone.cold.ui.fragment.main.AddressSyncFragment"
         android:label="AddressSyncFragment"
         tools:layout="@layout/address_sync_fragment">
     </fragment>
@@ -1075,8 +1088,6 @@
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
         app:popExitAnim="@android:anim/slide_out_right" />
-
-    //
 
     <action
         android:id="@+id/action_to_tutorialsFragment"

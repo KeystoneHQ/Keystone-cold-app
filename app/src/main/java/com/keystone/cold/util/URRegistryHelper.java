@@ -81,6 +81,13 @@ public class URRegistryHelper {
         return new CryptoHDKey(false, key, null, null, origin, null, null, name, note);
     }
 
+    private static CryptoHDKey generateRawKeyForNearByAddress(String path, String address, String note, String name, byte[] masterFingerprint) {
+        byte[] key = getNearPublicKeyByAddress(address);
+        int depth = getPathDepth(path);
+        CryptoKeypath origin = new CryptoKeypath(getPathComponents(path), masterFingerprint, depth);
+        return new CryptoHDKey(false, key, null, null, origin, null, null, name, note);
+    }
+
     public static CryptoMultiAccounts generateCryptoMultiAccountsForSol(List<String> paths) {
         List<CryptoHDKey> cryptoHDKeyList = new ArrayList<>();
         for (String path : paths) {
@@ -96,6 +103,16 @@ public class URRegistryHelper {
         byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
         for (Tuple<String, String, String> tupleItem : syncInfo) {
             CryptoHDKey cryptoHDKey = generateRawKeyForSolByAddress(tupleItem.first, tupleItem.second, null, tupleItem.third, masterFingerprint);
+            cryptoHDKeyList.add(cryptoHDKey);
+        }
+        return new CryptoMultiAccounts(masterFingerprint, cryptoHDKeyList, KEY_NAME);
+    }
+
+    public static CryptoMultiAccounts generateCryptoMultiAccountsForNearByAddress(List<Tuple<String, String, String>> syncInfo) {
+        List<CryptoHDKey> cryptoHDKeyList = new ArrayList<>();
+        byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
+        for (Tuple<String, String, String> tupleItem : syncInfo) {
+            CryptoHDKey cryptoHDKey = generateRawKeyForNearByAddress(tupleItem.first, tupleItem.second, null, tupleItem.third, masterFingerprint);
             cryptoHDKeyList.add(cryptoHDKey);
         }
         return new CryptoMultiAccounts(masterFingerprint, cryptoHDKeyList, KEY_NAME);
@@ -144,6 +161,13 @@ public class URRegistryHelper {
     private static byte[] getSolPublicKeyByAddress(String address) {
         if (!TextUtils.isEmpty(address)) {
             return new B58().decode(address);
+        }
+        return null;
+    }
+
+    private static byte[] getNearPublicKeyByAddress(String address) {
+        if (!TextUtils.isEmpty(address)) {
+            return Hex.decode(address);
         }
         return null;
     }

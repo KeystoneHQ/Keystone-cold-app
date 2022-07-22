@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
@@ -46,6 +47,7 @@ public class ChangeDerivePathFragment extends BaseFragment<ChangeDerivationPathF
 
     private static final String[] SOL_ACCOUNT_CODES = {SOLAccount.SOLFLARE_BIP44.getCode(), SOLAccount.SOLFLARE_BIP44_ROOT.getCode(), SOLAccount.SOLFLARE_BIP44_CHANGE.getCode()};
     private static final String[] ETH_ACCOUNT_CODES = {ETHAccount.LEDGER_LIVE.getCode(), ETHAccount.LEDGER_LEGACY.getCode(), ETHAccount.BIP44_STANDARD.getCode()};
+    private static final String[] NEAR_ACCOUNT_CODES = {NEARAccount.MNEMONIC.getCode(), NEARAccount.LEDGER.getCode()};
 
     @Override
     protected int setView() {
@@ -62,7 +64,26 @@ public class ChangeDerivePathFragment extends BaseFragment<ChangeDerivationPathF
             setupMetaMaskUI();
         } else if (watchWallet == WatchWallet.SOLANA) {
             setupSolUI();
+        } else if (watchWallet == WatchWallet.NEAR) {
+            setupNearUI();
         }
+    }
+
+    private void setupNearUI() {
+        String code = Utilities.getCurrentNearAccount(mActivity);
+        setCardCheckedStatus(code, NEAR_ACCOUNT_CODES);
+
+        mBinding.patternCard1.setOnClickListener(v -> {
+            syncViewModel.getNearAccountMutableLiveData().postValue(NEARAccount.MNEMONIC);
+            setCardCheckedStatus(NEARAccount.MNEMONIC.getCode(), NEAR_ACCOUNT_CODES);
+        });
+        mBinding.patternCard2.setOnClickListener(v -> {
+            syncViewModel.getNearAccountMutableLiveData().postValue(NEARAccount.LEDGER);
+            setCardCheckedStatus(NEARAccount.LEDGER.getCode(), NEAR_ACCOUNT_CODES);
+        });
+        mBinding.patternCard3.setVisibility(View.GONE);
+        mBinding.derivationPattern1.setText(highLight(NEARAccount.MNEMONIC.getDisplayPath() + " (" + NEARAccount.MNEMONIC.getName() + ")"));
+        mBinding.derivationPattern2.setText(highLight(NEARAccount.LEDGER.getDisplayPath() + " (" + NEARAccount.LEDGER.getName() + ")"));
     }
 
     private void setupSolUI() {
@@ -132,6 +153,10 @@ public class ChangeDerivePathFragment extends BaseFragment<ChangeDerivationPathF
             if (!TextUtils.isEmpty(selectCode)) {
                 Utilities.setCurrentSolAccount(mActivity, selectCode);
             }
+        } else if (watchWallet == WatchWallet.NEAR) {
+            if (!TextUtils.isEmpty(selectCode)) {
+                Utilities.setCurrentNearAccount(mActivity, selectCode);
+            }
         }
         startActivity(new Intent(mActivity, MainActivity.class));
         mActivity.finish();
@@ -167,7 +192,20 @@ public class ChangeDerivePathFragment extends BaseFragment<ChangeDerivationPathF
             setMetaMaskData();
         } else if (watchWallet == WatchWallet.SOLANA) {
             setSolData();
+        } else if (watchWallet == WatchWallet.NEAR) {
+            setNearData();
         }
+    }
+
+    private void setNearData() {
+        syncViewModel.getNearAccounts(NEARAccount.MNEMONIC).observe(this, pairs -> {
+            accountAdapter1.setItems(pairs);
+            mBinding.addressList1.setAdapter(accountAdapter1);
+        });
+        syncViewModel.getNearAccounts(NEARAccount.LEDGER).observe(this, pairs -> {
+            accountAdapter2.setItems(pairs);
+            mBinding.addressList2.setAdapter(accountAdapter2);
+        });
     }
 
     private void setSolData() {

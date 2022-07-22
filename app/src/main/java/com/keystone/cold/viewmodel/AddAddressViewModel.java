@@ -29,6 +29,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.utils.Coins;
@@ -254,6 +255,96 @@ public class AddAddressViewModel extends AndroidViewModel {
 
         return address;
     }
+
+    public void addNearAccountAddress(int number, CoinEntity coinEntity, Runnable onComplete){
+        String code = Utilities.getCurrentNearAccount(getApplication());
+        NEARAccount account = NEARAccount.ofCode(code);
+        AccountEntity accountEntity = mRepo.loadTargetNearAccount(account);
+        if(accountEntity != null) {
+            addNearAccountAddress(accountEntity, mRepo, number, coinEntity, onComplete);
+        } else {
+            AppExecutors.getInstance().mainThread().execute(onComplete);
+        }
+    }
+
+    public static void addNearAccountAddress(AccountEntity accountEntity, DataRepository repository, int number, CoinEntity coinEntity, Runnable onComplete) {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+
+            AbsDeriver deriver = AbsDeriver.newInstance("NEAR");
+            if (deriver == null) {
+                Log.e("addNearAccountAddress", "deriver is null");
+            } else {
+                int addressLength = accountEntity.getAddressLength();
+                int targetAddressCount = addressLength + number;
+                List<AddressEntity> entities = new ArrayList<>();
+                for (int index = addressLength; index < targetAddressCount; index++) {
+                    AddressEntity addressEntity = new AddressEntity();
+                    String addr = deriveNearAddress(accountEntity, index, addressEntity);
+                    if (repository.loadAddressBypath(addressEntity.getPath()) != null) {
+                        continue;
+                    }
+                    addressEntity.setAddressString(addr);
+                    addressEntity.setCoinId(coinEntity.getCoinId());
+                    addressEntity.setIndex(index);
+                    addressEntity.setName("NEAR-" + index);
+                    addressEntity.setDisplayName("Account " + index);
+                    addressEntity.setBelongTo(coinEntity.getBelongTo());
+                    entities.add(addressEntity);
+                }
+                coinEntity.setAddressCount(targetAddressCount);
+                accountEntity.setAddressLength(targetAddressCount);
+                repository.updateAccount(accountEntity);
+                repository.updateCoin(coinEntity);
+                repository.insertAddress(entities);
+            }
+            AppExecutors.getInstance().mainThread().execute(onComplete);
+        });
+    }
+
+    public static String deriveNearAddress(AccountEntity accountEntity, int index, AddressEntity addressEntity) {
+        String address = "";
+        NEARAccount nearAccount = NEARAccount.ofAddition(accountEntity.getAddition());
+        AbsDeriver deriver = AbsDeriver.newInstance("NEAR");
+        if (deriver == null) {
+            return address;
+        }
+        boolean isSetPath = addressEntity != null;
+
+        String xPub = null;
+        String xPubPath = null;
+        switch (nearAccount) {
+            case MNEMONIC:
+                xPubPath = "M/44'/397'/0'";
+                break;
+            case LEDGER:
+                xPubPath = "M/44'/397'/0'/0'" + "/" + index + "'";
+                break;
+        }
+        xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
+        address = deriver.derive(xPub);
+
+        if (isSetPath){
+            addressEntity.setPath(xPubPath);
+
+            try {
+                JSONObject innerJson = new JSONObject();
+                innerJson.put("derivation_path", nearAccount.getCode());
+                innerJson.put("index", index);
+                JSONArray jsonArray = new JSONArray();
+                jsonArray.put(innerJson);
+                JSONObject addition = new JSONObject();
+                addition.put("addition", jsonArray);
+
+                //json定义详见 com.keystone.cold.db.entity.AddressEntity addition字段
+                addressEntity.setAddition(addition.toString());
+            } catch (JSONException exception){
+                exception.printStackTrace();
+            }
+        }
+
+        return address;
+    }
+
 
     public static class AddAddressTask extends AsyncTask<String, Void, Void> {
         private final CoinEntity coinEntity;

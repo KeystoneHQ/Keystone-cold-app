@@ -60,7 +60,9 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialsBinding> {
             case XRP_TOOLKIT:
                 id = R.array.tutorials_name_xrp;
                 break;
-
+            case NEAR:
+                id = R.array.tutorials_name_sender;
+                break;
         }
         return id;
     }
@@ -80,6 +82,8 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialsBinding> {
             case XRP_TOOLKIT:
                 id = R.array.tutorials_link_xrp;
                 break;
+            case NEAR:
+                id = R.array.tutorials_link_sender;
         }
         return id;
     }

@@ -55,7 +55,13 @@ public class AddressSyncAdapter extends BaseBindingAdapter<AddressEntity, Addres
         return checkedList.get(position);
     }
 
-    public boolean exitSelectedAddress(){
+    public void resetCheckStatus() {
+        for (int i = 0; i < checkedList.size(); i++) {
+            checkedList.set(i, false);
+        }
+    }
+
+    public boolean existSelectedAddress(){
        return checkedList.contains(true);
     }
 
