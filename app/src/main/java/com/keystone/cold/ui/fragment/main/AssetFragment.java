@@ -40,6 +40,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -96,6 +97,7 @@ import com.keystone.cold.viewmodel.exceptions.UnsupportedSubstrateTxException;
 import com.keystone.cold.viewmodel.exceptions.XfpNotMatchException;
 import com.sparrowwallet.hummingbird.registry.EthNFTItem;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
+import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolNFTItem;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
 
@@ -103,6 +105,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -478,7 +481,32 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     handleSolSignRequest(result);
                 } else if (result.getType().equals(ScanResultTypes.UR_SOL_NFT_ITEM)) {
                     handleSolNFTItem(result);
+                } else if (result.getType().equals(ScanResultTypes.UR_NEAR_SIGN_REQUEST)) {
+                    handleNearSignRequest(result);
                 }
+            }
+
+            private void handleNearSignRequest(ScanResult result) {
+                NearSignRequest nearSignRequest = (NearSignRequest) result.resolve();
+                ByteBuffer uuidBuffer = ByteBuffer.wrap(nearSignRequest.getRequestId());
+                UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+                String hdPath = nearSignRequest.getDerivationPath();
+                String requestMFP = Hex.toHexString(nearSignRequest.getMasterFingerprint());
+                String MFP = new GetMasterFingerprintCallable().call();
+
+                List<byte[]> signDataList = nearSignRequest.getSignDataList();
+                List<String> signHexList = new ArrayList<>(signDataList.size());
+                for (byte[] signData : signDataList) {
+                    signHexList.add(Hex.toHexString(signData));
+                }
+                String account = nearSignRequest.getAccount();
+                String origin = nearSignRequest.getOrigin();
+
+                Bundle bundle = new Bundle();
+                bundle.putString(REQUEST_ID, uuid.toString());
+                bundle.putSerializable(SIGN_DATA, (Serializable) signHexList);
+                bundle.putString(HD_PATH, "M/" + hdPath);
+                mFragment.navigate(R.id.action_to_nearTxConfirmFragment, bundle);
             }
 
             private void handleSolNFTItem(ScanResult result) {
@@ -584,6 +612,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_ETH_NFT_ITEM));
         } else if (watchWallet == WatchWallet.SOLANA) {
             desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_SOL_SIGN_REQUEST, ScanResultTypes.UR_SOL_NFT_ITEM));
+        } else if (watchWallet == WatchWallet.NEAR) {
+            desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_NEAR_SIGN_REQUEST));
         }
         scannerState.setDesiredResults(desiredResults);
         ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);

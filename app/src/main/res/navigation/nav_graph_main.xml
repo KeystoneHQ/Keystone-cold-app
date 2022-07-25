@@ -249,6 +249,32 @@
     </fragment>
 
     <fragment
+        android:id="@+id/nearTxFragment"
+        android:name="com.keystone.cold.ui.fragment.main.near.NearTxConfirmFragment"
+        android:label="nearTxFragment"
+        tools:layout="@layout/fragment_near_tx_confirm">
+
+        <action
+            android:id="@+id/action_to_nearBroadcastTxFragment"
+            app:destination="@id/nearBroadcastTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nearBroadcastTxFragment"
+        android:name="com.keystone.cold.ui.fragment.main.near.NearBroadcastTxFragment"
+        android:label="nearBroadcastTxFragment">
+        <action
+            android:id="@+id/action_to_home"
+            app:destination="@id/assetListFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/assetListFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
         android:id="@+id/tutorialsFragment"
         android:name="com.keystone.cold.ui.fragment.main.tutorials.TutorialsFragment"
         android:label="tutorialsFragment"
@@ -1068,6 +1094,14 @@
     <action
         android:id="@+id/action_to_solTxDetailFragment"
         app:destination="@id/solTxDetailFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_nearTxConfirmFragment"
+        app:destination="@id/nearTxFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"

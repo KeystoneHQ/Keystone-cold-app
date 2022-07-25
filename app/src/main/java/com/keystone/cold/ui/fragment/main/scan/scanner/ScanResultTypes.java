@@ -4,6 +4,7 @@ import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
 import com.sparrowwallet.hummingbird.UR;
 import com.sparrowwallet.hummingbird.registry.EthNFTItem;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
+import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolNFTItem;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
 
@@ -25,7 +26,8 @@ public enum ScanResultTypes {
     UR_ETH_SIGN_REQUEST,
     UR_ETH_NFT_ITEM,
     UR_SOL_SIGN_REQUEST,
-    UR_SOL_NFT_ITEM;
+    UR_SOL_NFT_ITEM,
+    UR_NEAR_SIGN_REQUEST;
 
 
     public boolean isType(String text) {
@@ -49,6 +51,8 @@ public enum ScanResultTypes {
                     return decodeResult instanceof SolSignRequest;
                 case UR_SOL_NFT_ITEM:
                     return decodeResult instanceof SolNFTItem;
+                case UR_NEAR_SIGN_REQUEST:
+                    return decodeResult instanceof NearSignRequest;
                 default:
                     return false;
             }
@@ -71,6 +75,8 @@ public enum ScanResultTypes {
             List<DataItem> items = CborDecoder.decode(cborPayload);
             DataItem dataItem = items.get(0);
             switch (this) {
+                case UR_NEAR_SIGN_REQUEST:
+                    return NearSignRequest.fromCbor(dataItem);
                 case UR_SOL_NFT_ITEM:
                     return SolNFTItem.fromCbor(dataItem);
                 case UR_SOL_SIGN_REQUEST:
