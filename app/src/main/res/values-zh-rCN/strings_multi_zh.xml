@@ -418,6 +418,7 @@
         <item>鎧石錢包移動端</item>
         <item>MetaMask / Rabby / DeFi</item>
         <item>Solflare</item>
+        <item>Sender</item>
         <item>Polkadot{.js}</item>
         <item>XRP Toolkit</item>
     </string-array>
@@ -425,6 +426,7 @@
         <item>BTC、ETH等8條主鏈</item>
         <item>ETH, AVAX, BSC and all EVM Chains</item>
         <item>Solana</item>
+        <item>Near</item>
         <item>DOT、KSM</item>
         <item>XRP</item>
     </string-array>
