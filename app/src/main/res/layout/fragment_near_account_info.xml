@@ -69,8 +69,8 @@
         <include layout="@layout/divider" />
 
         <ImageView
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="53dp"
             app:icon="@{coinCode}"
