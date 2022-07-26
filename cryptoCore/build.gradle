@@ -1,0 +1,116 @@
+import groovy.xml.XmlUtil
+
+/*
+ * Copyright (c) 2021 Keystone
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+apply plugin: 'com.android.library'
+apply plugin: 'com.google.protobuf'
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+    sourceSets {
+        main {
+            proto {
+                srcDir 'rcc_android/'
+            }
+        }
+    }
+}
+
+apply plugin: 'org.mozilla.rust-android-gradle.rust-android'
+
+dependencies {
+    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
+    implementation 'com.google.protobuf:protobuf-java:3.7.1'
+    implementation 'com.googlecode.protobuf-java-format:protobuf-java-format:1.4'
+    implementation project(path: ':encryption-core')
+    implementation project(path: ':coinlib')
+    testImplementation "junit:junit:${rootProject.junit}"
+    testImplementation "org.mockito:mockito-core:${rootProject.mockito}"
+    testImplementation 'org.objenesis:objenesis:2.6'
+
+}
+
+
+preBuild {
+    doFirst {
+        exec {
+            executable "./env.sh" // set env for cargo python rustc
+        }
+    }
+}
+
+// add the following
+cargo {
+    module  = "./rcc_android"       // Or whatever directory contains your Cargo.toml
+    libname = "rcc_android"          // Or whatever matches Cargo.toml's [package] name.
+    targets = ["arm"]  // See bellow for a longer list of options
+    profile = 'release'
+    targetIncludes = ['librcc_android.so']
+    rustupChannel="nightly"
+}
+
+tasks.whenTaskAdded { task ->
+    if ((task.name == 'javaPreCompileDebug' || task.name == 'javaPreCompileRelease')) {
+        task.dependsOn 'cargoBuild'
+    }
+}
+
+protobuf {
+
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.7.1'
+    }
+
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                remove java
+            }
+            task.builtins {
+                java {}
+            }
+        }
+    }
+}

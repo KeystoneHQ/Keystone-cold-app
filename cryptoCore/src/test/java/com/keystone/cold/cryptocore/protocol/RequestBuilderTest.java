@@ -1,4 +1,4 @@
-package com.keystone.cold.protocol.signer;
+package com.keystone.cold.cryptocore.protocol;
 
 import junit.framework.TestCase;
 

@@ -178,9 +178,6 @@ android {
         }
     }
 }
-
-apply plugin: 'org.mozilla.rust-android-gradle.rust-android'
-
 dependencies {
     implementation 'androidx.core:core:1.6.0'
     compileOnly files('libs/cvos.jar')
@@ -211,6 +208,7 @@ dependencies {
 
     implementation project(':encryption-core')
     implementation project(path: ':coinlib')
+    implementation project(':cryptoCore')
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.json:json:20140107'
     androidTestImplementation 'androidx.test:runner:1.2.0'
@@ -219,12 +217,6 @@ dependencies {
 }
 
 preBuild {
-    doFirst {
-        exec {
-            executable "./env.sh" // set env for cargo python rustc
-        }
-    }
-
     doLast {
         def imlFile = file(project.name + ".iml")
         println 'Change ' + project.name + '.iml order'
@@ -239,23 +231,6 @@ preBuild {
         } catch (FileNotFoundException ignored) {
             // nop, iml not found
         }
-    }
-}
-
-// add the following
-cargo {
-    module  = "../keystone-signer"       // Or whatever directory contains your Cargo.toml
-    libname = "keystone_signer"          // Or whatever matches Cargo.toml's [package] name.
-    targets = ["arm"]  // See bellow for a longer list of options
-    profile = 'release'
-    targetIncludes = ['libkeystone_signer.so']
-    rustupChannel="nightly"
-}
-
-
-tasks.whenTaskAdded { task ->
-    if ((task.name == 'javaPreCompileVault_v2Debug' || task.name == 'javaPreCompileVault_v2Release')) {
-        task.dependsOn 'cargoBuild'
     }
 }
 

@@ -1,6 +1,6 @@
 [submodule "app/src/main/proto"]
 	path = app/src/main/proto
 	url = https://github.com/KeystoneHQ/keystone-crypto-coin-message-protocol
-[submodule "keystone-signer"]
-	path = keystone-signer
-	url = https://github.com/KeystoneHQ/keystone-signer.git
+[submodule "cryptoCore/rcc_android"]
+	path = cryptoCore/rcc_android
+	url = https://github.com/KeystoneHQ/rcc_android.git
