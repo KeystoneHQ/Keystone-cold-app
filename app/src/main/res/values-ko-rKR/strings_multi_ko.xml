@@ -365,6 +365,7 @@
     <item>키스톤 모바일 앱</item>
     <item>MetaMask / Rabby / DeFi</item>
     <item>Solflare</item>
+    <item>Sender</item>
     <item>Polkadot{.js}</item>
     <item>XRP Toolkit</item>
   </string-array>
@@ -372,6 +373,7 @@
     <item>BTC, ETH 등을 포함한 8개의 메인 체인</item>
     <item>ETH, AVAX, BSC and all EVM Chains</item>
     <item>Solana</item>
+    <item>Near</item>
     <item>DOT、KSM</item>
     <item>XRP</item>
   </string-array>

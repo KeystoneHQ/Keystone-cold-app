@@ -373,6 +373,7 @@
     <item>App complementaria Keystone</item>
     <item>MetaMask / Rabby / DeFi</item>
     <item>Solflare</item>
+    <item>Sender</item>
     <item>Polkadot{.js}</item>
     <item>XRP Toolkit</item>
   </string-array>
@@ -380,6 +381,7 @@
     <item>8 cadenas principales que incluyen BTC, ETH, etc.</item>
     <item>ETH, AVAX, BSC and all EVM Chains</item>
     <item>Solana</item>
+    <item>Near</item>
     <item>DOT、KSM</item>
     <item>XRP</item>
   </string-array>

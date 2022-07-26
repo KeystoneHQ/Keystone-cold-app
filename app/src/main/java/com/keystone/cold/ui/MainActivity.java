@@ -131,7 +131,8 @@ public class MainActivity extends FullScreenActivity {
             int index = getFragmentIndexByLabel(label);
             if (((watchWallet == WatchWallet.XRP_TOOLKIT
                     || watchWallet == WatchWallet.METAMASK
-                    || watchWallet == WatchWallet.SOLANA)
+                    || watchWallet == WatchWallet.SOLANA
+                    || watchWallet == WatchWallet.NEAR)
                     && label.equals(AssetFragment.TAG))) {
                 index = 0;
             }
@@ -215,7 +216,8 @@ public class MainActivity extends FullScreenActivity {
                 case R.id.drawer_wallet:
                     if (watchWallet == WatchWallet.XRP_TOOLKIT
                             || watchWallet == WatchWallet.METAMASK
-                            || watchWallet == WatchWallet.SOLANA) {
+                            || watchWallet == WatchWallet.SOLANA
+                            || watchWallet == WatchWallet.NEAR) {
                         NavOptions navOptions = new NavOptions.Builder()
                                 .setPopUpTo(R.id.assetListFragment, false)
                                 .build();

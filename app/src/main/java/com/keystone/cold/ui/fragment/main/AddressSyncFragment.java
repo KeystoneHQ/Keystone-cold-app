@@ -99,13 +99,6 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
                     .peek(this::handleDisplayName)
                     .collect(Collectors.toList());
             addressSyncAdapter.setItems(addressEntities);
-            if (watchWallet == WatchWallet.NEAR && isNearMnemonic()) {
-                AppExecutors.getInstance().mainThread().execute(() -> {
-                    addressSyncAdapter.toggleChecked(0);
-                    navigateUp();
-                    stepIntoSync();
-                });
-            }
         });
     }
 
