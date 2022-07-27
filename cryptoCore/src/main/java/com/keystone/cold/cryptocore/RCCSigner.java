@@ -18,6 +18,7 @@ public class RCCSigner {
     private final String authToken;
     private final boolean isMainWallet;
     private final String portName;
+    private final int FixedRequestId = 305;
 
     public RCCSigner(String path, String authToken, boolean isMainWallet, String portName) {
         this.privKeyPath = Objects.requireNonNull(path);
@@ -39,7 +40,7 @@ public class RCCSigner {
 
     private String composeCommand(String data) {
         RequestBuilder rb = new RequestBuilder();
-        rb.setSignId(305);
+        rb.setSignId(FixedRequestId);
         int seedId = isMainWallet? 0 : 0x50;
         rb.setSignRequest(seedId, 0, authToken, privKeyPath, data, portName);
         return rb.build();
@@ -49,7 +50,7 @@ public class RCCSigner {
         ResponseParser parser = new ResponseParser(response);
         int responseId = parser.getResponseId();
         int status = parser.getStatus();
-        if (responseId == 305 && status == 200) {
+        if (responseId == FixedRequestId && status == 200) {
             response = parser.getResponse();
             Log.e("rcc Signer reponse:", response);
             return response;
