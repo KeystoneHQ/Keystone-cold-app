@@ -39,6 +39,16 @@ class ImplementProvider {
         return EncryptionCore.getInstance();
     }
 
+    String getPortName(@NonNull Context context) {
+        if (!isInitialize) {
+            isInitialize = true;
+
+            initializeCore(context);
+        }
+
+        return EncryptionCore.getInstance().getPortName();
+    }
+
     private void initializeCore(@NonNull Context context) {
         final Config config = new Config.Builder()
                 .setPortSpeed(CONSTANTS.CONFIG.SPEED)

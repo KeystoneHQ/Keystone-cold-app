@@ -52,7 +52,7 @@ import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.encryption.ChipSigner;
+import com.keystone.cold.encryption.RustSigner;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 
 import org.json.JSONArray;
@@ -583,7 +583,7 @@ public class Web3TxViewModel extends Base {
             Log.w(TAG, "authToken null");
             return null;
         }
-        return new ChipSigner(hdPath.toLowerCase(), authToken);
+        return new RustSigner(hdPath.toLowerCase(), authToken);
     }
 
     public String getTxId() {

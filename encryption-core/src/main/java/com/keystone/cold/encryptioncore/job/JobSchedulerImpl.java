@@ -45,4 +45,10 @@ public class JobSchedulerImpl implements JobScheduler {
     public void offer(@NonNull Packet packet, @NonNull Callback callback) {
         mExecutor.submit(new Job(mManager, new PackerImpl(mCipher), packet, callback));
     }
+
+    public String getUsedPort() {
+        final String[] portNumbers = mManager.getSerialPorts();
+        Preconditions.checkArgument(portNumbers != null && portNumbers.length > 0, "port not found");
+        return portNumbers[0];
+    }
 }

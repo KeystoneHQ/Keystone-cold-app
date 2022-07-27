@@ -178,7 +178,6 @@ android {
         }
     }
 }
-
 dependencies {
     implementation 'androidx.core:core:1.6.0'
     compileOnly files('libs/cvos.jar')
@@ -209,6 +208,7 @@ dependencies {
 
     implementation project(':encryption-core')
     implementation project(path: ':coinlib')
+    implementation project(':cryptoCore')
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.json:json:20140107'
     androidTestImplementation 'androidx.test:runner:1.2.0'

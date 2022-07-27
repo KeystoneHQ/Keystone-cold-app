@@ -20,12 +20,16 @@ buildscript {
         google()
         jcenter()
         mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
 
     }
     dependencies {
         //noinspection GradleDependency
         classpath 'com.android.tools.build:gradle:3.2.1'
         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.10'
+        classpath 'org.mozilla.rust-android-gradle:plugin:0.9.3'
     }
 }
 

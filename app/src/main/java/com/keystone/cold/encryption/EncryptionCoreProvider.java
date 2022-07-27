@@ -34,6 +34,7 @@ import com.keystone.cold.encryptioncore.utils.Preconditions;
 public class EncryptionCoreProvider {
     private static final EncryptionCoreProvider sInstance = new EncryptionCoreProvider();
     private JobScheduler mImpl;
+    private String portName;
 
     @NonNull
     public static EncryptionCoreProvider getInstance() {
@@ -69,12 +70,19 @@ public class EncryptionCoreProvider {
     public void initialize(@NonNull Context context) {
         Preconditions.checkState(Looper.getMainLooper() == Looper.myLooper(), "should initialize in main loop");
         Preconditions.checkState(mImpl == null, "should not initialize again");
-        mImpl = new JobSchedulerWrapper(new ImplementProvider().getImplement(context));
+        ImplementProvider implementProvider = new ImplementProvider();
+        JobScheduler jobScheduler = implementProvider.getImplement(context);
+        mImpl = new JobSchedulerWrapper(jobScheduler);
+        portName = implementProvider.getPortName(context);
     }
 
     @NonNull
     public JobScheduler getImpl() {
         return Preconditions.checkNotNull(mImpl, "should initialize first");
+    }
+
+    public String getPortName() {
+        return portName;
     }
 
     private static class JobSchedulerWrapper implements JobScheduler {
