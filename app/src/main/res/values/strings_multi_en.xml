@@ -640,6 +640,10 @@
     <string name="decode_failed_hint">Data can‘t be decoded</string>
     <string name="tutorials_hint">Please use your laptop or mobile phone to open the links below for detailed tutorials of how to use Keystone with specific companion software wallets.</string>
 
+    <string name="raw_data">Raw Data</string>
+    <string name="overview">OverView</string>
+
+
     <string-array name="tutorials_name_sender">
         <item>Sender Extension</item>
     </string-array>
