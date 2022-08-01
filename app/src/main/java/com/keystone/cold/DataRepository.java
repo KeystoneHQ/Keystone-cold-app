@@ -172,6 +172,9 @@ public class DataRepository {
         mDb.txDao().insert(tx);
     }
 
+    public void insertTxList(List<TxEntity> txEntityList) {
+        mDb.txDao().insertTxList(txEntityList);
+    }
     public void insertCoins(List<CoinEntity> coins) {
         mDb.runInTransaction(() -> mDb.coinDao().insertAll(coins));
     }

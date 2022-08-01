@@ -48,7 +48,7 @@ public class TxEntity implements Tx {
     /**
      *
      * TxEntity类的额外信息，内部是JSON
-     * 目前仅用于Solana  其他币种暂时没有用到
+     * 目前仅用于Solana Near 其他币种暂时没有用到
      * @Solana {
      *     {
      *         "additioins":{
@@ -67,6 +67,32 @@ public class TxEntity implements Tx {
      * @signature 表示签名
      * @raw_message 表示原始信息
      * @parsed_message 表示解析后的信息
+     *
+     * @Near {
+     *     {
+     *         "additioins":{
+     *              "coin":"near",
+     *              "addition":{
+     *                  "signature":"adfas",
+     *                  "raw_message":"raw_message",
+     *                  "parsed_message":"parsed_message",
+     *                  "sign_by":"bip44",
+     *                  "sign_batch_info":{
+     *                      "batch_id":"xxx",
+     *                      "order":"0"
+     *                  }
+     *               }
+     *          }
+     *     }
+     * }
+     * @coin 表示币种
+     * @addition 表示附加信息
+     * @signature 表示签名
+     * @raw_message 表示原始信息
+     * @parsed_message 表示解析后的信息
+     * @sign_batch_info 表示同一批次交易的签名信息 （考虑后期可能支持一次签多笔交易，预留该字段）
+     *      @batch_id  批次id（同一批次中所有交易id的Keccak-256 hash）
+     *      @order  这一批次的第几个交易
      */
     private String addition;
 

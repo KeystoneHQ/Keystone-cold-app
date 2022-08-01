@@ -45,6 +45,9 @@ public interface TxDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(TxEntity tx);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertTxList(List<TxEntity> txEntityList);
+
     @Query("SELECT * FROM txs WHERE txId = :id")
     LiveData<TxEntity> load(String id);
 
