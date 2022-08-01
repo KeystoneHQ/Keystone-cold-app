@@ -21,6 +21,7 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.callables.ClearTokenCallable;
 
 import com.keystone.cold.encryption.ChipSigner;
+import com.keystone.cold.ui.fragment.main.near.model.NearTx;
 import com.sparrowwallet.hummingbird.registry.near.NearSignature;
 
 import org.json.JSONArray;
@@ -47,12 +48,13 @@ public class NearTxViewModel extends Base {
 
     private Signer signer;
     private List<String> signatureList = new ArrayList<>();
-    private List<String> txHashList;
+    private List<String> txHashList = new ArrayList<>();
 
 
     private int transactionNum = 0;
 
     private final MutableLiveData<JSONArray> parseMessageJsonLiveData;
+    private final MutableLiveData<NearTx> nearTxLiveData;
 
 
     public NearTxViewModel(@NonNull Application application) {
@@ -60,9 +62,14 @@ public class NearTxViewModel extends Base {
         context = application.getApplicationContext();
         coinCode = "NEAR";
         parseMessageJsonLiveData = new MutableLiveData<>();
+        nearTxLiveData = new MutableLiveData<>();
 
     }
 
+
+    public MutableLiveData<NearTx> getNearTxLiveData() {
+        return nearTxLiveData;
+    }
 
     public MutableLiveData<JSONArray> getParseMessageJsonLiveData() {
         return parseMessageJsonLiveData;
@@ -72,7 +79,6 @@ public class NearTxViewModel extends Base {
         @Override
         public void startSign() {
             signState.postValue(STATE_SIGNING);
-            signatureList.clear();
         }
 
         @Override
@@ -107,7 +113,6 @@ public class NearTxViewModel extends Base {
         AppExecutors.getInstance().diskIO().execute(() -> {
 
             txHexList = (List<String>) bundle.getSerializable(SIGN_DATA);
-            txHashList = new ArrayList<>();
             hdPath = bundle.getString(HD_PATH);
             requestId = bundle.getString(REQUEST_ID);
             transactionNum = txHexList.size();
@@ -119,6 +124,10 @@ public class NearTxViewModel extends Base {
                     @Override
                     public void onSuccess(String json) {
                         Log.e(TAG, String.format("onSuccess is %s", json));
+
+                        NearTx nearTx = NearTx.from(json);
+                        nearTxLiveData.postValue(nearTx);
+
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(json);

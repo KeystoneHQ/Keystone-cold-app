@@ -60,10 +60,11 @@ public class NearTxConfirmFragment extends BaseFragment<FragmentNearTxConfirmBin
     }
 
     private void initViewPager() {
-        String[] title = {getString(R.string.raw)};
+        String[] title = {getString(R.string.overview), getString(R.string.raw_data)};
         if (fragments == null) {
             fragments = new Fragment[title.length];
-            fragments[0] = NearRawTxFragment.newInstance(bundle);
+            fragments[0] = NearFormattedTxFragment.newInstance(bundle);
+            fragments[1] = NearRawTxFragment.newInstance(bundle);
         }
 
         mBinding.viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager(),
