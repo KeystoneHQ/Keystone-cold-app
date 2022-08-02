@@ -1,5 +1,9 @@
 package com.keystone.coinlib.accounts;
 
+import android.text.TextUtils;
+
+import com.keystone.coinlib.utils.Coins;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -113,5 +117,35 @@ public enum NEARAccount {
 
     public static boolean isLedger(String path) {
         return Pattern.matches("^M/44'/397'/0'/0'/\\d+'", path);
+    }
+
+    public static NEARAccount getAccountByPath(String path) {
+        if (!path.toUpperCase().startsWith("M/")) {
+            path = "M/" + path;
+        }
+        if (isMnemonic(path)) return MNEMONIC;
+        if (isLedger(path)) return LEDGER;
+        return null;
+    }
+
+    public boolean isBelongCurrentAccount(String addition) {
+
+        if (TextUtils.isEmpty(addition)) {
+            return false;
+        }
+        try {
+            JSONObject jsonObject = new JSONObject(addition);
+            JSONObject additions = (JSONObject) jsonObject.get("additions");
+            String coin = additions.getString("coin");
+            if (!TextUtils.isEmpty(coin) && coin.equals(Coins.NEAR.coinId())) {
+                String signBy = ((JSONObject) additions.get("addition")).getString("sign_by");
+                if (!TextUtils.isEmpty(signBy) && signBy.equals(code)) {
+                    return true;
+                }
+            }
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+        return false;
     }
 }

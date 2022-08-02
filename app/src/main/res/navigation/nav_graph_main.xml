@@ -264,6 +264,13 @@
     </fragment>
 
     <fragment
+        android:id="@+id/nearTxDetailFragment"
+        android:name="com.keystone.cold.ui.fragment.main.near.NearTxDetailFragment"
+        android:label="nearTxDetailFragment"
+        tools:layout="@layout/fragment_near_tx_detail">
+    </fragment>
+
+    <fragment
         android:id="@+id/nearBroadcastTxFragment"
         android:name="com.keystone.cold.ui.fragment.main.near.NearBroadcastTxFragment"
         android:label="nearBroadcastTxFragment">
@@ -1102,6 +1109,14 @@
     <action
         android:id="@+id/action_to_nearTxConfirmFragment"
         app:destination="@id/nearTxFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_nearTxDetailFragment"
+        app:destination="@id/nearTxDetailFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"

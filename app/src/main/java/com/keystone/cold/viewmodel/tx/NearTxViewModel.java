@@ -14,12 +14,16 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.keystone.coinlib.Util;
 import com.keystone.coinlib.coins.NEAR.NearImpl;
 import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.interfaces.Signer;
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.ClearTokenCallable;
 
+import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
 import com.keystone.cold.ui.fragment.main.near.model.NearTx;
 import com.sparrowwallet.hummingbird.registry.near.NearSignature;
@@ -49,6 +53,7 @@ public class NearTxViewModel extends Base {
     private Signer signer;
     private List<String> signatureList = new ArrayList<>();
     private List<String> txHashList = new ArrayList<>();
+    private List<String> formattedJsonList = new ArrayList<>();
 
 
     private int transactionNum = 0;
@@ -95,6 +100,7 @@ public class NearTxViewModel extends Base {
                 signState.postValue(STATE_SIGN_SUCCESS);
                 new ClearTokenCallable().call();
                 signer = null;
+                insertDB();
             }
         }
 
@@ -125,6 +131,7 @@ public class NearTxViewModel extends Base {
                     public void onSuccess(String json) {
                         Log.e(TAG, String.format("onSuccess is %s", json));
 
+                        formattedJsonList.add(json);
                         NearTx nearTx = NearTx.from(json);
                         nearTxLiveData.postValue(nearTx);
 
@@ -208,6 +215,96 @@ public class NearTxViewModel extends Base {
         byte[] requestId = byteBuffer.array();
         NearSignature nearSignature = new NearSignature(signatureBytes, requestId);
         return nearSignature.toUR().toString();
+    }
+
+    private void insertDB() {
+        if (signatureList.size() != txHexList.size()
+                || signatureList.size() != txHashList.size()
+                || signatureList.size() != formattedJsonList.size()) {
+            return;
+        }
+        String signBatchId = getSignBatchId();
+        List<TxEntity> txEntityList = new ArrayList<>();
+        for (int i = 0; i < signatureList.size(); i++) {
+            String signature = signatureList.get(i);
+            String rawMessage = txHexList.get(i);
+            String parsedMessage = formattedJsonList.get(i);
+            String hash = txHashList.get(i);
+            TxEntity txEntity = generateNearTxEntity();
+            txEntity.setTxId(hash);
+            String additionsString = null;
+            try {
+                JSONObject addition = new JSONObject();
+                addition.put("signature", signature);
+                addition.put("raw_message", rawMessage);
+                addition.put("parsed_message", parsedMessage);
+                addition.put("sign_by", Utilities.getCurrentNearAccount(getApplication()));
+                addition.put("sign_batch_info", getSignTogether(signBatchId, i));
+                JSONObject additions = new JSONObject();
+                additions.put("coin", Coins.NEAR.coinId());
+                additions.put("addition", addition);
+                JSONObject root = new JSONObject();
+                root.put("additions", additions);
+                additionsString = root.toString();
+            } catch (JSONException exception) {
+                exception.printStackTrace();
+            }
+            if (!TextUtils.isEmpty(additionsString)) {
+                //addition结构详见 com.keystone.cold.db.entity.TxEntity addition字段
+                txEntity.setAddition(additionsString);
+            }
+            txEntityList.add(txEntity);
+        }
+
+        if (!txEntityList.isEmpty()) {
+            mRepository.insertTxList(txEntityList);
+        }
+
+    }
+
+    private String getSignBatchId() {
+        StringBuilder sb = new StringBuilder();
+        for (String hash : txHashList) {
+            sb.append(hash);
+        }
+        return Util.sha3String(sb.toString());
+    }
+
+    private JSONObject getSignTogether(String signBatchId, int order) throws JSONException {
+        JSONObject signBatchInfo = new JSONObject();
+        signBatchInfo.put("batch_id", signBatchId);
+        signBatchInfo.put("order", order);
+        return signBatchInfo;
+    }
+
+    private TxEntity generateNearTxEntity() {
+        TxEntity txEntity = new TxEntity();
+        txEntity.setCoinId(Coins.NEAR.coinId());
+        txEntity.setSignId(watchWallet.getSignId());
+        txEntity.setCoinCode(Coins.NEAR.coinCode());
+        txEntity.setTimeStamp(getUniversalSignIndex(getApplication()));
+        txEntity.setBelongTo(mRepository.getBelongTo());
+        txEntity.setSignedHex(getSignatureUR());
+        return txEntity;
+    }
+
+    public NearTx parseNearTxEntity(TxEntity txEntity) {
+        String addition = txEntity.getAddition();
+        if (TextUtils.isEmpty(addition)) {
+            return null;
+        }
+        try {
+            JSONObject root = new JSONObject(addition);
+            JSONObject additions = root.getJSONObject("additions");
+            String coin = additions.getString("coin");
+            if (!TextUtils.isEmpty(coin) && coin.equals(Coins.NEAR.coinId())) {
+                String parsedMessage = additions.getJSONObject("addition").getString("parsed_message");
+                return NearTx.from(parsedMessage);
+            }
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+        return null;
     }
 
 
