@@ -24,11 +24,15 @@ import com.keystone.cold.ui.fragment.main.near.model.actions.Stake;
 import com.keystone.cold.ui.fragment.main.near.model.actions.Transfer;
 import com.keystone.cold.ui.fragment.main.near.model.actions.accesskey.FunctionCallPermission;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class NearActionView extends LinearLayout {
     private LayoutInflater inflater;
     private NearTx nearTx;
+
+    //Each Ⓝ is divisible into 10^24yocto Ⓝ.
+    private final static String NEAR_UNIT = "1000000000000000000000000";
 
     public NearActionView(Context context) {
         this(context, null);
@@ -139,19 +143,19 @@ public class NearActionView extends LinearLayout {
     private void addTransfer(LinearLayout container, Transfer action) {
         NearActionAttrBinding nearActionAttrBinding = DataBindingUtil.inflate(inflater, R.layout.near_action_attr, null, false);
         nearActionAttrBinding.key.setText("value");
-        nearActionAttrBinding.value.setText(action.getDeposit() + " NEAR");
+        nearActionAttrBinding.value.setText(conversionUnit(action.getDeposit()) + " NEAR");
         container.addView(nearActionAttrBinding.getRoot(), getTopMargin());
     }
 
     private void addFunctionCall(LinearLayout container, FunctionCall action) {
         NearActionAttrBinding deposit = DataBindingUtil.inflate(inflater, R.layout.near_action_attr, null, false);
         deposit.key.setText("Deposit Value");
-        deposit.value.setText(action.getDeposit() + " NEAR");
+        deposit.value.setText(conversionUnit(action.getDeposit()) + " NEAR");
         container.addView(deposit.getRoot(), getTopMargin());
 
         NearActionAttrBinding gas = DataBindingUtil.inflate(inflater, R.layout.near_action_attr, null, false);
         gas.key.setText("Prepaid Gas");
-        gas.value.setText(action.getGas() + " NEAR");
+        gas.value.setText(conversionUnit(String.valueOf(action.getGas())) + " NEAR");
         container.addView(gas.getRoot(), getTopMargin());
 
         NearActionAttrBinding contract = DataBindingUtil.inflate(inflater, R.layout.near_action_attr, null, false);
@@ -175,10 +179,21 @@ public class NearActionView extends LinearLayout {
     private void addCreateAccount(LinearLayout container, CreateAccount action) {
     }
 
-
     private LayoutParams getTopMargin() {
-        LinearLayout.LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.topMargin = (int) getResources().getDimension(R.dimen.tutorial_item_margin);
         return layoutParams;
+    }
+
+    private String conversionUnit(String original) {
+        try {
+            BigDecimal yoctoN = new BigDecimal(original);
+            BigDecimal unit = new BigDecimal(NEAR_UNIT);
+            BigDecimal N = yoctoN.divide(unit);
+            return N.toPlainString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return original;
     }
 }
