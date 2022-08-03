@@ -135,7 +135,6 @@ public class NearTxViewModel extends Base {
                         return;
                     }
                     Log.e(TAG, String.format("onSuccess is %s", json));
-                    formattedJsonList.add(json);
                     NearTx nearTx = NearTx.from(json);
                     nearTxLiveData.postValue(nearTx);
 
@@ -145,6 +144,7 @@ public class NearTxViewModel extends Base {
                         txHashList.add(jsonObject.getString("hash"));
                         jsonObject.remove("hash");
                         jsonArray.put(jsonObject);
+                        formattedJsonList.add(jsonObject.toString());
                     } catch (JSONException exception) {
                         exception.printStackTrace();
                     }
