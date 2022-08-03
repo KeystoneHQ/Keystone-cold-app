@@ -24,7 +24,7 @@ public class SolImpl implements Coin {
     protected static native int nativeValidateMessage(final String message);
 
     static {
-        System.loadLibrary("coin_android");
+        System.loadLibrary("CryptoCoinLib_v0_1_4");
     }
 
     @Override

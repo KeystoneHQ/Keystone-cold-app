@@ -23,6 +23,7 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.ClearTokenCallable;
 
+import com.keystone.cold.cryptocore.NearParser;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
 import com.keystone.cold.ui.fragment.main.near.model.NearTx;
@@ -125,40 +126,49 @@ public class NearTxViewModel extends Base {
 
             JSONArray jsonArray = new JSONArray();
             for (int i = 0; i < transactionNum; i++) {
-                int finalI = i;
-                NearImpl.parseMessage(txHexList.get(i), new NearImpl.ParseMessageCallback() {
-                    @Override
-                    public void onSuccess(String json) {
-                        Log.e(TAG, String.format("onSuccess is %s", json));
 
-                        formattedJsonList.add(json);
-                        NearTx nearTx = NearTx.from(json);
-                        nearTxLiveData.postValue(nearTx);
-
-                        JSONObject jsonObject = null;
-                        try {
-                            jsonObject = new JSONObject(json);
-                            txHashList.add(jsonObject.getString("hash"));
-                            jsonObject.remove("hash");
-                            jsonArray.put(jsonObject);
-                        } catch (JSONException exception) {
-                            exception.printStackTrace();
-                        }
-                        if (transactionNum - 1 == finalI) {
-                            parseMessageJsonLiveData.postValue(jsonArray);
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(String error) {
-                        Log.e(TAG, String.format("parse error is %s", error));
+                String parseResult = NearParser.parse(txHexList.get(i));
+                if (parseResult != null) {
+                    String json = getFormattedJson(parseResult);
+                    if (json == null) {
+                        Log.e(TAG, String.format("have no formatted data"));
                         parseMessageJsonLiveData.postValue(null);
-
+                        return;
                     }
-                });
+                    Log.e(TAG, String.format("onSuccess is %s", json));
+                    formattedJsonList.add(json);
+                    NearTx nearTx = NearTx.from(json);
+                    nearTxLiveData.postValue(nearTx);
+
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = new JSONObject(json);
+                        txHashList.add(jsonObject.getString("hash"));
+                        jsonObject.remove("hash");
+                        jsonArray.put(jsonObject);
+                    } catch (JSONException exception) {
+                        exception.printStackTrace();
+                    }
+                    if (transactionNum - 1 == i) {
+                        parseMessageJsonLiveData.postValue(jsonArray);
+                    }
+                } else {
+                    Log.e(TAG, String.format("parse error"));
+                    parseMessageJsonLiveData.postValue(null);
+                }
             }
 
         });
+    }
+
+    private String getFormattedJson(String nearStr) {
+        try {
+            JSONObject jsonObject = new JSONObject(nearStr);
+            return jsonObject.getJSONObject("formatted_json").toString();
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+        return null;
     }
 
     public void handleSign() {
