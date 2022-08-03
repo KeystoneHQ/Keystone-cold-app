@@ -51,7 +51,7 @@ android {
     sourceSets {
         main {
             proto {
-                srcDir 'rcc_android/'
+                srcDir 'rcc_android/protos'
             }
         }
     }

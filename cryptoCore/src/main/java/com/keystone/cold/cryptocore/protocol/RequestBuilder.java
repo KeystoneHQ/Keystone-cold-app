@@ -1,5 +1,6 @@
 package com.keystone.cold.cryptocore.protocol;
 
+import com.keystone.cold.cryptocore.SignRequestProtoc;
 import com.keystone.cold.encryptioncore.utils.ByteFormatter;
 import com.keystone.cold.cryptocore.RCCABIProtoc;
 
@@ -7,11 +8,11 @@ import com.keystone.cold.cryptocore.RCCABIProtoc;
 
 public class RequestBuilder {
     private final RCCABIProtoc.CommandRequest.Builder commandRequest;
-    private final RCCABIProtoc.SignRequest.Builder signRequest;
+    private final SignRequestProtoc.SignRequest.Builder signRequest;
 
     public RequestBuilder () {
         commandRequest = RCCABIProtoc.CommandRequest.newBuilder();
-        signRequest = RCCABIProtoc.SignRequest.newBuilder();
+        signRequest = SignRequestProtoc.SignRequest.newBuilder();
     }
     public String build() {
         commandRequest.setSignRequest(signRequest);
