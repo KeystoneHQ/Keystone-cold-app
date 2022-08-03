@@ -1,6 +1,5 @@
 package com.keystone.cold.ui.fragment.main.near;
 
-
 import android.os.Bundle;
 import android.view.View;
 
@@ -13,15 +12,14 @@ import com.keystone.cold.databinding.NearTxDetailBinding;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.viewmodel.tx.NearTxViewModel;
 
-
-public class NearFormattedTxFragment extends BaseFragment<NearTxDetailBinding> {
+public class NearFormattedRecordTxFragment extends BaseFragment<NearTxDetailBinding> {
 
 
     private NearTxViewModel viewModel;
 
 
     public static Fragment newInstance(@NonNull Bundle bundle) {
-        NearFormattedTxFragment fragment = new NearFormattedTxFragment();
+        NearFormattedRecordTxFragment fragment = new NearFormattedRecordTxFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -40,6 +38,9 @@ public class NearFormattedTxFragment extends BaseFragment<NearTxDetailBinding> {
                 mBinding.from.setText(nearTx.getSignerId());
                 mBinding.to.setText(nearTx.getReceiverId());
                 mBinding.actions.setData(nearTx);
+
+                mBinding.qrcode.qrcode.setData(nearTx.getUr());
+                mBinding.qr.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -56,3 +57,4 @@ public class NearFormattedTxFragment extends BaseFragment<NearTxDetailBinding> {
         viewModel.getNearTxLiveData().removeObservers(this);
     }
 }
+

@@ -1,10 +1,14 @@
 package com.keystone.cold.ui.fragment.main.near;
 
+import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 import static com.keystone.cold.ui.fragment.main.TxFragment.KEY_TX_ID;
 
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
@@ -19,7 +23,8 @@ public class NearTxDetailFragment extends BaseFragment<FragmentNearTxDetailBindi
 
     private NearTxViewModel viewModel;
     private TxEntity txEntity;
-
+    private Fragment[] fragments;
+    private Bundle bundle;
 
     @Override
     protected int setView() {
@@ -28,31 +33,49 @@ public class NearTxDetailFragment extends BaseFragment<FragmentNearTxDetailBindi
 
     @Override
     protected void init(View view) {
-        viewModel = ViewModelProviders.of(getParentFragment()).get(NearTxViewModel.class);
-        Bundle bundle = requireArguments();
+        viewModel = ViewModelProviders.of(this).get(NearTxViewModel.class);
+        bundle = requireArguments();
 
         ViewModelProviders.of(mActivity).get(CoinListViewModel.class)
                 .loadTx(bundle.getString(KEY_TX_ID)).observe(this, txEntity -> {
             this.txEntity = txEntity;
             if (this.txEntity != null) {
-                updateUI();
+                viewModel.parseNearTxEntity(txEntity);
             }
         });
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
+        initViewPager();
     }
 
-    private void updateUI() {
-        String ur = txEntity.getSignedHex();
-        NearTx nearTx = viewModel.parseNearTxEntity(txEntity);
+    private void initViewPager() {
+        String[] title = {getString(R.string.overview), getString(R.string.raw_data)};
+        if (fragments == null) {
+            fragments = new Fragment[title.length];
+            fragments[0] = NearFormattedRecordTxFragment.newInstance(bundle);
+            fragments[1] = NearRawRecordTxFragment.newInstance(bundle);
+        }
 
-        mBinding.network.setText(nearTx.getNetWork());
-        mBinding.from.setText(nearTx.getSignerId());
-        mBinding.to.setText(nearTx.getReceiverId());
-        mBinding.actions.setData(nearTx);
+        mBinding.viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager(),
+                BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+            @NonNull
+            @Override
+            public Fragment getItem(int position) {
+                return fragments[position];
+            }
 
-        mBinding.qrcode.qrcode.setData(ur);
-        mBinding.qr.setVisibility(View.VISIBLE);
+            @Override
+            public int getCount() {
+                return title.length;
+            }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return title[position];
+            }
+        });
+        mBinding.tab.setupWithViewPager(mBinding.viewPager);
     }
+
 
     @Override
     protected void initData(Bundle savedInstanceState) {
