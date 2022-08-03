@@ -131,7 +131,7 @@ public class NearTxViewModel extends Base {
                 if (parseResult != null) {
                     String json = getFormattedJson(parseResult);
                     if (json == null) {
-                        Log.e(TAG, String.format("have no formatted data"));
+                        Log.e(TAG, "have no formatted data");
                         parseMessageJsonLiveData.postValue(null);
                         return;
                     }
@@ -153,7 +153,7 @@ public class NearTxViewModel extends Base {
                         parseMessageJsonLiveData.postValue(jsonArray);
                     }
                 } else {
-                    Log.e(TAG, String.format("parse error"));
+                    Log.e(TAG, "parse error");
                     parseMessageJsonLiveData.postValue(null);
                 }
             }
