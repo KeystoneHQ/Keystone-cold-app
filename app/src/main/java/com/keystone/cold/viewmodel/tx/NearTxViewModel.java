@@ -119,6 +119,9 @@ public class NearTxViewModel extends Base {
         AppExecutors.getInstance().diskIO().execute(() -> {
 
             txHexList = (List<String>) bundle.getSerializable(SIGN_DATA);
+            txHashList.clear();
+            formattedJsonList.clear();
+            signatureList.clear();
             hdPath = bundle.getString(HD_PATH);
             requestId = bundle.getString(REQUEST_ID);
             transactionNum = txHexList.size();

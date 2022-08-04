@@ -52,6 +52,7 @@ public class NearActionView extends LinearLayout {
     }
 
     public void setData(NearTx nearTx) {
+        removeAllViews();
         this.nearTx = nearTx;
         List<Action> actionList = nearTx.getActions();
         for (int i = 0; i < actionList.size(); i++) {
