@@ -667,6 +667,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private void addCLickChangePathProcess(View view, Runnable additionProcess) {
+        if (isNearMnemonic()) {
+            view.setVisibility(View.GONE);
+        }
         view.setOnClickListener(v -> {
             if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR) {
                 navigate(R.id.action_assetFragment_to_changeDerivePathFragment);
@@ -746,6 +749,14 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             bundle.putString(KEY_COIN_ID, coinId);
             navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
         }
+    }
+
+    private boolean isNearMnemonic() {
+        if (watchWallet == WatchWallet.NEAR) {
+            String code = Utilities.getCurrentNearAccount(mActivity);
+            return NEARAccount.ofCode(code) == NEARAccount.MNEMONIC;
+        }
+        return false;
     }
 
     private void addClickAccountProcess(View view, Runnable additionProcess) {
