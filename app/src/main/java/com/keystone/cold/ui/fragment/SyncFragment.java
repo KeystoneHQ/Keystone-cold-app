@@ -17,7 +17,6 @@
 
 package com.keystone.cold.ui.fragment;
 
-import static com.keystone.cold.ui.fragment.main.AddressSyncFragment.DERIVATION_PATH_KEY;
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuide;
 import static com.keystone.cold.ui.fragment.setup.SyncWatchWalletGuide.getSyncWatchWalletGuideTitle;
 
@@ -59,6 +58,8 @@ import java.util.List;
 
 public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
 
+    public static final String DERIVATION_PATH_KEY = "derivation_paths_key";
+
     public static final String TAG = "SyncFragment";
     private SyncViewModel syncViewModel;
     private WatchWallet watchWallet;
@@ -68,7 +69,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
 
     private MutableLiveData<UR> URLiveData;
 
-    private List<Tuple<String, String, String>> syncInfo = new ArrayList<>();
+    private final List<Tuple<String, String, String>> syncInfo = new ArrayList<>();
 
     @Override
     protected int setView() {

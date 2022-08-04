@@ -21,6 +21,7 @@ import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CU
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
+import static com.keystone.cold.ui.fragment.SyncFragment.DERIVATION_PATH_KEY;
 import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.ETH_NFT;
 import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_CHAIN_ID;
 import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_COLLECTION_NAME;
@@ -85,6 +86,7 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerViewModel;
 import com.keystone.cold.ui.fragment.main.scan.scanner.exceptions.UnExpectedQRException;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
 import com.keystone.cold.util.SolMessageValidateUtil;
+import com.keystone.cold.util.SyncAddressUtil;
 import com.keystone.cold.util.ViewUtils;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.CoinViewModel;
@@ -665,6 +667,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private void addCLickChangePathProcess(View view, Runnable additionProcess) {
+        if (isNearMnemonic()) {
+            view.setVisibility(View.GONE);
+        }
         view.setOnClickListener(v -> {
             if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR) {
                 navigate(R.id.action_assetFragment_to_changeDerivePathFragment);
@@ -708,9 +713,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     Utilities.setUserClickSolSyncLock(mActivity);
                 }
             } else if (watchWallet == WatchWallet.NEAR) {
-                Bundle bundle = new Bundle();
-                bundle.putString(KEY_COIN_ID, coinId);
-                navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
+                syncNearAddress();
                 if (finalIsShowBadge) {
                     Utilities.setUserClickNearSyncLock(mActivity);
                 }
@@ -721,6 +724,39 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             }
             additionProcess.run();
         });
+    }
+
+    private void syncNearAddress() {
+        String code = Utilities.getCurrentNearAccount(mActivity);
+        if (NEARAccount.ofCode(code) == NEARAccount.MNEMONIC) {
+            SyncAddressUtil.Callback callback = new SyncAddressUtil.Callback() {
+                @Override
+                public void onGetAddressInfo(String addressInfo) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(DERIVATION_PATH_KEY, addressInfo);
+                    navigate(R.id.action_to_syncFragment, bundle);
+                }
+
+                @Override
+                public void onError() {
+                    Toast.makeText(mActivity, "Can't get public key info", Toast.LENGTH_SHORT).show();
+
+                }
+            };
+            SyncAddressUtil.getSyncAddressInfo(coinId, code, watchWallet, callback);
+        } else {
+            Bundle bundle = new Bundle();
+            bundle.putString(KEY_COIN_ID, coinId);
+            navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
+        }
+    }
+
+    private boolean isNearMnemonic() {
+        if (watchWallet == WatchWallet.NEAR) {
+            String code = Utilities.getCurrentNearAccount(mActivity);
+            return NEARAccount.ofCode(code) == NEARAccount.MNEMONIC;
+        }
+        return false;
     }
 
     private void addClickAccountProcess(View view, Runnable additionProcess) {
