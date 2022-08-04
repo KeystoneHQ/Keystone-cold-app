@@ -66,6 +66,7 @@ import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.exception.InvalidETHAccountException;
+import com.keystone.coinlib.exception.InvalidNEARAccountException;
 import com.keystone.coinlib.exception.InvalidSOLAccountException;
 import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.utils.Coins;
@@ -488,13 +489,27 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 }
             }
 
-            private void handleNearSignRequest(ScanResult result) {
+            private void handleNearSignRequest(ScanResult result) throws InvalidTransactionException, InvalidNEARAccountException, XfpNotMatchException {
                 NearSignRequest nearSignRequest = (NearSignRequest) result.resolve();
                 ByteBuffer uuidBuffer = ByteBuffer.wrap(nearSignRequest.getRequestId());
                 UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
                 String hdPath = nearSignRequest.getDerivationPath();
+
+                NEARAccount current = NEARAccount.ofCode(Utilities.getCurrentNearAccount(mFragment.getActivity()));
+                NEARAccount target = NEARAccount.getAccountByPath(hdPath);
+                if (target == null) {
+                    throw new InvalidTransactionException("unknown hd path");
+                }
+                if (!target.equals(current)) {
+                    if (!current.isChildrenPath(hdPath)) {
+                        throw new InvalidNEARAccountException("not expected NEAR account", current, target);
+                    }
+                }
                 String requestMFP = Hex.toHexString(nearSignRequest.getMasterFingerprint());
                 String MFP = new GetMasterFingerprintCallable().call();
+                if (!requestMFP.equalsIgnoreCase(MFP)) {
+                    throw new XfpNotMatchException("Master fingerprint not match");
+                }
 
                 List<byte[]> signDataList = nearSignRequest.getSignDataList();
                 List<String> signHexList = new ArrayList<>(signDataList.size());
@@ -605,6 +620,16 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                                 popBackStack(R.id.assetFragment, false);
                             });
                     return true;
+                } else if (e instanceof InvalidNEARAccountException) {
+                    mFragment.alertDoubleButtonModal(getString(R.string.invalid_data),
+                            getString(R.string.invalid_account_tx, ((InvalidNEARAccountException) e).getAccount().getName(), ((InvalidNEARAccountException) e).getTarget().getName(), ((InvalidNEARAccountException) e).getTarget().getName()),
+                            getString(R.string.cancel),
+                            getString(R.string.switch_wallet),
+                            null, () -> {
+                                Utilities.setCurrentSolAccount(mActivity, ((InvalidNEARAccountException) e).getTarget().getCode());
+                                popBackStack(R.id.assetFragment, false);
+                            });
+                    return true;
                 }
                 return false;
             }
@@ -679,8 +704,16 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private void addClickSyncProcess(View view, View anchor, Runnable additionProcess) {
-        boolean isShowBadge = false;
+        boolean isShowBadge = judgeShowBadge();
         BadgeView bgView = null;
+        if (isShowBadge) {
+            bgView = generateBadgeView(anchor);
+        }
+        setSyncViewListener(view, additionProcess, bgView);
+    }
+
+    private boolean judgeShowBadge() {
+        boolean isShowBadge = false;
         if (watchWallet == WatchWallet.METAMASK && !Utilities.hasUserClickEthSyncLock(mActivity)) {
             isShowBadge = true;
         } else if (watchWallet == WatchWallet.SOLANA && !Utilities.hasUserClickSolSyncLock(mActivity)) {
@@ -688,33 +721,36 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         } else if (watchWallet == WatchWallet.NEAR && !Utilities.hasUserClickNearSyncLock(mActivity)) {
             isShowBadge = true;
         }
-        if (isShowBadge) {
-            bgView = BadgeFactory.create(anchor.getContext())
-                    .setWidthAndHeight(10, 10)
-                    .setBadgeBackground(Color.RED)
-                    .setBadgeGravity(Gravity.END | Gravity.TOP)
-                    .setShape(BadgeView.SHAPE_CIRCLE)
-                    .setSpace(10, 0)
-                    .bind(anchor);
-        }
-        boolean finalIsShowBadge = isShowBadge;
-        BadgeView finalBgView = bgView;
+        return isShowBadge;
+    }
+
+    private BadgeView generateBadgeView(View anchor) {
+        return BadgeFactory.create(anchor.getContext())
+                .setWidthAndHeight(10, 10)
+                .setBadgeBackground(Color.RED)
+                .setBadgeGravity(Gravity.END | Gravity.TOP)
+                .setShape(BadgeView.SHAPE_CIRCLE)
+                .setSpace(10, 0)
+                .bind(anchor);
+    }
+
+    private void setSyncViewListener(View view, Runnable additionProcess, BadgeView finalBgView) {
         view.setOnClickListener(v -> {
             if (watchWallet == WatchWallet.METAMASK) {
                 navigate(R.id.action_to_syncFragment);
-                if (finalIsShowBadge) {
+                if (judgeShowBadge()) {
                     Utilities.setUserClickEthSyncLock(mActivity);
                 }
             } else if (watchWallet == WatchWallet.SOLANA) {
                 Bundle bundle = new Bundle();
                 bundle.putString(KEY_COIN_ID, coinId);
                 navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
-                if (finalIsShowBadge) {
+                if (judgeShowBadge()) {
                     Utilities.setUserClickSolSyncLock(mActivity);
                 }
             } else if (watchWallet == WatchWallet.NEAR) {
                 syncNearAddress();
-                if (finalIsShowBadge) {
+                if (judgeShowBadge()) {
                     Utilities.setUserClickNearSyncLock(mActivity);
                 }
             }
@@ -760,6 +796,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private void addClickAccountProcess(View view, Runnable additionProcess) {
+        if (isNearMnemonic()) {
+            view.setVisibility(View.GONE);
+        }
         view.setOnClickListener(v -> {
             if (canNotAddAddress()) {
                 Toast.makeText(mActivity, "Current pattern can't add accounts", Toast.LENGTH_SHORT).show();
