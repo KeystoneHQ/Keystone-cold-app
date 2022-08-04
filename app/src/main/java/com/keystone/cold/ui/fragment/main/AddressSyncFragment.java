@@ -1,6 +1,7 @@
 package com.keystone.cold.ui.fragment.main;
 
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
+import static com.keystone.cold.ui.fragment.SyncFragment.DERIVATION_PATH_KEY;
 
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
-import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.AddressSyncFragmentBinding;
@@ -24,9 +24,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding> {
-
-
-    public static final String DERIVATION_PATH_KEY = "derivation_paths_key";
 
     private CoinViewModel viewModel;
     private AddressSyncAdapter addressSyncAdapter;
@@ -133,10 +130,5 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
             default:
                 return false;
         }
-    }
-
-    private boolean isNearMnemonic() {
-        String code = Utilities.getCurrentNearAccount(mActivity);
-        return NEARAccount.ofCode(code) == NEARAccount.MNEMONIC;
     }
 }
