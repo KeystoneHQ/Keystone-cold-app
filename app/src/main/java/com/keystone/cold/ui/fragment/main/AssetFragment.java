@@ -66,6 +66,7 @@ import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.exception.InvalidETHAccountException;
+import com.keystone.coinlib.exception.InvalidNEARAccountException;
 import com.keystone.coinlib.exception.InvalidSOLAccountException;
 import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.utils.Coins;
@@ -488,13 +489,27 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 }
             }
 
-            private void handleNearSignRequest(ScanResult result) {
+            private void handleNearSignRequest(ScanResult result) throws InvalidTransactionException, InvalidNEARAccountException, XfpNotMatchException {
                 NearSignRequest nearSignRequest = (NearSignRequest) result.resolve();
                 ByteBuffer uuidBuffer = ByteBuffer.wrap(nearSignRequest.getRequestId());
                 UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
                 String hdPath = nearSignRequest.getDerivationPath();
+
+                NEARAccount current = NEARAccount.ofCode(Utilities.getCurrentNearAccount(mFragment.getActivity()));
+                NEARAccount target = NEARAccount.getAccountByPath(hdPath);
+                if (target == null) {
+                    throw new InvalidTransactionException("unknown hd path");
+                }
+                if (!target.equals(current)) {
+                    if (!current.isChildrenPath(hdPath)) {
+                        throw new InvalidNEARAccountException("not expected NEAR account", current, target);
+                    }
+                }
                 String requestMFP = Hex.toHexString(nearSignRequest.getMasterFingerprint());
                 String MFP = new GetMasterFingerprintCallable().call();
+                if (!requestMFP.equalsIgnoreCase(MFP)) {
+                    throw new XfpNotMatchException("Master fingerprint not match");
+                }
 
                 List<byte[]> signDataList = nearSignRequest.getSignDataList();
                 List<String> signHexList = new ArrayList<>(signDataList.size());
@@ -602,6 +617,16 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                             getString(R.string.switch_wallet),
                             null, () -> {
                                 Utilities.setCurrentSolAccount(mActivity, ((InvalidSOLAccountException) e).getTarget().getCode());
+                                popBackStack(R.id.assetFragment, false);
+                            });
+                    return true;
+                } else if (e instanceof InvalidNEARAccountException) {
+                    mFragment.alertDoubleButtonModal(getString(R.string.invalid_data),
+                            getString(R.string.invalid_account_tx, ((InvalidNEARAccountException) e).getAccount().getName(), ((InvalidNEARAccountException) e).getTarget().getName(), ((InvalidNEARAccountException) e).getTarget().getName()),
+                            getString(R.string.cancel),
+                            getString(R.string.switch_wallet),
+                            null, () -> {
+                                Utilities.setCurrentSolAccount(mActivity, ((InvalidNEARAccountException) e).getTarget().getCode());
                                 popBackStack(R.id.assetFragment, false);
                             });
                     return true;
