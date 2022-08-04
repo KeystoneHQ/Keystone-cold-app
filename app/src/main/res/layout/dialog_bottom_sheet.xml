@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2021 Keystone
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -23,127 +22,129 @@
     </data>
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#181717">
+        android:background="#181717"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/add_address"
             android:layout_width="match_parent"
             android:layout_height="53dp"
-            android:orientation="horizontal"
-            android:background="?attr/selectableItemBackground">
+            android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/add_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/add_address"
                 android:layout_centerVertical="true"
                 android:paddingHorizontal="16dp"
+                android:text="@string/add_address"
                 android:textColor="@color/white" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/arrow_right"
-                android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="16dp" />
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/arrow_right" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginHorizontal="16dp"
+                android:background="#12ffffff" />
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginHorizontal="16dp"
-            android:background="#12ffffff" />
 
         <RelativeLayout
             android:id="@+id/sync"
             android:layout_width="match_parent"
             android:layout_height="53dp"
-            android:orientation="horizontal"
-            android:background="?attr/selectableItemBackground">
+            android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/sync_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sync_watch_wallet"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="16dp"
+                android:text="@string/sync_watch_wallet"
                 android:textColor="@color/white" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/arrow_right"
-                android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="16dp" />
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/arrow_right" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginHorizontal="16dp"
+                android:background="#12ffffff" />
         </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginHorizontal="16dp"
-            android:background="#12ffffff" />
 
         <RelativeLayout
             android:id="@+id/change_path"
             android:layout_width="match_parent"
             android:layout_height="53dp"
-            android:orientation="horizontal"
-            android:background="?attr/selectableItemBackground">
+            android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/change_path_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/change_software_wallet_path"
                 android:layout_centerVertical="true"
                 android:paddingHorizontal="16dp"
+                android:text="@string/change_software_wallet_path"
                 android:textColor="@color/white" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/arrow_right"
-                android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="16dp" />
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/arrow_right" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginHorizontal="16dp"
+                android:background="#12ffffff" />
         </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginHorizontal="16dp"
-            android:background="#12ffffff" />
 
         <RelativeLayout
             android:id="@+id/tutorials"
             android:layout_width="match_parent"
             android:layout_height="53dp"
-            android:orientation="horizontal"
-            android:background="?attr/selectableItemBackground">
+            android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tutorials_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tutorials"
                 android:layout_centerVertical="true"
                 android:paddingHorizontal="16dp"
+                android:text="@string/tutorials"
                 android:textColor="@color/white" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/arrow_right"
-                android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="16dp" />
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/arrow_right" />
         </RelativeLayout>
     </LinearLayout>
 </layout>

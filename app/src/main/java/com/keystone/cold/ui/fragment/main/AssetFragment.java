@@ -796,6 +796,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private void addClickAccountProcess(View view, Runnable additionProcess) {
+        if (isNearMnemonic()) {
+            view.setVisibility(View.GONE);
+        }
         view.setOnClickListener(v -> {
             if (canNotAddAddress()) {
                 Toast.makeText(mActivity, "Current pattern can't add accounts", Toast.LENGTH_SHORT).show();
