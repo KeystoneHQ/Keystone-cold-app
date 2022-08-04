@@ -679,8 +679,16 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private void addClickSyncProcess(View view, View anchor, Runnable additionProcess) {
-        boolean isShowBadge = false;
+        boolean isShowBadge = judgeShowBadge();
         BadgeView bgView = null;
+        if (isShowBadge) {
+            bgView = generateBadgeView(anchor);
+        }
+        setSyncViewListener(view, additionProcess, bgView);
+    }
+
+    private boolean judgeShowBadge() {
+        boolean isShowBadge = false;
         if (watchWallet == WatchWallet.METAMASK && !Utilities.hasUserClickEthSyncLock(mActivity)) {
             isShowBadge = true;
         } else if (watchWallet == WatchWallet.SOLANA && !Utilities.hasUserClickSolSyncLock(mActivity)) {
@@ -688,33 +696,36 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         } else if (watchWallet == WatchWallet.NEAR && !Utilities.hasUserClickNearSyncLock(mActivity)) {
             isShowBadge = true;
         }
-        if (isShowBadge) {
-            bgView = BadgeFactory.create(anchor.getContext())
-                    .setWidthAndHeight(10, 10)
-                    .setBadgeBackground(Color.RED)
-                    .setBadgeGravity(Gravity.END | Gravity.TOP)
-                    .setShape(BadgeView.SHAPE_CIRCLE)
-                    .setSpace(10, 0)
-                    .bind(anchor);
-        }
-        boolean finalIsShowBadge = isShowBadge;
-        BadgeView finalBgView = bgView;
+        return isShowBadge;
+    }
+
+    private BadgeView generateBadgeView(View anchor) {
+        return BadgeFactory.create(anchor.getContext())
+                .setWidthAndHeight(10, 10)
+                .setBadgeBackground(Color.RED)
+                .setBadgeGravity(Gravity.END | Gravity.TOP)
+                .setShape(BadgeView.SHAPE_CIRCLE)
+                .setSpace(10, 0)
+                .bind(anchor);
+    }
+
+    private void setSyncViewListener(View view, Runnable additionProcess, BadgeView finalBgView) {
         view.setOnClickListener(v -> {
             if (watchWallet == WatchWallet.METAMASK) {
                 navigate(R.id.action_to_syncFragment);
-                if (finalIsShowBadge) {
+                if (judgeShowBadge()) {
                     Utilities.setUserClickEthSyncLock(mActivity);
                 }
             } else if (watchWallet == WatchWallet.SOLANA) {
                 Bundle bundle = new Bundle();
                 bundle.putString(KEY_COIN_ID, coinId);
                 navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
-                if (finalIsShowBadge) {
+                if (judgeShowBadge()) {
                     Utilities.setUserClickSolSyncLock(mActivity);
                 }
             } else if (watchWallet == WatchWallet.NEAR) {
                 syncNearAddress();
-                if (finalIsShowBadge) {
+                if (judgeShowBadge()) {
                     Utilities.setUserClickNearSyncLock(mActivity);
                 }
             }
