@@ -21,6 +21,9 @@ public class NearTx {
     private long nonce;
     private List<Action> actions;
 
+    private String rawData;
+    private String ur;
+
     @Override
     public String toString() {
         return "NearTx{" +
@@ -82,12 +85,30 @@ public class NearTx {
         return actions;
     }
 
+    public String getRawData() {
+        return rawData;
+    }
+
+    public void setRawData(String rawData) {
+        this.rawData = rawData;
+    }
+
+    public String getUr() {
+        return ur;
+    }
+
+    public void setUr(String ur) {
+        this.ur = ur;
+    }
+
     public String getNetWork() {
         if (signerId.endsWith(MAIN_NET_SUFFIX) || receiverId.endsWith(MAIN_NET_SUFFIX)) {
             return "NEAR Mainnet";
         } else if (signerId.endsWith(TEST_NET_SUFFIX) || receiverId.endsWith(TEST_NET_SUFFIX)) {
             return "NEAR Testnet";
         }
-        return "Unknown";
+        return "NEAR";
     }
+
+
 }

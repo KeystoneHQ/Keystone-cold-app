@@ -69,7 +69,6 @@ public class NearTxViewModel extends Base {
         coinCode = "NEAR";
         parseMessageJsonLiveData = new MutableLiveData<>();
         nearTxLiveData = new MutableLiveData<>();
-
     }
 
 
@@ -120,6 +119,9 @@ public class NearTxViewModel extends Base {
         AppExecutors.getInstance().diskIO().execute(() -> {
 
             txHexList = (List<String>) bundle.getSerializable(SIGN_DATA);
+            txHashList.clear();
+            formattedJsonList.clear();
+            signatureList.clear();
             hdPath = bundle.getString(HD_PATH);
             requestId = bundle.getString(REQUEST_ID);
             transactionNum = txHexList.size();
@@ -136,7 +138,6 @@ public class NearTxViewModel extends Base {
                         return;
                     }
                     Log.e(TAG, String.format("onSuccess is %s", json));
-                    formattedJsonList.add(json);
                     NearTx nearTx = NearTx.from(json);
                     nearTxLiveData.postValue(nearTx);
 
@@ -146,6 +147,7 @@ public class NearTxViewModel extends Base {
                         txHashList.add(jsonObject.getString("hash"));
                         jsonObject.remove("hash");
                         jsonArray.put(jsonObject);
+                        formattedJsonList.add(jsonObject.toString());
                     } catch (JSONException exception) {
                         exception.printStackTrace();
                     }
@@ -298,10 +300,10 @@ public class NearTxViewModel extends Base {
         return txEntity;
     }
 
-    public NearTx parseNearTxEntity(TxEntity txEntity) {
+    public void parseNearTxEntity(TxEntity txEntity) {
         String addition = txEntity.getAddition();
         if (TextUtils.isEmpty(addition)) {
-            return null;
+            nearTxLiveData.postValue(null);
         }
         try {
             JSONObject root = new JSONObject(addition);
@@ -309,12 +311,16 @@ public class NearTxViewModel extends Base {
             String coin = additions.getString("coin");
             if (!TextUtils.isEmpty(coin) && coin.equals(Coins.NEAR.coinId())) {
                 String parsedMessage = additions.getJSONObject("addition").getString("parsed_message");
-                return NearTx.from(parsedMessage);
+                NearTx nearTx = NearTx.from(parsedMessage);
+                nearTx.setRawData(parsedMessage);
+                nearTx.setUr(txEntity.getSignedHex());
+                nearTxLiveData.postValue(nearTx);
+                return;
             }
         } catch (JSONException exception) {
             exception.printStackTrace();
         }
-        return null;
+        nearTxLiveData.postValue(null);
     }
 
 
