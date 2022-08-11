@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.accounts.SOLAccount;
-import com.keystone.coinlib.coins.SOL.Sol;
 import com.keystone.coinlib.coins.SOL.SolImpl;
 import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.exception.InvalidTransactionException;
@@ -25,6 +24,7 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.ClearTokenCallable;
+import com.keystone.cold.cryptocore.SolanaParser;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
@@ -148,31 +148,34 @@ public class SolTxViewModel extends Base {
         return parseMessageJsonLiveData;
     }
 
+    public void setParseMessageJsonLiveData(JSONObject object) {
+        this.parseMessageJsonLiveData.postValue(object);
+    }
+
+    public String parseTxData(String txHex) {
+        return SolanaParser.parse(txHex);
+    }
+
     public void parseTxData(Bundle bundle) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             txHex = bundle.getString(SIGN_DATA);
             hdPath = bundle.getString(HD_PATH);
             requestId = bundle.getString(REQUEST_ID);
 
-            SolImpl.parseMessage(txHex, new SolImpl.ParseMessageCallback() {
-                @Override
-                public void onSuccess(String json) {
-                    parsedMessage = json;
-                    try {
-                        ensureAddressExist(hdPath);
-                        JSONObject jsonObject = new JSONObject(parsedMessage);
-                        parseMessageJsonLiveData.postValue(jsonObject);
-                    } catch (InvalidTransactionException | JSONException e) {
-                        e.printStackTrace();
-                    }
+            parsedMessage = SolanaParser.parse(txHex);
+            if(parsedMessage != null) {
+                try {
+                    ensureAddressExist(hdPath);
+                    JSONObject jsonObject = new JSONObject(parsedMessage);
+                    parseMessageJsonLiveData.postValue(jsonObject);
+                } catch (JSONException | InvalidTransactionException e) {
+                    e.printStackTrace();
                 }
-
-                @Override
-                public void onFailed(String error) {
-                    Log.e(TAG, String.format("sign error is %s", error));
-                    parseMessageJsonLiveData.postValue(null);
-                }
-            });
+            }
+            else {
+                Log.e(TAG, "parse solana transaction failed");
+                parseMessageJsonLiveData.postValue(null);
+            }
         });
     }
 

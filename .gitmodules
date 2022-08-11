@@ -3,4 +3,4 @@
 	url = https://github.com/KeystoneHQ/keystone-crypto-coin-message-protocol
 [submodule "cryptoCore/rcc_android"]
 	path = cryptoCore/rcc_android
-	url = https://github.com/KeystoneHQ/rcc_android.git
+	url = git@github.com:KeystoneHQ/rcc_android.git

@@ -548,6 +548,8 @@
     <string name="account_not_match_detail">The transaction does not belong to the current wallet, please check the transaction information.</string>
     <string name="simple">Simple</string>
     <string name="raw">Raw</string>
+    <string name="qr">QR</string>
+    <string name="details">details</string>
     <string name="spark_token_claim_guide"><![CDATA[
     1. Open <font color="#00cdc3">XRP Toolkit<font/><br>
     2. In the menu bar, go to <font color="#00cdc3">Account<font/> and select the <font color="#00cdc3">Properties<font/> menu item<br>
@@ -642,6 +644,7 @@
 
     <string name="raw_data">Raw Data</string>
     <string name="overview">OverView</string>
+    <string name="solana_tx_hint">* Please check transaction key information before signing</string>
 
 
     <string-array name="tutorials_name_sender">

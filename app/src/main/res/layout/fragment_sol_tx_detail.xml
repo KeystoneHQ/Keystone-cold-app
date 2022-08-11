@@ -48,76 +48,43 @@
         </androidx.appcompat.widget.Toolbar>
 
         <include layout="@layout/divider" />
+
         <ScrollView
+            android:fillViewport="true"
+            android:nestedScrollingEnabled="true"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:fadingEdge="vertical"
-            android:scrollbars="vertical">
-
+            android:layout_height="match_parent">
             <LinearLayout
-                android:layout_width="match_parent"
+                android:orientation="vertical"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-
-                <TextView
-                    android:id="@+id/tx_message"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:textColor="@color/white"/>
-
+                android:layout_width="match_parent">
                 <LinearLayout
-                    android:id="@+id/qr"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone">
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tab"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="16dp"
-                        android:paddingBottom="20dp">
-
-                        <View
-                            android:layout_width="30dp"
-                            android:layout_height="match_parent" />
-
-                        <TextView
-                            android:id="@+id/broadcast_hint"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="@string/please_broadcast_with_hot"
-                            android:textColor="@color/white"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-
-                        <ImageView
-                            android:id="@+id/info"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:padding="5dp"
-                            android:src="@drawable/info"
-                            android:visibility="invisible" />
-
-                    </LinearLayout>
+                        app:tabIndicatorColor="@color/colorAccent"
+                        app:tabIndicatorFullWidth="false"
+                        app:tabIndicatorHeight="2dp"
+                        app:tabMode="scrollable"
+                        app:tabSelectedTextColor="@color/white"
+                        app:tabTextAppearance="@style/TabTextAppearance"
+                        app:tabTextColor="@color/white40" />
 
                     <include
-                        android:id="@+id/qrcode"
-                        layout="@layout/dynamic_qrcode"
+                        layout="@layout/divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp" />
+
+                    <androidx.viewpager.widget.ViewPager
+                        android:id="@+id/view_pager"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
-
             </LinearLayout>
         </ScrollView>
-
-
     </LinearLayout>
 </layout>
