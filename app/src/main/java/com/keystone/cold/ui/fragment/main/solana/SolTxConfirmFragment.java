@@ -61,12 +61,14 @@ public class SolTxConfirmFragment extends BaseFragment<SolTxConfirmBinding> {
     }
 
     private void initViewPager() {
-        String[] title = {getString(R.string.raw)};
+        String[] title = {getString(R.string.overview), getString(R.string.details), getString(R.string.raw)};
         if (fragments == null) {
             fragments = new Fragment[title.length];
-            fragments[0] = SolRawTxFragment.newInstance(bundle);
+            fragments[0] = SolInstructionFragment.newInstance(true, false);
+            fragments[1] = SolInstructionFragment.newInstance(false, false);
+            fragments[2] = SolInstructionFragment.newInstance(false, true);
         }
-
+        mBinding.viewPager.setOffscreenPageLimit(2);
         mBinding.viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager(),
                 BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             @NonNull
