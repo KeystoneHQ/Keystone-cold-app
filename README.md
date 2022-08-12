@@ -7,8 +7,6 @@ Keystone is an air-gapped, open source hardware wallet that uses completely tran
 
 You can also follow [@Keystone](https://twitter.com/KeystoneWallet) on Twitter.
 
-<div align=center><img src="https://keyst.one/c430c589a841d8b8379c66766e78c95d.png"/></div>
-
 ## Contents
 
 - [Introduction](#introduction)
