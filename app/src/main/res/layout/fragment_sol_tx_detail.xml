@@ -46,7 +46,43 @@
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />
         </androidx.appcompat.widget.Toolbar>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
 
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/coin_sol" />
+
+            <TextView
+                android:id="@+id/coinCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_toEndOf="@id/icon"
+                android:text="SOL"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/coinId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/coinCode"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="2dp"
+                android:layout_toEndOf="@id/icon"
+                android:text="Solana"
+                android:textColor="@color/white40"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
         <include layout="@layout/divider" />
 
         <ScrollView

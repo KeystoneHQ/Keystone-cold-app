@@ -1,6 +1,9 @@
 package com.keystone.cold.ui.fragment.main.solana;
 
 import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 
@@ -8,10 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.SolInstructionArgumentBinding;
 import com.keystone.cold.databinding.SolInstructionBinding;
 import com.keystone.cold.ui.common.BaseBindingAdapter;
+import com.keystone.cold.util.StringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +24,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 class InstructionAdapter extends BaseBindingAdapter<JSONObject, SolInstructionBinding> {
     private static final String TAG = "InstructionAdapter";
@@ -67,14 +74,13 @@ class InstructionAdapter extends BaseBindingAdapter<JSONObject, SolInstructionBi
             e.printStackTrace();
             Log.e(TAG, "onBindItem: ", e);
         }
-        String instructionTitle = String.format("%d# Program: %s", position+1, program);
+        String instructionTitle = String.format("#%d Program: %s", position + 1, program);
         InstructionArgumentAdapter adapter = new InstructionArgumentAdapter(context);
         adapter.setItems(arguments);
-        binding.instructionTitle.setText(instructionTitle);
+        binding.instructionTitle.setText(highLight(instructionTitle));
         if (parseSuccess) {
             binding.arguments.setAdapter(adapter);
-        }
-        else {
+        } else {
             binding.error.setText(error);
             binding.error.setVisibility(View.VISIBLE);
             binding.arguments.setVisibility(View.GONE);
@@ -84,6 +90,24 @@ class InstructionAdapter extends BaseBindingAdapter<JSONObject, SolInstructionBi
     @Override
     protected void onBindItem(SolInstructionBinding binding, JSONObject instruction) {
 
+    }
+
+    private Pattern patternOrder = Pattern.compile("#\\d+");
+    private Pattern patterUnknown = Pattern.compile("Unknown");
+
+    private SpannableStringBuilder highLight(String content) {
+        SpannableStringBuilder spannable = new SpannableStringBuilder(content);
+        highLight(spannable, patternOrder, R.color.icon_select);
+        highLight(spannable, patterUnknown, R.color.check_info_color);
+        return spannable;
+    }
+
+    private void highLight(SpannableStringBuilder spannable, Pattern pattern, int colorId) {
+        Matcher matcher = pattern.matcher(spannable);
+        while (matcher.find()) {
+            spannable.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(colorId)), matcher.start(),
+                    matcher.end(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        }
     }
 
     static class InstructionArgument {
@@ -109,7 +133,7 @@ class InstructionAdapter extends BaseBindingAdapter<JSONObject, SolInstructionBi
 
         @Override
         protected void onBindItem(SolInstructionArgumentBinding binding, InstructionArgument item) {
-            binding.title.setText(item.title);
+            binding.title.setText(StringUtils.capitalizes(item.title));
             binding.content.setText(item.content);
         }
     }
