@@ -643,7 +643,7 @@
     <string name="tutorials_hint">Please use your laptop or mobile phone to open the links below for detailed tutorials of how to use Keystone with specific companion software wallets.</string>
 
     <string name="raw_data">Raw Data</string>
-    <string name="overview">OverView</string>
+    <string name="overview">Overview</string>
     <string name="solana_tx_hint">Please check transaction key information before signing</string>
     <string name="decode_failed">The transaction can not be decoded</string>
     <string name="decode_failed_detail">All data in this transaction are customized and can\'t be decoded for now.</string>
