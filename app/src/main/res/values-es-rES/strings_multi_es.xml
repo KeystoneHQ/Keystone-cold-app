@@ -532,7 +532,7 @@
   <string name="tip">Nota</string>
   <string name="learn_more"><![CDATA[<Data>Keystone admite la decodificación de transacciones. Visita<font color="#000CDC3"><b> https://keyst.one/abi </b></font>para más detalles.</Data>]]></string>
   <string name="learn_more_doc"><![CDATA[<Data>Keystone admite la decodificación de transacciones. Visita<font color="#000CDC3"><b> https://keyst.one/addabi </b></font>para más detalles.</Data>]]></string>
-  <string name="check_info">* Verifica los detalles de la transacción antes de firmar</string>
+  <string name="check_info">Verifica los detalles de la transacción antes de firmar</string>
   <string name="undecoded_tip">¡Atención! Estos son datos no codificados.</string>
   <string name="from_tfcard">(Derivado de tu tarjeta MicroSD)</string>
   <string name="format_sdcard_hint">Formatea la microSD en FAT32. De lo contrario, los archivos no se pueden leer ni exportar.</string>
