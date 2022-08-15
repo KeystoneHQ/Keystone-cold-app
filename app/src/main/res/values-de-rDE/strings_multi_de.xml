@@ -549,7 +549,7 @@ On Polkadot{.js}, you need to create watch-only wallets for DOT and KSM separate
   <string name="tip">Hinweis</string>
   <string name="learn_more"><![CDATA[<Data>Keystone unterstützt das Dekodieren von Transaktionen. Bitte besuchen Sie<font color="#00CDC3"><b> https://keyst.one/abi </b></font>für mehr Details.</Data>]]></string>
   <string name="learn_more_doc"><![CDATA[<Data>Keystone unterstützt das Dekodieren von Transaktionen. Bitte besuchen Sie<font color="#00CDC3"><b> https://keyst.one/addabi </b></font>für mehr Details.</Data>]]></string>
-  <string name="check_info">* Bitte überprüfen Sie die Details der Transaktion vor dem Signieren</string>
+  <string name="check_info">Bitte überprüfen Sie die Details der Transaktion vor dem Signieren</string>
   <string name="undecoded_tip">Achtung! Das sind nicht dekodierte Daten.</string>
   <string name="from_tfcard">(Abgeleitet von Ihrer MicroSD Karte)</string>
   <string name="select_last_word_hint">Bitte wählen Sie eines der folgenden Wörter als das 24. Wort</string>

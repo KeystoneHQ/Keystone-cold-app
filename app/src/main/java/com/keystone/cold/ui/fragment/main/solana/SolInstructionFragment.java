@@ -44,34 +44,43 @@ public class SolInstructionFragment extends BaseFragment<FragmentSolOverviewBind
         viewModel = ViewModelProviders.of(getParentFragment()).get(SolTxViewModel.class);
         viewModel.getParseMessageJsonLiveData().observe(this, jsonObject -> {
             if (jsonObject != null) {
-                if (jsonObject.toString().equals(new JSONObject().toString())) {
-                    return;
-                }
                 try {
-                    if(isRaw) {
+                    if (isRaw) {
                         mBinding.rawTx.setText(jsonObject.toString(2));
                         mBinding.rawTx.setVisibility(View.VISIBLE);
-                    }
-                    else {
+                    } else {
                         InstructionAdapter adapter = new InstructionAdapter(getContext(), this.isOverview);
                         JSONArray instructions = jsonObject.getJSONArray("instructions");
                         int length = instructions.length();
                         List<JSONObject> list = new ArrayList<>();
                         for (int i = 0; i < length; i++) {
-                            list.add(instructions.getJSONObject(i));
+                            if (isOverview) {
+                                if (isSupport(instructions.getJSONObject(i))) {
+                                    list.add(instructions.getJSONObject(i));
+                                }
+                            } else {
+                                list.add(instructions.getJSONObject(i));
+                            }
                         }
-                        adapter.setItems(list);
-                        mBinding.instructions.setAdapter(adapter);
-                        mBinding.instructions.setVisibility(View.VISIBLE);
+                        if (!list.isEmpty()) {
+                            adapter.setItems(list);
+                            mBinding.instructions.setAdapter(adapter);
+                            mBinding.rlListContainer.setVisibility(View.VISIBLE);
+                        } else {
+                            mBinding.errorPage.setVisibility(View.VISIBLE);
+                        }
                     }
                 } catch (JSONException exception) {
                     exception.printStackTrace();
                 }
             } else {
-                mBinding.rawTx.setText(R.string.decode_failed_hint);
-                mBinding.rawTx.setVisibility(View.VISIBLE);
+                mBinding.errorPage.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    private boolean isSupport(JSONObject jsonObject) throws JSONException {
+        return !(jsonObject.get("readable") instanceof String);
     }
 
     @Override
@@ -83,7 +92,6 @@ public class SolInstructionFragment extends BaseFragment<FragmentSolOverviewBind
     public void onDestroyView() {
         super.onDestroyView();
         viewModel.getParseMessageJsonLiveData().removeObservers(this);
-        viewModel.getParseMessageJsonLiveData().setValue(new JSONObject());
     }
 
 }

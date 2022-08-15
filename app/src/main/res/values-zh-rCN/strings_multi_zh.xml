@@ -556,7 +556,7 @@
     <string name="learn_more_doc"><Data><![CDATA[Keystone支持解析交易，您可前往<font color="#00CDC3"><b> https://keyst.one/addabi </b></font>了解详情。]]></Data></string>
     <string name="undecoded_tip">註意！該數據未被解析。</string>
     <string name="from_tfcard">（解碼資源來源於TF卡）</string>
-    <string name="check_info">* 簽名前，請仔細檢查交易詳情</string>
+    <string name="check_info">簽名前，請仔細檢查交易詳情</string>
     <string name="select_last_word_hint">請在以下單詞中任選一個作為第24個單詞</string>
     <string name="please_insert_sdcard">請先將TF卡插入到設備中</string>
     <string name="confirm_format">確認是否格式化?</string>

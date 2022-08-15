@@ -98,8 +98,8 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:padding="16dp"
-            android:text="@string/solana_tx_hint"
-            android:textColor="@color/white" />
+            android:textColor="@color/check_info_color"
+            android:text="@string/solana_tx_hint" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab"
