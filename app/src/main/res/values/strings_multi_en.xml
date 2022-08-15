@@ -549,7 +549,7 @@
     <string name="simple">Simple</string>
     <string name="raw">Raw</string>
     <string name="qr">QR</string>
-    <string name="details">details</string>
+    <string name="details">Details</string>
     <string name="spark_token_claim_guide"><![CDATA[
     1. Open <font color="#00cdc3">XRP Toolkit<font/><br>
     2. In the menu bar, go to <font color="#00cdc3">Account<font/> and select the <font color="#00cdc3">Properties<font/> menu item<br>
