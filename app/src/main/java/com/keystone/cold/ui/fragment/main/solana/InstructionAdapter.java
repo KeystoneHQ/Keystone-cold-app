@@ -21,6 +21,7 @@ import com.keystone.cold.util.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,6 +32,7 @@ class InstructionAdapter extends BaseBindingAdapter<JSONObject, SolInstructionBi
     private static final String TAG = "InstructionAdapter";
     private final boolean isOverview;
     private final Pattern patterUnknown = Pattern.compile("Unknown");
+    private final static String SOL_UNIT = "1000000000";
 
 
     public InstructionAdapter(Context context, Boolean isOverview) {
@@ -69,7 +71,11 @@ class InstructionAdapter extends BaseBindingAdapter<JSONObject, SolInstructionBi
                 arguments.add(new InstructionArgument("Method", method));
                 while (keys.hasNext()) {
                     String title = keys.next();
-                    arguments.add(new InstructionArgument(title, object.get(title).toString()));
+                    String content = object.get(title).toString();
+                    if (title.equalsIgnoreCase("amount")){
+                        content = conversionUnit(content) + " SOL";
+                    }
+                    arguments.add(new InstructionArgument(title, content));
                 }
             }
         } catch (JSONException e) {
@@ -109,6 +115,18 @@ class InstructionAdapter extends BaseBindingAdapter<JSONObject, SolInstructionBi
             spannable.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(colorId)), matcher.start(),
                     matcher.end(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         }
+    }
+
+    private String conversionUnit(String original) {
+        try {
+            BigDecimal lamport = new BigDecimal(original);
+            BigDecimal unit = new BigDecimal(SOL_UNIT);
+            BigDecimal sol = lamport.divide(unit);
+            return sol.toPlainString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return original;
     }
 
     static class InstructionArgument {
