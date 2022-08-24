@@ -41,12 +41,21 @@ public class AddressEntity implements Address, FilterableItem {
 
     /**
      * Address类的额外信息，内部是JSON
-     * 可能的结构：@Solana, 其他币种暂时没有用到
+     * 可能的结构：@Solana, @Near, @Aptos  其他币种暂时没有用到
      * @Solana {
-     *     "addtions" : [ {"derivation_pattern": "solflare", "index" : "1"}, {"derivation_pattern": "phantom", "index" : "1"}]
+     *     "addition" : [ {"derivation_pattern": "solflare", "index" : "1"}, {"derivation_pattern": "phantom", "index" : "1"}]
      * }
-     * @derivation_pattern 表示派生模式
-     * @index 表示为该派生模式下的第几个地址（path相同的地址，在不同模式下的索引号可能不同）
+     *      @derivation_pattern 表示派生模式
+     *      @index 表示为该派生模式下的第几个地址（path相同的地址，在不同模式下的索引号可能不同）
+     *
+     * @Near {
+     *     "addition" : [ {"derivation_pattern": "MNEMONIC", "index" : "1"}]
+     * }
+     *
+     * @Aptos {
+     *     "addition" : {"xPub": "xxxxxx"}
+     * }
+     *      @xPub 表示该地址对应的扩展公钥
      */
 
     private String addition;

@@ -41,7 +41,7 @@ import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.protocol.EncodeConfig;
 import com.keystone.cold.protocol.builder.SyncBuilder;
-import com.keystone.cold.util.Tuple;
+import com.keystone.cold.ui.fragment.main.SyncInfo;
 import com.keystone.cold.util.URRegistryHelper;
 import com.sparrowwallet.hummingbird.UR;
 
@@ -198,26 +198,15 @@ public class SyncViewModel extends AndroidViewModel {
         return data;
     }
 
-    public MutableLiveData<UR> generateSyncSolanaUR(List<Tuple<String, String, String>> syncInfo) {
+    public MutableLiveData<UR> generateSyncURBySyncInfo(List<SyncInfo> syncInfoList) {
         MutableLiveData<UR> data = new MutableLiveData<>();
         AppExecutors.getInstance().networkIO().execute(() -> {
             UR ur;
-            ur = URRegistryHelper.generateCryptoMultiAccountsForSolByAddress(syncInfo).toUR();
+            ur = URRegistryHelper.generateCryptoMultiAccounts(syncInfoList).toUR();
             data.postValue(ur);
         });
         return data;
     }
-
-    public MutableLiveData<UR> generateSyncNearUR(List<Tuple<String, String, String>> syncInfo) {
-        MutableLiveData<UR> data = new MutableLiveData<>();
-        AppExecutors.getInstance().networkIO().execute(() -> {
-            UR ur;
-            ur = URRegistryHelper.generateCryptoMultiAccountsForNearByAddress(syncInfo).toUR();
-            data.postValue(ur);
-        });
-        return data;
-    }
-
 
     public LiveData<String> generateSyncMetamask(ETHAccount ethAccount) {
         chainsMutableLiveData.postValue(ethAccount);

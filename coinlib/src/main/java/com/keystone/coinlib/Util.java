@@ -35,6 +35,8 @@ import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.DLSequence;
+import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.digests.SHA3Digest;
 import org.bouncycastle.jcajce.provider.digest.Keccak;
 import org.bouncycastle.util.Properties;
 import org.bouncycastle.util.encoders.Hex;
@@ -209,5 +211,19 @@ public class Util {
         System.arraycopy(bytes, 0, result, 0, bytes.length);
         System.arraycopy(checksum, 0, result, bytes.length, 4);
         return Base58.encode(result);
+    }
+
+    /**
+     * sha3-256 hash function.
+     *
+     * @param input binary encoded input data
+     * @return hash value
+     */
+    public static byte[] sha3256(byte[] input) {
+        Digest digest = new SHA3Digest(256);
+        digest.update(input, 0, input.length);
+        byte[] rsData = new byte[digest.getDigestSize()];
+        digest.doFinal(rsData, 0);
+        return rsData;
     }
 }

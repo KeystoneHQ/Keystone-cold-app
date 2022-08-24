@@ -132,7 +132,8 @@ public class MainActivity extends FullScreenActivity {
             if (((watchWallet == WatchWallet.XRP_TOOLKIT
                     || watchWallet == WatchWallet.METAMASK
                     || watchWallet == WatchWallet.SOLANA
-                    || watchWallet == WatchWallet.NEAR)
+                    || watchWallet == WatchWallet.NEAR
+                    || watchWallet == WatchWallet.APTOS)
                     && label.equals(AssetFragment.TAG))) {
                 index = 0;
             }
@@ -217,7 +218,8 @@ public class MainActivity extends FullScreenActivity {
                     if (watchWallet == WatchWallet.XRP_TOOLKIT
                             || watchWallet == WatchWallet.METAMASK
                             || watchWallet == WatchWallet.SOLANA
-                            || watchWallet == WatchWallet.NEAR) {
+                            || watchWallet == WatchWallet.NEAR
+                            || watchWallet == WatchWallet.APTOS) {
                         NavOptions navOptions = new NavOptions.Builder()
                                 .setPopUpTo(R.id.assetListFragment, false)
                                 .build();

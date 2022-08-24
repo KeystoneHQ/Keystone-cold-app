@@ -40,6 +40,7 @@ import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.CommonModalBinding;
 import com.keystone.cold.databinding.SyncFragmentBinding;
 import com.keystone.cold.ui.MainActivity;
+import com.keystone.cold.ui.fragment.main.SyncInfo;
 import com.keystone.cold.ui.fragment.setup.SetupVaultBaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.util.Tuple;
@@ -69,7 +70,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
 
     private MutableLiveData<UR> URLiveData;
 
-    private final List<Tuple<String, String, String>> syncInfo = new ArrayList<>();
+    private List<SyncInfo> syncInfoList;
 
     @Override
     protected int setView() {
@@ -84,10 +85,8 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
             coinCode = data.getString("coinCode");
             fromSyncGuide = getArguments().getBoolean("fromSyncGuide");
 
-            String syncPaths = getArguments().getString(DERIVATION_PATH_KEY);
-            if (!TextUtils.isEmpty(syncPaths)) {
-                syncInfo.addAll(collectSyncInfo(syncPaths));
-            }
+            syncInfoList = (List<SyncInfo>) getArguments().getSerializable(DERIVATION_PATH_KEY);
+
         }
         if (!fromSyncGuide) {
             mBinding.complete.setVisibility(View.GONE);
@@ -124,24 +123,6 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
         generateSyncData();
     }
 
-    private List<Tuple<String, String, String>> collectSyncInfo(String syncInfo) {
-        List<Tuple<String, String, String>> infoList = new ArrayList<>();
-        try {
-            JSONArray jsonArray = new JSONArray(syncInfo);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                String path = jsonObject.getString("path");
-                String address = jsonObject.getString("address");
-                String name = jsonObject.getString("name");
-                Tuple<String, String, String> pathAddressPair = Tuple.create(path, address, name);
-                infoList.add(pathAddressPair);
-            }
-        } catch (JSONException exception) {
-            exception.printStackTrace();
-        }
-        return infoList;
-    }
-
     private void setupUIWithWatchWallet() {
         mBinding.info.setOnClickListener(v -> {
             switch (watchWallet) {
@@ -150,6 +131,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 case XRP_TOOLKIT:
                 case POLKADOT_JS:
                 case NEAR:
+                case APTOS:
                     navigate(R.id.action_to_tutorialsFragment);
                     break;
                 default:
@@ -176,6 +158,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
             case METAMASK:
             case SOLANA:
             case NEAR:
+            case APTOS:
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 9, 0, 0);
                 mBinding.content.setLayoutParams(params);
@@ -261,14 +244,14 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                     if (isRefreshing) return;
                     isRefreshing = true;
                     Utilities.setCurrentSolAccount(mActivity, solAccount.getCode());
-                    URLiveData = syncViewModel.generateSyncSolanaUR(syncInfo);
+                    URLiveData = syncViewModel.generateSyncURBySyncInfo(syncInfoList);
                     URLiveData.observe(this, urData -> {
                         if (urData != null) {
                             mBinding.dynamicQrcodeLayout.qrcode.displayUR(urData);
                             mBinding.derivationPattern.setVisibility(View.VISIBLE);
                             mBinding.addressData.setVisibility(View.GONE);
-                            if (syncInfo.size() == 1) {
-                                mBinding.fromPath.setText(syncInfo.get(0).first.toLowerCase());
+                            if (syncInfoList.size() == 1) {
+                                mBinding.fromPath.setText(syncInfoList.get(0).getPath().toLowerCase());
                             } else {
                                 String code = Utilities.getCurrentSolAccount(mActivity);
                                 SOLAccount account = SOLAccount.ofCode(code);
@@ -289,14 +272,14 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                     if (isRefreshing) return;
                     isRefreshing = true;
                     Utilities.setCurrentNearAccount(mActivity, nearAccount.getCode());
-                    URLiveData = syncViewModel.generateSyncNearUR(syncInfo);
+                    URLiveData = syncViewModel.generateSyncURBySyncInfo(syncInfoList);
                     URLiveData.observe(this, urData -> {
                         if (urData != null) {
                             mBinding.dynamicQrcodeLayout.qrcode.displayUR(urData);
                             mBinding.derivationPattern.setVisibility(View.VISIBLE);
                             mBinding.addressData.setVisibility(View.GONE);
-                            if (syncInfo.size() == 1) {
-                                mBinding.fromPath.setText(syncInfo.get(0).first.toLowerCase());
+                            if (syncInfoList.size() == 1) {
+                                mBinding.fromPath.setText(syncInfoList.get(0).getPath().toLowerCase());
                             } else {
                                 String code = Utilities.getCurrentNearAccount(mActivity);
                                 NEARAccount account = NEARAccount.ofCode(code);
@@ -306,6 +289,26 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                         URLiveData.removeObservers(this);
                     });
 
+                });
+                break;
+            case APTOS:
+                if (URLiveData != null) {
+                    URLiveData.removeObservers(this);
+                }
+
+                if (isRefreshing) return;
+                isRefreshing = true;
+                URLiveData = syncViewModel.generateSyncURBySyncInfo(syncInfoList);
+                URLiveData.observe(this, urData -> {
+                    if (urData != null) {
+                        mBinding.dynamicQrcodeLayout.qrcode.displayUR(urData);
+                        mBinding.derivationPattern.setVisibility(View.VISIBLE);
+                        mBinding.addressData.setVisibility(View.GONE);
+                        if (syncInfoList.size() == 1) {
+                            mBinding.fromPath.setText(syncInfoList.get(0).getPath().toLowerCase());
+                        }
+                    }
+                    URLiveData.removeObservers(this);
                 });
                 break;
         }

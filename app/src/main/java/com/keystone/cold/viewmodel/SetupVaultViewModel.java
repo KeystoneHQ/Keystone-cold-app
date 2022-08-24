@@ -432,6 +432,9 @@ public class SetupVaultViewModel extends AndroidViewModel {
                     } else if (coin.getIndex() == Coins.NEAR.coinIndex()) {
                         createNearAccounts(coin);
                         continue;
+                    } else if (coin.getIndex() == Coins.APTOS.coinIndex()) {
+                        createAptosAddress(coin);
+                        continue;
                     }
                 }
                 String xPub = new GetExtendedPublicKeyCallable(coin.getAccounts().get(0).getHdPath()).call();
@@ -464,6 +467,19 @@ public class SetupVaultViewModel extends AndroidViewModel {
                 AppExecutors.getInstance().diskIO().execute(() -> AppExecutors.getInstance().mainThread().execute(onComplete));
             }
         });
+    }
+
+    private void createAptosAddress(CoinEntity coin) {
+        String coinXpub = new GetExtendedPublicKeyCallable(coin.getAccounts().get(0).getHdPath()).call();
+        coin.setExPub(coinXpub);
+        long id = mRepository.insertCoin(coin);
+        coin.setId(id);
+        AccountEntity account = coin.getAccounts().get(0);
+        account.setExPub(coinXpub);
+        account.setCoinId(id);
+        long accountId = mRepository.insertAccount(account);
+        account.setId(accountId);
+        AddAddressViewModel.addAptosAddress(account, mRepository, 1, coin, null);
     }
 
     private void updateNearAccounts(CoinEntity coin) {
