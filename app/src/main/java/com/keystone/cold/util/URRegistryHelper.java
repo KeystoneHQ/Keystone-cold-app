@@ -11,7 +11,7 @@ import com.sparrowwallet.hummingbird.registry.CryptoHDKey;
 import com.sparrowwallet.hummingbird.registry.CryptoKeypath;
 import com.sparrowwallet.hummingbird.registry.CryptoOutput;
 import com.sparrowwallet.hummingbird.registry.PathComponent;
-import com.sparrowwallet.hummingbird.registry.solana.CryptoMultiAccounts;
+import com.sparrowwallet.hummingbird.registry.CryptoMultiAccounts;
 
 import org.spongycastle.util.encoders.Hex;
 
