@@ -345,6 +345,74 @@ public class AddAddressViewModel extends AndroidViewModel {
         return address;
     }
 
+    public void addAptosAddress(int number, CoinEntity coinEntity, Runnable onComplete){
+        AccountEntity accountEntity = mRepo.loadAccountsForCoin(coinEntity).get(0);
+        if(accountEntity != null) {
+            addAptosAddress(accountEntity, mRepo, number, coinEntity, onComplete);
+        } else {
+            AppExecutors.getInstance().mainThread().execute(onComplete);
+        }
+    }
+
+    public static void addAptosAddress(AccountEntity accountEntity, DataRepository repository, int number, CoinEntity coinEntity, Runnable onComplete) {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+
+            AbsDeriver deriver = AbsDeriver.newInstance("APTOS");
+            if (deriver == null) {
+                Log.e("addAptosAddress", "deriver is null");
+            } else {
+                int addressLength = accountEntity.getAddressLength();
+                int targetAddressCount = addressLength + number;
+                List<AddressEntity> entities = new ArrayList<>();
+                for (int index = addressLength; index < targetAddressCount; index++) {
+                    AddressEntity addressEntity = new AddressEntity();
+                    String addr = deriveAptosAddress(0, index, addressEntity);
+                    if (repository.loadAddressBypath(addressEntity.getPath()) != null) {
+                        continue;
+                    }
+                    addressEntity.setAddressString(addr);
+                    addressEntity.setCoinId(coinEntity.getCoinId());
+                    addressEntity.setIndex(index);
+                    addressEntity.setName("APTOS-" + index);
+                    addressEntity.setDisplayName("AuthKey-" + index);
+                    addressEntity.setBelongTo(coinEntity.getBelongTo());
+                    entities.add(addressEntity);
+                }
+                coinEntity.setAddressCount(targetAddressCount);
+                accountEntity.setAddressLength(targetAddressCount);
+                repository.updateAccount(accountEntity);
+                repository.updateCoin(coinEntity);
+                repository.insertAddress(entities);
+            }
+            AppExecutors.getInstance().mainThread().execute(onComplete);
+        });
+    }
+
+    public static String deriveAptosAddress(int account, int index,  AddressEntity addressEntity) {
+        String address = "";
+        AbsDeriver deriver = AbsDeriver.newInstance("APTOS");
+        if (deriver == null) {
+            return address;
+        }
+        boolean isSetPath = addressEntity != null;
+        String xPubPath = "M/44'/637'/" + account +"'/0'" + "/" + index + "'";
+        String xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
+        address = deriver.derive(xPub);
+        if (isSetPath) {
+            addressEntity.setPath(xPubPath);
+
+            try {
+                JSONObject innerJson = new JSONObject();
+                innerJson.put("xPub", xPub);
+                JSONObject addition = new JSONObject();
+                addition.put("addition", innerJson);
+                addressEntity.setAddition(addition.toString());
+            } catch (JSONException exception){
+                exception.printStackTrace();
+            }
+        }
+        return address;
+    }
 
     public static class AddAddressTask extends AsyncTask<String, Void, Void> {
         private final CoinEntity coinEntity;

@@ -20,6 +20,7 @@ import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.viewmodel.CoinViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,7 +76,7 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
 
     private void stepIntoSync() {
         Bundle bundle = new Bundle();
-        bundle.putString(DERIVATION_PATH_KEY, addressSyncAdapter.getDerivationInfo());
+        bundle.putSerializable(DERIVATION_PATH_KEY, (Serializable) addressSyncAdapter.getSyncInfo());
         navigate(R.id.action_to_syncFragment, bundle);
     }
 
@@ -128,7 +129,7 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
                 return account.isChildrenPath(entity.getPath());
             }
             default:
-                return false;
+                return true;
         }
     }
 }

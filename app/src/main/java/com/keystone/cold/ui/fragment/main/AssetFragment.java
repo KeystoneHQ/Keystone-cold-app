@@ -169,6 +169,12 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             mBinding.customTitle.setVisibility(View.GONE);
             coinId = Coins.NEAR.coinId();
             coinCode = Coins.NEAR.coinCode();
+        } else if (watchWallet == WatchWallet.APTOS) {
+            mBinding.toolbar.setNavigationIcon(R.drawable.menu);
+            mBinding.toolbar.setTitle(watchWallet.getWalletName(mActivity));
+            mBinding.customTitle.setVisibility(View.GONE);
+            coinId = Coins.APTOS.coinId();
+            coinCode = Coins.APTOS.coinCode();
         } else {
             Bundle data = requireArguments();
             coinId = data.getString(KEY_COIN_ID);
@@ -193,7 +199,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         mBinding.toolbar.setOnMenuItemClickListener(this);
         mBinding.toolbar.setNavigationOnClickListener(v -> {
             if (watchWallet == WatchWallet.XRP_TOOLKIT || watchWallet == WatchWallet.METAMASK ||
-                    watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR) {
+                    watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR ||
+                    watchWallet == WatchWallet.APTOS) {
                 ((MainActivity) mActivity).toggleDrawer(v);
             } else {
                 navigateUp();
@@ -222,19 +229,17 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private int getMenuResId() {
-        if (watchWallet == WatchWallet.XRP_TOOLKIT) {
-            return R.menu.xrp_toolkit;
+        switch (watchWallet) {
+            case XRP_TOOLKIT:
+                return R.menu.xrp_toolkit;
+            case METAMASK:
+            case SOLANA:
+            case NEAR:
+            case APTOS:
+                return R.menu.metamask;
+            default:
+                return (showPublicKey || Coins.isPolkadotFamily(coinCode)) ? R.menu.asset_without_add : R.menu.asset;
         }
-        if (watchWallet == WatchWallet.METAMASK) {
-            return R.menu.metamask;
-        }
-        if (watchWallet == WatchWallet.SOLANA) {
-            return R.menu.metamask;
-        }
-        if (watchWallet == WatchWallet.NEAR) {
-            return R.menu.metamask;
-        }
-        return (showPublicKey || Coins.isPolkadotFamily(coinCode)) ? R.menu.asset_without_add : R.menu.asset;
     }
 
     private void initTabs() {
@@ -753,6 +758,10 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 if (judgeShowBadge()) {
                     Utilities.setUserClickNearSyncLock(mActivity);
                 }
+            } else if (watchWallet == WatchWallet.APTOS) {
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_COIN_ID, coinId);
+                navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
             }
             if (finalBgView != null) {
                 finalBgView.unbind();
@@ -767,9 +776,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         if (NEARAccount.ofCode(code) == NEARAccount.MNEMONIC) {
             SyncAddressUtil.Callback callback = new SyncAddressUtil.Callback() {
                 @Override
-                public void onGetAddressInfo(String addressInfo) {
+                public void onGetAddressInfo(List<SyncInfo> syncInfoList) {
                     Bundle bundle = new Bundle();
-                    bundle.putString(DERIVATION_PATH_KEY, addressInfo);
+                    bundle.putSerializable(DERIVATION_PATH_KEY, (Serializable) syncInfoList);
                     navigate(R.id.action_to_syncFragment, bundle);
                 }
 
@@ -871,6 +880,16 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             AppExecutors.getInstance().diskIO().execute(() -> {
                 CoinEntity coinEntity = viewModel.getCoin(coinId);
                 viewModel.addNearAccountAddress(value, coinEntity, () -> {
+                    if (fragments[0] != null && fragments[0] instanceof AddressFragment) {
+                        ((AddressFragment) fragments[0]).updateAddressList();
+                    }
+                    handler.postDelayed(dialog::dismiss, DIALOG_DISMISS_DELAY_TIME);
+                });
+            });
+        } else if (watchWallet == WatchWallet.APTOS) {
+            AppExecutors.getInstance().diskIO().execute(() -> {
+                CoinEntity coinEntity = viewModel.getCoin(coinId);
+                viewModel.addAptosAddress(value, coinEntity, () -> {
                     if (fragments[0] != null && fragments[0] instanceof AddressFragment) {
                         ((AddressFragment) fragments[0]).updateAddressList();
                     }

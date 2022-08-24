@@ -63,6 +63,8 @@ public class Coins {
             NEARAccount.MNEMONIC.getCode(),
             NEARAccount.LEDGER.getCode()});
 
+    public static final Coin APTOS = new Coin("aptos", "APTOS", "Aptos", 637, CURVE.ED25519, new String[]{});
+
     public static final List<Coin> SUPPORTED_COINS = Arrays.asList(
             BTC,
             BTC_LEGACY,
@@ -85,7 +87,8 @@ public class Coins {
             KSM,
             CFX,
             SOL,
-            NEAR
+            NEAR,
+            APTOS
     );
 
     public static boolean isCoinSupported(@NonNull String coinCode) {
@@ -264,6 +267,10 @@ public class Coins {
         return coinCode.equals(DOT.coinCode) || coinCode.equals(KSM.coinCode);
     }
 
+    public static boolean isAptosCoin(String coinCode){
+        return coinCode.equals(APTOS.coinCode);
+
+    }
     public static boolean isSolanaCoin(String coinCode) {
         return coinCode.equals(SOL.coinCode);
     }

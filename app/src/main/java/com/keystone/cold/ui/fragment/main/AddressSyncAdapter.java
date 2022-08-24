@@ -65,22 +65,20 @@ public class AddressSyncAdapter extends BaseBindingAdapter<AddressEntity, Addres
        return checkedList.contains(true);
     }
 
-    public String getDerivationInfo() {
-        JSONArray jsonArray = new JSONArray();
+    public List<SyncInfo> getSyncInfo() {
+        List<SyncInfo> syncInfoList = new ArrayList<>();
         for (int i = 0; i < checkedList.size(); i++) {
             if (checkedList.get(i)) {
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("path", getItems().get(i).getPath());
-                    jsonObject.put("address", getItems().get(i).getAddressString());
-                    jsonObject.put("name", getItems().get(i).getName());
-                    jsonArray.put(jsonObject);
-                } catch (JSONException exception) {
-                    exception.printStackTrace();
-                }
+                SyncInfo syncInfo = new SyncInfo();
+                syncInfo.setCoinId(getItems().get(i).getCoinId());
+                syncInfo.setAddress(getItems().get(i).getAddressString());
+                syncInfo.setPath(getItems().get(i).getPath());
+                syncInfo.setName(getItems().get(i).getName());
+                syncInfo.setAddition(getItems().get(i).getAddition());
+                syncInfoList.add(syncInfo);
             }
         }
-        return jsonArray.toString();
+        return syncInfoList;
     }
 
     @Override

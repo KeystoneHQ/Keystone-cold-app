@@ -102,26 +102,10 @@ public class ChooseWatchWalletFragment extends ListPreferenceFragment {
                 updateCurrentWatchWallet();
                 break;
             case METAMASK:
-//                int web3GuideTimes = Utilities.getWeb3GuideTimes(mActivity);
-//                if (web3GuideTimes > 0 && mActivity instanceof MainActivity) {
-//                    navigate(R.id.action_to_home);
-//                } else {
-//                    navigate(R.id.action_to_syncWatchWalletGuide, bundle);
-//                }
-                //navigate(R.id.action_to_syncWatchWalletGuide, bundle);
-                updateCurrentWatchWallet();
-                stepIntoMainActivity();
-                break;
             case XRP_TOOLKIT:
-                //navigate(R.id.action_to_syncWatchWalletGuide, bundle);
-                updateCurrentWatchWallet();
-                stepIntoMainActivity();
-                break;
             case SOLANA:
-                updateCurrentWatchWallet();
-                stepIntoMainActivity();
-                break;
             case NEAR:
+            case APTOS:
                 updateCurrentWatchWallet();
                 stepIntoMainActivity();
                 break;
