@@ -697,7 +697,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private void addCLickChangePathProcess(View view, Runnable additionProcess) {
-        if (isNearMnemonic()) {
+        if (isHideChangePath()) {
             view.setVisibility(View.GONE);
         }
         view.setOnClickListener(v -> {
@@ -794,6 +794,13 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             bundle.putString(KEY_COIN_ID, coinId);
             navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
         }
+    }
+
+    private boolean isHideChangePath() {
+        if (watchWallet == WatchWallet.APTOS) {
+            return true;
+        }
+        return isNearMnemonic();
     }
 
     private boolean isNearMnemonic() {
