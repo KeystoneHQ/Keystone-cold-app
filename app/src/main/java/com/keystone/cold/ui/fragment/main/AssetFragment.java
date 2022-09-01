@@ -100,6 +100,7 @@ import com.keystone.cold.viewmodel.exceptions.UnsupportedSubstrateTxException;
 import com.keystone.cold.viewmodel.exceptions.XfpNotMatchException;
 import com.sparrowwallet.hummingbird.registry.EthNFTItem;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
+import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
 import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolNFTItem;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
@@ -113,6 +114,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -378,7 +380,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 break;
             case R.id.action_scan:
                 if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.POLKADOT_JS
-                        || watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR) {
+                        || watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR
+                        || watchWallet == WatchWallet.APTOS) {
                     scanQrCode();
                 } else {
                     navigate(R.id.action_to_QRCodeScanFragment);
@@ -491,9 +494,23 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     handleSolNFTItem(result);
                 } else if (result.getType().equals(ScanResultTypes.UR_NEAR_SIGN_REQUEST)) {
                     handleNearSignRequest(result);
+                } else if (result.getType().equals(ScanResultTypes.UR_APTOS_SIGN_REQUEST)) {
+                    handleAptosSignRequest(result);
                 }
             }
 
+            private void handleAptosSignRequest(ScanResult result) {
+                AptosSignRequest aptosSignRequest = (AptosSignRequest) result.resolve();
+                ByteBuffer uuidBuffer = ByteBuffer.wrap(aptosSignRequest.getRequestId());
+                UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+                String hdPath = aptosSignRequest.getDerivationPath();
+                String signData = Hex.toHexString(aptosSignRequest.getSignData());
+                Bundle bundle = new Bundle();
+                bundle.putString(REQUEST_ID, uuid.toString());
+                bundle.putString(SIGN_DATA, signData);
+                bundle.putString(HD_PATH, "M/" + hdPath);
+                mFragment.navigate(R.id.action_to_aptosTxConfirmFragment, bundle);
+            }
             private void handleNearSignRequest(ScanResult result) throws InvalidTransactionException, InvalidNEARAccountException, XfpNotMatchException {
                 NearSignRequest nearSignRequest = (NearSignRequest) result.resolve();
                 ByteBuffer uuidBuffer = ByteBuffer.wrap(nearSignRequest.getRequestId());
@@ -645,7 +662,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         } else if (watchWallet == WatchWallet.SOLANA) {
             desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_SOL_SIGN_REQUEST, ScanResultTypes.UR_SOL_NFT_ITEM));
         } else if (watchWallet == WatchWallet.NEAR) {
-            desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_NEAR_SIGN_REQUEST));
+            desiredResults.addAll(Collections.singletonList(ScanResultTypes.UR_NEAR_SIGN_REQUEST));
+        } else if (watchWallet == WatchWallet.APTOS) {
+            desiredResults.addAll(Collections.singletonList(ScanResultTypes.UR_APTOS_SIGN_REQUEST));
         }
         scannerState.setDesiredResults(desiredResults);
         ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);
@@ -690,6 +709,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private void addClickTutorialsProcess(View view, Runnable additionProcess) {
+        if (watchWallet == WatchWallet.APTOS) {
+            view.setVisibility(View.GONE);
+        }
         view.setOnClickListener(v -> {
             navigate(R.id.action_to_tutorialsFragment);
             additionProcess.run();
