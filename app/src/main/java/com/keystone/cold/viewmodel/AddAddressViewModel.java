@@ -364,17 +364,17 @@ public class AddAddressViewModel extends AndroidViewModel {
                 int addressLength = accountEntity.getAddressLength();
                 int targetAddressCount = addressLength + number;
                 List<AddressEntity> entities = new ArrayList<>();
-                for (int index = addressLength; index < targetAddressCount; index++) {
+                for (int account = addressLength; account < targetAddressCount; account++) {
                     AddressEntity addressEntity = new AddressEntity();
-                    String addr = deriveAptosAddress(0, index, addressEntity);
+                    String addr = deriveAptosAddress(account, 0, addressEntity);
                     if (repository.loadAddressBypath(addressEntity.getPath()) != null) {
                         continue;
                     }
                     addressEntity.setAddressString(addr);
                     addressEntity.setCoinId(coinEntity.getCoinId());
-                    addressEntity.setIndex(index);
-                    addressEntity.setName("APTOS-" + index);
-                    addressEntity.setDisplayName("AuthKey-" + index);
+                    addressEntity.setIndex(account);
+                    addressEntity.setName("APTOS-" + account);
+                    addressEntity.setDisplayName("AuthKey-" + account);
                     addressEntity.setBelongTo(coinEntity.getBelongTo());
                     entities.add(addressEntity);
                 }

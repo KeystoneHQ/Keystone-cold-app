@@ -249,6 +249,32 @@
     </fragment>
 
     <fragment
+        android:id="@+id/aptosTxFragment"
+        android:name="com.keystone.cold.ui.fragment.main.aptos.AptosTxConfirmFragment"
+        android:label="aptosTxFragment"
+        tools:layout="@layout/sol_tx_confirm">
+        <action
+            android:id="@+id/action_to_aptosBroadcastTxFragment"
+            app:destination="@id/aptosBroadcastTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/aptosBroadcastTxFragment"
+        android:name="com.keystone.cold.ui.fragment.main.aptos.AptosBroadcastTxFragment"
+        android:label="aptosBroadcastTxFragment">
+        <action
+            android:id="@+id/action_to_home"
+            app:destination="@id/assetListFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/assetListFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
         android:id="@+id/nearTxFragment"
         android:name="com.keystone.cold.ui.fragment.main.near.NearTxConfirmFragment"
         android:label="nearTxFragment"
@@ -1117,6 +1143,14 @@
     <action
         android:id="@+id/action_to_nearTxDetailFragment"
         app:destination="@id/nearTxDetailFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_aptosTxConfirmFragment"
+        app:destination="@id/aptosTxFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
