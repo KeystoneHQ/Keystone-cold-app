@@ -68,7 +68,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 android:layout_toEndOf="@id/icon"
-                android:text="APTOS"
+                android:text="APT"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 android:textStyle="bold" />
