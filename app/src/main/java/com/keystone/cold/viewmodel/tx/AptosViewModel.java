@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.accounts.ExtendedPublicKey;
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.db.entity.AddressEntity;
@@ -23,7 +24,9 @@ import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.callables.ClearTokenCallable;
+import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
+import com.keystone.cold.ui.fragment.main.aptos.model.AptosTxData;
 import com.sparrowwallet.hummingbird.registry.aptos.AptosSignature;
 
 import org.json.JSONException;
@@ -49,6 +52,7 @@ public class AptosViewModel extends Base {
     private String xPub;
 
     private final MutableLiveData<JSONObject> parseMessageJsonLiveData;
+    private final MutableLiveData<AptosTxData> aptosTxDataMutableLiveData;
 
 
     public AptosViewModel(@NonNull Application application) {
@@ -56,6 +60,7 @@ public class AptosViewModel extends Base {
         context = application.getApplicationContext();
         coinCode = "APTOS";
         parseMessageJsonLiveData = new MutableLiveData<>();
+        aptosTxDataMutableLiveData = new MutableLiveData<>();
     }
 
     private final SignCallBack signCallBack = new SignCallBack() {
@@ -75,6 +80,7 @@ public class AptosViewModel extends Base {
             signature = signatureHex;
             signState.postValue(STATE_SIGN_SUCCESS);
             new ClearTokenCallable().call();
+            insertDB(signature, txHex);
         }
 
         @Override
@@ -124,6 +130,10 @@ public class AptosViewModel extends Base {
 
     public MutableLiveData<JSONObject> getParseMessageJsonLiveData() {
         return parseMessageJsonLiveData;
+    }
+
+    public MutableLiveData<AptosTxData> getAptosTxDataMutableLiveData() {
+        return aptosTxDataMutableLiveData;
     }
 
     public void parseTxData(Bundle bundle) {
@@ -201,6 +211,66 @@ public class AptosViewModel extends Base {
         byte[] publicKey = new byte[32];
         System.arraycopy(key, 1, publicKey, 0, 32);
         return publicKey;
+    }
+
+    private void insertDB(String signature, String rawMessage) {
+        TxEntity txEntity = generateAptosTxEntity();
+        txEntity.setTxId(signature);
+        String additionsString = null;
+        try {
+            JSONObject addition = new JSONObject();
+            addition.put("signature", signature);
+            addition.put("raw_message", rawMessage);
+            JSONObject additions = new JSONObject();
+            additions.put("coin", Coins.APTOS.coinId());
+            additions.put("addition", addition);
+            JSONObject root = new JSONObject();
+            root.put("additions", additions);
+            additionsString = root.toString();
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+        if (!TextUtils.isEmpty(additionsString)) {
+            //addition结构详见 com.keystone.cold.db.entity.TxEntity addition字段
+            txEntity.setAddition(additionsString);
+            mRepository.insertTx(txEntity);
+        }
+    }
+
+    private TxEntity generateAptosTxEntity() {
+        TxEntity txEntity = new TxEntity();
+        txEntity.setCoinId(Coins.APTOS.coinId());
+        txEntity.setSignId(watchWallet.getSignId());
+        txEntity.setCoinCode(Coins.APTOS.coinCode());
+        txEntity.setTimeStamp(getUniversalSignIndex(getApplication()));
+        txEntity.setBelongTo(mRepository.getBelongTo());
+        txEntity.setSignedHex(getSignatureUR());
+        return txEntity;
+    }
+
+    public void parseAptosTxEntity(TxEntity txEntity) {
+        String addition = txEntity.getAddition();
+        if (TextUtils.isEmpty(addition)) {
+            return;
+        }
+        try {
+            JSONObject root = new JSONObject(addition);
+            JSONObject additions = root.getJSONObject("additions");
+            String coin = additions.getString("coin");
+            if (!TextUtils.isEmpty(coin) && coin.equals(Coins.APTOS.coinId())) {
+                String signature = additions.getJSONObject("addition").getString("signature");
+                String rawMessage = additions.getJSONObject("addition").getString("raw_message");
+                AptosTxData aptosTxData = new AptosTxData();
+                aptosTxData.setSignature(signature);
+                JSONObject rawData = new JSONObject();
+                rawData.put("raw", rawMessage);
+                aptosTxData.setRawMessage(rawData.toString(2));
+                aptosTxData.setSignatureUR(txEntity.getSignedHex());
+                aptosTxDataMutableLiveData.postValue(aptosTxData);
+            }
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
     }
 
     interface SignCallBack {

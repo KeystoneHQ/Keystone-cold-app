@@ -17,6 +17,7 @@ import org.json.JSONException;
 public class AptosRawTxFragment extends BaseFragment<FragmentAptosRawTxBinding> {
 
     private AptosViewModel viewModel;
+    private boolean isFromRecord = false;
 
     public static Fragment newInstance(@NonNull Bundle bundle) {
         AptosRawTxFragment fragment = new AptosRawTxFragment();
@@ -24,6 +25,12 @@ public class AptosRawTxFragment extends BaseFragment<FragmentAptosRawTxBinding> 
         return fragment;
     }
 
+    public static Fragment newInstance(@NonNull Bundle bundle, boolean isFromRecord) {
+        AptosRawTxFragment fragment = new AptosRawTxFragment();
+        fragment.setArguments(bundle);
+        fragment.isFromRecord = isFromRecord;
+        return fragment;
+    }
 
     @Override
     protected int setView() {
@@ -34,18 +41,27 @@ public class AptosRawTxFragment extends BaseFragment<FragmentAptosRawTxBinding> 
     protected void init(View view) {
 
         viewModel = ViewModelProviders.of(getParentFragment()).get(AptosViewModel.class);
-        viewModel.getParseMessageJsonLiveData().observe(this, jsonArray -> {
-            if (jsonArray != null) {
-                try {
-                    mBinding.rawTx.setText(jsonArray.toString(2));
-                } catch (JSONException exception) {
-                    exception.printStackTrace();
+        if (isFromRecord) {
+            viewModel.getAptosTxDataMutableLiveData().observe(this, aptosTxData -> {
+                if (aptosTxData != null) {
+                    mBinding.rawTx.setText(aptosTxData.getRawMessage());
+                    mBinding.qr.setVisibility(View.VISIBLE);
+                    mBinding.qrcode.qrcode.setData(aptosTxData.getSignatureUR());
                 }
-            } else {
-                mBinding.rawTx.setText(R.string.decode_failed_hint);
-            }
-        });
-
+            });
+        } else {
+            viewModel.getParseMessageJsonLiveData().observe(this, jsonArray -> {
+                if (jsonArray != null) {
+                    try {
+                        mBinding.rawTx.setText(jsonArray.toString(2));
+                    } catch (JSONException exception) {
+                        exception.printStackTrace();
+                    }
+                } else {
+                    mBinding.rawTx.setText(R.string.decode_failed_hint);
+                }
+            });
+        }
     }
 
     @Override
@@ -56,6 +72,10 @@ public class AptosRawTxFragment extends BaseFragment<FragmentAptosRawTxBinding> 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        viewModel.getParseMessageJsonLiveData().removeObservers(this);
+        if (isFromRecord) {
+            viewModel.getAptosTxDataMutableLiveData().removeObservers(this);
+        } else {
+            viewModel.getParseMessageJsonLiveData().removeObservers(this);
+        }
     }
 }

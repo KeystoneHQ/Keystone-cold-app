@@ -65,7 +65,7 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
     private Comparator<Tx> txEntityComparator;
     private String coinCode;
     private WatchWallet watchWallet;
-
+    private  CoinListViewModel viewModel;
 
     static Fragment newInstance(@NonNull String coinId, @NonNull String coinCode) {
         TxListFragment fragment = new TxListFragment();
@@ -83,91 +83,19 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
 
     @Override
     protected void init(View view) {
-        CoinListViewModel viewModel = ViewModelProviders.of(mActivity)
+        viewModel = ViewModelProviders.of(mActivity)
                 .get(CoinListViewModel.class);
         watchWallet = WatchWallet.getWatchWallet(mActivity);
         adapter = new TxAdapter(mActivity);
         mBinding.list.setAdapter(adapter);
         if (watchWallet == WatchWallet.METAMASK) {
-            viewModel.loadEthTxs()
-                    .observe(this, ethTxEntities -> {
-                        ethTxEntities = ethTxEntities.stream()
-                                .filter(this::isCurrentAccountTx)
-                                .filter(ethTxEntity -> ethTxEntity.getBelongTo().equals(Utilities.getCurrentBelongTo(mActivity)))
-                                .collect(Collectors.toList());
-                        adapter.setItems(ethTxEntities);
-                    });
-            txCallback = ethTx -> {
-                GenericETHTxEntity ethTxEntity = (GenericETHTxEntity) ethTx;
-                String signedHex = ethTxEntity.getSignedHex();
-                Bundle bundle = new Bundle();
-                bundle.putString(KEY_TX_ID, ethTxEntity.getTxId());
-                try {
-                    new JSONObject(signedHex);
-                    navigate(R.id.action_to_ethTxFragment, bundle);
-                } catch (JSONException e) {
-                    switch (ethTxEntity.getTxType()) {
-                        case 0x00:
-                            Log.i(TAG, "navigate: jump to new ethLegacyTxFragment");
-                            navigate(R.id.action_to_ethLegacyTxFragment, bundle);
-                            break;
-                        case 0x02:
-                            Log.i(TAG, "navigate: jump to ethFeeMarketTxFragment");
-                            navigate(R.id.action_to_ethFeeMarketTxFragment, bundle);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            };
+            loadEthTx();
         } else if (watchWallet == WatchWallet.SOLANA) {
-            viewModel.loadTxs(requireArguments().getString(KEY_COIN_ID))
-                    .observe(this, txEntities -> {
-                        txEntityComparator = (o1, o2) -> {
-                            if (o1.getSignId().equals(o2.getSignId())) {
-                                return (int) (o2.getTimeStamp() - o1.getTimeStamp());
-                            } else if (ELECTRUM_SIGN_ID.equals(o1.getSignId())) {
-                                return -1;
-                            } else {
-                                return 1;
-                            }
-                        };
-                        txEntities = txEntities.stream()
-                                .filter(this::shouldShow)
-                                .filter(this::isCurrentSolAccountTx)
-                                .sorted(txEntityComparator)
-                                .collect(Collectors.toList());
-                        adapter.setItems(txEntities);
-                    });
-
-            txCallback = tx -> {
-                Bundle bundle = new Bundle();
-                bundle.putString(KEY_TX_ID, tx.getTxId());
-                navigate(R.id.action_to_solTxDetailFragment, bundle);
-            };
+            loadSolTx();
         } else if (watchWallet == WatchWallet.NEAR) {
-            viewModel.loadTxs(requireArguments().getString(KEY_COIN_ID))
-                    .observe(this, txEntities -> {
-                        txEntityComparator = (o1, o2) -> {
-                            if (o1.getSignId().equals(o2.getSignId())) {
-                                return (int) (o2.getTimeStamp() - o1.getTimeStamp());
-                            } else {
-                                return 1;
-                            }
-                        };
-                        txEntities = txEntities.stream()
-                                .filter(this::shouldShow)
-                                .filter(this::isCurrentNearAccountTx)
-                                .sorted(txEntityComparator)
-                                .collect(Collectors.toList());
-                        adapter.setItems(txEntities);
-                    });
-
-            txCallback = tx -> {
-                Bundle bundle = new Bundle();
-                bundle.putString(KEY_TX_ID, tx.getTxId());
-                navigate(R.id.action_to_nearTxDetailFragment, bundle);
-            };
+            loadNearTx();
+        } else if (watchWallet == WatchWallet.APTOS) {
+            loadAptosTx();
         } else {
             viewModel.loadTxs(requireArguments().getString(KEY_COIN_ID))
                     .observe(this, txEntities -> {
@@ -216,6 +144,116 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
                 }
             }
         });
+    }
+
+    private void loadAptosTx() {
+        viewModel.loadTxs(requireArguments().getString(KEY_COIN_ID))
+                .observe(this, txEntities -> {
+                    txEntityComparator = (o1, o2) -> {
+                        if (o1.getSignId().equals(o2.getSignId())) {
+                            return (int) (o2.getTimeStamp() - o1.getTimeStamp());
+                        } else {
+                            return 1;
+                        }
+                    };
+                    txEntities = txEntities.stream()
+                            .filter(this::shouldShow)
+                            .sorted(txEntityComparator)
+                            .collect(Collectors.toList());
+                    adapter.setItems(txEntities);
+                });
+
+        txCallback = tx -> {
+            Bundle bundle = new Bundle();
+            bundle.putString(KEY_TX_ID, tx.getTxId());
+            navigate(R.id.action_to_aptosTxDetailFragment, bundle);
+        };
+    }
+
+    private void loadNearTx() {
+        viewModel.loadTxs(requireArguments().getString(KEY_COIN_ID))
+                .observe(this, txEntities -> {
+                    txEntityComparator = (o1, o2) -> {
+                        if (o1.getSignId().equals(o2.getSignId())) {
+                            return (int) (o2.getTimeStamp() - o1.getTimeStamp());
+                        } else {
+                            return 1;
+                        }
+                    };
+                    txEntities = txEntities.stream()
+                            .filter(this::shouldShow)
+                            .filter(this::isCurrentNearAccountTx)
+                            .sorted(txEntityComparator)
+                            .collect(Collectors.toList());
+                    adapter.setItems(txEntities);
+                });
+
+        txCallback = tx -> {
+            Bundle bundle = new Bundle();
+            bundle.putString(KEY_TX_ID, tx.getTxId());
+            navigate(R.id.action_to_nearTxDetailFragment, bundle);
+        };
+    }
+
+    private void loadSolTx() {
+        viewModel.loadTxs(requireArguments().getString(KEY_COIN_ID))
+                .observe(this, txEntities -> {
+                    txEntityComparator = (o1, o2) -> {
+                        if (o1.getSignId().equals(o2.getSignId())) {
+                            return (int) (o2.getTimeStamp() - o1.getTimeStamp());
+                        } else if (ELECTRUM_SIGN_ID.equals(o1.getSignId())) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    };
+                    txEntities = txEntities.stream()
+                            .filter(this::shouldShow)
+                            .filter(this::isCurrentSolAccountTx)
+                            .sorted(txEntityComparator)
+                            .collect(Collectors.toList());
+                    adapter.setItems(txEntities);
+                });
+
+        txCallback = tx -> {
+            Bundle bundle = new Bundle();
+            bundle.putString(KEY_TX_ID, tx.getTxId());
+            navigate(R.id.action_to_solTxDetailFragment, bundle);
+        };
+    }
+
+    private void loadEthTx() {
+        viewModel.loadEthTxs()
+                .observe(this, ethTxEntities -> {
+                    ethTxEntities = ethTxEntities.stream()
+                            .filter(this::isCurrentAccountTx)
+                            .filter(ethTxEntity -> ethTxEntity.getBelongTo().equals(Utilities.getCurrentBelongTo(mActivity)))
+                            .collect(Collectors.toList());
+                    adapter.setItems(ethTxEntities);
+                });
+        txCallback = ethTx -> {
+            GenericETHTxEntity ethTxEntity = (GenericETHTxEntity) ethTx;
+            String signedHex = ethTxEntity.getSignedHex();
+            Bundle bundle = new Bundle();
+            bundle.putString(KEY_TX_ID, ethTxEntity.getTxId());
+            try {
+                new JSONObject(signedHex);
+                navigate(R.id.action_to_ethTxFragment, bundle);
+            } catch (JSONException e) {
+                switch (ethTxEntity.getTxType()) {
+                    case 0x00:
+                        Log.i(TAG, "navigate: jump to new ethLegacyTxFragment");
+                        navigate(R.id.action_to_ethLegacyTxFragment, bundle);
+                        break;
+                    case 0x02:
+                        Log.i(TAG, "navigate: jump to ethFeeMarketTxFragment");
+                        navigate(R.id.action_to_ethFeeMarketTxFragment, bundle);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
     }
 
     private boolean isCurrentAccountTx(GenericETHTxEntity ethTxEntitiy) {

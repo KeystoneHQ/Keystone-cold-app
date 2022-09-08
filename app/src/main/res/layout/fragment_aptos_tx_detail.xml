@@ -56,7 +56,7 @@
                 android:layout_height="28dp"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="16dp"
-                android:src="@drawable/coin_sol" />
+                android:src="@drawable/coin_aptos" />
 
             <TextView
                 android:id="@+id/coinCode"
@@ -65,7 +65,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 android:layout_toEndOf="@id/icon"
-                android:text="APTOS"
+                android:text="APT"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 android:textStyle="bold" />
