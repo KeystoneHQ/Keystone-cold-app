@@ -23,6 +23,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ObservableField;
@@ -124,6 +125,7 @@ public class FingerprintEnrollFragment extends BaseFragment<FingerprintEnrollBin
         mBinding.hint.setText(getString(R.string.enroll_complete_hint, currentEnrolled.getName()));
         mBinding.rename.setOnClickListener(v -> rename());
         if (!generateKeyPair()) {
+            Toast.makeText(getActivity(), R.string.input_fingerprint_fail_hint, Toast.LENGTH_SHORT).show();
             fingerprintKit.removeFingerprint(currentEnrolled, new RemovalListener() {
                 @Override
                 public void onSuccess() {
