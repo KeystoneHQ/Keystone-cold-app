@@ -58,6 +58,7 @@ public class ReceiveCoinFragment extends BaseFragment<ReceiveFragmentBinding> {
         else {
             mBinding.setDisplayName(coinCode);
         }
+        setWarningInfo(coinCode);
         mBinding.setCoinCode(coinCode);
         String address = data.getString(KEY_ADDRESS);
         index = data.getInt(KEY_ADDRESS_INDEX);
@@ -66,6 +67,26 @@ public class ReceiveCoinFragment extends BaseFragment<ReceiveFragmentBinding> {
         mBinding.setPath(data.getString(KEY_ADDRESS_PATH));
         mBinding.qrcode.setData(address);
         setupMenu();
+    }
+
+    private void setWarningInfo(String coinCode) {
+        if(coinCode.startsWith("BTC")) {
+            mBinding.setHintInfo("BTC");
+        } else {
+            String info = coinCode;
+            switch (coinCode.toUpperCase()) {
+                case "ETH":
+                    info = getString(R.string.eth_receive_info);
+                    break;
+                case "SOL":
+                    info = getString(R.string.sol_receive_info);
+                    break;
+                case "TRON":
+                    info = getString(R.string.tron_receive_info);
+                    break;
+            }
+            mBinding.setHintInfo(info);
+        }
     }
 
     private void setupMenu() {
