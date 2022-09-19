@@ -419,6 +419,7 @@
         <item>MetaMask / Rabby / DeFi</item>
         <item>Solflare</item>
         <item>Sender</item>
+        <item>Aptos</item>
         <item>Polkadot{.js}</item>
         <item>XRP Toolkit</item>
     </string-array>
@@ -427,6 +428,7 @@
         <item>ETH, AVAX, BSC and all EVM Chains</item>
         <item>Solana</item>
         <item>Near</item>
+        <item>Aptos</item>
         <item>DOT、KSM</item>
         <item>XRP</item>
     </string-array>
