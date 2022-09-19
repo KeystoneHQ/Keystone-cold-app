@@ -84,6 +84,8 @@ public class ReceiveCoinFragment extends BaseFragment<ReceiveFragmentBinding> {
                 case "TRON":
                     info = getString(R.string.tron_receive_info);
                     break;
+                case "APTOS":
+                    info = getString(R.string.aptos_receive_info);
             }
             mBinding.setHintInfo(info);
         }
