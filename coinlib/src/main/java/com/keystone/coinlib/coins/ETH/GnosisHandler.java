@@ -30,21 +30,35 @@ public class GnosisHandler implements FallbackHandler {
     @Override
     public void handleNestedContract(ABIReader.DecodedFunctionCall decodedFunctionCall) {
         if (TextUtils.equals(decodedFunctionCall.function.getName(), "createProxyWithNonce")) {
-            Object _singleton = decodedFunctionCall.callParameters.get(0);
-            String address = "0x" + Hex.toHexString(
-                    ByteUtil.bigIntegerToBytes(new BigInteger(String.valueOf(_singleton)), 20));
+            decodeCreateProxyWithNonce(decodedFunctionCall);
+        } else if (TextUtils.equals(decodedFunctionCall.function.getName(), "execTransaction")) {
+            decodeExecTransaction(decodedFunctionCall);
+        }
+    }
 
-            Object initializer = decodedFunctionCall.callParameters.get(1);
-            String data = Hex.toHexString((byte[]) initializer);
-            ABIReader.DecodedFunctionCall call = ABIReader.staticDecodeCall(data);
-            if (call != null) {
-                data = call.toJson().toString();
-            }
-            ABIReader abiReader = new ABIReader();
-            List<Contract> contracts = EthImpl.getContract(address);
-            for (Contract contract: contracts){
-                abiReader.decodeCall(data, contract, "");
-            }
+    private void decodeExecTransaction(ABIReader.DecodedFunctionCall decodedFunctionCall) {
+        Object _to = decodedFunctionCall.callParameters.get(0);
+        String address = "0x" + Hex.toHexString(
+                ByteUtil.bigIntegerToBytes(new BigInteger(String.valueOf(_to)), 20));
+        Object _data = decodedFunctionCall.callParameters.get(2);
+        String data = Hex.toHexString((byte[]) _data);
+        decode(address, data);
+    }
+
+    private void decodeCreateProxyWithNonce(ABIReader.DecodedFunctionCall decodedFunctionCall) {
+        Object _singleton = decodedFunctionCall.callParameters.get(0);
+        String address = "0x" + Hex.toHexString(
+                ByteUtil.bigIntegerToBytes(new BigInteger(String.valueOf(_singleton)), 20));
+        Object initializer = decodedFunctionCall.callParameters.get(1);
+        String data = Hex.toHexString((byte[]) initializer);
+        decode(address, data);
+    }
+
+    private void decode(String address, String data){
+        ABIReader abiReader = new ABIReader();
+        List<Contract> contracts = EthImpl.getContract(address);
+        for (Contract contract: contracts){
+            abiReader.decodeCall(data, contract, "");
         }
     }
 }
