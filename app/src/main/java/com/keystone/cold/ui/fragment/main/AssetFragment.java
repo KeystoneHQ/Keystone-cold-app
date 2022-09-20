@@ -499,8 +499,13 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 }
             }
 
-            private void handleAptosSignRequest(ScanResult result) {
+            private void handleAptosSignRequest(ScanResult result) throws XfpNotMatchException {
                 AptosSignRequest aptosSignRequest = (AptosSignRequest) result.resolve();
+                String requestMFP = Hex.toHexString(aptosSignRequest.getMasterFingerprint());
+                String MFP = new GetMasterFingerprintCallable().call();
+                if (!requestMFP.equalsIgnoreCase(MFP)) {
+                    throw new XfpNotMatchException("Master fingerprint not match");
+                }
                 ByteBuffer uuidBuffer = ByteBuffer.wrap(aptosSignRequest.getRequestId());
                 UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
                 String hdPath = aptosSignRequest.getDerivationPath();
