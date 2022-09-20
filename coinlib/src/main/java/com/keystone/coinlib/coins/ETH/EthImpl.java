@@ -159,16 +159,14 @@ public class EthImpl implements Coin {
         List<Contract> contracts = getContract(rawTx.getTo());
         Contract matchedContract = null;
 
-        ABIReader abiReader = new ABIReader();
-        for (Contract contract: contracts){
-            ABIReader.DecodedFunctionCall call = abiReader.decodeCall(rawTx.getData(), contract, rawTx.getTo());
-            if (call != null) {
-                JSONObject data = call.toJson();
-                data.put("contract", contract.getName());
-                metaData.put("data", data.toString());
-                metaData.put("contract", contract.getName());
-                matchedContract = contract;
-                break;
+        if (contracts.isEmpty()) {
+            matchedContract = getAbiInfo(rawTx, new Contract(), metaData);
+        } else {
+            for (Contract contract: contracts){
+                matchedContract = getAbiInfo(rawTx, contract, metaData);
+                if (matchedContract != null) {
+                    break;
+                }
             }
         }
         if (matchedContract == null) {
@@ -185,6 +183,19 @@ public class EthImpl implements Coin {
         if (matchedContract != null && matchedContract.isFromTFCard() && callback != null) {
             callback.fromTFCard();
         }
+    }
+
+    private static Contract getAbiInfo(RawTransaction rawTx, Contract contract, JSONObject metaData) throws JSONException {
+        ABIReader abiReader = new ABIReader();
+        ABIReader.DecodedFunctionCall call = abiReader.decodeCall(rawTx.getData(), contract, rawTx.getTo());
+        if (call != null) {
+            JSONObject data = call.toJson();
+            data.put("contract", contract.getName());
+            metaData.put("data", data.toString());
+            metaData.put("contract", contract.getName());
+            return contract;
+        }
+        return null;
     }
 
     protected static List<Contract> getContract(String address) {
