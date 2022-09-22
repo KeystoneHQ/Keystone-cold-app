@@ -9,16 +9,17 @@ import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.ui.fragment.main.SyncInfo;
 import com.keystone.cold.viewmodel.WatchWallet;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class SyncAddressUtil {
 
     public interface Callback {
-        void onGetAddressInfo(List<SyncInfo> syncInfoList);
+        void oneAddress(SyncInfo syncInfoList);
 
-        void onError();
+        void moreThanOneAddress();
+
+        void noAddress();
     }
 
     public static void getSyncAddressInfo(String coinId, String code, WatchWallet watchWallet, Callback callback) {
@@ -28,20 +29,22 @@ public class SyncAddressUtil {
             addressEntities = addressEntities.stream()
                     .filter(entity -> isCurrentAccount(code, entity, watchWallet))
                     .collect(Collectors.toList());
-            if (addressEntities.size() == 1) {
+
+            int size = addressEntities.size();
+            if (size == 0) {
+                AppExecutors.getInstance().mainThread().execute(callback::noAddress);
+            } else if (size == 1) {
                 AddressEntity addressEntity = addressEntities.get(0);
-                List<SyncInfo> syncInfoList = new ArrayList<>();
                 SyncInfo syncInfo = new SyncInfo();
                 syncInfo.setCoinId(addressEntity.getCoinId());
                 syncInfo.setAddress(addressEntity.getAddressString());
                 syncInfo.setPath(addressEntity.getPath());
                 syncInfo.setName(addressEntity.getName());
                 syncInfo.setAddition(addressEntity.getAddition());
-                syncInfoList.add(syncInfo);
-                AppExecutors.getInstance().mainThread().execute(() -> callback.onGetAddressInfo(syncInfoList));
-                return;
+                AppExecutors.getInstance().mainThread().execute(() -> callback.oneAddress(syncInfo));
+            } else {
+                AppExecutors.getInstance().mainThread().execute(callback::moreThanOneAddress);
             }
-            AppExecutors.getInstance().mainThread().execute(() -> callback.onError());
         });
 
     }
@@ -57,7 +60,7 @@ public class SyncAddressUtil {
                 return account.isChildrenPath(entity.getPath());
             }
             default:
-                return false;
+                return true;
         }
     }
 }

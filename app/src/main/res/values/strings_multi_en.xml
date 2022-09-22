@@ -705,6 +705,7 @@
     <string name="sol_receive_info">SOL or SPL tokens</string>
     <string name="tron_receive_info">TRC or TRC-20 tokens</string>
     <string name="aptos_receive_info">APT or Aptos tokens</string>
+    <string name="get_address_fail_info">Failed to get address.</string>
 
 
 </resources>

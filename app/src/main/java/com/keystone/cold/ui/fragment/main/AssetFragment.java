@@ -786,9 +786,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     Utilities.setUserClickNearSyncLock(mActivity);
                 }
             } else if (watchWallet == WatchWallet.APTOS) {
-                Bundle bundle = new Bundle();
-                bundle.putString(KEY_COIN_ID, coinId);
-                navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
+                syncAptosAddress();
             }
             if (finalBgView != null) {
                 finalBgView.unbind();
@@ -798,21 +796,53 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         });
     }
 
+    private void syncAptosAddress() {
+        SyncAddressUtil.Callback callback = new SyncAddressUtil.Callback() {
+            @Override
+            public void oneAddress(SyncInfo syncInfo) {
+                List<SyncInfo> syncInfoList = Collections.singletonList(syncInfo);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(DERIVATION_PATH_KEY, (Serializable) syncInfoList);
+                navigate(R.id.action_to_syncFragment, bundle);
+            }
+
+            @Override
+            public void moreThanOneAddress() {
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_COIN_ID, coinId);
+                navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
+            }
+
+            @Override
+            public void noAddress() {
+                Toast.makeText(mActivity, R.string.get_address_fail_info, Toast.LENGTH_SHORT).show();
+            }
+        };
+        SyncAddressUtil.getSyncAddressInfo(coinId, null, watchWallet, callback);
+    }
+
     private void syncNearAddress() {
         String code = Utilities.getCurrentNearAccount(mActivity);
         if (NEARAccount.ofCode(code) == NEARAccount.MNEMONIC) {
             SyncAddressUtil.Callback callback = new SyncAddressUtil.Callback() {
                 @Override
-                public void onGetAddressInfo(List<SyncInfo> syncInfoList) {
+                public void oneAddress(SyncInfo syncInfo) {
+                    List<SyncInfo> syncInfoList = Collections.singletonList(syncInfo);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(DERIVATION_PATH_KEY, (Serializable) syncInfoList);
                     navigate(R.id.action_to_syncFragment, bundle);
                 }
 
                 @Override
-                public void onError() {
-                    Toast.makeText(mActivity, "Can't get public key info", Toast.LENGTH_SHORT).show();
+                public void moreThanOneAddress() {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(KEY_COIN_ID, coinId);
+                    navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
+                }
 
+                @Override
+                public void noAddress() {
+                    Toast.makeText(mActivity, R.string.get_address_fail_info, Toast.LENGTH_SHORT).show();
                 }
             };
             SyncAddressUtil.getSyncAddressInfo(coinId, code, watchWallet, callback);
