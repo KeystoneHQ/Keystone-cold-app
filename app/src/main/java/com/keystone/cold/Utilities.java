@@ -77,6 +77,7 @@ public class Utilities {
     public static final String PREFERENCE_ETH_KEY_SYNCED = "user_click_eth_sync";
     public static final String PREFERENCE_SOL_KEY_SYNCED = "user_click_sol_sync";
     public static final String PREFERENCE_NEAR_KEY_SYNCED = "user_click_near_sync";
+    public static final String PREFERENCE_APTOS_KEY_SYNCED = "user_click_aptos_sync";
 
     public static final String SOL_DERIVATION_PATHS = "sol_derivation_paths";
     public static final String NEAR_DERIVATION_PATHS = "near_derivation_paths";
@@ -259,6 +260,16 @@ public class Utilities {
     public static void setUserClickNearSyncLock(Context context) {
         SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
         sp.edit().putBoolean(PREFERENCE_NEAR_KEY_SYNCED, true).apply();
+    }
+
+    public static boolean hasUserClickAptosSyncLock(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        return sp.getBoolean(PREFERENCE_APTOS_KEY_SYNCED, false);
+    }
+
+    public static void setUserClickAptosSyncLock(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        sp.edit().putBoolean(PREFERENCE_APTOS_KEY_SYNCED, true).apply();
     }
 
     public static String getFingerprintPassword(Context context) {

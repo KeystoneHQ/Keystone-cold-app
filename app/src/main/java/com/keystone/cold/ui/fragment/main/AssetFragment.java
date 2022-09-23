@@ -194,7 +194,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             mBinding.toolbar.inflateMenu(getMenuResId());
             mBinding.button.setVisibility(View.GONE);
             MenuItem menuItem = mBinding.toolbar.getMenu().findItem(R.id.action_more);
-            if (isNeedShowBadge()) {
+            if (judgeShowBadge()) {
                 showBadge(menuItem);
             }
         }
@@ -210,18 +210,6 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         });
         initSearchView();
         initTabs();
-    }
-
-    private boolean isNeedShowBadge() {
-        boolean isShowBadge = false;
-        if (watchWallet == WatchWallet.METAMASK && !Utilities.hasUserClickEthSyncLock(mActivity)) {
-            isShowBadge = true;
-        } else if (watchWallet == WatchWallet.SOLANA && !Utilities.hasUserClickSolSyncLock(mActivity)) {
-            isShowBadge = true;
-        } else if (watchWallet == WatchWallet.NEAR && !Utilities.hasUserClickNearSyncLock(mActivity)) {
-            isShowBadge = true;
-        }
-        return isShowBadge;
     }
 
     private void syncPolkadot() {
@@ -749,8 +737,29 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             isShowBadge = true;
         } else if (watchWallet == WatchWallet.NEAR && !Utilities.hasUserClickNearSyncLock(mActivity)) {
             isShowBadge = true;
+        } else if (watchWallet == WatchWallet.APTOS && !Utilities.hasUserClickAptosSyncLock(mActivity)) {
+            isShowBadge = true;
         }
         return isShowBadge;
+    }
+
+    private void setUserClickSyncLock() {
+        switch (watchWallet) {
+            case METAMASK:
+                Utilities.setUserClickEthSyncLock(mActivity);
+                break;
+            case SOLANA:
+                Utilities.setUserClickSolSyncLock(mActivity);
+                break;
+            case NEAR:
+                Utilities.setUserClickNearSyncLock(mActivity);
+                break;
+            case APTOS:
+                Utilities.setUserClickAptosSyncLock(mActivity);
+                break;
+            default:
+                break;
+        }
     }
 
     private BadgeView generateBadgeView(View anchor) {
@@ -767,23 +776,17 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         view.setOnClickListener(v -> {
             if (watchWallet == WatchWallet.METAMASK) {
                 navigate(R.id.action_to_syncFragment);
-                if (judgeShowBadge()) {
-                    Utilities.setUserClickEthSyncLock(mActivity);
-                }
             } else if (watchWallet == WatchWallet.SOLANA) {
                 Bundle bundle = new Bundle();
                 bundle.putString(KEY_COIN_ID, coinId);
                 navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
-                if (judgeShowBadge()) {
-                    Utilities.setUserClickSolSyncLock(mActivity);
-                }
             } else if (watchWallet == WatchWallet.NEAR) {
                 syncNearAddress();
-                if (judgeShowBadge()) {
-                    Utilities.setUserClickNearSyncLock(mActivity);
-                }
             } else if (watchWallet == WatchWallet.APTOS) {
                 syncAptosAddress();
+            }
+            if (judgeShowBadge()) {
+                setUserClickSyncLock();
             }
             if (finalBgView != null) {
                 finalBgView.unbind();
