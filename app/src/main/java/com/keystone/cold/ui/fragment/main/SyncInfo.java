@@ -88,7 +88,12 @@ public class SyncInfo implements Serializable {
             JSONObject additionJson = rootJson.getJSONObject("addition");
             String xPub = additionJson.getString("xPub");
             ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(xPub);
-            return extendedPublicKey.getKey();
+            byte[] key = extendedPublicKey.getKey();
+            if (key != null && key.length == 33) {
+                byte[] pubKey = new byte[32];
+                System.arraycopy(key, 1, pubKey, 0, 32);
+                return pubKey;
+            }
         } catch (JSONException exception) {
             exception.printStackTrace();
         }

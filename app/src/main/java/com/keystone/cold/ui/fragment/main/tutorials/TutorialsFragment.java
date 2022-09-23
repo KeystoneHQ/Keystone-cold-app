@@ -63,6 +63,9 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialsBinding> {
             case NEAR:
                 id = R.array.tutorials_name_sender;
                 break;
+            case APTOS:
+                id = R.array.tutorials_name_aptos;
+                break;
         }
         return id;
     }
@@ -84,6 +87,10 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialsBinding> {
                 break;
             case NEAR:
                 id = R.array.tutorials_link_sender;
+                break;
+            case APTOS:
+                id = R.array.tutorials_link_aptos;
+                break;
         }
         return id;
     }

@@ -458,7 +458,7 @@
         <item>MetaMask / Rabby / DeFi</item>
         <item>Solflare</item>
         <item>Sender</item>
-        <item>Aptos</item>>
+        <item>Martian / Fewcha</item>
         <item>Polkadot{.js}</item>
         <item>XRP Toolkit</item>
     </string-array>
@@ -467,7 +467,7 @@
         <item>metamask</item>
         <item>solana</item>
         <item>near</item>
-        <item>aptos</item>>
+        <item>aptos</item>
         <item>polkadotJs</item>
         <item>xrpToolkit</item>
     </string-array>
@@ -476,7 +476,7 @@
         <item>ETH, AVAX, BSC and all EVM Chains</item>
         <item>Solana</item>
         <item>Near</item>
-        <item>Aptos</item>>
+        <item>Aptos</item>
         <item>DOT、KSM</item>
         <item>XRP</item>
     </string-array>
@@ -651,6 +651,16 @@
     <string name="decode_failed">The transaction can not be decoded</string>
     <string name="decode_failed_detail">All data in this transaction are customized and can\'t be decoded for now.</string>
 
+    <string-array name="tutorials_name_aptos">
+        <item>Martian Wallet (Extension)</item>
+        <item>Fewcha Wallet (Extension)</item>
+    </string-array>
+
+    <string-array name="tutorials_link_aptos">
+        <item><u>https://keyst.one/martian</u></item>
+        <item><u>https://keyst.one/fewcha</u></item>
+    </string-array>
+
     <string-array name="tutorials_name_sender">
         <item>Sender Extension</item>
     </string-array>
@@ -704,5 +714,8 @@
     <string name="eth_receive_info">ETH or ERC-20 tokens</string>
     <string name="sol_receive_info">SOL or SPL tokens</string>
     <string name="tron_receive_info">TRC or TRC-20 tokens</string>
+    <string name="aptos_receive_info">APT or Aptos tokens</string>
+    <string name="get_address_fail_info">Failed to get address.</string>
+
 
 </resources>

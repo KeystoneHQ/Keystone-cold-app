@@ -194,7 +194,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             mBinding.toolbar.inflateMenu(getMenuResId());
             mBinding.button.setVisibility(View.GONE);
             MenuItem menuItem = mBinding.toolbar.getMenu().findItem(R.id.action_more);
-            if (isNeedShowBadge()) {
+            if (judgeShowBadge()) {
                 showBadge(menuItem);
             }
         }
@@ -210,18 +210,6 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         });
         initSearchView();
         initTabs();
-    }
-
-    private boolean isNeedShowBadge() {
-        boolean isShowBadge = false;
-        if (watchWallet == WatchWallet.METAMASK && !Utilities.hasUserClickEthSyncLock(mActivity)) {
-            isShowBadge = true;
-        } else if (watchWallet == WatchWallet.SOLANA && !Utilities.hasUserClickSolSyncLock(mActivity)) {
-            isShowBadge = true;
-        } else if (watchWallet == WatchWallet.NEAR && !Utilities.hasUserClickNearSyncLock(mActivity)) {
-            isShowBadge = true;
-        }
-        return isShowBadge;
     }
 
     private void syncPolkadot() {
@@ -499,8 +487,13 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 }
             }
 
-            private void handleAptosSignRequest(ScanResult result) {
+            private void handleAptosSignRequest(ScanResult result) throws XfpNotMatchException {
                 AptosSignRequest aptosSignRequest = (AptosSignRequest) result.resolve();
+                String requestMFP = Hex.toHexString(aptosSignRequest.getMasterFingerprint());
+                String MFP = new GetMasterFingerprintCallable().call();
+                if (!requestMFP.equalsIgnoreCase(MFP)) {
+                    throw new XfpNotMatchException("Master fingerprint not match");
+                }
                 ByteBuffer uuidBuffer = ByteBuffer.wrap(aptosSignRequest.getRequestId());
                 UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
                 String hdPath = aptosSignRequest.getDerivationPath();
@@ -709,9 +702,6 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private void addClickTutorialsProcess(View view, Runnable additionProcess) {
-        if (watchWallet == WatchWallet.APTOS) {
-            view.setVisibility(View.GONE);
-        }
         view.setOnClickListener(v -> {
             navigate(R.id.action_to_tutorialsFragment);
             additionProcess.run();
@@ -747,8 +737,29 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             isShowBadge = true;
         } else if (watchWallet == WatchWallet.NEAR && !Utilities.hasUserClickNearSyncLock(mActivity)) {
             isShowBadge = true;
+        } else if (watchWallet == WatchWallet.APTOS && !Utilities.hasUserClickAptosSyncLock(mActivity)) {
+            isShowBadge = true;
         }
         return isShowBadge;
+    }
+
+    private void setUserClickSyncLock() {
+        switch (watchWallet) {
+            case METAMASK:
+                Utilities.setUserClickEthSyncLock(mActivity);
+                break;
+            case SOLANA:
+                Utilities.setUserClickSolSyncLock(mActivity);
+                break;
+            case NEAR:
+                Utilities.setUserClickNearSyncLock(mActivity);
+                break;
+            case APTOS:
+                Utilities.setUserClickAptosSyncLock(mActivity);
+                break;
+            default:
+                break;
+        }
     }
 
     private BadgeView generateBadgeView(View anchor) {
@@ -765,25 +776,17 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         view.setOnClickListener(v -> {
             if (watchWallet == WatchWallet.METAMASK) {
                 navigate(R.id.action_to_syncFragment);
-                if (judgeShowBadge()) {
-                    Utilities.setUserClickEthSyncLock(mActivity);
-                }
             } else if (watchWallet == WatchWallet.SOLANA) {
                 Bundle bundle = new Bundle();
                 bundle.putString(KEY_COIN_ID, coinId);
                 navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
-                if (judgeShowBadge()) {
-                    Utilities.setUserClickSolSyncLock(mActivity);
-                }
             } else if (watchWallet == WatchWallet.NEAR) {
                 syncNearAddress();
-                if (judgeShowBadge()) {
-                    Utilities.setUserClickNearSyncLock(mActivity);
-                }
             } else if (watchWallet == WatchWallet.APTOS) {
-                Bundle bundle = new Bundle();
-                bundle.putString(KEY_COIN_ID, coinId);
-                navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
+                syncAptosAddress();
+            }
+            if (judgeShowBadge()) {
+                setUserClickSyncLock();
             }
             if (finalBgView != null) {
                 finalBgView.unbind();
@@ -793,21 +796,53 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         });
     }
 
+    private void syncAptosAddress() {
+        SyncAddressUtil.Callback callback = new SyncAddressUtil.Callback() {
+            @Override
+            public void oneAddress(SyncInfo syncInfo) {
+                List<SyncInfo> syncInfoList = Collections.singletonList(syncInfo);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(DERIVATION_PATH_KEY, (Serializable) syncInfoList);
+                navigate(R.id.action_to_syncFragment, bundle);
+            }
+
+            @Override
+            public void moreThanOneAddress() {
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_COIN_ID, coinId);
+                navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
+            }
+
+            @Override
+            public void noAddress() {
+                Toast.makeText(mActivity, R.string.get_address_fail_info, Toast.LENGTH_SHORT).show();
+            }
+        };
+        SyncAddressUtil.getSyncAddressInfo(coinId, null, watchWallet, callback);
+    }
+
     private void syncNearAddress() {
         String code = Utilities.getCurrentNearAccount(mActivity);
         if (NEARAccount.ofCode(code) == NEARAccount.MNEMONIC) {
             SyncAddressUtil.Callback callback = new SyncAddressUtil.Callback() {
                 @Override
-                public void onGetAddressInfo(List<SyncInfo> syncInfoList) {
+                public void oneAddress(SyncInfo syncInfo) {
+                    List<SyncInfo> syncInfoList = Collections.singletonList(syncInfo);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(DERIVATION_PATH_KEY, (Serializable) syncInfoList);
                     navigate(R.id.action_to_syncFragment, bundle);
                 }
 
                 @Override
-                public void onError() {
-                    Toast.makeText(mActivity, "Can't get public key info", Toast.LENGTH_SHORT).show();
+                public void moreThanOneAddress() {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(KEY_COIN_ID, coinId);
+                    navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
+                }
 
+                @Override
+                public void noAddress() {
+                    Toast.makeText(mActivity, R.string.get_address_fail_info, Toast.LENGTH_SHORT).show();
                 }
             };
             SyncAddressUtil.getSyncAddressInfo(coinId, code, watchWallet, callback);
