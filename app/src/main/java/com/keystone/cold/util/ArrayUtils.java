@@ -1,13 +1,15 @@
 package com.keystone.cold.util;
 
 
+import java.lang.reflect.Array;
+
 public class ArrayUtils {
 
-
-    public static CharSequence[] remove(CharSequence[] array, int index) {
+    @SuppressWarnings("unchecked")
+    public static <T> T[] remove(Class<T> c, T[] array, int index) {
         int length = array.length;
         if (index >= 0 && index < length) {
-            CharSequence[] result = new CharSequence[length - 1];
+            T[] result = (T[]) Array.newInstance(c, length - 1);
             System.arraycopy(array, 0, result, 0, index);
             if (index < length - 1) {
                 System.arraycopy(array, index + 1, result, index, length - index - 1);
