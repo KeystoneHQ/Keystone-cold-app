@@ -34,6 +34,7 @@ import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
+import com.keystone.cold.util.CharSetUtil;
 import com.keystone.cold.viewmodel.tx.KeystoneTxViewModel;
 import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 
@@ -83,12 +84,16 @@ public class EthSignMessageFragment extends BaseFragment<EthSignMessageBinding> 
                 message = jsonObject.getString("data");
                 String fromAddress = jsonObject.getString("fromAddress");
                 mBinding.address.setText(fromAddress);
-                String messageUtf8 = new String(Hex.decode(message), StandardCharsets.UTF_8);
-                mBinding.message.setText(messageUtf8);
+                if (CharSetUtil.isUTF8Format(Hex.decode(message))) {
+                    String messageUtf8 = new String(Hex.decode(message), StandardCharsets.UTF_8);
+                    mBinding.message.setText(messageUtf8);
+                } else {
+                    mBinding.llMsgUtf8.setVisibility(View.GONE);
+                }
                 mBinding.rawMessage.setText(message);
                 liveData.removeObservers(EthSignMessageFragment.this);
             } catch (UnsupportedOperationException e) {
-                mBinding.message.setText(R.string.decode_as_utf8_failed_hint);
+                mBinding.llMsgUtf8.setVisibility(View.GONE);
                 mBinding.rawMessage.setText(message);
                 liveData.removeObservers(EthSignMessageFragment.this);
             } catch (JSONException e) {
