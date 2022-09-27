@@ -24,6 +24,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.model.Address;
 
 @Entity(tableName = "addresses")
@@ -124,6 +125,13 @@ public class AddressEntity implements Address, FilterableItem {
     @Override
     public String getAddressString() {
         return addressString;
+    }
+
+    public String getDisplayPath() {
+        if (coinId.equals(Coins.DOT.coinId()) || coinId.equals(Coins.KSM.coinId())) {
+            return "(" + getPath()  + ")";
+        }
+        return "";
     }
 
     @Override

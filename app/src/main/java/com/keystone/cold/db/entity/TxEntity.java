@@ -85,6 +85,14 @@ public class TxEntity implements Tx {
      *          }
      *     }
      * }
+     * @Polkadot {
+     *     coin: "polkadot", //整个Substrate网络都用polkadot
+     *     addition: {
+     *         "signature": "",
+     *         "raw_message": "raw_message",
+     *         "parsed_message": "",
+     *     }
+     * }
      * @coin 表示币种
      * @addition 表示附加信息
      * @signature 表示签名
@@ -93,6 +101,8 @@ public class TxEntity implements Tx {
      * @sign_batch_info 表示同一批次交易的签名信息 （考虑后期可能支持一次签多笔交易，预留该字段）
      *      @batch_id  批次id（同一批次中所有交易id的Keccak-256 hash）
      *      @order  这一批次的第几个交易
+     *
+     *
      */
     private String addition;
 

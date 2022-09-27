@@ -82,6 +82,8 @@ public class Utilities {
     public static final String SOL_DERIVATION_PATHS = "sol_derivation_paths";
     public static final String NEAR_DERIVATION_PATHS = "near_derivation_paths";
 
+    public static final String POLKADOT_DB_INITIALIZED = "polkadot_db_initialized";
+
 
     public static void alert(AppCompatActivity activity,
                              @Nullable String title, @NonNull String message,
@@ -394,5 +396,15 @@ public class Utilities {
         }else {
             return null;
         }
+    }
+
+    public static void setPolkadotDbInitialized(Context context, boolean flag) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        sp.edit().putBoolean(POLKADOT_DB_INITIALIZED, flag).apply();
+    }
+
+    public static boolean getPolkadotDBInitialized(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        return sp.getBoolean(POLKADOT_DB_INITIALIZED, false);
     }
 }

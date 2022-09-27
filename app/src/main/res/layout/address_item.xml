@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2021 Keystone
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -17,8 +16,8 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -36,46 +35,62 @@
     </data>
 
     <RelativeLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:onClick="@{()->callback.onClick(address)}"
-        android:background="?attr/selectableItemBackground"
         android:layout_height="63dp"
-        android:focusable="true">
+        android:background="?attr/selectableItemBackground"
+        android:focusable="true"
+        android:onClick="@{()->callback.onClick(address)}"
+        android:orientation="vertical">
 
         <com.keystone.cold.ui.views.MenuHidingEditText
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
             android:layout_marginStart="16dp"
-            tools:text="BTC-1"
+            android:layout_marginTop="14dp"
+            android:background="@null"
+            android:clickable="false"
+            android:enabled="false"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:singleLine="true"
+            android:text="@={address.displayName}"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:background="@null"
-            android:singleLine="true"
-            android:clickable="false"
-            android:text="@={address.displayName}"
-            android:imeOptions="actionDone"
-            android:enabled="false"
             tools:ignore="LabelFor"
-            android:importantForAutofill="no"
-            android:inputType="text" />
+            tools:text="BTC-1" />
 
-        <TextView
-            android:id="@+id/addr"
-            android:layout_width="133dp"
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/name"
-            android:ellipsize="middle"
-            android:singleLine="true"
-            android:textSize="12sp"
-            android:textColor="@color/white40"
-            tools:text="0x4f77d6a…52ce9824"
-            android:layout_alignStart="@id/name"
-            android:text="@{address.addressString}"
-            android:layout_marginTop="4dp" />
+            android:layout_alignStart="@id/name">
+
+            <TextView
+                android:id="@+id/addr"
+                android:layout_width="133dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:ellipsize="middle"
+                android:singleLine="true"
+                android:text="@{address.addressString}"
+                android:textColor="@color/white40"
+                android:textSize="12sp"
+                tools:text="0x4f77d6a…52ce9824" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_toEndOf="@id/addr"
+                android:text="@{address.getDisplayPath()}"
+                android:textColor="@color/white40"
+                android:textSize="12sp"
+                tools:text="(//polkadot)" />
+        </RelativeLayout>
+
 
         <ImageView
             android:id="@+id/edit_icon"
@@ -83,10 +98,10 @@
             android:layout_height="63dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:clickable="true"
-            android:scaleType="center"
             android:alpha="0.5"
             android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:scaleType="center"
             android:src="@drawable/edit"
             tools:ignore="ContentDescription" />
 

@@ -91,6 +91,7 @@ import com.keystone.cold.util.SyncAddressUtil;
 import com.keystone.cold.util.ViewUtils;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.CoinViewModel;
+import com.keystone.cold.viewmodel.PolkadotViewModel;
 import com.keystone.cold.viewmodel.PublicKeyViewModel;
 import com.keystone.cold.viewmodel.SetupVaultViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
@@ -187,17 +188,17 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private void updateUI() {
-        if (watchWallet == WatchWallet.POLKADOT_JS) {
-            mBinding.button.setVisibility(View.VISIBLE);
-            mBinding.button.setOnClickListener(v -> syncPolkadot());
-        } else {
+//        if (watchWallet == WatchWallet.POLKADOT_JS) {
+//            mBinding.button.setVisibility(View.VISIBLE);
+//            mBinding.button.setOnClickListener(v -> syncPolkadot());
+//        } else {
             mBinding.toolbar.inflateMenu(getMenuResId());
             mBinding.button.setVisibility(View.GONE);
             MenuItem menuItem = mBinding.toolbar.getMenu().findItem(R.id.action_more);
             if (judgeShowBadge()) {
                 showBadge(menuItem);
             }
-        }
+//        }
         mBinding.toolbar.setOnMenuItemClickListener(this);
         mBinding.toolbar.setNavigationOnClickListener(v -> {
             if (watchWallet == WatchWallet.XRP_TOOLKIT || watchWallet == WatchWallet.METAMASK ||
@@ -226,9 +227,10 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             case SOLANA:
             case NEAR:
             case APTOS:
+            case POLKADOT_JS:
                 return R.menu.metamask;
             default:
-                return (showPublicKey || Coins.isPolkadotFamily(coinCode)) ? R.menu.asset_without_add : R.menu.asset;
+                return (showPublicKey) ? R.menu.asset_without_add : R.menu.asset;
         }
     }
 
@@ -367,7 +369,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 showBottomSheetMenu();
                 break;
             case R.id.action_scan:
-                if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.POLKADOT_JS
+                if (watchWallet == WatchWallet.METAMASK
                         || watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR
                         || watchWallet == WatchWallet.APTOS) {
                     scanQrCode();
@@ -960,7 +962,18 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     handler.postDelayed(dialog::dismiss, DIALOG_DISMISS_DELAY_TIME);
                 });
             });
-        } else {
+        } else if (watchWallet == WatchWallet.POLKADOT_JS) {
+            AppExecutors.getInstance().diskIO().execute(() -> {
+                CoinEntity coinEntity = viewModel.getCoin(coinId);
+                viewModel.addPolkadotAddress(value, coinEntity, () -> {
+//                    if (fragments[0] != null && fragments[0] instanceof AddressFragment) {
+//                        ((AddressFragment) fragments[0]).updateAddressList();
+//                    }
+                    handler.postDelayed(dialog::dismiss, DIALOG_DISMISS_DELAY_TIME);
+                });
+            });
+        }
+        else {
             AppExecutors.getInstance().diskIO().execute(() -> {
                 CoinEntity coinEntity = viewModel.getCoin(coinId);
                 if (coinEntity != null) {

@@ -32,6 +32,7 @@ import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
+import com.keystone.cold.viewmodel.PolkadotViewModel;
 import com.keystone.cold.viewmodel.tx.PolkadotJsTxConfirmViewModel;
 import com.keystone.cold.viewmodel.tx.KeystoneTxViewModel;
 
@@ -41,6 +42,8 @@ import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KE
 import static com.keystone.cold.ui.fragment.main.keystone.TxConfirmFragment.KEY_TX_DATA;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
+import org.json.JSONObject;
+
 public class PolkadotTxConfirm extends BaseFragment<PolkadotTxConfirmBinding> {
 
     private final Runnable forgetPassword = () -> {
@@ -49,6 +52,7 @@ public class PolkadotTxConfirm extends BaseFragment<PolkadotTxConfirmBinding> {
         navigate(R.id.action_to_preImportFragment, bundle);
     };
     private PolkadotJsTxConfirmViewModel viewModel;
+    private PolkadotViewModel polkadotViewModel;
     private SigningDialog signingDialog;
 
     @Override
@@ -61,14 +65,20 @@ public class PolkadotTxConfirm extends BaseFragment<PolkadotTxConfirmBinding> {
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         Bundle bundle = requireArguments();
         String data = bundle.getString(KEY_TX_DATA);
-        viewModel = ViewModelProviders.of(this).get(PolkadotJsTxConfirmViewModel.class);
+        polkadotViewModel = ViewModelProviders.of(this).get(PolkadotViewModel.class);
+        try {
+            JSONObject result = polkadotViewModel.parseTransaction(data);
+
+        } catch (PolkadotViewModel.PolkadotException e){
+            e.printStackTrace();
+        }
         viewModel.parseTxData(data);
-        viewModel.getObservableTx().observe(this, txEntity -> {
-            if (txEntity != null) {
-                mBinding.setTx(txEntity);
-                mBinding.dotTx.txDetail.updateUI(txEntity);
-            }
-        });
+//        viewModel.getObservableTx().observe(this, txEntity -> {
+//            if (txEntity != null) {
+//                mBinding.setTx(txEntity);
+//                mBinding.dotTx.txDetail.updateUI(txEntity);
+//            }
+//        });
         mBinding.sign.setOnClickListener(v -> handleSign());
     }
 

@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,20 +42,30 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.keystone.coinlib.coins.polkadot.AddressCodec;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
+import com.keystone.cold.DataRepository;
+import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.AssetListBottomMenuBinding;
 import com.keystone.cold.databinding.AssetListFragmentBinding;
 import com.keystone.cold.db.PresetData;
+import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.CoinListViewModel;
+import com.keystone.cold.viewmodel.CoinViewModel;
+import com.keystone.cold.viewmodel.PolkadotViewModel;
 import com.keystone.cold.viewmodel.SetupVaultViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
+
+import org.spongycastle.util.encoders.Hex;
 
 import java.util.Arrays;
 import java.util.List;
@@ -67,6 +78,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
 
     private CoinAdapter mCoinAdapter;
     private WatchWallet watchWallet;
+    private DataRepository mRepository;
 
 
     @Override
@@ -94,6 +106,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         mBinding.toolbar.setTitle(watchWallet.getWalletName(mActivity));
         mCoinAdapter = new CoinAdapter(mActivity, mCoinClickCallback, false);
         mBinding.assetList.setAdapter(mCoinAdapter);
+        mRepository = ((MainApplication) mActivity.getApplication()).getRepository();
     }
 
     @Override
@@ -101,6 +114,36 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         CoinListViewModel mViewModel = ViewModelProviders.of(mActivity).get(CoinListViewModel.class);
         subscribeUi(mViewModel.getCoins());
         checkAndAddNewCoins();
+        if (watchWallet == WatchWallet.POLKADOT_JS) {
+            PolkadotViewModel polkadotViewModel = ViewModelProviders.of(this).get(PolkadotViewModel.class);
+            try {
+                polkadotViewModel.initialDB();
+                LiveData<List<AddressEntity>> dot = mRepository.loadAddress(Coins.DOT.coinId());
+                dot.observe(this, addressEntities -> addressEntities.forEach((a) -> {
+                    try {
+                        byte[] pubkey = AddressCodec.decodeAddress(a.getAddressString());
+                        String publicKey = Hex.toHexString(pubkey);
+                        String path = a.getPath();
+                        polkadotViewModel.importAddress(publicKey, path);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }));
+                LiveData<List<AddressEntity>> ksm = mRepository.loadAddress(Coins.KSM.coinId());
+                ksm.observe(this, addressEntities -> addressEntities.forEach((a) -> {
+                    try {
+                        byte[] pubkey = AddressCodec.decodeAddress(a.getAddressString());
+                        String publicKey = Hex.toHexString(pubkey);
+                        String path = a.getPath();
+                        polkadotViewModel.importAddress(publicKey, path);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }));
+            } catch (PolkadotViewModel.PolkadotException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void checkAndAddNewCoins() {
@@ -160,6 +203,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_scan) {
+            Log.d(TAG, "onOptionsItemSelected: here");
             AndPermission.with(this)
                     .permission(Permission.CAMERA, Permission.READ_EXTERNAL_STORAGE)
                     .onGranted(permissions -> navigate(R.id.action_to_scan))
