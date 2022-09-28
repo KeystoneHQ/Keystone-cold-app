@@ -231,7 +231,6 @@ public class TxEntity implements Tx {
         return this.addition;
     }
 
-    @NonNull
     @Override
     public String toString() {
         return "TxEntity{" +
@@ -247,6 +246,7 @@ public class TxEntity implements Tx {
                 ", memo='" + memo + '\'' +
                 ", signId='" + signId + '\'' +
                 ", belongTo='" + belongTo + '\'' +
+                ", addition='" + addition + '\'' +
                 '}';
     }
 

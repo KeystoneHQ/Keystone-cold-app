@@ -21,15 +21,19 @@ package com.keystone.cold.ui.fragment.main.polkadot;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.coinlib.exception.InvalidAccountException;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.databinding.PolkadotTxConfirmBinding;
+import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
+import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
 import com.keystone.cold.viewmodel.PolkadotViewModel;
@@ -42,6 +46,8 @@ import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KE
 import static com.keystone.cold.ui.fragment.main.keystone.TxConfirmFragment.KEY_TX_DATA;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PolkadotTxConfirm extends BaseFragment<PolkadotTxConfirmBinding> {
@@ -66,29 +72,68 @@ public class PolkadotTxConfirm extends BaseFragment<PolkadotTxConfirmBinding> {
         Bundle bundle = requireArguments();
         String data = bundle.getString(KEY_TX_DATA);
         polkadotViewModel = ViewModelProviders.of(this).get(PolkadotViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(PolkadotJsTxConfirmViewModel.class);
         try {
             JSONObject result = polkadotViewModel.parseTransaction(data);
-
-        } catch (PolkadotViewModel.PolkadotException e){
+            Log.d("sora", "init: " + result);
+            String type = result.getString("transaction_type");
+            JSONArray content = result.getJSONArray("content");
+            mBinding.dotTx.txDetail.updateUI(content);
+            mBinding.dotTx.icon.setVisibility(View.GONE);
+            mBinding.dotTx.network.setVisibility(View.GONE);
+            switch (type) {
+                case "Sign": {
+                    int checksum = result.getInt("checksum");
+                    mBinding.dotTx.icon.setVisibility(View.VISIBLE);
+                    mBinding.dotTx.network.setVisibility(View.VISIBLE);
+                    TxEntity tx = viewModel.generateAndPostSubstrateTxV2(result, data);
+                    mBinding.setTx(tx);
+                    String signContent = polkadotViewModel.getSignContent(checksum).getString("value");
+                    mBinding.sign.setOnClickListener(v -> handleSign(signContent));
+                    mBinding.sign.setText(R.string.sign);
+                    break;
+                }
+                case "Read": {
+                    mBinding.sign.setOnClickListener(v -> navigateUp());
+                    mBinding.sign.setText(R.string.decline);
+                    break;
+                }
+                case "Stub": {
+                    int checksum = result.getInt("checksum");
+                    mBinding.sign.setText(R.string.approve);
+                    mBinding.sign.setOnClickListener(v -> {
+                        try {
+                            polkadotViewModel.handleStub(checksum);
+                            navigateUp();
+                        } catch (PolkadotViewModel.PolkadotException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    break;
+                }
+                default: {
+                    ModalDialog.showCommonModal(mActivity, "Warning", "Action " + type + " is not supported currently", "OK", null);
+                    navigateUp();
+                }
+            }
+        } catch (PolkadotViewModel.PolkadotException | JSONException e) {
             e.printStackTrace();
+        } catch (InvalidAccountException e) {
+            ModalDialog.showCommonModal(mActivity,
+                    getString(R.string.account_not_match),
+                    getString(R.string.account_not_match_detail),
+                    getString(R.string.confirm),
+                    this::navigateUp);
         }
-        viewModel.parseTxData(data);
-//        viewModel.getObservableTx().observe(this, txEntity -> {
-//            if (txEntity != null) {
-//                mBinding.setTx(txEntity);
-//                mBinding.dotTx.txDetail.updateUI(txEntity);
-//            }
-//        });
-        mBinding.sign.setOnClickListener(v -> handleSign());
     }
 
-    private void handleSign() {
+    private void handleSign(String signContent) {
         boolean fingerprintSignEnable = new FingerprintPolicyCallable(READ, TYPE_SIGN_TX).call();
         AuthenticateModal.show(mActivity,
                 getString(R.string.password_modal_title), "", fingerprintSignEnable,
                 token -> {
                     viewModel.setToken(token);
-                    viewModel.handleSign();
+                    viewModel.handleSign(signContent);
                     subscribeSignState();
                 }, forgetPassword);
     }

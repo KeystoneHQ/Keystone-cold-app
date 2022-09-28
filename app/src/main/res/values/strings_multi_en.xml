@@ -452,6 +452,8 @@
     <string name="clear_and_power_off">Erase all Information and Power off</string>
     <string name="abnormal_state_hint">It is recommended that you wipe the device and then reset it.Repeated retries failed, you can contact us：support@keyst.one\n  Status Code:%s</string>
     <string name="abnormal_state_title">Abnormal State</string>
+    <string name="decline">Decline</string>
+    <string name="approve">Approve</string>
 
     <string-array name="watch_wallet_list">
         <item>Keystone Companion App</item>

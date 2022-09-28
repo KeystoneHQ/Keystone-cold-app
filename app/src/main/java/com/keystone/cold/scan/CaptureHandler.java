@@ -122,6 +122,7 @@ public final class CaptureHandler extends Handler {
                 String decoded;
                 try {
                     decoded = polkadotDecoder.decode();
+                    Log.d("sora", "polkadotDecode: " + decoded);
                 } catch (PolkadotViewModel.PolkadotException e) {
                     e.printStackTrace();
                     return;

@@ -119,6 +119,17 @@ public class PolkadotViewModel extends AndroidViewModel {
         }
     }
 
+    public JSONObject getSignContent(int checksum) throws PolkadotException {
+        String response = PolkadotService.getSignContent(dbPath, checksum);
+        try {
+            JSONObject json = new JSONObject(response);
+            return json;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new PolkadotException("Invalid Response");
+        }
+    }
+
     public void importAddress(String public_key, String path) {
         String response = PolkadotService.importAddress(dbPath, public_key, path);
         try {
@@ -181,13 +192,15 @@ public class PolkadotViewModel extends AndroidViewModel {
         }
 
         public String decode() throws PolkadotException {
-            if(this.getCurrent() < this.getTotal() + 2) return null;
+            if (this.getCurrent() < this.getTotal()) return null;
             String response = PolkadotService.decodeSequence(this.messages);
             try {
                 JSONObject json = new JSONObject(response);
                 if (json.getString("status").equals("success")) {
                     return json.getString("value");
                 } else {
+                    // try 5 times again for multi frames
+                    if (this.getCurrent() < this.getTotal() + 5) return null;
                     String reason = json.getString("reason");
                     throw new PolkadotException(reason);
                 }

@@ -17,6 +17,7 @@ public class PolkadotRequestBuilder {
     private final PolkadotProtoc.DecodeSequence.Builder decodeSequence;
     private final PolkadotProtoc.HandleStub.Builder handleStub;
     private final PolkadotProtoc.ImportAddress.Builder importAddress;
+    private final PolkadotProtoc.GetSignContent.Builder getSignContent;
 
     public PolkadotRequestBuilder () {
         commandRequest = RCCABIProtoc.CommandRequest.newBuilder();
@@ -28,6 +29,7 @@ public class PolkadotRequestBuilder {
         decodeSequence = PolkadotProtoc.DecodeSequence.newBuilder();
         handleStub = PolkadotProtoc.HandleStub.newBuilder();
         importAddress = PolkadotProtoc.ImportAddress.newBuilder();
+        getSignContent = PolkadotProtoc.GetSignContent.newBuilder();
     }
     public String build() {
         blockChainRequest.setPolkadot(polkadot);
@@ -73,6 +75,13 @@ public class PolkadotRequestBuilder {
         importAddress.setPublicKey(pubkey);
         importAddress.setDerivationPath(path);
         polkadot.setImportAddress(importAddress);
+        return this;
+    }
+
+    public PolkadotRequestBuilder getSignContent(String dbPath, int checksum) {
+        getSignContent.setDbPath(dbPath);
+        getSignContent.setChecksum(checksum);
+        polkadot.setGetSignContent(getSignContent);
         return this;
     }
 }

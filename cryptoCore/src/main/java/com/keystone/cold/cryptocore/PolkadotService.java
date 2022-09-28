@@ -32,6 +32,15 @@ public class PolkadotService {
         return parseResponse(response);
     }
 
+    public static String getSignContent(String dbPath, int checksum) {
+        RCC rcc = new RCC();
+        PolkadotRequestBuilder rb = new PolkadotRequestBuilder();
+        rb.getSignContent(dbPath, checksum);
+        String command = rb.build();
+        String response = rcc.processCommand(command);
+        return parseResponse(response);
+    }
+
     public static String importAddress(String dbPath, String publicKey, String derivationPath) {
         RCC rcc = new RCC();
         PolkadotRequestBuilder rb = new PolkadotRequestBuilder();

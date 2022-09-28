@@ -104,12 +104,7 @@ public class BroadcastTxFragment extends BaseFragment<BroadcastTxFragmentBinding
         if (watchWallet == WatchWallet.KEYSTONE) {
             return getSignTxJson(txEntity);
         } else if (watchWallet == WatchWallet.POLKADOT_JS) {
-            try {
-                return new JSONObject(txEntity.getSignedHex())
-                        .getString("signedHex");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            return txEntity.getSignedHex();
         }
         return "";
     }

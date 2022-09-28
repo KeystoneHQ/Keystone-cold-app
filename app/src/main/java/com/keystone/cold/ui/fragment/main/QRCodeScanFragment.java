@@ -205,6 +205,8 @@ public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
         Bundle bundle = new Bundle();
         bundle.putString(KEY_TX_DATA, res);
         bundle.putBoolean("substrateTx", true);
+        Log.d("sora", "handleUOS: here");
+        Log.d("sora", "handleUOS: " + res);
         navigate(R.id.action_to_polkadotTxConfirm, bundle);
     }
 
