@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.AddressSyncFragmentBinding;
@@ -76,6 +77,10 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
 
     private void stepIntoSync() {
         Bundle bundle = new Bundle();
+        Bundle data = requireArguments();
+        String coinId = data.getString(KEY_COIN_ID);
+        String coinCode = Coins.coinCodeFromCoinId(coinId);
+        bundle.putString("coinCode", coinCode);
         bundle.putSerializable(DERIVATION_PATH_KEY, (Serializable) addressSyncAdapter.getSyncInfo());
         navigate(R.id.action_to_syncFragment, bundle);
     }

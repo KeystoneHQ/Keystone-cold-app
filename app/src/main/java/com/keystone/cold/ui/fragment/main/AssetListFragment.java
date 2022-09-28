@@ -107,6 +107,12 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         mCoinAdapter = new CoinAdapter(mActivity, mCoinClickCallback, false);
         mBinding.assetList.setAdapter(mCoinAdapter);
         mRepository = ((MainApplication) mActivity.getApplication()).getRepository();
+        if(watchWallet.equals(WatchWallet.POLKADOT_JS)) {
+            mBinding.hint.setText(R.string.polkadot_hint);
+            mBinding.hint.setVisibility(View.VISIBLE);
+        } else {
+            mBinding.hint.setVisibility(View.GONE);
+        }
     }
 
     @Override

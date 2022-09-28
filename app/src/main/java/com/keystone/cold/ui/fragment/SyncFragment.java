@@ -206,7 +206,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 });
                 break;
             case POLKADOT_JS:
-                syncViewModel.generateSyncPolkadotjs(coinCode).observe(this, s -> {
+                syncViewModel.generateSyncPolkadotjs(syncInfoList.get(0)).observe(this, s -> {
                     if (!TextUtils.isEmpty(s)) {
                         mBinding.dynamicQrcodeLayout.qrcode.disableMultipart();
                         mBinding.dynamicQrcodeLayout.qrcode.setData(s);

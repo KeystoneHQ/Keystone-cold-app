@@ -20,6 +20,7 @@
 package com.keystone.cold.ui.fragment.main.polkadot;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.lifecycle.ViewModelProviders;
@@ -30,6 +31,7 @@ import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,16 +54,37 @@ public class PolkadotTxFragment extends BaseFragment<PolkadotTxBinding> {
                 .loadTx(bundle.getString(KEY_TX_ID)).observe(this, txEntity -> {
             this.txEntity = txEntity;
             if (this.txEntity != null) {
-                mBinding.dotTx.txDetail.updateUI(txEntity);
-                mBinding.dotTx.qrcode.qrcode.disableMultipart();
-                mBinding.dotTx.qrcode.qrcode.setVisibility(View.VISIBLE);
-                mBinding.dotTx.broadcastHint.setVisibility(View.VISIBLE);
-                mBinding.dotTx.broadcastHint.setText(getString(R.string.please_broadcast_with_hot));
                 try {
-                    mBinding.dotTx.qrcode.qrcode.setData(new JSONObject(txEntity.getSignedHex())
-                            .getString("signedHex"));
+                    // new polkadot pattern
+                    JSONObject tx = new JSONObject(txEntity.getAddition());
+                    JSONObject parsedTransaction = tx.getJSONObject("parsed_transaction");
+                    JSONArray content = parsedTransaction.getJSONArray("content");
+                    mBinding.setTx(txEntity);
+                    mBinding.txView.setVisibility(View.VISIBLE);
+                    mBinding.legacyTxView.setVisibility(View.GONE);
+                    mBinding.dotTxNew.txDetail.updateUI(content);
+                    mBinding.dotTxNew.qrcode.qrcode.disableMultipart();
+                    mBinding.dotTxNew.qrcode.qrcode.setVisibility(View.VISIBLE);
+                    mBinding.dotTxNew.broadcastHint.setVisibility(View.VISIBLE);
+                    mBinding.dotTxNew.broadcastHint.setText(getString(R.string.please_broadcast_with_hot));
+                    Log.d(TAG, "init: " + txEntity);
+                    mBinding.dotTxNew.qrcode.qrcode.setData(txEntity.getSignedHex());
+                    mBinding.dotTxNew.txDetail.bindTx(txEntity);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    // try old pattern;
+                    mBinding.txView.setVisibility(View.GONE);
+                    mBinding.legacyTxView.setVisibility(View.VISIBLE);
+                    mBinding.dotTx.txDetail.updateUI(txEntity);
+                    mBinding.dotTx.qrcode.qrcode.disableMultipart();
+                    mBinding.dotTx.qrcode.qrcode.setVisibility(View.VISIBLE);
+                    mBinding.dotTx.broadcastHint.setVisibility(View.VISIBLE);
+                    mBinding.dotTx.broadcastHint.setText(getString(R.string.please_broadcast_with_hot));
+                    try {
+                        mBinding.dotTx.qrcode.qrcode.setData(new JSONObject(txEntity.getSignedHex())
+                                .getString("signedHex"));
+                    } catch (JSONException e2) {
+                        e2.printStackTrace();
+                    }
                 }
             }
         });

@@ -162,14 +162,13 @@ public class SyncViewModel extends AndroidViewModel {
         }
     }
 
-    public LiveData<String> generateSyncPolkadotjs(String coinCode) {
+    public LiveData<String> generateSyncPolkadotjs(SyncInfo syncInfo) {
         MutableLiveData<String> result = new MutableLiveData<>();
         AppExecutors.getInstance().diskIO().execute(() -> {
-            AddressEntity addressEntity = mRepository.loadAddressSync(Coins.coinIdFromCoinCode(coinCode)).get(0);
             String prefix = "substrate";
-            String address = addressEntity.getAddressString();
-            String genesisHash = getGenesisHash(coinCode);
-            String name = "keystone-" + Coins.coinNameFromCoinCode(coinCode);
+            String address = syncInfo.getAddress();
+            String genesisHash = getGenesisHash(Coins.coinCodeFromCoinId(syncInfo.getCoinId()));
+            String name = syncInfo.getName();
             result.postValue(prefix + ":" + address + ":" + genesisHash + ":" + name);
         });
         return result;

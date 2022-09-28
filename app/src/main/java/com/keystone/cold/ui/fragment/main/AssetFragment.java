@@ -213,12 +213,6 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         initTabs();
     }
 
-    private void syncPolkadot() {
-        Bundle bundle = new Bundle();
-        bundle.putString("coinCode", coinCode);
-        navigate(R.id.action_to_syncFragment, bundle);
-    }
-
     private int getMenuResId() {
         switch (watchWallet) {
             case XRP_TOOLKIT:
@@ -506,6 +500,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 bundle.putString(HD_PATH, "M/" + hdPath);
                 mFragment.navigate(R.id.action_to_aptosTxConfirmFragment, bundle);
             }
+
             private void handleNearSignRequest(ScanResult result) throws InvalidTransactionException, InvalidNEARAccountException, XfpNotMatchException {
                 NearSignRequest nearSignRequest = (NearSignRequest) result.resolve();
                 ByteBuffer uuidBuffer = ByteBuffer.wrap(nearSignRequest.getRequestId());
@@ -739,6 +734,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             isShowBadge = true;
         } else if (watchWallet == WatchWallet.NEAR && !Utilities.hasUserClickNearSyncLock(mActivity)) {
             isShowBadge = true;
+        } else if (watchWallet == WatchWallet.POLKADOT_JS && !Utilities.hasUserClickPolkadotSyncLock(mActivity)) {
+            isShowBadge = true;
         } else if (watchWallet == WatchWallet.APTOS && !Utilities.hasUserClickAptosSyncLock(mActivity)) {
             isShowBadge = true;
         }
@@ -786,6 +783,10 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 syncNearAddress();
             } else if (watchWallet == WatchWallet.APTOS) {
                 syncAptosAddress();
+            } else if (watchWallet == WatchWallet.POLKADOT_JS) {
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_COIN_ID, coinId);
+                navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
             }
             if (judgeShowBadge()) {
                 setUserClickSyncLock();
@@ -856,7 +857,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private boolean isHideChangePath() {
-        if (watchWallet == WatchWallet.APTOS) {
+        if (watchWallet == WatchWallet.APTOS
+                || watchWallet == WatchWallet.POLKADOT_JS) {
             return true;
         }
         return isNearMnemonic();
@@ -972,8 +974,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     handler.postDelayed(dialog::dismiss, DIALOG_DISMISS_DELAY_TIME);
                 });
             });
-        }
-        else {
+        } else {
             AppExecutors.getInstance().diskIO().execute(() -> {
                 CoinEntity coinEntity = viewModel.getCoin(coinId);
                 if (coinEntity != null) {

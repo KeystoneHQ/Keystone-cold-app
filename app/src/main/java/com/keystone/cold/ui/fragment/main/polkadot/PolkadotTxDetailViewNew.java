@@ -92,6 +92,11 @@ public class PolkadotTxDetailViewNew extends ScrollView {
         }
     }
 
+    public void bindTx(TxEntity tx) {
+        mBinding.setTx(tx);
+        mBinding.network.setText(Coins.coinNameFromCoinCode(tx.getCoinCode()));
+    }
+
     private void addDivider() {
         @SuppressLint("InflateParams")
         View div = inflater.inflate(R.layout.divider, null, false);

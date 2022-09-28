@@ -75,7 +75,6 @@ public class PolkadotTxConfirm extends BaseFragment<PolkadotTxConfirmBinding> {
         viewModel = ViewModelProviders.of(this).get(PolkadotJsTxConfirmViewModel.class);
         try {
             JSONObject result = polkadotViewModel.parseTransaction(data);
-            Log.d("sora", "init: " + result);
             String type = result.getString("transaction_type");
             JSONArray content = result.getJSONArray("content");
             mBinding.dotTx.txDetail.updateUI(content);
@@ -88,6 +87,7 @@ public class PolkadotTxConfirm extends BaseFragment<PolkadotTxConfirmBinding> {
                     mBinding.dotTx.network.setVisibility(View.VISIBLE);
                     TxEntity tx = viewModel.generateAndPostSubstrateTxV2(result, data);
                     mBinding.setTx(tx);
+                    mBinding.dotTx.txDetail.bindTx(tx);
                     String signContent = polkadotViewModel.getSignContent(checksum).getString("value");
                     mBinding.sign.setOnClickListener(v -> handleSign(signContent));
                     mBinding.sign.setText(R.string.sign);

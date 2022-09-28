@@ -74,11 +74,18 @@
                     android:layout_alignParentBottom="true" />
             </RelativeLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:padding="16dp"
+                android:textColor="@color/check_info_color"
+                android:text="@string/solana_tx_hint" />
+
             <LinearLayout
                 android:id="@+id/container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-5dp"
                 android:paddingTop="16dp"
                 android:layout_marginHorizontal="16dp"
                 android:background="@drawable/data_bg"
@@ -86,7 +93,18 @@
                 android:padding="10dp">
 
             </LinearLayout>
-
+            <TextView
+                android:id="@+id/broadcast_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:layout_marginHorizontal="30dp"
+                android:text="@string/please_broadcast_with_hot"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:visibility="gone"/>
             <include
                 android:id="@+id/qrcode"
                 layout="@layout/dynamic_qrcode"
