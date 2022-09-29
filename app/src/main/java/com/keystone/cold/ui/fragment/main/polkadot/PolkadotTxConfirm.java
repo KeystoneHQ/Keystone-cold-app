@@ -34,6 +34,7 @@ import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
+import com.keystone.cold.ui.modal.PolkadotErrorDialog;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
 import com.keystone.cold.viewmodel.PolkadotViewModel;
@@ -51,6 +52,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PolkadotTxConfirm extends BaseFragment<PolkadotTxConfirmBinding> {
+
+    public static final String KEY_PARSED_TRANSACTION = "key_parsed_transaction";
 
     private final Runnable forgetPassword = () -> {
         Bundle bundle = new Bundle();
@@ -70,21 +73,20 @@ public class PolkadotTxConfirm extends BaseFragment<PolkadotTxConfirmBinding> {
     protected void init(View view) {
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         Bundle bundle = requireArguments();
+        String parsedTransaction = bundle.getString(KEY_PARSED_TRANSACTION);
         String data = bundle.getString(KEY_TX_DATA);
         polkadotViewModel = ViewModelProviders.of(this).get(PolkadotViewModel.class);
         viewModel = ViewModelProviders.of(this).get(PolkadotJsTxConfirmViewModel.class);
         try {
-            JSONObject result = polkadotViewModel.parseTransaction(data);
+            JSONObject result = new JSONObject(parsedTransaction);
             String type = result.getString("transaction_type");
             JSONArray content = result.getJSONArray("content");
-            mBinding.dotTx.txDetail.updateUI(content);
-            mBinding.dotTx.icon.setVisibility(View.GONE);
-            mBinding.dotTx.network.setVisibility(View.GONE);
+            mBinding.dotTx.title.setVisibility(View.GONE);
             switch (type) {
                 case "Sign": {
                     int checksum = result.getInt("checksum");
-                    mBinding.dotTx.icon.setVisibility(View.VISIBLE);
-                    mBinding.dotTx.network.setVisibility(View.VISIBLE);
+                    mBinding.dotTx.txDetail.updateUI(content);
+                    mBinding.dotTx.title.setVisibility(View.VISIBLE);
                     TxEntity tx = viewModel.generateAndPostSubstrateTxV2(result, data);
                     mBinding.setTx(tx);
                     mBinding.dotTx.txDetail.bindTx(tx);
@@ -93,13 +95,9 @@ public class PolkadotTxConfirm extends BaseFragment<PolkadotTxConfirmBinding> {
                     mBinding.sign.setText(R.string.sign);
                     break;
                 }
-                case "Read": {
-                    mBinding.sign.setOnClickListener(v -> navigateUp());
-                    mBinding.sign.setText(R.string.decline);
-                    break;
-                }
                 case "Stub": {
                     int checksum = result.getInt("checksum");
+                    mBinding.dotTx.txDetail.updateUI(content);
                     mBinding.sign.setText(R.string.approve);
                     mBinding.sign.setOnClickListener(v -> {
                         try {
@@ -111,6 +109,7 @@ public class PolkadotTxConfirm extends BaseFragment<PolkadotTxConfirmBinding> {
                     });
                     break;
                 }
+                // "Read" has already handled in scanner
                 default: {
                     ModalDialog.showCommonModal(mActivity, "Warning", "Action " + type + " is not supported currently", "OK", null);
                     navigateUp();

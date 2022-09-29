@@ -34,12 +34,14 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/content_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             tools:showIn="@layout/tx_confirm_fragment">
 
             <RelativeLayout
+                android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="60dp">
 
@@ -75,6 +77,7 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"

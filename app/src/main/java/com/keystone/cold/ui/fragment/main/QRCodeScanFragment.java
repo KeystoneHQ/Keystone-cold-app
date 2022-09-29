@@ -47,6 +47,7 @@ import com.keystone.cold.scan.bean.ZxingConfigBuilder;
 import com.keystone.cold.scan.camera.CameraManager;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
+import com.keystone.cold.ui.modal.PolkadotErrorDialog;
 import com.keystone.cold.viewmodel.PolkadotViewModel;
 import com.keystone.cold.viewmodel.tx.PolkadotJsTxConfirmViewModel;
 import com.keystone.cold.viewmodel.QrScanViewModel;
@@ -54,6 +55,7 @@ import com.keystone.cold.viewmodel.exceptions.UnknowQrCodeException;
 import com.keystone.cold.viewmodel.WatchWallet;
 import com.keystone.cold.viewmodel.exceptions.XfpNotMatchException;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,6 +63,7 @@ import java.io.IOException;
 
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.main.keystone.TxConfirmFragment.KEY_TX_DATA;
+import static com.keystone.cold.ui.fragment.main.polkadot.PolkadotTxConfirm.KEY_PARSED_TRANSACTION;
 
 public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
         implements SurfaceHolder.Callback, Host {
@@ -202,12 +205,22 @@ public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
     }
 
     private void handleUOS(String res) {
-        Bundle bundle = new Bundle();
-        bundle.putString(KEY_TX_DATA, res);
-        bundle.putBoolean("substrateTx", true);
-        Log.d("sora", "handleUOS: here");
-        Log.d("sora", "handleUOS: " + res);
-        navigate(R.id.action_to_polkadotTxConfirm, bundle);
+        try {
+            PolkadotViewModel polkadotViewModel = ViewModelProviders.of(this).get(PolkadotViewModel.class);
+            JSONObject result = polkadotViewModel.parseTransaction(res);
+            String type = result.getString("transaction_type");
+            JSONArray content = result.getJSONArray("content");
+            if (type.equals("Read")) {
+                PolkadotErrorDialog.show(mActivity, getString(R.string.notice), getString(R.string.decline), content, this::rescan);
+            } else {
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_TX_DATA, res);
+                bundle.putString(KEY_PARSED_TRANSACTION, result.toString());
+                navigate(R.id.action_to_polkadotTxConfirm, bundle);
+            }
+        } catch (Exception e) {
+            handleException(e);
+        }
     }
 
     private void handleUR(String res) {
@@ -225,7 +238,7 @@ public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
             alert(getString(R.string.unresolve_tx),
                     getString(R.string.unresolve_tx_hint,
                             WatchWallet.getWatchWallet(mActivity).getWalletName(mActivity)));
-        } else if (e instanceof JSONException) {
+        } else if (e instanceof JSONException || e instanceof PolkadotViewModel.PolkadotException) {
             alert(getString(R.string.incorrect_qrcode));
         } else if (e instanceof CoinNotFindException) {
             alert(getString(R.string.unsupported_coin));

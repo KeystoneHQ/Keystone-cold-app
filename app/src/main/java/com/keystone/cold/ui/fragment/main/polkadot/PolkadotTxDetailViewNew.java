@@ -77,6 +77,10 @@ public class PolkadotTxDetailViewNew extends ScrollView {
     }
 
     public void updateUI(JSONArray content) throws JSONException {
+        updateUI(content, false);
+    }
+
+    public void updateUI(JSONArray content, boolean inError) throws JSONException {
         mBinding = DataBindingUtil.getBinding(this);
         int length = content.length();
         for (int i = 0; i < length; i++) {
@@ -85,7 +89,7 @@ public class PolkadotTxDetailViewNew extends ScrollView {
         List<Card> sortedCards = cards.stream().sorted(Comparator.comparingInt(v -> v.index)).collect(Collectors.toList());
         Iterator<Card> iterator = sortedCards.iterator();
         while (iterator.hasNext()) {
-            addCard(iterator.next());
+            addCard(iterator.next(), inError);
             if (iterator.hasNext()) {
                 addDivider();
             }
@@ -103,7 +107,8 @@ public class PolkadotTxDetailViewNew extends ScrollView {
         mBinding.container.addView(div);
     }
 
-    private void addCard(Card card) {
+    @SuppressLint("ResourceAsColor")
+    private void addCard(Card card, boolean inError) {
         int paddingBase = 8;
         ParamItemBinding binding = DataBindingUtil.inflate(inflater,
                 R.layout.param_item, null, false);
@@ -120,6 +125,10 @@ public class PolkadotTxDetailViewNew extends ScrollView {
         binding.wrapper.setLayoutParams(layoutParams);
         binding.key.setText(card.getTitle());
         binding.value.setText(card.getValue());
+        if(inError){
+            binding.key.setTextColor(R.color.black);
+            binding.value.setTextColor(R.color.black);
+        }
         mBinding.container.addView(binding.getRoot());
     }
 
