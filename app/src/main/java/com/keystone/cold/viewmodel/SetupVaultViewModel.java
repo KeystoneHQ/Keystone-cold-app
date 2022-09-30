@@ -113,6 +113,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
     }
 
     public void calcAuthCode(String data) {
+        webAuthCode.postValue(null);
         AppExecutors.getInstance().diskIO().execute(() -> {
             byte[] authData = null;
             try{
