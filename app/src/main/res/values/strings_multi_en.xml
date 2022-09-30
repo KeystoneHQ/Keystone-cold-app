@@ -462,7 +462,7 @@
         <item>Solflare</item>
         <item>Sender</item>
         <item>Martian / Fewcha</item>
-        <item>SubWallet / Polkadot{.js}</item>
+        <item>SubWallet / Nova / Polkadot{.js}</item>
         <item>XRP Toolkit</item>
     </string-array>
     <string-array name="watch_wallet_list_values" translatable="false">
@@ -490,7 +490,7 @@
     <string name="sync_keystone_wallet_guide_title">How to bind Keystone App：</string>
     <string name="sync_xumm_guide_title">How to create a Read only account in XUMM：</string>
     <string name="sync_xrp_toolkit_guide_title">How to create a watch-only account in XRP Toolkit：</string>
-    <string name="sync_polkadotjs_wallet_guide_title">How to create a %s watch-only wallet in SubWallet / Polkadot{.js}：</string>
+    <string name="sync_polkadotjs_wallet_guide_title">How to create a %s watch-only wallet in SubWallet / Nova / Polkadot{.js}：</string>
     <string name="sync_metamask_guide_title">Connect MetaMask Tutorials:</string>
     <string name="sync_solana_guide_title">Connect solana Tutorials:</string>
 

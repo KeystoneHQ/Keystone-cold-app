@@ -41,7 +41,7 @@ public final class CaptureHandler extends Handler {
     private State state;
     private final CameraManager cameraManager;
 
-    private final PolkadotViewModel.PolkadotDecoder polkadotDecoder = new PolkadotViewModel.PolkadotDecoder();
+    private PolkadotViewModel.PolkadotDecoder polkadotDecoder = new PolkadotViewModel.PolkadotDecoder();
     private URDecoder decoder = new URDecoder();
     private final ExecutorService sExecutor = Executors.newSingleThreadExecutor();
 
@@ -193,6 +193,7 @@ public final class CaptureHandler extends Handler {
         if (state == State.SUCCESS) {
             state = State.PREVIEW;
             decoder = new URDecoder();
+            polkadotDecoder = new PolkadotViewModel.PolkadotDecoder();
             cameraManager.requestPreviewFrame(decodeThread.getHandler(), Constant.DECODE);
         }
     }
