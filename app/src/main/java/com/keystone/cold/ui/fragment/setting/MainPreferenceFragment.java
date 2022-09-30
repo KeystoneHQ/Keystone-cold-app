@@ -221,7 +221,7 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
             e.printStackTrace();
         }
 
-        return version;
+        return "M-7.3(Polkadot)";
     }
 
     @Override
