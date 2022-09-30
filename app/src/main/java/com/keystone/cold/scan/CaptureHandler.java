@@ -18,14 +18,8 @@ package com.keystone.cold.scan;
 
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import com.google.zxing.Result;
-import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
-import com.keystone.coinlib.coins.polkadot.UOS.UOSDecoder;
-import com.keystone.coinlib.coins.polkadot.UOS.UosDecodeResult;
-import com.keystone.coinlib.exception.InvalidUOSException;
-import com.keystone.coinlib.utils.SDCardUtil;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.scan.camera.CameraManager;
 import com.keystone.cold.scan.common.Constant;
@@ -35,17 +29,8 @@ import com.sparrowwallet.hummingbird.ResultType;
 import com.sparrowwallet.hummingbird.UR;
 import com.sparrowwallet.hummingbird.URDecoder;
 
-import org.json.JSONArray;
-import org.spongycastle.util.encoders.DecoderException;
 import org.spongycastle.util.encoders.Hex;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -56,7 +41,6 @@ public final class CaptureHandler extends Handler {
     private State state;
     private final CameraManager cameraManager;
 
-    private UOSDecoder uosDecoder = new UOSDecoder();
     private final PolkadotViewModel.PolkadotDecoder polkadotDecoder = new PolkadotViewModel.PolkadotDecoder();
     private URDecoder decoder = new URDecoder();
     private final ExecutorService sExecutor = Executors.newSingleThreadExecutor();
@@ -122,7 +106,6 @@ public final class CaptureHandler extends Handler {
                 String decoded;
                 try {
                     decoded = polkadotDecoder.decode();
-                    Log.d("sora", "polkadotDecode: " + decoded);
                 } catch (PolkadotViewModel.PolkadotException e) {
                     e.printStackTrace();
                     return;
@@ -210,7 +193,6 @@ public final class CaptureHandler extends Handler {
         if (state == State.SUCCESS) {
             state = State.PREVIEW;
             decoder = new URDecoder();
-            uosDecoder = new UOSDecoder();
             cameraManager.requestPreviewFrame(decodeThread.getHandler(), Constant.DECODE);
         }
     }

@@ -146,7 +146,6 @@ public class PolkadotTxDetailViewNew extends ScrollView {
         }
 
         public static Card fromJSON(JSONObject json) throws JSONException {
-            Log.d("sora", "fromJSON: " + json);
             int index = json.getInt("index");
             int indent = json.getInt("indent");
             JSONObject card = json.getJSONObject("card");
