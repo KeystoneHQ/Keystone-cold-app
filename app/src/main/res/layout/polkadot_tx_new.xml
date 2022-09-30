@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Copyright (c) 2021 Keystone
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -49,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/tx_confirm_title"
+                android:text="@string/signing_history"
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />
         </androidx.appcompat.widget.Toolbar>
@@ -64,20 +65,11 @@
 
             <include
                 android:id="@+id/dot_tx"
-                layout="@layout/polkadot_tx_detail_new"
+                layout="@layout/polkadot_tx_detail"
                 android:layout_height="0dp"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 bind:tx="@{tx}"/>
-
-            <Button
-                android:id="@+id/sign"
-                style="@style/AcceptButton"
-                android:layout_width="match_parent"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="20dp"
-                android:text="@string/sign" />
         </LinearLayout>
 
 

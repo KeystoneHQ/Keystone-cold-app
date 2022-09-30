@@ -29,6 +29,7 @@ import com.keystone.coinlib.coins.polkadot.UOS.Extrinsic;
 import com.keystone.coinlib.coins.polkadot.UOS.Network;
 import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
 import com.keystone.coinlib.coins.polkadot.pallets.Parameter;
+import com.keystone.coinlib.exception.InvalidAccountException;
 import com.keystone.coinlib.exception.InvalidUOSException;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
@@ -50,18 +51,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class PolkadotJsTxConfirmViewModel extends Base {
 
-    private byte[] signingPayload;
-    private boolean isHash;
     private final DataRepository mRepo;
-    private Extrinsic extrinsic;
-    private byte[] accountPublicKey;
     private String txId;
+
+    private AddressEntity addressEntity;
 
     public PolkadotJsTxConfirmViewModel(@NonNull Application application) {
         super(application);
@@ -70,71 +70,134 @@ public class PolkadotJsTxConfirmViewModel extends Base {
 
     private JSONObject extrinsicObject;
 
-    public void parseTxData(String data) {
-        try {
-            SubstratePayload sp = new SubstratePayload(data);
-            isHash = sp.isHash;
-            extrinsic = sp.extrinsic;
-            accountPublicKey = sp.accountPublicKey;
-            extrinsicObject = extrinsic.palletParameter.toJSON();
-            TxEntity tx = generateSubstrateTxEntity(sp);
+//    public void parseTxData(String data) {
+//        try {
+//            SubstratePayload sp = new SubstratePayload(data);
+//            isHash = sp.isHash;
+//            extrinsic = sp.extrinsic;
+//            accountPublicKey = sp.accountPublicKey;
+//            extrinsicObject = extrinsic.palletParameter.toJSON();
+//            TxEntity tx = generateSubstrateTxEntity(sp);
+//            observableTx.postValue(tx);
+//            signingPayload = sp.getSigningPayload();
+//        } catch (InvalidUOSException | JSONException | DecoderException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    public TxEntity generateAndPostSubstrateTxV2(JSONObject parsedTransaction, String transactionHex) throws JSONException, InvalidAccountException {
+        String type = parsedTransaction.getString("transaction_type");
+        if (type.equals("Sign")) {
+            JSONObject networkInfo = parsedTransaction.getJSONObject("network_info");
+            String network = networkInfo.getString("network_title");
+            switch (network) {
+                case "Polkadot": {
+                    coinCode = Coins.DOT.coinCode();
+                    break;
+                }
+                case "Kusama": {
+                    coinCode = Coins.KSM.coinCode();
+                    break;
+                }
+                default: {
+                    return null;
+                }
+            }
+            JSONObject authorInfo = parsedTransaction.getJSONObject("author_info");
+            String from = authorInfo.getString("base58");
+
+            addressEntity = findAccount(from);
+            if (addressEntity == null) {
+                throw new InvalidAccountException("invalid account");
+            }
+
+            TxEntity tx = new TxEntity();
+            tx.setSignId(WatchWallet.POLKADOT_JS_SIGN_ID);
+            tx.setTimeStamp(getUniversalSignIndex(getApplication()));
+            tx.setCoinCode(coinCode);
+            tx.setCoinId(Coins.coinIdFromCoinCode(coinCode));
+            tx.setFrom(from);
+            tx.setFee("");
+            tx.setSignedHex("");
+            tx.setBelongTo(mRepository.getBelongTo());
+
+            JSONObject addition = new JSONObject();
+            addition.put("parsed_transaction", parsedTransaction);
+            addition.put("raw_message", transactionHex);
+            tx.setAddition(addition.toString());
             observableTx.postValue(tx);
-            signingPayload = sp.getSigningPayload();
-        } catch (InvalidUOSException | JSONException | DecoderException e) {
-            e.printStackTrace();
+            return tx;
+        } else {
+            return null;
         }
     }
 
-    public boolean isTransactionSupported(Parameter parameter) {
-        if (parameter == null) return false;
-        return parameter.name.startsWith("balance.transfer")
-                || parameter.name.startsWith("staking")
-                || parameter.name.startsWith("utility.batch")
-                || parameter.name.startsWith("session.setKeys")
-                || parameter.name.startsWith("democracy")
-                || parameter.name.equals("identity.setIdentity")
-                || parameter.name.equals("proxy.addProxy")
-                || parameter.name.startsWith("electionsPhragmen")
-                || parameter.name.startsWith("treasury")
-                || parameter.name.startsWith("society")
-                || parameter.name.startsWith("recovery")
-                || parameter.name.startsWith("multisig");
-    }
+//    public boolean isTransactionSupported(Parameter parameter) {
+//        if (parameter == null) return false;
+//        return parameter.name.startsWith("balance.transfer")
+//                || parameter.name.startsWith("staking")
+//                || parameter.name.startsWith("utility.batch")
+//                || parameter.name.startsWith("session.setKeys")
+//                || parameter.name.startsWith("democracy")
+//                || parameter.name.equals("identity.setIdentity")
+//                || parameter.name.equals("proxy.addProxy")
+//                || parameter.name.startsWith("electionsPhragmen")
+//                || parameter.name.startsWith("treasury")
+//                || parameter.name.startsWith("society")
+//                || parameter.name.startsWith("recovery")
+//                || parameter.name.startsWith("multisig");
+//    }
+//
+//    public boolean isNetworkSupported(Network network) {
+//        return Network.supportedNetworks.contains(network);
+//    }
 
-    public boolean isNetworkSupported(Network network) {
-        return Network.supportedNetworks.contains(network);
-    }
-
-    public boolean isAccountMatch(String account) {
-        Future<Boolean> future = Executors.newSingleThreadExecutor().submit(() -> {
+    public AddressEntity findAccount(String account) {
+        Future<AddressEntity> future = Executors.newSingleThreadExecutor().submit(() -> {
             List<AddressEntity> allSubstrateAddress = new ArrayList<>();
             allSubstrateAddress.addAll(mRepo.loadAddressSync(Coins.KSM.coinId()));
             allSubstrateAddress.addAll(mRepo.loadAddressSync(Coins.DOT.coinId()));
-            return allSubstrateAddress.stream().anyMatch(entity -> account.equals(entity.getAddressString()));
+            Optional<AddressEntity> optionalAddressEntity = allSubstrateAddress.stream().filter(addressEntity -> addressEntity.getAddressString().equals(account)).findAny();
+            return optionalAddressEntity.orElse(null);
         });
         try {
             return future.get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
 
-    private TxEntity generateSubstrateTxEntity(SubstratePayload sp) {
-        TxEntity tx = new TxEntity();
-        coinCode = sp.network.coinCode();
-        tx.setSignId(WatchWallet.POLKADOT_JS_SIGN_ID);
-        tx.setTimeStamp(getUniversalSignIndex(getApplication()));
-        tx.setCoinCode(coinCode);
-        tx.setCoinId(Coins.coinIdFromCoinCode(coinCode));
-        tx.setFrom(sp.getAccount());
-        tx.setFee(sp.extrinsic.getTip() + " " + coinCode);
-        tx.setSignedHex(extrinsicObject.toString());
-        tx.setBelongTo(mRepository.getBelongTo());
-        return tx;
-    }
+//    public boolean isAccountMatch(String account) {
+//        Future<Boolean> future = Executors.newSingleThreadExecutor().submit(() -> {
+//            List<AddressEntity> allSubstrateAddress = new ArrayList<>();
+//            allSubstrateAddress.addAll(mRepo.loadAddressSync(Coins.KSM.coinId()));
+//            allSubstrateAddress.addAll(mRepo.loadAddressSync(Coins.DOT.coinId()));
+//            return allSubstrateAddress.stream().anyMatch(entity -> account.equals(entity.getAddressString()));
+//        });
+//        try {
+//            return future.get();
+//        } catch (ExecutionException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        return false;
+//    }
 
-    public void handleSign() {
+//    private TxEntity generateSubstrateTxEntity(SubstratePayload sp) {
+//        TxEntity tx = new TxEntity();
+//        coinCode = sp.network.coinCode();
+//        tx.setSignId(WatchWallet.POLKADOT_JS_SIGN_ID);
+//        tx.setTimeStamp(getUniversalSignIndex(getApplication()));
+//        tx.setCoinCode(coinCode);
+//        tx.setCoinId(Coins.coinIdFromCoinCode(coinCode));
+//        tx.setFrom(sp.getAccount());
+//        tx.setFee(sp.extrinsic.getTip() + " " + coinCode);
+//        tx.setSignedHex(extrinsicObject.toString());
+//        tx.setBelongTo(mRepository.getBelongTo());
+//        return tx;
+//    }
+
+    public void handleSign(String signContent) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             SignCallback callback = initSignTxCallback();
             callback.startSign();
@@ -143,18 +206,13 @@ public class PolkadotJsTxConfirmViewModel extends Base {
                 Log.w(TAG, "authToken null");
                 callback.onFail();
             }
-            Signer signer = new ChipSigner(coinCode.equals(Coins.DOT.coinCode()) ?
-                    Coins.DOT.getAccounts()[0] : Coins.KSM.getAccounts()[0], authToken);
-            String signedHex = signer.sign(Hex.toHexString(signingPayload));
-            try {
-                String txId = extrinsic.getTxId(accountPublicKey, Hex.decode(signedHex));
-                if (!TextUtils.isEmpty(signedHex)) {
-                    callback.onSuccess(txId, signedHex);
-                } else {
-                    callback.onFail();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            Signer signer = new ChipSigner(addressEntity.getPath(), authToken);
+            String signedHex = signer.sign(signContent);
+            String txId = signedHex.substring(0, 32);
+            if (!TextUtils.isEmpty(signedHex)) {
+                callback.onSuccess(txId, signedHex);
+            } else {
+                callback.onFail();
             }
         });
     }
@@ -164,18 +222,12 @@ public class PolkadotJsTxConfirmViewModel extends Base {
         return txId;
     }
 
-    protected TxEntity onSignSuccess(String txId, String rawTx) {
+    protected TxEntity onSignSuccess(String txId, String signature) {
         this.txId = txId;
         TxEntity tx = observableTx.getValue();
         Objects.requireNonNull(tx).setTxId(txId);
-        try {
-            extrinsicObject.put("signedHex", "01" + rawTx);
-            tx.setSignedHex(extrinsicObject.toString());
-            mRepository.insertTx(tx);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
+        tx.setSignedHex("01"+signature);
+        mRepository.insertTx(tx);
         return tx;
     }
 }

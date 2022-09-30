@@ -6,10 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.AddressSyncItemBinding;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.ui.common.BaseBindingAdapter;
+import com.keystone.cold.viewmodel.WatchWallet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,8 +52,16 @@ public class AddressSyncAdapter extends BaseBindingAdapter<AddressEntity, Addres
     }
 
     public boolean toggleChecked(int position) {
-        checkedList.set(position, !checkedList.get(position));
-        notifyItemChanged(position);
+        if(WatchWallet.getWatchWallet(context).equals(WatchWallet.POLKADOT_JS)) {
+            boolean current = checkedList.get(position);
+            resetCheckStatus();
+            checkedList.set(position, !current);
+            notifyItemChanged(position);
+        }
+        else {
+            checkedList.set(position, !checkedList.get(position));
+            notifyItemChanged(position);
+        }
         return checkedList.get(position);
     }
 

@@ -124,8 +124,8 @@ public class PresetData {
     }
 
     public static Coins.CURVE getCurveByPath(String pubKeyPath) {
-        if (pubKeyPath.equals(DOT.getAccounts()[0])
-                || pubKeyPath.equals(KSM.getAccounts()[0])) {
+        if (pubKeyPath.startsWith(DOT.getAccounts()[0])
+                || pubKeyPath.startsWith(KSM.getAccounts()[0])) {
             return Coins.CURVE.SR25519;
         }
         String[] strs = pubKeyPath.split("/");

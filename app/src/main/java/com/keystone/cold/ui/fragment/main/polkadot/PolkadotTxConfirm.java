@@ -21,17 +21,23 @@ package com.keystone.cold.ui.fragment.main.polkadot;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.coinlib.exception.InvalidAccountException;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.databinding.PolkadotTxConfirmBinding;
+import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
+import com.keystone.cold.ui.modal.ModalDialog;
+import com.keystone.cold.ui.modal.PolkadotErrorDialog;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
+import com.keystone.cold.viewmodel.PolkadotViewModel;
 import com.keystone.cold.viewmodel.tx.PolkadotJsTxConfirmViewModel;
 import com.keystone.cold.viewmodel.tx.KeystoneTxViewModel;
 
@@ -41,7 +47,13 @@ import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KE
 import static com.keystone.cold.ui.fragment.main.keystone.TxConfirmFragment.KEY_TX_DATA;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class PolkadotTxConfirm extends BaseFragment<PolkadotTxConfirmBinding> {
+
+    public static final String KEY_PARSED_TRANSACTION = "key_parsed_transaction";
 
     private final Runnable forgetPassword = () -> {
         Bundle bundle = new Bundle();
@@ -49,6 +61,7 @@ public class PolkadotTxConfirm extends BaseFragment<PolkadotTxConfirmBinding> {
         navigate(R.id.action_to_preImportFragment, bundle);
     };
     private PolkadotJsTxConfirmViewModel viewModel;
+    private PolkadotViewModel polkadotViewModel;
     private SigningDialog signingDialog;
 
     @Override
@@ -60,25 +73,66 @@ public class PolkadotTxConfirm extends BaseFragment<PolkadotTxConfirmBinding> {
     protected void init(View view) {
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         Bundle bundle = requireArguments();
+        String parsedTransaction = bundle.getString(KEY_PARSED_TRANSACTION);
         String data = bundle.getString(KEY_TX_DATA);
+        polkadotViewModel = ViewModelProviders.of(this).get(PolkadotViewModel.class);
         viewModel = ViewModelProviders.of(this).get(PolkadotJsTxConfirmViewModel.class);
-        viewModel.parseTxData(data);
-        viewModel.getObservableTx().observe(this, txEntity -> {
-            if (txEntity != null) {
-                mBinding.setTx(txEntity);
-                mBinding.dotTx.txDetail.updateUI(txEntity);
+        try {
+            JSONObject result = new JSONObject(parsedTransaction);
+            String type = result.getString("transaction_type");
+            JSONArray content = result.getJSONArray("content");
+            mBinding.dotTx.title.setVisibility(View.GONE);
+            switch (type) {
+                case "Sign": {
+                    int checksum = result.getInt("checksum");
+                    mBinding.dotTx.txDetail.updateUI(content);
+                    mBinding.dotTx.title.setVisibility(View.VISIBLE);
+                    TxEntity tx = viewModel.generateAndPostSubstrateTxV2(result, data);
+                    mBinding.setTx(tx);
+                    mBinding.dotTx.txDetail.bindTx(tx);
+                    String signContent = polkadotViewModel.getSignContent(checksum).getString("value");
+                    mBinding.sign.setOnClickListener(v -> handleSign(signContent));
+                    mBinding.sign.setText(R.string.sign);
+                    break;
+                }
+                case "Stub": {
+                    int checksum = result.getInt("checksum");
+                    mBinding.dotTx.txDetail.updateUI(content);
+                    mBinding.sign.setText(R.string.approve);
+                    mBinding.sign.setOnClickListener(v -> {
+                        try {
+                            polkadotViewModel.handleStub(checksum);
+                            navigateUp();
+                        } catch (PolkadotViewModel.PolkadotException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    break;
+                }
+                // "Read" has already handled in scanner
+                default: {
+                    ModalDialog.showCommonModal(mActivity, "Warning", "Action " + type + " is not supported currently", "OK", null);
+                    navigateUp();
+                }
             }
-        });
-        mBinding.sign.setOnClickListener(v -> handleSign());
+        } catch (PolkadotViewModel.PolkadotException | JSONException e) {
+            e.printStackTrace();
+        } catch (InvalidAccountException e) {
+            ModalDialog.showCommonModal(mActivity,
+                    getString(R.string.account_not_match),
+                    getString(R.string.account_not_match_detail),
+                    getString(R.string.confirm),
+                    this::navigateUp);
+        }
     }
 
-    private void handleSign() {
+    private void handleSign(String signContent) {
         boolean fingerprintSignEnable = new FingerprintPolicyCallable(READ, TYPE_SIGN_TX).call();
         AuthenticateModal.show(mActivity,
                 getString(R.string.password_modal_title), "", fingerprintSignEnable,
                 token -> {
                     viewModel.setToken(token);
-                    viewModel.handleSign();
+                    viewModel.handleSign(signContent);
                     subscribeSignState();
                 }, forgetPassword);
     }

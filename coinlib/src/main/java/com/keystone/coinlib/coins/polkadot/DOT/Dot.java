@@ -17,6 +17,8 @@
 
 package com.keystone.coinlib.coins.polkadot.DOT;
 
+import android.util.Log;
+
 import com.keystone.coinlib.coins.AbsCoin;
 import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.coins.AbsTx;
@@ -96,6 +98,7 @@ import com.keystone.coinlib.utils.B58;
 import com.keystone.coinlib.utils.Coins;
 
 import org.bouncycastle.util.Arrays;
+import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONException;
 import org.json.JSONObject;
 

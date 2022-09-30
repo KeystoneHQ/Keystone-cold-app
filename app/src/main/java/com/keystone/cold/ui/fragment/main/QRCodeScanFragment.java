@@ -47,18 +47,23 @@ import com.keystone.cold.scan.bean.ZxingConfigBuilder;
 import com.keystone.cold.scan.camera.CameraManager;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
+import com.keystone.cold.ui.modal.PolkadotErrorDialog;
+import com.keystone.cold.viewmodel.PolkadotViewModel;
 import com.keystone.cold.viewmodel.tx.PolkadotJsTxConfirmViewModel;
 import com.keystone.cold.viewmodel.QrScanViewModel;
 import com.keystone.cold.viewmodel.exceptions.UnknowQrCodeException;
 import com.keystone.cold.viewmodel.WatchWallet;
 import com.keystone.cold.viewmodel.exceptions.XfpNotMatchException;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.main.keystone.TxConfirmFragment.KEY_TX_DATA;
+import static com.keystone.cold.ui.fragment.main.polkadot.PolkadotTxConfirm.KEY_PARSED_TRANSACTION;
 
 public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
         implements SurfaceHolder.Callback, Host {
@@ -201,8 +206,18 @@ public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
 
     private void handleUOS(String res) {
         try {
-            SubstratePayload sp = new SubstratePayload(res);
-            handlePolkadotJsTransaction(res, sp);
+            PolkadotViewModel polkadotViewModel = ViewModelProviders.of(this).get(PolkadotViewModel.class);
+            JSONObject result = polkadotViewModel.parseTransaction(res);
+            String type = result.getString("transaction_type");
+            JSONArray content = result.getJSONArray("content");
+            if (type.equals("Read")) {
+                PolkadotErrorDialog.show(mActivity, getString(R.string.notice), getString(R.string.decline), content, this::rescan);
+            } else {
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_TX_DATA, res);
+                bundle.putString(KEY_PARSED_TRANSACTION, result.toString());
+                navigate(R.id.action_to_polkadotTxConfirm, bundle);
+            }
         } catch (Exception e) {
             handleException(e);
         }
@@ -223,38 +238,23 @@ public class QRCodeScanFragment extends BaseFragment<QrcodeScanFragmentBinding>
             alert(getString(R.string.unresolve_tx),
                     getString(R.string.unresolve_tx_hint,
                             WatchWallet.getWatchWallet(mActivity).getWalletName(mActivity)));
-        } else if (e instanceof JSONException) {
+        } else if (e instanceof JSONException || e instanceof PolkadotViewModel.PolkadotException) {
             alert(getString(R.string.incorrect_qrcode));
         } else if (e instanceof CoinNotFindException) {
-            alert( getString(R.string.unsupported_coin));
+            alert(getString(R.string.unsupported_coin));
         } else if (e instanceof UnknowQrCodeException) {
             alert(getString(R.string.unsupported_qrcode));
-        } else if (e instanceof InvalidAccountException | e instanceof XfpNotMatchException ) {
+        } else if (e instanceof InvalidAccountException | e instanceof XfpNotMatchException) {
             ModalDialog.showCommonModal(mActivity,
                     getString(R.string.account_not_match),
-                    getString(R.string.account_not_match_detail) ,
+                    getString(R.string.account_not_match_detail),
                     getString(R.string.confirm),
                     this::rescan);
         }
     }
 
-    protected void handlePolkadotJsTransaction(String res, SubstratePayload sp) {
-        PolkadotJsTxConfirmViewModel viewModel = ViewModelProviders.of(this)
-                .get(PolkadotJsTxConfirmViewModel.class);
-        Extrinsic extrinsic = sp.extrinsic;
-        if (!viewModel.isNetworkSupported(sp.network)) {
-            alert(getString(R.string.unknown_substrate_chain_title),
-                    getString(R.string.unknown_substrate_chain_content));
-        } else if (extrinsic == null ||
-                !viewModel.isTransactionSupported(extrinsic.palletParameter)) {
-            alert(getString(R.string.unsupported_polka_tx_type_title),
-                    getString(R.string.unsupported_polka_tx_type_content));
-        } else if (!viewModel.isAccountMatch(sp.getAccount())) {
-            alert(getString(R.string.account_not_match),
-                    getString(R.string.account_not_match_detail));
-        } else {
-            handlePolkadotJsTx(res);
-        }
+    protected void handlePolkadotJsTransaction(String res) {
+        handlePolkadotJsTx(res);
     }
 
     private void handlePolkadotJsTx(String res) {

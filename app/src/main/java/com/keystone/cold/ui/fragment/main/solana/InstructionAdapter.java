@@ -56,7 +56,6 @@ class InstructionAdapter extends BaseBindingAdapter<JSONObject, SolInstructionBi
         boolean parseSuccess = true;
 
         String field = isOverview? "overview" : "details";
-        Log.d("sora", "onBindViewHolder: " + instruction.toString());
         try {
             if (instruction.get("readable") instanceof String) {
                 parseSuccess = false;

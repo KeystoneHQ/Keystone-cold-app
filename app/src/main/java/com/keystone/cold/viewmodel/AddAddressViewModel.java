@@ -58,7 +58,7 @@ public class AddAddressViewModel extends AndroidViewModel {
 
     public AddAddressViewModel(@NonNull Application application) {
         super(application);
-        mRepo = ((MainApplication)application).getRepository();
+        mRepo = ((MainApplication) application).getRepository();
     }
 
     public ObservableField<Boolean> getLoading() {
@@ -86,11 +86,11 @@ public class AddAddressViewModel extends AndroidViewModel {
         return addComplete;
     }
 
-    public void addEthAccountAddress(int number, CoinEntity coinEntity, Runnable onComplete){
+    public void addEthAccountAddress(int number, CoinEntity coinEntity, Runnable onComplete) {
         String code = Utilities.getCurrentEthAccount(getApplication());
         ETHAccount account = ETHAccount.ofCode(code);
         AccountEntity accountEntity = mRepo.loadTargetETHAccount(account);
-        if(accountEntity != null) {
+        if (accountEntity != null) {
             addEthAccountAddress(accountEntity, mRepo, number, coinEntity, onComplete);
         }
         AppExecutors.getInstance().mainThread().execute(onComplete);
@@ -117,7 +117,7 @@ public class AddAddressViewModel extends AndroidViewModel {
                         continue;
                     }
                     addressEntities.add(addressEntity);
-                    if(ETHAccount.isStandardChildren(addressEntity.getPath())) {
+                    if (ETHAccount.isStandardChildren(addressEntity.getPath())) {
                         coinEntity.setAddressCount(coinEntity.getAddressCount() + 1);
                     }
                 }
@@ -142,7 +142,7 @@ public class AddAddressViewModel extends AndroidViewModel {
             case LEDGER_LIVE:
                 xPubPath = ETHAccount.LEDGER_LIVE.getPath() + "/" + index + "'";
                 xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
-                address = deriver.derive(xPub, 0 , 0);
+                address = deriver.derive(xPub, 0, 0);
                 if (isSetPath) addressEntity.setPath(xPubPath + "/0/0");
                 break;
             case LEDGER_LEGACY:
@@ -234,7 +234,7 @@ public class AddAddressViewModel extends AndroidViewModel {
         xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
         address = deriver.derive(xPub);
 
-        if (isSetPath){
+        if (isSetPath) {
             addressEntity.setPath(xPubPath);
 
             try {
@@ -248,7 +248,7 @@ public class AddAddressViewModel extends AndroidViewModel {
 
                 //json定义详见 com.keystone.cold.db.entity.AddressEntity addition字段
                 addressEntity.setAddition(addition.toString());
-            } catch (JSONException exception){
+            } catch (JSONException exception) {
                 exception.printStackTrace();
             }
         }
@@ -256,11 +256,11 @@ public class AddAddressViewModel extends AndroidViewModel {
         return address;
     }
 
-    public void addNearAccountAddress(int number, CoinEntity coinEntity, Runnable onComplete){
+    public void addNearAccountAddress(int number, CoinEntity coinEntity, Runnable onComplete) {
         String code = Utilities.getCurrentNearAccount(getApplication());
         NEARAccount account = NEARAccount.ofCode(code);
         AccountEntity accountEntity = mRepo.loadTargetNearAccount(account);
-        if(accountEntity != null) {
+        if (accountEntity != null) {
             addNearAccountAddress(accountEntity, mRepo, number, coinEntity, onComplete);
         } else {
             AppExecutors.getInstance().mainThread().execute(onComplete);
@@ -323,7 +323,7 @@ public class AddAddressViewModel extends AndroidViewModel {
         xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
         address = deriver.derive(xPub);
 
-        if (isSetPath){
+        if (isSetPath) {
             addressEntity.setPath(xPubPath);
 
             try {
@@ -337,7 +337,7 @@ public class AddAddressViewModel extends AndroidViewModel {
 
                 //json定义详见 com.keystone.cold.db.entity.AddressEntity addition字段
                 addressEntity.setAddition(addition.toString());
-            } catch (JSONException exception){
+            } catch (JSONException exception) {
                 exception.printStackTrace();
             }
         }
@@ -345,9 +345,9 @@ public class AddAddressViewModel extends AndroidViewModel {
         return address;
     }
 
-    public void addAptosAddress(int number, CoinEntity coinEntity, Runnable onComplete){
+    public void addAptosAddress(int number, CoinEntity coinEntity, Runnable onComplete) {
         AccountEntity accountEntity = mRepo.loadAccountsForCoin(coinEntity).get(0);
-        if(accountEntity != null) {
+        if (accountEntity != null) {
             addAptosAddress(accountEntity, mRepo, number, coinEntity, onComplete);
         } else {
             AppExecutors.getInstance().mainThread().execute(onComplete);
@@ -388,14 +388,14 @@ public class AddAddressViewModel extends AndroidViewModel {
         });
     }
 
-    public static String deriveAptosAddress(int account, int index,  AddressEntity addressEntity) {
+    public static String deriveAptosAddress(int account, int index, AddressEntity addressEntity) {
         String address = "";
         AbsDeriver deriver = AbsDeriver.newInstance("APTOS");
         if (deriver == null) {
             return address;
         }
         boolean isSetPath = addressEntity != null;
-        String xPubPath = "M/44'/637'/" + account +"'/0'" + "/" + index + "'";
+        String xPubPath = "M/44'/637'/" + account + "'/0'" + "/" + index + "'";
         String xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
         address = deriver.derive(xPub);
         if (isSetPath) {
@@ -407,7 +407,72 @@ public class AddAddressViewModel extends AndroidViewModel {
                 JSONObject addition = new JSONObject();
                 addition.put("addition", innerJson);
                 addressEntity.setAddition(addition.toString());
-            } catch (JSONException exception){
+            } catch (JSONException exception) {
+                exception.printStackTrace();
+            }
+        }
+        return address;
+    }
+
+    public void addPolkadotAddress(int number, CoinEntity coinEntity, Runnable onComplete) {
+        AccountEntity accountEntity = mRepo.loadAccountsForCoin(coinEntity).get(0);
+        if (accountEntity != null) {
+            addPolkadotAddress(accountEntity, mRepo, number, coinEntity, onComplete);
+        } else {
+            AppExecutors.getInstance().mainThread().execute(onComplete);
+        }
+    }
+
+    public static void addPolkadotAddress(AccountEntity accountEntity, DataRepository repository, int number, CoinEntity coinEntity, Runnable onComplete) {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            String rootPath = accountEntity.getHdPath();
+            AbsDeriver deriver = AbsDeriver.newInstance(coinEntity.getCoinCode());
+            if (deriver == null) {
+                Log.e("addPolkadotAddress", "deriver is null");
+            } else {
+                int addressLength = accountEntity.getAddressLength();
+                int targetAddressCount = addressLength + number;
+                List<AddressEntity> entities = new ArrayList<>();
+                for (int account = addressLength; account < targetAddressCount; account++) {
+                    AddressEntity addressEntity = new AddressEntity();
+                    String addr = derivePolkadotAddress(rootPath, account, addressEntity, deriver);
+                    if (repository.loadAddressBypath(addressEntity.getPath()) != null) {
+                        continue;
+                    }
+                    addressEntity.setAddressString(addr);
+                    addressEntity.setCoinId(coinEntity.getCoinId());
+                    // Polkadot family ignores this attribute in actual use;
+                    addressEntity.setIndex(account);
+                    addressEntity.setName( coinEntity.getCoinCode() + "-" + account);
+                    addressEntity.setDisplayName(coinEntity.getCoinCode() + "-" + account);
+                    addressEntity.setBelongTo(coinEntity.getBelongTo());
+                    entities.add(addressEntity);
+                }
+                coinEntity.setAddressCount(targetAddressCount);
+                accountEntity.setAddressLength(targetAddressCount);
+                repository.updateAccount(accountEntity);
+                repository.updateCoin(coinEntity);
+                repository.insertAddress(entities);
+            }
+            AppExecutors.getInstance().mainThread().execute(onComplete);
+        });
+    }
+
+    public static String derivePolkadotAddress(String rootPath, int index, AddressEntity addressEntity, AbsDeriver deriver) {
+        String address;
+        boolean isSetPath = addressEntity != null;
+        String xPubPath = rootPath + "/" + index;
+        String xPub = new GetExtendedPublicKeyCallable(xPubPath).call();
+        address = deriver.derive(xPub);
+        if (isSetPath) {
+            addressEntity.setPath(xPubPath);
+            try {
+                JSONObject innerJson = new JSONObject();
+                innerJson.put("xPub", xPub);
+                JSONObject addition = new JSONObject();
+                addition.put("addition", innerJson);
+                addressEntity.setAddition(addition.toString());
+            } catch (JSONException exception) {
                 exception.printStackTrace();
             }
         }

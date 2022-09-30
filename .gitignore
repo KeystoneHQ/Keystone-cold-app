@@ -77,3 +77,5 @@ keystores
 
 !keystores/test.properties
 !keystores/testKeystore.jks
+
+.env

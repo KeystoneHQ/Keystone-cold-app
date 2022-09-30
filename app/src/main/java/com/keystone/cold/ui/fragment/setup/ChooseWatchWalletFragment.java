@@ -86,15 +86,11 @@ public class ChooseWatchWalletFragment extends ListPreferenceFragment {
         Bundle bundle = new Bundle();
         bundle.putBoolean(Utilities.IS_SWITCH_WATCH_WALLET, true);
         switch (WatchWallet.getWatchWalletById(tempValue)) {
-            case POLKADOT_JS:
-                bundle.putString("coinCode", Coins.DOT.coinCode());
-                navigate(R.id.action_to_manageCoinFragment, bundle);
-                updateCurrentWatchWallet();
-                break;
             case KEYSTONE:
                 navigate(R.id.action_to_manageCoinFragment, bundle);
                 updateCurrentWatchWallet();
                 break;
+            case POLKADOT_JS:
             case METAMASK:
             case XRP_TOOLKIT:
             case SOLANA:

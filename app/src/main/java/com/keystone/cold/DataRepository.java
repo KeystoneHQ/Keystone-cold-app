@@ -130,7 +130,7 @@ public class DataRepository {
     }
 
     public AddressEntity loadAddressBypath(String path) {
-        if (path.equals(DOT.getAccounts()[0]) || path.equals(KSM.getAccounts()[0])) {
+        if (path.startsWith(DOT.getAccounts()[0]) || path.startsWith(KSM.getAccounts()[0])) {
             return mDb.addressDao().loadAddress(path, getBelongTo());
         }
         return mDb.addressDao().loadAddress(path.toUpperCase(), getBelongTo());

@@ -78,9 +78,12 @@ public class Utilities {
     public static final String PREFERENCE_SOL_KEY_SYNCED = "user_click_sol_sync";
     public static final String PREFERENCE_NEAR_KEY_SYNCED = "user_click_near_sync";
     public static final String PREFERENCE_APTOS_KEY_SYNCED = "user_click_aptos_sync";
+    public static final String PREFERENCE_POLKADOT_KEY_SYNCED = "user_click_polkadot_sync";
 
     public static final String SOL_DERIVATION_PATHS = "sol_derivation_paths";
     public static final String NEAR_DERIVATION_PATHS = "near_derivation_paths";
+
+    public static final String POLKADOT_DB_INITIALIZED = "polkadot_db_initialized";
 
 
     public static void alert(AppCompatActivity activity,
@@ -272,6 +275,16 @@ public class Utilities {
         sp.edit().putBoolean(PREFERENCE_APTOS_KEY_SYNCED, true).apply();
     }
 
+    public static boolean hasUserClickPolkadotSyncLock(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        return sp.getBoolean(PREFERENCE_POLKADOT_KEY_SYNCED, false);
+    }
+
+    public static void setUserClickPolkadotSyncLock(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        sp.edit().putBoolean(PREFERENCE_POLKADOT_KEY_SYNCED, true).apply();
+    }
+
     public static String getFingerprintPassword(Context context) {
         return Settings.System.getString(context.getContentResolver(), FINGERPRINT_PASSWORD);
     }
@@ -394,5 +407,15 @@ public class Utilities {
         }else {
             return null;
         }
+    }
+
+    public static void setPolkadotDbInitialized(Context context, boolean flag) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        sp.edit().putBoolean(POLKADOT_DB_INITIALIZED, flag).apply();
+    }
+
+    public static boolean getPolkadotDBInitialized(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        return sp.getBoolean(POLKADOT_DB_INITIALIZED, false);
     }
 }

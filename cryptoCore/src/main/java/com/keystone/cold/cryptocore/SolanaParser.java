@@ -30,7 +30,7 @@ public class SolanaParser {
         int status = parser.getStatus();
         if (status == 200) {
             response = parser.getResponse();
-            Log.d("solana parse reponse:", response);
+            Log.d("solana parse response:", response);
             return response;
         } else {
             String error = parser.getError();
