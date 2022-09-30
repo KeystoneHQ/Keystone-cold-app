@@ -56,7 +56,9 @@ public class AddressSyncAdapter extends BaseBindingAdapter<AddressEntity, Addres
             boolean current = checkedList.get(position);
             resetCheckStatus();
             checkedList.set(position, !current);
-            notifyItemChanged(position);
+            for (int i = 0; i < checkedList.size(); i++) {
+                notifyItemChanged(i);
+            }
         }
         else {
             checkedList.set(position, !checkedList.get(position));
