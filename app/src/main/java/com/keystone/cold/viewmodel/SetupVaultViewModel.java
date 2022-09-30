@@ -40,6 +40,7 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.BuildConfig;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
+import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.callables.GetRandomEntropyCallable;
@@ -113,13 +114,23 @@ public class SetupVaultViewModel extends AndroidViewModel {
 
     public void calcAuthCode(String data) {
         AppExecutors.getInstance().diskIO().execute(() -> {
-            Bundle bundle = getApplication().getContentResolver().call(
-                    Uri.parse("content://settings"), "web_auth_priv_key", null, null);
-            String rsaPrivKey = bundle == null ? "null" : bundle.getString("key");
-            String authCode = new WebAuthCallableUpgrade(Base64.decode(data),
-                    rsaPrivKey,
-                    Hex.decode(BuildConfig.WEB_AUTH_R1_PUBLIC_KEY)).call();
-            webAuthCode.postValue(format(authCode));
+            byte[] authData = null;
+            try{
+               authData = Base64.decode(data);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (authData == null) {
+                webAuthCode.postValue(getApplication().getString(R.string.web_auth_scan_fail));
+            } else {
+                Bundle bundle = getApplication().getContentResolver().call(
+                        Uri.parse("content://settings"), "web_auth_priv_key", null, null);
+                String rsaPrivKey = bundle == null ? "null" : bundle.getString("key");
+                String authCode = new WebAuthCallableUpgrade(authData,
+                        rsaPrivKey,
+                        Hex.decode(BuildConfig.WEB_AUTH_R1_PUBLIC_KEY)).call();
+                webAuthCode.postValue(format(authCode));
+            }
         });
     }
 
