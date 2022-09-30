@@ -28,11 +28,10 @@
             type="com.keystone.cold.viewmodel.SetupVaultViewModel" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:gravity="center_horizontal">
 
         <com.keystone.cold.ui.views.NewStepView
             android:id="@+id/step"
@@ -40,27 +39,34 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             app:step="4" />
-
-        <fragment
-            android:id="@+id/choose_watch_wallet"
-            android:name="com.keystone.cold.ui.fragment.setup.ChooseWatchWalletFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            />
-        <Space
+        <ScrollView
+            android:id="@+id/svContainer"
+            android:layout_above="@id/complete"
+            android:layout_below="@id/step"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                <fragment
+                    android:id="@+id/choose_watch_wallet"
+                    android:name="com.keystone.cold.ui.fragment.setup.ChooseWatchWalletFragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    />
+            </LinearLayout>
+        </ScrollView>
 
         <Button
+            android:layout_alignParentBottom="true"
             android:id="@+id/complete"
             style="@style/AcceptButton"
             android:layout_width="match_parent"
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="16dp"
             android:text="@string/confirm" />
-
-
-    </LinearLayout>
+    </RelativeLayout>
 </layout>

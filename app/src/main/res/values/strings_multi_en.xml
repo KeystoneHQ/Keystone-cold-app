@@ -716,6 +716,7 @@
     <string name="tron_receive_info">TRC or TRC-20 tokens</string>
     <string name="aptos_receive_info">APT or Aptos tokens</string>
     <string name="get_address_fail_info">Failed to get address.</string>
+    <string name="web_auth_scan_fail">Scan Failed, Please ensure you have selected the right QR code to be scanned.</string>
 
 
 </resources>
