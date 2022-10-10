@@ -18,13 +18,17 @@
 package com.keystone.cold.ui.fragment.main;
 
 import android.content.Context;
-import android.util.Log;
+import android.graphics.Color;
+import android.view.Gravity;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.allenliu.badgeview.BadgeFactory;
+import com.allenliu.badgeview.BadgeView;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.AssetItemBinding;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.viewmodel.CoinModel;
@@ -52,6 +56,9 @@ public class CoinAdapter extends FilterableBaseBindingAdapter<CoinEntity, AssetI
         if (WatchWallet.getWatchWallet(context) != WatchWallet.POLKADOT_JS) {
             binding.setIsManage(isManageCoin);
         }
+        if (WatchWallet.getWatchWallet(context).equals(WatchWallet.POLKADOT_JS) && !isManageCoin && !Utilities.hasUserClickPolkadotSyncLock(context) ) {
+            generateBadgeView(binding.addr);
+        }
         binding.setCallback(mCoinClickCallback);
         binding.setCoin(item.toCoinModel());
         CoinModel coinModel = item.toCoinModel();
@@ -61,4 +68,13 @@ public class CoinAdapter extends FilterableBaseBindingAdapter<CoinEntity, AssetI
         }
     }
 
+    private void generateBadgeView(View anchor) {
+        BadgeFactory.create(anchor.getContext())
+                .setWidthAndHeight(10, 10)
+                .setBadgeBackground(Color.RED)
+                .setBadgeGravity(Gravity.END | Gravity.TOP)
+                .setShape(BadgeView.SHAPE_CIRCLE)
+                .setSpace(10, 0)
+                .bind(anchor);
+    }
 }

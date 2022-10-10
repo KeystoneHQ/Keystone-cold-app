@@ -756,6 +756,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             case APTOS:
                 Utilities.setUserClickAptosSyncLock(mActivity);
                 break;
+            case POLKADOT_JS:
+                Utilities.setUserClickPolkadotSyncLock(mActivity);
+                break;
             default:
                 break;
         }
