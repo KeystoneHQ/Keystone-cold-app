@@ -30,14 +30,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.CommonModalBinding;
 import com.keystone.cold.databinding.PolkadotErrorModalBinding;
 import com.keystone.cold.databinding.TwoButtonModalBinding;
+import com.keystone.cold.ui.fragment.main.polkadot.PolkadotTxDetailViewNew;
+import com.keystone.cold.viewmodel.PolkadotViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class PolkadotErrorDialog extends DialogFragment {
@@ -76,21 +80,34 @@ public class PolkadotErrorDialog extends DialogFragment {
     }
 
     public static PolkadotErrorDialog show(AppCompatActivity activity,
-                                                      String title,
-                                                      String buttonText,
-                                                      JSONArray content,
-                                                      Runnable confirmAction) {
+                                           String title,
+                                           String buttonText,
+                                           JSONArray content,
+                                           Runnable confirmAction) {
         PolkadotErrorDialog dialog = new PolkadotErrorDialog();
         PolkadotErrorModalBinding binding = DataBindingUtil.inflate(LayoutInflater.from(activity),
                 R.layout.polkadot_error_modal, null, false);
         binding.title.setText(title);
         binding.close.setVisibility(View.GONE);
         binding.confirm.setText(buttonText);
+
+        boolean isDBFailed = isDBCorrupted(content);
+        if (isDBFailed) {
+            binding.subTitle.setVisibility(View.VISIBLE);
+            binding.subTitle.setText(R.string.polkadot_db_hint);
+            binding.confirm.setText(R.string.reset_polkadot_db);
+            binding.txContainer.setVisibility(View.GONE);
+        }
+
         binding.confirm.setOnClickListener(v -> {
             if (confirmAction != null) {
                 confirmAction.run();
             }
             dialog.dismiss();
+            if(isDBFailed) {
+                PolkadotViewModel viewModel = ViewModelProviders.of(activity).get(PolkadotViewModel.class);
+                viewModel.resetDB();
+            }
         });
 
         binding.dotTx.contentContainer.setBackgroundResource(R.drawable.modal_bg);
@@ -107,6 +124,24 @@ public class PolkadotErrorDialog extends DialogFragment {
         dialog.setBinding(binding);
         dialog.show(activity.getSupportFragmentManager(), "");
         return dialog;
+    }
+
+    private static boolean isDBCorrupted(JSONArray content) {
+        try {
+            int length = content.length();
+            for (int i = 0; i < length; i++) {
+                JSONObject object = content.getJSONObject(i);
+                JSONObject card = object.getJSONObject("card");
+                Object value = card.get("value");
+                if (value instanceof String && ((String) value).contains("Database error")) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override

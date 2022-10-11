@@ -17,6 +17,7 @@
 
 package com.keystone.cold.ui.fragment.main.keystone;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.keystone.cold.databinding.BroadcastTxFragmentBinding;
 import com.keystone.cold.model.Tx;
 import com.keystone.cold.protocol.builder.SignTxResultBuilder;
 import com.keystone.cold.ui.BindingAdapters;
+import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
@@ -44,7 +46,10 @@ public class BroadcastTxFragment extends BaseFragment<BroadcastTxFragmentBinding
 
     protected Tx txEntity;
 
-    protected final View.OnClickListener goHome = v -> navigate(R.id.action_to_home);
+    protected final View.OnClickListener goHome = v -> {
+        startActivity(new Intent(mActivity, MainActivity.class));
+        mActivity.finish();
+    };
 
     @Override
     protected int setView() {

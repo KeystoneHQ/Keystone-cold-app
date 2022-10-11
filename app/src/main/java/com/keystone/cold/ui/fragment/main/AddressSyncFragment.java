@@ -33,7 +33,7 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
 
     private final AddressSyncCallback addressSyncCallback = (addr, position) -> {
         addressSyncAdapter.toggleChecked(position);
-        if (watchWallet == WatchWallet.NEAR) {
+        if (watchWallet == WatchWallet.NEAR || watchWallet.equals(WatchWallet.POLKADOT_JS)) {
             stepIntoSync();
             addressSyncAdapter.resetCheckStatus();
         } else {
@@ -68,7 +68,7 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
         mBinding.tvConfirm.setOnClickListener(v -> {
             stepIntoSync();
         });
-        if (watchWallet == WatchWallet.NEAR) {
+        if (watchWallet == WatchWallet.NEAR || watchWallet.equals(WatchWallet.POLKADOT_JS)) {
             mBinding.tvConfirm.setVisibility(View.GONE);
         }
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());

@@ -95,11 +95,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
         mBinding.toolbar.setTitle("");
         mBinding.complete.setOnClickListener(v -> {
             if (mActivity instanceof MainActivity) {
-                if (watchWallet == WatchWallet.POLKADOT_JS && coinCode.equals(Coins.DOT.coinCode())) {
-                    Bundle bundle = getArguments();
-                    bundle.putString("coinCode", Coins.KSM.coinCode());
-                    navigate(R.id.action_to_syncWatchWalletGuide, bundle);
-                } else if (watchWallet == WatchWallet.METAMASK) {
+                if (watchWallet == WatchWallet.METAMASK) {
                     Utilities.setWeb3GuideTimes(mActivity, Utilities.getWeb3GuideTimes(mActivity) + 1);
                     startActivity(new Intent(mActivity, MainActivity.class));
                     mActivity.finish();
@@ -150,6 +146,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 } else if (coinCode.equals(Coins.KSM.coinCode())) {
                     mBinding.chain.setText(Coins.KSM.coinName());
                 }
+                mBinding.complete.setVisibility(View.VISIBLE);
                 break;
             case XRP_TOOLKIT:
                 mBinding.hint.setText(R.string.sync_with_xrp_toolkit);
