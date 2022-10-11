@@ -54,9 +54,10 @@
 
             <ScrollView
                 android:id="@+id/tx_container"
-                android:layout_below="@id/title"
                 android:layout_width="match_parent"
-                android:layout_height="300dp">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title">
+
                 <include
                     android:id="@+id/dot_tx"
                     layout="@layout/polkadot_tx_detail_new"
@@ -64,13 +65,25 @@
                     android:layout_height="wrap_content" />
             </ScrollView>
 
-
+            <com.keystone.cold.ui.views.SpanedTextView
+                android:id="@+id/sub_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tx_container"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="12dp"
+                android:gravity="center_horizontal"
+                android:lineSpacingExtra="6dp"
+                android:maxLines="15"
+                android:textSize="14sp"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/confirm"
                 style="@style/AcceptButton"
                 android:layout_width="match_parent"
-                android:layout_below="@id/tx_container"
+                android:layout_below="@id/sub_title"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp" />

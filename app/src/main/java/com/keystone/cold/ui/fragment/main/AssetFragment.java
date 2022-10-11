@@ -85,6 +85,7 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerState;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerViewModel;
 import com.keystone.cold.ui.fragment.main.scan.scanner.exceptions.UnExpectedQRException;
+import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
 import com.keystone.cold.util.SolMessageValidateUtil;
 import com.keystone.cold.util.SyncAddressUtil;
@@ -192,12 +193,12 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 //            mBinding.button.setVisibility(View.VISIBLE);
 //            mBinding.button.setOnClickListener(v -> syncPolkadot());
 //        } else {
-            mBinding.toolbar.inflateMenu(getMenuResId());
-            mBinding.button.setVisibility(View.GONE);
-            MenuItem menuItem = mBinding.toolbar.getMenu().findItem(R.id.action_more);
-            if (judgeShowBadge()) {
-                showBadge(menuItem);
-            }
+        mBinding.toolbar.inflateMenu(getMenuResId());
+        mBinding.button.setVisibility(View.GONE);
+        MenuItem menuItem = mBinding.toolbar.getMenu().findItem(R.id.action_more);
+        if (judgeShowBadge()) {
+            showBadge(menuItem);
+        }
 //        }
         mBinding.toolbar.setOnMenuItemClickListener(this);
         mBinding.toolbar.setNavigationOnClickListener(v -> {
@@ -694,6 +695,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         addClickSyncProcess(binding.sync, binding.syncText, closeDialog);
         addCLickChangePathProcess(binding.changePath, closeDialog);
         addClickTutorialsProcess(binding.tutorials, closeDialog);
+        addClickResetDBProcess(binding.resetDb, closeDialog);
         dialog.setContentView(binding.getRoot());
         dialog.show();
     }
@@ -703,6 +705,20 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             navigate(R.id.action_to_tutorialsFragment);
             additionProcess.run();
         });
+    }
+
+    private void addClickResetDBProcess(View view, Runnable additionProcess) {
+        if (!WatchWallet.getWatchWallet(getContext()).equals(WatchWallet.POLKADOT_JS)) {
+            view.setVisibility(View.GONE);
+        } else {
+            view.setOnClickListener(v -> {
+                ModalDialog.showCommonModal(mActivity, getString(R.string.warning), getString(R.string.reset_polkadot_db_hint), getString(R.string.confirm), () -> {
+                    PolkadotViewModel viewModel = ViewModelProviders.of(mActivity).get(PolkadotViewModel.class);
+                    viewModel.resetDB();
+                    additionProcess.run();
+                });
+            });
+        }
     }
 
     private void addCLickChangePathProcess(View view, Runnable additionProcess) {

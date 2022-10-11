@@ -41,6 +41,7 @@ public class PolkadotViewModel extends AndroidViewModel {
 
     private void copySingleAsset(String path) throws IOException {
         File file = new File(dbPath, path);
+        Log.d("sora", "copySingleAsset: copy to" + file.getPath());
         file.createNewFile();
         InputStream input = context.getAssets().open(Paths.get("polkadot", "database", path).toString());
         FileOutputStream out = new FileOutputStream(file);
@@ -52,6 +53,23 @@ public class PolkadotViewModel extends AndroidViewModel {
         }
         out.close();
         input.close();
+    }
+
+    private void recursivelyRemove(File file) {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File file1 : files) {
+                    recursivelyRemove(file1);
+                }
+            }
+        }
+        file.delete();
+    }
+
+    private void cleanDB() {
+        File file = new File(context.getFilesDir().getPath() + "/polkadot");
+        recursivelyRemove(file);
     }
 
     private boolean copyAssets(String path) {
@@ -78,10 +96,17 @@ public class PolkadotViewModel extends AndroidViewModel {
         if (Utilities.getPolkadotDBInitialized(context)) {
             return;
         }
-        if (!this.copyAssets("")) {
+        if (!this.resetDB()) {
             throw new PolkadotException("Initialize Polkadot DB failed");
         }
-        String[] list = new File(dbPath).list();
+    }
+
+    public boolean resetDB() {
+        cleanDB();
+        Utilities.setPolkadotDbInitialized(context, false);
+        if (!this.copyAssets("")) {
+            return false;
+        }
         String response = PolkadotService.initialDB(dbPath);
         try {
             JSONObject json = new JSONObject(response);
@@ -91,10 +116,11 @@ public class PolkadotViewModel extends AndroidViewModel {
                 String reason = json.getString("reason");
                 throw new PolkadotException(reason);
             }
-        } catch (JSONException e) {
+        } catch (JSONException | PolkadotException e) {
             e.printStackTrace();
-            throw new PolkadotException("Invalid Response");
+            return false;
         }
+        return true;
     }
 
     public JSONObject parseTransaction(String transactionHex) throws PolkadotException {

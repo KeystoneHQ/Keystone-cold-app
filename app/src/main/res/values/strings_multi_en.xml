@@ -71,6 +71,8 @@
     <string name="import_nft_hint">*Please check your lock screen after confirm the import</string>
     <string name="import_nft_error">Invalid NFT data</string>
 
+    <string name="warning">Warning</string>
+
     <string-array name="language_entries" translatable="false">
         <item>English</item>
         <item>Español</item>
@@ -453,8 +455,11 @@
     <string name="abnormal_state_hint">It is recommended that you wipe the device and then reset it.Repeated retries failed, you can contact us：support@keyst.one\n  Status Code:%s</string>
     <string name="abnormal_state_title">Abnormal State</string>
     <string name="decline">Decline</string>
+    <string name="reset_polkadot_db">Reset Database</string>
+    <string name="reset_polkadot_db_hint">This action will reset database for Polkadot.{js} / Sub Wallet / Nova Wallet, you have to import metadata again after this. </string>
     <string name="approve">Approve</string>
     <string name="polkadot_hint">Hint: \n\nYou need to select the network to get your keys and connect software wallet separately on chains</string>
+    <string name="polkadot_db_hint">Hint: \n\nWe meet a problem with database. Please click the button below to reset. This action will erase your metadata, please import the metadata again if you need it.</string>
 
     <string-array name="watch_wallet_list">
         <item>Keystone Companion App</item>

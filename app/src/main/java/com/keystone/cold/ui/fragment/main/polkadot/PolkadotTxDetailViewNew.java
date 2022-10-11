@@ -126,8 +126,10 @@ public class PolkadotTxDetailViewNew extends ScrollView {
         binding.key.setText(card.getTitle());
         binding.value.setText(card.getValue());
         if(inError){
+            binding.key.setVisibility(GONE);
             binding.key.setTextColor(R.color.black);
             binding.value.setTextColor(R.color.black);
+            binding.value.setTextAlignment(TEXT_ALIGNMENT_CENTER);
         }
         mBinding.container.addView(binding.getRoot());
     }
