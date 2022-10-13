@@ -40,7 +40,6 @@ import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.SetupVaultActivity;
 import com.keystone.cold.ui.common.BaseBindingAdapter;
 import com.keystone.cold.ui.fragment.setting.ListPreferenceFragment;
-import com.keystone.cold.util.ArrayUtils;
 import com.keystone.cold.viewmodel.WatchWallet;
 
 import java.util.ArrayList;
@@ -70,11 +69,6 @@ public class ChooseWatchWalletFragment extends ListPreferenceFragment {
         entries = getResources().getStringArray(getEntries());
         values = getResources().getStringArray(getValues());
         subTitles = getResources().getStringArray(R.array.watch_wallet_summury);
-
-        entries = ArrayUtils.remove(CharSequence.class, entries, 4);
-        values = ArrayUtils.remove(CharSequence.class, values, 4);
-        subTitles = ArrayUtils.remove(CharSequence.class, subTitles, 4);
-
         value = prefs.getString(getKey(), defaultValue());
         tempValue = value;
         adapter = new Adapter(mActivity);
