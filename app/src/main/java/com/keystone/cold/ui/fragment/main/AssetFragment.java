@@ -869,27 +869,26 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private void addClickAccountProcess(View view, Runnable additionProcess) {
-        if (isNearMnemonic()) {
+        if (hideAddAddress()) {
             view.setVisibility(View.GONE);
         }
         view.setOnClickListener(v -> {
-            if (canNotAddAddress()) {
-                Toast.makeText(mActivity, "Current pattern can't add accounts", Toast.LENGTH_SHORT).show();
-            } else {
-                handleAddAddress();
-            }
+            handleAddAddress();
             additionProcess.run();
         });
     }
 
-    private boolean canNotAddAddress() {
-        boolean cannot = false;
+
+    private boolean hideAddAddress() {
+        boolean hide = false;
         if (watchWallet == WatchWallet.SOLANA && SOLAccount.ofCode(Utilities.getCurrentSolAccount(mActivity)) == SOLAccount.SOLFLARE_BIP44_ROOT) {
-            cannot = true;
+            hide = true;
         } else if (watchWallet == WatchWallet.NEAR && NEARAccount.ofCode(Utilities.getCurrentNearAccount(mActivity)) == NEARAccount.MNEMONIC) {
-            cannot = true;
+            hide = true;
+        } else if (watchWallet == WatchWallet.APTOS) {
+            hide = true;
         }
-        return cannot;
+        return hide;
     }
 
     private void enterSearch() {
