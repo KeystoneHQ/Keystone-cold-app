@@ -56,8 +56,14 @@ public class CoinAdapter extends FilterableBaseBindingAdapter<CoinEntity, AssetI
         if (WatchWallet.getWatchWallet(context) != WatchWallet.POLKADOT_JS) {
             binding.setIsManage(isManageCoin);
         }
-        if (WatchWallet.getWatchWallet(context).equals(WatchWallet.POLKADOT_JS) && !isManageCoin && !Utilities.hasUserClickPolkadotSyncLock(context) ) {
-            generateBadgeView(binding.addr);
+        if (WatchWallet.getWatchWallet(context).equals(WatchWallet.POLKADOT_JS) && !isManageCoin
+        ) {
+            if(item.getCoinCode().equals(Coins.DOT.coinCode()) && !Utilities.hasUserClickPolkadotSyncLock(context)) {
+                generateBadgeView(binding.addr);
+            }
+            else if (item.getCoinCode().equals(Coins.KSM.coinCode()) && !Utilities.hasUserClickKusamaSyncLock(context)){
+                generateBadgeView(binding.addr);
+            }
         }
         binding.setCallback(mCoinClickCallback);
         binding.setCoin(item.toCoinModel());

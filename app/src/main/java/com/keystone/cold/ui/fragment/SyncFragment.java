@@ -138,20 +138,11 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
             case KEYSTONE:
                 mBinding.hint.setText(R.string.sync_with_keystone_vault);
                 break;
-            case POLKADOT_JS:
-                mBinding.hint.setText(R.string.sync_with_polkadot_js);
-                mBinding.chain.setVisibility(View.VISIBLE);
-                if (coinCode.equals(Coins.DOT.coinCode())) {
-                    mBinding.chain.setText(Coins.DOT.coinName());
-                } else if (coinCode.equals(Coins.KSM.coinCode())) {
-                    mBinding.chain.setText(Coins.KSM.coinName());
-                }
-                mBinding.complete.setVisibility(View.VISIBLE);
-                break;
             case XRP_TOOLKIT:
                 mBinding.hint.setText(R.string.sync_with_xrp_toolkit);
                 mBinding.address.setVisibility(View.VISIBLE);
                 break;
+            case POLKADOT_JS:
             case METAMASK:
             case SOLANA:
             case NEAR:
@@ -203,8 +194,14 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 });
                 break;
             case POLKADOT_JS:
-                syncViewModel.generateSyncPolkadotjs(syncInfoList.get(0)).observe(this, s -> {
+                SyncInfo info = syncInfoList.get(0);
+                syncViewModel.generateSyncPolkadotjs(info).observe(this, s -> {
                     if (!TextUtils.isEmpty(s)) {
+                        mBinding.derivationPattern.setVisibility(View.VISIBLE);
+                        mBinding.addressData.setVisibility(View.GONE);
+                        mBinding.chain.setVisibility(View.VISIBLE);
+                        mBinding.chain.setText(info.getName());
+                        mBinding.fromPath.setText("Derivation Path:  " + info.getPath());
                         mBinding.dynamicQrcodeLayout.qrcode.disableMultipart();
                         mBinding.dynamicQrcodeLayout.qrcode.setData(s);
                     }
