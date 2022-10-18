@@ -45,8 +45,8 @@ public class CoinImpl implements Coin {
     private static final String FUNCTION_SIGN = "sign";
 
     private final String coinCode;
-    private final V8 v8;
-    private final V8Object coin;
+    protected final V8 v8;
+    protected final V8Object coin;
     private V8Function signTxFunction;
     private V8Function signMessageFunction;
     private V8Function generateAddressFunction;
@@ -148,7 +148,7 @@ public class CoinImpl implements Coin {
         return (String) signMessageFunction.call(coin, params);
     }
 
-    private V8Object createSignerProvider(Signer signer) {
+    protected V8Object createSignerProvider(Signer signer) {
         V8Object signProvider = new V8Object(v8);
         v8.registerResource(signProvider);
         V8Function sign = new V8Function(v8, new SignProviderCallback(signer));
