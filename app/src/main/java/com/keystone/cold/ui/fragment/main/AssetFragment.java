@@ -750,7 +750,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             isShowBadge = true;
         } else if (watchWallet == WatchWallet.NEAR && !Utilities.hasUserClickNearSyncLock(mActivity)) {
             isShowBadge = true;
-        } else if (watchWallet == WatchWallet.POLKADOT_JS && !Utilities.hasUserClickPolkadotSyncLock(mActivity)) {
+        } else if (watchWallet == WatchWallet.POLKADOT_JS && coinCode.equals(Coins.DOT.coinCode()) && !Utilities.hasUserClickPolkadotSyncLock(mActivity)) {
+            isShowBadge = true;
+        } else if (watchWallet == WatchWallet.POLKADOT_JS && coinCode.equals(Coins.KSM.coinCode()) && !Utilities.hasUserClickKusamaSyncLock(mActivity)) {
             isShowBadge = true;
         } else if (watchWallet == WatchWallet.APTOS && !Utilities.hasUserClickAptosSyncLock(mActivity)) {
             isShowBadge = true;
@@ -773,7 +775,11 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 Utilities.setUserClickAptosSyncLock(mActivity);
                 break;
             case POLKADOT_JS:
-                Utilities.setUserClickPolkadotSyncLock(mActivity);
+                if(coinCode.equals(Coins.DOT.coinCode())) {
+                    Utilities.setUserClickPolkadotSyncLock(mActivity);
+                } else {
+                    Utilities.setUserClickKusamaSyncLock(mActivity);
+                }
                 break;
             default:
                 break;
