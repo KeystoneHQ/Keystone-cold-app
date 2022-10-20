@@ -64,7 +64,7 @@ public class URRegistryHelper {
     public static CryptoMultiAccounts generateCryptoMultiAccounts(List<SyncInfo> syncInfoList) {
         List<CryptoHDKey> cryptoHDKeyList = new ArrayList<>();
         byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
-        for (SyncInfo syncInfo: syncInfoList) {
+        for (SyncInfo syncInfo : syncInfoList) {
             CryptoHDKey cryptoHDKey = generateRawKey(syncInfo, masterFingerprint);
             cryptoHDKeyList.add(cryptoHDKey);
         }
@@ -102,5 +102,15 @@ public class URRegistryHelper {
             cryptoOutputs.add(cryptoOutput);
         }
         return new CryptoAccount(masterFingerprint, cryptoOutputs);
+    }
+
+    public static List<CryptoHDKey> generateCryptoHDKeysForLedgerLive(List<Integer> indexes) {
+        List<CryptoHDKey> cryptoHDKeys = new ArrayList<>();
+        for (Integer a :
+                indexes) {
+            CryptoHDKey cryptoHDKey = generateRawKeyForLedgerLive(ETHAccount.LEDGER_LIVE.getPath() + "/" + a + "'" + "/0/0", "account.ledger_live");
+            cryptoHDKeys.add(cryptoHDKey);
+        }
+        return cryptoHDKeys;
     }
 }
