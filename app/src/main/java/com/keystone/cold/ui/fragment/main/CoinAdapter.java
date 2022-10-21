@@ -32,6 +32,7 @@ import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.AssetItemBinding;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.viewmodel.CoinModel;
+import com.keystone.cold.model.ui.AssetItem;
 import com.keystone.cold.ui.common.FilterableBaseBindingAdapter;
 import com.keystone.cold.viewmodel.WatchWallet;
 
@@ -39,9 +40,11 @@ public class CoinAdapter extends FilterableBaseBindingAdapter<CoinEntity, AssetI
 
     private final CoinClickCallback mCoinClickCallback;
     private final boolean isManageCoin;
+    private final Context context;
 
     public CoinAdapter(Context context, @Nullable CoinClickCallback clickCallback, boolean isManageCoin) {
         super(context);
+        this.context = context;
         mCoinClickCallback = clickCallback;
         this.isManageCoin = isManageCoin;
     }
@@ -58,16 +61,16 @@ public class CoinAdapter extends FilterableBaseBindingAdapter<CoinEntity, AssetI
         }
         if (WatchWallet.getWatchWallet(context).equals(WatchWallet.POLKADOT_JS) && !isManageCoin
         ) {
-            if(item.getCoinCode().equals(Coins.DOT.coinCode()) && !Utilities.hasUserClickPolkadotSyncLock(context)) {
+            if (item.getCoinCode().equals(Coins.DOT.coinCode()) && !Utilities.hasUserClickPolkadotSyncLock(context)) {
                 generateBadgeView(binding.addr);
-            }
-            else if (item.getCoinCode().equals(Coins.KSM.coinCode()) && !Utilities.hasUserClickKusamaSyncLock(context)){
+            } else if (item.getCoinCode().equals(Coins.KSM.coinCode()) && !Utilities.hasUserClickKusamaSyncLock(context)) {
                 generateBadgeView(binding.addr);
             }
         }
         binding.setCallback(mCoinClickCallback);
-        binding.setCoin(item.toCoinModel());
         CoinModel coinModel = item.toCoinModel();
+        binding.setCoin(coinModel);
+        binding.setAsset(adaptCoinModelToAssetItem(coinModel));
         if (isManageCoin || Coins.showPublicKey(item.getCoinCode())) {
             binding.addrNum.setVisibility(View.GONE);
             binding.addr.setVisibility(View.GONE);
@@ -82,5 +85,25 @@ public class CoinAdapter extends FilterableBaseBindingAdapter<CoinEntity, AssetI
                 .setShape(BadgeView.SHAPE_CIRCLE)
                 .setSpace(10, 0)
                 .bind(anchor);
+    }
+
+    private AssetItem adaptCoinModelToAssetItem(CoinModel coinModel) {
+        if (WatchWallet.getWatchWallet(context).equals(WatchWallet.CORE_WALLET)) {
+            if (coinModel.getCoinCode().equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) {
+                return new AssetItem(Coins.BTC_NATIVE_SEGWIT.coinName(), coinModel.getCoinCode(), coinModel.getCoinCode(), "", false);
+            } else {
+                // ETH, but we treat as AVAX here;
+                return new AssetItem(Coins.AVAX.coinName(),
+                        Coins.AVAX.coinCode(),
+                        Coins.AVAX.coinCode(),
+                        "",
+                        false);
+            }
+        }
+        return new AssetItem(coinModel.getCoinCode(),
+                coinModel.getDisplayName(),
+                coinModel.getCoinCode(),
+                coinModel.getTag(),
+                coinModel.hasTag());
     }
 }

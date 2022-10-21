@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2021 Keystone
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -27,6 +26,10 @@
             type="com.keystone.cold.db.viewmodel.CoinModel" />
 
         <variable
+            name="asset"
+            type="com.keystone.cold.model.ui.AssetItem" />
+
+        <variable
             name="callback"
             type="com.keystone.cold.ui.fragment.main.CoinClickCallback" />
 
@@ -38,8 +41,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:onClick="@{()->callback.onClick(coin)}"
         android:background="?attr/selectableItemBackground"
+        android:onClick="@{()->callback.onClick(coin)}"
         android:orientation="horizontal">
 
         <ImageView
@@ -49,56 +52,57 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="14dp"
-            app:icon="@{coin.coinCode}"
-            tools:src="@drawable/coin_btc"
-            tools:ignore="ContentDescription" />
+            app:icon="@{asset.coinCode}"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/coin_btc" />
 
 
         <LinearLayout
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/icon"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
+
                 <TextView
                     android:id="@+id/coinCode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{coin.displayName}"
+                    android:text="@{asset.title}"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     tools:text="BTC" />
 
                 <TextView
-                    android:layout_marginStart="12dp"
-                    visibleGone="@{coin.hasTag()}"
                     android:id="@+id/tag"
+                    visibleGone="@{asset.hasTag}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{coin.tag}"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/round_color_text_bg"
+                    android:text="@{asset.tag}"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:background="@drawable/round_color_text_bg"
                     tools:text="Native Segwit" />
             </LinearLayout>
 
 
             <TextView
                 android:id="@+id/coinName"
+                visibleGone="@{isManage}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                tools:text="Bitcoin"
-                android:textSize="12sp"
+                android:text="@{asset.subTitle}"
                 android:textColor="@color/white40"
-                visibleGone="@{isManage}"
-                android:text="@{coin.name}" />
+                android:textSize="12sp"
+                tools:text="Bitcoin" />
 
         </LinearLayout>
 

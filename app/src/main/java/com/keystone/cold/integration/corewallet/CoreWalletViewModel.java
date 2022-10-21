@@ -1,6 +1,7 @@
 package com.keystone.cold.integration.corewallet;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -27,16 +28,12 @@ import java.util.List;
 public class CoreWalletViewModel extends AndroidViewModel {
     private final String BTCNativeSegwitPath = "M/84'/0'/0'";
 
-    private final MutableLiveData<ETHAccount> ethAccountMutableLiveData;
-
     public CoreWalletViewModel(@NonNull Application application) {
         super(application);
-        ethAccountMutableLiveData = new MutableLiveData<>();
-        ethAccountMutableLiveData.postValue(ETHAccount.ofCode(Utilities.getCurrentEthAccount(application)));
     }
 
     public MutableLiveData<UR> GenerateSyncData() {
-        ETHAccount account =  ethAccountMutableLiveData.getValue();
+        ETHAccount account = ETHAccount.ofCode(Utilities.getCurrentEthAccount(getApplication()));
         MutableLiveData<UR> data = new MutableLiveData<>();
         AppExecutors.getInstance().networkIO().execute(() -> {
             UR ur = generateCryptoMultiAccounts(account).toUR();

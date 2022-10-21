@@ -33,6 +33,7 @@ import com.keystone.cold.scan.QREncoding;
 public enum WatchWallet {
     KEYSTONE("keystone"),
     POLKADOT_JS("polkadotJs"),
+    CORE_WALLET("coreWallet"),
     XRP_TOOLKIT("xrpToolkit"),
     METAMASK("metamask"),
     SOLANA("solana"),
@@ -46,6 +47,7 @@ public enum WatchWallet {
     public static final String SOLANA_SIGN_ID = "solana_sign_id";
     public static final String NEAR_SIGN_ID = "near_sign_id";
     public static final String APTOS_SIGN_ID = "aptos_sign_id";
+    public static final String CORE_WALLET_SIGN_ID = "core_wallet_sign_id";
 
     private final String walletId;
 
@@ -111,6 +113,8 @@ public enum WatchWallet {
                 return new Coins.Coin[]{Coins.SOL};
             case NEAR:
                 return new Coins.Coin[]{Coins.NEAR};
+            case CORE_WALLET:
+                return new Coins.Coin[]{Coins.BTC_NATIVE_SEGWIT, Coins.ETH};
             case APTOS:
                 return new Coins.Coin[]{Coins.APTOS};
         }
@@ -141,6 +145,8 @@ public enum WatchWallet {
                 return NEAR_SIGN_ID;
             case APTOS:
                 return APTOS_SIGN_ID;
+            case CORE_WALLET:
+                return CORE_WALLET_SIGN_ID;
         }
         return null;
     }

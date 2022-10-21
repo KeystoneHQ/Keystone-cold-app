@@ -25,7 +25,8 @@ public enum Network {
     Rinkeby(4),
     Goerli(5),
     Kovan(42),
-    Ethereum_Classic(61);
+    Ethereum_Classic(61),
+    Avalanche_C_Chain(43114);
 
     private final int chainId;
 

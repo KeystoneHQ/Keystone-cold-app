@@ -27,6 +27,14 @@
         android:label="AssetListFragment"
         tools:layout="@layout/asset_list_fragment">
         <action
+            android:id="@+id/action_assetListFragment_to_changeDerivePathFragment"
+            app:destination="@id/changeDerivePathFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
+            />
+        <action
             android:id="@+id/action_to_scan"
             app:destination="@id/QRCodeScanFragment"
             app:enterAnim="@anim/slide_in_right"
