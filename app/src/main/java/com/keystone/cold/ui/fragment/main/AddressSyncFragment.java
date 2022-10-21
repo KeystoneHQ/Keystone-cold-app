@@ -88,11 +88,12 @@ public class AddressSyncFragment extends BaseFragment<AddressSyncFragmentBinding
     @Override
     protected void initData(Bundle savedInstanceState) {
         Bundle data = requireArguments();
+        String coinId = data.getString(KEY_COIN_ID);
         CoinViewModel.Factory factory = new CoinViewModel.Factory(mActivity.getApplication(),
                 data.getString(KEY_COIN_ID));
         viewModel = ViewModelProviders.of(getParentFragment(), factory)
                 .get(CoinViewModel.class);
-        subscribeUi(viewModel.getAddress());
+        subscribeUi(viewModel.getNewAddressLiveData(coinId));
     }
 
     private void subscribeUi(LiveData<List<AddressEntity>> address) {
