@@ -57,7 +57,6 @@ public class CoinViewModel extends AndroidViewModel {
         mRepository = repository;
         mObservableCoin = repository.loadCoin(coinId);
         mObservableAddress = repository.loadAddress(coinId);
-
     }
 
     public LiveData<CoinEntity> getObservableCoin() {

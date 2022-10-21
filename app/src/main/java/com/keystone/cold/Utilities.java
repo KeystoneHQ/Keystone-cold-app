@@ -288,12 +288,12 @@ public class Utilities {
 
     public static boolean hasUserClickKusamaSyncLock(Context context) {
         SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
-        return sp.getBoolean(PREFERENCE_POLKADOT_KEY_SYNCED, false);
+        return sp.getBoolean(PREFERENCE_KUSAMA_KEY_SYNCED, false);
     }
 
     public static void setUserClickKusamaSyncLock(Context context) {
         SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
-        sp.edit().putBoolean(PREFERENCE_POLKADOT_KEY_SYNCED, true).apply();
+        sp.edit().putBoolean(PREFERENCE_KUSAMA_KEY_SYNCED, true).apply();
     }
 
     public static String getFingerprintPassword(Context context) {
