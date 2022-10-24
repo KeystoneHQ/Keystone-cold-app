@@ -290,6 +290,18 @@
     </fragment>
 
     <fragment
+        android:id="@+id/aptosSignMessageFragment"
+        android:name="com.keystone.cold.ui.fragment.main.aptos.AptosMessageFragment"
+        android:label="aptosSignMessageFragment">
+        <action
+            android:id="@+id/action_to_aptosBroadcastTxFragment"
+            app:destination="@id/aptosBroadcastTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
         android:id="@+id/nearTxFragment"
         android:name="com.keystone.cold.ui.fragment.main.near.NearTxConfirmFragment"
         android:label="nearTxFragment"
@@ -1166,6 +1178,14 @@
     <action
         android:id="@+id/action_to_aptosTxConfirmFragment"
         app:destination="@id/aptosTxFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_aptosMessageFragment"
+        app:destination="@id/aptosSignMessageFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
