@@ -734,5 +734,16 @@
     <string name="get_address_fail_info">Failed to get address.</string>
     <string name="web_auth_scan_fail">Scan Failed, Please ensure you have selected the right QR code to be scanned.</string>
 
+    <string name="method">Method</string>
+    <string name="sender">Sender</string>
+    <string name="receiver">Receiver</string>
+    <string name="amount">Amount</string>
+    <string name="sequence">Sequence No</string>
+    <string name="expiration_timestamp">Expiration Timestamp</string>
+    <string name="max_gas_limit">Max Gas Limit</string>
+    <string name="gas_unit_price">Gas Unit Price</string>
+    <string name="chain_id">Chain ID</string>
+    <string name="transfer">Transfer</string>
+
 
 </resources>

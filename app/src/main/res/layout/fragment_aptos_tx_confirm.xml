@@ -49,58 +49,6 @@
 
         <include layout="@layout/divider" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp">
-
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/coin_aptos" />
-
-            <TextView
-                android:id="@+id/coinCode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="12dp"
-                android:layout_toEndOf="@id/icon"
-                android:text="APT"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/coinId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/coinCode"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="2dp"
-                android:layout_toEndOf="@id/icon"
-                android:text="Aptos"
-                android:textColor="@color/white40"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <include
-                layout="@layout/divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentBottom="true" />
-        </RelativeLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:padding="16dp"
-            android:textColor="@color/check_info_color"
-            android:text="@string/solana_tx_hint" />
-
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab"
             android:layout_width="wrap_content"

@@ -47,10 +47,11 @@ public class AptosTxDetailFragment extends BaseFragment<FragmentAptosTxDetailBin
     }
 
     private void initViewPager() {
-        String[] title = {getString(R.string.raw_data)};
+        String[] title = {getString(R.string.overview), getString(R.string.raw_data)};
         if (fragments == null) {
             fragments = new Fragment[title.length];
-            fragments[0] = AptosRawTxFragment.newInstance(bundle, true);
+            fragments[0] = AptosFormattedTxFragment.newInstance(bundle, true);
+            fragments[1] = AptosRawTxFragment.newInstance(bundle, true);
         }
 
         mBinding.viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager(),

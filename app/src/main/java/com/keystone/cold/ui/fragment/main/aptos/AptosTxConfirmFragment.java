@@ -60,10 +60,11 @@ public class AptosTxConfirmFragment extends BaseFragment<FragmentAptosTxConfirmB
     }
 
     private void initViewPager() {
-        String[] title = {getString(R.string.raw)};
+        String[] title = {getString(R.string.overview), getString(R.string.raw_data)};
         if (fragments == null) {
             fragments = new Fragment[title.length];
-            fragments[0] = AptosRawTxFragment.newInstance(bundle);
+            fragments[0] = AptosFormattedTxFragment.newInstance(bundle);
+            fragments[1] = AptosRawTxFragment.newInstance(bundle);
         }
         mBinding.viewPager.setOffscreenPageLimit(2);
         mBinding.viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager(),

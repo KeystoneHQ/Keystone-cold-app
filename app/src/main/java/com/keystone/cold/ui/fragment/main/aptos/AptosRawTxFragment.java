@@ -44,9 +44,7 @@ public class AptosRawTxFragment extends BaseFragment<FragmentAptosRawTxBinding> 
         if (isFromRecord) {
             viewModel.getAptosTxDataMutableLiveData().observe(this, aptosTxData -> {
                 if (aptosTxData != null) {
-                    mBinding.rawTx.setText(aptosTxData.getRawMessage());
-                    mBinding.qr.setVisibility(View.VISIBLE);
-                    mBinding.qrcode.qrcode.setData(aptosTxData.getSignatureUR());
+                    mBinding.rawTx.setText(aptosTxData.getParsedMessage());
                 }
             });
         } else {
