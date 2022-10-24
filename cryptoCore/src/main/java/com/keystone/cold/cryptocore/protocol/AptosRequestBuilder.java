@@ -3,7 +3,6 @@ package com.keystone.cold.cryptocore.protocol;
 import com.keystone.cold.cryptocore.AptosProtoc;
 import com.keystone.cold.cryptocore.BlockChainRequestProtoc;
 import com.keystone.cold.cryptocore.CommonProtoc;
-import com.keystone.cold.cryptocore.NearProtoc;
 import com.keystone.cold.cryptocore.RCCABIProtoc;
 import com.keystone.cold.encryptioncore.utils.ByteFormatter;
 
