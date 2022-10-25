@@ -931,8 +931,6 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             hide = true;
         } else if (watchWallet == WatchWallet.NEAR && NEARAccount.ofCode(Utilities.getCurrentNearAccount(mActivity)) == NEARAccount.MNEMONIC) {
             hide = true;
-        } else if (watchWallet == WatchWallet.APTOS) {
-            hide = true;
         }
         return hide;
     }
