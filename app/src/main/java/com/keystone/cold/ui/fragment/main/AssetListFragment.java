@@ -51,6 +51,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.AssetListBottomMenuBinding;
 import com.keystone.cold.databinding.AssetListFragmentBinding;
+import com.keystone.cold.databinding.DialogBottomSheetBinding;
 import com.keystone.cold.db.PresetData;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
@@ -107,11 +108,15 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         mCoinAdapter = new CoinAdapter(mActivity, mCoinClickCallback, false);
         mBinding.assetList.setAdapter(mCoinAdapter);
         mRepository = ((MainApplication) mActivity.getApplication()).getRepository();
-        if(watchWallet.equals(WatchWallet.POLKADOT_JS)) {
+        if (watchWallet.equals(WatchWallet.POLKADOT_JS)) {
             mBinding.hint.setText(R.string.polkadot_hint);
             mBinding.hint.setVisibility(View.VISIBLE);
         } else {
             mBinding.hint.setVisibility(View.GONE);
+        }
+
+        if (watchWallet.equals(WatchWallet.CORE_WALLET)) {
+            mBinding.toolbar.setTitle(R.string.select_network);
         }
     }
 
@@ -198,7 +203,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-        if (watchWallet != WatchWallet.KEYSTONE) {
+        if (watchWallet != WatchWallet.KEYSTONE && watchWallet != WatchWallet.CORE_WALLET) {
             MenuItem item = menu.findItem(R.id.action_more);
             item.setVisible(false);
         }
@@ -233,19 +238,39 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
 
     private void showBottomSheetMenu() {
         BottomSheetDialog dialog = new BottomSheetDialog(mActivity);
-        AssetListBottomMenuBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
-                R.layout.asset_list_bottom_menu,null,false);
-        binding.addHideAsset.setOnClickListener(v-> {
-            navigate(R.id.action_to_manageCoinFragment);
-            dialog.dismiss();
+        if (watchWallet.equals(WatchWallet.CORE_WALLET)) {
+            DialogBottomSheetBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+                    R.layout.dialog_bottom_sheet, null, false);
+            binding.addAddress.setVisibility(View.GONE);
+            binding.resetDb.setVisibility(View.GONE);
+            binding.changePath.setOnClickListener(v -> {
+                navigate(R.id.action_assetListFragment_to_changeDerivePathFragment);
+                dialog.dismiss();
+            });
+            binding.tutorials.setOnClickListener(v -> {
+                navigate(R.id.action_to_tutorialsFragment);
+                dialog.dismiss();
+            });
+            binding.sync.setOnClickListener(v -> {
+                navigate(R.id.action_to_syncFragment);
+                dialog.dismiss();
+            });
+            dialog.setContentView(binding.getRoot());
+        } else {
+            AssetListBottomMenuBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+                    R.layout.asset_list_bottom_menu, null, false);
+            binding.addHideAsset.setOnClickListener(v -> {
+                navigate(R.id.action_to_manageCoinFragment);
+                dialog.dismiss();
 
-        });
-        binding.sync.setOnClickListener(v-> {
-            navigate(R.id.action_to_syncFragment);
-            dialog.dismiss();
+            });
+            binding.sync.setOnClickListener(v -> {
+                navigate(R.id.action_to_syncFragment);
+                dialog.dismiss();
 
-        });
-        dialog.setContentView(binding.getRoot());
+            });
+            dialog.setContentView(binding.getRoot());
+        }
         dialog.show();
     }
 

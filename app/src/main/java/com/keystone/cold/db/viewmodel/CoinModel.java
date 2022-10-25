@@ -1,61 +1,118 @@
 package com.keystone.cold.db.viewmodel;
 
 import com.keystone.cold.db.entity.CoinEntity;
+
 public class CoinModel {
-    private final CoinEntity entity;
+    private String tag;
+    private boolean hasTag;
+    private final long id;
+    private final String belongTo;
+    private final String coinId;
+    private final String coinCode;
+    private final String displayCoinCode;
+    private final String name;
+    private final String displayName;
+    private final int addressCount;
+    private final boolean isShow;
+    private final String exPub;
+    private final int index;
 
     public CoinModel(CoinEntity entity) {
-        this.entity = entity;
+        this.id = entity.getId();
+        this.belongTo = entity.getBelongTo();
+        this.coinId = entity.getCoinId();
+        this.coinCode = entity.getCoinCode();
+        this.addressCount = entity.getAddressCount();
+        this.isShow = entity.isShow();
+        this.exPub = entity.getExPub();
+        this.index = entity.getIndex();
+        this.displayName = entity.getDisplayName();
+        this.name = entity.getName();
+        this.displayCoinCode = entity.getCoinCode();
+        this.setTag(entity);
     }
 
-    public String getTag() {
-        switch (entity.getCoinCode()){
-            case "BTC_LEGACY":
-            case "BTC_TESTNET_LEGACY":
-                return "Legacy";
-            case "BTC_NATIVE_SEGWIT":
-            case "BTC_TESTNET_NATIVE_SEGWIT":
-                return "Native Segwit";
-            default:
-                return "Nested Segwit";
-        }
+    public CoinModel(long id, String belongTo, String coinId, String coinCode, String displayCoinCode, String name, String displayName, int addressCount, boolean isShow, String exPub, int index) {
+        this.id = id;
+        this.belongTo = belongTo;
+        this.coinId = coinId;
+        this.coinCode = coinCode;
+        this.displayCoinCode = displayCoinCode;
+        this.name = name;
+        this.displayName = displayName;
+        this.addressCount = addressCount;
+        this.isShow = isShow;
+        this.exPub = exPub;
+        this.index = index;
     }
-    public boolean hasTag() {
-        switch (entity.getCoinCode()){
+
+    public static CoinModel fake(CoinEntity entity, String displayCoinCode, String displayName) {
+        return new CoinModel(entity.getId(), entity.getBelongTo(), entity.getCoinId(), entity.getCoinCode(), displayCoinCode, entity.getName(), displayName, entity.getAddressCount(), entity.isShow(), entity.getExPub(), entity.getIndex());
+    }
+
+    private void setTag(CoinEntity entity) {
+        switch (entity.getCoinCode()) {
+            case "BTC_LEGACY":
+            case "BTC_TESTNET_LEGACY": {
+                this.tag = "LEGACY";
+                break;
+            }
+            case "BTC_NATIVE_SEGWIT":
+            case "BTC_TESTNET_NATIVE_SEGWIT": {
+                this.tag = "Native Segwit";
+                break;
+            }
+            default: {
+                this.tag = "Nested Segwit";
+            }
+        }
+
+        switch (entity.getCoinCode()) {
             case "BTC_LEGACY":
             case "BTC_TESTNET_LEGACY":
             case "BTC_NATIVE_SEGWIT":
             case "BTC_TESTNET_NATIVE_SEGWIT":
             case "BTC":
-            case "BTC_TESTNET_SEGWIT":
-                return true;
-            default:
-                return false;
+            case "BTC_TESTNET_SEGWIT": {
+                this.hasTag = true;
+                break;
+            }
+            default: {
+                this.hasTag = false;
+            }
         }
     }
 
+    public String getTag() {
+        return this.tag;
+    }
+
+    public boolean hasTag() {
+        return this.hasTag;
+    }
+
     public long getId() {
-        return entity.getId();
+        return id;
     }
 
     public String getBelongTo() {
-        return entity.getBelongTo();
+        return belongTo;
     }
 
     public String getCoinId() {
-        return entity.getCoinId();
+        return coinId;
     }
 
     public String getName() {
-        return entity.getName();
+        return name;
     }
 
     public String getCoinCode() {
-        return entity.getCoinCode();
+        return coinCode;
     }
 
-    public String getDisplayName() {
-        switch (entity.getCoinCode()) {
+    public String getDisplayCoinCode() {
+        switch (coinCode) {
             case "BTC":
             case "BTC_LEGACY":
             case "BTC_NATIVE_SEGWIT":
@@ -65,26 +122,26 @@ public class CoinModel {
             case "BTC_TESTNET_NATIVE_SEGWIT":
                 return "XTN";
         }
-        return entity.getDisplayName();
+        return displayCoinCode;
     }
 
-    public int getIconResId() {
-        return entity.getIconResId();
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public int getAddressCount(){
-        return entity.getAddressCount();
+    public int getAddressCount() {
+        return addressCount;
     }
 
-    public  boolean isShow() {
-        return entity.isShow();
+    public boolean isShow() {
+        return isShow;
     }
 
     public String getExPub() {
-        return entity.getExPub();
+        return exPub;
     }
 
     public int getIndex() {
-        return entity.getIndex();
+        return index;
     }
 }

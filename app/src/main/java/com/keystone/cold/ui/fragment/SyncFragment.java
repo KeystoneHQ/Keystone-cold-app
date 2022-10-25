@@ -32,6 +32,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.utils.Coins;
@@ -39,6 +40,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.CommonModalBinding;
 import com.keystone.cold.databinding.SyncFragmentBinding;
+import com.keystone.cold.integration.corewallet.CoreWalletViewModel;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.fragment.main.SyncInfo;
 import com.keystone.cold.ui.fragment.setup.SetupVaultBaseFragment;
@@ -128,6 +130,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 case POLKADOT_JS:
                 case NEAR:
                 case APTOS:
+                case CORE_WALLET:
                     navigate(R.id.action_to_tutorialsFragment);
                     break;
                 default:
@@ -147,6 +150,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
             case SOLANA:
             case NEAR:
             case APTOS:
+            case CORE_WALLET:
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 9, 0, 0);
                 mBinding.content.setLayoutParams(params);
@@ -227,6 +231,25 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                         }
                         URLiveData.removeObservers(this);
                     });
+                });
+                break;
+            case CORE_WALLET:
+                if (URLiveData != null) {
+                    URLiveData.removeObservers(this);
+                }
+                if (isRefreshing) return;
+                isRefreshing = true;
+                ETHAccount ethAccount = ETHAccount.ofCode(Utilities.getCurrentEthAccount(mActivity));
+                CoreWalletViewModel coreWalletViewModel = ViewModelProviders.of(mActivity).get(CoreWalletViewModel.class);
+                URLiveData = coreWalletViewModel.GenerateSyncData();
+                URLiveData.observe(this, ur -> {
+                    if (ur != null) {
+                        mBinding.dynamicQrcodeLayout.qrcode.displayUR(ur);
+                        mBinding.addressData.setVisibility(View.GONE);
+                        mBinding.derivationPattern.setVisibility(View.VISIBLE);
+                        mBinding.fromPath.setText(ethAccount.getDisplayPath());
+                    }
+                    URLiveData.removeObservers(this);
                 });
                 break;
             case SOLANA:

@@ -30,17 +30,20 @@ import java.util.List;
 import java.util.Optional;
 
 public class Coins {
-    public static final Coin BTC = new Coin("bitcoin", "BTC", "Bitcoin Nested Segwit", 0); // AKA P2SH
-    public static final Coin BTC_LEGACY = new Coin("bitcoin_legacy", "BTC_LEGACY", "Bitcoin Legacy", 0);
-    public static final Coin BTC_NATIVE_SEGWIT = new Coin("bitcoin_native_segwit", "BTC_NATIVE_SEGWIT", "Bitcoin Native Segwit", 0);
-    public static final Coin BTC_TESTNET_SEGWIT = new Coin("bitcoin_testnet", "BTC_TESTNET_SEGWIT", "Bitcoin Nested Segwit", 1); // AKA P2SH
-    public static final Coin BTC_TESTNET_LEGACY = new Coin("bitcoin_testnet_legacy", "BTC_TESTNET_LEGACY", "Bitcoin Legacy", 1);
-    public static final Coin BTC_TESTNET_NATIVE_SEGWIT = new Coin("bitcoin_testnet_native_segwit", "BTC_TESTNET_NATIVE_SEGWIT", "Bitcoin Native Segwit", 1);
+    public static final Coin BTC = new Coin("bitcoin", "BTC", "Bitcoin (Nested Segwit)", 0); // AKA P2SH
+    public static final Coin BTC_LEGACY = new Coin("bitcoin_legacy", "BTC_LEGACY", "Bitcoin (Legacy)", 0);
+    public static final Coin BTC_NATIVE_SEGWIT = new Coin("bitcoin_native_segwit", "BTC_NATIVE_SEGWIT", "Bitcoin (Native Segwit)", 0);
+    public static final Coin BTC_TESTNET_SEGWIT = new Coin("bitcoin_testnet", "BTC_TESTNET_SEGWIT", "Bitcoin (Nested Segwit)", 1); // AKA P2SH
+    public static final Coin BTC_TESTNET_LEGACY = new Coin("bitcoin_testnet_legacy", "BTC_TESTNET_LEGACY", "Bitcoin (Legacy)", 1);
+    public static final Coin BTC_TESTNET_NATIVE_SEGWIT = new Coin("bitcoin_testnet_native_segwit", "BTC_TESTNET_NATIVE_SEGWIT", "Bitcoin (Native Segwit)", 1);
     public static final Coin BCH = new Coin("bitcoin_cash", "BCH", "Bitcoin Cash", 145);
     public static final Coin DASH = new Coin("dash", "DASH", "Dash", 5);
     public static final Coin LTC = new Coin("litecoin", "LTC", "Litecoin", 2);
     public static final Coin ETH = new Coin("ethereum", "ETH", "Ethereum", 60,
             CURVE.SECP256K1, new String[]{ETHAccount.BIP44_STANDARD.getPath(), ETHAccount.LEDGER_LEGACY.getPath(), ETHAccount.LEDGER_LIVE.getPath()});
+    // Since CoreWallet use ETH path for AVAX C-Chain, we treat AVAX as ETH for CoreWallet;
+    // So this coin will not generate DB entity;
+    public static final Coin AVAX = new Coin("avalanche_c_chain", "AVAX", "Avalanche (C-Chain)", 60);
     public static final Coin ETC = new Coin("ethereum_classic", "ETC", "Ethereum Classic", 61);
     public static final Coin CFX = new Coin("conflux_mainnet", "CFX", "Conflux", 503);
     public static final Coin TRON = new Coin("tron", "TRON", "Tron", 195);

@@ -41,7 +41,6 @@ public class PolkadotViewModel extends AndroidViewModel {
 
     private void copySingleAsset(String path) throws IOException {
         File file = new File(dbPath, path);
-        Log.d("sora", "copySingleAsset: copy to" + file.getPath());
         file.createNewFile();
         InputStream input = context.getAssets().open(Paths.get("polkadot", "database", path).toString());
         FileOutputStream out = new FileOutputStream(file);
