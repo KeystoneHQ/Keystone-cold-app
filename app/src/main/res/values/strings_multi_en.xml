@@ -466,7 +466,7 @@
         <item>MetaMask / Rabby / DeFi</item>
         <item>Solflare</item>
         <item>Sender</item>
-        <item>Martian / Fewcha</item>
+        <item>Fewcha</item>
         <item>Core Wallet</item>
         <item>SubWallet / Nova / Polkadot{.js}</item>
         <item>XRP Toolkit</item>
@@ -664,12 +664,12 @@
     <string name="decode_failed_detail">All data in this transaction are customized and can\'t be decoded for now.</string>
 
     <string-array name="tutorials_name_aptos">
-        <item>Martian Wallet (Extension)</item>
+<!--        <item>Martian Wallet (Extension)</item>-->
         <item>Fewcha Wallet (Extension)</item>
     </string-array>
 
     <string-array name="tutorials_link_aptos">
-        <item><u>https://keyst.one/martian</u></item>
+<!--        <item><u>https://keyst.one/martian</u></item>-->
         <item><u>https://keyst.one/fewcha</u></item>
     </string-array>
 
@@ -733,6 +733,17 @@
     <string name="aptos_receive_info">APT or Aptos tokens</string>
     <string name="get_address_fail_info">Failed to get address.</string>
     <string name="web_auth_scan_fail">Scan Failed, Please ensure you have selected the right QR code to be scanned.</string>
+
+    <string name="method">Method</string>
+    <string name="sender">Sender</string>
+    <string name="receiver">Receiver</string>
+    <string name="amount">Amount</string>
+    <string name="sequence">Sequence No</string>
+    <string name="expiration_timestamp">Expiration Timestamp</string>
+    <string name="max_gas_limit">Max Gas Limit</string>
+    <string name="gas_unit_price">Gas Unit Price</string>
+    <string name="chain_id">Chain ID</string>
+    <string name="transfer">Transfer</string>
 
 
 </resources>

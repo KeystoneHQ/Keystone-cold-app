@@ -1,6 +1,5 @@
 package com.keystone.cold.ui.fragment.main.aptos;
 
-import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
 import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KEY_SIGNATURE_UR;
@@ -10,31 +9,30 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
-import com.keystone.cold.databinding.FragmentAptosTxConfirmBinding;
+import com.keystone.cold.databinding.AptosSignMessageBinding;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
+import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
+import com.keystone.cold.util.CharSetUtil;
 import com.keystone.cold.viewmodel.tx.AptosViewModel;
 
-public class AptosTxConfirmFragment extends BaseFragment<FragmentAptosTxConfirmBinding> {
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.spongycastle.util.encoders.Hex;
 
-    public static final int SIGN_DIALOG_SUCCESS_DELAY = 500;
-    public static final int SIGN_DIALOG_FAIL_DELAY = 1000;
-    public static final int SIGN_DIALOG_REMOVE_OBSERVERS_DELAY = 2000;
+import java.nio.charset.StandardCharsets;
 
-    private SigningDialog signingDialog;
+public class AptosMessageFragment extends BaseFragment<AptosSignMessageBinding> {
+
     private AptosViewModel viewModel;
-
-    private Fragment[] fragments;
-    private Bundle bundle;
+    private SigningDialog signingDialog;
 
     private final Runnable forgetPassword = () -> {
         Bundle bundle = new Bundle();
@@ -44,48 +42,57 @@ public class AptosTxConfirmFragment extends BaseFragment<FragmentAptosTxConfirmB
 
     @Override
     protected int setView() {
-        return R.layout.fragment_aptos_tx_confirm;
+        return R.layout.aptos_sign_message;
     }
 
     @Override
     protected void init(View view) {
-        bundle = requireArguments();
-        viewModel = ViewModelProviders.of(this).get(AptosViewModel.class);
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
-        mBinding.sign.setOnClickListener(v -> {
-            handleSign();
-        });
-        viewModel.parseTxData(bundle);
-        initViewPager();
+        viewModel = ViewModelProviders.of(this).get(AptosViewModel.class);
+        LiveData<JSONObject> liveData = viewModel.parseRawMessage(requireArguments());
+        liveData.observe(this, o -> onMessageParsed(liveData, o));
+        viewModel.parseTxException().observe(this, this::handleParseException);
+        mBinding.sign.setOnClickListener(v -> handleSign());
     }
 
-    private void initViewPager() {
-        String[] title = {getString(R.string.overview), getString(R.string.raw_data)};
-        if (fragments == null) {
-            fragments = new Fragment[title.length];
-            fragments[0] = AptosFormattedTxFragment.newInstance(bundle);
-            fragments[1] = AptosRawTxFragment.newInstance(bundle);
+    private void onMessageParsed(LiveData<JSONObject> liveData, JSONObject jsonObject) {
+        if (jsonObject != null) {
+            String message = null;
+            try {
+                message = jsonObject.getString("data");
+                String fromAddress = jsonObject.getString("fromAddress");
+                mBinding.address.setText(fromAddress);
+                if (CharSetUtil.isUTF8Format(Hex.decode(message))) {
+                    String messageUtf8 = new String(Hex.decode(message), StandardCharsets.UTF_8);
+                    mBinding.message.setText(messageUtf8);
+                } else {
+                    mBinding.llMsgUtf8.setVisibility(View.GONE);
+                }
+                mBinding.rawMessage.setText(message);
+                liveData.removeObservers(AptosMessageFragment.this);
+            } catch (UnsupportedOperationException e) {
+                mBinding.llMsgUtf8.setVisibility(View.GONE);
+                mBinding.rawMessage.setText(message);
+                liveData.removeObservers(AptosMessageFragment.this);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                handleParseException(e);
+            }
         }
-        mBinding.viewPager.setOffscreenPageLimit(2);
-        mBinding.viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager(),
-                BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-            @NonNull
-            @Override
-            public Fragment getItem(int position) {
-                return fragments[position];
-            }
+    }
 
-            @Override
-            public int getCount() {
-                return title.length;
-            }
 
-            @Override
-            public CharSequence getPageTitle(int position) {
-                return title[position];
-            }
-        });
-        mBinding.tab.setupWithViewPager(mBinding.viewPager);
+    private void handleParseException(Exception ex) {
+        if (ex != null) {
+            ex.printStackTrace();
+            ModalDialog.showCommonModal(mActivity,
+                    getString(R.string.invalid_data),
+                    getString(R.string.incorrect_tx_data),
+                    getString(R.string.confirm),
+                    null);
+            viewModel.parseTxException().setValue(null);
+            popBackStack(R.id.assetFragment, false);
+        }
     }
 
     @Override
@@ -99,11 +106,10 @@ public class AptosTxConfirmFragment extends BaseFragment<FragmentAptosTxConfirmB
                 getString(R.string.password_modal_title), "", fingerprintSignEnable,
                 token -> {
                     viewModel.setToken(token);
-                    viewModel.handleSign();
+                    viewModel.handleSignMessage();
                     subscribeSignState();
                 }, forgetPassword);
     }
-
 
     private void subscribeSignState() {
         viewModel.getSignState().observe(this, s -> {
@@ -120,28 +126,28 @@ public class AptosTxConfirmFragment extends BaseFragment<FragmentAptosTxConfirmB
                     }
                     signingDialog = null;
                     onSignSuccess();
-                }, SIGN_DIALOG_SUCCESS_DELAY);
+                }, 500);
             } else if (AptosViewModel.STATE_SIGN_FAIL.equals(s)) {
-                new Handler().postDelayed(() -> {
-                    if (signingDialog != null) {
-                        signingDialog.setState(SigningDialog.STATE_FAIL);
-                    }
-                }, SIGN_DIALOG_FAIL_DELAY);
+                if (signingDialog == null) {
+                    signingDialog = SigningDialog.newInstance();
+                    signingDialog.show(mActivity.getSupportFragmentManager(), "");
+                }
+                new Handler().postDelayed(() -> signingDialog.setState(SigningDialog.STATE_FAIL), 1000);
                 new Handler().postDelayed(() -> {
                     if (signingDialog != null) {
                         signingDialog.dismiss();
                     }
                     signingDialog = null;
                     viewModel.getSignState().removeObservers(this);
-                }, SIGN_DIALOG_REMOVE_OBSERVERS_DELAY);
+                }, 2000);
             }
         });
     }
 
     private void onSignSuccess() {
-        String signatureURString = viewModel.getSignatureUR();
+        String signature = viewModel.getSignatureUR();
         Bundle data = new Bundle();
-        data.putString(KEY_SIGNATURE_UR, signatureURString);
+        data.putString(KEY_SIGNATURE_UR, signature);
         navigate(R.id.action_to_aptosBroadcastTxFragment, data);
         viewModel.getSignState().setValue("");
         viewModel.getSignState().removeObservers(this);

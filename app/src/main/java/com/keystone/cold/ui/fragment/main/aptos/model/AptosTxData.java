@@ -5,6 +5,9 @@ public class AptosTxData {
     private String rawMessage;
     private String parsedMessage;
     private String signatureUR;
+    private AptosTx aptosTx;
+
+
 
     public String getSignature() {
         return signature;
@@ -36,5 +39,13 @@ public class AptosTxData {
 
     public void setSignatureUR(String signatureUR) {
         this.signatureUR = signatureUR;
+    }
+
+    public AptosTx getAptosTx() {
+        return aptosTx;
+    }
+
+    public void setAptosTx(AptosTx aptosTx) {
+        this.aptosTx = aptosTx;
     }
 }

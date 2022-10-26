@@ -87,6 +87,7 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerViewModel;
 import com.keystone.cold.ui.fragment.main.scan.scanner.exceptions.UnExpectedQRException;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
+import com.keystone.cold.util.AptosTransactionHelper;
 import com.keystone.cold.util.SolMessageValidateUtil;
 import com.keystone.cold.util.SyncAddressUtil;
 import com.keystone.cold.util.ViewUtils;
@@ -484,7 +485,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 }
             }
 
-            private void handleAptosSignRequest(ScanResult result) throws XfpNotMatchException {
+            private void handleAptosSignRequest(ScanResult result) throws XfpNotMatchException, UnknowQrCodeException {
                 AptosSignRequest aptosSignRequest = (AptosSignRequest) result.resolve();
                 String requestMFP = Hex.toHexString(aptosSignRequest.getMasterFingerprint());
                 String MFP = new GetMasterFingerprintCallable().call();
@@ -499,7 +500,24 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 bundle.putString(REQUEST_ID, uuid.toString());
                 bundle.putString(SIGN_DATA, signData);
                 bundle.putString(HD_PATH, "M/" + hdPath);
-                mFragment.navigate(R.id.action_to_aptosTxConfirmFragment, bundle);
+                AptosSignRequest.DataType dataType =  aptosSignRequest.getType();
+                Log.d("aptos_sign", "dataType is " + dataType);
+                Log.d("aptos_sign", "signData is " + signData);
+                switch (dataType) {
+                    case MESSAGE:
+                        mFragment.navigate(R.id.action_to_aptosMessageFragment, bundle);
+                        break;
+                    case SINGLE:
+                        AptosTransactionHelper.Type type = AptosTransactionHelper.judgeDataType(signData);
+                        if (type == AptosTransactionHelper.Type.MESSAGE) {
+                            mFragment.navigate(R.id.action_to_aptosMessageFragment, bundle);
+                        } else {
+                            mFragment.navigate(R.id.action_to_aptosTxConfirmFragment, bundle);
+                        }
+                        break;
+                    case MULTI:
+                        throw new UnknowQrCodeException("unknown transaction!");
+                }
             }
 
             private void handleNearSignRequest(ScanResult result) throws InvalidTransactionException, InvalidNEARAccountException, XfpNotMatchException {
@@ -898,27 +916,24 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private void addClickAccountProcess(View view, Runnable additionProcess) {
-        if (isNearMnemonic()) {
+        if (hideAddAddress()) {
             view.setVisibility(View.GONE);
         }
         view.setOnClickListener(v -> {
-            if (canNotAddAddress()) {
-                Toast.makeText(mActivity, "Current pattern can't add accounts", Toast.LENGTH_SHORT).show();
-            } else {
-                handleAddAddress();
-            }
+            handleAddAddress();
             additionProcess.run();
         });
     }
 
-    private boolean canNotAddAddress() {
-        boolean cannot = false;
+
+    private boolean hideAddAddress() {
+        boolean hide = false;
         if (watchWallet == WatchWallet.SOLANA && SOLAccount.ofCode(Utilities.getCurrentSolAccount(mActivity)) == SOLAccount.SOLFLARE_BIP44_ROOT) {
-            cannot = true;
+            hide = true;
         } else if (watchWallet == WatchWallet.NEAR && NEARAccount.ofCode(Utilities.getCurrentNearAccount(mActivity)) == NEARAccount.MNEMONIC) {
-            cannot = true;
+            hide = true;
         }
-        return cannot;
+        return hide;
     }
 
     private void enterSearch() {

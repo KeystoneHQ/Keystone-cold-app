@@ -45,6 +45,7 @@ import com.keystone.cold.databinding.AddressFragmentBinding;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.util.Keyboard;
+import com.keystone.cold.util.StringUtils;
 import com.keystone.cold.viewmodel.CoinViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 
@@ -187,7 +188,11 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
                         .collect(Collectors.toList());
             } else {
                 addressEntities = addressEntities.stream().peek(addressEntity -> {
-                    addressEntity.setDisplayName(addressEntity.getName());
+                    if (watchWallet == WatchWallet.APTOS) {
+                        addressEntity.setDisplayName(StringUtils.capitalizes(addressEntity.getName().toLowerCase()));
+                    } else {
+                        addressEntity.setDisplayName(addressEntity.getName());
+                    }
                 }).collect(Collectors.toList());
                 if (requireArguments().getString(KEY_COIN_CODE).equals(Coins.ETH.coinCode())) {
                     addressEntities = addressEntities.stream().filter(addressEntity -> ETHAccount.isStandardChildren(addressEntity.getPath())).collect(Collectors.toList());
