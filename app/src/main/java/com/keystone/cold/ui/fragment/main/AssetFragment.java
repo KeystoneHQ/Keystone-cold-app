@@ -501,7 +501,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 bundle.putString(SIGN_DATA, signData);
                 bundle.putString(HD_PATH, "M/" + hdPath);
                 AptosSignRequest.DataType dataType =  aptosSignRequest.getType();
-                Log.d("aptos_sign_type", "dataType is " + dataType);
+                Log.d("aptos_sign", "dataType is " + dataType);
+                Log.d("aptos_sign", "signData is " + signData);
                 switch (dataType) {
                     case MESSAGE:
                         mFragment.navigate(R.id.action_to_aptosMessageFragment, bundle);
