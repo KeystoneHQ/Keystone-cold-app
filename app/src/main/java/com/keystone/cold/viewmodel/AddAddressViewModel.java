@@ -373,7 +373,7 @@ public class AddAddressViewModel extends AndroidViewModel {
                     addressEntity.setAddressString(addr);
                     addressEntity.setCoinId(coinEntity.getCoinId());
                     addressEntity.setIndex(account);
-                    addressEntity.setName("APTOS-" + account);
+                    addressEntity.setName("Aptos-" + account);
                     addressEntity.setDisplayName("AuthKey-" + account);
                     addressEntity.setBelongTo(coinEntity.getBelongTo());
                     entities.add(addressEntity);
