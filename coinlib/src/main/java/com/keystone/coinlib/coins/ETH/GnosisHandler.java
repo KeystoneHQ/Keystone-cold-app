@@ -17,8 +17,8 @@ public class GnosisHandler implements FallbackHandler {
 
     @Override
     public ABIReader.DecodedFunctionCall decodeCall(String data, Contract contract, String address) {
-        contract.setAbi(readAsset("abi/Mastercopy_1.2.0.json"));
-        contract.setName("Gnosis Safe: Mastercopy 1.2.0");
+        contract.setAbi(readAsset("abi/Safe_Singleton_L2_1.3.0.json"));
+        contract.setName("Safe");
         ABIReader abiReader = new ABIReader();
         ABIReader.DecodedFunctionCall call = abiReader.decodeCall(data, contract, address);
         if (call != null) {
