@@ -51,6 +51,8 @@ public class AptosFormattedTxFragment extends BaseFragment<AptosTxDetailBinding>
                     if (aptosTxData.getAptosTx() != null) {
                         updateUI(aptosTxData.getAptosTx());
                     }
+                    mBinding.llChainInfo.setVisibility(View.GONE);
+                    mBinding.checkInfo.setVisibility(View.GONE);
                     mBinding.qr.setVisibility(View.VISIBLE);
                     mBinding.qrcode.qrcode.setData(aptosTxData.getSignatureUR());
                 }

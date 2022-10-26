@@ -36,6 +36,7 @@
             tools:showIn="@layout/tx_confirm_fragment">
 
             <RelativeLayout
+                android:id="@+id/llChainInfo"
                 android:layout_width="match_parent"
                 android:layout_height="50dp">
 
