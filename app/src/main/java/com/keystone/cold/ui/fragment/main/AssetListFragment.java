@@ -43,12 +43,15 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.coins.polkadot.AddressCodec;
+import com.keystone.coinlib.exception.InvalidETHAccountException;
+import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
+import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.databinding.AssetListBottomMenuBinding;
 import com.keystone.cold.databinding.AssetListFragmentBinding;
 import com.keystone.cold.databinding.DialogBottomSheetBinding;
@@ -57,18 +60,28 @@ import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
+import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
+import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerState;
+import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerViewModel;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 import com.keystone.cold.viewmodel.CoinViewModel;
+import com.keystone.cold.viewmodel.PSBTViewModel;
 import com.keystone.cold.viewmodel.PolkadotViewModel;
 import com.keystone.cold.viewmodel.SetupVaultViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
+import com.keystone.cold.viewmodel.exceptions.UnknowQrCodeException;
+import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
+import org.spongycastle.util.encoders.Base64;
 import org.spongycastle.util.encoders.Hex;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -214,17 +227,21 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_scan) {
-            Log.d(TAG, "onOptionsItemSelected: here");
-            AndPermission.with(this)
-                    .permission(Permission.CAMERA, Permission.READ_EXTERNAL_STORAGE)
-                    .onGranted(permissions -> navigate(R.id.action_to_scan))
-                    .onDenied(permissions -> {
-                        Uri packageURI = Uri.parse("package:" + mActivity.getPackageName());
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        Toast.makeText(mActivity, getString(R.string.scan_permission_denied), Toast.LENGTH_LONG).show();
-                    }).start();
+            if(watchWallet.equals(WatchWallet.CORE_WALLET)) {
+                scanQrCode();
+            }
+            else {
+                AndPermission.with(this)
+                        .permission(Permission.CAMERA, Permission.READ_EXTERNAL_STORAGE)
+                        .onGranted(permissions -> navigate(R.id.action_to_scan))
+                        .onDenied(permissions -> {
+                            Uri packageURI = Uri.parse("package:" + mActivity.getPackageName());
+                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            Toast.makeText(mActivity, getString(R.string.scan_permission_denied), Toast.LENGTH_LONG).show();
+                        }).start();
+            }
             return true;
         }
 
@@ -234,6 +251,49 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void scanQrCode() {
+        ScannerState scannerState = new ScannerState() {
+            @Override
+            public void handleScanResult(ScanResult result) throws Exception {
+                if(result.getType().equals(ScanResultTypes.UR_CRYPTO_PSBT)) {
+                    CryptoPSBT cryptoPSBT = (CryptoPSBT) result.resolve();
+                    handleCryptoPSBT(cryptoPSBT);
+                }else {
+                    throw new UnknowQrCodeException("unknown transaction!");
+                }
+            }
+
+            private void handleCryptoPSBT(CryptoPSBT psbt) throws InvalidTransactionException {
+                byte[] bytes = psbt.getPsbt();
+                String psbtB64 = Base64.toBase64String(bytes);
+                PSBTViewModel psbtViewModel = ViewModelProviders.of(mFragment).get(PSBTViewModel.class);
+                PSBTViewModel.PSBT result = psbtViewModel.parsePsbtBase64(psbtB64);
+                String myMasterFingerprint = new GetMasterFingerprintCallable().call();
+                result.validate(myMasterFingerprint);
+                mFragment.navigate(R.id.action_to_psbtConfirmFragment);
+            }
+
+            @Override
+            public boolean handleException(Exception e) {
+                e.printStackTrace();
+                if (e instanceof InvalidTransactionException) {
+                    mFragment.alert(getString(R.string.invalid_data), e.getMessage());
+                    return true;
+                }
+                return false;
+            }
+        };
+
+        List<ScanResultTypes> desiredResults = new ArrayList<>();
+        if (watchWallet == WatchWallet.CORE_WALLET) {
+            desiredResults.addAll(Collections.singletonList(ScanResultTypes.UR_CRYPTO_PSBT));
+        }
+        scannerState.setDesiredResults(desiredResults);
+        ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);
+        scannerViewModel.setState(scannerState);
+        navigate(R.id.action_to_scanner);
     }
 
     private void showBottomSheetMenu() {

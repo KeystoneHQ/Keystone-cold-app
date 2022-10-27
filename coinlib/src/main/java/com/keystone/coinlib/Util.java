@@ -226,4 +226,14 @@ public class Util {
         digest.doFinal(rsData, 0);
         return rsData;
     }
+
+    public static String reverseHex(String hex) {
+        byte[] data = org.spongycastle.util.encoders.Hex.decode(hex);
+        for (int i = 0; i < data.length / 2; i++) {
+            byte temp = data[i];
+            data[i] = data[data.length - i - 1];
+            data[data.length - i - 1] = temp;
+        }
+        return org.spongycastle.util.encoders.Hex.toHexString(data);
+    }
 }

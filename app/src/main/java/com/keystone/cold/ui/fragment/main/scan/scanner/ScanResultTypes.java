@@ -2,6 +2,7 @@ package com.keystone.cold.ui.fragment.main.scan.scanner;
 
 import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
 import com.sparrowwallet.hummingbird.UR;
+import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
 import com.sparrowwallet.hummingbird.registry.EthNFTItem;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
@@ -29,6 +30,7 @@ public enum ScanResultTypes {
     UR_SOL_SIGN_REQUEST,
     UR_SOL_NFT_ITEM,
     UR_NEAR_SIGN_REQUEST,
+    UR_CRYPTO_PSBT,
     UR_APTOS_SIGN_REQUEST;
 
 
@@ -57,6 +59,8 @@ public enum ScanResultTypes {
                     return decodeResult instanceof NearSignRequest;
                 case UR_APTOS_SIGN_REQUEST:
                     return decodeResult instanceof AptosSignRequest;
+                case UR_CRYPTO_PSBT:
+                    return decodeResult instanceof CryptoPSBT;
                 default:
                     return false;
             }
@@ -91,6 +95,8 @@ public enum ScanResultTypes {
                     return EthSignRequest.fromCbor(dataItem);
                 case UR_ETH_NFT_ITEM:
                     return EthNFTItem.fromCbor(dataItem);
+                case UR_CRYPTO_PSBT:
+                    return CryptoPSBT.fromCbor(dataItem);
                 case UR_BYTES:
                     return ((ByteString) dataItem).getBytes();
                 default:
