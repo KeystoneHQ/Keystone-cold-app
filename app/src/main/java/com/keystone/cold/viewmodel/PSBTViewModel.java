@@ -5,23 +5,35 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
+import com.keystone.coinlib.Util;
+import com.keystone.coinlib.accounts.ExtendedPublicKey;
+import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.coins.BTC.BtcImpl;
+import com.keystone.coinlib.coins.BTC_NATIVE_SEGWIT.BTC_NATIVE_SEGWIT;
+import com.keystone.coinlib.exception.InvalidTransactionException;
+import com.keystone.coinlib.utils.Coins;
+import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
+import com.keystone.cold.callables.GetMasterFingerprintCallable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.spongycastle.util.encoders.Hex;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PSBTViewModel extends AndroidViewModel {
+    private final String BTCNativeSegwitPath = "M/84'/0'/0'";
+
     private final BtcImpl btc = new BtcImpl();
 
     public PSBTViewModel(@NonNull Application application) {
         super(application);
     }
 
-    public PSBT parsePsbtBase64(String psbt) {
+    public PSBT parsePsbtBase64(String psbt) throws InvalidTransactionException {
         PSBT psbt1 = new PSBT();
         try {
             JSONObject object = btc.parsePsbt(psbt);
@@ -31,6 +43,7 @@ public class PSBTViewModel extends AndroidViewModel {
             psbt1.adoptOutputs(outputs);
         } catch (JSONException e) {
             e.printStackTrace();
+            throw new InvalidTransactionException("Transaction data error");
         }
         return psbt1;
     }
@@ -45,6 +58,18 @@ public class PSBTViewModel extends AndroidViewModel {
                 this.masterFingerprint = masterFingerprint;
                 this.path = path;
                 this.pubkey = pubkey;
+            }
+
+            public String getMasterFingerprint() {
+                return masterFingerprint;
+            }
+
+            public String getPath() {
+                return path;
+            }
+
+            public String getPubkey() {
+                return pubkey;
             }
         }
 
@@ -65,6 +90,71 @@ public class PSBTViewModel extends AndroidViewModel {
                 this.isMultiSign = isMultiSign;
                 this.signStatus = signStatus;
                 this.isFinalized = isFinalized;
+            }
+
+            public String getTxId() {
+                return txId;
+            }
+
+            public int getIndex() {
+                return index;
+            }
+
+            public long getValue() {
+                return value;
+            }
+
+            public List<Pubkey> getPubkeys() {
+                return pubkeys;
+            }
+
+            public boolean isMultiSign() {
+                return isMultiSign;
+            }
+
+            public String getSignStatus() {
+                return signStatus;
+            }
+
+            public boolean isFinalized() {
+                return isFinalized;
+            }
+
+            public String getValueText() {
+                return new BigInteger(String.valueOf(getValue())).divide(new BigInteger("10").pow(8)).toString() + " BTC";
+            }
+
+            private boolean checkLength() {
+                int length = getPubkeys().size();
+                // only support single sign currently;
+                if (length != 1) return false;
+                return true;
+            }
+
+            public boolean validate() {
+                return checkLength();
+            }
+
+            public boolean isMyKey(String myMasterFingerprint) {
+                int length = getPubkeys().size();
+                for (int i = 0; i < length; i++) {
+                    Pubkey pubkey = getPubkeys().get(i);
+                    if (pubkey.masterFingerprint.equals(myMasterFingerprint)) {
+                        String xpub = new GetExtendedPublicKeyCallable(pubkey.getPath()).call();
+                        ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(xpub);
+                        String key = Hex.toHexString(extendedPublicKey.getKey());
+                        if (pubkey.pubkey.equals(key)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            public String getAddress() {
+                Pubkey myKey = getPubkeys().get(0);
+                String myXpub = new GetExtendedPublicKeyCallable(myKey.getPath()).call();
+                return AbsDeriver.newInstance(Coins.BTC_NATIVE_SEGWIT.coinCode()).derive(myXpub);
             }
 
             public static Input fromJSON(JSONObject json) throws JSONException {
@@ -99,6 +189,49 @@ public class PSBTViewModel extends AndroidViewModel {
                 this.pubkeys = pubkeys;
             }
 
+            public String getAddress() {
+                return address;
+            }
+
+            public long getValue() {
+                return value;
+            }
+
+            public List<Pubkey> getPubkeys() {
+                return pubkeys;
+            }
+
+            public String getValueText() {
+                return new BigInteger(String.valueOf(getValue())).divide(new BigInteger("10").pow(8)).toString() + " BTC";
+            }
+
+            public boolean validate() {
+                int length = getPubkeys().size();
+                // only support single sign currently;
+                return length == 1;
+            }
+
+            public boolean isChange(String myMasterFingerprint) {
+                int length = getPubkeys().size();
+                for (int i = 0; i < length; i++) {
+                    Pubkey pubkey = getPubkeys().get(i);
+                    if (pubkey.masterFingerprint.equals(myMasterFingerprint)) {
+                        String xpub = new GetExtendedPublicKeyCallable(pubkey.getPath()).call();
+                        ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(xpub);
+                        String key = Hex.toHexString(extendedPublicKey.getKey());
+                        if (pubkey.pubkey.equals(key)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            public String getChangePath() {
+                Pubkey pubkey = getPubkeys().get(0);
+                return pubkey.path;
+            }
+
             public static Output fromJSON(JSONObject json) throws JSONException {
                 String address = json.getString("address");
                 long value = json.getLong("value");
@@ -117,17 +250,14 @@ public class PSBTViewModel extends AndroidViewModel {
             }
         }
 
-        private List<Input> inputs = new ArrayList<>();
-        private List<Output> outputs = new ArrayList<>();
+        private final List<Input> inputs = new ArrayList<>();
+        private final List<Output> outputs = new ArrayList<>();
 
-        private boolean isError = false;
-
-        public void adoptInputs(JSONArray inputs) {
+        public void adoptInputs(JSONArray inputs) throws InvalidTransactionException {
             try {
                 int length = inputs.length();
                 if (length == 0) {
-                    this.isError = true;
-                    return;
+                    throw new InvalidTransactionException("Transaction has no input");
                 }
                 for (int i = 0; i < length; i++) {
                     JSONObject jsonInput = inputs.getJSONObject(i);
@@ -135,16 +265,15 @@ public class PSBTViewModel extends AndroidViewModel {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                this.isError = true;
+                throw new InvalidTransactionException("Data error");
             }
         }
 
-        public void adoptOutputs(JSONArray outputs) {
+        public void adoptOutputs(JSONArray outputs) throws InvalidTransactionException {
             try {
                 int length = outputs.length();
                 if (length == 0) {
-                    this.isError = true;
-                    return;
+                    throw new InvalidTransactionException("Transaction has no output");
                 }
                 for (int i = 0; i < length; i++) {
                     JSONObject jsonOutput = outputs.getJSONObject(i);
@@ -152,12 +281,47 @@ public class PSBTViewModel extends AndroidViewModel {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                this.isError = true;
+                throw new InvalidTransactionException("Data error");
             }
         }
 
-        public boolean isError() {
-            return this.isError;
+        private long getFee() {
+            long inputValue = this.inputs.stream().map(v -> v.value).reduce(0L, Long::sum);
+            long outputValue = this.outputs.stream().map(v -> v.value).reduce(0L, Long::sum);
+            return inputValue - outputValue;
+        }
+
+        public String getFeeText() {
+            return new BigInteger(String.valueOf(getFee())).divide(new BigInteger("10").pow(8)).toString() + " BTC";
+        }
+
+        public List<Input> getInputs() {
+            return inputs;
+        }
+
+        public List<Output> getOutputs() {
+            return outputs;
+        }
+
+        public void validate(String masterFingerprint) throws InvalidTransactionException {
+            this.validateInputs(masterFingerprint);
+            this.validateOutputs();
+        }
+
+        private void validateInputs(String masterFingerprint) throws InvalidTransactionException {
+            for (int i = 0; i < this.inputs.size(); i++) {
+                Input input = this.inputs.get(i);
+                if (input.validate() && input.isMyKey(masterFingerprint)) return;
+            }
+            throw new InvalidTransactionException("Transaction has no valid input");
+        }
+
+        private void validateOutputs() throws InvalidTransactionException {
+            for (int i = 0; i < this.outputs.size(); i++) {
+                Output output = this.outputs.get(i);
+                if (output.validate()) return;
+            }
+            throw new InvalidTransactionException("Transaction has no valid output");
         }
     }
 }
