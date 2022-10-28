@@ -56,7 +56,7 @@
                 android:layout_height="28dp"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="16dp"
-                android:src="@drawable/coin_aptos" />
+                android:src="@drawable/coin_apt" />
 
             <TextView
                 android:id="@+id/coinCode"
