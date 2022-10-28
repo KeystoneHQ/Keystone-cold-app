@@ -63,7 +63,7 @@
             <include
                 android:id="@+id/tx_detail"
                 layout="@layout/psbt_tx_detail"
-                bind:tx="@{psbt}" />
+                bind:psbt="@{psbt}" />
         </LinearLayout>
 
         <Button
