@@ -80,11 +80,30 @@ public class PolkadotTxDetailViewNew extends ScrollView {
         updateUI(content, false);
     }
 
+    private JSONArray filterErrorCard(JSONArray content) throws JSONException {
+        int length = content.length();
+        JSONArray result = new JSONArray();
+        for (int i = 0; i < length; i++) {
+            JSONObject object = content.getJSONObject(i);
+            String type = object.getJSONObject("card").getString("type");
+
+            if(type.equals("Warning") || type.equals("Error")) {
+                result.put(object);
+            }
+        }
+        return result;
+    }
+
     public void updateUI(JSONArray content, boolean inError) throws JSONException {
         mBinding = DataBindingUtil.getBinding(this);
-        int length = content.length();
+        JSONArray jsonCards = content;
+        if (inError) {
+            jsonCards = filterErrorCard(content);
+        }
+        int length = jsonCards.length();
+
         for (int i = 0; i < length; i++) {
-            cards.add(Card.fromJSON(content.getJSONObject(i)));
+            cards.add(Card.fromJSON(jsonCards.getJSONObject(i)));
         }
         List<Card> sortedCards = cards.stream().sorted(Comparator.comparingInt(v -> v.index)).collect(Collectors.toList());
         Iterator<Card> iterator = sortedCards.iterator();
