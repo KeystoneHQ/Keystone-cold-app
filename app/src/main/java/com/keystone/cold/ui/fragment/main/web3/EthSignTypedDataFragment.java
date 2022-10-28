@@ -139,7 +139,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
         if (addressSymbol != null) {
             verifyingContract = verifyingContract + String.format(" (%s)", addressSymbol);
         } else if (GnosisHandler.gnosisContractAddresses.contains(verifyingContract)) {
-            verifyingContract += " (GnosisSafeProxy)";
+            verifyingContract += " (Safe)";
         } else {
 //            verifyingContract = verifyingContract + String.format(" [%s]", "Unknown Address");
         }
@@ -177,6 +177,11 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
             if (hasRepalcedAddress.contains(address)) continue;
             String ens = viewModel.loadEnsAddress(address);
             String symbol = viewModel.recognizeAddress(address);
+            if (symbol == null) {
+                if (GnosisHandler.gnosisContractAddresses.contains(address)) {
+                    symbol = "Safe";
+                }
+            }
             address = Eth.Deriver.toChecksumAddress(address);
             StringBuilder result = new StringBuilder();
             if (!TextUtils.isEmpty(ens)) {
