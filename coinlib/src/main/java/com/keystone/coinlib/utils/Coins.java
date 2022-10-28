@@ -66,7 +66,7 @@ public class Coins {
             NEARAccount.MNEMONIC.getCode(),
             NEARAccount.LEDGER.getCode()});
 
-    public static final Coin APTOS = new Coin("aptos", "APTOS", "Aptos", 637, CURVE.ED25519, new String[]{});
+    public static final Coin APTOS = new Coin("aptos", "APT", "Aptos", 637, CURVE.ED25519, new String[]{});
 
     public static final List<Coin> SUPPORTED_COINS = Arrays.asList(
             BTC,
