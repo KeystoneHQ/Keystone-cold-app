@@ -226,6 +226,11 @@ public class EthFeeMarketTxFragment extends BaseFragment<EthFeeMarketTxBinding> 
             if ("address".equals(item.type)) {
                 String ens = viewModel.loadEnsAddress(item.value);
                 String addressSymbol = viewModel.recognizeAddress(item.value);
+                if (addressSymbol == null) {
+                    if (GnosisHandler.gnosisContractAddresses.contains(item.value.toLowerCase())) {
+                        addressSymbol = "Safe";
+                    }
+                }
                 item.value = Eth.Deriver.toChecksumAddress(item.value);
                 if (addressSymbol != null) {
                     item.value += String.format(" (%s)", addressSymbol);
@@ -263,7 +268,7 @@ public class EthFeeMarketTxFragment extends BaseFragment<EthFeeMarketTxBinding> 
             if (!TextUtils.isEmpty(addressSymbol)) {
                 to = to + String.format(" (%s)", addressSymbol);
             } else if (GnosisHandler.gnosisContractAddresses.contains(to.toLowerCase())) {
-                to += " (GnosisSafeProxy)";
+                to += " (Safe)";
             } else {
 //                to = to + String.format(" [%s]", "Unknown Address");
             }
