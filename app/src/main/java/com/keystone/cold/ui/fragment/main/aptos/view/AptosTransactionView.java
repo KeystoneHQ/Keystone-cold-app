@@ -13,6 +13,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.databinding.NearActionAttrBinding;
 import com.keystone.cold.databinding.NearActionItemBinding;
 import com.keystone.cold.ui.fragment.main.aptos.model.payload.PayLoad;
+import com.keystone.cold.util.StringUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,7 +57,7 @@ public class AptosTransactionView extends LinearLayout {
             while (iterator.hasNext()) {
                 String key = iterator.next();
                 NearActionAttrBinding nearActionAttrBinding = DataBindingUtil.inflate(inflater, R.layout.near_action_attr, null, false);
-                nearActionAttrBinding.key.setText(key);
+                nearActionAttrBinding.key.setText(StringUtils.capitalizes(key));
                 if (jsonObject.get(key) instanceof JSONObject) {
                     nearActionAttrBinding.value.setText(jsonObject.getJSONObject(key).toString(2));
                 } else if (jsonObject.get(key) instanceof JSONArray) {
