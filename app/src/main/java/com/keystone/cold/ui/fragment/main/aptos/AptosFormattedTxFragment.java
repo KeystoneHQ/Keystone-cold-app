@@ -12,7 +12,6 @@ import com.keystone.cold.databinding.AptosTxDetailBinding;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.main.aptos.model.AptosTransferTx;
 import com.keystone.cold.ui.fragment.main.aptos.model.AptosTx;
-import com.keystone.cold.util.DateUtil;
 import com.keystone.cold.viewmodel.tx.AptosViewModel;
 
 import java.math.BigDecimal;
@@ -70,7 +69,7 @@ public class AptosFormattedTxFragment extends BaseFragment<AptosTxDetailBinding>
     private void updateUI(AptosTx aptosTx) {
         mBinding.tvSender.setText(aptosTx.getSender());
         mBinding.tvSequenceNo.setText(String.valueOf(aptosTx.getSequenceNumber()));
-        mBinding.tvExpirationTimeStamp.setText(DateUtil.formatTimestamp(aptosTx.getExpirationTimestampSecs()));
+        mBinding.tvExpirationTimeStamp.setText(String.valueOf(aptosTx.getExpirationTimestampSecs()));
         mBinding.tvMaxGasLimit.setText(aptosTx.getMaxGasAmount() + " Gas Units");
         mBinding.tvGasUnitPrice.setText(conversionUnit(String.valueOf(aptosTx.getGasUnitPrice())) + " APT");
         mBinding.tvChainId.setText(String.valueOf(aptosTx.getChainId()));
