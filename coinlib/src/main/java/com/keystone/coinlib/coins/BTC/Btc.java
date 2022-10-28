@@ -19,6 +19,8 @@ package com.keystone.coinlib.coins.BTC;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.keystone.coinlib.coins.AbsCoin;
 import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.coins.AbsTx;
@@ -26,12 +28,15 @@ import com.keystone.coinlib.coins.BCH.Bch;
 import com.keystone.coinlib.coins.LTC.Ltc;
 import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.Coin;
+import com.keystone.coinlib.interfaces.SignCallback;
+import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.utils.Coins;
 
 import org.bitcoinj.core.LegacyAddress;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptBuilder;
+import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -219,6 +224,23 @@ public class Btc extends AbsCoin {
         }
     }
 
+    public void signPsbt(@NonNull String psbt, SignCallback callback, boolean finalize, Signer... signers) {
+        if (signers == null) {
+            callback.onFail();
+            return;
+        }
+        SignPsbtResult result = ((BtcImpl)impl).signPsbt(psbt, finalize, signers);
+        if (result != null && result.isValid()) {
+            callback.onSuccess(result.txId, result.psbtB64);
+        } else {
+            callback.onFail();
+        }
+    }
+
+    public void signPsbt(@NonNull String psbt, SignCallback callback, Signer... signers) {
+        signPsbt(psbt,callback,true, signers);
+    }
+
     public static class Deriver extends AbsDeriver {
 
         @Override
@@ -234,6 +256,11 @@ public class Btc extends AbsCoin {
             DeterministicKey key = DeterministicKey.deserializeB58(xPubKey, MAINNET);
             return LegacyAddress.fromScriptHash(MAINNET,
                     segWitOutputScript(key.getPubKeyHash()).getPubKeyHash()).toBase58();
+        }
+
+        public String deriveByPubkey(String pubkey) {
+            return LegacyAddress.fromScriptHash(MAINNET,
+                    segWitOutputScript(Hex.decode(pubkey)).getPubKeyHash()).toBase58();
         }
 
         protected Script segWitOutputScript(byte[] pubKeyHash) {

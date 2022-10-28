@@ -69,7 +69,7 @@
     </fragment>
     <fragment
         android:id="@+id/psbtConfirmFragment"
-        android:name="com.keystone.cold.ui.fragment.main.PSBTConfirmFragment"
+        android:name="com.keystone.cold.ui.fragment.main.psbt.PSBTConfirmFragment"
         android:label="PSBTConfirmFragment"
         tools:layout="@layout/psbt_confirm_fragment"
         >
@@ -1103,6 +1103,14 @@
         tools:layout="@layout/address_sync_fragment">
     </fragment>
 
+    <fragment
+        android:id="@+id/psbtBroadcastFragment"
+        android:name="com.keystone.cold.ui.fragment.main.psbt.PSBTBroadcastFragment"
+        android:label="PSBTBroadcastFragment"
+        tools:layout="@layout/broadcast_tx_fragment">
+
+    </fragment>
+
     <!--global action-->
     <action
         android:id="@+id/action_to_preImportFragment"
@@ -1234,6 +1242,15 @@
     <action
         android:id="@+id/action_to_psbtConfirmFragment"
         app:destination="@id/psbtConfirmFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right"
+        />
+
+    <action
+        android:id="@+id/action_to_psbtBroadcastFragment"
+        app:destination="@id/psbtBroadcastFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"

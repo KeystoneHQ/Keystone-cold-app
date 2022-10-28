@@ -26,9 +26,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,14 +41,12 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.coins.polkadot.AddressCodec;
-import com.keystone.coinlib.exception.InvalidETHAccountException;
 import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
-import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.databinding.AssetListBottomMenuBinding;
 import com.keystone.cold.databinding.AssetListFragmentBinding;
@@ -64,10 +60,8 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerState;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerViewModel;
-import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.CoinListViewModel;
-import com.keystone.cold.viewmodel.CoinViewModel;
-import com.keystone.cold.viewmodel.PSBTViewModel;
+import com.keystone.cold.viewmodel.tx.psbt.PSBTViewModel;
 import com.keystone.cold.viewmodel.PolkadotViewModel;
 import com.keystone.cold.viewmodel.SetupVaultViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
@@ -269,9 +263,8 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
                 byte[] bytes = psbt.getPsbt();
                 String psbtB64 = Base64.toBase64String(bytes);
                 PSBTViewModel psbtViewModel = ViewModelProviders.of(mFragment).get(PSBTViewModel.class);
-                PSBTViewModel.PSBT result = psbtViewModel.parsePsbtBase64(psbtB64);
                 String myMasterFingerprint = new GetMasterFingerprintCallable().call();
-                result.validate(myMasterFingerprint);
+                psbtViewModel.parsePsbtBase64(psbtB64, myMasterFingerprint);
                 mFragment.navigate(R.id.action_to_psbtConfirmFragment);
             }
 

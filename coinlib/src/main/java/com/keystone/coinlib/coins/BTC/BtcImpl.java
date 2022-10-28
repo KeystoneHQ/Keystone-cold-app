@@ -24,6 +24,7 @@ import com.eclipsesource.v8.V8Function;
 import com.eclipsesource.v8.V8ScriptExecutionException;
 import com.keystone.coinlib.coins.AbsTx;
 import com.keystone.coinlib.coins.SignTxResult;
+import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.v8.CoinImpl;
 import com.eclipsesource.v8.V8Object;
