@@ -100,7 +100,7 @@ public class CoinAdapter extends FilterableBaseBindingAdapter<CoinEntity, AssetI
                         false);
             }
         }
-        return new AssetItem(coinModel.getCoinCode(),
+        return new AssetItem(coinModel.getDisplayCoinCode(),
                 coinModel.getDisplayName(),
                 coinModel.getCoinCode(),
                 coinModel.getTag(),
