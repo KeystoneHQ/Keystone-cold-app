@@ -111,7 +111,7 @@ public class PSBTViewModel extends AndroidViewModel {
                         tx.setSignedHex(psbtB64);
                         tx.setAddition(generateAddition(psbt));
                         mRepository.insertTx(tx);
-                        signState.postValue(new SignState(STATE_SIGN_SUCCESS, txId, psbtB64));
+                        signState.postValue(new SignState(STATE_SIGN_SUCCESS, txId));
                     } catch (JSONException e) {
                         e.printStackTrace();
                         signState.postValue(new SignState(STATE_SIGN_FAIL, null));
