@@ -75,9 +75,13 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
             } else {
                 Bundle bundle = requireArguments();
                 Bundle data = new Bundle();
+                String addressName = addr.getName();
+                if (watchWallet == WatchWallet.APTOS) {
+                    addressName = (StringUtils.capitalizes(addressName.toLowerCase()));
+                }
                 data.putString(KEY_COIN_CODE, bundle.getString(KEY_COIN_CODE));
                 data.putString(KEY_ADDRESS, addr.getAddressString());
-                data.putString(KEY_ADDRESS_NAME, addr.getName());
+                data.putString(KEY_ADDRESS_NAME, addressName);
                 data.putString(KEY_ADDRESS_PATH, addr.getPath());
                 data.putInt(KEY_ADDRESS_INDEX, addr.getIndex());
                 navigate(R.id.action_to_receiveCoinFragment, data);
