@@ -71,7 +71,7 @@ public class Web3TxViewModel extends Base {
     private String txHex;
     private String messageData;
     private String hdPath;
-    private int chainId;
+    private long chainId;
     private String toAddress;
     private String toContractName;
 
@@ -183,7 +183,7 @@ public class Web3TxViewModel extends Base {
         return methods.toString();
     }
 
-    public String getNetwork(int chainId) {
+    public String getNetwork(long chainId) {
         String networkName = "";
         if (chainIdJSONObject != null) {
             JSONObject jsonObject = chainIdJSONObject.optJSONObject(String.valueOf(chainId));
@@ -218,7 +218,7 @@ public class Web3TxViewModel extends Base {
                     parseTxException.postValue(new InvalidTransactionException("invalid transaction"));
                     return;
                 }
-                chainId = ethTx.getInt("chainId");
+                chainId = ethTx.getLong("chainId");
                 if (ethTx.has("to") && ethTx.has("contract")) {
                     toAddress = ethTx.getString("to");
                     toContractName = ethTx.getString("contract");
@@ -257,7 +257,7 @@ public class Web3TxViewModel extends Base {
                     toAddress = ethTx.getString("to");
                     toContractName = ethTx.getString("contract");
                 }
-                chainId = ethTx.getInt("chainId");
+                chainId = ethTx.getLong("chainId");
                 String data = ethTx.getString("data");
                 try {
                     abi = new JSONObject(data);
@@ -295,7 +295,7 @@ public class Web3TxViewModel extends Base {
                 chainId = 1;
                 if (!isLegacyTypedData) {
                     JSONObject typedData = new JSONObject(messageData);
-                    chainId = typedData.getJSONObject("domain").optInt("chainId", 1);
+                    chainId = typedData.getJSONObject("domain").optLong("chainId", 1);
                 }
                 observableObject.postValue(object);
             } catch (JSONException e) {
@@ -598,7 +598,7 @@ public class Web3TxViewModel extends Base {
         return Objects.requireNonNull(observableEthTx.getValue()).getSignedHex();
     }
 
-    public int getChainId() {
+    public long getChainId() {
         return chainId;
     }
 
@@ -627,7 +627,7 @@ public class Web3TxViewModel extends Base {
         return value.divide(limitValue.multiply(BigDecimal.TEN.pow(9)), 8, BigDecimal.ROUND_HALF_UP);
     }
 
-    public static String getSymbol(int chainId) {
+    public static String getSymbol(long chainId) {
         String symbol = " ";
         if (chainIdJSONObject != null) {
             JSONObject jsonObject = chainIdJSONObject.optJSONObject(String.valueOf(chainId));

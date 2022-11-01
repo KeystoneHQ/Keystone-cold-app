@@ -93,12 +93,12 @@ public class EthTxFragment extends BaseFragment<EthTxBinding> {
     }
 
     private void updateUI() {
-        int chainId = 1;
+        long chainId = 1;
         JSONObject signed = null;
         JSONObject abi = null;
         try {
             signed = new JSONObject(txEntity.getSignedHex());
-            chainId = signed.optInt("chainId", 1);
+            chainId = signed.optLong("chainId", 1);
             abi = signed.getJSONObject("abi");
         } catch (JSONException e) {
             e.printStackTrace();

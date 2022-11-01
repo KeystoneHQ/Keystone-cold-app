@@ -32,7 +32,7 @@ public class NFTConfirmFragment extends BaseFragment<NftConfirmFragmentBinding> 
 
     public static String KEY_NFT_TYPE = "NFT_TYPE";
 
-    private Integer chainId;
+    private Long chainId;
     private String contractAddress;
     private String name;
     private String contractName;
@@ -56,7 +56,7 @@ public class NFTConfirmFragment extends BaseFragment<NftConfirmFragmentBinding> 
 
         if (ETH_NFT.equals(nftType)) {
             viewModel = ViewModelProviders.of(this).get(Web3TxViewModel.class);
-            chainId = requireArguments().getInt(KEY_CHAIN_ID);
+            chainId = requireArguments().getLong(KEY_CHAIN_ID);
             contractAddress = requireArguments().getString(KEY_CONTRACT_ADDRESS);
             contractName = requireArguments().getString(KEY_CONTRACT_NAME);
             name = requireArguments().getString(KEY_NAME);

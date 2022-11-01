@@ -43,7 +43,7 @@ import java.util.regex.Pattern;
 
 public class Eth extends AbsCoin implements Coin {
 
-    public static int CHAIN_ID = Network.Mainnet.getChainId();
+    public static long CHAIN_ID = Network.Mainnet.getChainId();
 
     public Eth(Coin impl) {
         super(impl);

@@ -27,7 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Etc extends Eth {
-    public static int CHAIN_ID = Network.Ethereum_Classic.getChainId();
+    public static long CHAIN_ID = Network.Ethereum_Classic.getChainId();
     public Etc(Coin impl) {
         super(impl);
     }
