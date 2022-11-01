@@ -66,7 +66,7 @@ public class GenericETHTxEntity implements Tx {
 
     // another params
     private String signature;
-    private int chainId;
+    private long chainId;
     private String addition;
     private int txType; // 0x00:legacy  0x02:feeMarket
     private boolean isFromTFCard;
@@ -87,7 +87,7 @@ public class GenericETHTxEntity implements Tx {
                     }
                     genericETHTxEntity = getGenericETHTxEntity(ethTx, web3TxEntity);
                     genericETHTxEntity.setSignature(EthImpl.getSignature(web3TxEntity.getSignedHex()));
-                    int chainId = getChainIdByEIP155(ethTx.getInt("chainId"));
+                    long chainId = getChainIdByEIP155(ethTx.getLong("chainId"));
                     genericETHTxEntity.setChainId(chainId);
                     BigDecimal gasPrice = new BigDecimal(ethTx.getString("gasPrice"));
                     gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
@@ -169,7 +169,7 @@ public class GenericETHTxEntity implements Tx {
         return genericETHTxEntity;
     }
 
-    private static int getChainIdByEIP155(int chainId) {
+    private static long getChainIdByEIP155(long chainId) {
         return (chainId - 8 - 27) / 2;
     }
 
@@ -263,7 +263,7 @@ public class GenericETHTxEntity implements Tx {
         return signature;
     }
 
-    public int getChainId() {
+    public long getChainId() {
         return chainId;
     }
 
@@ -339,7 +339,7 @@ public class GenericETHTxEntity implements Tx {
         this.signature = signature;
     }
 
-    public void setChainId(int chainId) {
+    public void setChainId(long chainId) {
         this.chainId = chainId;
     }
 

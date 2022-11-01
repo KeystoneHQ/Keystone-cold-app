@@ -28,17 +28,17 @@ public enum Network {
     Ethereum_Classic(61),
     Avalanche_C_Chain(43114);
 
-    private final int chainId;
+    private final long chainId;
 
-    Network(int chainId) {
+    Network(long chainId) {
         this.chainId = chainId;
     }
 
-    public int getChainId() {
+    public long getChainId() {
         return chainId;
     }
 
-    public static Network getNetwork(int chainId) {
+    public static Network getNetwork(long chainId) {
         for (Network value : Network.values()) {
             if (chainId == value.chainId) {
                 return value;

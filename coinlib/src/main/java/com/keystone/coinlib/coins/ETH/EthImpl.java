@@ -65,9 +65,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class EthImpl implements Coin {
-    private final int chainId;
+    private final long chainId;
 
-    public EthImpl(int chainId) {
+    public EthImpl(long chainId) {
         this.chainId = chainId;
     }
 
@@ -121,7 +121,7 @@ public class EthImpl implements Coin {
             if (rawTx instanceof SignedRawTransaction) {
                 Sign.SignatureData signatureData = ((SignedRawTransaction) rawTx).getSignatureData();
                 byte[] v = signatureData.getV();
-                metaData.put("chainId", new BigInteger(Hex.toHexString(v), 16).intValue());
+                metaData.put("chainId", new BigInteger(Hex.toHexString(v), 16).longValue());
             } else {
                 metaData.put("chainId", 1);
             }
@@ -291,7 +291,7 @@ public class EthImpl implements Coin {
             recId = Integer.parseInt(signature.substring(128), 16);
         } catch (Exception ignore) {
         }
-        int v = 27 + recId;
+        long v = 27 + recId;
         if (chainId > 0 && isEIP155) {
             v += chainId * 2 + 8;
         }

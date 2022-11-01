@@ -99,7 +99,7 @@ public class EthSignTypedDataFragment extends BaseFragment<EthSignTypedDataBindi
                     JSONObject messageData = new JSONObject(jsonObject.getString("data"));
                     JSONObject domain = messageData.getJSONObject("domain");
                     mBinding.primaryType.setText(messageData.getString("primaryType"));
-                    mBinding.network.setText(viewModel.getNetwork(domain.optInt("chainId", 1)));
+                    mBinding.network.setText(viewModel.getNetwork(domain.optLong("chainId", 1)));
                     mBinding.name.setText(domain.optString("name"));
                     String verifyingContract = domain.optString("verifyingContract", "");
                     updateVerifyingContract(verifyingContract);

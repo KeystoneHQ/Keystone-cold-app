@@ -1,12 +1,10 @@
 package com.keystone.cold.integration.corewallet;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.cold.AppExecutors;

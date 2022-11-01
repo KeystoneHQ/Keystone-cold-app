@@ -461,14 +461,14 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 } else if (result.getType().equals(ScanResultTypes.UR_ETH_NFT_ITEM)) {
                     EthNFTItem ethnftItem = (EthNFTItem) result.resolve();
                     String name = ethnftItem.getName();
-                    int chainId = ethnftItem.getChainId();
+                    long chainId = ethnftItem.getChainId();
                     String contractAddress = ethnftItem.getContractAddress();
                     String contractName = ethnftItem.getContractName();
                     String mediaData = ethnftItem.getMediaData();
 
                     Bundle bundle = new Bundle();
                     bundle.putString(KEY_NFT_TYPE, ETH_NFT);
-                    bundle.putInt(KEY_CHAIN_ID, chainId);
+                    bundle.putLong(KEY_CHAIN_ID, chainId);
                     bundle.putString(KEY_CONTRACT_ADDRESS, contractAddress);
                     bundle.putString(KEY_CONTRACT_NAME, contractName);
                     bundle.putString(KEY_NAME, name);

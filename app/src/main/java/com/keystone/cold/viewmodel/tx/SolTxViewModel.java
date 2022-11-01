@@ -56,7 +56,6 @@ public class SolTxViewModel extends Base {
     private String txHex;
     private String messageData;
     private String hdPath;
-    private int chainId;
 
     private String requestId;
     private String signature;
