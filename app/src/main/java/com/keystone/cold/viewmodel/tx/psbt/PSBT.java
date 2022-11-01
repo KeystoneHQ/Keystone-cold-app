@@ -1,5 +1,7 @@
 package com.keystone.cold.viewmodel.tx.psbt;
 
+import android.util.Log;
+
 import com.keystone.coinlib.accounts.ExtendedPublicKey;
 import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.coins.BTC.Btc;
@@ -14,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +110,7 @@ public class PSBT {
         }
 
         public String getValueText() {
-            return new BigInteger(String.valueOf(getValue())).divide(new BigInteger("10").pow(8)).toString() + " BTC";
+            return new BigDecimal(String.valueOf(getValue())).divide(new BigDecimal("10").pow(8)).toString() + " BTC";
         }
 
         private boolean checkLength() {
@@ -150,6 +153,23 @@ public class PSBT {
             }
         }
 
+        @Override
+        public String toString() {
+            return "Input{" +
+                    "txId='" + txId + '\'' +
+                    ", index=" + index +
+                    ", value=" + value +
+                    ", pubkeys=" + pubkeys +
+                    ", isMultiSign=" + isMultiSign +
+                    ", signStatus='" + signStatus + '\'' +
+                    ", isFinalized=" + isFinalized +
+                    ", isMine=" + isMine +
+                    ", canonicalHDPath='" + canonicalHDPath + '\'' +
+                    ", canonicalPubkey='" + canonicalPubkey + '\'' +
+                    ", canonicalAddress='" + canonicalAddress + '\'' +
+                    '}';
+        }
+
         public static Input fromJSON(JSONObject json, String myMasterFingerprint) throws JSONException {
             String txId = json.getString("txId");
             int index = json.getInt("index");
@@ -166,23 +186,34 @@ public class PSBT {
                 String path = key.getString("path");
                 String pubkey = key.getString("pubkey");
                 Pubkey publicKey = new Pubkey(masterFingerprint, path, pubkey);
-                if (masterFingerprint.equals(myMasterFingerprint)) {
+                canonicalPubkey = pubkey;
+                if (masterFingerprint.equalsIgnoreCase(myMasterFingerprint)) {
                     canonicalHDPath = calculateCanonicalPath(publicKey);
                     if (canonicalHDPath != null) {
-                        canonicalPubkey = pubkey;
                         canonicalAddress = deriveAddress(canonicalHDPath, canonicalPubkey);
-                     }
+                    }
                 }
                 pubkeys.add(publicKey);
             }
             boolean isMultiSign = json.getBoolean("isMultiSign");
-            String signStatus = json.getString("signStatus");
+            String signStatus = json.optString("signStatus");
             boolean isFinalized = json.getBoolean("isFinalized");
-            return new Input(txId, index, value, pubkeys, isMultiSign, signStatus, isFinalized, canonicalHDPath == null, canonicalHDPath, canonicalPubkey, canonicalAddress);
+            return new Input(txId, index, value, pubkeys, isMultiSign, signStatus, isFinalized, canonicalHDPath != null, canonicalHDPath, canonicalPubkey, canonicalAddress);
         }
     }
 
     public static class Output {
+        @Override
+        public String toString() {
+            return "Output{" +
+                    "address='" + address + '\'' +
+                    ", value=" + value +
+                    ", pubkeys=" + pubkeys +
+                    ", isChange=" + isChange +
+                    ", changePath='" + changePath + '\'' +
+                    '}';
+        }
+
         private String address;
         private long value;
         private List<Pubkey> pubkeys;
@@ -211,29 +242,7 @@ public class PSBT {
         }
 
         public String getValueText() {
-            return new BigInteger(String.valueOf(getValue())).divide(new BigInteger("10").pow(8)).toString() + " BTC";
-        }
-
-        public boolean validate() {
-            int length = getPubkeys().size();
-            // only support single sign currently;
-            return length == 1;
-        }
-
-        public boolean isChange(String myMasterFingerprint) {
-            int length = getPubkeys().size();
-            for (int i = 0; i < length; i++) {
-                Pubkey pubkey = getPubkeys().get(i);
-                if (pubkey.masterFingerprint.equals(myMasterFingerprint)) {
-                    String xpub = new GetExtendedPublicKeyCallable(pubkey.getPath()).call();
-                    ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(xpub);
-                    String key = Hex.toHexString(extendedPublicKey.getKey());
-                    if (pubkey.pubkey.equals(key)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
+            return new BigDecimal(String.valueOf(getValue())).divide(new BigDecimal("10").pow(8)).toString() + " BTC";
         }
 
         public String getChangePath() {
@@ -244,29 +253,31 @@ public class PSBT {
         public static Output fromJSON(JSONObject json, String myMasterFingerprint) throws JSONException {
             String address = json.getString("address");
             long value = json.getLong("value");
-            JSONArray keys = json.getJSONArray("hdPath");
-            List<Pubkey> pubkeys = new ArrayList<>();
-            int length = keys.length();
+            JSONArray keys = json.optJSONArray("hdPath");
             String canonicalHDPath = null;
-            for (int i = 0; i < length; i++) {
-                JSONObject key = keys.getJSONObject(i);
-                String masterFingerprint = key.getString("masterFingerprint");
-                String path = key.getString("path");
-                String pubkey = key.getString("pubkey");
-                Pubkey publicKey = new Pubkey(masterFingerprint, path, pubkey);
-                if (masterFingerprint.equals(myMasterFingerprint)) {
-                    canonicalHDPath = calculateCanonicalPath(publicKey);
+            List<Pubkey> pubkeys = new ArrayList<>();
+            if (keys != null) {
+                int length = keys.length();
+                for (int i = 0; i < length; i++) {
+                    JSONObject key = keys.getJSONObject(i);
+                    String masterFingerprint = key.getString("masterFingerprint");
+                    String path = key.getString("path");
+                    String pubkey = key.getString("pubkey");
+                    Pubkey publicKey = new Pubkey(masterFingerprint, path, pubkey);
+                    if (masterFingerprint.equalsIgnoreCase(myMasterFingerprint)) {
+                        canonicalHDPath = calculateCanonicalPath(publicKey);
+                    }
+                    pubkeys.add(publicKey);
                 }
-                pubkeys.add(publicKey);
             }
-            return new Output(address, value, pubkeys, canonicalHDPath == null, canonicalHDPath);
+            return new Output(address, value, pubkeys, canonicalHDPath != null, canonicalHDPath);
         }
     }
 
     private final List<Input> inputs = new ArrayList<>();
     private final List<Output> outputs = new ArrayList<>();
-    private String myMasterFingerprint;
-    private String rawData;
+    private final String myMasterFingerprint;
+    private final String rawData;
 
     public PSBT(String rawData, String myMasterFingerprint) {
         this.rawData = rawData;
@@ -277,7 +288,7 @@ public class PSBT {
         return rawData;
     }
 
-    public void adoptInputs(JSONArray inputs, String myMasterFingerprint) throws InvalidTransactionException {
+    public void adoptInputs(JSONArray inputs) throws InvalidTransactionException {
         try {
             int length = inputs.length();
             if (length == 0) {
@@ -296,7 +307,7 @@ public class PSBT {
         }
     }
 
-    public void adoptOutputs(JSONArray outputs, String myMasterFingerprint) throws InvalidTransactionException {
+    public void adoptOutputs(JSONArray outputs) throws InvalidTransactionException {
         try {
             int length = outputs.length();
             if (length == 0) {
@@ -319,7 +330,7 @@ public class PSBT {
     }
 
     public String getFeeText() {
-        return new BigInteger(String.valueOf(getFee())).divide(new BigInteger("10").pow(8)).toString() + " BTC";
+        return new BigDecimal(String.valueOf(getFee())).divide(new BigDecimal("10").pow(8)).toString() + " BTC";
     }
 
     public List<Input> getInputs() {
@@ -337,12 +348,10 @@ public class PSBT {
     private static String calculateCanonicalPath(Pubkey pubkey) {
         AtomicReference<String> canonicalHDPath = new AtomicReference<>(null);
         PSBTViewModel.BTCPaths.forEach(a -> {
-            String subPath = pubkey.path;
-            subPath = subPath.substring(1); //remove first char 'm';
-            String path = a + subPath;
+            String path = pubkey.path;
             String xpub = new GetExtendedPublicKeyCallable(path).call();
             ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(xpub);
-            if (Hex.toHexString(extendedPublicKey.getKey()).equals(pubkey.pubkey)) {
+            if (Hex.toHexString(extendedPublicKey.getKey()).equalsIgnoreCase(pubkey.pubkey)) {
                 canonicalHDPath.set(path);
             }
         });

@@ -17,6 +17,8 @@
 
 package com.keystone.coinlib.coins.BTC;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.eclipsesource.v8.V8Array;
@@ -56,7 +58,6 @@ public class BtcImpl extends CoinImpl {
         V8Array params = new V8Array(v8);
         v8.registerResource(params);
         params.push(psbt);
-
 
         if (signers.length > 0) {
             V8Array signProviders = new V8Array(v8);

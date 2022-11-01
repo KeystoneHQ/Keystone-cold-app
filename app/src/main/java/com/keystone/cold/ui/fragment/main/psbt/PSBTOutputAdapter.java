@@ -40,7 +40,7 @@ class PSBTOutputAdapter extends BaseBindingAdapter<JSONObject, TxDetailItemBindi
             boolean isChange = item.getBoolean("is_change");
             String value = item.getString("value");
             String address = item.getString("address");
-            String path = item.getString("change_path");
+            String path = item.optString("change_path");
             if (isChange) {
                 binding.info.setText(value + "\n" + address + "\n" + path);
                 binding.change.setVisibility(View.VISIBLE);

@@ -56,7 +56,6 @@ public class PSBTViewModel extends AndroidViewModel {
 
     protected static final List<String> BTCPaths = new ArrayList<>(Arrays.asList(BTCLegacyPath, BTCNestedSegwitPath, BTCNativeSegwitPath));
 
-    private final BtcImpl btcImpl = new BtcImpl();
     private final Application mApplication;
     private final DataRepository mRepository;
 
@@ -73,11 +72,11 @@ public class PSBTViewModel extends AndroidViewModel {
     public PSBT parsePsbtBase64(String psbt, String myMasterFingerprint) throws InvalidTransactionException {
         PSBT psbt1 = new PSBT(psbt, myMasterFingerprint);
         try {
-            JSONObject object = btcImpl.parsePsbt(psbt);
+            JSONObject object = new BtcImpl().parsePsbt(psbt);
             JSONArray inputs = object.getJSONArray("inputs");
             JSONArray outputs = object.getJSONArray("outputs");
-            psbt1.adoptInputs(inputs, myMasterFingerprint);
-            psbt1.adoptOutputs(outputs, myMasterFingerprint);
+            psbt1.adoptInputs(inputs);
+            psbt1.adoptOutputs(outputs);
         } catch (JSONException e) {
             e.printStackTrace();
             throw new InvalidTransactionException("Transaction data error");
@@ -128,7 +127,7 @@ public class PSBTViewModel extends AndroidViewModel {
             callback.startSign();
 
             Signer[] signer = initSigners(psbt);
-            Btc btc = new Btc(btcImpl);
+            Btc btc = new Btc(new BtcImpl());
             btc.signPsbt(psbt.getRawData(), callback, signer);
         });
         return signState;

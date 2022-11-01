@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -251,6 +252,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         ScannerState scannerState = new ScannerState() {
             @Override
             public void handleScanResult(ScanResult result) throws Exception {
+                Log.d(TAG, "handleScanResult: " + result);
                 if(result.getType().equals(ScanResultTypes.UR_CRYPTO_PSBT)) {
                     CryptoPSBT cryptoPSBT = (CryptoPSBT) result.resolve();
                     handleCryptoPSBT(cryptoPSBT);
@@ -265,7 +267,9 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
                 PSBTViewModel psbtViewModel = ViewModelProviders.of(mFragment).get(PSBTViewModel.class);
                 String myMasterFingerprint = new GetMasterFingerprintCallable().call();
                 psbtViewModel.parsePsbtBase64(psbtB64, myMasterFingerprint);
-                mFragment.navigate(R.id.action_to_psbtConfirmFragment);
+                Bundle data = new Bundle();
+                data.putString("psbt", psbtB64);
+                mFragment.navigate(R.id.action_to_psbtConfirmFragment, data);
             }
 
             @Override
