@@ -6,8 +6,11 @@ import com.keystone.coinlib.interfaces.Coin;
 import com.keystone.coinlib.utils.Coins;
 
 import org.bitcoinj.core.Address;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.LegacyAddress;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.script.Script;
+import org.bouncycastle.util.encoders.Hex;
 
 public class BTC_NATIVE_SEGWIT extends Btc {
     public BTC_NATIVE_SEGWIT(Coin impl) {
@@ -35,6 +38,10 @@ public class BTC_NATIVE_SEGWIT extends Btc {
         @Override
         public String derive(String xPubKey, int index) {
             throw new RuntimeException("not implemented");
+        }
+
+        public String deriveByPubkey(String pubkey) {
+            return Address.fromKey(MAINNET, ECKey.fromPublicOnly(Hex.decode(pubkey)), Script.ScriptType.P2WPKH).toString();
         }
 
     }

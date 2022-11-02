@@ -101,6 +101,8 @@ import com.keystone.cold.viewmodel.exceptions.UnknowQrCodeException;
 import com.keystone.cold.viewmodel.exceptions.UnknownSubstrateChainException;
 import com.keystone.cold.viewmodel.exceptions.UnsupportedSubstrateTxException;
 import com.keystone.cold.viewmodel.exceptions.XfpNotMatchException;
+import com.keystone.cold.viewmodel.tx.psbt.PSBTViewModel;
+import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
 import com.sparrowwallet.hummingbird.registry.EthNFTItem;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
@@ -110,6 +112,7 @@ import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.spongycastle.util.encoders.Base64;
 import org.spongycastle.util.encoders.Hex;
 
 import java.io.Serializable;
@@ -148,6 +151,20 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     @Override
     protected void init(View view) {
         watchWallet = WatchWallet.getWatchWallet(mActivity);
+        if (watchWallet == WatchWallet.CORE_WALLET) {
+            Bundle data = requireArguments();
+            coinId = data.getString(KEY_COIN_ID);
+            coinCode = data.getString(KEY_COIN_CODE);
+            mBinding.customTitle.setVisibility(View.GONE);
+            if (coinCode.equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) {
+                mBinding.toolbar.setTitle(Coins.BTC_NATIVE_SEGWIT.coinName());
+            } else {
+                // We treat ETH as AVAX, for they share the same accounts;
+                mBinding.toolbar.setTitle(Coins.AVAX.coinName());
+                mBinding.account.setText(ETHAccount.ofCode(Utilities.getCurrentEthAccount(mActivity)).getName());
+                mBinding.account.setVisibility(View.VISIBLE);
+            }
+        }
         if (watchWallet == WatchWallet.METAMASK) {
             mBinding.toolbar.setNavigationIcon(R.drawable.menu);
             mBinding.toolbar.setTitle(watchWallet.getWalletName(mActivity).replace("MetaMask", "MM"));
@@ -224,6 +241,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             case NEAR:
             case APTOS:
             case POLKADOT_JS:
+            case CORE_WALLET:
                 return R.menu.metamask;
             default:
                 return (showPublicKey) ? R.menu.asset_without_add : R.menu.asset;
@@ -367,7 +385,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             case R.id.action_scan:
                 if (watchWallet == WatchWallet.METAMASK
                         || watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR
-                        || watchWallet == WatchWallet.APTOS) {
+                        || watchWallet == WatchWallet.APTOS || watchWallet == WatchWallet.CORE_WALLET) {
                     scanQrCode();
                 } else {
                     navigate(R.id.action_to_QRCodeScanFragment);
@@ -402,78 +420,11 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 if (result.getType().equals(ScanResultTypes.PLAIN_TEXT)) {
                     throw new UnknowQrCodeException("unknown transaction!");
                 } else if (result.getType().equals(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
-                    EthSignRequest ethSignRequest = (EthSignRequest) result.resolve();
-                    Bundle bundle = new Bundle();
-                    ByteBuffer uuidBuffer = ByteBuffer.wrap(ethSignRequest.getRequestId());
-                    UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
-                    String hdPath = ethSignRequest.getDerivationPath();
-                    String requestMFP = Hex.toHexString(ethSignRequest.getMasterFingerprint());
-                    bundle.putString(REQUEST_ID, uuid.toString());
-                    bundle.putString(SIGN_DATA, Hex.toHexString(ethSignRequest.getSignData()));
-                    bundle.putString(HD_PATH, "M/" + hdPath);
-
-                    ETHAccount current = ETHAccount.ofCode(Utilities.getCurrentEthAccount(mFragment.getActivity()));
-                    ETHAccount target = ETHAccount.getAccountByPath(hdPath);
-                    if (target == null) {
-                        throw new InvalidTransactionException("unknown hd path");
-                    }
-                    if (!target.equals(current)) {
-                        if (!current.isChildrenPath(hdPath)) {
-                            //standard and ledger_live has overlap of 1st address
-                            throw new InvalidETHAccountException("not expected ETH account", current, target);
-                        }
-                    }
-
-                    String MFP = new GetMasterFingerprintCallable().call();
-
-                    if (!requestMFP.equalsIgnoreCase(MFP)) {
-                        throw new XfpNotMatchException("Master fingerprint not match");
-                    }
-                    if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TRANSACTION.getType())) {
-                        mFragment.navigate(R.id.action_to_ethTxConfirmFragment, bundle);
-                    } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_DATA.getType())) {
-                        mFragment.navigate(R.id.action_to_ethSignTypedDataFragment, bundle);
-                    } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.PERSONAL_MESSAGE.getType())) {
-                        mFragment.navigate(R.id.action_to_ethSignMessageFragment, bundle);
-                    } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_TRANSACTION.getType())) {
-                        byte[] typedTransaction = ethSignRequest.getSignData();
-                        byte type = typedTransaction[0];
-                        switch (type) {
-                            case 0x02:
-                                mFragment.navigate(R.id.action_to_ethFeeMarketTxConfirmFragment, bundle);
-                                break;
-                            default:
-                                throw new UnknowQrCodeException("unknown transaction!");
-                        }
-                    }
+                    handleETHSignRequest(result);
                 } else if (result.getType().equals(ScanResultTypes.UR_BYTES)) {
-                    JSONObject object = new JSONObject(new String((byte[]) result.resolve(), StandardCharsets.UTF_8));
-                    JSONObject webAuth = object.optJSONObject("data");
-                    if (webAuth != null && webAuth.optString("type").equals("webAuth")) {
-                        String data = webAuth.getString("data");
-                        Bundle bundle = new Bundle();
-                        bundle.putString(WEB_AUTH_DATA, data);
-                        bundle.putBoolean(IS_SETUP_VAULT, false);
-                        mFragment.navigate(R.id.action_QRCodeScan_to_result, bundle);
-                    } else {
-                        throw new UnExpectedQRException("cannot resolve ur bytes");
-                    }
+                    handleURBytes(result);
                 } else if (result.getType().equals(ScanResultTypes.UR_ETH_NFT_ITEM)) {
-                    EthNFTItem ethnftItem = (EthNFTItem) result.resolve();
-                    String name = ethnftItem.getName();
-                    long chainId = ethnftItem.getChainId();
-                    String contractAddress = ethnftItem.getContractAddress();
-                    String contractName = ethnftItem.getContractName();
-                    String mediaData = ethnftItem.getMediaData();
-
-                    Bundle bundle = new Bundle();
-                    bundle.putString(KEY_NFT_TYPE, ETH_NFT);
-                    bundle.putLong(KEY_CHAIN_ID, chainId);
-                    bundle.putString(KEY_CONTRACT_ADDRESS, contractAddress);
-                    bundle.putString(KEY_CONTRACT_NAME, contractName);
-                    bundle.putString(KEY_NAME, name);
-                    bundle.putString(KEY_MEDIA_DATA, mediaData);
-                    mFragment.navigate(R.id.action_QRCodeScan_to_nftConfirmFragment, bundle);
+                    handleETHNFTItem(result);
                 } else if (result.getType().equals(ScanResultTypes.UR_SOL_SIGN_REQUEST)) {
                     handleSolSignRequest(result);
                 } else if (result.getType().equals(ScanResultTypes.UR_SOL_NFT_ITEM)) {
@@ -482,7 +433,102 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     handleNearSignRequest(result);
                 } else if (result.getType().equals(ScanResultTypes.UR_APTOS_SIGN_REQUEST)) {
                     handleAptosSignRequest(result);
+                } else if (result.getType().equals(ScanResultTypes.UR_CRYPTO_PSBT)) {
+                    handleCryptoPSBT(result);
+                } else {
+                    throw new UnknowQrCodeException("unknown transaction!");
                 }
+            }
+
+            private void handleURBytes(ScanResult result) throws JSONException, UnExpectedQRException {
+                JSONObject object = new JSONObject(new String((byte[]) result.resolve(), StandardCharsets.UTF_8));
+                JSONObject webAuth = object.optJSONObject("data");
+                if (webAuth != null && webAuth.optString("type").equals("webAuth")) {
+                    String data = webAuth.getString("data");
+                    Bundle bundle = new Bundle();
+                    bundle.putString(WEB_AUTH_DATA, data);
+                    bundle.putBoolean(IS_SETUP_VAULT, false);
+                    mFragment.navigate(R.id.action_QRCodeScan_to_result, bundle);
+                } else {
+                    throw new UnExpectedQRException("cannot resolve ur bytes");
+                }
+            }
+
+            private void handleETHNFTItem(ScanResult result) {
+                EthNFTItem ethnftItem = (EthNFTItem) result.resolve();
+                String name = ethnftItem.getName();
+                int chainId = ethnftItem.getChainId();
+                String contractAddress = ethnftItem.getContractAddress();
+                String contractName = ethnftItem.getContractName();
+                String mediaData = ethnftItem.getMediaData();
+
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_NFT_TYPE, ETH_NFT);
+                bundle.putLong(KEY_CHAIN_ID, chainId);
+                bundle.putString(KEY_CONTRACT_ADDRESS, contractAddress);
+                bundle.putString(KEY_CONTRACT_NAME, contractName);
+                bundle.putString(KEY_NAME, name);
+                bundle.putString(KEY_MEDIA_DATA, mediaData);
+                mFragment.navigate(R.id.action_QRCodeScan_to_nftConfirmFragment, bundle);
+            }
+
+            private void handleETHSignRequest(ScanResult result) throws UnknowQrCodeException, XfpNotMatchException, InvalidETHAccountException, InvalidTransactionException {
+                EthSignRequest ethSignRequest = (EthSignRequest) result.resolve();
+                Bundle bundle = new Bundle();
+                ByteBuffer uuidBuffer = ByteBuffer.wrap(ethSignRequest.getRequestId());
+                UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+                String hdPath = ethSignRequest.getDerivationPath();
+                String requestMFP = Hex.toHexString(ethSignRequest.getMasterFingerprint());
+                bundle.putString(REQUEST_ID, uuid.toString());
+                bundle.putString(SIGN_DATA, Hex.toHexString(ethSignRequest.getSignData()));
+                bundle.putString(HD_PATH, "M/" + hdPath);
+
+                ETHAccount current = ETHAccount.ofCode(Utilities.getCurrentEthAccount(mFragment.getActivity()));
+                ETHAccount target = ETHAccount.getAccountByPath(hdPath);
+                if (target == null) {
+                    throw new InvalidTransactionException("unknown hd path");
+                }
+                if (!target.equals(current)) {
+                    if (!current.isChildrenPath(hdPath)) {
+                        //standard and ledger_live has overlap of 1st address
+                        throw new InvalidETHAccountException("not expected ETH account", current, target);
+                    }
+                }
+
+                String MFP = new GetMasterFingerprintCallable().call();
+
+                if (!requestMFP.equalsIgnoreCase(MFP)) {
+                    throw new XfpNotMatchException("Master fingerprint not match");
+                }
+                if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TRANSACTION.getType())) {
+                    mFragment.navigate(R.id.action_to_ethTxConfirmFragment, bundle);
+                } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_DATA.getType())) {
+                    mFragment.navigate(R.id.action_to_ethSignTypedDataFragment, bundle);
+                } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.PERSONAL_MESSAGE.getType())) {
+                    mFragment.navigate(R.id.action_to_ethSignMessageFragment, bundle);
+                } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_TRANSACTION.getType())) {
+                    byte[] typedTransaction = ethSignRequest.getSignData();
+                    byte type = typedTransaction[0];
+                    switch (type) {
+                        case 0x02:
+                            mFragment.navigate(R.id.action_to_ethFeeMarketTxConfirmFragment, bundle);
+                            break;
+                        default:
+                            throw new UnknowQrCodeException("unknown transaction!");
+                    }
+                }
+            }
+
+            private void handleCryptoPSBT(ScanResult result) throws InvalidTransactionException {
+                CryptoPSBT cryptoPSBT = (CryptoPSBT) result.resolve();
+                byte[] bytes = cryptoPSBT.getPsbt();
+                String psbtB64 = Base64.toBase64String(bytes);
+                PSBTViewModel psbtViewModel = ViewModelProviders.of(mFragment).get(PSBTViewModel.class);
+                String myMasterFingerprint = new GetMasterFingerprintCallable().call();
+                psbtViewModel.parsePsbtBase64(psbtB64, myMasterFingerprint);
+                Bundle data = new Bundle();
+                data.putString("psbt", psbtB64);
+                mFragment.navigate(R.id.action_to_psbtConfirmFragment, data);
             }
 
             private void handleAptosSignRequest(ScanResult result) throws XfpNotMatchException, UnknowQrCodeException {
@@ -500,9 +546,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 bundle.putString(REQUEST_ID, uuid.toString());
                 bundle.putString(SIGN_DATA, signData);
                 bundle.putString(HD_PATH, "M/" + hdPath);
-                AptosSignRequest.DataType dataType =  aptosSignRequest.getType();
-                Log.d("aptos_sign", "dataType is " + dataType);
-                Log.d("aptos_sign", "signData is " + signData);
+                AptosSignRequest.DataType dataType = aptosSignRequest.getType();
                 switch (dataType) {
                     case MESSAGE:
                         mFragment.navigate(R.id.action_to_aptosMessageFragment, bundle);
@@ -547,9 +591,6 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 for (byte[] signData : signDataList) {
                     signHexList.add(Hex.toHexString(signData));
                 }
-                String account = nearSignRequest.getAccount();
-                String origin = nearSignRequest.getOrigin();
-
                 Bundle bundle = new Bundle();
                 bundle.putString(REQUEST_ID, uuid.toString());
                 bundle.putSerializable(SIGN_DATA, (Serializable) signHexList);
@@ -674,6 +715,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             desiredResults.addAll(Collections.singletonList(ScanResultTypes.UR_NEAR_SIGN_REQUEST));
         } else if (watchWallet == WatchWallet.APTOS) {
             desiredResults.addAll(Collections.singletonList(ScanResultTypes.UR_APTOS_SIGN_REQUEST));
+        } else if (watchWallet == WatchWallet.CORE_WALLET) {
+            desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_CRYPTO_PSBT));
         }
         scannerState.setDesiredResults(desiredResults);
         ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);
@@ -744,7 +787,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             view.setVisibility(View.GONE);
         }
         view.setOnClickListener(v -> {
-            if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR) {
+            if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR || watchWallet == WatchWallet.CORE_WALLET) {
                 navigate(R.id.action_assetFragment_to_changeDerivePathFragment);
             }
             additionProcess.run();
@@ -774,6 +817,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             isShowBadge = true;
         } else if (watchWallet == WatchWallet.APTOS && !Utilities.hasUserClickAptosSyncLock(mActivity)) {
             isShowBadge = true;
+        } else if (watchWallet == WatchWallet.CORE_WALLET && !Utilities.hasUserClickCoreWalletSyncLock(mActivity)) {
+            isShowBadge = true;
         }
         return isShowBadge;
     }
@@ -793,11 +838,14 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 Utilities.setUserClickAptosSyncLock(mActivity);
                 break;
             case POLKADOT_JS:
-                if(coinCode.equals(Coins.DOT.coinCode())) {
+                if (coinCode.equals(Coins.DOT.coinCode())) {
                     Utilities.setUserClickPolkadotSyncLock(mActivity);
                 } else {
                     Utilities.setUserClickKusamaSyncLock(mActivity);
                 }
+                break;
+            case CORE_WALLET:
+                Utilities.setUserClickCoreWalletSyncLock(mActivity);
                 break;
             default:
                 break;
@@ -816,7 +864,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 
     private void setSyncViewListener(View view, Runnable additionProcess, BadgeView finalBgView) {
         view.setOnClickListener(v -> {
-            if (watchWallet == WatchWallet.METAMASK) {
+            if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.CORE_WALLET) {
                 navigate(R.id.action_to_syncFragment);
             } else if (watchWallet == WatchWallet.SOLANA) {
                 Bundle bundle = new Bundle();
@@ -902,6 +950,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     private boolean isHideChangePath() {
         if (watchWallet == WatchWallet.APTOS
                 || watchWallet == WatchWallet.POLKADOT_JS) {
+            return true;
+        }
+        if (watchWallet == WatchWallet.CORE_WALLET && coinCode.equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) {
             return true;
         }
         return isNearMnemonic();

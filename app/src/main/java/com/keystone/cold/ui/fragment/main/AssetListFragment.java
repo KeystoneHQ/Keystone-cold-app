@@ -20,13 +20,16 @@ package com.keystone.cold.ui.fragment.main;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
 import static com.keystone.cold.ui.fragment.Constants.KEY_ID;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.HD_PATH;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.REQUEST_ID;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.SIGN_DATA;
 import static com.keystone.cold.viewmodel.CoinListViewModel.coinEntityComparator;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +45,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.coins.polkadot.AddressCodec;
 import com.keystone.coinlib.exception.InvalidETHAccountException;
 import com.keystone.coinlib.exception.InvalidTransactionException;
@@ -64,25 +68,29 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerState;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerViewModel;
-import com.keystone.cold.viewmodel.AddAddressViewModel;
+import com.keystone.cold.util.ViewUtils;
 import com.keystone.cold.viewmodel.CoinListViewModel;
-import com.keystone.cold.viewmodel.CoinViewModel;
-import com.keystone.cold.viewmodel.PSBTViewModel;
+import com.keystone.cold.viewmodel.exceptions.XfpNotMatchException;
+import com.keystone.cold.viewmodel.tx.psbt.PSBTViewModel;
 import com.keystone.cold.viewmodel.PolkadotViewModel;
 import com.keystone.cold.viewmodel.SetupVaultViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 import com.keystone.cold.viewmodel.exceptions.UnknowQrCodeException;
 import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
+import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.spongycastle.util.encoders.Base64;
 import org.spongycastle.util.encoders.Hex;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -127,10 +135,20 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         } else {
             mBinding.hint.setVisibility(View.GONE);
         }
-
         if (watchWallet.equals(WatchWallet.CORE_WALLET)) {
             mBinding.toolbar.setTitle(R.string.select_network);
+            MenuItem menuItem = mBinding.toolbar.getMenu().findItem(R.id.action_more);
+            if (!Utilities.hasUserClickCoreWalletSyncLock(mActivity)) {
+                showBadge(menuItem);
+            }
         }
+    }
+
+    private void showBadge(MenuItem menuItem) {
+        Drawable menu = Objects.requireNonNull(menuItem).getIcon();
+        int badgeSize = (int) getResources().getDimension(R.dimen.default_badge_size);
+        Drawable menuWithBadge = ViewUtils.addBadge(getResources(), menu, badgeSize);
+        menuItem.setIcon(menuWithBadge);
     }
 
     @Override
@@ -227,10 +245,9 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_scan) {
-            if(watchWallet.equals(WatchWallet.CORE_WALLET)) {
+            if (watchWallet.equals(WatchWallet.CORE_WALLET)) {
                 scanQrCode();
-            }
-            else {
+            } else {
                 AndPermission.with(this)
                         .permission(Permission.CAMERA, Permission.READ_EXTERNAL_STORAGE)
                         .onGranted(permissions -> navigate(R.id.action_to_scan))
@@ -257,22 +274,73 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         ScannerState scannerState = new ScannerState() {
             @Override
             public void handleScanResult(ScanResult result) throws Exception {
-                if(result.getType().equals(ScanResultTypes.UR_CRYPTO_PSBT)) {
-                    CryptoPSBT cryptoPSBT = (CryptoPSBT) result.resolve();
-                    handleCryptoPSBT(cryptoPSBT);
-                }else {
+                if (result.getType().equals(ScanResultTypes.UR_CRYPTO_PSBT)) {
+                    handleCryptoPSBT(result);
+                } else if (result.getType().equals(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
+                    handleETHSignRequest(result);
+                } else {
                     throw new UnknowQrCodeException("unknown transaction!");
                 }
             }
 
-            private void handleCryptoPSBT(CryptoPSBT psbt) throws InvalidTransactionException {
-                byte[] bytes = psbt.getPsbt();
+            private void handleCryptoPSBT(ScanResult result) throws InvalidTransactionException {
+                CryptoPSBT cryptoPSBT = (CryptoPSBT) result.resolve();
+                byte[] bytes = cryptoPSBT.getPsbt();
                 String psbtB64 = Base64.toBase64String(bytes);
                 PSBTViewModel psbtViewModel = ViewModelProviders.of(mFragment).get(PSBTViewModel.class);
-                PSBTViewModel.PSBT result = psbtViewModel.parsePsbtBase64(psbtB64);
                 String myMasterFingerprint = new GetMasterFingerprintCallable().call();
-                result.validate(myMasterFingerprint);
-                mFragment.navigate(R.id.action_to_psbtConfirmFragment);
+                psbtViewModel.parsePsbtBase64(psbtB64, myMasterFingerprint);
+                Bundle data = new Bundle();
+                data.putString("psbt", psbtB64);
+                mFragment.navigate(R.id.action_to_psbtConfirmFragment, data);
+            }
+
+            private void handleETHSignRequest(ScanResult result) throws InvalidTransactionException, InvalidETHAccountException, XfpNotMatchException, UnknowQrCodeException {
+                EthSignRequest ethSignRequest = (EthSignRequest) result.resolve();
+                Bundle bundle = new Bundle();
+                ByteBuffer uuidBuffer = ByteBuffer.wrap(ethSignRequest.getRequestId());
+                UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+                String hdPath = ethSignRequest.getDerivationPath();
+                String requestMFP = Hex.toHexString(ethSignRequest.getMasterFingerprint());
+                bundle.putString(REQUEST_ID, uuid.toString());
+                bundle.putString(SIGN_DATA, Hex.toHexString(ethSignRequest.getSignData()));
+                bundle.putString(HD_PATH, "M/" + hdPath);
+
+                ETHAccount current = ETHAccount.ofCode(Utilities.getCurrentEthAccount(mFragment.getActivity()));
+                ETHAccount target = ETHAccount.getAccountByPath(hdPath);
+                if (target == null) {
+                    throw new InvalidTransactionException("This transaction use an invalid key path");
+                }
+                if (!target.equals(current)) {
+                    if (!current.isChildrenPath(hdPath)) {
+                        //standard and ledger_live has overlap of 1st address
+                        throw new InvalidETHAccountException("not expected ETH account", current, target);
+                    }
+                }
+
+                String MFP = new GetMasterFingerprintCallable().call();
+
+                if (!requestMFP.equalsIgnoreCase(MFP)) {
+                    throw new XfpNotMatchException("Master fingerprint not match");
+                }
+                if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TRANSACTION.getType())) {
+                    mFragment.navigate(R.id.action_to_ethTxConfirmFragment, bundle);
+                } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_DATA.getType())) {
+                    mFragment.navigate(R.id.action_to_ethSignTypedDataFragment, bundle);
+                } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.PERSONAL_MESSAGE.getType())) {
+                    mFragment.navigate(R.id.action_to_ethSignMessageFragment, bundle);
+                } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_TRANSACTION.getType())) {
+                    byte[] typedTransaction = ethSignRequest.getSignData();
+                    byte type = typedTransaction[0];
+                    switch (type) {
+                        case 0x02:
+                            mFragment.navigate(R.id.action_to_ethFeeMarketTxConfirmFragment, bundle);
+                            break;
+                        default:
+                            throw new UnknowQrCodeException("unknown transaction!");
+                    }
+                }
+
             }
 
             @Override
@@ -280,6 +348,19 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
                 e.printStackTrace();
                 if (e instanceof InvalidTransactionException) {
                     mFragment.alert(getString(R.string.invalid_data), e.getMessage());
+                    return true;
+                } else if (e instanceof XfpNotMatchException) {
+                    mFragment.alert(getString(R.string.account_not_match), getString(R.string.account_not_match_detail));
+                    return true;
+                } else if (e instanceof InvalidETHAccountException) {
+                    mFragment.alertDoubleButtonModal(getString(R.string.invalid_data),
+                            getString(R.string.invalid_account_tx, ((InvalidETHAccountException) e).getAccount().getName(), ((InvalidETHAccountException) e).getTarget().getName(), ((InvalidETHAccountException) e).getTarget().getName()),
+                            getString(R.string.cancel),
+                            getString(R.string.switch_wallet),
+                            null, () -> {
+                                Utilities.setCurrentEthAccount(mActivity, ((InvalidETHAccountException) e).getTarget().getCode());
+                                popBackStack(R.id.assetFragment, false);
+                            });
                     return true;
                 }
                 return false;

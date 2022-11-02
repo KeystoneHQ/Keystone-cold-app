@@ -7,6 +7,7 @@ import com.keystone.coinlib.utils.Coins;
 
 import org.bitcoinj.core.LegacyAddress;
 import org.bitcoinj.crypto.DeterministicKey;
+import org.bouncycastle.util.encoders.Hex;
 
 public class BTC_LEGACY extends Btc {
     public BTC_LEGACY(Coin impl) {
@@ -36,5 +37,8 @@ public class BTC_LEGACY extends Btc {
             throw new RuntimeException("not implemented");
         }
 
+        public String deriveByPubkey(String pubkey) {
+            return LegacyAddress.fromPubKeyHash(MAINNET, Hex.decode(pubkey)).toBase58();
+        }
     }
 }

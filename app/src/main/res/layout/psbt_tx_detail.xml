@@ -19,13 +19,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="psbt"
-            type="com.keystone.cold.viewmodel.PSBTViewModel.PSBT" />
-    </data>
-
     <com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -125,7 +118,6 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="14dp"
                 android:layout_marginEnd="16dp"
-                android:text="@{psbt.feeText}"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 tools:text="0.00006840 BTC" />
@@ -177,27 +169,11 @@
             </LinearLayout>
 
             <include
-                android:id="@+id/qrcode_layout"
-                layout="@layout/qrcode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <include
                 android:id="@+id/dynamic_qrcode_layout"
                 layout="@layout/dynamic_qrcode"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
+                android:layout_height="wrap_content" />
 
-            <com.keystone.cold.ui.views.SpanedTextView
-                android:id="@+id/export_to_sdcard_hint"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="16dp"
-                android:text="@string/electrum_qrcode_hint"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
         </LinearLayout>
     </com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout>
 </layout>

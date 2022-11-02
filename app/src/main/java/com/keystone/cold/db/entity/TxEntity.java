@@ -48,7 +48,7 @@ public class TxEntity implements Tx {
     /**
      *
      * TxEntity类的额外信息，内部是JSON
-     * 目前仅用于Solana Near 其他币种暂时没有用到
+     * 目前仅用于Solana Near Polkadot Bitcion 其他币种暂时没有用到
      * @Solana {
      *     {
      *         "additioins":{
@@ -86,9 +86,7 @@ public class TxEntity implements Tx {
      *     }
      * }
      * @Polkadot {
-     *     coin: "polkadot", //整个Substrate网络都用polkadot
      *     addition: {
-     *         "signature": "",
      *         "raw_message": "raw_message",
      *         "parsed_message": "",
      *     }
@@ -101,6 +99,20 @@ public class TxEntity implements Tx {
      * @sign_batch_info 表示同一批次交易的签名信息 （考虑后期可能支持一次签多笔交易，预留该字段）
      *      @batch_id  批次id（同一批次中所有交易id的Keccak-256 hash）
      *      @order  这一批次的第几个交易
+     *
+     *
+     * @Bitcoin {
+     *     coin: "bitcoin",
+     *     addition: {
+     *          "raw_message": "raw_message",
+     *          "parsed_message": {
+     *              "_version": 0,
+     *              "inputs": [],
+     *              "outputs": [],
+     *              "fee": "",
+     *          }
+     *     }
+     * }
      *
      *
      */
