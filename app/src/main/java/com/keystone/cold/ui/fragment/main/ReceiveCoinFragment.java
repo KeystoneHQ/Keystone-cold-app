@@ -30,6 +30,7 @@ import android.view.View;
 import androidx.databinding.DataBindingUtil;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.ReceiveFragmentBinding;
 import com.keystone.cold.databinding.XrpSyncMenuBinding;
@@ -58,6 +59,11 @@ public class ReceiveCoinFragment extends BaseFragment<ReceiveFragmentBinding> {
         else {
             mBinding.setDisplayName(coinCode);
         }
+
+        if(WatchWallet.getWatchWallet(mActivity).equals(WatchWallet.CORE_WALLET) && coinCode.equals(Coins.ETH.coinCode())) {
+            coinCode = Coins.AVAX.coinCode();
+        }
+
         setWarningInfo(coinCode);
         mBinding.setCoinCode(coinCode);
         String address = data.getString(KEY_ADDRESS);
@@ -86,6 +92,9 @@ public class ReceiveCoinFragment extends BaseFragment<ReceiveFragmentBinding> {
                     break;
                 case "APTOS":
                     info = getString(R.string.aptos_receive_info);
+                    break;
+                case "AVAX":
+                    info = getString(R.string.avax_receive_info);
             }
             mBinding.setHintInfo(info);
         }

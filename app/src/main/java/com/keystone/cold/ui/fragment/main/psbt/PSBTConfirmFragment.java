@@ -74,6 +74,8 @@ public class PSBTConfirmFragment extends BaseFragment<PsbtConfirmFragmentBinding
             this.alert("Invalid Transaction", e.getMessage(), this::navigateUp);
         }
 
+        mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
+
         mBinding.txDetail.qr.setVisibility(View.GONE);
 
         PSBTInputAdapter inputAdapter = new PSBTInputAdapter(mActivity);

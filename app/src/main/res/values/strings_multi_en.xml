@@ -677,6 +677,15 @@
         <item><u>https://keyst.one/fewcha</u></item>
     </string-array>
 
+    <string-array name="tutorials_name_core_wallet">
+        <item>CoreWallet</item>
+    </string-array>
+
+    <string-array name="tutorials_link_core_wallet">
+        <!--        <item><u>https://keyst.one/martian</u></item>-->
+        <item><u>https://keyst.one/coreWallet</u></item>
+    </string-array>
+
     <string-array name="tutorials_name_sender">
         <item>Sender Extension</item>
     </string-array>
@@ -735,6 +744,7 @@
     <string name="sol_receive_info">SOL or SPL tokens</string>
     <string name="tron_receive_info">TRC or TRC-20 tokens</string>
     <string name="aptos_receive_info">APT or Aptos tokens</string>
+    <string name="avax_receive_info">AVAX, ETH or ERC-20 tokens</string>
     <string name="get_address_fail_info">Failed to get address.</string>
     <string name="web_auth_scan_fail">Scan Failed, Please ensure you have selected the right QR code to be scanned.</string>
 
