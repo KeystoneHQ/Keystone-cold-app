@@ -335,7 +335,7 @@ public class Coins {
         return coinCode.equals(SOL.coinCode);
     }
 
-    public static boolean isCosmosFamily(String coinCode) {
+    public static boolean isCosmosFamilyByCoinCode(String coinCode) {
         return coinCode.equals(ATOM.coinCode) || coinCode.equals(OSMO.coinCode) ||
                 coinCode.equals(SCRT.coinCode) || coinCode.equals(AKT.coinCode) ||
                 coinCode.equals(CRO.coinCode) || coinCode.equals(IOV.coinCode) ||
@@ -349,6 +349,11 @@ public class Coins {
                 coinCode.equals(UMEE.coinCode) || coinCode.equals(GRAV.coinCode) ||
                 coinCode.equals(TGD.coinCode) || coinCode.equals(STRD.coinCode) ||
                 coinCode.equals(KAVA.coinCode) || coinCode.equals(EVMOS.coinCode);
+    }
+
+    public static boolean isCosmosFamilyByCoinId(String coinId) {
+        String coinCode = coinCodeFromCoinId(coinId);
+        return isCosmosFamilyByCoinCode(coinCode);
     }
 
     public static boolean isDefaultOpen(String coinCode) {

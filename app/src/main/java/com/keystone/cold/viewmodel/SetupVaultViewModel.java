@@ -52,7 +52,7 @@ import com.keystone.cold.callables.WebAuthCallableUpgrade;
 import com.keystone.cold.callables.WriteMnemonicCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.util.CacheHelper;
+import com.keystone.cold.util.ExtendedPublicKeyCacheHelper;
 import com.keystone.cold.util.HashUtil;
 
 import org.json.JSONException;
@@ -409,7 +409,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
 
     public void presetData(List<CoinEntity> coins, final Runnable onComplete) {
         AppExecutors.getInstance().diskIO().execute(() -> {
-            CacheHelper.getInstance().clearCache();
+            ExtendedPublicKeyCacheHelper.getInstance().clearCache();
             for (CoinEntity coin : coins) {
                 CoinEntity coinEntity = mRepository.loadCoinSync(coin.getCoinId());
                 if (coinEntity != null) {
@@ -449,7 +449,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
                     } else if (coin.getIndex() == Coins.APTOS.coinIndex()) {
                         createAptosAddress(coin);
                         continue;
-                    } else if (Coins.isCosmosFamily(coin.getCoinCode())) {
+                    } else if (Coins.isCosmosFamilyByCoinCode(coin.getCoinCode())) {
                         createCosmosAddress(coin);
                         continue;
                     }
@@ -483,12 +483,12 @@ public class SetupVaultViewModel extends AndroidViewModel {
             if (onComplete != null) {
                 AppExecutors.getInstance().diskIO().execute(() -> AppExecutors.getInstance().mainThread().execute(onComplete));
             }
-            CacheHelper.getInstance().clearCache();
+            ExtendedPublicKeyCacheHelper.getInstance().clearCache();
         });
     }
 
     private void createCosmosAddress(CoinEntity coin) {
-        String coinXpub = CacheHelper.getInstance().getExtendedPublicKey(coin.getAccounts().get(0).getHdPath());
+        String coinXpub = ExtendedPublicKeyCacheHelper.getInstance().getExtendedPublicKey(coin.getAccounts().get(0).getHdPath());
         coin.setExPub(coinXpub);
         long id = mRepository.insertCoin(coin);
         coin.setId(id);
@@ -501,7 +501,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
     }
 
     private void createAptosAddress(CoinEntity coin) {
-        String coinXpub = CacheHelper.getInstance().getExtendedPublicKey(coin.getAccounts().get(0).getHdPath());
+        String coinXpub = new GetExtendedPublicKeyCallable(coin.getAccounts().get(0).getHdPath()).call();
         coin.setExPub(coinXpub);
         long id = mRepository.insertCoin(coin);
         coin.setId(id);

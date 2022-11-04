@@ -114,7 +114,7 @@ public class PresetData {
                     .toString();
             if (Coins.isPolkadotFamily(coin.coinCode())) {
                 defaultHdPath = coin.getAccounts()[0];
-            } else if (Coins.isCosmosFamily(coin.coinCode())) {
+            } else if (Coins.isCosmosFamilyByCoinCode(coin.coinCode())) {
                 defaultHdPath += "/0/0";
             } else if (Coins.CURVE.ED25519 == getCurveByPath(defaultHdPath)) {
                 defaultHdPath += "/0'/0'";

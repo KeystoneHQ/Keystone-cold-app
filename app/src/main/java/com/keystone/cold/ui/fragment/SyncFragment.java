@@ -41,22 +41,20 @@ import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.CommonModalBinding;
 import com.keystone.cold.databinding.SyncFragmentBinding;
 import com.keystone.cold.integration.corewallet.CoreWalletViewModel;
+import com.keystone.cold.integration.cosmoswallet.CosmosWalletViewModel;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.fragment.main.SyncInfo;
 import com.keystone.cold.ui.fragment.setup.SetupVaultBaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
-import com.keystone.cold.util.Tuple;
 import com.keystone.cold.viewmodel.SyncViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 import com.sparrowwallet.hummingbird.UR;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
@@ -327,6 +325,25 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                     URLiveData.removeObservers(this);
                 });
                 break;
+            case COSMOS:
+                if (URLiveData != null) {
+                    URLiveData.removeObservers(this);
+                }
+                if (isRefreshing) return;
+                isRefreshing = true;
+                CosmosWalletViewModel cosmosWalletViewModel = ViewModelProviders.of(mActivity).get(CosmosWalletViewModel.class);
+                URLiveData = cosmosWalletViewModel.generateSyncData();
+                URLiveData.observe(this, ur -> {
+                    if (ur != null) {
+                        mBinding.dynamicQrcodeLayout.qrcode.displayUR(ur);
+                        mBinding.addressData.setVisibility(View.GONE);
+                        mBinding.derivationPattern.setVisibility(View.VISIBLE);
+                        mBinding.fromPath.setText("m/44'/*'/0'/0/0");
+                    }
+                    URLiveData.removeObservers(this);
+                });
+                break;
+
         }
     }
 

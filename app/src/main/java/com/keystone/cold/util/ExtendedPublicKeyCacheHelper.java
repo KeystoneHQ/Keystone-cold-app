@@ -5,15 +5,15 @@ import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CacheHelper {
+public class ExtendedPublicKeyCacheHelper {
 
     private static class Inner {
-        private static final CacheHelper INSTANCE = new CacheHelper();
+        private static final ExtendedPublicKeyCacheHelper INSTANCE = new ExtendedPublicKeyCacheHelper();
     }
 
-    private CacheHelper(){}
+    private ExtendedPublicKeyCacheHelper(){}
 
-    public static CacheHelper getInstance(){
+    public static ExtendedPublicKeyCacheHelper getInstance(){
         return Inner.INSTANCE;
     }
 

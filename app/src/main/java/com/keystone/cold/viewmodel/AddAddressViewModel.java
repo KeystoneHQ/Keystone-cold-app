@@ -42,7 +42,7 @@ import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.util.CacheHelper;
+import com.keystone.cold.util.ExtendedPublicKeyCacheHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -531,7 +531,7 @@ public class AddAddressViewModel extends AndroidViewModel {
         }
         boolean isSetPath = addressEntity != null;
         String xPubPath = "M/44'/" + coinEntity.getIndex() + "'/0'/0/" + index;
-        String xPub = CacheHelper.getInstance().getExtendedPublicKey(xPubPath);
+        String xPub = ExtendedPublicKeyCacheHelper.getInstance().getExtendedPublicKey(xPubPath);
         address = deriver.derive(xPub);
         if (isSetPath) {
             addressEntity.setPath(xPubPath);

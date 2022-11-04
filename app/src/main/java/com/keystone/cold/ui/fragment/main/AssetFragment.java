@@ -201,7 +201,13 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             Bundle data = requireArguments();
             coinId = data.getString(KEY_COIN_ID);
             coinCode = data.getString(KEY_COIN_CODE);
-            showPublicKey = Coins.showPublicKey(coinCode);
+            if (watchWallet == WatchWallet.COSMOS) {
+                mBinding.toolbar.setNavigationIcon(R.drawable.menu);
+                mBinding.toolbar.setTitle(Coins.coinNameOfCoinId(coinId));
+                mBinding.customTitle.setVisibility(View.GONE);
+            } else {
+                showPublicKey = Coins.showPublicKey(coinCode);
+            }
         }
         updateUI();
     }
@@ -242,6 +248,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             case APTOS:
             case POLKADOT_JS:
             case CORE_WALLET:
+            case COSMOS:
                 return R.menu.metamask;
             default:
                 return (showPublicKey) ? R.menu.asset_without_add : R.menu.asset;
@@ -878,6 +885,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 Bundle bundle = new Bundle();
                 bundle.putString(KEY_COIN_ID, coinId);
                 navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
+            } else if (watchWallet == WatchWallet.COSMOS) {
+                navigate(R.id.action_to_syncFragment);
             }
             if (judgeShowBadge()) {
                 setUserClickSyncLock();
@@ -949,7 +958,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 
     private boolean isHideChangePath() {
         if (watchWallet == WatchWallet.APTOS
-                || watchWallet == WatchWallet.POLKADOT_JS) {
+                || watchWallet == WatchWallet.POLKADOT_JS || watchWallet == WatchWallet.COSMOS) {
             return true;
         }
         if (watchWallet == WatchWallet.CORE_WALLET && coinCode.equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) {
@@ -976,12 +985,13 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         });
     }
 
-
     private boolean hideAddAddress() {
         boolean hide = false;
         if (watchWallet == WatchWallet.SOLANA && SOLAccount.ofCode(Utilities.getCurrentSolAccount(mActivity)) == SOLAccount.SOLFLARE_BIP44_ROOT) {
             hide = true;
         } else if (watchWallet == WatchWallet.NEAR && NEARAccount.ofCode(Utilities.getCurrentNearAccount(mActivity)) == NEARAccount.MNEMONIC) {
+            hide = true;
+        } else if (watchWallet == WatchWallet.COSMOS) {
             hide = true;
         }
         return hide;
