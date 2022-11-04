@@ -137,10 +137,6 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         }
         if (watchWallet.equals(WatchWallet.CORE_WALLET)) {
             mBinding.toolbar.setTitle(R.string.select_network);
-            MenuItem menuItem = mBinding.toolbar.getMenu().findItem(R.id.action_more);
-            if (!Utilities.hasUserClickCoreWalletSyncLock(mActivity)) {
-                showBadge(menuItem);
-            }
         }
     }
 
@@ -237,6 +233,12 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         if (watchWallet != WatchWallet.KEYSTONE && watchWallet != WatchWallet.CORE_WALLET) {
             MenuItem item = menu.findItem(R.id.action_more);
             item.setVisible(false);
+        }
+        if (watchWallet.equals(WatchWallet.CORE_WALLET)) {
+            MenuItem menuItem = mBinding.toolbar.getMenu().findItem(R.id.action_more);
+            if (!Utilities.hasUserClickCoreWalletSyncLock(mActivity)) {
+                showBadge(menuItem);
+            }
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
