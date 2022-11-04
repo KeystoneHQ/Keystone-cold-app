@@ -38,6 +38,9 @@ public interface AddressDao {
     @Query("SELECT * FROM addresses WHERE path = :path AND belongTo = :belongTo")
     AddressEntity loadAddress(String path, String belongTo);
 
+    @Query("SELECT * FROM addresses WHERE path = :path AND belongTo = :belongTo AND coinId = :coinId")
+    AddressEntity loadAddress(String path, String belongTo, String coinId);
+
     @Insert
     void insertAddress(AddressEntity address);
 

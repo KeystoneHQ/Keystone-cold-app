@@ -52,6 +52,7 @@ import com.keystone.cold.callables.WebAuthCallableUpgrade;
 import com.keystone.cold.callables.WriteMnemonicCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
+import com.keystone.cold.util.CacheHelper;
 import com.keystone.cold.util.HashUtil;
 
 import org.json.JSONException;
@@ -408,11 +409,12 @@ public class SetupVaultViewModel extends AndroidViewModel {
 
     public void presetData(List<CoinEntity> coins, final Runnable onComplete) {
         AppExecutors.getInstance().diskIO().execute(() -> {
+            CacheHelper.getInstance().clearCache();
             for (CoinEntity coin : coins) {
                 CoinEntity coinEntity = mRepository.loadCoinSync(coin.getCoinId());
                 if (coinEntity != null) {
                     List<AccountEntity> accountEntities = mRepository.loadAccountsForCoin(coinEntity);
-                    if (coin.getIndex() == Coins.ETH.coinIndex()) {
+                    if (coin.getCoinCode().equals(Coins.ETH.coinCode())) {
                         if (accountEntities.size() != coin.getAccounts().size()) {
                             try {
                                 updateEthAccounts(accountEntities, coinEntity);
@@ -435,7 +437,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
                         continue;
                     }
                 } else {
-                    if (coin.getIndex() == Coins.ETH.coinIndex()) {
+                    if (coin.getCoinCode().equals(Coins.ETH.coinCode())) {
                         createEthAccounts(coin);
                         continue;
                     } else if (coin.getIndex() == Coins.SOL.coinIndex()) {
@@ -446,6 +448,9 @@ public class SetupVaultViewModel extends AndroidViewModel {
                         continue;
                     } else if (coin.getIndex() == Coins.APTOS.coinIndex()) {
                         createAptosAddress(coin);
+                        continue;
+                    } else if (Coins.isCosmosFamily(coin.getCoinCode())) {
+                        createCosmosAddress(coin);
                         continue;
                     }
                 }
@@ -478,11 +483,25 @@ public class SetupVaultViewModel extends AndroidViewModel {
             if (onComplete != null) {
                 AppExecutors.getInstance().diskIO().execute(() -> AppExecutors.getInstance().mainThread().execute(onComplete));
             }
+            CacheHelper.getInstance().clearCache();
         });
     }
 
+    private void createCosmosAddress(CoinEntity coin) {
+        String coinXpub = CacheHelper.getInstance().getExtendedPublicKey(coin.getAccounts().get(0).getHdPath());
+        coin.setExPub(coinXpub);
+        long id = mRepository.insertCoin(coin);
+        coin.setId(id);
+        AccountEntity account = coin.getAccounts().get(0);
+        account.setExPub(coinXpub);
+        account.setCoinId(id);
+        long accountId = mRepository.insertAccount(account);
+        account.setId(accountId);
+        AddAddressViewModel.addCosmosAddress(account, mRepository, 1, coin, null);
+    }
+
     private void createAptosAddress(CoinEntity coin) {
-        String coinXpub = new GetExtendedPublicKeyCallable(coin.getAccounts().get(0).getHdPath()).call();
+        String coinXpub = CacheHelper.getInstance().getExtendedPublicKey(coin.getAccounts().get(0).getHdPath());
         coin.setExPub(coinXpub);
         long id = mRepository.insertCoin(coin);
         coin.setId(id);

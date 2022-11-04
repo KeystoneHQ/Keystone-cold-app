@@ -47,6 +47,10 @@ public abstract class AbsDeriver {
             else if(coinCode.equals(Coins.BTC_TESTNET_LEGACY.coinCode())) return new XTN_LEGACY.Deriver();
             else if(coinCode.equals(Coins.BTC_TESTNET_NATIVE_SEGWIT.coinCode())) return new XTN_NATIVE_SEGWIT.Deriver();
             else if(coinCode.equals(Coins.BTC_TESTNET_SEGWIT.coinCode())) return new XTN_SEGWIT.Deriver();
+            else if(Coins.isCosmosFamily(coinCode)) {
+                Class clazz = Class.forName(CoinReflect.getCosmosFamilyCoinClassByCoinCode(coinCode) + "$Deriver");
+                return (AbsDeriver) clazz.newInstance();
+            }
             else {
                 Class clazz = Class.forName(CoinReflect.getCoinClassByCoinCode(coinCode) + "$Deriver");
                 return (AbsDeriver) clazz.newInstance();

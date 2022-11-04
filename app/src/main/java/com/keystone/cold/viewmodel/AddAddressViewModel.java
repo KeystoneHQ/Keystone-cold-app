@@ -32,6 +32,7 @@ import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.coins.AbsDeriver;
+import com.keystone.coinlib.coins.cosmos.AddressCodec;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
@@ -41,6 +42,7 @@ import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
+import com.keystone.cold.util.CacheHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -478,6 +480,82 @@ public class AddAddressViewModel extends AndroidViewModel {
         }
         return address;
     }
+
+    public void addCosmosAddress(int number, CoinEntity coinEntity, Runnable onComplete) {
+        AccountEntity accountEntity = mRepo.loadAccountsForCoin(coinEntity).get(0);
+        if (accountEntity != null) {
+            addCosmosAddress(accountEntity, mRepo, number, coinEntity, onComplete);
+        } else {
+            AppExecutors.getInstance().mainThread().execute(onComplete);
+        }
+    }
+
+    public static void addCosmosAddress(AccountEntity accountEntity, DataRepository repository, int number, CoinEntity coinEntity, Runnable onComplete) {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            AbsDeriver deriver = AbsDeriver.newInstance(coinEntity.getCoinCode());
+            if (deriver == null) {
+                Log.e("addCosmosAddress", "deriver is null");
+            } else {
+                int addressLength = accountEntity.getAddressLength();
+                int targetAddressCount = addressLength + number;
+                List<AddressEntity> entities = new ArrayList<>();
+                for (int index = addressLength; index < targetAddressCount; index++) {
+                    AddressEntity addressEntity = new AddressEntity();
+                    String addr = deriveCosmosAddress(index, addressEntity, coinEntity, repository);
+                    if (repository.loadAddressByPathAndCoinId(addressEntity.getPath(), coinEntity.getCoinId()) != null) {
+                        continue;
+                    }
+                    addressEntity.setAddressString(addr);
+                    addressEntity.setCoinId(coinEntity.getCoinId());
+                    addressEntity.setIndex(index);
+                    addressEntity.setName(coinEntity.getCoinCode() + "-" + index);
+                    addressEntity.setDisplayName("Account " + index);
+                    addressEntity.setBelongTo(coinEntity.getBelongTo());
+                    entities.add(addressEntity);
+                }
+                coinEntity.setAddressCount(targetAddressCount);
+                accountEntity.setAddressLength(targetAddressCount);
+                repository.updateAccount(accountEntity);
+                repository.updateCoin(coinEntity);
+                repository.insertAddress(entities);
+            }
+            AppExecutors.getInstance().mainThread().execute(onComplete);
+        });
+    }
+
+    public static String deriveCosmosAddress(int index, AddressEntity addressEntity, CoinEntity coinEntity, DataRepository repository) {
+        String address = "";
+        AbsDeriver deriver = AbsDeriver.newInstance(coinEntity.getCoinCode());
+        if (deriver == null) {
+            return address;
+        }
+        boolean isSetPath = addressEntity != null;
+        String xPubPath = "M/44'/" + coinEntity.getIndex() + "'/0'/0/" + index;
+        String xPub = CacheHelper.getInstance().getExtendedPublicKey(xPubPath);
+        address = deriver.derive(xPub);
+        if (isSetPath) {
+            addressEntity.setPath(xPubPath);
+            try {
+                JSONObject innerJson = new JSONObject();
+                innerJson.put("xPub", xPub);
+                if (coinEntity.getCoinCode().equals(Coins.EVMOS.coinCode())){
+                    String[] addresses = address.split(AddressCodec.SEPARATOR);
+                    if (addresses.length == 2) {
+                        address = addresses[0];
+                        String ethAddress = addresses[1];
+                        innerJson.put("ethHexAddress", ethAddress);
+                    }
+                }
+                JSONObject addition = new JSONObject();
+                addition.put("addition", innerJson);
+                addressEntity.setAddition(addition.toString());
+            } catch (JSONException exception) {
+                exception.printStackTrace();
+            }
+        }
+        return address;
+    }
+
 
     public static class AddAddressTask extends AsyncTask<String, Void, Void> {
         private final CoinEntity coinEntity;

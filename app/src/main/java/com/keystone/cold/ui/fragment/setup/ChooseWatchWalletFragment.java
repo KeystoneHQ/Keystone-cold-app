@@ -97,6 +97,7 @@ public class ChooseWatchWalletFragment extends ListPreferenceFragment {
             case NEAR:
             case APTOS:
             case CORE_WALLET:
+            case COSMOS:
                 updateCurrentWatchWallet();
                 stepIntoMainActivity();
                 break;

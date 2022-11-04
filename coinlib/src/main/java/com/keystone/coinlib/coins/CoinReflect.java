@@ -22,6 +22,12 @@ import androidx.annotation.NonNull;
 import java.util.Objects;
 
 class CoinReflect {
+
+    static String getCosmosFamilyCoinClassByCoinCode(@NonNull String coinCode) {
+        return getPackageName() + ".cosmos."  + coinCode + "." + toUpperFirstChar(coinCode);
+
+    }
+
     static String getCoinClassByCoinCode(@NonNull String coinCode) {
         return getPackageName() + "." + coinCode + "." + toUpperFirstChar(coinCode);
     }
