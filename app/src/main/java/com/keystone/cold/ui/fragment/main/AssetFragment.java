@@ -160,8 +160,6 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             } else {
                 // We treat ETH as AVAX, for they share the same accounts;
                 mBinding.toolbar.setTitle(Coins.AVAX.coinName());
-                mBinding.account.setText(ETHAccount.ofCode(Utilities.getCurrentEthAccount(mActivity)).getName());
-                mBinding.account.setVisibility(View.VISIBLE);
             }
         }
         if (watchWallet == WatchWallet.METAMASK) {

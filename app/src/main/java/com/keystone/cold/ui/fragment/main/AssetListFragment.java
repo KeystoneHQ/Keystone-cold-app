@@ -387,13 +387,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
                     R.layout.dialog_bottom_sheet, null, false);
             binding.addAddress.setVisibility(View.GONE);
             binding.resetDb.setVisibility(View.GONE);
-            if (watchWallet.equals(WatchWallet.KEPLR_WALLET)) {
-                binding.changePath.setVisibility(View.GONE);
-            }
-            binding.changePath.setOnClickListener(v -> {
-                navigate(R.id.action_assetListFragment_to_changeDerivePathFragment);
-                dialog.dismiss();
-            });
+            binding.changePath.setVisibility(View.GONE);
             binding.tutorials.setOnClickListener(v -> {
                 navigate(R.id.action_to_tutorialsFragment);
                 dialog.dismiss();
