@@ -99,6 +99,12 @@ public class CoinAdapter extends FilterableBaseBindingAdapter<CoinEntity, AssetI
                         "",
                         false);
             }
+        } else if (WatchWallet.getWatchWallet(context).equals(WatchWallet.KEPLR_WALLET)) {
+            return new AssetItem(coinModel.getName(),
+                    coinModel.getDisplayName(),
+                    coinModel.getCoinCode(),
+                    coinModel.getTag(),
+                    coinModel.hasTag());
         }
         return new AssetItem(coinModel.getDisplayCoinCode(),
                 coinModel.getDisplayName(),

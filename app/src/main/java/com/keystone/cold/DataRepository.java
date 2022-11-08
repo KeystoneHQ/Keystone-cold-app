@@ -136,6 +136,14 @@ public class DataRepository {
         return mDb.addressDao().loadAddress(path.toUpperCase(), getBelongTo());
     }
 
+
+    public AddressEntity loadAddressByPathAndCoinId(String path, String coinId) {
+        if (path.startsWith(DOT.getAccounts()[0]) || path.startsWith(KSM.getAccounts()[0])) {
+            return mDb.addressDao().loadAddress(path, getBelongTo(), coinId);
+        }
+        return mDb.addressDao().loadAddress(path.toUpperCase(), getBelongTo(), coinId);
+    }
+
     public void updateAddress(AddressEntity addressEntity) {
         mDb.addressDao().update(addressEntity);
     }

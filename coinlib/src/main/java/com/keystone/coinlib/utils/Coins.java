@@ -68,6 +68,35 @@ public class Coins {
 
     public static final Coin APTOS = new Coin("aptos", "APT", "Aptos", 637, CURVE.ED25519, new String[]{});
 
+    //Cosmos chains
+    public static final Coin ATOM = new Coin("cosmos_hub", "ATOM", "Cosmos Hub", 118);
+    public static final Coin OSMO = new Coin("osmosis", "OSMO", "Osmosis", 118);
+    public static final Coin SCRT = new Coin("secret_network", "SCRT", "Secret Network", 529);
+    public static final Coin AKT = new Coin("akash", "AKT", "Akash", 118);
+    public static final Coin CRO = new Coin("crypto.org", "CRO", "Crypto.org", 394);
+    public static final Coin IOV = new Coin("starname", "IOV", "Starname", 234);
+    public static final Coin ROWAN = new Coin("sifchain", "ROWAN", "Sifchain", 118);
+    public static final Coin CTK = new Coin("certik", "CTK", "Certik", 118);
+    public static final Coin IRIS = new Coin("irisnet", "IRIS", "IRISnet", 118);
+    public static final Coin REGEN = new Coin("regen", "REGEN", "Regen", 118);
+    public static final Coin XPRT = new Coin("persistence", "XPRT", "Persistence", 118);
+    public static final Coin DVPN = new Coin("sentinel", "DVPN", "Sentinel", 118);
+    public static final Coin IXO = new Coin("ixo", "IXO", "ixo", 118);
+    public static final Coin NGM = new Coin("e-money", "NGM", "e-Money", 118);
+    public static final Coin BLD = new Coin("agoric", "BLD", "Agoric", 564);
+    public static final Coin BOOT = new Coin("bostrom", "BOOT", "Bostrom", 118);
+    public static final Coin JUNO = new Coin("juno", "JUNO", "Juno", 118);
+    public static final Coin STARS = new Coin("stargaze", "STARS", "Stargaze", 118);
+    public static final Coin AXL = new Coin("axelar", "AXL", "Axelar", 118);
+    public static final Coin SOMM = new Coin("sommelier", "SOMM", "Sommelier", 118);
+    public static final Coin UMEE = new Coin("umee", "UMEE", "Umee", 118);
+    public static final Coin GRAV = new Coin("gravity_bridge", "GRAV", "Gravity Bridge", 118);
+    public static final Coin TGD = new Coin("tgrade", "TGD", "Tgrade", 118);
+    public static final Coin STRD = new Coin("stride", "STRD", "Stride", 118);
+    public static final Coin KAVA = new Coin("kava", "KAVA", "Kava", 459);
+    public static final Coin EVMOS = new Coin("evmos", "EVMOS", "Evmos", 60);
+
+
     public static final List<Coin> SUPPORTED_COINS = Arrays.asList(
             BTC,
             BTC_LEGACY,
@@ -91,7 +120,34 @@ public class Coins {
             CFX,
             SOL,
             NEAR,
-            APTOS
+            APTOS,
+
+            ATOM,
+            OSMO,
+            SCRT,
+            AKT,
+            CRO,
+            IOV,
+            ROWAN,
+            CTK,
+            IRIS,
+            REGEN,
+            XPRT,
+            DVPN,
+            IXO,
+            NGM,
+            BLD,
+            BOOT,
+            JUNO,
+            STARS,
+            AXL,
+            SOMM,
+            UMEE,
+            GRAV,
+            TGD,
+            STRD,
+            KAVA,
+            EVMOS
     );
 
     public static boolean isCoinSupported(@NonNull String coinCode) {
@@ -270,12 +326,34 @@ public class Coins {
         return coinCode.equals(DOT.coinCode) || coinCode.equals(KSM.coinCode);
     }
 
-    public static boolean isAptosCoin(String coinCode){
+    public static boolean isAptosCoin(String coinCode) {
         return coinCode.equals(APTOS.coinCode);
 
     }
+
     public static boolean isSolanaCoin(String coinCode) {
         return coinCode.equals(SOL.coinCode);
+    }
+
+    public static boolean isCosmosFamilyByCoinCode(String coinCode) {
+        return coinCode.equals(ATOM.coinCode) || coinCode.equals(OSMO.coinCode) ||
+                coinCode.equals(SCRT.coinCode) || coinCode.equals(AKT.coinCode) ||
+                coinCode.equals(CRO.coinCode) || coinCode.equals(IOV.coinCode) ||
+                coinCode.equals(ROWAN.coinCode) || coinCode.equals(CTK.coinCode) ||
+                coinCode.equals(IRIS.coinCode) || coinCode.equals(REGEN.coinCode) ||
+                coinCode.equals(XPRT.coinCode) || coinCode.equals(DVPN.coinCode) ||
+                coinCode.equals(IXO.coinCode) || coinCode.equals(NGM.coinCode) ||
+                coinCode.equals(BLD.coinCode) || coinCode.equals(BOOT.coinCode) ||
+                coinCode.equals(JUNO.coinCode) || coinCode.equals(STARS.coinCode) ||
+                coinCode.equals(AXL.coinCode) || coinCode.equals(SOMM.coinCode) ||
+                coinCode.equals(UMEE.coinCode) || coinCode.equals(GRAV.coinCode) ||
+                coinCode.equals(TGD.coinCode) || coinCode.equals(STRD.coinCode) ||
+                coinCode.equals(KAVA.coinCode) || coinCode.equals(EVMOS.coinCode);
+    }
+
+    public static boolean isCosmosFamilyByCoinId(String coinId) {
+        String coinCode = coinCodeFromCoinId(coinId);
+        return isCosmosFamilyByCoinCode(coinCode);
     }
 
     public static boolean isDefaultOpen(String coinCode) {

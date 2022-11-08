@@ -469,6 +469,7 @@
         <item>Sender</item>
         <item>Fewcha</item>
         <item>Core Wallet</item>
+        <item>Keplr</item>
         <item>SubWallet / Polkadot{.js}</item>
         <item>XRP Toolkit</item>
     </string-array>
@@ -479,6 +480,7 @@
         <item>near</item>
         <item>aptos</item>
         <item>coreWallet</item>
+        <item>keplrWallet</item>
         <item>polkadotJs</item>
         <item>xrpToolkit</item>
     </string-array>
@@ -489,6 +491,7 @@
         <item>Near</item>
         <item>Aptos</item>
         <item>AVAX, BTC, ETH, etc</item>
+        <item>Cosmos</item>
         <item>DOT、KSM</item>
         <item>XRP</item>
     </string-array>

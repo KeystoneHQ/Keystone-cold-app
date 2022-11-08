@@ -57,15 +57,16 @@ public class SyncInfo implements Serializable {
             return publicKey;
         }
         if (Coins.APTOS.coinId().equalsIgnoreCase(coinId)) {
-            publicKey = getAptosPublicKeyByAddition();
+            publicKey = getAptosPublicKey();
         } else if (Coins.NEAR.coinId().equalsIgnoreCase(coinId)) {
             publicKey = getNearPublicKeyByAddress();
         } else if (Coins.SOL.coinId().equalsIgnoreCase(coinId)) {
             publicKey = getSolPublicKeyByAddress();
+        } else if (Coins.isCosmosFamilyByCoinId(coinId)) {
+            publicKey = getCosmosPublicKey();
         }
         return publicKey;
     }
-
 
     public void setPublicKey(byte[] publicKey) {
         this.publicKey = publicKey;
@@ -79,7 +80,7 @@ public class SyncInfo implements Serializable {
         this.addition = addition;
     }
 
-    private byte[] getAptosPublicKeyByAddition() {
+    private byte[] getPublicKeyByAddition() {
         if (addition == null) {
             return null;
         }
@@ -88,18 +89,26 @@ public class SyncInfo implements Serializable {
             JSONObject additionJson = rootJson.getJSONObject("addition");
             String xPub = additionJson.getString("xPub");
             ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(xPub);
-            byte[] key = extendedPublicKey.getKey();
-            if (key != null && key.length == 33) {
-                byte[] pubKey = new byte[32];
-                System.arraycopy(key, 1, pubKey, 0, 32);
-                return pubKey;
-            }
+            return extendedPublicKey.getKey();
         } catch (JSONException exception) {
             exception.printStackTrace();
         }
         return null;
     }
 
+    private byte[] getCosmosPublicKey() {
+        return getPublicKeyByAddition();
+    }
+
+    private byte[] getAptosPublicKey() {
+        byte[] key = getPublicKeyByAddition();
+        if (key != null && key.length == 33) {
+            byte[] pubKey = new byte[32];
+            System.arraycopy(key, 1, pubKey, 0, 32);
+            return pubKey;
+        }
+        return null;
+    }
 
     private byte[] getSolPublicKeyByAddress() {
         if (!TextUtils.isEmpty(address)) {

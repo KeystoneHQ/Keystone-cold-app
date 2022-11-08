@@ -38,7 +38,8 @@ public enum WatchWallet {
     METAMASK("metamask"),
     SOLANA("solana"),
     NEAR("near"),
-    APTOS("aptos");
+    APTOS("aptos"),
+    KEPLR_WALLET("keplrWallet");
 
 
     public static final String XRP_TOOLKIT_SIGN_ID = "xrp_toolkit_sign_id";
@@ -48,6 +49,7 @@ public enum WatchWallet {
     public static final String NEAR_SIGN_ID = "near_sign_id";
     public static final String APTOS_SIGN_ID = "aptos_sign_id";
     public static final String CORE_WALLET_SIGN_ID = "core_wallet_sign_id";
+    public static final String KEPLR_WALLET_SIGN_ID = "keplr_wallet_sign_id";
 
     private final String walletId;
 
@@ -117,6 +119,8 @@ public enum WatchWallet {
                 return new Coins.Coin[]{Coins.BTC_NATIVE_SEGWIT, Coins.ETH};
             case APTOS:
                 return new Coins.Coin[]{Coins.APTOS};
+            case KEPLR_WALLET:
+                return new Coins.Coin[]{Coins.ATOM, Coins.OSMO, Coins.SCRT, Coins.AKT, Coins.CRO, Coins.IOV, Coins.ROWAN, Coins.CTK, Coins.IRIS, Coins.REGEN, Coins.XPRT, Coins.DVPN, Coins.IXO, Coins.NGM, Coins.BLD, Coins.BOOT, Coins.JUNO, Coins.STARS, Coins.AXL, Coins.SOMM, Coins.UMEE, Coins.GRAV, Coins.TGD, Coins.STRD, Coins.KAVA, Coins.EVMOS};
         }
         return new Coins.Coin[]{};
     }
@@ -147,6 +151,8 @@ public enum WatchWallet {
                 return APTOS_SIGN_ID;
             case CORE_WALLET:
                 return CORE_WALLET_SIGN_ID;
+            case KEPLR_WALLET:
+                return KEPLR_WALLET_SIGN_ID;
         }
         return null;
     }

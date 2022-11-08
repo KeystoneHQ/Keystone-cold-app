@@ -57,7 +57,7 @@ public class PresetData {
         entity.setShow(isDefaultOpen(coin.coinCode()));
         AccountEntity account = new AccountEntity();
 
-        if (coin.coinIndex() == Coins.ETH.coinIndex()) {
+        if (coin.coinCode().equals(Coins.ETH.coinCode())) {
             try {
                 boolean hasSetupStandard = false;
                 for (int i = 0; i < coin.getAccounts().length; i++) {
@@ -114,6 +114,8 @@ public class PresetData {
                     .toString();
             if (Coins.isPolkadotFamily(coin.coinCode())) {
                 defaultHdPath = coin.getAccounts()[0];
+            } else if (Coins.isCosmosFamilyByCoinCode(coin.coinCode())) {
+                defaultHdPath += "/0/0";
             } else if (Coins.CURVE.ED25519 == getCurveByPath(defaultHdPath)) {
                 defaultHdPath += "/0'/0'";
             }
