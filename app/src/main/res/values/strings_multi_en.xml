@@ -131,6 +131,7 @@
     <string name="read_confirm"><![CDATA[I\'ve read and agreed to the <font color="#00cdc3"><u>\"Terms of Service\"</u><font/>, and  <font color="#00cdc3"><u>\"Privacy Policy\"</u><font/> ]]></string>
     <string name="create_vault_hint"><![CDATA[1. Touch <font color="#00cdc3">\"Create Wallet\"<font/> to generate a new Wallet]]></string>
     <string name="import_vault_hint"><![CDATA[2. Touch <font color="#00cdc3">\"Import Wallet\"<font/> to import an existing HD wallet]]></string>
+    <string name="import_vault_danger_warning">The existing wallet will be wiped when importing or creating a wallet!</string>
     <string name="license">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="input_mnemonic_hint">Please enter your %d-word recovery phrase in the table below.</string>
@@ -238,7 +239,7 @@
     <string name="select_mnemonic_count">Recovery Phrase Length</string>
     <string name="set_password">Set Password</string>
     <string name="firmware_upgrade">Firmware Upgrade</string>
-    <string name="text_password_required">Must contain at least 10 characters and include upper and lower case letters and digits. Symbols are allowed. Case sensitive.</string>
+    <string name="text_password_required">Strongly recommend using a strong password at least 10 digit include upper and lower case letters and digits to unlock device. \n·\tMust contain at least 6 digits\n \t(numbers, letters or symbols)</string>
     <string name="welcome">Welcome to Keystone!</string>
     <string name="welcome_site"><![CDATA[Please open the following link using a PC: <font color="#00cdc3">https://keyst.one/start</font>]]></string>
     <string name="welcome_text">This will help guide setting up your Keystone hardware wallet.</string>
