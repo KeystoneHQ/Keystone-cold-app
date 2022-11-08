@@ -296,10 +296,10 @@ public class SetupVaultViewModel extends AndroidViewModel {
     }
 
     public PasswordValidationResult validatePassword() {
-        if (Objects.requireNonNull(pwd1.get()).length() < 10) {
+        if (Objects.requireNonNull(pwd1.get()).length() < 6) {
             return PasswordValidationResult.RESULT_TOO_SHORT;
-        } else if (!validInput(Objects.requireNonNull(pwd1.get()))) {
-            return PasswordValidationResult.RESULT_INPUT_WRONG;
+//        } else if (!validInput(Objects.requireNonNull(pwd1.get()))) {
+//            return PasswordValidationResult.RESULT_INPUT_WRONG;
         } else {
             return PasswordValidationResult.RESULT_OK;
         }
