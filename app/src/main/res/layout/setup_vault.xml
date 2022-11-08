@@ -81,6 +81,32 @@
                 android:textColor="@color/white"
                 android:textSize="13sp" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="16dp"
+                android:paddingVertical="12dp"
+                android:background="@color/red"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginHorizontal="12dp"
+                    android:src="@drawable/information"
+                    app:tint="@color/white" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:textColor="@color/white"
+                    android:text="@string/import_vault_danger_warning"
+                    />
+            </LinearLayout>
+
+
+
 
             <!--LinearLayout
                 android:layout_width="wrap_content"
