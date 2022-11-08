@@ -3,11 +3,9 @@ package com.keystone.coinlib.coins.cosmos;
 import static com.keystone.coinlib.Util.cleanHexPrefix;
 import static com.keystone.coinlib.Util.sha3String;
 
-import com.keystone.coinlib.utils.Ripemd160;
-
+import org.bitcoinj.core.Utils;
 import org.bouncycastle.jcajce.provider.digest.Keccak;
 import org.bouncycastle.util.encoders.Hex;
-import org.web3j.crypto.Hash;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -19,9 +17,8 @@ public class AddressCodec {
     public static final String SEPARATOR  = "@";
 
     public static String encodeGeneralAddress(String prefix, byte[] publicKey) {
-        byte[] sha256 = Hash.sha256(publicKey);
-        byte[] ripe160 = Ripemd160.getHash(sha256);
-        return Bech32.bech32Encode(prefix.getBytes(StandardCharsets.UTF_8), ripe160);
+        byte[] hashResult = Utils.sha256hash160(publicKey);
+        return Bech32.bech32Encode(prefix.getBytes(StandardCharsets.UTF_8), hashResult);
     }
 
     public static String encodeEvmosAddress(String prefix, byte[] publicKey) {
