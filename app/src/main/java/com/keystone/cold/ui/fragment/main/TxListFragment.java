@@ -88,7 +88,7 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
         watchWallet = WatchWallet.getWatchWallet(mActivity);
         adapter = new TxAdapter(mActivity);
         mBinding.list.setAdapter(adapter);
-        if (watchWallet == WatchWallet.METAMASK) {
+        if (watchWallet == WatchWallet.METAMASK || watchWallet.equals(WatchWallet.CORE_WALLET)) {
             loadEthTx();
         } else if (watchWallet == WatchWallet.SOLANA) {
             loadSolTx();
@@ -227,6 +227,7 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
                 .observe(this, ethTxEntities -> {
                     ethTxEntities = ethTxEntities.stream()
                             .filter(this::isCurrentAccountTx)
+                            .filter(this::isCurrentWatchWalletTx)
                             .filter(ethTxEntity -> ethTxEntity.getBelongTo().equals(Utilities.getCurrentBelongTo(mActivity)))
                             .collect(Collectors.toList());
                     adapter.setItems(ethTxEntities);
@@ -275,6 +276,11 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
             e.printStackTrace();
             return false;
         }
+    }
+
+    private boolean isCurrentWatchWalletTx(GenericETHTxEntity ethTxEntity) {
+        String signId = ethTxEntity.getSignId();
+        return signId.equals(watchWallet.getSignId());
     }
 
     private boolean isCurrentSolAccountTx(TxEntity txEntity) {

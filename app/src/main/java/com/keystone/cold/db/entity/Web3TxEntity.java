@@ -16,6 +16,14 @@ public class Web3TxEntity {
     private long timeStamp;
     private String belongTo;
     private int txType;
+    /*
+    json {
+    isFromTFCard: boolean,
+    requestId: string,
+    signBy: string,
+    signId: watchWallet.signId, #added after coreWallet integration
+    }
+    */
     private String addition;
 
 

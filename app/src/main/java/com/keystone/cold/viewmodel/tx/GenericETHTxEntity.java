@@ -21,11 +21,13 @@ import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
 
 import android.text.TextUtils;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
 import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.MainApplication;
+import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.db.entity.Web3TxEntity;
 import com.keystone.cold.model.Tx;
@@ -186,6 +188,7 @@ public class GenericETHTxEntity implements Tx {
 
     @Override
     public String getCoinCode() {
+        if (this.chainId == 43114) return Coins.AVAX.coinCode();
         return Coins.ETH.coinCode();
     }
 
@@ -231,7 +234,13 @@ public class GenericETHTxEntity implements Tx {
 
     @Override
     public String getSignId() {
-        return WatchWallet.METAMASK_SIGN_ID;
+        try {
+            JSONObject jsonObject = new JSONObject(this.addition);
+            return jsonObject.optString("signId", WatchWallet.METAMASK_SIGN_ID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return WatchWallet.METAMASK_SIGN_ID;
+        }
     }
 
     @Override
@@ -265,6 +274,12 @@ public class GenericETHTxEntity implements Tx {
 
     public long getChainId() {
         return chainId;
+    }
+
+    public int getIcon() {
+        if (this.chainId == 1) return R.drawable.coin_eth;
+        if (this.chainId == 43114) return R.drawable.coin_avax;
+        return R.drawable.coin_eth_token;
     }
 
     public String getAddition() {
@@ -368,27 +383,35 @@ public class GenericETHTxEntity implements Tx {
                 || memo.toLowerCase().contains(s);
     }
 
-    @NonNull
     @Override
     public String toString() {
-        return "TxEntity{" +
-                "txId='" + getTxId() + '\'' +
-                ", coinId='" + getCoinId() + '\'' +
-                ", coinCode='" + getCoinCode() + '\'' +
-                ", amount='" + getAmount() + '\'' +
-                ", from='" + getFrom() + '\'' +
-                ", to='" + getTo() + '\'' +
-                ", estimatedFee='" + getEstimatedFee() + '\'' +
-                ", maxFee='" + getMaxFee() + '\'' +
-                ", maxFeePerGas='" + getMaxFeePerGas() + '\'' +
-                ", maxPriorityFeePerGas='" + getMaxPriorityFeePerGas() + '\'' +
-                ", signedHex='" + getSignedHex() + '\'' +
-                ", timeStamp=" + getTimeStamp() +
-                ", memo='" + getMemo() + '\'' +
-                ", signId='" + getSignId() + '\'' +
-                ", belongTo='" + getBelongTo() + '\'' +
-                ", addition='" + getAddition() + '\'' +
-                ", signature='" + getSignature() + '\'' +
+        return "GenericETHTxEntity{" +
+                "txId='" + txId + '\'' +
+                ", amount='" + amount + '\'' +
+                ", amountValue=" + amountValue +
+                ", from='" + from + '\'' +
+                ", to='" + to + '\'' +
+                ", fee='" + fee + '\'' +
+                ", feeValue=" + feeValue +
+                ", signedHex='" + signedHex + '\'' +
+                ", timeStamp=" + timeStamp +
+                ", memo='" + memo + '\'' +
+                ", belongTo='" + belongTo + '\'' +
+                ", estimatedFee='" + estimatedFee + '\'' +
+                ", maxFee='" + maxFee + '\'' +
+                ", maxFeePerGas='" + maxFeePerGas + '\'' +
+                ", maxPriorityFeePerGas='" + maxPriorityFeePerGas + '\'' +
+                ", gasLimit='" + gasLimit + '\'' +
+                ", estimatedFeeValue=" + estimatedFeeValue +
+                ", maxFeeValue=" + maxFeeValue +
+                ", maxFeePerGasValue=" + maxFeePerGasValue +
+                ", maxPriorityFeePerGasValue=" + maxPriorityFeePerGasValue +
+                ", gasLimitValue=" + gasLimitValue +
+                ", signature='" + signature + '\'' +
+                ", chainId=" + chainId +
+                ", addition='" + addition + '\'' +
+                ", txType=" + txType +
+                ", isFromTFCard=" + isFromTFCard +
                 '}';
     }
 
