@@ -31,7 +31,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -135,7 +134,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         } else {
             mBinding.hint.setVisibility(View.GONE);
         }
-        if (watchWallet.equals(WatchWallet.CORE_WALLET) || watchWallet.equals(WatchWallet.COSMOS)) {
+        if (watchWallet.equals(WatchWallet.CORE_WALLET) || watchWallet.equals(WatchWallet.KEPLR_WALLET)) {
             mBinding.toolbar.setTitle(R.string.select_network);
         }
     }
@@ -200,7 +199,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
                     mBinding.setIsEmpty(true);
                 } else {
                     mBinding.setIsEmpty(false);
-                    if (watchWallet != WatchWallet.COSMOS) {
+                    if (watchWallet != WatchWallet.KEPLR_WALLET) {
                         toShow.sort(coinEntityComparator);
                     }
                     mCoinAdapter.setItems(toShow);
@@ -232,7 +231,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-        if (watchWallet != WatchWallet.KEYSTONE && watchWallet != WatchWallet.CORE_WALLET && watchWallet != WatchWallet.COSMOS) {
+        if (watchWallet != WatchWallet.KEYSTONE && watchWallet != WatchWallet.CORE_WALLET && watchWallet != WatchWallet.KEPLR_WALLET) {
             MenuItem item = menu.findItem(R.id.action_more);
             item.setVisible(false);
         }
@@ -383,12 +382,12 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
 
     private void showBottomSheetMenu() {
         BottomSheetDialog dialog = new BottomSheetDialog(mActivity);
-        if (watchWallet.equals(WatchWallet.CORE_WALLET) || watchWallet.equals(WatchWallet.COSMOS)) {
+        if (watchWallet.equals(WatchWallet.CORE_WALLET) || watchWallet.equals(WatchWallet.KEPLR_WALLET)) {
             DialogBottomSheetBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
                     R.layout.dialog_bottom_sheet, null, false);
             binding.addAddress.setVisibility(View.GONE);
             binding.resetDb.setVisibility(View.GONE);
-            if (watchWallet.equals(WatchWallet.COSMOS)) {
+            if (watchWallet.equals(WatchWallet.KEPLR_WALLET)) {
                 binding.changePath.setVisibility(View.GONE);
             }
             binding.changePath.setOnClickListener(v -> {

@@ -99,7 +99,7 @@ public class CoinAdapter extends FilterableBaseBindingAdapter<CoinEntity, AssetI
                         "",
                         false);
             }
-        } else if (WatchWallet.getWatchWallet(context).equals(WatchWallet.COSMOS)) {
+        } else if (WatchWallet.getWatchWallet(context).equals(WatchWallet.KEPLR_WALLET)) {
             return new AssetItem(coinModel.getName(),
                     coinModel.getDisplayName(),
                     coinModel.getCoinCode(),

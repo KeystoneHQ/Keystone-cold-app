@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class CosmosWalletViewModel extends AndroidViewModel {
-    public CosmosWalletViewModel(@NonNull Application application) {
+public class KeplrWalletViewModel extends AndroidViewModel {
+    public KeplrWalletViewModel(@NonNull Application application) {
         super(application);
     }
 
@@ -39,7 +39,7 @@ public class CosmosWalletViewModel extends AndroidViewModel {
     private CryptoMultiAccounts generateCryptoMultiAccounts() {
         Set<Integer> coinIndexSet = new HashSet<>();
         List<SyncInfo> syncInfoList =
-                Arrays.stream(WatchWallet.COSMOS.getSupportedCoins())
+                Arrays.stream(WatchWallet.KEPLR_WALLET.getSupportedCoins())
                         .filter(coin -> filterRepeatedCoinIndex(coinIndexSet, coin))
                         .map(this::getSyncInfo)
                         .collect(Collectors.toList());

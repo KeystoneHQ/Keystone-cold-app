@@ -41,7 +41,7 @@ import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.CommonModalBinding;
 import com.keystone.cold.databinding.SyncFragmentBinding;
 import com.keystone.cold.integration.corewallet.CoreWalletViewModel;
-import com.keystone.cold.integration.cosmoswallet.CosmosWalletViewModel;
+import com.keystone.cold.integration.cosmoswallet.KeplrWalletViewModel;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.fragment.main.SyncInfo;
 import com.keystone.cold.ui.fragment.setup.SetupVaultBaseFragment;
@@ -325,14 +325,14 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                     URLiveData.removeObservers(this);
                 });
                 break;
-            case COSMOS:
+            case KEPLR_WALLET:
                 if (URLiveData != null) {
                     URLiveData.removeObservers(this);
                 }
                 if (isRefreshing) return;
                 isRefreshing = true;
-                CosmosWalletViewModel cosmosWalletViewModel = ViewModelProviders.of(mActivity).get(CosmosWalletViewModel.class);
-                URLiveData = cosmosWalletViewModel.generateSyncData();
+                KeplrWalletViewModel keplrWalletViewModel = ViewModelProviders.of(mActivity).get(KeplrWalletViewModel.class);
+                URLiveData = keplrWalletViewModel.generateSyncData();
                 URLiveData.observe(this, ur -> {
                     if (ur != null) {
                         mBinding.dynamicQrcodeLayout.qrcode.displayUR(ur);

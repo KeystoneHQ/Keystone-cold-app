@@ -24,7 +24,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 
@@ -32,7 +31,6 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.SettingItemSelectableBinding;
@@ -97,7 +95,7 @@ public class ChooseWatchWalletFragment extends ListPreferenceFragment {
             case NEAR:
             case APTOS:
             case CORE_WALLET:
-            case COSMOS:
+            case KEPLR_WALLET:
                 updateCurrentWatchWallet();
                 stepIntoMainActivity();
                 break;
