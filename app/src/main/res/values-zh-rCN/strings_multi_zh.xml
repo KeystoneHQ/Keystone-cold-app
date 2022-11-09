@@ -97,7 +97,7 @@
     <string name="confirm_mnemonic">確認助記詞</string>
     <string name="confirm_input_mnemonic_hint">請在下方表格中輸入%d個助記詞。</string>
     <string name="complete">完成</string>
-    <string name="password_verify_too_short">至少10個字符</string>
+    <string name="password_verify_too_short">至少6個字符</string>
     <string-array name="screen_off_entries">
         <item>15 秒</item>
         <item>30 秒</item>
