@@ -143,7 +143,12 @@ public class PolkadotTxDetailViewNew extends ScrollView {
         binding.wrapper.setPadding(padding, 0, 0, 0);
         binding.wrapper.setLayoutParams(layoutParams);
         binding.key.setText(card.getTitle());
-        binding.value.setText(card.getValue());
+        if (card.getValue() == null) {
+            binding.value.setVisibility(GONE);
+        }
+        else {
+            binding.value.setText(card.getValue());
+        }
         if(inError){
             binding.key.setVisibility(GONE);
             binding.key.setTextColor(R.color.black);
@@ -171,8 +176,11 @@ public class PolkadotTxDetailViewNew extends ScrollView {
             int indent = json.getInt("indent");
             JSONObject card = json.getJSONObject("card");
             String title = card.getString("type");
-            Object content = card.get("value");
+            Object content = card.opt("value");
             String value;
+            if (content == null) {
+                return new Card(index, indent, title, null);
+            }
             if (content instanceof JSONObject) {
                 JSONObject j = (JSONObject) content;
                 StringBuilder stringBuilder = new StringBuilder();

@@ -100,7 +100,7 @@ public class PolkadotJsTxConfirmViewModel extends Base {
                     break;
                 }
                 default: {
-                    return null;
+                    coinCode = Coins.DOT.coinCode();
                 }
             }
             JSONObject authorInfo = parsedTransaction.getJSONObject("author_info");
