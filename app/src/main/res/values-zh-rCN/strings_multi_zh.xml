@@ -200,7 +200,7 @@
     <string name="select_mnemonic_count">選擇助記詞數量</string>
     <string name="set_password">設置密碼</string>
     <string name="firmware_upgrade">固件升級</string>
-    <string name="text_password_required">至少10個字符；必須同時包含大、小寫字母和數字；允許特殊字符</string>
+    <string name="text_password_required">Strongly recommend using a strong password at least 10 digit include upper and lower case letters and digits to unlock device. \n·\tMust contain at least 6 digits\n \t(numbers, letters or symbols)</string>
     <string name="welcome">歡迎使用鎧石硬件錢包！</string>
     <string name="welcome_site"><![CDATA[請用電腦訪問: <font color="#00cdc3">https://keyst.one/start<font/>]]></string>
     <string name="welcome_text">將引導您對鎧石硬件錢包進行初始化設置</string>

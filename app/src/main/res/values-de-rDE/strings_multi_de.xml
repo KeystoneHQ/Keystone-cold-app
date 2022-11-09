@@ -209,7 +209,7 @@
   <string name="select_mnemonic_count">Recovery Phrase Length</string>
   <string name="set_password">Set Password</string>
   <string name="firmware_upgrade">Firmware Upgrade</string>
-  <string name="text_password_required">Must contain at least 10 characters and include upper and lower case letters and digits. Symbols are allowed. Case sensitive.</string>
+  <string name="text_password_required">Strongly recommend using a strong password at least 10 digit include upper and lower case letters and digits to unlock device. \n·\tMust contain at least 6 digits\n \t(numbers, letters or symbols)</string>
   <string name="welcome">Welcome to Keystone!</string>
   <string name="welcome_site"><![CDATA[Please open the following link using a PC: <font color=\"#00cdc3\"><u>https://keyst.one/start</u></font>]]></string>
   <string name="welcome_text">This will help guide setting up your Keystone hardware wallet.</string>

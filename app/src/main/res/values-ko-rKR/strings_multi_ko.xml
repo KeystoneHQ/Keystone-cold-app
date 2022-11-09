@@ -145,7 +145,7 @@
   <string name="secret_modal_msg">당신의 복구 문구가 있는 사람은 누구나 당신의 암호화폐에 접근할 수 있습니다. 복구 문구를 기록할 때 구경꾼이나 카메라가 없는지 확인하십시오.</string>
   <string name="select_mnemonic_count">복구 문구 개수 선택</string>
   <string name="set_password">암호 설정</string>
-  <string name="text_password_required">비밀번호는 10자 이상이어야 하며 숫자와 영문 대소문자를 구분하여 포함되어야 합니다. 기호도 사용이 가능합니다.</string>
+  <string name="text_password_required">Strongly recommend using a strong password at least 10 digit include upper and lower case letters and digits to unlock device. \n·\tMust contain at least 6 digits\n \t(numbers, letters or symbols)</string>
   <string name="guide_completed_title">축하합니다! \n설치가 완료되었습니다!</string>
   <string name="guide_completed_remind"><![CDATA[암호 문구(숨겨진 지갑)을 만들거나 설정에서 암호를 재설정할 수 있습니다. \n제품에 동봉된 퀵 가이드를 읽거나 웹 사이트를 방문하여 자세히 알아보십시오: <br><font color="#00cdc3">https://keyst.one<font/>]]></string>
   <string name="tx_from">발신</string>
