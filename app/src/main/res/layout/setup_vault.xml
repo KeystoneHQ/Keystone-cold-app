@@ -82,6 +82,7 @@
                 android:textSize="13sp" />
 
             <LinearLayout
+                android:id="@+id/import_vault_danger_hint"
                 android:layout_width="match_parent"
                 android:layout_marginTop="16dp"
                 android:layout_marginHorizontal="16dp"

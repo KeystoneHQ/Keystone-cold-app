@@ -54,6 +54,7 @@ public class SetupVaultFragment extends BaseFragment<SetupVaultBinding> {
             mBinding.step.setVisibility(View.VISIBLE);
             mBinding.toolbar.setVisibility(View.GONE);
             mBinding.divider.setVisibility(View.GONE);
+            mBinding.importVaultDangerHint.setVisibility(View.GONE);
         } else {
             mBinding.step.setVisibility(View.GONE);
             mBinding.toolbar.setVisibility(View.VISIBLE);
