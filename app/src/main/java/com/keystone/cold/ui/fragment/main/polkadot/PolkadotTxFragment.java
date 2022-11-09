@@ -67,7 +67,6 @@ public class PolkadotTxFragment extends BaseFragment<PolkadotTxBinding> {
                     mBinding.dotTxNew.qrcode.qrcode.setVisibility(View.VISIBLE);
                     mBinding.dotTxNew.broadcastHint.setVisibility(View.VISIBLE);
                     mBinding.dotTxNew.broadcastHint.setText(getString(R.string.please_broadcast_with_hot));
-                    Log.d(TAG, "init: " + txEntity);
                     mBinding.dotTxNew.qrcode.qrcode.setData(txEntity.getSignedHex());
                     mBinding.dotTxNew.txDetail.bindTx(txEntity);
                 } catch (JSONException e) {

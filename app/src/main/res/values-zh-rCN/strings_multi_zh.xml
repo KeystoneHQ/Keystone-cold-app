@@ -79,6 +79,7 @@
     <string name="license">服務條款</string>
     <string name="create_vault_hint"><![CDATA[1. 點擊 <u><font color="#00cdc3">\"創建錢包\"<font/></u>按鈕，將為您新建一個全新的錢包]]></string>
     <string name="import_vault_hint"><![CDATA[2. 點擊 <u><font color="#00cdc3">\"導入錢包\"<font/></u>按鈕，通過助記詞恢復已有的錢包]]></string>
+    <string name="import_vault_danger_warning">當導入或創建錢包時會清除掉當前錢包數據。</string>
     <string name="setup_wallet_hint1">感謝您使用鎧石錢包！</string>
     <string name="input_mnemonic_hint">請在下方表格中輸入%d個助記詞以恢復錢包</string>
     <string name="input_mnemonic">輸入助記詞</string>

@@ -116,25 +116,20 @@ public class ChangeDerivePathFragment extends BaseFragment<ChangeDerivationPathF
             setCardCheckedStatus(ETHAccount.LEDGER_LIVE.getCode(), ETH_ACCOUNT_CODES);
         });
 
+        mBinding.patternCard2.setOnClickListener(v -> {
+            syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.LEDGER_LEGACY);
+            Utilities.setCurrentEthAccount(mActivity, ETHAccount.LEDGER_LEGACY.getCode());
+            setCardCheckedStatus(ETHAccount.LEDGER_LEGACY.getCode(), ETH_ACCOUNT_CODES);
+        });
+
         mBinding.patternCard3.setOnClickListener(v -> {
             syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.BIP44_STANDARD);
             Utilities.setCurrentEthAccount(mActivity, ETHAccount.BIP44_STANDARD.getCode());
             setCardCheckedStatus(ETHAccount.BIP44_STANDARD.getCode(), ETH_ACCOUNT_CODES);
         });
         mBinding.derivationPattern1.setText(highLight(ETHAccount.LEDGER_LIVE.getDisplayPath() + " (" + ETHAccount.LEDGER_LIVE.getName() + ")"));
+        mBinding.derivationPattern2.setText(highLight(ETHAccount.LEDGER_LEGACY.getDisplayPath() + " (" + ETHAccount.LEDGER_LEGACY.getName() + ")"));
         mBinding.derivationPattern3.setText(highLight(ETHAccount.BIP44_STANDARD.getDisplayPath() + " (" + ETHAccount.BIP44_STANDARD.getName() + ")"));
-
-        if (watchWallet.equals(WatchWallet.METAMASK)) {
-            mBinding.patternCard2.setOnClickListener(v -> {
-                syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.LEDGER_LEGACY);
-                Utilities.setCurrentEthAccount(mActivity, ETHAccount.LEDGER_LEGACY.getCode());
-                setCardCheckedStatus(ETHAccount.LEDGER_LEGACY.getCode(), ETH_ACCOUNT_CODES);
-            });
-            mBinding.derivationPattern2.setText(highLight(ETHAccount.LEDGER_LEGACY.getDisplayPath() + " (" + ETHAccount.LEDGER_LEGACY.getName() + ")"));
-        }
-        else {
-            mBinding.patternCard2.setVisibility(View.GONE);
-        }
     }
 
     private void setCardCheckedStatus(final String code, final String[] codes) {
@@ -152,7 +147,7 @@ public class ChangeDerivePathFragment extends BaseFragment<ChangeDerivationPathF
     }
 
     private void stepIntoMainActivity() {
-        if (watchWallet == WatchWallet.METAMASK) {
+        if (watchWallet == WatchWallet.METAMASK || watchWallet.equals(WatchWallet.CORE_WALLET)) {
             if (!TextUtils.isEmpty(selectCode)) {
                 Utilities.setCurrentEthAccount(mActivity, selectCode);
             }
@@ -236,16 +231,14 @@ public class ChangeDerivePathFragment extends BaseFragment<ChangeDerivationPathF
             accountAdapter1.setItems(pairs);
             mBinding.addressList1.setAdapter(accountAdapter1);
         });
+        syncViewModel.getAccounts(ETHAccount.LEDGER_LEGACY).observe(this, pairs -> {
+            accountAdapter2.setItems(pairs);
+            mBinding.addressList2.setAdapter(accountAdapter2);
+        });
         syncViewModel.getAccounts(ETHAccount.BIP44_STANDARD).observe(this, pairs -> {
             accountAdapter3.setItems(pairs);
             mBinding.addressList3.setAdapter(accountAdapter3);
         });
-        if (watchWallet.equals(WatchWallet.METAMASK)) {
-            syncViewModel.getAccounts(ETHAccount.LEDGER_LEGACY).observe(this, pairs -> {
-                accountAdapter2.setItems(pairs);
-                mBinding.addressList2.setAdapter(accountAdapter2);
-            });
-        }
     }
 
     public static Pattern pattern = Pattern.compile("\\(.+\\)");

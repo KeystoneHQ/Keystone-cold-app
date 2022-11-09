@@ -27,10 +27,13 @@ import static com.keystone.cold.viewmodel.CoinListViewModel.coinEntityComparator
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,6 +46,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.allenliu.badgeview.BadgeFactory;
+import com.allenliu.badgeview.BadgeView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.coins.polkadot.AddressCodec;
@@ -144,6 +149,16 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         int badgeSize = (int) getResources().getDimension(R.dimen.default_badge_size);
         Drawable menuWithBadge = ViewUtils.addBadge(getResources(), menu, badgeSize);
         menuItem.setIcon(menuWithBadge);
+    }
+
+    private BadgeView generateBadgeView(View anchor) {
+        return BadgeFactory.create(anchor.getContext())
+                .setWidthAndHeight(10, 10)
+                .setBadgeBackground(Color.RED)
+                .setBadgeGravity(Gravity.END | Gravity.TOP)
+                .setShape(BadgeView.SHAPE_CIRCLE)
+                .setSpace(10, 0)
+                .bind(anchor);
     }
 
     @Override
@@ -372,7 +387,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
 
         List<ScanResultTypes> desiredResults = new ArrayList<>();
         if (watchWallet == WatchWallet.CORE_WALLET) {
-            desiredResults.addAll(Collections.singletonList(ScanResultTypes.UR_CRYPTO_PSBT));
+            desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_CRYPTO_PSBT, ScanResultTypes.UR_ETH_SIGN_REQUEST));
         }
         scannerState.setDesiredResults(desiredResults);
         ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);
@@ -387,18 +402,17 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
                     R.layout.dialog_bottom_sheet, null, false);
             binding.addAddress.setVisibility(View.GONE);
             binding.resetDb.setVisibility(View.GONE);
-            if (watchWallet.equals(WatchWallet.KEPLR_WALLET)) {
-                binding.changePath.setVisibility(View.GONE);
-            }
-            binding.changePath.setOnClickListener(v -> {
-                navigate(R.id.action_assetListFragment_to_changeDerivePathFragment);
-                dialog.dismiss();
-            });
+            binding.changePath.setVisibility(View.GONE);
             binding.tutorials.setOnClickListener(v -> {
                 navigate(R.id.action_to_tutorialsFragment);
                 dialog.dismiss();
             });
+            if (!Utilities.hasUserClickCoreWalletSyncLock(mActivity)) {
+                generateBadgeView(binding.syncText);
+            }
+
             binding.sync.setOnClickListener(v -> {
+                Utilities.setUserClickCoreWalletSyncLock(mActivity);
                 navigate(R.id.action_to_syncFragment);
                 dialog.dismiss();
             });

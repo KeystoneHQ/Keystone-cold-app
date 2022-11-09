@@ -19,6 +19,7 @@
 
 package com.keystone.cold.ui.fragment.main.web3;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -47,6 +48,7 @@ public class EthBroadcastTxFragment extends BroadcastTxFragment {
         return R.layout.broadcast_tx_fragment;
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     protected void init(View view) {
         Bundle data = requireArguments();
@@ -62,13 +64,13 @@ public class EthBroadcastTxFragment extends BroadcastTxFragment {
                 if (genericETHTxEntity != null) {
                     mBinding.setCoinCode(genericETHTxEntity.getCoinCode());
                     this.txEntity = genericETHTxEntity;
+                    mBinding.icon.setImageDrawable(mActivity.getDrawable(genericETHTxEntity.getIcon()));
                     refreshUI();
                 }
             });
         }
         mBinding.toolbar.setNavigationOnClickListener(v -> popBackStack(R.id.assetFragment, false));
         mBinding.broadcastHint.setText(R.string.sync_with_metamask);
-        mBinding.icon.setImageDrawable(mActivity.getDrawable(R.drawable.coin_eth));
     }
 
     @Override

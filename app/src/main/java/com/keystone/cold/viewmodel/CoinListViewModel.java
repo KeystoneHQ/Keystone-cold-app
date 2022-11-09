@@ -20,6 +20,7 @@ package com.keystone.cold.viewmodel;
 import static com.keystone.cold.viewmodel.ElectrumViewModel.ELECTRUM_SIGN_ID;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
