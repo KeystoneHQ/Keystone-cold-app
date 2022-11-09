@@ -145,7 +145,7 @@
   <string name="secret_modal_msg">Cualquiera con tu frase de recuperación tiene acceso completo a tus criptomonedas. Asegúrate de que no haya espectadores ni cámaras cuando grabes tu frase de recuperación.</string>
   <string name="select_mnemonic_count">Longitud de la frase de recuperación</string>
   <string name="set_password">Establecer contraseña</string>
-  <string name="text_password_required">Debe contener al menos 10 caracteres e incluir letras mayúsculas, minúsculas y dígitos. Se permiten símbolos. Distingue mayúsculas y minúsculas.</string>
+  <string name="text_password_required">Strongly recommend using a strong password at least 10 digit include upper and lower case letters and digits to unlock device. \n·\tMust contain at least 6 digits\n \t(numbers, letters or symbols)</string>
   <string name="guide_completed_title">Felicitaciones!\nLa instalación está completa.</string>
   <string name="guide_completed_remind"><![CDATA[Crear una passphrase (billetera oculta) o restablece tu contraseña en la configuración. \nLee la Guía Rápida adjunta o por mayor información, visita: <br> <font color="#00cdc3">https://keyst.one<font/>]]></string>
   <string name="tx_from">De</string>
