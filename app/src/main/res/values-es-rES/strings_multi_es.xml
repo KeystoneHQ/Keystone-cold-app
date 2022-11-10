@@ -375,7 +375,7 @@
     <item>Solflare</item>
     <item>Sender</item>
     <item>Fewcha</item>
-    <item>Core Wallet</item>
+    <!-- <item>Core Wallet</item> -->
     <item>Polkadot{.js}</item>
     <item>XRP Toolkit</item>
   </string-array>
@@ -385,7 +385,7 @@
     <item>Solana</item>
     <item>Near</item>
     <item>Aptos</item>
-    <item>AVAX, BTC, ETH, etc</item>
+    <!-- <item>AVAX, BTC, ETH, etc</item> -->
     <item>DOT、KSM</item>
     <item>XRP</item>
   </string-array>
