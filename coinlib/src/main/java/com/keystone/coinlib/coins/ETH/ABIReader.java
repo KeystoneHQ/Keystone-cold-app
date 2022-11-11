@@ -66,7 +66,7 @@ public class ABIReader {
             Function entry = functions.get(methodId);
             Tuple result = entry.decodeCall(Hex.decode(noPrefix));
             return new DecodedFunctionCall(entry, result);
-        } catch (Exception e) {
+        } catch (Exception | Error e) {
             e.printStackTrace();
             return null;
         }
@@ -101,7 +101,7 @@ public class ABIReader {
                 fallbackHandler.handleNestedContract(call);
             }
             return call;
-        } catch (Exception e) {
+        } catch (Exception | Error e) {
             e.printStackTrace();
             return null;
         }
