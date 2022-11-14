@@ -1,5 +1,7 @@
 package com.keystone.cold.ui.fragment.main.psbt;
 
+import static com.keystone.cold.ui.fragment.main.TxFragment.KEY_TX_ID;
+
 import android.os.Bundle;
 import android.view.View;
 
@@ -27,7 +29,7 @@ public class PSBTTransactionFragment extends BaseFragment<PsbtConfirmFragmentBin
     @Override
     protected void init(View view) {
         Bundle data = requireArguments();
-        String txId = data.getString("tx_id");
+        String txId = data.getString(KEY_TX_ID);
         DataRepository repository = MainApplication.getApplication().getRepository();
 
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
