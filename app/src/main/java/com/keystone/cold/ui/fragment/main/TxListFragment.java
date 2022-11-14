@@ -37,6 +37,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.TxListBinding;
@@ -65,7 +66,7 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
     private Comparator<Tx> txEntityComparator;
     private String coinCode;
     private WatchWallet watchWallet;
-    private  CoinListViewModel viewModel;
+    private CoinListViewModel viewModel;
 
     static Fragment newInstance(@NonNull String coinId, @NonNull String coinCode) {
         TxListFragment fragment = new TxListFragment();
@@ -88,7 +89,7 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
         watchWallet = WatchWallet.getWatchWallet(mActivity);
         adapter = new TxAdapter(mActivity);
         mBinding.list.setAdapter(adapter);
-        if (watchWallet == WatchWallet.METAMASK || watchWallet.equals(WatchWallet.CORE_WALLET)) {
+        if (watchWallet == WatchWallet.METAMASK) {
             loadEthTx();
         } else if (watchWallet == WatchWallet.SOLANA) {
             loadSolTx();
@@ -96,6 +97,8 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
             loadNearTx();
         } else if (watchWallet == WatchWallet.APTOS) {
             loadAptosTx();
+        } else if (watchWallet == WatchWallet.CORE_WALLET) {
+            loadCoreWalletTx();
         } else {
             viewModel.loadTxs(requireArguments().getString(KEY_COIN_ID))
                     .observe(this, txEntities -> {
@@ -255,6 +258,28 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
                 }
             }
         };
+    }
+
+    private void loadCoreWalletTx() {
+        String coinId = requireArguments().getString(KEY_COIN_ID);
+        if (coinId.equals(Coins.ETH.coinId())) {
+            loadEthTx();
+        } else {
+            viewModel.loadTxs(coinId)
+                    .observe(this, txEntities -> {
+                        txEntityComparator = (o1, o2) -> (int) (o2.getTimeStamp() - o1.getTimeStamp());
+                        txEntities = txEntities.stream()
+                                .filter(this::shouldShow)
+                                .sorted(txEntityComparator)
+                                .collect(Collectors.toList());
+                        adapter.setItems(txEntities);
+                    });
+            txCallback = tx -> {
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_TX_ID, tx.getTxId());
+                navigate(R.id.action_to_psbtTransactionFragment, bundle);
+            };
+        }
     }
 
     private boolean isCurrentAccountTx(GenericETHTxEntity ethTxEntitiy) {

@@ -32,8 +32,7 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right"
-            />
+            app:popExitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_to_scan"
             app:destination="@id/QRCodeScanFragment"
@@ -71,8 +70,7 @@
         android:id="@+id/psbtConfirmFragment"
         android:name="com.keystone.cold.ui.fragment.main.psbt.PSBTConfirmFragment"
         android:label="PSBTConfirmFragment"
-        tools:layout="@layout/psbt_confirm_fragment"
-        >
+        tools:layout="@layout/psbt_confirm_fragment">
 
     </fragment>
     <fragment
@@ -165,6 +163,12 @@
         android:name="com.keystone.cold.ui.fragment.main.polkadot.PolkadotTxFragment"
         android:label="polkadotTxFragment"
         tools:layout="@layout/eth_tx_confirm" />
+
+    <fragment
+        android:id="@+id/psbtTransactionFragment"
+        android:name="com.keystone.cold.ui.fragment.main.psbt.PSBTTransactionFragment"
+        android:label="PSBTTransactionFragment"
+        tools:layout="@layout/psbt_confirm_fragment" />
 
     <fragment
         android:id="@+id/solTxFragment"
@@ -261,8 +265,7 @@
         android:id="@+id/solTxDetailFragment"
         android:name="com.keystone.cold.ui.fragment.main.solana.SolTxDetailFragment"
         android:label="solTxDetailFragment"
-        tools:layout="@layout/fragment_sol_tx_detail">
-    </fragment>
+        tools:layout="@layout/fragment_sol_tx_detail"></fragment>
 
     <fragment
         android:id="@+id/aptosTxFragment"
@@ -294,8 +297,7 @@
         android:id="@+id/aptosTxDetailFragment"
         android:name="com.keystone.cold.ui.fragment.main.aptos.AptosTxDetailFragment"
         android:label="aptosTxDetailFragment"
-        tools:layout="@layout/fragment_aptos_tx_detail">
-    </fragment>
+        tools:layout="@layout/fragment_aptos_tx_detail"></fragment>
 
     <fragment
         android:id="@+id/aptosSignMessageFragment"
@@ -328,8 +330,7 @@
         android:id="@+id/nearTxDetailFragment"
         android:name="com.keystone.cold.ui.fragment.main.near.NearTxDetailFragment"
         android:label="nearTxDetailFragment"
-        tools:layout="@layout/fragment_near_tx_detail">
-    </fragment>
+        tools:layout="@layout/fragment_near_tx_detail"></fragment>
 
     <fragment
         android:id="@+id/nearBroadcastTxFragment"
@@ -346,8 +347,7 @@
         android:id="@+id/tutorialsFragment"
         android:name="com.keystone.cold.ui.fragment.main.tutorials.TutorialsFragment"
         android:label="tutorialsFragment"
-        tools:layout="@layout/fragment_tutorials">
-    </fragment>
+        tools:layout="@layout/fragment_tutorials"></fragment>
 
     <fragment
         android:id="@+id/ethBroadcastTxFragment"
@@ -546,16 +546,16 @@
         android:id="@+id/selectWalletFragment"
         android:name="com.keystone.cold.ui.fragment.SelectWalletFragment"
         android:label="SelectWalletFragment"
-        tools:layout="@layout/select_wallet_fragment"/>
+        tools:layout="@layout/select_wallet_fragment" />
     <fragment
         android:id="@+id/changeDerivePathFragment"
         android:name="com.keystone.cold.ui.fragment.ChangeDerivePathFragment"
         android:label="ChangeDerivetionFragment"
-        tools:layout="@layout/change_derivation_path_fragment"/>
+        tools:layout="@layout/change_derivation_path_fragment" />
     <fragment
         android:id="@+id/nftConfirmFragment"
-        android:label="NFTConfirmFragment"
         android:name="com.keystone.cold.ui.fragment.main.NFTConfirmFragment"
+        android:label="NFTConfirmFragment"
         tools:layout="@layout/nft_confirm_fragment">
         <action
             android:id="@+id/action_to_home"
@@ -622,15 +622,14 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right"
-            />
+            app:popExitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_assetFragment_to_addressSyncAddress"
             app:destination="@id/addressSyncFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right"/>
+            app:popExitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_assetFragment_to_selectWalletFragment"
             app:destination="@id/selectWalletFragment"
@@ -698,6 +697,13 @@
         <action
             android:id="@+id/action_to_electrumTxFragment"
             app:destination="@id/electrumTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+
+        <action android:id="@+id/action_to_psbtTransactionFragment"
+            app:destination="@id/psbtTransactionFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
@@ -1084,7 +1090,8 @@
             android:id="@+id/action_QRCodeScan_to_result"
             app:destination="@id/webAuthResultFragment" />
 
-        <action android:id="@+id/action_QRCodeScan_to_nftConfirmFragment"
+        <action
+            android:id="@+id/action_QRCodeScan_to_nftConfirmFragment"
             app:destination="@id/nftConfirmFragment" />
 
         <action
@@ -1100,8 +1107,7 @@
         android:id="@+id/addressSyncFragment"
         android:name="com.keystone.cold.ui.fragment.main.AddressSyncFragment"
         android:label="AddressSyncFragment"
-        tools:layout="@layout/address_sync_fragment">
-    </fragment>
+        tools:layout="@layout/address_sync_fragment"></fragment>
 
     <fragment
         android:id="@+id/psbtBroadcastFragment"
@@ -1245,8 +1251,7 @@
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
-        app:popExitAnim="@android:anim/slide_out_right"
-        />
+        app:popExitAnim="@android:anim/slide_out_right" />
 
     <action
         android:id="@+id/action_to_psbtBroadcastFragment"
@@ -1254,7 +1259,6 @@
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
-        app:popExitAnim="@android:anim/slide_out_right"
-        />
+        app:popExitAnim="@android:anim/slide_out_right" />
 
 </navigation>
