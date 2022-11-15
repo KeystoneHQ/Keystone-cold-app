@@ -746,7 +746,7 @@
     <string name="input_fingerprint_fail_hint">Failed to input fingerprint, please try again.</string>
     <string name="eth_receive_info">ETH or ERC-20 tokens</string>
     <string name="sol_receive_info">SOL or SPL tokens</string>
-    <string name="tron_receive_info">TRC or TRC-20 tokens</string>
+    <string name="tron_receive_info">TRX or TRC-20 tokens</string>
     <string name="aptos_receive_info">APT or Aptos tokens</string>
     <string name="avax_receive_info">AVAX, ETH or ERC-20 tokens</string>
     <string name="get_address_fail_info">Failed to get address.</string>
