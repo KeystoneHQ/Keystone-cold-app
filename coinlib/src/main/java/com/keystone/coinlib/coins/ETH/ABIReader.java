@@ -1,6 +1,7 @@
 package com.keystone.coinlib.coins.ETH;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.esaulpaugh.headlong.abi.ABIJSON;
 import com.esaulpaugh.headlong.abi.ABIType;
@@ -32,6 +33,9 @@ import static com.esaulpaugh.headlong.abi.ABIType.TYPE_CODE_LONG;
 import static com.esaulpaugh.headlong.abi.ABIType.TYPE_CODE_TUPLE;
 
 public class ABIReader {
+
+    private static final String TAG = "ABIReader";
+
     static Map<String, Function> functions = new HashMap<>();
     static List<FallbackHandler> fallbackHandlers = new ArrayList<>();
 
@@ -68,6 +72,8 @@ public class ABIReader {
             return new DecodedFunctionCall(entry, result);
         } catch (Exception | Error e) {
             e.printStackTrace();
+            Log.e(TAG, String.format("data is %s", data));
+            Log.e(TAG, String.format("err info is %s", e));
             return null;
         }
     }
@@ -103,6 +109,8 @@ public class ABIReader {
             return call;
         } catch (Exception | Error e) {
             e.printStackTrace();
+            Log.e(TAG, String.format("data is %s", data));
+            Log.e(TAG, String.format("err info is %s", e));
             return null;
         }
     }
