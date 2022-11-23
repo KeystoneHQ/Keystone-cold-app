@@ -1,5 +1,6 @@
 package com.keystone.cold.cryptocore;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.keystone.cold.cryptocore.lib.RCC;
@@ -29,6 +30,9 @@ public class RCCSigner {
 
 
     public String sign(String data) {
+        if (TextUtils.isEmpty(data)) {
+            return null;
+        }
         RCC rcc = new RCC();
         String command = composeCommand(data);
 
