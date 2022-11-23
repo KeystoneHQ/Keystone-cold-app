@@ -6,6 +6,7 @@ import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
 import com.sparrowwallet.hummingbird.registry.EthNFTItem;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
+import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignRequest;
 import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolNFTItem;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
@@ -31,7 +32,8 @@ public enum ScanResultTypes {
     UR_SOL_NFT_ITEM,
     UR_NEAR_SIGN_REQUEST,
     UR_CRYPTO_PSBT,
-    UR_APTOS_SIGN_REQUEST;
+    UR_APTOS_SIGN_REQUEST,
+    UR_COSMOS_SIGN_REQUEST;
 
 
     public boolean isType(String text) {
@@ -61,6 +63,8 @@ public enum ScanResultTypes {
                     return decodeResult instanceof AptosSignRequest;
                 case UR_CRYPTO_PSBT:
                     return decodeResult instanceof CryptoPSBT;
+                case UR_COSMOS_SIGN_REQUEST:
+                    return decodeResult instanceof CosmosSignRequest;
                 default:
                     return false;
             }
@@ -83,6 +87,8 @@ public enum ScanResultTypes {
             List<DataItem> items = CborDecoder.decode(cborPayload);
             DataItem dataItem = items.get(0);
             switch (this) {
+                case UR_COSMOS_SIGN_REQUEST:
+                    return CosmosSignRequest.fromCbor(dataItem);
                 case UR_APTOS_SIGN_REQUEST:
                     return AptosSignRequest.fromCbor(dataItem);
                 case UR_NEAR_SIGN_REQUEST:

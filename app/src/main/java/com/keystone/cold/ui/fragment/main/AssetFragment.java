@@ -105,6 +105,7 @@ import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
 import com.sparrowwallet.hummingbird.registry.EthNFTItem;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
+import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignRequest;
 import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolNFTItem;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
@@ -389,7 +390,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             case R.id.action_scan:
                 if (watchWallet == WatchWallet.METAMASK
                         || watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR
-                        || watchWallet == WatchWallet.APTOS || watchWallet == WatchWallet.CORE_WALLET) {
+                        || watchWallet == WatchWallet.APTOS || watchWallet == WatchWallet.CORE_WALLET
+                        || watchWallet == WatchWallet.KEPLR_WALLET) {
                     scanQrCode();
                 } else {
                     navigate(R.id.action_to_QRCodeScanFragment);
@@ -416,6 +418,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     public static final String SIGN_DATA = "signData";
     public static final String REQUEST_ID = "requestId";
     public static final String HD_PATH = "hdPath";
+    public static final String DATA_TYPE = "dataType";
 
     private void scanQrCode() {
         ScannerState scannerState = new ScannerState() {
@@ -439,6 +442,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     handleAptosSignRequest(result);
                 } else if (result.getType().equals(ScanResultTypes.UR_CRYPTO_PSBT)) {
                     handleCryptoPSBT(result);
+                } else if (result.getType().equals(ScanResultTypes.UR_COSMOS_SIGN_REQUEST)) {
+                    handleCosmosSignRequest(result);
                 } else {
                     throw new UnknowQrCodeException("unknown transaction!");
                 }
@@ -534,6 +539,33 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 data.putString("psbt", psbtB64);
                 mFragment.navigate(R.id.action_to_psbtConfirmFragment, data);
             }
+
+            private void handleCosmosSignRequest(ScanResult result) throws XfpNotMatchException, InvalidTransactionException {
+                CosmosSignRequest cosmosSignRequest = (CosmosSignRequest) result.resolve();
+                ByteBuffer uuidBuffer = ByteBuffer.wrap(cosmosSignRequest.getRequestId());
+                UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+                String hdPath = cosmosSignRequest.getDerivationPath();
+                String requestMFP = Hex.toHexString(cosmosSignRequest.getMasterFingerprint());
+                String signData = Hex.toHexString(cosmosSignRequest.getSignData());
+                String MFP = new GetMasterFingerprintCallable().call();
+                if (!requestMFP.equalsIgnoreCase(MFP)) {
+                    throw new XfpNotMatchException("Master fingerprint not match");
+                }
+                Bundle bundle = new Bundle();
+                bundle.putString(REQUEST_ID, uuid.toString());
+                bundle.putString(SIGN_DATA, signData);
+                bundle.putString(HD_PATH, "M/" + hdPath);
+                String dataType = cosmosSignRequest.getType().getType();
+                if (dataType.equals(CosmosSignRequest.DataType.AMINO.getType()) || dataType.equals(CosmosSignRequest.DataType.DIRECT.getType())) {
+                    bundle.putString(DATA_TYPE, cosmosSignRequest.getType().getType());
+                    mFragment.navigate(R.id.action_to_cosmosTxConfirmFragment, bundle);
+                } else if (dataType.equals(CosmosSignRequest.DataType.MESSAGE.getType())) {
+
+                } else {
+                    throw new InvalidTransactionException("The textual format is not supported");
+                }
+            }
+
 
             private void handleAptosSignRequest(ScanResult result) throws XfpNotMatchException, UnknowQrCodeException {
                 AptosSignRequest aptosSignRequest = (AptosSignRequest) result.resolve();
@@ -721,6 +753,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             desiredResults.addAll(Collections.singletonList(ScanResultTypes.UR_APTOS_SIGN_REQUEST));
         } else if (watchWallet == WatchWallet.CORE_WALLET) {
             desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_CRYPTO_PSBT));
+        } else if (watchWallet == WatchWallet.KEPLR_WALLET) {
+            desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_COSMOS_SIGN_REQUEST, ScanResultTypes.UR_ETH_SIGN_REQUEST));
         }
         scannerState.setDesiredResults(desiredResults);
         ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);
@@ -868,7 +902,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 
     private void setSyncViewListener(View view, Runnable additionProcess, BadgeView finalBgView) {
         view.setOnClickListener(v -> {
-            if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.CORE_WALLET) {
+            if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.CORE_WALLET || watchWallet == WatchWallet.KEPLR_WALLET) {
                 navigate(R.id.action_to_syncFragment);
             } else if (watchWallet == WatchWallet.SOLANA) {
                 Bundle bundle = new Bundle();
@@ -882,8 +916,6 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 Bundle bundle = new Bundle();
                 bundle.putString(KEY_COIN_ID, coinId);
                 navigate(R.id.action_assetFragment_to_addressSyncAddress, bundle);
-            } else if (watchWallet == WatchWallet.KEPLR_WALLET) {
-                navigate(R.id.action_to_syncFragment);
             }
             if (judgeShowBadge()) {
                 setUserClickSyncLock();
