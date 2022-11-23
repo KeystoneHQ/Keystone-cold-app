@@ -15,7 +15,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.accounts.ExtendedPublicKey;
-import com.keystone.coinlib.coins.APTOS.AptosImpl;
 import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.coins.cosmos.CosmosImpl;
 import com.keystone.coinlib.interfaces.Signer;
@@ -23,12 +22,9 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.callables.ClearTokenCallable;
-import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AddressEntity;
-import com.keystone.cold.encryption.ChipSigner;
 import com.keystone.cold.encryption.RustSigner;
 import com.keystone.cold.ui.fragment.main.cosmos.model.CosmosTx;
-import com.sparrowwallet.hummingbird.registry.aptos.AptosSignature;
 import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignature;
 
 import org.json.JSONException;
