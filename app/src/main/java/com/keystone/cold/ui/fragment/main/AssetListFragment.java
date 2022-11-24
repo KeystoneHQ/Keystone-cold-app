@@ -323,7 +323,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
                     bundle.putString(DATA_TYPE, cosmosSignRequest.getType().getType());
                     mFragment.navigate(R.id.action_to_cosmosTxConfirmFragment, bundle);
                 } else if (dataType.equals(CosmosSignRequest.DataType.MESSAGE.getType())) {
-
+                    mFragment.navigate(R.id.action_to_cosmosMessageFragment, bundle);
                 } else {
                     throw new InvalidTransactionException("The textual format is not supported");
                 }

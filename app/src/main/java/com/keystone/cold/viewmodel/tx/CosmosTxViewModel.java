@@ -18,13 +18,19 @@ import com.keystone.coinlib.accounts.ExtendedPublicKey;
 import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.coins.cosmos.CosmosImpl;
 import com.keystone.coinlib.interfaces.Signer;
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.db.entity.AddressEntity;
+import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.RustSigner;
 import com.keystone.cold.ui.fragment.main.cosmos.model.CosmosTx;
+import com.keystone.cold.ui.fragment.main.cosmos.model.CosmosTxData;
+import com.keystone.cold.ui.fragment.main.cosmos.model.msg.Msg;
+import com.keystone.cold.ui.fragment.main.cosmos.model.msg.MsgSignData;
+import com.keystone.cold.util.HashUtil;
 import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignature;
 
 import org.json.JSONException;
@@ -32,6 +38,7 @@ import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
 import java.nio.ByteBuffer;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -47,12 +54,14 @@ public class CosmosTxViewModel extends Base {
     private String signature;
 
     private String xPub;
+    private String chainId;
+    private String parseJson;
 
     private final MutableLiveData<JSONObject> parseMessageJsonLiveData;
 
 
-
     private final MutableLiveData<CosmosTx> cosmosTxLiveData;
+    private final MutableLiveData<CosmosTxData> cosmosTxDataMutableLiveData;
 
 
     private final SignCallBack signCallBack = new SignCallBack() {
@@ -72,6 +81,7 @@ public class CosmosTxViewModel extends Base {
             signature = signatureHex;
             signState.postValue(STATE_SIGN_SUCCESS);
             new ClearTokenCallable().call();
+            insertDB(signature, txHex, parseJson);
         }
 
         @Override
@@ -87,6 +97,7 @@ public class CosmosTxViewModel extends Base {
         super(application);
         parseMessageJsonLiveData = new MutableLiveData<>();
         cosmosTxLiveData = new MutableLiveData<>();
+        cosmosTxDataMutableLiveData = new MutableLiveData<>();
     }
 
     public LiveData<JSONObject> getParseMessageJsonLiveData() {
@@ -97,20 +108,22 @@ public class CosmosTxViewModel extends Base {
         return cosmosTxLiveData;
     }
 
+    public MutableLiveData<CosmosTxData> getCosmosTxDataMutableLiveData() {
+        return cosmosTxDataMutableLiveData;
+    }
+
     public void parseTxData(Bundle bundle) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             txHex = bundle.getString(SIGN_DATA);
             hdPath = bundle.getString(HD_PATH);
             requestId = bundle.getString(REQUEST_ID);
             dataType = bundle.getString(DATA_TYPE);
-
             if ("sign-type-amino".equals(dataType)) {
                 parseAminoTx();
-            } else if ("sign-type-direct".equals(dataType)){
+            } else if ("sign-type-direct".equals(dataType)) {
                 parseDirectTx();
             }
             xPub = getXpubByPath(hdPath);
-
         });
     }
 
@@ -122,18 +135,67 @@ public class CosmosTxViewModel extends Base {
         String aminoMessage = new String(Hex.decode(txHex));
         CosmosTx cosmosTx = CosmosTx.from(aminoMessage);
         cosmosTxLiveData.postValue(cosmosTx);
-
+        if (cosmosTx != null) {
+            chainId = cosmosTx.getChainId();
+        }
         try {
-            parseMessageJsonLiveData.postValue(new JSONObject(aminoMessage));
+            parseMessageJsonLiveData.postValue(new JSONObject(parseJson));
         } catch (JSONException exception) {
             exception.printStackTrace();
         }
 
     }
 
+
+    public MutableLiveData<JSONObject> parseRawMessage(Bundle bundle) {
+        MutableLiveData<JSONObject> observableObject = new MutableLiveData<>();
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            try {
+                hdPath = bundle.getString(HD_PATH);
+                requestId = bundle.getString(REQUEST_ID);
+                messageData = bundle.getString(SIGN_DATA);
+                String signer = null;
+                String data = null;
+                String aminoMessage = new String(Hex.decode(messageData));
+                CosmosTx cosmosTx = CosmosTx.from(aminoMessage);
+                if (cosmosTx != null) {
+                    chainId = cosmosTx.getChainId();
+                    if (cosmosTx.getMsgs() != null && cosmosTx.getMsgs().size() != 0) {
+                        for (Msg msg : cosmosTx.getMsgs()) {
+                            if (msg instanceof MsgSignData) {
+                                signer = ((MsgSignData) msg).getSigner();
+                                data = ((MsgSignData) msg).getData();
+                                break;
+                            }
+                        }
+                    }
+                }
+                JSONObject object = new JSONObject();
+                object.put("hdPath", hdPath);
+                object.put("requestId", requestId);
+                object.put("data", data);
+                object.put("chainId", chainId);
+                object.put("signer", signer);
+                observableObject.postValue(object);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                observableObject.postValue(null);
+                parseTxException.postValue(e);
+            }
+            xPub = getXpubByPath(hdPath);
+        });
+        return observableObject;
+    }
+
+
     private String getXpubByPath(String path) {
         DataRepository repository = MainApplication.getApplication().getRepository();
-        AddressEntity addressEntity = repository.loadAddressBypath(path);
+        AddressEntity addressEntity;
+        if (isEvmosPath(path)) {
+            addressEntity = repository.loadAddressByPathAndCoinId(path, Coins.EVMOS.coinId());
+        } else {
+            addressEntity = repository.loadAddressBypath(path);
+        }
         if (addressEntity != null) {
             String addition = addressEntity.getAddition();
             try {
@@ -173,6 +235,23 @@ public class CosmosTxViewModel extends Base {
         }
     }
 
+    public void handleSignMessage() {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            Signer signer = initSigner();
+            signMessage(signer);
+        });
+    }
+
+    private void signMessage(Signer signer) {
+        signCallBack.startSign();
+        String result = new CosmosImpl().signMessage(messageData, signer);
+        if (result == null) {
+            signCallBack.onFail();
+        } else {
+            signCallBack.onSignMsgSuccess(result);
+        }
+    }
+
     public String getSignatureUR() {
         if (TextUtils.isEmpty(signature) || TextUtils.isEmpty(requestId)) {
             return "";
@@ -194,6 +273,95 @@ public class CosmosTxViewModel extends Base {
     private byte[] getPublicKey(String xPub) {
         ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(xPub);
         return extendedPublicKey.getKey();
+    }
+
+    private void insertDB(String signature, String rawMessage, String parseJson) {
+        TxEntity txEntity = generateCosmosTxEntity();
+        String txId = Hex.toHexString(Objects.requireNonNull(HashUtil.sha256(Hex.decode(txHex))));
+        txEntity.setTxId(txId);
+        String additionsString = null;
+        try {
+            JSONObject addition = new JSONObject();
+            addition.put("signature", signature);
+            addition.put("raw_message", rawMessage);
+            addition.put("parse_message", parseJson);
+
+            JSONObject additions = new JSONObject();
+            additions.put("coin", getCosmosCoinId(chainId));
+            additions.put("addition", addition);
+            JSONObject root = new JSONObject();
+            root.put("additions", additions);
+            additionsString = root.toString();
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+        if (!TextUtils.isEmpty(additionsString)) {
+            //addition结构详见 com.keystone.cold.db.entity.TxEntity addition字段
+            txEntity.setAddition(additionsString);
+            mRepository.insertTx(txEntity);
+        }
+    }
+
+    private TxEntity generateCosmosTxEntity() {
+        TxEntity txEntity = new TxEntity();
+        String coinId = getCosmosCoinId(chainId);
+        txEntity.setCoinId(coinId);
+        txEntity.setSignId(watchWallet.getSignId());
+        String coinCode = getCosmosCoinCode(chainId);
+        txEntity.setCoinCode(coinCode);
+        txEntity.setTimeStamp(getUniversalSignIndex(getApplication()));
+        txEntity.setBelongTo(mRepository.getBelongTo());
+        txEntity.setSignedHex(getSignatureUR());
+        return txEntity;
+    }
+
+    public void parseCosmosTxEntity(TxEntity txEntity) {
+        String addition = txEntity.getAddition();
+        if (TextUtils.isEmpty(addition)) {
+            return;
+        }
+        try {
+            JSONObject root = new JSONObject(addition);
+            JSONObject additions = root.getJSONObject("additions");
+            String coin = additions.getString("coin");
+            if (!TextUtils.isEmpty(coin)) {
+                String signature = additions.getJSONObject("addition").getString("signature");
+                String rawMessage = additions.getJSONObject("addition").getString("raw_message");
+                String parseMessage = additions.getJSONObject("addition").getString("parse_message");
+                CosmosTxData cosmosTxData = new CosmosTxData();
+                cosmosTxData.setSignature(signature);
+                cosmosTxData.setRawMessage(rawMessage);
+                cosmosTxData.setParsedMessage(new JSONObject(parseMessage).toString(2));
+                cosmosTxData.setSignatureUR(txEntity.getSignedHex());
+                CosmosTx cosmosTx = CosmosTx.from(parseMessage);
+                cosmosTxData.setCosmosTx(cosmosTx);
+                cosmosTxDataMutableLiveData.postValue(cosmosTxData);
+            }
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    public String getCosmosCoinId(String chainId) {
+        return Coins.getCosmosCoinId(chainId);
+    }
+
+    public String getCosmosCoinCode(String chainId) {
+        return Coins.getCosmosCoinCode(chainId);
+    }
+
+    public String getCosmosCoinName(String chainId) {
+        return Coins.coinNameFromCoinCode(getCosmosCoinCode(chainId));
+    }
+
+    private boolean isEvmosPath(String path) {
+        //M/44'/60'/0'/0/0
+        if (null != path) {
+            String[] segs = path.split("/");
+            String coinType = segs[2].replace("'", "");
+            return coinType.equals(String.valueOf(Coins.EVMOS.coinIndex()));
+        }
+        return false;
     }
 
     interface SignCallBack {

@@ -36,7 +36,15 @@ public class CosmosImpl implements Coin {
 
     @Override
     public String signMessage(@NonNull String message, Signer signer) {
-        return null;
+        byte[] data = Hex.decode(message);
+        byte[] hashBytes = Sha256Hash.hash(data);
+        String signingData = Hex.toHexString(hashBytes);
+        String signature = signer.sign(signingData);
+        if (signature != null) {
+            return signature.substring(0, 128);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -55,7 +63,7 @@ public class CosmosImpl implements Coin {
         String signingData = Hex.toHexString(hashBytes);
         String signature = signer.sign(signingData);
         if (signature != null) {
-            signature = signature.substring(0,128);
+            signature = signature.substring(0, 128);
             return new SignTxResult(signature, hex, signature);
         } else {
             return null;
