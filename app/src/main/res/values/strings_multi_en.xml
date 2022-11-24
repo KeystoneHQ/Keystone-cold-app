@@ -762,6 +762,18 @@
     <string name="gas_unit_price">Gas Unit Price</string>
     <string name="chain_id">Chain ID</string>
     <string name="transfer">Transfer</string>
+    <string name="transaction_type">Transaction Type</string>
+    <string name="gas_limit">Gas Limit</string>
 
+    <string name="voter">Voter</string>
+    <string name="proposal">Proposal</string>
+    <string name="option">Option</string>
+    <string name="delegate_address">Delegate Address</string>
+    <string name="validator_address">Validator Address</string>
+
+    <string name="old_validator">Old Validator</string>
+    <string name="new_validator">New Validator</string>
+    <string name="unsupport_message_hint">This message can not be decoded as readable text. Please check raw data for more information.</string>
+    <string name="message_tittle">Message</string>
 
 </resources>
