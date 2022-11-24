@@ -45,8 +45,17 @@ public class CosmosFormattedTxFragment extends BaseFragment<CosmosTxDetailBindin
         viewModel = ViewModelProviders.of(getParentFragment()).get(CosmosTxViewModel.class);
 
         if (isFromRecord) {
-
-
+            viewModel.getCosmosTxDataMutableLiveData().observe(this, cosmosTxData -> {
+                if (cosmosTxData != null) {
+                    if (cosmosTxData.getCosmosTx() != null) {
+                        updateUI(cosmosTxData.getCosmosTx());
+                    }
+                    mBinding.llChainInfo.setVisibility(View.GONE);
+                    mBinding.checkInfo.setVisibility(View.GONE);
+                    mBinding.qr.setVisibility(View.VISIBLE);
+                    mBinding.qrcode.qrcode.setData(cosmosTxData.getSignatureUR());
+                }
+            });
         } else {
             viewModel.getCosmosTxLiveData().observe(this, cosmosTx -> {
                 if (cosmosTx != null) {
@@ -57,6 +66,8 @@ public class CosmosFormattedTxFragment extends BaseFragment<CosmosTxDetailBindin
     }
 
     private void updateUI(CosmosTx cosmosTx) {
+        mBinding.setCoinCode(viewModel.getCosmosCoinCode(cosmosTx.getChainId()));
+        mBinding.setCoinName(viewModel.getCosmosCoinName(cosmosTx.getChainId()));
         mBinding.tvChainId.setText(cosmosTx.getChainId());
         if (cosmosTx.getFee() != null) {
             mBinding.tvFee.setText(cosmosTx.getFee().getAmountValue() + " " + cosmosTx.getFee().getAmountDenom().toUpperCase());
@@ -71,5 +82,13 @@ public class CosmosFormattedTxFragment extends BaseFragment<CosmosTxDetailBindin
 
     }
 
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (isFromRecord) {
+            viewModel.getCosmosTxDataMutableLiveData().removeObservers(this);
+        } else {
+            viewModel.getCosmosTxLiveData().removeObservers(this);
+        }
+    }
 }

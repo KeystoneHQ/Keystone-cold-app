@@ -99,6 +99,8 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
             loadAptosTx();
         } else if (watchWallet == WatchWallet.CORE_WALLET) {
             loadCoreWalletTx();
+        } else if (watchWallet == WatchWallet.KEPLR_WALLET) {
+            loadCosmosTx();
         } else {
             viewModel.loadTxs(requireArguments().getString(KEY_COIN_ID))
                     .observe(this, txEntities -> {
@@ -147,6 +149,30 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
                 }
             }
         });
+    }
+
+    private void loadCosmosTx() {
+        viewModel.loadTxs(requireArguments().getString(KEY_COIN_ID))
+                .observe(this, txEntities -> {
+                    txEntityComparator = (o1, o2) -> {
+                        if (o1.getSignId().equals(o2.getSignId())) {
+                            return (int) (o2.getTimeStamp() - o1.getTimeStamp());
+                        } else {
+                            return 1;
+                        }
+                    };
+                    txEntities = txEntities.stream()
+                            .filter(this::shouldShow)
+                            .sorted(txEntityComparator)
+                            .collect(Collectors.toList());
+                    adapter.setItems(txEntities);
+                });
+
+        txCallback = tx -> {
+            Bundle bundle = new Bundle();
+            bundle.putString(KEY_TX_ID, tx.getTxId());
+            navigate(R.id.action_to_cosmosTxDetailFragment, bundle);
+        };
     }
 
     private void loadAptosTx() {

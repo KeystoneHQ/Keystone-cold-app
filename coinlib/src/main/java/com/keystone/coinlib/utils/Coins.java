@@ -356,6 +356,91 @@ public class Coins {
         return isCosmosFamilyByCoinCode(coinCode);
     }
 
+    public static String getCosmosCoinId(String chainId) {
+        if (TextUtils.isEmpty(chainId)) {
+            return Coins.ATOM.coinId();
+        }
+        if (chainId.startsWith("cosmoshub")) {
+            return Coins.ATOM.coinId();
+        }
+        if (chainId.startsWith("osmosis")) {
+            return Coins.OSMO.coinId();
+        }
+        if (chainId.startsWith("secret")) {
+            return Coins.SCRT.coinId();
+        }
+        if (chainId.startsWith("akashnet")) {
+            return Coins.AKT.coinId();
+        }
+        if (chainId.startsWith("crypto-org-chain")) {
+            return Coins.CRO.coinId();
+        }
+        if (chainId.startsWith("iov")) {
+            return Coins.IOV.coinId();
+        }
+        if (chainId.startsWith("sifchain")) {
+            return Coins.ROWAN.coinId();
+        }
+        if (chainId.startsWith("shentu")) {
+            return Coins.CTK.coinId();
+        }
+        if (chainId.startsWith("irishub")) {
+            return Coins.IRIS.coinId();
+        }
+        if (chainId.startsWith("regen")) {
+            return Coins.REGEN.coinId();
+        }
+        if (chainId.startsWith("core")) {
+            return Coins.XPRT.coinId();
+        }
+        if (chainId.startsWith("sentinelhub")) {
+            return Coins.DVPN.coinId();
+        }
+        if (chainId.startsWith("impacthub")) {
+            return Coins.IXO.coinId();
+        }
+        if (chainId.startsWith("agoric")) {
+            return Coins.BLD.coinId();
+        }
+        if (chainId.startsWith("bostrom")) {
+            return Coins.BOOT.coinId();
+        }
+        if (chainId.startsWith("juno")) {
+            return Coins.JUNO.coinId();
+        }
+        if (chainId.startsWith("stargaze")) {
+            return Coins.STARS.coinId();
+        }
+        if (chainId.startsWith("axelar")) {
+            return Coins.AXL.coinId();
+        }
+        if (chainId.startsWith("sommelier")) {
+            return Coins.SOMM.coinId();
+        }
+        if (chainId.startsWith("umee")) {
+            return Coins.UMEE.coinId();
+        }
+        if (chainId.startsWith("gravity")) {
+            return Coins.GRAV.coinId();
+        }
+        if (chainId.startsWith("tgrade")) {
+            return Coins.TGD.coinId();
+        }
+        if (chainId.startsWith("stride")) {
+            return Coins.STRD.coinId();
+        }
+        if (chainId.startsWith("evmos")) {
+            return Coins.EVMOS.coinId();
+        }
+        return Coins.ATOM.coinId();
+    }
+
+    public static String getCosmosCoinCode(String chainId) {
+        String coinId = getCosmosCoinId(chainId);
+        return coinCodeFromCoinId(coinId);
+
+    }
+
     public static boolean isDefaultOpen(String coinCode) {
         switch (coinCode) {
             case "BTC":

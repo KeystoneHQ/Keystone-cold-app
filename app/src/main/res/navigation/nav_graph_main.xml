@@ -306,6 +306,26 @@
             app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
+        android:id="@+id/cosmosMessageFragment"
+        android:name="com.keystone.cold.ui.fragment.main.cosmos.CosmosMessageFragment"
+        android:label="cosmosMessageFragment"
+        tools:layout="@layout/cosmos_sign_message">
+        <action
+            android:id="@+id/action_to_cosmosBroadcastTxFragment"
+            app:destination="@id/cosmosBroadcastTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cosmosTxDetailFragment"
+        android:name="com.keystone.cold.ui.fragment.main.cosmos.CosmosTxDetailFragment"
+        android:label="cosmosTxDetailFragment"
+        tools:layout="@layout/fragment_cosmos_tx_detail">
+    </fragment>
+    <fragment
         android:id="@+id/cosmosBroadcastTxFragment"
         android:name="com.keystone.cold.ui.fragment.main.cosmos.CosmosBroadcastTxFragment"
         android:label="cosmosBroadcastTxFragment">
@@ -1250,6 +1270,22 @@
     <action
         android:id="@+id/action_to_cosmosTxConfirmFragment"
         app:destination="@id/cosmosTxFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_cosmosMessageFragment"
+        app:destination="@id/cosmosMessageFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_cosmosTxDetailFragment"
+        app:destination="@id/cosmosTxDetailFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"

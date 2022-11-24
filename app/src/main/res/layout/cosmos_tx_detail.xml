@@ -21,6 +21,13 @@
 
     <data>
 
+        <variable
+            name="coinCode"
+            type="String" />
+
+        <variable
+            name="coinName"
+            type="String" />
 
     </data>
 
@@ -47,6 +54,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="16dp"
                     android:src="@drawable/coin_cosmos_default"
+                    app:icon="@{coinCode}"
                     tools:ignore="ContentDescription" />
 
                 <TextView
@@ -58,7 +66,7 @@
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="2dp"
                     android:layout_toEndOf="@id/icon"
-                    android:text="Cosmos Ecosystem"
+                    android:text="@{coinName}"
                     android:textColor="@color/white40"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -151,7 +159,7 @@
                 android:id="@+id/cmMessages"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
 
             <LinearLayout
                 android:id="@+id/llFee"
