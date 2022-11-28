@@ -200,7 +200,6 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             coinId = data.getString(KEY_COIN_ID);
             coinCode = data.getString(KEY_COIN_CODE);
             if (watchWallet == WatchWallet.KEPLR_WALLET) {
-                mBinding.toolbar.setNavigationIcon(R.drawable.menu);
                 mBinding.toolbar.setTitle(Coins.coinNameOfCoinId(coinId));
                 mBinding.customTitle.setVisibility(View.GONE);
             } else {
@@ -857,6 +856,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             isShowBadge = true;
         } else if (watchWallet == WatchWallet.CORE_WALLET && !Utilities.hasUserClickCoreWalletSyncLock(mActivity)) {
             isShowBadge = true;
+        } else if (watchWallet == WatchWallet.KEPLR_WALLET && !Utilities.hasUserClickKeplrSyncLock(mActivity)) {
+            isShowBadge = true;
         }
         return isShowBadge;
     }
@@ -884,6 +885,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 break;
             case CORE_WALLET:
                 Utilities.setUserClickCoreWalletSyncLock(mActivity);
+                break;
+            case KEPLR_WALLET:
+                Utilities.setUserClickKeplrSyncLock(mActivity);
                 break;
             default:
                 break;

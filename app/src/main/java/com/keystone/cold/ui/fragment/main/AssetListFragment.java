@@ -250,11 +250,9 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
             MenuItem item = menu.findItem(R.id.action_more);
             item.setVisible(false);
         }
-        if (watchWallet.equals(WatchWallet.CORE_WALLET)) {
-            MenuItem menuItem = mBinding.toolbar.getMenu().findItem(R.id.action_more);
-            if (!Utilities.hasUserClickCoreWalletSyncLock(mActivity)) {
-                showBadge(menuItem);
-            }
+        if (judgeShowBadge()) {
+            MenuItem menuItem = menu.findItem(R.id.action_more);
+            showBadge(menuItem);
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -437,12 +435,14 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
                 navigate(R.id.action_to_tutorialsFragment);
                 dialog.dismiss();
             });
-            if (!Utilities.hasUserClickCoreWalletSyncLock(mActivity)) {
+            if (judgeShowBadge()) {
                 generateBadgeView(binding.syncText);
             }
 
             binding.sync.setOnClickListener(v -> {
-                Utilities.setUserClickCoreWalletSyncLock(mActivity);
+                if (judgeShowBadge()) {
+                    setUserClickSyncLock();
+                }
                 navigate(R.id.action_to_syncFragment);
                 dialog.dismiss();
             });
@@ -463,6 +463,29 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
             dialog.setContentView(binding.getRoot());
         }
         dialog.show();
+    }
+
+    private boolean judgeShowBadge() {
+        boolean isShowBadge = false;
+        if (watchWallet == WatchWallet.CORE_WALLET && !Utilities.hasUserClickCoreWalletSyncLock(mActivity)) {
+            isShowBadge = true;
+        } else if (watchWallet == WatchWallet.KEPLR_WALLET && !Utilities.hasUserClickKeplrSyncLock(mActivity)) {
+            isShowBadge = true;
+        }
+        return isShowBadge;
+    }
+
+    private void setUserClickSyncLock() {
+        switch (watchWallet) {
+            case CORE_WALLET:
+                Utilities.setUserClickCoreWalletSyncLock(mActivity);
+                break;
+            case KEPLR_WALLET:
+                Utilities.setUserClickKeplrSyncLock(mActivity);
+                break;
+            default:
+                break;
+        }
     }
 
     private final CoinClickCallback mCoinClickCallback = coin -> {
