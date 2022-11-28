@@ -152,26 +152,70 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
     }
 
     private void loadCosmosTx() {
-        viewModel.loadTxs(requireArguments().getString(KEY_COIN_ID))
-                .observe(this, txEntities -> {
-                    txEntityComparator = (o1, o2) -> {
-                        if (o1.getSignId().equals(o2.getSignId())) {
-                            return (int) (o2.getTimeStamp() - o1.getTimeStamp());
-                        } else {
-                            return 1;
-                        }
-                    };
-                    txEntities = txEntities.stream()
-                            .filter(this::shouldShow)
-                            .sorted(txEntityComparator)
-                            .collect(Collectors.toList());
-                    adapter.setItems(txEntities);
-                });
+        String coinId = requireArguments().getString(KEY_COIN_ID);
+        if (Coins.EVMOS.coinId().equals(coinId)) {
+            viewModel.loadEvmosTx()
+                    .observe(this, txEntities -> {
+                        txEntityComparator = (o1, o2) -> {
+                            if (o1.getSignId().equals(o2.getSignId())) {
+                                return (int) (o2.getTimeStamp() - o1.getTimeStamp());
+                            } else {
+                                return 1;
+                            }
+                        };
+                        txEntities = txEntities.stream()
+                                .filter(this::isCurrentWatchWalletTx)
+                                .sorted(txEntityComparator)
+                                .collect(Collectors.toList());
+                        adapter.setItems(txEntities);
+                    });
+
+        } else {
+            viewModel.loadTxs(requireArguments().getString(KEY_COIN_ID))
+                    .observe(this, txEntities -> {
+                        txEntityComparator = (o1, o2) -> {
+                            if (o1.getSignId().equals(o2.getSignId())) {
+                                return (int) (o2.getTimeStamp() - o1.getTimeStamp());
+                            } else {
+                                return 1;
+                            }
+                        };
+                        txEntities = txEntities.stream()
+                                .filter(this::shouldShow)
+                                .sorted(txEntityComparator)
+                                .collect(Collectors.toList());
+                        adapter.setItems(txEntities);
+                    });
+        }
 
         txCallback = tx -> {
-            Bundle bundle = new Bundle();
-            bundle.putString(KEY_TX_ID, tx.getTxId());
-            navigate(R.id.action_to_cosmosTxDetailFragment, bundle);
+            if (tx instanceof GenericETHTxEntity) {
+                GenericETHTxEntity ethTxEntity = (GenericETHTxEntity) tx;
+                String signedHex = ethTxEntity.getSignedHex();
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_TX_ID, ethTxEntity.getTxId());
+                try {
+                    new JSONObject(signedHex);
+                    navigate(R.id.action_to_ethTxFragment, bundle);
+                } catch (JSONException e) {
+                    switch (ethTxEntity.getTxType()) {
+                        case 0x00:
+                            Log.i(TAG, "navigate: jump to new ethLegacyTxFragment");
+                            navigate(R.id.action_to_ethLegacyTxFragment, bundle);
+                            break;
+                        case 0x02:
+                            Log.i(TAG, "navigate: jump to ethFeeMarketTxFragment");
+                            navigate(R.id.action_to_ethFeeMarketTxFragment, bundle);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            } else {
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_TX_ID, tx.getTxId());
+                navigate(R.id.action_to_cosmosTxDetailFragment, bundle);
+            }
         };
     }
 
@@ -329,8 +373,8 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
         }
     }
 
-    private boolean isCurrentWatchWalletTx(GenericETHTxEntity ethTxEntity) {
-        String signId = ethTxEntity.getSignId();
+    private boolean isCurrentWatchWalletTx(Tx tx) {
+        String signId = tx.getSignId();
         return signId.equals(watchWallet.getSignId());
     }
 

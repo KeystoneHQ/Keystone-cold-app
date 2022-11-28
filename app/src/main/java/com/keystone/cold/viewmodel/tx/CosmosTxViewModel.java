@@ -351,6 +351,9 @@ public class CosmosTxViewModel extends Base {
     }
 
     public String getCosmosCoinName(String chainId) {
+        if (!TextUtils.isEmpty(chainId) && chainId.contains("9000")){
+            return "Evmos Testnet";
+        }
         return Coins.coinNameFromCoinCode(getCosmosCoinCode(chainId));
     }
 

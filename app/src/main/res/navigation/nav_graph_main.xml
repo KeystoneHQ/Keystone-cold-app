@@ -268,19 +268,6 @@
         tools:layout="@layout/fragment_sol_tx_detail"></fragment>
 
     <fragment
-        android:id="@+id/cosmosTxFragment"
-        android:name="com.keystone.cold.ui.fragment.main.cosmos.CosmosTxConfirmFragment"
-        android:label="cosmosTxFragment"
-        tools:layout="@layout/fragment_cosmos_tx_confirm">
-        <action
-            android:id="@+id/action_to_cosmosBroadcastTxFragment"
-            app:destination="@id/cosmosBroadcastTxFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
-    </fragment>
-    <fragment
         android:id="@+id/cosmosBroadcastTxFragment"
         android:name="com.keystone.cold.ui.fragment.main.cosmos.CosmosBroadcastTxFragment"
         android:label="cosmosBroadcastTxFragment">
@@ -324,17 +311,6 @@
         android:name="com.keystone.cold.ui.fragment.main.cosmos.CosmosTxDetailFragment"
         android:label="cosmosTxDetailFragment"
         tools:layout="@layout/fragment_cosmos_tx_detail">
-    </fragment>
-    <fragment
-        android:id="@+id/cosmosBroadcastTxFragment"
-        android:name="com.keystone.cold.ui.fragment.main.cosmos.CosmosBroadcastTxFragment"
-        android:label="cosmosBroadcastTxFragment">
-        <action
-            android:id="@+id/action_to_home"
-            app:destination="@id/assetListFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@id/assetListFragment"
-            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment

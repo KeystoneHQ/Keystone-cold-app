@@ -189,6 +189,9 @@ public class GenericETHTxEntity implements Tx {
     @Override
     public String getCoinCode() {
         if (this.chainId == 43114) return Coins.AVAX.coinCode();
+        if (this.chainId == 9000 || this.chainId == 9001) {
+            return Coins.EVMOS.coinCode();
+        }
         return Coins.ETH.coinCode();
     }
 
@@ -279,6 +282,7 @@ public class GenericETHTxEntity implements Tx {
     public int getIcon() {
         if (this.chainId == 1) return R.drawable.coin_eth;
         if (this.chainId == 43114) return R.drawable.coin_avax;
+        if (this.chainId == 9000 || this.chainId == 9001) return R.drawable.coin_evmos;
         return R.drawable.coin_eth_token;
     }
 
