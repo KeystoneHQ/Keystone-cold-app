@@ -118,10 +118,14 @@ public class CosmosTxViewModel extends Base {
             hdPath = bundle.getString(HD_PATH);
             requestId = bundle.getString(REQUEST_ID);
             dataType = bundle.getString(DATA_TYPE);
-            if ("sign-type-amino".equals(dataType)) {
-                parseAminoTx();
-            } else if ("sign-type-direct".equals(dataType)) {
-                parseDirectTx();
+            try {
+                if ("sign-type-amino".equals(dataType)) {
+                    parseAminoTx();
+                } else if ("sign-type-direct".equals(dataType)) {
+                    parseDirectTx();
+                }
+            } catch (Exception e){
+                e.printStackTrace();
             }
             xPub = getXpubByPath(hdPath);
         });
@@ -132,8 +136,8 @@ public class CosmosTxViewModel extends Base {
     }
 
     private void parseAminoTx() {
-        String aminoMessage = new String(Hex.decode(txHex));
-        CosmosTx cosmosTx = CosmosTx.from(aminoMessage);
+        parseJson = new String(Hex.decode(txHex));
+        CosmosTx cosmosTx = CosmosTx.from(parseJson);
         cosmosTxLiveData.postValue(cosmosTx);
         if (cosmosTx != null) {
             chainId = cosmosTx.getChainId();
@@ -143,7 +147,6 @@ public class CosmosTxViewModel extends Base {
         } catch (JSONException exception) {
             exception.printStackTrace();
         }
-
     }
 
 
