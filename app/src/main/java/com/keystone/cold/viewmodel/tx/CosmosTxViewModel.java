@@ -23,6 +23,7 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.callables.ClearTokenCallable;
+import com.keystone.cold.cryptocore.CosmosParser;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.RustSigner;
@@ -132,7 +133,20 @@ public class CosmosTxViewModel extends Base {
     }
 
     private void parseDirectTx() {
-
+        String parseResult = CosmosParser.parse(txHex);
+        if (parseResult != null) {
+            parseJson = CosmosTx.transformDirectToAmino(parseResult);
+            CosmosTx cosmosTx = CosmosTx.from(parseJson);
+            cosmosTxLiveData.postValue(cosmosTx);
+            if (cosmosTx != null) {
+                chainId = cosmosTx.getChainId();
+            }
+            try {
+                parseMessageJsonLiveData.postValue(new JSONObject(parseJson));
+            } catch (JSONException exception) {
+                exception.printStackTrace();
+            }
+        }
     }
 
     private void parseAminoTx() {
