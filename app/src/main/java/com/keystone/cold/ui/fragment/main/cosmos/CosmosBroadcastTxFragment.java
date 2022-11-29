@@ -28,7 +28,12 @@ public class CosmosBroadcastTxFragment extends BroadcastTxFragment {
         Bundle data = requireArguments();
         signatureURString = data.getString(KEY_SIGNATURE_UR);
         mBinding.qrcodeLayout.qrcode.setData(getSignedTxData());
-        mBinding.setCoinCode("cosmos_default");
+        String coinCode = data.getString(KEY_COIN_CODE);
+        if (!TextUtils.isEmpty(coinCode)) {
+            mBinding.setCoinCode(coinCode);
+        } else {
+            mBinding.setCoinCode("cosmos_default");
+        }
         String des = StepFragmentHelper.getInstance().getStartingPoint();
         if (!TextUtils.isEmpty(des) && des.equals(AssetListFragment.class.getName())) {
             mBinding.toolbar.setNavigationOnClickListener(goHome);

@@ -3,6 +3,7 @@ package com.keystone.cold.ui.fragment.main.cosmos;
 import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
+import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KEY_COIN_CODE;
 import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KEY_SIGNATURE_UR;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
@@ -147,6 +148,7 @@ public class CosmosTxConfirmFragment extends BaseFragment<FragmentCosmosTxConfir
         String signatureURString = viewModel.getSignatureUR();
         Bundle data = new Bundle();
         data.putString(KEY_SIGNATURE_UR, signatureURString);
+        data.putString(KEY_COIN_CODE, viewModel.getCosmosCoinCode());
         navigate(R.id.action_to_cosmosBroadcastTxFragment, data);
         viewModel.getSignState().setValue("");
         viewModel.getSignState().removeObservers(this);

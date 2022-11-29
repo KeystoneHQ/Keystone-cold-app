@@ -41,6 +41,7 @@ public class BroadcastTxFragment extends BaseFragment<BroadcastTxFragmentBinding
 
     public static final String KEY_TXID = "txId";
     public static final String KEY_SIGNATURE_UR = "signature_ur";
+    public static final String KEY_COIN_CODE = "coinCode";
 
     protected WatchWallet watchWallet;
 
