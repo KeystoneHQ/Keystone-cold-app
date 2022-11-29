@@ -27,7 +27,9 @@ import android.view.View;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
+import com.keystone.cold.ui.fragment.main.AssetListFragment;
 import com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment;
+import com.keystone.cold.util.StepFragmentHelper;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 import com.keystone.cold.viewmodel.WatchWallet;
 import com.sparrowwallet.hummingbird.registry.EthSignature;
@@ -69,7 +71,12 @@ public class EthBroadcastTxFragment extends BroadcastTxFragment {
                 }
             });
         }
-        mBinding.toolbar.setNavigationOnClickListener(v -> popBackStack(R.id.assetFragment, false));
+        String des = StepFragmentHelper.getInstance().getStartingPoint();
+        if (!TextUtils.isEmpty(des) && des.equals(AssetListFragment.class.getName())) {
+            mBinding.toolbar.setNavigationOnClickListener(goHome);
+        } else {
+            mBinding.toolbar.setNavigationOnClickListener(v -> popBackStack(R.id.assetFragment, false));
+        }
         mBinding.broadcastHint.setText(R.string.sync_with_metamask);
     }
 

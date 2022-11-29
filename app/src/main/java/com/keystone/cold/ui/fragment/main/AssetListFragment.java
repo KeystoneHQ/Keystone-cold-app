@@ -33,7 +33,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -73,6 +72,7 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerState;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerViewModel;
+import com.keystone.cold.util.StepFragmentHelper;
 import com.keystone.cold.util.ViewUtils;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 import com.keystone.cold.viewmodel.exceptions.XfpNotMatchException;
@@ -93,7 +93,6 @@ import org.spongycastle.util.encoders.Hex;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -252,11 +251,9 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
             MenuItem item = menu.findItem(R.id.action_more);
             item.setVisible(false);
         }
-        if (watchWallet.equals(WatchWallet.CORE_WALLET)) {
-            MenuItem menuItem = mBinding.toolbar.getMenu().findItem(R.id.action_more);
-            if (!Utilities.hasUserClickCoreWalletSyncLock(mActivity)) {
-                showBadge(menuItem);
-            }
+        if (judgeShowBadge()) {
+            MenuItem menuItem = menu.findItem(R.id.action_more);
+            showBadge(menuItem);
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -294,6 +291,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         ScannerState scannerState = new ScannerState() {
             @Override
             public void handleScanResult(ScanResult result) throws Exception {
+                StepFragmentHelper.getInstance().setStartingPoint(AssetListFragment.class.getName());
                 if (result.getType().equals(ScanResultTypes.UR_CRYPTO_PSBT)) {
                     handleCryptoPSBT(result);
                 } else if (result.getType().equals(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
@@ -325,7 +323,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
                     bundle.putString(DATA_TYPE, cosmosSignRequest.getType().getType());
                     mFragment.navigate(R.id.action_to_cosmosTxConfirmFragment, bundle);
                 } else if (dataType.equals(CosmosSignRequest.DataType.MESSAGE.getType())) {
-
+                    mFragment.navigate(R.id.action_to_cosmosMessageFragment, bundle);
                 } else {
                     throw new InvalidTransactionException("The textual format is not supported");
                 }
@@ -439,12 +437,14 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
                 navigate(R.id.action_to_tutorialsFragment);
                 dialog.dismiss();
             });
-            if (!Utilities.hasUserClickCoreWalletSyncLock(mActivity)) {
+            if (judgeShowBadge()) {
                 generateBadgeView(binding.syncText);
             }
 
             binding.sync.setOnClickListener(v -> {
-                Utilities.setUserClickCoreWalletSyncLock(mActivity);
+                if (judgeShowBadge()) {
+                    setUserClickSyncLock();
+                }
                 navigate(R.id.action_to_syncFragment);
                 dialog.dismiss();
             });
@@ -465,6 +465,29 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
             dialog.setContentView(binding.getRoot());
         }
         dialog.show();
+    }
+
+    private boolean judgeShowBadge() {
+        boolean isShowBadge = false;
+        if (watchWallet == WatchWallet.CORE_WALLET && !Utilities.hasUserClickCoreWalletSyncLock(mActivity)) {
+            isShowBadge = true;
+        } else if (watchWallet == WatchWallet.KEPLR_WALLET && !Utilities.hasUserClickKeplrSyncLock(mActivity)) {
+            isShowBadge = true;
+        }
+        return isShowBadge;
+    }
+
+    private void setUserClickSyncLock() {
+        switch (watchWallet) {
+            case CORE_WALLET:
+                Utilities.setUserClickCoreWalletSyncLock(mActivity);
+                break;
+            case KEPLR_WALLET:
+                Utilities.setUserClickKeplrSyncLock(mActivity);
+                break;
+            default:
+                break;
+        }
     }
 
     private final CoinClickCallback mCoinClickCallback = coin -> {

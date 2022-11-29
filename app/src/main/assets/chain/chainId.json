@@ -743,6 +743,10 @@
     "symbol": "PHOTON",
     "name": "Evmos Testnet"
   },
+  "9001": {
+    "symbol": "EVMOS",
+    "name": "Evmos"
+  },
   "11297108099": {
     "symbol": "PALM",
     "name": "Palm Testnet"

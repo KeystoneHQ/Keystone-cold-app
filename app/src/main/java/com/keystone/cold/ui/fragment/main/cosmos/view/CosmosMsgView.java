@@ -173,7 +173,7 @@ public class CosmosMsgView extends LinearLayout {
         if ("uatom".equals(denom)) {
             display = conversionUnit(amountStr) + " ATOM";
         } else {
-            display = amount + " " + denom;
+            display = amountStr + " " + denom;
         }
         CosmosMsgItemBinding amountView = generateMsgView();
         amountView.tvTittle.setText(getContext().getString(R.string.amount));

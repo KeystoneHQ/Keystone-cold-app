@@ -147,6 +147,7 @@ public class CoinListViewModel extends AndroidViewModel {
             genericETHTxEntity.setSignedHex(web3TxEntity.getSignedHex());
             genericETHTxEntity.setAddition(web3TxEntity.getAddition());
             genericETHTxEntity.setBelongTo(web3TxEntity.getBelongTo());
+            genericETHTxEntity.setTimeStamp(web3TxEntity.getTimeStamp());
             ethTxEntityList.add(genericETHTxEntity);
         }
         return ethTxEntityList;
@@ -173,9 +174,30 @@ public class CoinListViewModel extends AndroidViewModel {
             genericETHTxEntity.setTxId(txEntity.getTxId());
             genericETHTxEntity.setSignedHex(txEntity.getSignedHex());
             genericETHTxEntity.setBelongTo(txEntity.getBelongTo());
+            genericETHTxEntity.setTimeStamp(txEntity.getTimeStamp());
             ethTxEntityList.add(genericETHTxEntity);
         }
         return ethTxEntityList;
+    }
+
+
+    public LiveData<List<Tx>> loadEvmosTx(){
+        MutableLiveData<List<Tx>> txMutableLiveData = new MutableLiveData<>();
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            List<GenericETHTxEntity> genericETHTxEntities = getGenericETHTxsFromETHTXDBEntities();
+            List<GenericETHTxEntity> ethTxEntityList = getGenericETHTxsFromTxEntities();
+            if (genericETHTxEntities != null) {
+                if (ethTxEntityList != null) {
+                    genericETHTxEntities.addAll(ethTxEntityList);
+                }
+            } else {
+                genericETHTxEntities = ethTxEntityList;
+            }
+            List<Tx> txList = new ArrayList<>(genericETHTxEntities);
+            txList.addAll(mRepository.loadAllTxSync(Coins.EVMOS.coinId()));
+            txMutableLiveData.postValue(txList);
+        });
+        return txMutableLiveData;
     }
 
     private boolean shouldShow(Tx tx) {

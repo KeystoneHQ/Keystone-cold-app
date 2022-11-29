@@ -88,6 +88,7 @@ import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
 import com.keystone.cold.util.AptosTransactionHelper;
 import com.keystone.cold.util.SolMessageValidateUtil;
+import com.keystone.cold.util.StepFragmentHelper;
 import com.keystone.cold.util.SyncAddressUtil;
 import com.keystone.cold.util.ViewUtils;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
@@ -200,7 +201,6 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             coinId = data.getString(KEY_COIN_ID);
             coinCode = data.getString(KEY_COIN_CODE);
             if (watchWallet == WatchWallet.KEPLR_WALLET) {
-                mBinding.toolbar.setNavigationIcon(R.drawable.menu);
                 mBinding.toolbar.setTitle(Coins.coinNameOfCoinId(coinId));
                 mBinding.customTitle.setVisibility(View.GONE);
             } else {
@@ -424,6 +424,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         ScannerState scannerState = new ScannerState() {
             @Override
             public void handleScanResult(ScanResult result) throws Exception {
+                StepFragmentHelper.getInstance().setStartingPoint(AssetFragment.class.getName());
                 if (result.getType().equals(ScanResultTypes.PLAIN_TEXT)) {
                     throw new UnknowQrCodeException("unknown transaction!");
                 } else if (result.getType().equals(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
@@ -560,7 +561,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     bundle.putString(DATA_TYPE, cosmosSignRequest.getType().getType());
                     mFragment.navigate(R.id.action_to_cosmosTxConfirmFragment, bundle);
                 } else if (dataType.equals(CosmosSignRequest.DataType.MESSAGE.getType())) {
-
+                    mFragment.navigate(R.id.action_to_cosmosMessageFragment, bundle);
                 } else {
                     throw new InvalidTransactionException("The textual format is not supported");
                 }
@@ -857,6 +858,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             isShowBadge = true;
         } else if (watchWallet == WatchWallet.CORE_WALLET && !Utilities.hasUserClickCoreWalletSyncLock(mActivity)) {
             isShowBadge = true;
+        } else if (watchWallet == WatchWallet.KEPLR_WALLET && !Utilities.hasUserClickKeplrSyncLock(mActivity)) {
+            isShowBadge = true;
         }
         return isShowBadge;
     }
@@ -884,6 +887,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 break;
             case CORE_WALLET:
                 Utilities.setUserClickCoreWalletSyncLock(mActivity);
+                break;
+            case KEPLR_WALLET:
+                Utilities.setUserClickKeplrSyncLock(mActivity);
                 break;
             default:
                 break;

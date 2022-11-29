@@ -78,6 +78,7 @@ public class Utilities {
     public static final String PREFERENCE_SOL_KEY_SYNCED = "user_click_sol_sync";
     public static final String PREFERENCE_NEAR_KEY_SYNCED = "user_click_near_sync";
     public static final String PREFERENCE_APTOS_KEY_SYNCED = "user_click_aptos_sync";
+    public static final String PREFERENCE_Keplr_KEY_SYNCED = "user_click_keplr_sync";
     public static final String PREFERENCE_CORE_WALLET_KEY_SYNCED = "user_click_core_wallet_sync";
     public static final String PREFERENCE_POLKADOT_KEY_SYNCED = "user_click_polkadot_sync";
     public static final String PREFERENCE_KUSAMA_KEY_SYNCED = "user_click_kusama_sync";
@@ -275,6 +276,16 @@ public class Utilities {
     public static void setUserClickAptosSyncLock(Context context) {
         SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
         sp.edit().putBoolean(PREFERENCE_APTOS_KEY_SYNCED, true).apply();
+    }
+
+    public static boolean hasUserClickKeplrSyncLock(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        return sp.getBoolean(PREFERENCE_Keplr_KEY_SYNCED, false);
+    }
+
+    public static void setUserClickKeplrSyncLock(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        sp.edit().putBoolean(PREFERENCE_Keplr_KEY_SYNCED, true).apply();
     }
 
     public static boolean hasUserClickCoreWalletSyncLock(Context context) {

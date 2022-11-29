@@ -41,18 +41,26 @@ public class CosmosRawTxFragment extends BaseFragment<FragmentAptosRawTxBinding>
     protected void init(View view) {
 
         viewModel = ViewModelProviders.of(getParentFragment()).get(CosmosTxViewModel.class);
-
-        viewModel.getParseMessageJsonLiveData().observe(this, jsonArray -> {
-            if (jsonArray != null) {
-                try {
-                    mBinding.rawTx.setText(jsonArray.toString(2));
-                } catch (JSONException exception) {
-                    exception.printStackTrace();
+        if (isFromRecord) {
+            viewModel.getCosmosTxDataMutableLiveData().observe(this, aptosTxData -> {
+                if (aptosTxData != null) {
+                    mBinding.rawTx.setText(aptosTxData.getParsedMessage());
                 }
-            } else {
-                mBinding.rawTx.setText(R.string.decode_failed_hint);
-            }
-        });
+            });
+        } else {
+            viewModel.getParseMessageJsonLiveData().observe(this, jsonObject -> {
+                if (jsonObject != null) {
+                    try {
+                        mBinding.rawTx.setText(jsonObject.toString(2));
+                    } catch (JSONException exception) {
+                        exception.printStackTrace();
+                    }
+                } else {
+                    mBinding.rawTx.setText(R.string.decode_failed_hint);
+                }
+            });
+        }
+
 
     }
 
@@ -64,6 +72,10 @@ public class CosmosRawTxFragment extends BaseFragment<FragmentAptosRawTxBinding>
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        viewModel.getParseMessageJsonLiveData().removeObservers(this);
+        if (isFromRecord) {
+            viewModel.getCosmosTxDataMutableLiveData().removeObservers(this);
+        } else {
+            viewModel.getParseMessageJsonLiveData().removeObservers(this);
+        }
     }
 }

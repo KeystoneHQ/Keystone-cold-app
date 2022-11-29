@@ -49,7 +49,9 @@ public abstract class Msg {
                 return MsgVote.from(value);
             } else if (type.endsWith("MsgExec")) {
                 return MsgExec.from(value);
-            }else {
+            } else if (type.endsWith("MsgSignData")) {
+                return MsgSignData.from(value);
+            } else {
                 return new UnsupportMsg(type, value.toString());
             }
         } catch (JSONException exception) {
