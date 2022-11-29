@@ -88,6 +88,7 @@ import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
 import com.keystone.cold.util.AptosTransactionHelper;
 import com.keystone.cold.util.SolMessageValidateUtil;
+import com.keystone.cold.util.StepFragmentHelper;
 import com.keystone.cold.util.SyncAddressUtil;
 import com.keystone.cold.util.ViewUtils;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
@@ -423,6 +424,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         ScannerState scannerState = new ScannerState() {
             @Override
             public void handleScanResult(ScanResult result) throws Exception {
+                StepFragmentHelper.getInstance().setStartingPoint(AssetFragment.class.getName());
                 if (result.getType().equals(ScanResultTypes.PLAIN_TEXT)) {
                     throw new UnknowQrCodeException("unknown transaction!");
                 } else if (result.getType().equals(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {

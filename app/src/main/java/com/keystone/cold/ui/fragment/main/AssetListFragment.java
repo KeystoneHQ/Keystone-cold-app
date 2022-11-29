@@ -72,6 +72,7 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerState;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerViewModel;
+import com.keystone.cold.util.StepFragmentHelper;
 import com.keystone.cold.util.ViewUtils;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 import com.keystone.cold.viewmodel.exceptions.XfpNotMatchException;
@@ -290,6 +291,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         ScannerState scannerState = new ScannerState() {
             @Override
             public void handleScanResult(ScanResult result) throws Exception {
+                StepFragmentHelper.getInstance().setStartingPoint(AssetListFragment.class.getName());
                 if (result.getType().equals(ScanResultTypes.UR_CRYPTO_PSBT)) {
                     handleCryptoPSBT(result);
                 } else if (result.getType().equals(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
