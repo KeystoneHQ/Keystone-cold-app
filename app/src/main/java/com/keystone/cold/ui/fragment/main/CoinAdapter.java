@@ -69,6 +69,11 @@ public class CoinAdapter extends FilterableBaseBindingAdapter<CoinEntity, AssetI
         }
         binding.setCallback(mCoinClickCallback);
         CoinModel coinModel = item.toCoinModel();
+        if (coinModel.getCoinCode().equals(Coins.DOT.coinCode()) || coinModel.getCoinCode().equals(Coins.KSM.coinCode())) {
+            if (WatchWallet.getWatchWallet(context).equals(WatchWallet.KEYSTONE)) {
+                coinModel.setAddressCount(1);
+            }
+        }
         binding.setCoin(coinModel);
         binding.setAsset(adaptCoinModelToAssetItem(coinModel));
         if (isManageCoin || Coins.showPublicKey(item.getCoinCode())) {
