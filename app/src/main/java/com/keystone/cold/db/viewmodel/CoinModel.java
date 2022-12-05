@@ -12,7 +12,7 @@ public class CoinModel {
     private final String displayCoinCode;
     private final String name;
     private final String displayName;
-    private final int addressCount;
+    private int addressCount;
     private final boolean isShow;
     private final String exPub;
     private final int index;
@@ -131,6 +131,10 @@ public class CoinModel {
 
     public int getAddressCount() {
         return addressCount;
+    }
+
+    public void setAddressCount(int addressCount) {
+        this.addressCount = addressCount;
     }
 
     public boolean isShow() {

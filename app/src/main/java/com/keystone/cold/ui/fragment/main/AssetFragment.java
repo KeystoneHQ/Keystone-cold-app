@@ -248,6 +248,10 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             case CORE_WALLET:
             case KEPLR_WALLET:
                 return R.menu.metamask;
+            case KEYSTONE:
+                if (coinCode.equals(Coins.DOT.coinCode()) || coinCode.equals(Coins.KSM.coinCode()))
+                    return R.menu.asset_without_add;
+                return R.menu.asset;
             default:
                 return (showPublicKey) ? R.menu.asset_without_add : R.menu.asset;
         }

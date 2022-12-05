@@ -191,6 +191,11 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
                         })
                         .collect(Collectors.toList());
             } else {
+
+                if (watchWallet.equals(WatchWallet.KEYSTONE) && (coinId.equals(Coins.DOT.coinId()) || coinId.equals(Coins.KSM.coinId()))) {
+                    addressEntities = addressEntities.subList(0, 1);
+                }
+
                 addressEntities = addressEntities.stream().peek(addressEntity -> {
                     if (watchWallet == WatchWallet.APTOS) {
                         addressEntity.setDisplayName(StringUtils.capitalizes(addressEntity.getName().toLowerCase()));
