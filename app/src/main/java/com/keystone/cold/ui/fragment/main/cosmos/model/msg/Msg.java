@@ -41,7 +41,7 @@ public abstract class Msg {
                 return MsgUndelegate.from(value);
             } else if (type.endsWith("MsgBeginRedelegate")) {
                 return MsgBeginRedelegate.from(value);
-            } else if (type.endsWith("MsgWithdrawDelegationReward")) {
+            } else if (type.endsWith("MsgWithdrawDelegationReward") || type.endsWith("MsgWithdrawDelegatorReward")) {
                 return MsgWithdrawDelegationReward.from(value);
             } else if (type.endsWith("MsgTransfer")) {
                 return MsgTransfer.from(value);

@@ -671,6 +671,14 @@
     <string name="decode_failed">The transaction can not be decoded</string>
     <string name="decode_failed_detail">All data in this transaction are customized and can\'t be decoded for now.</string>
 
+    <string-array name="tutorials_name_cosmos">
+        <item>Keplr Wallet (Extension)</item>
+    </string-array>
+
+    <string-array name="tutorials_link_cosmos">
+        <item><u>https://keyst.one/t/keplr</u></item>
+    </string-array>
+
     <string-array name="tutorials_name_aptos">
 <!--        <item>Martian Wallet (Extension)</item>-->
         <item>Fewcha Wallet (Extension)</item>
