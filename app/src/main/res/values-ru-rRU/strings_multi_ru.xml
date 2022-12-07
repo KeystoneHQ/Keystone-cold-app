@@ -1,0 +1,652 @@
+<!--
+  ~
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+    <string name="app_name">Keystone</string>
+    <string name="action_scan_qr_code">Сканировать QR-код</string>
+    <string name="drawer_menu_my_vault">Мой Keystone</string>
+    <string name="drawer_menu_add_remove">Добавить / скрыть актив</string>
+    <string name="drawer_menu_sync">Программный кошелек</string>
+    <string name="drawer_menu_setting">Настройки</string>
+    <string name="drawer_menu_about">О Keystone</string>
+    <string name="title_about">О Keystone</string>
+    <string name="title_setting">Настройки</string>
+    <string name="title_sync">Синхронизация Keystone Mobile</string>
+    <string name="add_remove_coin">Добавить / скрыть актив</string>
+    <string name="scan">Сканировать QR-код</string>
+    <string name="scan_hint">Выровняйте QR-код внутри рамки для сканирования</string>
+    <string name="pattern_lock">Разблокировка графическим ключом</string>
+    <string name="pattern_lock_hint">Пожалуйста, нарисуйте графический ключ</string>
+    <string name="switch_to_password">Переключиться на разблокировку паролем</string>
+    <string name="device_info">Серийный номер: %s \n   Версия прошивки：%s\n SE Версия прошивки: %s\n Версия системы：%s </string>
+    <string name="asset_list_empty">Пожалуйста, перейдите в Меню - Добавить / Скрыть активы, чтобы добавить нужные вам активы.</string>
+    <string name="mnemonic_hint1">"Фраза восстановления используется для восстановления вашего кошелька. Используйте Keystone Tablet, чтобы записать 24 слова фразы восстановления и надежно сохранить их."</string>
+    <string name="mnemonic_hint2">Не делитесь своей фразой восстановления с кем-либо и не фотографируйте ее. В случае утери или кражи все активы не подлежат возврату.</string>
+    <string name="saved">Фраза восстановления сохранена</string>
+    <string name="tab_my_pubkey">Мой публичный ключ</string>
+    <string name="tab_public_key">Публичный ключ</string>
+    <string name="tab_transaction_history">ПОДПИСИ</string>
+
+    <string-array name="step_label">
+        <item>Веб-аутентификация</item>
+        <item>Установка пароля</item>
+        <item>Обновление прошивки</item>
+        <item>Создать/импортировать кошелек</item>
+        <item>Выберите сопутствующее приложение</item>
+    </string-array>
+    <string name="create_addr">Создать адрес %s</string>
+    <string name="signing_hint">Подписание…</string>
+    <string name="scan_progress">Пожалуйста, продолжайте сканирование:: %s</string>
+    <string name="eos_hint">Вот ваш публичный ключ %s (безопасный для передачи)</string>
+    <string name="eos_pubkey">Публичный ключ：\n%s</string>
+    <string name="receive_warning">Пожалуйста, отправляйте только %s на этот адрес! Отправка любых других монет в другие цепочки приведет к потере вашего депозита.</string>
+    <string name="receive_coin">Получить %s</string>
+    <string name="version_update_hint"><![CDATA[Посетите: <font color="#00cdc3">https://keyst.one/fw<font/> чтобы проверить наличие обновлений прошивки. Если вы не используете последнюю версию прошивки, загрузите ее с официального сайта Keystone и сохраните на карту microSD (формат FAT32). Перенесите файл на свое устройство, как показано на изображении ниже. (Карта MicroSD не входит в комплект поставки.)]]></string>
+    <string name="version">Версия </string>
+    <string name="setting_language">Язык</string>
+    <string name="setting_vibrator">Вибрация вкл/выкл</string>
+    <string name="setting_brightness">Яркость экрана</string>
+    <string name="setting_screen_off_time">Время ожидания экрана</string>
+    <string name="import_nft">Импорт NFT на экран блокировки</string>
+    <string name="import_nft_contract_address">Адрес контракта</string>
+    <string name="import_nft_mint_address">Создать адрес</string>
+    <string name="import_nft_hint">*Пожалуйста, проверьте экран блокировки после подтверждения импорта</string>
+    <string name="import_nft_error">Неверные данные NFT</string>
+
+    <string name="warning">Предупреждение</string>
+
+    <string name="tab_my_address">АДРЕСА</string>
+    <string name="tab_my_account">УЧЕТНЫЕ ЗАПИСИ</string>
+    <string name="web_auth1"><![CDATA[1. Нажмите кнопку<font color="#00cdc3">«Сканировать QR-код»<font/> ниже и отсканируйте QR-код, отображаемый на веб-сайте]]></string>
+    <string name="web_auth2">2. Ваш Keystone будет отображать код. Введите его на официальном сайте, чтобы проверить подлинность вашего устройства</string>
+    <string name="web_auth3"><![CDATA[3. Нажмите кнопку <font color="#00cdc3">«Подтвердить»<font/> на сайте, чтобы увидеть результат]]></string>
+    <string name="web_auth4">Если аутентификация не удалась, пожалуйста, не используйте это устройство, так как оно могло быть скомпрометировано!</string>
+    <string name="web_auth5"><![CDATA[Ссылка на веб-аутентификацию: <br> <font color="#00cdc3">https://keyst.one/start/1<font/>]]></string>
+
+    <string name="firmware_upgrade1">Настоятельно рекомендуется обновить прошивку до последней версии, чтобы воспользоваться новыми функциями.</string>
+    <string name="firmware_upgrade2">Требуется карта microSD в формате FAT32 с максимальным объемом памяти 512 ГБ.</string>
+    <string name="firmware_upgrade3">Требуется не менее 70% заряда батареи</string>
+    <string name="firmware_upgrade4"><![CDATA[Чтобы загрузить последнюю версию встроенного ПО, посетите: <br> <font color="#00cdc3">https://keyst.one/start/3<font/>]]></string>
+    <string name="firmware_upgrade_start">Обновить сейчас</string>
+    <string name="firmware_upgrade_unable">Обнаружена ошибка</string>
+    <string name="firmware_upgrade_unable_description">Новый пакет прошивки не был обнаружен. Пожалуйста, проверьте, отформатирована ли ваша карта microSD в FAT32, имеет ли она не более 512 ГБ памяти и правильно ли скопирован на карту файл \'update.zip\'.</string>
+    <string name="skip">Пропустить</string>
+    <string name="read_confirm"><![CDATA[Я прочитал и согласен с <font color="#00cdc3"><u>«Условиями предоставления услуг»</u><font/>, и <font color="#00cdc3"><u>«Политикой конфиденциальности»</u><font/> ]]></string>
+    <string name="create_vault_hint"><![CDATA[1. Нажмите <font color="#00cdc3">«Создать кошелек»<font/> чтобы создать новый кошелек]]></string>
+    <string name="import_vault_hint"><![CDATA[2. Нажмите <font color="#00cdc3">«Импорт кошелька»<font/> чтобы импортировать существующий холодный кошелек]]></string>
+    <string name="import_vault_danger_warning">Существующий кошелек будет удален при импорте или создании кошелька!</string>
+    <string name="license">условия обслуживания</string>
+    <string name="privacy_policy">Политика конфиденциальности</string>
+    <string name="input_mnemonic_hint">Пожалуйста, введите вашу фразу для восстановления %d-word в таблице ниже.</string>
+    <string name="input_mnemonic">Введите фразу восстановления</string>
+    <string name="pwd_again_hint">Подтвердите пароль</string>
+    <string name="pwd_hint">Пожалуйста введите ваш пароль</string>
+    <string name="password_verify_wrong">Пароли не совпадают.</string>
+    <string name="passphrase_not_match">Парольная фраза не совпадает.</string>
+    <string name="password_input_wrong">Должен содержать заглавные и строчные буквы и цифры.</string>
+    <string name="mnemonic_hint"><![CDATA[Важная информация: <br>1. Фраза восстановления — единственный способ восстановить ваши активы. Пожалуйста, внимательно запишите фразу восстановления и сохраните ее в безопасном месте.  <br><br>2. Не фотографируйте свою фразу восстановления и не храните ее на устройстве, подключенном к Интернету. Не сообщайте фразу восстановления другим.  <br><br>3. Посетите <font color="#00cdc3">https://keyst.one/kt<font/>, чтобы приобрести Keystone Tablet, чтобы сохранить фразу восстановления с более высокой степенью безопасности.]]></string>
+    <string name="generate_mnemonic">Создать фразу восстановления</string>
+    <string name="next">Далее</string>
+    <string name="and">И</string>
+    <string name="import_vault">Импортировать кошелек</string>
+    <string name="create_vault">Создать кошелек</string>
+    <string name="confirm_mnemonic">Подтвердите фразу восстановления</string>
+    <string name="confirm_input_mnemonic_hint">Пожалуйста, введите вашу фразу для восстановления %d-word в таблице ниже.</string>
+    <string name="complete">Готово</string>
+    <string name="password_verify_too_short">Слишком короткий</string>
+    <string name="sync_hint2"><![CDATA[Скачать Keystone Mobile:<br><font color="#00cdc3">https://keyst.one/app<font/><br>]]></string>
+    <string name="sync_hint1"><![CDATA[Сканирование <font color="#00cdc3">QR Code<font/> с помощью Keystone Mobile]]></string>
+    <string name="wrong_mnemonic_please_check">фраза для восстановления неверна, попробуйте еще раз.</string>
+    <string name="dots_not_enough">Пожалуйста, соедините не менее 4 точек.</string>
+    <string name="input_pattern_again">Пожалуйста, нарисуйте еще раз, чтобы подтвердить.</string>
+    <string name="two_pattern_not_match">Узор не совпадает, нарисуйте еще раз.</string>
+    <string name="set_pattern_complete">Образец записан</string>
+    <string name="retry_times_hint">Неверный пароль, у вас осталось %d попыток.</string>
+    <string name="too_many_pattern_attempts">Слишком много неправильных попыток, \n попробуйте разблокировать паролем.</string>
+    <string name="wrong_pattern_hint">Неправильный узор, попробуйте еще раз.</string>
+    <string name="factory_reset_hint">Все данные будут удалены. Это действие не может быть отменено.</string>
+    <string name="factory_reset_title">Очистить устройство</string>
+    <string name="password_modal_title">Пожалуйста введите пароль.</string>
+    <string name="passphrase_hint3">Парольная фраза не может превышать 128 символов. Может состоять из прописных и строчных букв, цифр, символов, пробелов. С учетом регистра.</string>
+    <string name="passphrase_hint2">Введите кодовую фразу (с учетом регистра)</string>
+    <string name="passphrase_hint_agian">Введите кодовую фразу еще раз</string>
+    <string name="passphrase_hint1">Важная информация:\n1. При создании скрытого кошелька его кодовая фраза не может быть изменена. Если кодовая фраза будет утеряна или забыта, скрытый кошелек и все его активы будут безвозвратно утеряны. Запишите и надежно сохраните кодовую фразу перед созданием скрытого кошелька\n2. Оставьте поле Passphrase пустым, чтобы войти в кошелек по умолчанию.</string>
+    <string name="passphrase_hint">Пожалуйста, введите кодовую фразу</string>
+    <string name="passphrase_title">Кошелек с кодовой фразой</string>
+    <string name="passphrase_confirm_modal_title">Переключиться с текущего кошелька</string>
+    <string name="passphrase_confirm_modal_hint">Подтвердите, чтобы переключиться с текущего кошелька на новый кошелек. Вы можете вернуться к любому кошельку, введя его правильную фразу-пароль. Обратите внимание, что парольная фраза для HD-кошелька по умолчанию пуста.</string>
+    <string name="password_error_hint">Неверный пароль, у вас осталось %d попыток.</string>
+    <string name="verify_mnemonic_hint">Пожалуйста, введите вашу фразу для восстановления %d-word в таблице ниже.</string>
+    <string name="delete_white_list_hint">Подтвердаете удаление адреса из белого списка:%s？</string>
+    <string name="invalid_qrcode">Неверный QR-код!</string>
+    <string name="attack_warning">Чтобы защитить ваши активы, вся информация была удалена из вашего Keystone. Пожалуйста, прекратите использование этого устройства и немедленно обратитесь в службу поддержки клиентов.\n Код состояния:%s</string>
+    <string name="verify_mnemonic">Проверить фразу восстановления</string>
+    <string name="set_pattern">Установить блокировку графического ключа</string>
+    <string name="system_settings">Системные настройки</string>
+    <string name="white_list">Белый список</string>
+    <string name="create_import_vault">Создать/импортировать кошелек</string>
+    <string name="safety_instruction">Руководство по безопасности</string>
+    <string name="setting_license">условия обслуживания</string>
+    <string name="factory_reset">Очистить устройство</string>
+    <string name="updatable">Обновить сейчас</string>
+    <string name="password_input_hint">Пожалуйста введите пароль.</string>
+    <string name="password">Пароль</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="switch_wallet">Переключить кошелек</string>
+    <string name="wrong_password_retry_hint">Неверный пароль, пожалуйста, попробуйте еще раз</string>
+    <string name="Update">Обновить</string>
+    <string name="draw_pattern_again">Пожалуйста, нарисуйте еще раз, чтобы подтвердить</string>
+    <string name="scan_to_auth">Сканировать QR-код</string>
+    <string name="signing_history">Подробности подписания</string>
+    <string name="add_coins">Добавить криптовалюту</string>
+    <string name="not_in_whitelist_reject">Адрес получения неавторизован, транзакция отклонена!</string>
+    <string name="invalid_mnemonic">Неверная фраза для восстановления. Повторите попытку.</string>
+    <string name="scan_permission_denied">Разрешение на сканирование отклонено</string>
+    <string name="wrong_mnemonic">Неверная фраза восстановления</string>
+    <string name="too_many_passphrase">Может иметь только до 5 кодовых фраз</string>
+    <string name="about_message">Keystone — это аппаратный air-gapped кошелек, который использует полностью прозрачную передачу данных с помощью QR-кода, поэтому вы можете проверить, что входит и выходит из него. Наш Secure Element выполняет генерацию настоящих случайных чисел (TRNG), чтобы гарантировать, что ваши закрытые ключи получены из реальных физических источников энтропии. Подписание всех транзакций происходит полностью в Secure Element, который имеет современную защиту, чтобы защитить вас в случае, если злоумышленник получит физический доступ к вашему устройству.</string>
+    <string name="amount_hint">Установить сумму</string>
+    <string name="setup_wallet_hint1">Спасибо, что выбрали Keystone!</string>
+    <string name="change_password">Изменить пароль</string>
+    <string name="self_checking">Выполняется проверка безопасности…</string>
+    <string name="text_create_address_main_text">Выберите количество адресов</string>
+    <string name="address_name_hint">Адреса не могут быть удалены после создания. Выберите имя, которое вы сможете распознать.</string>
+    <string name="add_white_list">Добавить белый список</string>
+    <string name="search">Поиск</string>
+    <string name="cancel">Отмена</string>
+    <string name="device_under_attack">Это устройство больше не безопасно для использования!</string>
+    <string name="power_off">Выключить</string>
+    <string name="create_new_address">Создать адрес</string>
+    <string name="screen_brightness_hint">Сдвиньте, чтобы отрегулировать яркость экрана</string>
+    <string name="broadcast_tx">Трансляция транзакции</string>
+    <string name="please_broadcast_with_hot">Отсканируйте QR-код с помощью Watch-only кошелька, чтобы получить подпись</string>
+    <string name="please_confirm">Пожалуйста подтвердите</string>
+    <string name="know">Я понимаю</string>
+    <string name="creating_vault_hint">Создание кошелька, не отключайте экран.</string>
+    <string name="delete_white_list">Удалить белый список</string>
+    <string name="self_check_under_disassemble">Кто-то пытался взломать ваше устройство!</string>
+    <string name="self_check_alert_content">Ваше устройство подверглось атаке и, возможно, было скомпрометировано. Продолжая использовать это устройство, вы рискуете раскрытием конфиденциальной информации и потерей своих активов. Мы настоятельно рекомендуем вам удалить всю личную информацию с устройства и немедленно связаться со службой поддержки.</string>
+    <string name="web_auth_scan_agian">Отсканируйте еще раз</string>
+    <string name="clean_data_and_power_off">Очистить данные и выключить</string>
+    <string name="generate_mnemonic_hint">После создания кошелька фраза восстановления больше не будет отображаться!</string>
+    <string name="sign_success">Успешно подписано</string>
+    <string name="sign_fail">Ошибка подписи</string>
+    <string name="manage_white_list_hint">Пользователи могут отправлять активы только на адреса, сохраненные в белом списке. Пока белый список пуст, все транзакции запрещены.</string>
+    <string name="password_unlock">Разблокировка пароля</string>
+    <string name="forget_password">забыл пароль?</string>
+    <string name="unlock">Разблокировать</string>
+    <string name="eos_pubkey_sign_only">1. Если вы сгенерировали адрес из своего Публичного ключа, вы можете отправлять и получать средства на Keystone mobile, а данные вашей учетной записи будут автоматически синхронизироваться при входе в систему с этого устройства.\n2. Если вы не сгенерировали адрес, вы можете пригласить друга с %s для сканирования этого Pub Key и создания адреса.</string>
+    <string name="secret_modal_title">Пожалуйста, проверьте свое окружение</string>
+    <string name="secret_modal_msg">Любой, у кого есть ваша фраза восстановления, имеет полный доступ к вашей криптовалюте. Пожалуйста, убедитесь, что во время записи фразы восстановления нет посторонних или камер.</string>
+    <string name="select_mnemonic_count">Длина фразы восстановления</string>
+    <string name="set_password">Установить пароль</string>
+    <string name="firmware_upgrade">Обновление прошивки</string>
+    <string name="text_password_required">Настоятельно рекомендуем использовать надежный пароль не менее чем из 10 цифр, включая прописные и строчные буквы и цифры, чтобы разблокировать устройство. \n·\tДолжен содержать не менее 6 цифр\n \t(цифры, буквы или символы)</string>
+    <string name="welcome">Добро пожаловать в Keystone!</string>
+    <string name="welcome_site"><![CDATA[Пожалуйста, откройте следующую ссылку с помощью ПК: <font color="#00cdc3">https://keyst.one/start</font>]]></string>
+    <string name="welcome_text">Это поможет настроить аппаратный кошелек Keystone.</string>
+    <string name="welcome_done">Начать</string>
+    <string name="guide_completed_title">Поздравляем! \nУстановка завершена!</string>
+    <string name="guide_completed_remind"><![CDATA[Вы можете создать кодовую фразу (скрытый кошелек) или сбросить пароль в настройках. \n Прочтите прилагаемое краткое руководство или посетите наш веб-сайт, чтобы узнать больше: <br> <font color="#00cdc3">https://keyst.one<font/>]]></string>
+    <string name="tx_from">От</string>
+    <string name="tx_to">Кому</string>
+    <string name="tx_fee">Комиссия</string>
+    <string name="tx_memo">Memo</string>
+    <string name="tx_confirm">Проверка отпечатка пальца</string>
+    <string name="tx_confirm_title">Подтвердить детали транзакции</string>
+    <string name="msg_confirm_title">Подтвердите детали сообщения</string>
+    <string name="select_account_tittle">Выберите учетную запись</string>
+    <string name="sign">Подписать</string>
+    <string name="find_password">Забыли пароль</string>
+    <string name="update_hint">Устанавливайте только обновления прошивки, загруженные с официального веб-сайта Keystone.</string>
+    <string name="web_auth">Веб-аутентификация</string>
+    <string name="web_auth_code">Код аутентификации вашего устройства</string>
+    <string name="Success">Успех</string>
+    <string name="fail">Не удалось</string>
+    <string name="verify_way">Пожалуйста, выберите метод проверки</string>
+    <string name="verify_way_sharding">Проверить разделение</string>
+    <string name="verify_way_mnemonic">Проверить фразу восстановления</string>
+    <string name="tx_id">ID транзакции</string>
+    <string name="mnemonic_save_hint">Фраза восстановления — единственный способ восстановить ваши активы и пароль. В случае его утери ваши активы будут безвозвратно утеряны, а устройство может быть заблокировано! (Фраза восстановления больше не будет отображаться после инициализации устройства.</string>
+    <string name="verify_code_hint">Пожалуйста, введите проверочный код на странице веб-аутентификации официального веб-сайта, чтобы аутентифицировать ваше устройство.</string>
+    <string name="update_alert_boot_low_battery_message">Уровень зарядки устройства должен быть выше %s, чтобы обеспечить успешное обновление. Текущий уровень заряда батареи %s, замените или зарядите батарею.</string>
+    <string name="update">Обновить</string>
+    <string name="new_version_hint_message">Новая версия %s доступна для обновления. Сравните следующий sha256 с sha256 вашего загружаемого пакета на официальном сайте, убедитесь, что они совпадают, затем нажмите «Обновить сейчас».</string>
+    <string name="updating">Обновление…</string>
+    <string name="update_now">Обновить сейчас</string>
+    <string name="delete_fingerprint">Удалить отпечаток пальца</string>
+    <string name="rename_fingerprint">Переименовать</string>
+    <string name="confirm_delete">Подтвердить удаление</string>
+    <string name="fingerprint_rename_subtitle">Изменить имя отпечатка пальца</string>
+    <string name="enroll_complete_hint">Зарегистрирован отпечаток пальца %s.</string>
+    <string name="unsupported_qrcode">Этот QR-код не поддерживается</string>
+    <string name="unsupported_coin">Неподдерживаемая криптовалюта</string>
+    <string name="incorrect_qrcode">Неверный QR-код</string>
+    <string name="incorrect_tx_data">Неверные данные транзакции</string>
+    <string name="invalid_webauth_qrcode_hint">Неверный QR-код. Следуйте инструкциям, чтобы отсканировать правильный QR-код для завершения аутентификации.</string>
+    <string name="hint">подсказки</string>
+    <string name="enlarge_qrcode">Коснитесь QR-кода, если у вас возникли трудности со сканированием.</string>
+    <string name="enroll_fingerprint">Регистрация отпечатков пальцев</string>
+    <string name="enroll_fingerprint_hint">Поместите палец на область распознавания отпечатков пальцев и уберите его, когда почувствуете вибрацию. Повторяйте до тех пор, пока процесс регистрации не будет полностью завершен.</string>
+    <string name="complete_enroll">Готово</string>
+    <string name="modify_fingerprint_name">Изменить имя</string>
+    <string name="fingerprint_settings">Настройки отпечатков пальцев</string>
+    <string name="enroll_fingerprint_hint1">Поместите палец в область распознавания отпечатков пальцев и слегка нажмите.</string>
+    <string name="fingerprint_use_hint">Отпечаток пальца можно использовать для подписи транзакций или разблокировки устройства.</string>
+    <string name="fingerprint_start_enroll">Начать регистрацию</string>
+    <string name="delete">Удалить</string>
+    <string name="rename">Переименовать</string>
+    <string name="fingerprint_unlock">Разблокировка по отпечатку пальца</string>
+    <string name="verify_fingerprint_hint">Проверка отпечатка пальца</string>
+    <string name="add_fingerprint">+Добавить отпечаток пальца</string>
+    <string name="search_coin_no_result_hint">Нет результатов</string>
+    <string name="verify_fingerprint_to_sign">Подтвердите отпечаток пальца, чтобы подписать транзакцию.</string>
+    <string name="switch_to_fingerprint_sign"><![CDATA[Переключиться на пароль>]]></string>
+    <string name="use_fingerprint_unlock">Разблокировать устройство</string>
+    <string name="use_fingerprint_sign">Подписать транзакции</string>
+    <string name="serialno">Серийный номер: %s</string>
+    <string name="receive_address">Кому %d</string>
+    <string name="sync_in_progress">Выполняется синхронизация</string>
+    <string name="invalid_data">Ошибка</string>
+    <string name="version_not_match">Версия мобильного приложения не соответствует. Пожалуйста, обновите прошивку и мобильное приложение до последней версии.</string>
+    <string name="reset_hint">Неправильный пароль. Это устройство будет очищено.</string>
+    <string name="set_passphrase">Кошелек с кодовой фразой</string>
+    <string name="tx_list_empty">Нет результата\nПожалуйста, введите ключевые слова подписи</string>
+    <string name="address_list_empty">Нет результата\nПожалуйста, введите адрес или ключевые слова имени</string>
+    <string name="tag">Memo</string>
+    <string name="confirm_to_verify_mnemonic">Следующий шаг</string>
+    <string name="pattern_unlock_hint">Графический пароль используется для разблокировки кошелька</string>
+    <string name="new_version_footer_hint">Вы также можете перейти в [Меню > Настройки > Версия] и нажать «Обновить сейчас» позже.</string>
+    <string name="factory_reset_warning">Все данные будут удалены. Пожалуйста, подтвердите, чтобы продолжить</string>
+    <string-array name="create_vault_step">
+        <item>"Создание кошелька…"</item>
+        <item>"Выполняется проверка безопасности…"</item>
+        <item>"Шифрование кошелька…"</item>
+        <item>"Выполняется проверка Secure Element…"</item>
+        <item>"Запись Secure Element…"</item>
+    </string-array>
+    <string name="export_to_electrum">Создайте Watch-Only кошелек в Electrum</string>
+    <string name="export_to_electrum_guide">1. Откройте Electrum и создайте новый кошелек. \n2. Выберите «Стандартный кошелек». \n3. Выберите «Использовать мастер-ключ». \n4. Коснитесь «Показать главный публичный ключ» ниже, затем щелкните значок камеры в окне «Создать хранилище ключей из главного ключа» в Electrum, чтобы отсканировать QR-код, отображаемый на Keystone.\n5. Установите пароль. \n6. Войдите в watch-only кошелек.</string>
+    <string name="export_xpub">Показать главный публичный ключ</string>
+    <string name="export_to_electrum_guide_hint">Как создать кошелек watch-only в Electrum:</string>
+    <string name="send_address">От %d</string>
+    <string name="input">Вход %d</string>
+    <string name="output">Выход %d</string>
+    <string name="export_success">Экспорт выполнен успешно</string>
+    <string name="read_sdcard">Карта MicroSD</string>
+    <string name="no_sdcard">Карта MicroSD не найдена</string>
+    <string name="no_sdcard_hint">Пожалуйста, убедитесь, что вы вставили карту microSD формата FAT32</string>
+    <string name="no_unsigned_txn">Файл не найден</string>
+    <string name="no_unsigned_txn_hint">Убедитесь, что файл, который вы хотите подписать, был успешно сохранен на карту microSD.</string>
+    <string name="electrum_broadcast_guide">Как транслировать</string>
+    <string name="electrum_broadcast_action_guide">В Electrum выберите «Инструменты» > «Загрузить транзакцию» > «Из QR-кода».\n\nПроблемы со сканированием? Вы можете экспортировать данные подписанной транзакции в виде файла с помощью карты microSD и транслировать транзакцию из файла с помощью Electrum.</string>
+    <string name="electrum_decode_txn_fail">Ошибка чтения</string>
+    <string name="electrum_import_xpub_guide_title">Как сканировать QR-код</string>
+    <string name="electrum_import_xpub_action_guide">1. Откройте Electrumand и создайте новый кошелек.\n2. Выберите «Стандартный кошелек».\n3. Выберите «Использовать мастер-ключ». \n4. Щелкните значок камеры в окне «Создать хранилище ключей из главного ключа» в Electrum, чтобы отсканировать QR-код, отображаемый в Keystone.\n\nПроблемы со сканированием? Вы также можете экспортировать главный файл открытого ключа с помощью карты microSD.</string>
+    <string name="error_txn_file">Не удалось прочитать файл. Повторите попытку импорта.</string>
+    <string name="export_signed_txn">Экспорт файла в трансляцию</string>
+    <string name="electrum_import_signed_txn">В Electrum выберите «Инструменты» > «Загрузить транзакцию» > «Из файла», чтобы открыть файл. </string>
+    <string name="insert_sdcard_hint">Убедитесь, что вы вставили карту microSD формата FAT32.</string>
+    <string name="electrum_import_xpub_action">Открывается при вводе главного открытого ключа на Electrum.</string>
+    <string name="transaction_source_label">Кошелек</string>
+    <string name="use_electrum_to_broadcast">Отсканируйте QR-код с помощью Electrum для трансляции</string>
+    <string name="transaction_from_electrum">Эта транзакция от Electrum</string>
+    <string name="add_address">Добавить адрес</string>
+    <string name="add_account">добавить учетную запись</string>
+    <string name="use_electrum_scan_xpub">Сканировать главный публичный ключ с помощью Electrum</string>
+    <string name="export_signed_txn_file">Экспорт подписанного файла</string>
+    <string name="export_signed_txn_action_guide">Как транслировать с помощью Electrum:\nВ Electrum выберите «Инструменты» > «Загрузить транзакцию» > «Из файла». Откройте файл и нажмите «Трансляция».</string>
+    <string name="export">Экспорт</string>
+    <string name="export_xpub_text_file">Экспорт главного файла публичного ключа</string>
+    <string name="file_name_label">Имя файла:</string>
+    <string name="master_xpub">Главный публичный ключ (Nested SegWit)</string>
+    <string name="electrum_qrcode_hint"><![CDATA[Проблемы со сканированием? Нажмите на QR-код, чтобы увеличить<br>или <u>нажмите здесь, чтобы экспортировать на карту microSD.]]></string>
+    <string name="scan_electrum_hint">Проблемы со сканированием? Вы можете импортировать незавершенные транзакции из Electrum с помощью карты microSD (Меню > Карта MicroSD).</string>
+    <string name="sign_txn_in_sdcard">Неподписанные файлы транзакций</string>
+    <string name="master_pubkey_not_match">Транзакция не распознана. Ваш Keystone не был успешно сопряжен с watch-only кошельком.</string>
+    <string name="change">Изменить</string>
+    <string name="mine">Мой</string>
+    <string name="electrum_compatibility">Electrum Watch-Only клшелек</string>
+    <string name="identification_failed">Ошибка идентификации</string>
+    <string name="from_electrum">Из Electrum</string>
+    <string name="update_failed">Не удалось обновить</string>
+    <string name="contact_keystone_service">свяжитесь с нами: support@keyst.one\nКод состояния:%s</string>
+    <string name="keep_rolling">Продолжайте вращать</string>
+    <string name="confirm_rolling">Генерировать</string>
+    <string name="rolling_hint_less_than_99">Вы бросили %d раз. Мы рекомендуем выполнить 99 повторений для 256-битной версии. <entropy class=""></entropy></string>
+    <string name="rolling_hint_less_than_50">Вы бросили %d раз. Вам нужно как минимум 50 бросков, чтобы сгенерировать фразу восстановления.</string>
+    <string name="rolling_not_enough">Продолжайте вращать</string>
+    <string name="dice_rolls">Бросок костей</string>
+    <string name="dice_roll_guide"><![CDATA[Как использовать кости для генерации ключей:<br><br> 1.  Бросьте кости не менее 50 раз. Бросайте 99 раз, чтобы получить 256-битную энтропию (рекомендуется). Количество бросков, которые вы можете использовать, не ограничено.<br>2. Мы рекомендуем вам использовать <font color="#00cdc3">кости из казино<font/> чтобы увеличить энтропию каждого броска костей.]]></string>
+    <string name="start">Начать</string>
+    <string name="pattern_lock_hide_track">Во избежание подглядывания трек будет скрыт при разблокировке.</string>
+    <string name="abnormal_tx">Ненормальная транзакция</string>
+    <string name="fee_attack_warning">Обнаружено того, что транзакция является рискованной и не может быть подписана. Вы можете перейти по адресу: https://keyst.one/fee-attack для получения подробной информации или связаться с нами: support@keyst.one</string>
+    <string name="already_signed">Вы подписали транзакцию, можете транслировать транзакцию напрямую</string>
+    <string name="contact_info">Twitter: @KeystoneWallet\nEmail：support@keyst.one</string>
+    <string name="keep_mnemonic_hint">*Keystone никогда и ни при каких обстоятельствах не будет запрашивать вашу фразу восстановления, обязательно сохраните фразу восстановления и никому ее не сообщайте.</string>
+    <string name="contact_us">Свяжитесь с нами</string>
+    <string name="current_device_info">Информация об оборудовании</string>
+    <string name="switch_passphrase">Введите кодовую фразу кошелька</string>
+    <string name="check_mnemonic">Проверка фразы восстановления</string>
+    <string name="check_failed">Ошибка проверки</string>
+    <string name="check_mnemonic_failed">Введенная фраза восстановления не совпадает с фразой в Keystone. Не перезагружайте устройство, пока не будет проверена действительная резервная копия.</string>
+    <string name="invalid_mnemonic_hint">Вы ввели неверную фразу для восстановления, попробуйте еще раз.</string>
+    <string name="check_successful">Проверка выполнена успешно</string>
+    <string name="check_successful_hint">Введенная фраза восстановления совпала с фразой в Keystone.</string>
+    <string name="notice">Ошибка</string>
+    <string name="notice1">Уведомление</string>
+    <string name="default_vault_notice">Вы успешно обновились до последней версии. Чтобы защитить ваши активы, кошелек автоматически сбрасывается на кошелек по умолчанию при каждом перезапуске устройства. (Также при обновлении, выключении или перезапуске.）</string>
+    <string name="switching_to_main_vault">При вводе кошелька по умолчанию не отключайте экран.</string>
+    <string name="add_polkadot_hint">Вам необходимо ввести фразу восстановления этого кошелька при добавлении %s. Для получения подробной информации посетите: https://keyst.one/%s</string>
+    <string name="add_later">Не добавлено</string>
+    <string name="comfirm_add">Подтвердите добавление</string>
+    <string name="mnemonic_not_match">Введенная фраза восстановления не совпадает с фразой в Keystone. Пожалуйста, попробуйте еще раз.</string>
+    <string name="adding_dot_hint">Добавление %s, оставьте экран включенным</string>
+    <string name="dot_tip">Подсказки</string>
+    <string name="shading_guide"><![CDATA[
+    1. Вы создали <font color="#00cdc3">%1$d<font/>/<font color="#00cdc3">%2$d<font/> резервную копию Shamir. Это резервная копия Shamir с <font color="#00cdc3">%3$d<font/> частями, и вам нужно как минимум <font color="#00cdc3">%4$d<font/> частей для восстановления вашего кошелька.<br><br>
+    2. Далее вам нужно будет подтвердить каждую часть фразы. Если все части принадлежат другому лицу, подтвердите, что каждое подтверждение выполняется конкретным лицом.<br> <br>
+    3. Пожалуйста, не фотографируйте части фразы и не храните их в Интернете. Не делитесь им с кем-либо еще, иначе вы рискуете потерять свои средства».
+    ]]></string>
+    <string name="generate_sharding_sequence">поделиться #%d(Всего %d)</string>
+    <string name="generate_shading_hint">Пожалуйста, подтвердите, что вы являетесь хранителем части #%d</string>
+    <string name="cancel_create_sharding">Отмена</string>
+    <string name="input_sharding_mnemonic_hint"><![CDATA[Введите фразу восстановления для общего <font color="#00cdc3">ресурса #%d<font/> в форму ниже.]]></string>
+    <string name="verify_pass">Проверка пройдена</string>
+    <string name="verify_sharding_pass_hint">Фраза восстановления этой части была успешно проверена, теперь перейдите к следующей части. Нажмите «Подтвердить» и передайте второму хранителю доли слов, у которого есть номер части #%d.</string>
+    <string name="sharding_no">поделиться #%d</string>
+    <string name="reset_password">Восстановление пароля</string>
+    <string name="first_sharding_hint">Первая часть введена успешно, необходимо ввести еще %d частей.</string>
+    <string name="cancel_import_sharding">Отменить Ввод</string>
+    <string name="continue_import_sharding">Продолжайте вводить</string>
+    <string name="sharding_repeat">Часть уже введена, пожалуйста, введите другую часть.</string>
+    <string name="sharding_id_not_match">Вы ввели часть фразы из другого резервного хранилища Shamir.</string>
+    <string name="confirm_cancel_import_sharding">Отмена</string>
+    <string name="continue_create_sharding">Продолжайте вводить</string>
+    <string name="invalid_shard">Фраза восстановления неверна, пожалуйста, проверьте её.</string>
+    <string name="ask_confirm_cancel_import_sharding">Отменить импорт кошелька？</string>
+    <string name="ask_confirm_cancel_create_sharding">Отменить создание кошелька？</string>
+    <string name="ask_confirm_cancel_check_sharding">Отменить проверку фразы восстановления?</string>
+    <string name="ask_confirm_cancel_enter_sharding">Отменить ввод фразы восстановления?</string>
+    <string name="cancel_import_sharding_notice">Подтвержденная доля будет потеряна после отмены. Вы уверены, что хотите отменить?</string>
+    <string name="next_sharding">Следующая часть</string>
+    <string name="not_support_multi_group_sharding">Вы ввели Super Shamir (двухуровневую конфигурацию резервного копирования Shamir), Keystone в настоящее время ее не поддерживает.</string>
+    <string name="total_sharding_count">Количество частей</string>
+    <string name="sharding_threshold">Порог</string>
+    <string name="confirm_cancel_create_sharding_title">Отменить создание кошелька？</string>
+    <string name="confirm_cancel_create_sharding">Подтвержденная часть будет потеряна после отмены. Вы уверены, что хотите отменить?</string>
+    <string name="choose_check_type">Выберите способ проверки</string>
+    <string name="choose_import_type">Выберите способ импорта</string>
+    <string name="check_bip39_phrase">Проверьте кошелек с помощью единой резервной копии BIP39</string>
+    <string name="check_slip39_phrase">Проверьте кошелек с помощью резервной копии Shamir</string>
+    <string name="import_bip39_phrase">Импортируйте кошелек с помощью единой резервной копией BIP39</string>
+    <string name="import_slip39_phrase">Импортируйте кошелек с помощью резервной копии Shamir</string>
+    <string name="enter_bip39_phrase">Введите общую фразу восстановления BIP39</string>
+    <string name="enter_slip39_phrase">Введите резервную копию Shamir</string>
+    <string name="reset_password_by_phrase">Сбросьте пароль с помощью фразы восстановления</string>
+    <string name="shamir_backup">Резервная копия Shamir</string>
+    <string name="generate_slip39_phrase">Создайте кошелек с помощью резервной копии Shamir</string>
+    <string name="generate_bip39_phrase">Создайте кошелек с помощью единой резервной копии BIP39</string>
+    <string name="shard_setting">Установка</string>
+    <string name="previous_one">Предыдущий</string>
+    <string name="next_one">Следующий</string>
+    <string name="opration_failed">Операция не удалась</string>
+    <string name="reboot_hint">Пожалуйста, перезапустите или свяжитесь с нами по адресу support@keyst.one\n Код состояния:%s</string>
+    <string name="reboot">Перезагрузить</string>
+    <string name="clear_and_power_off">Стереть всю информацию и выключить</string>
+    <string name="abnormal_state_hint">Рекомендуется очистить устройство, а затем перезагрузить его. Повторные попытки не увенчались успехом, вы можете связаться с нами: support@keyst.one\n Код состояния: %s</string>
+    <string name="abnormal_state_title">Неправильное состояние</string>
+    <string name="decline">Отклонить</string>
+    <string name="reset_polkadot_db">Сбросить базу данных</string>
+    <string name="reset_polkadot_db_hint">Это действие приведет к сбросу базы данных для Polkadot.{js} / Sub Wallet, после чего вам придется снова импортировать метаданные.</string>
+    <string name="approve">Подтвердить</string>
+    <string name="polkadot_hint">Подсказка: \n\nВам нужно выбрать сеть, чтобы получить ключи и подключить программный кошелек отдельно по цепочкам</string>
+    <string name="polkadot_db_hint">Подсказка: \n\nМы столкнулись с проблемой в базе данных. Пожалуйста, нажмите кнопку ниже, чтобы сбросить настройки. Это действие удалит ваши метаданные. Пожалуйста, импортируйте метаданные еще раз, если они вам нужны.</string>
+
+    <string-array name="watch_wallet_list">
+        <item>Keystone Companion App</item>
+        <item>MetaMask / Rabby / DeFi</item>
+        <item>Solflare</item>
+        <item>Sender</item>
+        <item>Fewcha</item>
+        <item>Core Wallet</item>
+        <item>Keplr</item>
+        <item>SubWallet / Polkadot{.js}</item>
+        <item>XRP Toolkit</item>
+    </string-array>
+
+    <string-array name="watch_wallet_summury" >
+        <item>8 main chains including BTC, ETH, etc</item>
+        <item>ETH, AVAX, BSC and all EVM Chains</item>
+        <item>Solana</item>
+        <item>Near</item>
+        <item>Aptos</item>
+        <item>AVAX, BTC, ETH, etc</item>
+        <item>Cosmos</item>
+        <item>DOT、KSM</item>
+        <item>XRP</item>
+    </string-array>
+
+    <string name="choose_watch_only_wallet">Выберите программное обеспечение Walle</string>
+    <string name="sync_later">Экспортировать позже</string>
+    <string name="sync_watch_wallet">Подключить программный кошелек</string>
+    <string name="sync_keystone_wallet_guide_title">Как привязать приложение Keystone：</string>
+    <string name="sync_xumm_guide_title">Как создать учетную запись только для использования в XUMM：</string>
+    <string name="sync_xrp_toolkit_guide_title">Как создать учетную запись только для использования в XRP Toolkit：</string>
+    <string name="sync_polkadotjs_wallet_guide_title">Как создать кошелек %s только для просмотра в SubWallet / Polkadot{.js}：</string>
+    <string name="sync_metamask_guide_title">Инструкции по подключению MetaMask:</string>
+    <string name="sync_solana_guide_title">Инструкции по подключению Solana:</string>
+
+
+
+    <string name="sync_keystone_wallet_guide_text"><![CDATA[
+        1. Откройте аппаратный кошелек Keystone и добавьте монеты<br>
+        2. Выберите  ""Аппаратный кошелек"" и нажмите кнопку ""Подключить программный кошелек""<br>
+        3. Нажмите """"Отобразить QR-код"""" ниже, затем отсканируйте QR-код с помощью приложения Keystone<br><br>
+        <font color="#535353">Download Keystone App：<font/><br>
+        <font color="#00cdc3">https://keyst.one/app<font/>
+    ]]></string>
+    <string name="sync_polkadot_js_guide_text"><![CDATA[
+        1. Откройте Polkadot{.js} и выберите <font color="#00cdc3">%s<font/><br>
+        2. Нажмите <font color="#00cdc3">Учетные записи<font/> и выберите <font color="#00cdc3">Учетную запись<font/><br>
+        3. Нажмите <font color="#00cdc3">Добавить с помощью Qr-кода<font/><br>
+        4. Отсканируйте QR-код, который отображается на Keystone<br>
+    ]]></string>
+    <string name="sync_xumm_guide_text"><![CDATA[
+        1. Откройте XUMM и создайте новую учетную запись.<br>
+        2. Выберите ""Импортировать существующую учетную запись""<br>
+        3. Выберите ""Только для просмотра"" и нажмите ""Далее""<br>
+        4.  Отсканируйте QR-код адреса, который отображается на Keystone<br>
+        Первый адрес (m/44\'/144\’/0\’/0/0) генерируется по умолчанию. Если вы хотите синхронизировать другие адреса, вы можете добавить адреса после входа в кошелек и отсканировать адрес с помощью XUMM<br>
+        5. Нажмите ""Далее"" и введите учетную запись только для просмотра<br>
+    ]]></string>
+
+    <string name="sync_xrp_toolkit_guide_text"><![CDATA[
+        1. Откройте XRP Toolkit, нажмите ""Подключить кошелек""<br>
+        2. Выберите ""Устройство Keystone""<br>
+        3. Нажмите ""Сканировать Keystone"" в XRP Toolkit<br>
+        4. Нажмите на кнопку ниже и отсканируйте QR-код<br>
+    ]]></string>
+    <string name="sync_metamask_guide_text"><![CDATA[
+        <font color="#00cdc3">① <font/>Откройте MetaMask и нажмите \'<b>Подключить аппаратный кошелек</b>\'<br>
+        <font color="#00cdc3">② <font/>Выберите \'<b>Кошелек HW на основе QR-кода</b>\'<br>
+        <font color="#00cdc3">③ <font/>Нажмите \'<b>Сканировать QR-код</b>\' кнопку<br>
+        <font color="#00cdc3">④ <font/>Отсканируйте QR-код кошелька<br>
+        <font color="#00cdc3">⑤ <font/>Выберите учетную запись и разблокируйте<br>
+        <font color="#00cdc3">⑥ <font/>Войдите в учетную запись<br>
+    ]]></string>
+    <string name="sync_metamask_hit"><![CDATA[Руководства по подключению остальных сопутствующих приложений,<br> пожалуйста, посетите:: <font color="#00cdc3">https://keyst.one/web3<font/>]]></string>
+    <string name="sync_keystone_guide_button_text">Отобразить QR-код</string>
+    <string name="sync_xumm_guide_button_text">Отобразить QR-код адреса</string>
+    <string name="sync_xrp_toolkit_guide_button_text">Отобразить QR-код</string>
+    <string name="sync_polkadot_js_guide_button_text">Отобразить QR-код %s</string>
+    <string name="sync_metamask_guide_button_text">Отобразить QR-код</string>
+    <string name="sync_polkadot_hint">Подсказка: \nВ Polkadot {.js}, вам нужно создать кошельки для просмотра монет DOT и KSM отдельно.</string>
+    <string name="sync_with_keystone_vault">Отсканируйте QR-код с помощью приложения Keystone</string>
+    <string name="sync_with_xumm">Отсканируйте QR-код с помощью XUMM</string>
+    <string name="sync_with_xrp_toolkit">Отсканируйте QR-код с помощью XRP Toolkit</string>
+    <string name="sync_with_metamask">Отсканируйте QR-код с помощью кошелька Watch-only</string>
+    <string name="sync_with_polkadot_js">Отсканируйте QR-код с помощью Sub Wallet / Polkadot{.js}</string>
+    <string name="sync_with_watch_only">Отсканируйте QR-код с помощью кошелька Watch-only</string>
+    <string name="sync_with_core_wallet">Отсканируйте QR-код с помощью кошелька CoreWallet</string>
+    <string name="broadcast_with_core_wallet">Отсканируйте QR-код с помощью кошелька CoreWallet</string>
+    <string name="broadcast_xrp_toolkit_hint">Сканируйте QR-код с помощью XRP Toolkit</string>
+    <string name="sync_first_xrp_accout">Первый адрес генерируется по умолчанию. Если вы хотите синхронизировать другие адреса, вы можете добавить адреса после входа в кошелек.</string>
+    <string name="sync_xrp">Приложение для сопряжения</string>
+    <string name="unresolve_tx">Ошибка</string>
+    <string name="unresolve_tx_hint">Пожалуйста, отсканируйте QR-код, созданный в %s</string>
+    <string name="invalid_account_tx">Текущий кошелек использует пути деривации %s Keystone. Транзакция, которую вы только что отсканировали, представляет собой путь вывода для %s. Пожалуйста, переключите свой кошелек на %s и повторите попытку.</string>
+    <string name="account_not_match">Ошибка</string>
+    <string name="account_not_match_detail">Транзакция не относится к текущему кошельку, пожалуйста, проверьте информацию о транзакции.</string>
+    <string name="simple">Простой</string>
+    <string name="raw">Необработанно</string>
+    <string name="qr">QR</string>
+    <string name="details">Подробности</string>
+    <string name="spark_token_claim_guide"><![CDATA[
+    1. Откройте <font color="#00cdc3">XRP Toolkit<font/><br>
+    2. В строке меню перейдите в раздел <font color="#00cdc3">Учетная запись<font/> и выберите <font color="#00cdc3">пункт<font/> меню Свойства<br>
+    3. Посмотрите на странице свойств учетной записи раздел <font color="#00cdc3">Ключ сообщения<font/><br>
+    4. Нажмите на маленький значок <font color="#00cdc3">QR-кода<font/> в поле ключа сообщения<br>
+    5. Отсканируйте QR-код ключа сообщения, который отображается на Keystone<br>
+    6. Нажмите кнопку <font color="#00cdc3">Обновить<font/><br>
+    7. Подпишите транзакцию
+    ]]></string>
+    <string name="spark_token_prepare_title">Подготовьтесь к получению ваших токенов Spark：</string>
+    <string name="claim_spark_token_button">Отображение QR-кода ключа сообщения</string>
+    <string name="spark_token_title">Ключ сообщения</string>
+    <string name="claim_spark">Претензия Spark</string>
+    <string name="claim_spark_button_text">Отсканируйте QR-код XRP Toolkit</string>
+    <string name="pair_app">Приложение для сопряжения</string>
+    <string name="unknown_substrate_chain_title">В настоящее время эта монета не поддерживается</string>
+    <string name="unknown_substrate_chain_content">Polkadot{.js} для просмотра не поддерживает этот актив</string>
+    <string name="unsupported_polka_tx_type_title">Неразрешенная транзакция</string>
+    <string name="unsupported_polka_tx_type_content">Эти типы транзакций в настоящее время не поддерживаются.</string>
+    <string name="enable_dot_for_polkadotjs">Вам необходимо ввести фразу восстановления этого кошелька при переключении кошелька, доступного только для просмотра, на Polkadot{.js}. Для получения более подробной информации, пожалуйста, посетите: https://keyst.one/dot</string>
+    <string name="not_switch">Не сейчас</string>
+    <string name="confirm_switch">Подтвердить</string>
+    <string name="keep_screen_on">Пожалуйста, держите экран включенным</string>
+    <string name="sync">Подключить</string>
+    <string name="change_software_wallet_path">Измените путь вывода</string>
+    <string name="tutorials">Инструкции</string>
+
+    <string name="qrcode_capacity">Плотность QR-кода: %s </string>
+    <string name="qr_capacity_high">Высокий</string>
+    <string name="qr_capacity_mid">Средний</string>
+    <string name="qr_capacity_low">Низкий</string>
+    <string name="adjust_qr_capacity">При сканировании, вы можете отрегулировать размер QR-кода или уменьшить плотность QR-кода.</string>
+
+    <string name="create_mnemonic_guide_content"><![CDATA[
+        1. Нажмите кнопку ""Введите свои 23 слова"" ниже<br>
+        2. Выберите первые 23 из официального списка из 2048 слов и заполните поля<br>
+        3. Keystone вычислит 24-е слово<br>
+        4. Создайте резервную копию вашей фразы восстановления<br>
+    ]]>
+    </string>
+    <string name="create_mnemonic_web_guide">Официальный список из 2048 слов и более подробную информацию, пожалуйста, посетите: https://keyst.one/24th</string>
+    <string name="fill_23_words">Заполните свои 23 слова</string>
+    <string name="last_word_hint"><![CDATA[
+        Ваше 24-е слово: <font color="#00cdc3">%s<font/>
+    ]]></string>
+    <string name="please_input_23_words">Заполните свои первые 23 слова</string>
+    <string name="calculate_24th_word">Вычислите 24-е слово</string>
+    <string name="create_23_word">Создайте свою собственную фразу для восстановления из 24 слов</string>
+    <string name="create_23_word_title">Создайте свою фразу для восстановления</string>
+    <string name="mnemonic_backuped">У меня есть фраза восстановления</string>
+    <string name="testnet">Тестовая сеть</string>
+    <string name="inconsistent_address">Несовместимо с адресом</string>
+    <string name="calc_mnemonic_warning">Вы запустили расширенную функцию "Создания своей фразы восстановления". Пожалуйста, убедитесь, что вы полностью понимаете опасности этой функции, прежде чем приступить к созданию фразы восстановления с ее помощью. Ваши средства могут быть скомпрометированы, если вы этого не сделаете. Действуйте на свой страх и риск!</string>
+    <string name="calc_mnemonic_warning_checkbox">Я полностью понимаю энтропию, BIP39, генерацию закрытого ключа и другие связанные с этим материалы для создания моей фразы восстановления.</string>
+    <string name="note">ОПАСНОСТЬ!</string>
+    <string name="tip">Примечание</string>
+    <string name="learn_more"><Data><![CDATA[Keystone поддерживает декодирование транзакций. Пожалуйста, посетите><b><font color="#00CDC3"><b> https://keyst.one/abi </b></font>для получения более подробной информации.]]></Data></string>
+    <string name="learn_more_doc"><Data><![CDATA[Keystone поддерживает декодирование транзакций. Пожалуйста, посетите<br /><font color="#00CDC3"><b> https://keyst.one/addabi </b></font><br />для получения более подробной информации.]]></Data></string>
+    <string name="check_info">Пожалуйста, проверьте детали транзакции перед подписанием</string>
+    <string name="undecoded_tip">Внимание! Это недекодированные данные.</string>
+    <string name="from_tfcard">(Получено с вашей карты microSD)</string>
+    <string name="select_last_word_hint">Пожалуйста, выберите одно из следующих слов в качестве 24-го слова</string>
+    <string name="please_insert_sdcard">Пожалуйста, убедитесь, что вы вставили карту microSD</string>
+    <string name="confirm_format">Вы уверены?</string>
+    <string name="format_sd_card_hint">Эта операция удалит все файлы с карты microSD и отформатирует карту в формат FAT32. Пожалуйста, создайте резервную копию важных файлов перед форматированием.</string>
+    <string name="format_sdcard_title">Формат карты</string>
+    <string name="format_sdcard_hint">Пожалуйста, отформатируйте карту microSD в формат FAT32. В противном случае файлы могут быть не прочитаны и не экспортированы.</string>
+    <string name="format_sdcard_hint1">Примечание: продолжение приведет к удалению всех файлов на этой карте microSD. Пожалуйста, убедитесь, что все ваши файлы были надежно скопированы, прежде чем приступить к форматированию.</string>
+    <string name="format_now">Форматировать сейчас</string>
+    <string name="format_sdcard_hint2">Вы также можете перейти в меню > Настройки > Системные настройки > Формат карты</string>
+    <string name="format_success">Успешно отформатировано</string>
+    <string name="format_failed">Сбой форматирования</string>
+    <string name="retry_format">Карта переформатирована?</string>
+    <string name="retry">Повторить попытку</string>
+    <string name="formatting">Форматирование…</string>
+    <string name="fee_too_high">Комиссия слишком высокая</string>
+    <string name="atention">Внимание</string>
+    <string name="exceed_fee">Комиссия за эту транзакцию слишком высокая, подтвердите, стоит ли подписывать.</string>
+    <string name="companion_hint"><![CDATA[Если ваша фраза восстановления была импортирована с устройства ledger (ledger live/legacy), все ваши активы могут не быть идентифицированы с помощью приведенного выше QR-кода. Пожалуйста, <font color="#00cdc3"><u>нажмите здесь</u><font/>, чтобы перейти к QR-коду кошелька.]]></string>
+    <string name="select_wallet">Выберите кошелек</string>
+    <string name="select_network">Выберите сеть</string>
+    <string name="ledger_live"><![CDATA[<font color="#00cdc3">Ledger Live<font/> to connect to Ledger]]></string>
+    <string name="my_crypto_mew"><![CDATA[<font color="#00cdc3">Legacy<font/> (My Crypto, MEW)]]></string>
+    <string name="metamusk_ledger"><![CDATA[<font color="#00cdc3">Standard<font/> (MetaMask, Ledger, etc.)]]></string>
+    <string name="top_account">Первые 3 аккаунта:</string>
+    <string name="show_this_qrcode">Отобразить QR-код</string>
+    <string name="change_path">Отобразить QR-код</string>
+    <string name="sync_metamask_guide_text_hint">Возьмем в качестве примера процесс импорта расширения Keystone Ethereum, процесс других кошельков аналогичен.</string>
+    <string name="decode_as_utf8_failed_hint">Данные не могут быть декодированы в utf-8 формат.</string>
+    <string name="change_path_hint">Пожалуйста, выберите путь вывода, который вы хотите использовать. Первые 3 учетные записи (адреса) отображаются для каждого пути.</string>
+    <string name="decode_failed_hint">Данные не могут быть декодированы</string>
+    <string name="tutorials_hint">Пожалуйста, используйте свой ноутбук или мобильный телефон, чтобы открыть ссылки ниже для получения подробных руководств по использованию Keystone с конкретными сопутствующими программными кошельками.</string>
+
+    <string name="raw_data">Исходные данные</string>
+    <string name="overview">Обзор</string>
+    <string name="solana_tx_hint">Пожалуйста, проверьте информацию о ключе транзакции перед подписанием</string>
+    <string name="decode_failed">Транзакция не может быть расшифрована</string>
+    <string name="decode_failed_detail">Все данные в этой транзакции настроены и на данный момент не могут быть декодированы.</string>
+
+
+    <string name="tittle_eth_selector">4-байтовая сигнатура функции</string>
+    <string name="input_fingerprint_fail_hint">Не удалось ввести отпечаток пальца, пожалуйста, попробуйте еще раз.</string>
+
+    <string name="get_address_fail_info">Не удалось получить адрес.</string>
+    <string name="web_auth_scan_fail">Сканирование не удалось, пожалуйста, убедитесь, что вы выбрали правильный QR-код для сканирования.</string>
+
+    <string name="method">Путь</string>
+    <string name="sender">Отправить</string>
+    <string name="receiver">Принять</string>
+    <string name="amount">Сумма</string>
+    <string name="sequence">Нет последовательности</string>
+    <string name="expiration_timestamp">Срок действия</string>
+    <string name="max_gas_limit">Максимальный предел расхода газа</string>
+    <string name="gas_unit_price">Цена за единицу газа</string>
+    <string name="chain_id">ID цепочки</string>
+    <string name="transfer">Передача</string>
+    <string name="transaction_type">Тип операции</string>
+    <string name="gas_limit">Лимит газа</string>
+
+    <string name="voter">избиратель</string>
+    <string name="proposal">Предложение</string>
+    <string name="option">Вариант</string>
+    <string name="delegate_address">Адрес делегата</string>
+    <string name="validator_address">Адрес валидатора</string>
+
+    <string name="old_validator">Старый валидатор</string>
+    <string name="new_validator">Новый валидатор</string>
+    <string name="unsupport_message_hint">Это сообщение не может быть расшифровано как читаемый текст. Пожалуйста, проверьте необработанные данные для получения дополнительной информации.</string>
+    <string name="message_tittle">Сообщение</string>
+
+</resources>
