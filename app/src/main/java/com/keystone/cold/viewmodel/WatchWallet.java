@@ -40,6 +40,7 @@ public enum WatchWallet {
     SOLANA("solana"),
     NEAR("near"),
     APTOS("aptos"),
+    ARConnect("arweave"),
     KEPLR_WALLET("keplrWallet");
 
 
@@ -51,6 +52,7 @@ public enum WatchWallet {
     public static final String APTOS_SIGN_ID = "aptos_sign_id";
     public static final String CORE_WALLET_SIGN_ID = "core_wallet_sign_id";
     public static final String BIT_KEEP_SIGN_ID = "bit_keep_sign_id";
+    public static final String ARWEAVE_SIGN_ID = "arweave_sign_id";
     public static final String KEPLR_WALLET_SIGN_ID = "keplr_wallet_sign_id";
 
     private final String walletId;
@@ -125,6 +127,8 @@ public enum WatchWallet {
                 return new Coins.Coin[]{Coins.APTOS};
             case KEPLR_WALLET:
                 return new Coins.Coin[]{Coins.ATOM, Coins.OSMO, Coins.SCRT, Coins.AKT, Coins.CRO, Coins.IOV, Coins.ROWAN, Coins.CTK, Coins.IRIS, Coins.REGEN, Coins.XPRT, Coins.DVPN, Coins.IXO, Coins.NGM, Coins.BLD, Coins.BOOT, Coins.JUNO, Coins.STARS, Coins.AXL, Coins.SOMM, Coins.UMEE, Coins.GRAV, Coins.TGD, Coins.STRD, Coins.KAVA, Coins.EVMOS};
+            case ARConnect:
+                return new Coins.Coin[]{Coins.AR};
         }
         return new Coins.Coin[]{};
     }

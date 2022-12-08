@@ -35,6 +35,7 @@ import com.keystone.cold.db.entity.CoinEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,6 +43,8 @@ public class PresetData {
 
     public static List<CoinEntity> generateCoins(Context context) {
         return Coins.SUPPORTED_COINS.stream()
+                //setup AR in AR page;
+                .filter(coin -> !coin.coinCode().equals(Coins.AR.coinCode()))
                 .map(coin -> mapToCoinEntity(context, coin))
                 .collect(Collectors.toList());
     }

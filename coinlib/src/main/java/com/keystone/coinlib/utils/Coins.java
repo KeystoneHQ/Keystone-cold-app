@@ -68,6 +68,8 @@ public class Coins {
 
     public static final Coin APTOS = new Coin("aptos", "APT", "Aptos", 637, CURVE.ED25519, new String[]{});
 
+    public static final Coin AR = new Coin("arweave", "AR", "Arweave", 472, CURVE.RSA, new String[]{});
+
     //Cosmos chains
     public static final Coin ATOM = new Coin("cosmos_hub", "ATOM", "Cosmos Hub", 118);
     public static final Coin OSMO = new Coin("osmosis", "OSMO", "Osmosis", 118);
@@ -121,6 +123,7 @@ public class Coins {
             SOL,
             NEAR,
             APTOS,
+            AR,
 
             ATOM,
             OSMO,
@@ -294,7 +297,8 @@ public class Coins {
         ED25519,
         SECP256K1,
         SECP256R1,
-        SR25519
+        SR25519,
+        RSA,
     }
 
     public static int purposeNumber(String coinCode) {

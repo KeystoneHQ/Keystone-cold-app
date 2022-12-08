@@ -1,5 +1,6 @@
 package com.keystone.cold.cryptocore.protocol;
 
+import com.keystone.cold.cryptocore.GetRSAPublicKeyProtoc;
 import com.keystone.cold.cryptocore.SignRequestProtoc;
 import com.keystone.cold.encryptioncore.utils.ByteFormatter;
 import com.keystone.cold.cryptocore.RCCABIProtoc;
@@ -9,10 +10,12 @@ import com.keystone.cold.cryptocore.RCCABIProtoc;
 public class RequestBuilder {
     private final RCCABIProtoc.CommandRequest.Builder commandRequest;
     private final SignRequestProtoc.SignRequest.Builder signRequest;
+    private final GetRSAPublicKeyProtoc.GetRSAPublicKey.Builder getRSAPublicKey;
 
     public RequestBuilder () {
         commandRequest = RCCABIProtoc.CommandRequest.newBuilder();
         signRequest = SignRequestProtoc.SignRequest.newBuilder();
+        getRSAPublicKey = GetRSAPublicKeyProtoc.GetRSAPublicKey.newBuilder();
     }
     public String build() {
         commandRequest.setSignRequest(signRequest);
@@ -35,4 +38,10 @@ public class RequestBuilder {
         return this;
     }
 
+    public RequestBuilder setGetRSAPublicKey(int seedId, String password, String portName) {
+        getRSAPublicKey.setSeedId(seedId);
+        getRSAPublicKey.setPassword(password);
+        getRSAPublicKey.setPortName(portName);
+        return this;
+    }
 }

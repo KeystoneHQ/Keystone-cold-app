@@ -42,6 +42,20 @@ public class RCCSigner {
         return parseResponse(response);
     }
 
+    public String getRSAPublicKey() {
+        RequestBuilder rb = new RequestBuilder();
+        rb.setSignId(FixedRequestId);
+        int seedId = isMainWallet? 0 : 0x50;
+        rb.setGetRSAPublicKey(seedId, authToken, portName);
+        String command = rb.build();
+
+        Log.e("Rust Signer:", command);
+
+        RCC rcc = new RCC();
+        String response = rcc.processCommand(command);
+        return parseResponse(response);
+    }
+
     private String composeCommand(String data) {
         RequestBuilder rb = new RequestBuilder();
         rb.setSignId(FixedRequestId);
