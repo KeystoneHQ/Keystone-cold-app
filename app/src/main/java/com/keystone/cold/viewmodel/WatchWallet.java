@@ -34,6 +34,7 @@ public enum WatchWallet {
     KEYSTONE("keystone"),
     POLKADOT_JS("polkadotJs"),
     CORE_WALLET("coreWallet"),
+    BIT_KEEP("bitKeep"),
     XRP_TOOLKIT("xrpToolkit"),
     METAMASK("metamask"),
     SOLANA("solana"),
@@ -49,6 +50,7 @@ public enum WatchWallet {
     public static final String NEAR_SIGN_ID = "near_sign_id";
     public static final String APTOS_SIGN_ID = "aptos_sign_id";
     public static final String CORE_WALLET_SIGN_ID = "core_wallet_sign_id";
+    public static final String BIT_KEEP_SIGN_ID = "bit_keep_sign_id";
     public static final String KEPLR_WALLET_SIGN_ID = "keplr_wallet_sign_id";
 
     private final String walletId;
@@ -117,6 +119,8 @@ public enum WatchWallet {
                 return new Coins.Coin[]{Coins.NEAR};
             case CORE_WALLET:
                 return new Coins.Coin[]{Coins.BTC_NATIVE_SEGWIT, Coins.ETH};
+            case BIT_KEEP:
+                return new Coins.Coin[]{Coins.BTC_NATIVE_SEGWIT, Coins.ETH};
             case APTOS:
                 return new Coins.Coin[]{Coins.APTOS};
             case KEPLR_WALLET:
@@ -151,6 +155,8 @@ public enum WatchWallet {
                 return APTOS_SIGN_ID;
             case CORE_WALLET:
                 return CORE_WALLET_SIGN_ID;
+            case BIT_KEEP:
+                return BIT_KEEP_SIGN_ID;
             case KEPLR_WALLET:
                 return KEPLR_WALLET_SIGN_ID;
         }

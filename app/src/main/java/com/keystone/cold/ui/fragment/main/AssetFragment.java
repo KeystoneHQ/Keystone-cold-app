@@ -164,6 +164,17 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 mBinding.toolbar.setTitle(Coins.AVAX.coinName());
             }
         }
+        if (watchWallet == WatchWallet.BIT_KEEP) {
+            Bundle data = requireArguments();
+            coinId = data.getString(KEY_COIN_ID);
+            coinCode = data.getString(KEY_COIN_CODE);
+            mBinding.customTitle.setVisibility(View.GONE);
+            if (coinCode.equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) {
+                mBinding.toolbar.setTitle("Bitcoin");
+            } else {
+                mBinding.toolbar.setTitle(Coins.ETH.coinName());
+            }
+        }
         if (watchWallet == WatchWallet.METAMASK) {
             mBinding.toolbar.setNavigationIcon(R.drawable.menu);
             mBinding.toolbar.setTitle(watchWallet.getWalletName(mActivity).replace("MetaMask", "MM"));
@@ -246,6 +257,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             case APTOS:
             case POLKADOT_JS:
             case CORE_WALLET:
+            case BIT_KEEP:
             case KEPLR_WALLET:
                 return R.menu.metamask;
             case KEYSTONE:
@@ -395,6 +407,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 if (watchWallet == WatchWallet.METAMASK
                         || watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR
                         || watchWallet == WatchWallet.APTOS || watchWallet == WatchWallet.CORE_WALLET
+                        || watchWallet == WatchWallet.BIT_KEEP
                         || watchWallet == WatchWallet.KEPLR_WALLET) {
                     scanQrCode();
                 } else {
@@ -758,6 +771,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             desiredResults.addAll(Collections.singletonList(ScanResultTypes.UR_APTOS_SIGN_REQUEST));
         } else if (watchWallet == WatchWallet.CORE_WALLET) {
             desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_CRYPTO_PSBT));
+        } else if (watchWallet == WatchWallet.BIT_KEEP) {
+            desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_CRYPTO_PSBT));
         } else if (watchWallet == WatchWallet.KEPLR_WALLET) {
             desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_COSMOS_SIGN_REQUEST, ScanResultTypes.UR_ETH_SIGN_REQUEST));
         }
@@ -830,7 +845,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             view.setVisibility(View.GONE);
         }
         view.setOnClickListener(v -> {
-            if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR || watchWallet == WatchWallet.CORE_WALLET) {
+            if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR || watchWallet == WatchWallet.CORE_WALLET || watchWallet == WatchWallet.BIT_KEEP) {
                 navigate(R.id.action_assetFragment_to_changeDerivePathFragment);
             }
             additionProcess.run();
@@ -912,7 +927,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 
     private void setSyncViewListener(View view, Runnable additionProcess, BadgeView finalBgView) {
         view.setOnClickListener(v -> {
-            if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.CORE_WALLET || watchWallet == WatchWallet.KEPLR_WALLET) {
+            if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.CORE_WALLET || watchWallet.equals(WatchWallet.BIT_KEEP) || watchWallet == WatchWallet.KEPLR_WALLET) {
                 navigate(R.id.action_to_syncFragment);
             } else if (watchWallet == WatchWallet.SOLANA) {
                 Bundle bundle = new Bundle();
@@ -1000,7 +1015,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 || watchWallet == WatchWallet.POLKADOT_JS || watchWallet == WatchWallet.KEPLR_WALLET) {
             return true;
         }
-        if (watchWallet == WatchWallet.CORE_WALLET && coinCode.equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) {
+        if ((watchWallet == WatchWallet.CORE_WALLET || watchWallet.equals(WatchWallet.BIT_KEEP)) && coinCode.equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) {
             return true;
         }
         return isNearMnemonic();

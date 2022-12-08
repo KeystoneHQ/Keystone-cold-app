@@ -140,7 +140,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         } else {
             mBinding.hint.setVisibility(View.GONE);
         }
-        if (watchWallet.equals(WatchWallet.CORE_WALLET) || watchWallet.equals(WatchWallet.KEPLR_WALLET)) {
+        if (watchWallet.equals(WatchWallet.CORE_WALLET) || watchWallet.equals(WatchWallet.BIT_KEEP) || watchWallet.equals(WatchWallet.KEPLR_WALLET)) {
             mBinding.toolbar.setTitle(R.string.select_network);
         }
     }
@@ -247,7 +247,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-        if (watchWallet != WatchWallet.KEYSTONE && watchWallet != WatchWallet.CORE_WALLET && watchWallet != WatchWallet.KEPLR_WALLET) {
+        if (watchWallet != WatchWallet.KEYSTONE && watchWallet != WatchWallet.CORE_WALLET && watchWallet != WatchWallet.BIT_KEEP && watchWallet != WatchWallet.KEPLR_WALLET) {
             MenuItem item = menu.findItem(R.id.action_more);
             item.setVisible(false);
         }
@@ -262,7 +262,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_scan) {
-            if (watchWallet.equals(WatchWallet.CORE_WALLET) || watchWallet.equals(WatchWallet.KEPLR_WALLET)) {
+            if (watchWallet.equals(WatchWallet.CORE_WALLET) || watchWallet == WatchWallet.BIT_KEEP || watchWallet.equals(WatchWallet.KEPLR_WALLET)) {
                 scanQrCode();
             } else {
                 AndPermission.with(this)
@@ -416,6 +416,8 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         List<ScanResultTypes> desiredResults = new ArrayList<>();
         if (watchWallet == WatchWallet.CORE_WALLET) {
             desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_CRYPTO_PSBT, ScanResultTypes.UR_ETH_SIGN_REQUEST));
+        } else if (watchWallet == WatchWallet.BIT_KEEP) {
+            desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_CRYPTO_PSBT, ScanResultTypes.UR_ETH_SIGN_REQUEST));
         } else if (watchWallet == WatchWallet.KEPLR_WALLET) {
             desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_COSMOS_SIGN_REQUEST, ScanResultTypes.UR_ETH_SIGN_REQUEST));
         }
@@ -427,7 +429,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
 
     private void showBottomSheetMenu() {
         BottomSheetDialog dialog = new BottomSheetDialog(mActivity);
-        if (watchWallet.equals(WatchWallet.CORE_WALLET) || watchWallet.equals(WatchWallet.KEPLR_WALLET)) {
+        if (watchWallet.equals(WatchWallet.CORE_WALLET) || watchWallet.equals(WatchWallet.BIT_KEEP) || watchWallet.equals(WatchWallet.KEPLR_WALLET)) {
             DialogBottomSheetBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
                     R.layout.dialog_bottom_sheet, null, false);
             binding.addAddress.setVisibility(View.GONE);
