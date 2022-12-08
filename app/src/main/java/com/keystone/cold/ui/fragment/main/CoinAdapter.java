@@ -104,6 +104,10 @@ public class CoinAdapter extends FilterableBaseBindingAdapter<CoinEntity, AssetI
                         "",
                         false);
             }
+        } else if (WatchWallet.getWatchWallet(context).equals(WatchWallet.BIT_KEEP)) {
+            if (coinModel.getCoinCode().equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) {
+                return new AssetItem("BTC", coinModel.getCoinCode(), coinModel.getCoinCode(), "", false);
+            }
         } else if (WatchWallet.getWatchWallet(context).equals(WatchWallet.KEPLR_WALLET)) {
             return new AssetItem(coinModel.getName(),
                     coinModel.getDisplayName(),

@@ -69,6 +69,9 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialsBinding> {
             case CORE_WALLET:
                 id = R.array.tutorials_name_core_wallet;
                 break;
+            case BIT_KEEP:
+                id = R.array.tutorials_name_bit_keep;
+                break;
             case KEPLR_WALLET:
                 id = R.array.tutorials_name_cosmos;
         }
@@ -98,6 +101,9 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialsBinding> {
                 break;
             case CORE_WALLET:
                 id = R.array.tutorials_link_core_wallet;
+                break;
+            case BIT_KEEP:
+                id = R.array.tutorials_link_bit_keep;
                 break;
             case KEPLR_WALLET:
                 id = R.array.tutorials_link_cosmos;

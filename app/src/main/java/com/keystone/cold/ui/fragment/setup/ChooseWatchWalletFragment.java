@@ -95,6 +95,7 @@ public class ChooseWatchWalletFragment extends ListPreferenceFragment {
             case NEAR:
             case APTOS:
             case CORE_WALLET:
+            case BIT_KEEP:
             case KEPLR_WALLET:
                 updateCurrentWatchWallet();
                 stepIntoMainActivity();

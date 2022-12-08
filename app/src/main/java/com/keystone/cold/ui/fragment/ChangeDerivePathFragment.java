@@ -59,7 +59,7 @@ public class ChangeDerivePathFragment extends BaseFragment<ChangeDerivationPathF
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         mBinding.btConfirm.setOnClickListener(v -> stepIntoMainActivity());
         syncViewModel = ViewModelProviders.of(mActivity).get(SyncViewModel.class);
-        if (watchWallet == WatchWallet.METAMASK || watchWallet.equals(WatchWallet.CORE_WALLET)) {
+        if (watchWallet == WatchWallet.METAMASK || watchWallet.equals(WatchWallet.CORE_WALLET) || watchWallet.equals(WatchWallet.BIT_KEEP)) {
             setupEthUI();
         } else if (watchWallet == WatchWallet.SOLANA) {
             setupSolUI();
@@ -147,7 +147,7 @@ public class ChangeDerivePathFragment extends BaseFragment<ChangeDerivationPathF
     }
 
     private void stepIntoMainActivity() {
-        if (watchWallet == WatchWallet.METAMASK || watchWallet.equals(WatchWallet.CORE_WALLET)) {
+        if (watchWallet == WatchWallet.METAMASK || watchWallet.equals(WatchWallet.CORE_WALLET) || watchWallet.equals(WatchWallet.BIT_KEEP)) {
             if (!TextUtils.isEmpty(selectCode)) {
                 Utilities.setCurrentEthAccount(mActivity, selectCode);
             }
@@ -190,7 +190,7 @@ public class ChangeDerivePathFragment extends BaseFragment<ChangeDerivationPathF
             return false;
         });
 
-        if (watchWallet == WatchWallet.METAMASK || watchWallet.equals(WatchWallet.CORE_WALLET)) {
+        if (watchWallet == WatchWallet.METAMASK || watchWallet.equals(WatchWallet.CORE_WALLET) || watchWallet.equals(WatchWallet.BIT_KEEP)) {
             setEthData();
         } else if (watchWallet == WatchWallet.SOLANA) {
             setSolData();

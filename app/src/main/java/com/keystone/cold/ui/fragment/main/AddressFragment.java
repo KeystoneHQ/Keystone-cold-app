@@ -151,7 +151,12 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
 
     private void subscribeUi(LiveData<List<AddressEntity>> address) {
         address.observe(this, addressEntities -> {
-            if (watchWallet.equals(WatchWallet.METAMASK) || (watchWallet.equals(WatchWallet.CORE_WALLET) && coinId.equals(Coins.ETH.coinId()))) {
+            if (watchWallet.equals(WatchWallet.METAMASK)
+                    ||
+                    ((watchWallet.equals(WatchWallet.CORE_WALLET)
+                            || watchWallet.equals(WatchWallet.BIT_KEEP))
+                            && coinId.equals(Coins.ETH.coinId()))
+            ) {
                 String code = Utilities.getCurrentEthAccount(mActivity);
                 ETHAccount account = ETHAccount.ofCode(code);
                 addressEntities = addressEntities.stream()

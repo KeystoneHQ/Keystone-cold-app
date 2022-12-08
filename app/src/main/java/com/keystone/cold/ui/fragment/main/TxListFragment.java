@@ -99,6 +99,8 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
             loadAptosTx();
         } else if (watchWallet == WatchWallet.CORE_WALLET) {
             loadCoreWalletTx();
+        } else if (watchWallet == WatchWallet.BIT_KEEP) {
+            loadBitKeepTx();
         } else if (watchWallet == WatchWallet.KEPLR_WALLET) {
             loadCosmosTx();
         } else {
@@ -331,6 +333,28 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
     }
 
     private void loadCoreWalletTx() {
+        String coinId = requireArguments().getString(KEY_COIN_ID);
+        if (coinId.equals(Coins.ETH.coinId())) {
+            loadEthTx();
+        } else {
+            viewModel.loadTxs(coinId)
+                    .observe(this, txEntities -> {
+                        txEntityComparator = (o1, o2) -> (int) (o2.getTimeStamp() - o1.getTimeStamp());
+                        txEntities = txEntities.stream()
+                                .filter(this::shouldShow)
+                                .sorted(txEntityComparator)
+                                .collect(Collectors.toList());
+                        adapter.setItems(txEntities);
+                    });
+            txCallback = tx -> {
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_TX_ID, tx.getTxId());
+                navigate(R.id.action_to_psbtTransactionFragment, bundle);
+            };
+        }
+    }
+
+    private void loadBitKeepTx() {
         String coinId = requireArguments().getString(KEY_COIN_ID);
         if (coinId.equals(Coins.ETH.coinId())) {
             loadEthTx();

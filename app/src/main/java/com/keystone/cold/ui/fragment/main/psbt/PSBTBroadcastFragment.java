@@ -33,6 +33,9 @@ public class PSBTBroadcastFragment extends BroadcastTxFragment {
         if (watchWallet.equals(WatchWallet.CORE_WALLET)) {
             mBinding.broadcastHint.setText(R.string.sync_with_core_wallet);
         }
+        else if (watchWallet.equals(WatchWallet.BIT_KEEP)) {
+            mBinding.broadcastHint.setText(R.string.sync_with_bit_keep);
+        }
         else {
             mBinding.broadcastHint.setText(R.string.sync_with_watch_only);
         }

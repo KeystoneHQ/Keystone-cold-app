@@ -129,6 +129,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 case NEAR:
                 case APTOS:
                 case CORE_WALLET:
+                case BIT_KEEP:
                     navigate(R.id.action_to_tutorialsFragment);
                     break;
                 default:
@@ -149,6 +150,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
             case NEAR:
             case APTOS:
             case CORE_WALLET:
+            case BIT_KEEP:
             case KEPLR_WALLET:
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 9, 0, 0);
@@ -233,6 +235,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 });
                 break;
             case CORE_WALLET:
+            case BIT_KEEP:
                 if (URLiveData != null) {
                     URLiveData.removeObservers(this);
                 }
