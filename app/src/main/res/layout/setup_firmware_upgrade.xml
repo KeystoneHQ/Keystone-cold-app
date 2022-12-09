@@ -34,7 +34,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.keystone.cold.ui.views.NewStepView
+        <com.keystone.cold.ui.views.NewCustomStepView
             android:id="@+id/step"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

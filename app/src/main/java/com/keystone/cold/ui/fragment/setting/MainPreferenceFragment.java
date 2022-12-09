@@ -27,8 +27,8 @@ import android.hardware.fingerprint.FingerprintManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -160,24 +160,26 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
         Looper.getMainLooper().getQueue().addIdleHandler(() -> {
 
             if (!Utilities.hasUserClickPatternLock(mActivity)) {
-                patternBadgeView = BadgeFactory.create(mActivity)
-                        .setWidthAndHeight(10, 10)
-                        .setBadgeBackground(Color.RED)
-                        .setBadgeGravity(Gravity.END | Gravity.TOP)
-                        .setShape(BadgeView.SHAPE_CIRCLE)
-                        .setSpace(10, 0)
-                        .bind(switchPreference.getViewHolder().findViewById(android.R.id.title));
+//                patternBadgeView = BadgeFactory.create(mActivity)
+//                        .setWidthAndHeight(10, 10)
+//                        .setBadgeBackground(Color.RED)
+//                        .setBadgeGravity(Gravity.END | Gravity.TOP)
+//                        .setShape(BadgeView.SHAPE_CIRCLE)
+//                        .setSpace(10, 0)
+//                        .bind(switchPreference.getViewHolder().findViewById(android.R.id.title));
+                switchPreference.getViewHolder().findViewById(R.id.redPoint).setVisibility(View.VISIBLE);
             }
 
             if (fingerprintPreference != null
                     && !Utilities.hasUserClickFingerprint(mActivity)) {
-                fingerprintBadgeView = BadgeFactory.create(mActivity)
-                        .setWidthAndHeight(10, 10)
-                        .setBadgeBackground(Color.RED)
-                        .setBadgeGravity(Gravity.END | Gravity.TOP)
-                        .setShape(BadgeView.SHAPE_CIRCLE)
-                        .setSpace(10, 0)
-                        .bind(fingerprintPreference.getViewHolder().findViewById(android.R.id.title));
+//                fingerprintBadgeView = BadgeFactory.create(mActivity)
+//                        .setWidthAndHeight(10, 10)
+//                        .setBadgeBackground(Color.RED)
+//                        .setBadgeGravity(Gravity.END | Gravity.TOP)
+//                        .setShape(BadgeView.SHAPE_CIRCLE)
+//                        .setSpace(10, 0)
+//                        .bind(fingerprintPreference.getViewHolder().findViewById(android.R.id.title));
+                fingerprintPreference.getViewHolder().findViewById(R.id.redPoint).setVisibility(View.VISIBLE);
             }
             return false;
         });
@@ -231,19 +233,30 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                 handleChangePassword();
                 break;
             case SETTING_PATTERN_UNLOCK:
-                if (patternBadgeView != null) {
+//                if (patternBadgeView != null) {
+//                    Utilities.setUserClickPatternLock(mActivity);
+//                    patternBadgeView.unbind();
+//                    patternBadgeView = null;
+//                    ((MainActivity) mActivity).updateBadge();
+//                }
+                if (!Utilities.hasUserClickPatternLock(mActivity)) {
                     Utilities.setUserClickPatternLock(mActivity);
-                    patternBadgeView.unbind();
-                    patternBadgeView = null;
+                    switchPreference.getViewHolder().findViewById(R.id.redPoint).setVisibility(View.GONE);
                     ((MainActivity) mActivity).updateBadge();
+
                 }
                 handleSwitchPatternUnlock();
                 break;
             case SETTING_FINGERPRINT:
-                if (fingerprintBadgeView != null) {
+//                if (fingerprintBadgeView != null) {
+//                    Utilities.setUserClickFingerprint(mActivity);
+//                    fingerprintBadgeView.unbind();
+//                    fingerprintBadgeView = null;
+//                    ((MainActivity) mActivity).updateBadge();
+//                }
+                if (!Utilities.hasUserClickFingerprint(mActivity)) {
                     Utilities.setUserClickFingerprint(mActivity);
-                    fingerprintBadgeView.unbind();
-                    fingerprintBadgeView = null;
+                    fingerprintPreference.getViewHolder().findViewById(R.id.redPoint).setVisibility(View.GONE);
                     ((MainActivity) mActivity).updateBadge();
                 }
                 handleFingerprintSetting();

@@ -38,11 +38,14 @@
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <TextView
+                android:layout_marginEnd="80dp"
                 android:id="@+id/toolbar_title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:gravity="center"
                 android:textSize="15sp"
+                android:maxLines="2"
+                android:ellipsize="end"
                 android:textColor="@android:color/white"
                 android:text="@string/sync_watch_wallet" />
         </androidx.appcompat.widget.Toolbar>
@@ -76,7 +79,7 @@
                         android:textSize="15sp"
                         android:breakStrategy="simple"
                         android:textStyle="bold"
-                        android:text="@string/tutorials"/>
+                        android:text="Отсканируйте QR-код с помощью приложения Keystone"/>
 
                     <ImageView
                         android:id="@+id/info"
