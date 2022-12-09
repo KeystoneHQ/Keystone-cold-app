@@ -86,23 +86,47 @@
             android:layout_marginTop="10dp"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/input1"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:focusable="true"
-                android:paddingVertical="10dp"
-                android:focusableInTouchMode="true"
-                android:hint="@string/passphrase_hint2"
-                android:imeOptions="actionNext"
-                android:inputType="textPassword"
-                android:maxLength="128"
-                android:text="@={passphrase1}"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white40"
-                android:textSize="14sp"
-                tools:ignore="Autofill" />
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/input1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:focusable="true"
+                    android:paddingVertical="10dp"
+                    android:focusableInTouchMode="true"
+                    android:hint="@string/passphrase_hint2"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPassword"
+                    android:maxLength="128"
+                    android:text="@={passphrase1}"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white40"
+                    android:textSize="14sp"
+                    tools:ignore="Autofill" />
+
+                <ImageView
+                    android:layout_marginEnd="16dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/ic_show_password"
+                    android:id="@+id/ivPassword"
+                    android:layout_width="22dp"
+                    android:layout_height="18dp"/>
+
+                <View
+                    android:id="@+id/clickHelper1"
+                    android:background="#0000"
+                    android:layout_width="40dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"/>
+            </RelativeLayout>
+
 
             <include
                 layout="@layout/divider"
@@ -126,25 +150,46 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="10dp"
             android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/input2"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:focusable="true"
-                android:paddingVertical="10dp"
-                android:focusableInTouchMode="true"
-                android:hint="@string/passphrase_hint_agian"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"
-                android:maxLength="128"
-                android:text="@={passphrase2}"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white40"
-                android:textSize="14sp"
-                tools:ignore="Autofill" />
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/input2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:focusable="true"
+                    android:paddingVertical="10dp"
+                    android:focusableInTouchMode="true"
+                    android:hint="@string/passphrase_hint_agian"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:maxLength="128"
+                    android:text="@={passphrase2}"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white40"
+                    android:textSize="14sp"
+                    tools:ignore="Autofill" />
 
+
+                <ImageView
+                    android:layout_marginEnd="16dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/ic_show_password"
+                    android:id="@+id/ivPasswordAgagin"
+                    android:layout_width="22dp"
+                    android:layout_height="18dp"/>
+
+                <View
+                    android:id="@+id/clickHelper2"
+                    android:background="#0000"
+                    android:layout_width="40dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"/>
+            </RelativeLayout>
             <include
                 layout="@layout/divider"
                 android:layout_width="match_parent"

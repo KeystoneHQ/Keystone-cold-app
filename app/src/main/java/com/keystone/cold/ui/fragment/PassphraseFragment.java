@@ -23,6 +23,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputFilter;
 import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
+import android.text.method.TransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -104,6 +107,41 @@ public class PassphraseFragment extends SetupVaultBaseFragment<PassphraseBinding
         };
         passphrase1.addOnPropertyChangedCallback(callback);
         passphrase2.addOnPropertyChangedCallback(callback);
+
+        mBinding.clickHelper1.setOnClickListener(v -> {
+            int selectionPosition = -1;
+            if(mBinding.input1.hasFocus()) {
+                selectionPosition = mBinding.input1.getSelectionStart();
+            }
+            TransformationMethod method = mBinding.input1.getTransformationMethod();
+            if (method == HideReturnsTransformationMethod.getInstance()) {
+                mBinding.ivPassword.setBackgroundResource(R.drawable.ic_show_password);
+                mBinding.input1.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            } else {
+                mBinding.ivPassword.setBackgroundResource(R.drawable.ic_hide_password);
+                mBinding.input1.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            }
+            if (selectionPosition != -1) {
+                mBinding.input1.setSelection(selectionPosition);
+            }
+        });
+        mBinding.clickHelper2.setOnClickListener(v -> {
+            int selectionPosition = -1;
+            if(mBinding.input2.hasFocus()) {
+                selectionPosition = mBinding.input2.getSelectionStart();
+            }
+            TransformationMethod method = mBinding.input2.getTransformationMethod();
+            if (method == HideReturnsTransformationMethod.getInstance()) {
+                mBinding.ivPasswordAgagin.setBackgroundResource(R.drawable.ic_show_password);
+                mBinding.input2.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            } else {
+                mBinding.ivPasswordAgagin.setBackgroundResource(R.drawable.ic_hide_password);
+                mBinding.input2.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            }
+            if (selectionPosition != -1) {
+                mBinding.input2.setSelection(selectionPosition);
+            }
+        });
     }
 
     private void confirmInput() {
