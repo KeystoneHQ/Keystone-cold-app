@@ -444,7 +444,7 @@
         <item>XRP</item>
     </string-array>
 
-    <string name="choose_watch_only_wallet">Выберите программное обеспечение Walle</string>
+    <string name="choose_watch_only_wallet">Выберите программное обеспечение Wallet</string>
     <string name="sync_later">Экспортировать позже</string>
     <string name="sync_watch_wallet">Подключить программный кошелек</string>
     <string name="sync_keystone_wallet_guide_title">Как привязать приложение Keystone：</string>

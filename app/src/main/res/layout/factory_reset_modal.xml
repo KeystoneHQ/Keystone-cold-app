@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="12dp"
-                android:gravity="top"
+                android:gravity="center"
                 android:layout_below="@id/sub_title"
                 android:layout_marginTop="28dp">
 

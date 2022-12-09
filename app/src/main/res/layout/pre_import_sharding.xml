@@ -39,11 +39,14 @@
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <TextView
+                android:layout_marginEnd="80dp"
                 android:id="@+id/toolbar_title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:gravity="center"
                 android:text="@string/import_vault"
+                android:maxLines="2"
+                android:ellipsize="end"
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />
         </androidx.appcompat.widget.Toolbar>
@@ -66,13 +69,27 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"/>
+<!--        <Button-->
+<!--            android:id="@+id/import_normal_mnemonic"-->
+<!--            android:layout_width="match_parent"-->
+<!--            style="@style/AcceptButton"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_marginHorizontal="16dp"-->
+<!--            android:padding="10dp"-->
+<!--            android:text="@string/import_bip39_phrase"/>-->
         <Button
             android:id="@+id/import_normal_mnemonic"
             android:layout_width="match_parent"
-            style="@style/AcceptButton"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/accept_button_bg"
+            android:padding="10dp"
             android:layout_marginHorizontal="16dp"
-            android:text="@string/import_bip39_phrase"/>
-
+            android:text="@string/import_bip39_phrase"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:textSize="14sp"
+            android:textStyle="bold" />
         <Button
             android:id="@+id/import_sharding_mnemonic"
             android:layout_width="wrap_content"

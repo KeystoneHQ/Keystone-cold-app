@@ -54,7 +54,7 @@
                 android:id="@+id/divider"
                 layout="@layout/divider" />
 
-            <com.keystone.cold.ui.views.NewStepView
+            <com.keystone.cold.ui.views.NewCustomStepView
                 android:id="@+id/step"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -142,28 +142,38 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <LinearLayout
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:orientation="horizontal">
+                android:layout_marginBottom="20dp">
+
+                <View
+                    android:id="@+id/viewHelper"
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="16dp"
+                    android:layout_height="10dp"/>
 
                 <Button
+                    android:layout_marginStart="16dp"
                     android:id="@+id/import_vault"
                     style="@style/AcceptButton"
-                    android:layout_width="0dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_toStartOf="@id/viewHelper"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:text="@string/import_vault" />
-
                 <Button
                     android:id="@+id/create_vault"
                     style="@style/AcceptButton"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
+                    android:layout_toEndOf="@id/viewHelper"
                     android:layout_marginEnd="16dp"
-                    android:layout_weight="1"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:text="@string/create_vault" />
-            </LinearLayout>
+
+            </RelativeLayout>
         </LinearLayout>
 
         <View
