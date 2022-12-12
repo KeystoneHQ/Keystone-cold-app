@@ -8,10 +8,12 @@ import com.keystone.coinlib.Coinlib;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtil {
@@ -36,5 +38,21 @@ public class FileUtil {
             e.printStackTrace();
         }
         return stringBuilder.toString();
+    }
+
+    public static List<String> getAllSubDirPath(String dirPath) {
+        List<String> subDirs = new ArrayList<>();
+        File dir = new File(dirPath);
+        if (dir.exists()) {
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        subDirs.add(file.getAbsolutePath());
+                    }
+                }
+            }
+        }
+        return subDirs;
     }
 }
