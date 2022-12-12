@@ -227,10 +227,10 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
             }
             TransformationMethod method = mBinding.pwd1.getTransformationMethod();
             if (method == HideReturnsTransformationMethod.getInstance()) {
-                mBinding.ivPassword.setBackgroundResource(R.drawable.ic_show_password);
+                mBinding.ivPassword.setBackgroundResource(R.drawable.ic_hide_password);
                 mBinding.pwd1.setTransformationMethod(PasswordTransformationMethod.getInstance());
             } else {
-                mBinding.ivPassword.setBackgroundResource(R.drawable.ic_hide_password);
+                mBinding.ivPassword.setBackgroundResource(R.drawable.ic_show_password);
                 mBinding.pwd1.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
             }
             if (selectionPosition != -1) {
@@ -244,10 +244,10 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<SetPasswordBindi
             }
             TransformationMethod method = mBinding.pwd2.getTransformationMethod();
             if (method == HideReturnsTransformationMethod.getInstance()) {
-                mBinding.ivPasswordAgagin.setBackgroundResource(R.drawable.ic_show_password);
+                mBinding.ivPasswordAgagin.setBackgroundResource(R.drawable.ic_hide_password);
                 mBinding.pwd2.setTransformationMethod(PasswordTransformationMethod.getInstance());
             } else {
-                mBinding.ivPasswordAgagin.setBackgroundResource(R.drawable.ic_hide_password);
+                mBinding.ivPasswordAgagin.setBackgroundResource(R.drawable.ic_show_password);
                 mBinding.pwd2.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
             }
             if (selectionPosition != -1) {
