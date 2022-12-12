@@ -15,10 +15,26 @@ public class SelfDefinedABIStore implements ABIStoreEngine {
 
     @Override
     public List<Contract> load(String address) {
-        List<Contract>  contracts = new ArrayList<>();
-        String selfDefineFilePath = SDCardUtil.externalSDCardPath() + File.separator
-                + SELF_DEFINE_TFCARD_PATH + File.separator + address + ".json";
-        String content = FileUtil.readFromFile(selfDefineFilePath);
+        List<Contract> contracts = new ArrayList<>();
+        String rootDir = SDCardUtil.externalSDCardPath() + File.separator + SELF_DEFINE_TFCARD_PATH;
+        String rootFilePath = rootDir + File.separator + address + ".json";
+        List<String> filePaths = new ArrayList<>();
+        filePaths.add(rootFilePath);
+        List<String> subDir = FileUtil.getAllSubDirPath(rootDir);
+        for (String dirPath: subDir) {
+            filePaths.add(dirPath + File.separator + address + ".json");
+        }
+        for (String path: filePaths) {
+            Contract contract = getContract(path);
+            if (contract != null) {
+                contracts.add(contract);
+            }
+        }
+        return contracts;
+    }
+
+    private Contract getContract(String filePath) {
+        String content = FileUtil.readFromFile(filePath);
         try {
             Contract contract = new Contract();
             contract.setFromTFCard(true);
@@ -27,10 +43,10 @@ public class SelfDefinedABIStore implements ABIStoreEngine {
             JSONObject outputJson = metadataJson.getJSONObject("output");
             contract.setAbi(outputJson.getString("abi"));
             contract.setName(contentJson.getString("name"));
-            contracts.add(contract);
+            return contract;
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return contracts;
+        return null;
     }
 }
