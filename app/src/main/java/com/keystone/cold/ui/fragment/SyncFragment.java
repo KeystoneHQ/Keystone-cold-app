@@ -130,6 +130,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 case APTOS:
                 case CORE_WALLET:
                 case BIT_KEEP:
+                case KEPLR_WALLET:
                     navigate(R.id.action_to_tutorialsFragment);
                     break;
                 default:
