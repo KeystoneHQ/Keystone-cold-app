@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.keystone.coinlib.utils.SDCardUtil;
+import com.keystone.cold.AppExecutors;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.cryptocore.PolkadotService;
 
@@ -156,12 +157,14 @@ public class PolkadotViewModel extends AndroidViewModel {
     }
 
     public void importAddress(String public_key, String path) {
-        String response = PolkadotService.importAddress(dbPath, public_key, path);
-        try {
-            JSONObject json = new JSONObject(response);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            String response = PolkadotService.importAddress(dbPath, public_key, path);
+            try {
+                JSONObject json = new JSONObject(response);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public static class PolkadotException extends Exception {

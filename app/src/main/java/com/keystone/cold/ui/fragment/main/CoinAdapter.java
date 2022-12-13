@@ -19,6 +19,7 @@ package com.keystone.cold.ui.fragment.main;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
@@ -69,11 +70,6 @@ public class CoinAdapter extends FilterableBaseBindingAdapter<CoinEntity, AssetI
         }
         binding.setCallback(mCoinClickCallback);
         CoinModel coinModel = item.toCoinModel();
-        if (coinModel.getCoinCode().equals(Coins.DOT.coinCode()) || coinModel.getCoinCode().equals(Coins.KSM.coinCode())) {
-            if (WatchWallet.getWatchWallet(context).equals(WatchWallet.KEYSTONE)) {
-                coinModel.setAddressCount(1);
-            }
-        }
         binding.setCoin(coinModel);
         binding.setAsset(adaptCoinModelToAssetItem(coinModel));
         if (isManageCoin || Coins.showPublicKey(item.getCoinCode())) {
@@ -95,30 +91,37 @@ public class CoinAdapter extends FilterableBaseBindingAdapter<CoinEntity, AssetI
     private AssetItem adaptCoinModelToAssetItem(CoinModel coinModel) {
         if (WatchWallet.getWatchWallet(context).equals(WatchWallet.CORE_WALLET)) {
             if (coinModel.getCoinCode().equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) {
-                return new AssetItem(Coins.BTC_NATIVE_SEGWIT.coinName(), coinModel.getCoinCode(), coinModel.getCoinCode(), "", false);
+                return new AssetItem(Coins.BTC_NATIVE_SEGWIT.coinName(), coinModel.getCoinCode(), coinModel.getCoinCode(), "", false, coinModel.getAddressCount());
             } else {
                 // ETH, but we treat as AVAX here;
                 return new AssetItem(Coins.AVAX.coinName(),
                         Coins.AVAX.coinCode(),
                         Coins.AVAX.coinCode(),
                         "",
-                        false);
+                        false, coinModel.getAddressCount());
             }
         } else if (WatchWallet.getWatchWallet(context).equals(WatchWallet.BIT_KEEP)) {
             if (coinModel.getCoinCode().equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) {
-                return new AssetItem("BTC", coinModel.getCoinCode(), coinModel.getCoinCode(), "", false);
+                return new AssetItem("BTC", coinModel.getCoinCode(), coinModel.getCoinCode(), "", false, coinModel.getAddressCount());
             }
         } else if (WatchWallet.getWatchWallet(context).equals(WatchWallet.KEPLR_WALLET)) {
             return new AssetItem(coinModel.getName(),
                     coinModel.getDisplayName(),
                     coinModel.getCoinCode(),
                     coinModel.getTag(),
-                    coinModel.hasTag());
+                    coinModel.hasTag(), coinModel.getAddressCount());
+        } else if (WatchWallet.getWatchWallet(context).equals(WatchWallet.KEYSTONE) && (coinModel.getCoinCode().equals(Coins.DOT.coinCode()) || coinModel.getCoinCode().equals(Coins.KSM.coinCode()))) {
+            return new AssetItem(coinModel.getDisplayCoinCode(),
+                    coinModel.getDisplayName(),
+                    coinModel.getCoinCode(),
+                    coinModel.getTag(),
+                    coinModel.hasTag(), 1);
         }
         return new AssetItem(coinModel.getDisplayCoinCode(),
                 coinModel.getDisplayName(),
                 coinModel.getCoinCode(),
                 coinModel.getTag(),
-                coinModel.hasTag());
+                coinModel.hasTag(), coinModel.getAddressCount());
+
     }
 }
