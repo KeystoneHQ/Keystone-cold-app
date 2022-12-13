@@ -32,6 +32,7 @@ import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_MINT_ADD
 import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_NAME;
 import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_NFT_TYPE;
 import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.SOL_NFT;
+import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
 
 import android.annotation.SuppressLint;
@@ -41,11 +42,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -57,6 +60,7 @@ import androidx.databinding.ObservableField;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 
 import com.allenliu.badgeview.BadgeFactory;
 import com.allenliu.badgeview.BadgeView;
@@ -77,6 +81,7 @@ import com.keystone.cold.databinding.AssetFragmentBinding;
 import com.keystone.cold.databinding.DialogBottomSheetBinding;
 import com.keystone.cold.db.PresetData;
 import com.keystone.cold.db.entity.CoinEntity;
+import com.keystone.cold.integration.chains.ArweaveViewModel;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
@@ -84,8 +89,10 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerState;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerViewModel;
 import com.keystone.cold.ui.fragment.main.scan.scanner.exceptions.UnExpectedQRException;
+import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
+import com.keystone.cold.ui.views.AuthenticateModal;
 import com.keystone.cold.util.AptosTransactionHelper;
 import com.keystone.cold.util.SolMessageValidateUtil;
 import com.keystone.cold.util.StepFragmentHelper;
@@ -183,6 +190,12 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             mBinding.account.setVisibility(View.VISIBLE);
             coinId = Coins.ETH.coinId();
             coinCode = Coins.ETH.coinCode();
+        } else if (watchWallet == WatchWallet.ARConnect) {
+            mBinding.toolbar.setNavigationIcon(R.drawable.menu);
+            mBinding.toolbar.setTitle(watchWallet.getWalletName(mActivity));
+            mBinding.customTitle.setVisibility(View.GONE);
+            coinId = Coins.AR.coinId();
+            coinCode = Coins.AR.coinCode();
         } else if (watchWallet == WatchWallet.XRP_TOOLKIT) {
             mBinding.toolbar.setNavigationIcon(R.drawable.menu);
             mBinding.toolbar.setTitle(watchWallet.getWalletName(mActivity));
@@ -237,7 +250,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         mBinding.toolbar.setNavigationOnClickListener(v -> {
             if (watchWallet == WatchWallet.XRP_TOOLKIT || watchWallet == WatchWallet.METAMASK ||
                     watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR ||
-                    watchWallet == WatchWallet.APTOS) {
+                    watchWallet == WatchWallet.APTOS || watchWallet == WatchWallet.ARConnect) {
                 ((MainActivity) mActivity).toggleDrawer(v);
             } else {
                 navigateUp();
@@ -372,6 +385,15 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             viewModel.preGenerateSolDerivationAddress();
         } else if (watchWallet == WatchWallet.NEAR) {
             viewModel.preGenerateNearDerivationAddress();
+        }
+
+        if (coinCode.equals(Coins.AR.coinCode())) {
+            ArweaveViewModel arweaveViewModel = ViewModelProviders.of(this).get(ArweaveViewModel.class);
+            arweaveViewModel.hasArweaveAddress().observe(this, value -> {
+                if (!value) {
+                    navigate(R.id.action_to_ArweaveAuthFragment);
+                }
+            });
         }
     }
 

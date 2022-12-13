@@ -132,6 +132,9 @@
     <string name="create_vault_hint"><![CDATA[1. Touch <font color="#00cdc3">\"Create Wallet\"<font/> to generate a new Wallet]]></string>
     <string name="import_vault_hint"><![CDATA[2. Touch <font color="#00cdc3">\"Import Wallet\"<font/> to import an existing HD wallet]]></string>
     <string name="import_vault_danger_warning">The existing wallet will be wiped when importing or creating a wallet!</string>
+    <string name="arweave_authenticate">Authentication Required</string>
+    <string name="arweave_authenticate_content">An authorization is required from you to generate an address that will be derived from your current recovery phrase as Arweave uses RSA algorithm.</string>
+    <string name="arweave_add_address"><![CDATA[1. Touch <font color="#00cdc3">\"here\"<font/> to generate a address]]></string>
     <string name="license">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="input_mnemonic_hint">Please enter your %d-word recovery phrase in the table below.</string>
@@ -460,6 +463,7 @@
     <string name="reset_polkadot_db">Reset Database</string>
     <string name="reset_polkadot_db_hint">This action will reset database for Polkadot.{js} / SubWallet, you have to import metadata again after this. </string>
     <string name="approve">Approve</string>
+    <string name="approval">Approval</string>
     <string name="polkadot_hint">Hint: \n\nYou need to select the network to get your keys and connect software wallet separately on chains</string>
     <string name="polkadot_db_hint">Hint: \n\nWe meet a problem with database. Please click the button below to reset. This action will erase your metadata, please import the metadata again if you need it.</string>
 
@@ -469,6 +473,7 @@
         <item>Solflare</item>
         <item>Sender</item>
         <item>Fewcha</item>
+        <item>ArConnect</item>
 <!--        <item>Core Wallet</item>-->
 <!--        <item>BitKeep</item>-->
 <!--        <item>Keplr</item>-->
@@ -481,6 +486,7 @@
         <item>solana</item>
         <item>near</item>
         <item>aptos</item>
+        <item>arweave</item>
 <!--        <item>coreWallet</item>-->
 <!--        <item>bitKeep</item>-->
 <!--        <item>keplrWallet</item>-->
@@ -493,6 +499,7 @@
         <item>Solana</item>
         <item>Near</item>
         <item>Aptos</item>
+        <item>AR</item>
 <!--        <item>AVAX, BTC, ETH, etc</item>-->
 <!--        <item>BTC, ETH</item>-->
 <!--        <item>Cosmos</item>-->

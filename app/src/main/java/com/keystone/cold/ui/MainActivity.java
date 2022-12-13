@@ -133,6 +133,7 @@ public class MainActivity extends FullScreenActivity {
                     || watchWallet == WatchWallet.METAMASK
                     || watchWallet == WatchWallet.SOLANA
                     || watchWallet == WatchWallet.NEAR
+                    || watchWallet == WatchWallet.ARConnect
                     || watchWallet == WatchWallet.APTOS)
                     && label.equals(AssetFragment.TAG))) {
                 index = 0;
@@ -219,6 +220,7 @@ public class MainActivity extends FullScreenActivity {
                             || watchWallet == WatchWallet.METAMASK
                             || watchWallet == WatchWallet.SOLANA
                             || watchWallet == WatchWallet.NEAR
+                            || watchWallet == WatchWallet.ARConnect
                             || watchWallet == WatchWallet.APTOS) {
                         NavOptions navOptions = new NavOptions.Builder()
                                 .setPopUpTo(R.id.assetListFragment, false)

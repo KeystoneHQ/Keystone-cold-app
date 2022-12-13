@@ -68,7 +68,7 @@ public class Coins {
 
     public static final Coin APTOS = new Coin("aptos", "APT", "Aptos", 637, CURVE.ED25519, new String[]{});
 
-    public static final Coin AR = new Coin("arweave", "AR", "Arweave", 472, CURVE.RSA, new String[]{});
+    public static final Coin AR = new Coin("arweave", "AR", "Arweave", 472, CURVE.RSA, new String[]{"M/44'/472'"});
 
     //Cosmos chains
     public static final Coin ATOM = new Coin("cosmos_hub", "ATOM", "Cosmos Hub", 118);

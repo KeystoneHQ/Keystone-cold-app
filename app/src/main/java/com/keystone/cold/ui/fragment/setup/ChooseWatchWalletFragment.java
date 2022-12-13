@@ -94,6 +94,7 @@ public class ChooseWatchWalletFragment extends ListPreferenceFragment {
             case SOLANA:
             case NEAR:
             case APTOS:
+            case ARConnect:
             case CORE_WALLET:
             case BIT_KEEP:
             case KEPLR_WALLET:

@@ -19,13 +19,14 @@ public class RCCSigner {
     private final String authToken;
     private final boolean isMainWallet;
     private final String portName;
-    private final int FixedRequestId = 305;
+    private final int requestId;
 
-    public RCCSigner(String path, String authToken, boolean isMainWallet, String portName) {
+    public RCCSigner(String path, String authToken, boolean isMainWallet, String portName, int requestId) {
         this.privKeyPath = Objects.requireNonNull(path);
         this.authToken = authToken;
         this.isMainWallet = isMainWallet;
         this.portName =  portName;
+        this.requestId = requestId;
     }
 
 
@@ -42,23 +43,9 @@ public class RCCSigner {
         return parseResponse(response);
     }
 
-    public String getRSAPublicKey() {
-        RequestBuilder rb = new RequestBuilder();
-        rb.setSignId(FixedRequestId);
-        int seedId = isMainWallet? 0 : 0x50;
-        rb.setGetRSAPublicKey(seedId, authToken, portName);
-        String command = rb.build();
-
-        Log.e("Rust Signer:", command);
-
-        RCC rcc = new RCC();
-        String response = rcc.processCommand(command);
-        return parseResponse(response);
-    }
-
     private String composeCommand(String data) {
         RequestBuilder rb = new RequestBuilder();
-        rb.setSignId(FixedRequestId);
+        rb.setSignId(requestId);
         int seedId = isMainWallet? 0 : 0x50;
         rb.setSignRequest(seedId, 0, authToken, privKeyPath, data, portName);
         return rb.build();
@@ -68,7 +55,7 @@ public class RCCSigner {
         ResponseParser parser = new ResponseParser(response);
         int responseId = parser.getResponseId();
         int status = parser.getStatus();
-        if (responseId == FixedRequestId && status == 200) {
+        if (responseId == requestId && status == 200) {
             response = parser.getResponse();
             Log.e("rcc Signer reponse:", response);
             return response;

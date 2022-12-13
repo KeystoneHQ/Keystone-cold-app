@@ -36,6 +36,7 @@ import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.DLSequence;
 import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.crypto.digests.SHA3Digest;
 import org.bouncycastle.jcajce.provider.digest.Keccak;
 import org.bouncycastle.util.Properties;
@@ -221,6 +222,14 @@ public class Util {
      */
     public static byte[] sha3256(byte[] input) {
         Digest digest = new SHA3Digest(256);
+        digest.update(input, 0, input.length);
+        byte[] rsData = new byte[digest.getDigestSize()];
+        digest.doFinal(rsData, 0);
+        return rsData;
+    }
+
+    public static byte[] sha256(byte[] input) {
+        Digest digest = new SHA256Digest();
         digest.update(input, 0, input.length);
         byte[] rsData = new byte[digest.getDigestSize()];
         digest.doFinal(rsData, 0);

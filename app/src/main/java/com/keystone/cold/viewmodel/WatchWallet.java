@@ -103,10 +103,9 @@ public enum WatchWallet {
     public Coins.Coin[] getSupportedCoins() {
         switch (this) {
             case KEYSTONE:
-                if(FeatureFlags.ENABLE_XTN) {
+                if (FeatureFlags.ENABLE_XTN) {
                     return new Coins.Coin[]{Coins.BTC, Coins.BTC_LEGACY, Coins.BTC_NATIVE_SEGWIT, Coins.BCH, Coins.ETH, Coins.XRP, Coins.TRON, Coins.LTC, Coins.DASH, Coins.DOT, Coins.BTC_TESTNET_LEGACY, Coins.BTC_TESTNET_SEGWIT, Coins.BTC_TESTNET_NATIVE_SEGWIT};
-                }
-                else {
+                } else {
                     return new Coins.Coin[]{Coins.BTC, Coins.BTC_LEGACY, Coins.BTC_NATIVE_SEGWIT, Coins.BCH, Coins.ETH, Coins.XRP, Coins.TRON, Coins.LTC, Coins.DASH, Coins.DOT};
                 }
             case POLKADOT_JS:
@@ -161,6 +160,8 @@ public enum WatchWallet {
                 return CORE_WALLET_SIGN_ID;
             case BIT_KEEP:
                 return BIT_KEEP_SIGN_ID;
+            case ARConnect:
+                return ARWEAVE_SIGN_ID;
             case KEPLR_WALLET:
                 return KEPLR_WALLET_SIGN_ID;
         }

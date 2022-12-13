@@ -89,6 +89,11 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
         watchWallet = WatchWallet.getWatchWallet(mActivity);
         adapter = new TxAdapter(mActivity);
         mBinding.list.setAdapter(adapter);
+        // coinCode == "ETH";
+        // loadETHTx();
+
+        // transactionViewModel.loadTx();
+        // { ETHViewModel.loadTx() };
         if (watchWallet == WatchWallet.METAMASK) {
             loadEthTx();
         } else if (watchWallet == WatchWallet.SOLANA) {
