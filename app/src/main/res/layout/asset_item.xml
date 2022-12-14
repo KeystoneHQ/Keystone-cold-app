@@ -126,7 +126,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="5dp"
             android:layout_toStartOf="@id/addr"
-            android:text="@{String.valueOf(coin.addressCount)}"
+            android:text="@{String.valueOf(asset.addressCount)}"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold"

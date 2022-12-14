@@ -7,13 +7,15 @@ public class AssetItem {
     private final String coinCode;
     private final String tag;
     private final boolean hasTag;
+    private final int addressCount;
 
-    public AssetItem(String title, String subTitle, String coinCode, String tag, boolean hasTag) {
+    public AssetItem(String title, String subTitle, String coinCode, String tag, boolean hasTag, int addressCount) {
         this.title = title;
         this.subTitle = subTitle;
         this.coinCode = coinCode;
         this.tag = tag;
         this.hasTag = hasTag;
+        this.addressCount = addressCount;
     }
 
     public String getTitle() {
@@ -34,5 +36,9 @@ public class AssetItem {
 
     public boolean isHasTag() {
         return hasTag;
+    }
+
+    public int getAddressCount() {
+        return addressCount;
     }
 }
