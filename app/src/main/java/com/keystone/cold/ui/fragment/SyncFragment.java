@@ -40,6 +40,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.CommonModalBinding;
 import com.keystone.cold.databinding.SyncFragmentBinding;
+import com.keystone.cold.integration.chains.ArweaveViewModel;
 import com.keystone.cold.integration.corewallet.CoreWalletViewModel;
 import com.keystone.cold.integration.cosmoswallet.KeplrWalletViewModel;
 import com.keystone.cold.ui.MainActivity;
@@ -131,6 +132,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                 case CORE_WALLET:
                 case BIT_KEEP:
                 case KEPLR_WALLET:
+                case ARConnect:
                     navigate(R.id.action_to_tutorialsFragment);
                     break;
                 default:
@@ -153,6 +155,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
             case CORE_WALLET:
             case BIT_KEEP:
             case KEPLR_WALLET:
+            case ARConnect:
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 9, 0, 0);
                 mBinding.content.setLayoutParams(params);
@@ -251,6 +254,19 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                         mBinding.addressData.setVisibility(View.GONE);
                         mBinding.derivationPattern.setVisibility(View.VISIBLE);
                         mBinding.fromPath.setText(ethAccount.getDisplayPath());
+                    }
+                    URLiveData.removeObservers(this);
+                });
+                break;
+            case ARConnect:
+                ArweaveViewModel arweaveViewModel = ViewModelProviders.of(mActivity).get(ArweaveViewModel.class);
+                URLiveData = arweaveViewModel.generateSyncData();
+                URLiveData.observe(this, ur -> {
+                    if (ur != null) {
+                        mBinding.dynamicQrcodeLayout.qrcode.displayUR(ur);
+                        mBinding.addressData.setVisibility(View.GONE);
+                        mBinding.derivationPattern.setVisibility(View.VISIBLE);
+                        mBinding.fromPath.setText(Coins.AR.getAccounts()[0]);
                     }
                     URLiveData.removeObservers(this);
                 });

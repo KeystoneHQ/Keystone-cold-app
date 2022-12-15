@@ -183,6 +183,7 @@ public class DataRepository {
     public void insertTxList(List<TxEntity> txEntityList) {
         mDb.txDao().insertTxList(txEntityList);
     }
+
     public void insertCoins(List<CoinEntity> coins) {
         mDb.runInTransaction(() -> mDb.coinDao().insertAll(coins));
     }
@@ -237,11 +238,11 @@ public class DataRepository {
         return mDb.accountDao().loadForCoin(coin.getId());
     }
 
-    public void deleteAccountsByCoin(CoinEntity coin){
+    public void deleteAccountsByCoin(CoinEntity coin) {
         mDb.accountDao().deleteByCoin(coin.getId());
     }
 
-    public AccountEntity loadTargetETHAccount(ETHAccount account){
+    public AccountEntity loadTargetETHAccount(ETHAccount account) {
         try {
             CoinEntity coinEntity = this.loadCoinSync(Coins.ETH.coinId());
             List<AccountEntity> accountEntityList = this.loadAccountsForCoin(coinEntity);
@@ -251,13 +252,20 @@ public class DataRepository {
                     return accountEntityList.get(i);
                 }
             }
-        }catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public AccountEntity loadTargetSOLAccount(SOLAccount account){
+    public AccountEntity loadArweaveAccount() {
+        CoinEntity coinEntity = this.loadCoinSync(Coins.AR.coinId());
+        List<AccountEntity> accountEntityList = this.loadAccountsForCoin(coinEntity);
+        if (accountEntityList.size() > 0) return accountEntityList.get(0);
+        return null;
+    }
+
+    public AccountEntity loadTargetSOLAccount(SOLAccount account) {
         try {
             CoinEntity coinEntity = this.loadCoinSync(Coins.SOL.coinId());
             if (coinEntity == null) {
@@ -274,13 +282,13 @@ public class DataRepository {
                     return accountEntityList.get(i);
                 }
             }
-        }catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public AccountEntity loadTargetNearAccount(NEARAccount account){
+    public AccountEntity loadTargetNearAccount(NEARAccount account) {
         try {
             CoinEntity coinEntity = this.loadCoinSync(Coins.NEAR.coinId());
             if (coinEntity == null) {
@@ -297,7 +305,7 @@ public class DataRepository {
                     return accountEntityList.get(i);
                 }
             }
-        }catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;

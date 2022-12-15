@@ -705,7 +705,6 @@
     </string-array>
 
     <string-array name="tutorials_link_core_wallet">
-        <!--        <item><u>https://keyst.one/martian</u></item>-->
         <item><u>https://keyst.one/coreWallet</u></item>
     </string-array>
 
@@ -714,8 +713,15 @@
     </string-array>
 
     <string-array name="tutorials_link_bit_keep">
-        <!--        <item><u>https://keyst.one/martian</u></item>-->
         <item><u>https://keyst.one/bitKeep</u></item>
+    </string-array>
+
+    <string-array name="tutorials_name_arconnect">
+        <item>ARConnect</item>
+    </string-array>
+
+    <string-array name="tutorials_link_arconnect">
+        <item><u>https://keyst.one/arconnect</u></item>
     </string-array>
 
     <string-array name="tutorials_name_sender">

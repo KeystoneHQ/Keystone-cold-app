@@ -272,6 +272,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             case CORE_WALLET:
             case BIT_KEEP:
             case KEPLR_WALLET:
+            case ARConnect:
                 return R.menu.metamask;
             case KEYSTONE:
                 if (coinCode.equals(Coins.DOT.coinCode()) || coinCode.equals(Coins.KSM.coinCode()))
@@ -429,7 +430,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 if (watchWallet == WatchWallet.METAMASK
                         || watchWallet == WatchWallet.SOLANA || watchWallet == WatchWallet.NEAR
                         || watchWallet == WatchWallet.APTOS || watchWallet == WatchWallet.CORE_WALLET
-                        || watchWallet == WatchWallet.BIT_KEEP
+                        || watchWallet == WatchWallet.BIT_KEEP || watchWallet == WatchWallet.ARConnect
                         || watchWallet == WatchWallet.KEPLR_WALLET) {
                     scanQrCode();
                 } else {
@@ -901,6 +902,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             isShowBadge = true;
         } else if (watchWallet == WatchWallet.KEPLR_WALLET && !Utilities.hasUserClickKeplrSyncLock(mActivity)) {
             isShowBadge = true;
+        }else if (watchWallet == WatchWallet.ARConnect && !Utilities.hasUserClickArweaveSyncLock(mActivity)) {
+            isShowBadge = true;
         }
         return isShowBadge;
     }
@@ -932,6 +935,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             case KEPLR_WALLET:
                 Utilities.setUserClickKeplrSyncLock(mActivity);
                 break;
+            case ARConnect:
+                Utilities.setUserClickArweaveSyncLock(mActivity);
             default:
                 break;
         }
@@ -949,7 +954,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 
     private void setSyncViewListener(View view, Runnable additionProcess, BadgeView finalBgView) {
         view.setOnClickListener(v -> {
-            if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.CORE_WALLET || watchWallet.equals(WatchWallet.BIT_KEEP) || watchWallet == WatchWallet.KEPLR_WALLET) {
+            if (watchWallet == WatchWallet.METAMASK || watchWallet == WatchWallet.CORE_WALLET || watchWallet.equals(WatchWallet.BIT_KEEP) || watchWallet == WatchWallet.KEPLR_WALLET || watchWallet == WatchWallet.ARConnect) {
                 navigate(R.id.action_to_syncFragment);
             } else if (watchWallet == WatchWallet.SOLANA) {
                 Bundle bundle = new Bundle();
@@ -1033,7 +1038,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private boolean isHideChangePath() {
-        if (watchWallet == WatchWallet.APTOS
+        if (watchWallet == WatchWallet.APTOS || watchWallet == WatchWallet.ARConnect
                 || watchWallet == WatchWallet.POLKADOT_JS || watchWallet == WatchWallet.KEPLR_WALLET) {
             return true;
         }
@@ -1067,7 +1072,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             hide = true;
         } else if (watchWallet == WatchWallet.NEAR && NEARAccount.ofCode(Utilities.getCurrentNearAccount(mActivity)) == NEARAccount.MNEMONIC) {
             hide = true;
-        } else if (watchWallet == WatchWallet.KEPLR_WALLET) {
+        } else if (watchWallet == WatchWallet.KEPLR_WALLET || watchWallet == WatchWallet.ARConnect) {
             hide = true;
         }
         return hide;

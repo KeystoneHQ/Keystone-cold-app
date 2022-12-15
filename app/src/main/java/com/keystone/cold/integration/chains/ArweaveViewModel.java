@@ -12,17 +12,21 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.Util;
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.Utilities;
+import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.cryptocore.RCCService;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.encryption.EncryptionCoreProvider;
 import com.keystone.cold.ui.views.AuthenticateModal;
+import com.sparrowwallet.hummingbird.UR;
+import com.sparrowwallet.hummingbird.registry.arweave.ArweaveCryptoAccount;
 
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
@@ -137,6 +141,7 @@ public class ArweaveViewModel extends AndroidViewModel {
             Log.e(TAG, "addArweaveAddressToDB: ", e);
         } finally {
             generatingAddress.postValue(false);
+            clearToken();
         }
     }
 
@@ -151,5 +156,25 @@ public class ArweaveViewModel extends AndroidViewModel {
         addressEntity.setIndex(0);
         addressEntity.setDisplayName("AR Account");
         return addressEntity;
+    }
+
+    public MutableLiveData<UR> generateSyncData() {
+        MutableLiveData<UR> data = new MutableLiveData<>();
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            try {
+                AccountEntity account = mRepo.loadArweaveAccount();
+                JSONObject json = new JSONObject(account.getAddition());
+                String public_key = json.getString("public_key");
+                byte[] publicKey = Hex.decode(public_key);
+                byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
+                String device = "Keystone";
+                ArweaveCryptoAccount arweaveCryptoAccount = new ArweaveCryptoAccount(masterFingerprint, publicKey, device);
+                UR ur = arweaveCryptoAccount.toUR();
+                data.postValue(ur);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        return data;
     }
 }
