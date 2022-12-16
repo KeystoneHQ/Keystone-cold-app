@@ -121,6 +121,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
                 WatchWallet.getWatchWallet(mActivity) == WatchWallet.METAMASK ||
                 WatchWallet.getWatchWallet(mActivity) == WatchWallet.SOLANA ||
                 WatchWallet.getWatchWallet(mActivity) == WatchWallet.NEAR ||
+                WatchWallet.getWatchWallet(mActivity) == WatchWallet.ARConnect ||
                 WatchWallet.getWatchWallet(mActivity) == WatchWallet.APTOS) {
             navigate(R.id.assetFragment);
         }

@@ -310,8 +310,7 @@
         android:id="@+id/cosmosTxDetailFragment"
         android:name="com.keystone.cold.ui.fragment.main.cosmos.CosmosTxDetailFragment"
         android:label="cosmosTxDetailFragment"
-        tools:layout="@layout/fragment_cosmos_tx_detail">
-    </fragment>
+        tools:layout="@layout/fragment_cosmos_tx_detail"></fragment>
 
     <fragment
         android:id="@+id/aptosTxFragment"
@@ -748,7 +747,8 @@
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
 
-        <action android:id="@+id/action_to_psbtTransactionFragment"
+        <action
+            android:id="@+id/action_to_psbtTransactionFragment"
             app:destination="@id/psbtTransactionFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
@@ -1163,6 +1163,14 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/ArweaveAuthFragment"
+        android:name="com.keystone.cold.ui.fragment.main.arweave.ArweaveAuthFragment"
+        android:label="ArweaveAuthFragment"
+        tools:layout="@layout/arweave_auth_fragment">
+
+    </fragment>
+
     <!--global action-->
     <action
         android:id="@+id/action_to_preImportFragment"
@@ -1326,6 +1334,14 @@
     <action
         android:id="@+id/action_to_psbtBroadcastFragment"
         app:destination="@id/psbtBroadcastFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_ArweaveAuthFragment"
+        app:destination="@id/ArweaveAuthFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"

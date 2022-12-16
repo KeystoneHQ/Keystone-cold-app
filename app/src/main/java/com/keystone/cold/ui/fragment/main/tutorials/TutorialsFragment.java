@@ -74,6 +74,9 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialsBinding> {
                 break;
             case KEPLR_WALLET:
                 id = R.array.tutorials_name_cosmos;
+                break;
+            case ARConnect:
+                id = R.array.tutorials_name_arconnect;
         }
         return id;
     }
@@ -107,6 +110,9 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialsBinding> {
                 break;
             case KEPLR_WALLET:
                 id = R.array.tutorials_link_cosmos;
+                break;
+            case ARConnect:
+                id = R.array.tutorials_link_arconnect;
         }
         return id;
     }
