@@ -79,7 +79,7 @@
                         android:textSize="15sp"
                         android:breakStrategy="simple"
                         android:textStyle="bold"
-                        android:text="Отсканируйте QR-код с помощью приложения Keystone"/>
+                        android:text="@string/sync_with_keystone_vault"/>
 
                     <ImageView
                         android:id="@+id/info"
