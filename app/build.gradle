@@ -172,6 +172,9 @@ android {
     }
     sourceSets {
         main {
+            res.srcDirs(
+                    'src/main/res',
+                    'src/main/res_remove_wallet_mode')
             proto {
                 srcDir 'src/main/protos'
             }
