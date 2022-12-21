@@ -25,10 +25,11 @@ import android.view.View;
 
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
+import com.keystone.cold.config.FeatureFlags;
 import com.keystone.cold.databinding.SecurityCheckBinding;
 import com.keystone.cold.selfcheck.SecurityCheck;
 import com.keystone.cold.ui.AttackWarningActivity;
-import com.keystone.cold.ui.MainActivity;
+import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.ui.SetupVaultActivity;
 import com.keystone.cold.viewmodel.SetupVaultViewModel;
 
@@ -55,7 +56,11 @@ public class SecurityCheckFragment extends BaseFragment<SecurityCheckBinding> {
                     Log.d(TAG, "setupFinished = " + setupFinished);
                     Intent intent;
                     if (setupFinished) {
-                        intent = new Intent(mActivity, MainActivity.class);
+                        if (FeatureFlags.ENABLE_REMOVE_WALLET_MODE){
+                            intent = new Intent(mActivity, MainActivity.class);
+                        } else {
+                            intent = new Intent(mActivity, com.keystone.cold.ui.MainActivity.class);
+                        }
                     } else {
                         intent = new Intent(mActivity, SetupVaultActivity.class);
                         intent.putExtra("check_updating", true);

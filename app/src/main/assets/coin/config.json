@@ -1,0 +1,180 @@
+{
+  "version": 1,
+  "extraCoins": [
+    {
+      "coinId": "bnb",
+      "coinCode": "BNB",
+      "network": "BNB",
+      "show": true
+    },
+    {
+      "coinId": "matic",
+      "coinCode": "MATIC",
+      "network": "Polygon",
+      "show": false
+    },
+    {
+      "coinId": "okb",
+      "coinCode": "OKB",
+      "network": "OKB",
+      "show": false
+    },
+    {
+      "coinId": "avax",
+      "coinCode": "AVAX",
+      "network": "Avalanche",
+      "show": false
+    },
+    {
+      "coinId": "ht",
+      "coinCode": "HT",
+      "network": "Huobi",
+      "show": false
+    },
+    {
+      "coinId": "ftm",
+      "coinCode": "FTM",
+      "network": "Fantom",
+      "show": false
+    },
+    {
+      "coinId": "klay",
+      "coinCode": "KLAY",
+      "network": "Klayton",
+      "show": false
+    },
+    {
+      "coinId": "op",
+      "coinCode": "OP",
+      "network": "Optimism",
+      "show": false
+    },
+    {
+      "coinId": "celo",
+      "coinCode": "CELO",
+      "network": "Celo",
+      "show": false
+    },
+    {
+      "coinId": "theta",
+      "coinCode": "THETA",
+      "network": "Theta Network",
+      "show": false
+    },
+    {
+      "coinId": "iotx",
+      "coinCode": "IOTX",
+      "network": "IoTex",
+      "show": false
+    },
+    {
+      "coinId": "one",
+      "coinCode": "ONE",
+      "network": "Harmony",
+      "show": false
+    }
+  ],
+  "ecology": {
+    "evm": [
+      "BNB",
+      "MATIC",
+      "OKB",
+      "AVAX",
+      "CRO",
+      "KAVA",
+      "FTM",
+      "KLAY",
+      "OP",
+      "CELO",
+      "THETA",
+      "IOTX",
+      "EVMOS",
+      "ONE",
+      "ROWAN"
+    ],
+    "cosmos": [
+      "ATOM",
+      "CRO",
+      "KAVA",
+      "OSMO",
+      "EVMOS",
+      "XPRT",
+      "BLD",
+      "JUNO",
+      "SCRT",
+      "STARS",
+      "AXL",
+      "CTK",
+      "REGEN",
+      "IRIS",
+      "AKT",
+      "NGM",
+      "DVPN",
+      "UMEE",
+      "ROWAN",
+      "IOV",
+      "IXO",
+      "GRAV",
+      "BOOT",
+      "SOMM",
+      "TGD",
+      "STRD"
+    ]
+  },
+  "orderList": [
+    "BTC",
+    "ETH",
+    "BNB",
+    "XRP",
+    "ADA",
+    "MATIC",
+    "DOT",
+    "LTC",
+    "OKB",
+    "SOL",
+    "TRX",
+    "AVAX",
+    "ATOM",
+    "ETC",
+    "CRO",
+    "HT",
+    "NEAR",
+    "KAVA",
+    "FTM",
+    "APT",
+    "BCH",
+    "KLAY",
+    "DASH",
+    "SOMM",
+    "OSMO",
+    "KSM",
+    "AR",
+    "OP",
+    "CELO",
+    "THETA",
+    "IOTX",
+    "EVMOS",
+    "ONE",
+    "XPRT",
+    "BLD",
+    "JUNO",
+    "SCRT",
+    "STARS",
+    "AXL",
+    "CTK",
+    "REGEN",
+    "IRIS",
+    "AKT",
+    "NGM",
+    "DVPN",
+    "UMEE",
+    "ROWAN",
+    "IOV",
+    "IXO",
+    "GRAV",
+    "BOOT",
+    "SOMM",
+    "TGD",
+    "STRD"
+  ]
+}
