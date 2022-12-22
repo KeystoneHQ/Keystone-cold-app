@@ -24,8 +24,9 @@ import android.view.View;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
+import com.keystone.cold.config.FeatureFlags;
 import com.keystone.cold.databinding.SetupSyncBinding;
-import com.keystone.cold.ui.MainActivity;
+import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.viewmodel.SyncViewModel;
 
 public class SetupSyncFragment extends SetupVaultBaseFragment<SetupSyncBinding> {
@@ -43,8 +44,13 @@ public class SetupSyncFragment extends SetupVaultBaseFragment<SetupSyncBinding> 
     }
 
     private void complete(View view) {
-        Intent intent = new Intent(mActivity, MainActivity.class);
-        startActivity(intent);
+        if (FeatureFlags.ENABLE_REMOVE_WALLET_MODE){
+            Intent intent = new Intent(mActivity, MainActivity.class);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(mActivity, com.keystone.cold.ui.MainActivity.class);
+            startActivity(intent);
+        }
         mActivity.finish();
     }
 

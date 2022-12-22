@@ -21,8 +21,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.keystone.cold.R;
+import com.keystone.cold.config.FeatureFlags;
 import com.keystone.cold.databinding.SettingFragmentBinding;
-import com.keystone.cold.ui.MainActivity;
+import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 
 public class SettingFragment extends BaseFragment<SettingFragmentBinding> {
@@ -37,7 +38,11 @@ public class SettingFragment extends BaseFragment<SettingFragmentBinding> {
     @Override
     protected void init(View view) {
         mActivity.setSupportActionBar(mBinding.toolbar);
-        mBinding.toolbar.setNavigationOnClickListener(((MainActivity) mActivity)::toggleDrawer);
+        if (FeatureFlags.ENABLE_REMOVE_WALLET_MODE) {
+            mBinding.toolbar.setNavigationOnClickListener(((MainActivity) mActivity)::toggleDrawer);
+        } else {
+            mBinding.toolbar.setNavigationOnClickListener(((com.keystone.cold.ui.MainActivity) mActivity)::toggleDrawer);
+        }
         mBinding.toolbar.setTitle("");
     }
 

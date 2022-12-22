@@ -29,6 +29,8 @@ import androidx.navigation.NavInflater;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.keystone.cold.R;
+import com.keystone.cold.config.FeatureFlags;
+import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.selfcheck.RuntimeStatusCode;
 import com.keystone.cold.ui.common.FullScreenActivity;
 import com.keystone.cold.viewmodel.SetupVaultViewModel;
@@ -99,7 +101,11 @@ public class SetupVaultActivity extends FullScreenActivity {
                     break;
                 }
                 case SetupVaultViewModel.VAULT_CREATE_STEP_DONE: {
-                    startActivity(new Intent(this, MainActivity.class));
+                    if (FeatureFlags.ENABLE_REMOVE_WALLET_MODE) {
+                        startActivity(new Intent(this, MainActivity.class));
+                    } else {
+                        startActivity(new Intent(this, com.keystone.cold.ui.MainActivity.class));
+                    }
                     this.finish();
                     return;
                 }

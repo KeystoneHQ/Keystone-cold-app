@@ -26,9 +26,10 @@ import android.widget.Toast;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
+import com.keystone.cold.config.FeatureFlags;
 import com.keystone.cold.databinding.AboutFragmentBinding;
 import com.keystone.cold.logging.FileLogger;
-import com.keystone.cold.ui.MainActivity;
+import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.viewmodel.AboutViewModel;
 
 import java.util.concurrent.ExecutorService;
@@ -46,7 +47,11 @@ public class AboutFragment extends BaseFragment<AboutFragmentBinding> {
     @Override
     protected void init(View view) {
         mActivity.setSupportActionBar(mBinding.toolbar);
-        mBinding.toolbar.setNavigationOnClickListener(((MainActivity) mActivity)::toggleDrawer);
+        if (FeatureFlags.ENABLE_REMOVE_WALLET_MODE) {
+            mBinding.toolbar.setNavigationOnClickListener(((MainActivity) mActivity)::toggleDrawer);
+        } else {
+            mBinding.toolbar.setNavigationOnClickListener(((com.keystone.cold.ui.MainActivity) mActivity)::toggleDrawer);
+        }
         mBinding.toolbar.setTitle("");
         mBinding.logo.setOnClickListener(new ExportLogHandler(mActivity,Executors.newSingleThreadExecutor()));
     }

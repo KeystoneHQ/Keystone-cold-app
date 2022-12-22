@@ -23,6 +23,7 @@ import android.view.View;
 
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
+import com.keystone.cold.config.FeatureFlags;
 import com.keystone.cold.databinding.SetupWatchWalletBinding;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.SetupVaultActivity;
@@ -67,7 +68,11 @@ public class SetupWatchWalletFragment extends SetupVaultBaseFragment<SetupWatchW
     }
 
     private void stepIntoMainActivity(){
-        startActivity(new Intent(mActivity, MainActivity.class));
+        if (FeatureFlags.ENABLE_REMOVE_WALLET_MODE) {
+            startActivity(new Intent(mActivity, com.keystone.cold.remove_wallet_mode.ui.MainActivity.class));
+        } else {
+            startActivity(new Intent(mActivity, MainActivity.class));
+        }
         mActivity.finish();
     }
 }

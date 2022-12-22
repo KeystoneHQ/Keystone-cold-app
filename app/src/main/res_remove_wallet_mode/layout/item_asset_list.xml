@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="assetItem"
+            type="com.keystone.cold.remove_wallet_mode.ui.model.AssetItem" />
+
+        <variable
+            name="callback"
+            type="com.keystone.cold.remove_wallet_mode.ui.adapter.CoinAdapter.CoinClickCallback" />
+
+        <variable
+            name="isManage"
+            type="boolean" />
+    </data>
+
+    <RelativeLayout
+        style="@style/selectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_52"
+        android:onClick="@{()->callback.onClick(assetItem)}"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/ivIcon"
+            android:layout_width="@dimen/dp_32"
+            android:layout_height="@dimen/dp_32"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dp_18"
+            app:icon="@{assetItem.coinCode}"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/coin_btc" />
+
+        <LinearLayout
+            android:id="@+id/llCoinInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dp_12"
+            android:layout_toEndOf="@id/ivIcon"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/coinCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{assetItem.coinCode}"
+                android:textColor="@color/white"
+                android:textSize="@{isManage? @dimen/sp_16:@dimen/sp_14}"
+                android:textStyle="bold"
+                tools:text="BTC" />
+
+            <TextView
+                android:id="@+id/coinName"
+                visibleGone="@{!isManage}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_2"
+                android:text="@{assetItem.network}"
+                android:textColor="@color/white40"
+                android:textSize="@dimen/sp_10"
+                tools:text="Bitcoin" />
+
+        </LinearLayout>
+
+        <com.keystone.cold.remove_wallet_mode.ui.views.EcologyTagView
+            android:id="@+id/etvEco"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/llCoinInfo" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbShow"
+            visibleGone="@{isManage}"
+            android:layout_width="@dimen/dp_22"
+            android:layout_height="@dimen/dp_22"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:button="@drawable/checkbox"
+            android:checked="@{assetItem.show}"
+            android:clickable="false" />
+
+        <include
+            layout="@layout/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+</layout>
