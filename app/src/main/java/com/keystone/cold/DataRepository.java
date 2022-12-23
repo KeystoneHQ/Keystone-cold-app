@@ -129,6 +129,10 @@ public class DataRepository {
         return mDb.addressDao().loadAddressSync(coinId, getBelongTo());
     }
 
+    public AddressEntity loadAddressById(long id) {
+        return mDb.addressDao().loadAddress(id);
+    }
+
     public AddressEntity loadAddressBypath(String path) {
         if (path.startsWith(DOT.getAccounts()[0]) || path.startsWith(KSM.getAccounts()[0])) {
             return mDb.addressDao().loadAddress(path, getBelongTo());
