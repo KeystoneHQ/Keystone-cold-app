@@ -1,6 +1,6 @@
 package com.keystone.cold.remove_wallet_mode.ui.model;
 
-import static com.keystone.cold.remove_wallet_mode.ui.helper.CoinConfigHelper.getCoinEco;
+import static com.keystone.cold.remove_wallet_mode.helper.CoinConfigHelper.getCoinEco;
 
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.FilterableItem;
