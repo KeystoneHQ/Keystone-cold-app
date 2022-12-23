@@ -1,5 +1,8 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main;
 
+import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS;
+import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_NAME;
+import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_PATH;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
 
@@ -46,7 +49,17 @@ public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
         addressAdapter = new AddressAdapter(mActivity, new AddressAdapter.AddressCallback() {
             @Override
             public void onClick(AddressItem addr) {
-
+                if (addressAdapter.isEditing()) {
+                    addressAdapter.exitEdit();
+                } else {
+                    Bundle bundle = requireArguments();
+                    Bundle data = new Bundle();
+                    data.putString(KEY_COIN_CODE, bundle.getString(KEY_COIN_CODE));
+                    data.putString(KEY_ADDRESS, addr.getAddress());
+                    data.putString(KEY_ADDRESS_NAME, addr.getName());
+                    data.putString(KEY_ADDRESS_PATH, addr.getPath());
+                    navigate(R.id.action_to_receiveCoinFragment, data);
+                }
             }
 
             @Override
