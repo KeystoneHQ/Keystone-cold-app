@@ -10,7 +10,7 @@ import com.keystone.cold.Utilities;
 import com.keystone.cold.cryptocore.RCCService;
 import com.keystone.cold.cryptocore.RCCSigner;
 
-// Rust Signer currently only support K1 curve
+// Rust Signer currently only support K1 / RSA curve
 public class RustSigner extends Signer {
 
     private final RCCSigner rccSigner;
@@ -30,6 +30,10 @@ public class RustSigner extends Signer {
     @Override
     public String sign(String data) {
         return rccSigner.sign(data);
+    }
+
+    public String signRSA(String data) {
+        return rccSigner.sign(data, RCCSigner.SignAlgo.RSA);
     }
 
 }

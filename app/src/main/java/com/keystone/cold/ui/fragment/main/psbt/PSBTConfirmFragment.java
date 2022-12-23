@@ -21,6 +21,7 @@ import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
+import com.keystone.cold.viewmodel.tx.SignState;
 import com.keystone.cold.viewmodel.tx.psbt.PSBT;
 import com.keystone.cold.viewmodel.tx.psbt.PSBTViewModel;
 
@@ -111,7 +112,7 @@ public class PSBTConfirmFragment extends BaseFragment<PsbtConfirmFragmentBinding
                 getString(R.string.password_modal_title), "", fingerprintSignEnable,
                 token -> {
                     psbtViewModel.setToken(token);
-                    MutableLiveData<PSBTViewModel.SignState> signState = psbtViewModel.handleSignPSBT(psbt);
+                    MutableLiveData<SignState> signState = psbtViewModel.handleSignPSBT(psbt);
                     subscribeSignState(signState);
                 }, forgetPassword);
     }
@@ -122,7 +123,7 @@ public class PSBTConfirmFragment extends BaseFragment<PsbtConfirmFragmentBinding
         navigate(R.id.action_to_psbtBroadcastFragment, data);
     }
 
-    private void subscribeSignState(MutableLiveData<PSBTViewModel.SignState> signState) {
+    private void subscribeSignState(MutableLiveData<SignState> signState) {
         signState.observe(this, s -> {
             if (PSBTViewModel.STATE_SIGNING.equals(s.getStatus())) {
                 signingDialog = SigningDialog.newInstance();

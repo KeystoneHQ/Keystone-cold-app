@@ -1,0 +1,245 @@
+package com.keystone.cold.viewmodel.tx;
+
+import android.app.Application;
+import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
+
+import com.keystone.coinlib.Util;
+import com.keystone.coinlib.utils.Coins;
+import com.keystone.cold.AppExecutors;
+import com.keystone.cold.DataRepository;
+import com.keystone.cold.MainApplication;
+import com.keystone.cold.Utilities;
+import com.keystone.cold.callables.ClearTokenCallable;
+import com.keystone.cold.callables.GetMessageCallable;
+import com.keystone.cold.callables.GetPasswordTokenCallable;
+import com.keystone.cold.callables.VerifyFingerprintCallable;
+import com.keystone.cold.cryptocore.ArweaveParser;
+import com.keystone.cold.db.entity.TxEntity;
+import com.keystone.cold.encryption.RustSigner;
+import com.keystone.cold.integration.chains.ArweaveViewModel;
+import com.keystone.cold.ui.views.AuthenticateModal;
+import com.keystone.cold.viewmodel.WatchWallet;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.spongycastle.util.encoders.Hex;
+
+import java.security.SignatureException;
+
+public class ArweaveTxViewModel extends AndroidViewModel {
+    private final String TAG = "ArweaveViewModel";
+    private final Application mApplication;
+    private final DataRepository mRepository;
+    private final String hdPath = "M/44'/472'";
+    protected AuthenticateModal.OnVerify.VerifyToken token;
+
+    public static final String STATE_NONE = "";
+    public static final String STATE_SIGNING = "signing";
+    public static final String STATE_SIGN_FAIL = "signing_fail";
+    public static final String STATE_SIGN_SUCCESS = "signing_success";
+
+    protected final MutableLiveData<SignState> signState = new MutableLiveData<>();
+
+    public ArweaveTxViewModel(@NonNull Application application) {
+        super(application);
+        this.mApplication = application;
+        this.mRepository = MainApplication.getApplication().getRepository();
+    }
+
+    public void setToken(AuthenticateModal.OnVerify.VerifyToken token) {
+        this.token = token;
+    }
+
+    protected String getAuthToken() {
+        String authToken = null;
+        if (!TextUtils.isEmpty(token.password)) {
+            authToken = new GetPasswordTokenCallable(token.password).call();
+        } else if (token.signature != null) {
+            String message = new GetMessageCallable().call();
+            if (!TextUtils.isEmpty(message)) {
+                try {
+                    token.signature.update(Hex.decode(message));
+                    byte[] signature = token.signature.sign();
+                    byte[] rs = Util.decodeRSFromDER(signature);
+                    if (rs != null) {
+                        authToken = new VerifyFingerprintCallable(Hex.toHexString(rs)).call();
+                    }
+                } catch (SignatureException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        AuthenticateModal.OnVerify.VerifyToken.invalid(token);
+        return authToken;
+    }
+
+
+    private RustSigner initSigner() {
+        String authToken = getAuthToken();
+        if (TextUtils.isEmpty(authToken)) {
+            Log.w(TAG, "authToken null");
+            return null;
+        }
+        return new RustSigner(hdPath.toLowerCase(), authToken);
+    }
+
+    public MutableLiveData<Tx> parseTransaction(String jsonHex) {
+        MutableLiveData<Tx> result = new MutableLiveData<>(null);
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            try {
+                String jsonString = ArweaveParser.parse(jsonHex);
+                JSONObject object = new JSONObject(jsonString);
+                String status = object.getString("status");
+                if (status.equals("success")) {
+                    result.postValue(Tx.fromRCC(object));
+                } else {
+                    result.postValue(new Tx());
+                }
+            } catch (JSONException e) {
+                result.postValue(new Tx());
+            }
+        });
+        return result;
+    }
+
+    public void handleSign(Tx tx) {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            signState.postValue(new SignState(STATE_SIGNING, null));
+            RustSigner signer = initSigner();
+            if (signer == null) {
+                signState.postValue(new SignState(STATE_SIGN_FAIL, null));
+                return;
+            }
+            String signature = signer.signRSA(tx.getSignatureData());
+            String txId = ArweaveViewModel.formatHex(Util.sha256(Hex.decode(signature)));
+            try {
+                insertDB(signature, txId, tx);
+                signState.postValue(new SignState(STATE_SIGN_SUCCESS, txId));
+                new ClearTokenCallable().call();
+            } catch (JSONException e) {
+                e.printStackTrace();
+                signState.postValue(new SignState(STATE_SIGN_FAIL, null));
+            }
+        });
+    }
+
+    private void insertDB(String signature, String txId, Tx tx) throws JSONException {
+        TxEntity txEntity = generateTxEntity();
+        txEntity.setTxId(txId);
+        JSONObject rawTx = tx.getRawTx();
+        rawTx.put("signature", ArweaveViewModel.formatHex(Hex.decode(signature)));
+        txEntity.setSignedHex(rawTx.toString());
+        txEntity.setAddition(
+                new JSONObject().put("rawTx", tx.rawTx)
+                        .put("parsedMessage", tx.parsedMessage)
+                        .put("signature", signature)
+                        .toString()
+        );
+        mRepository.insertTx(txEntity);
+    }
+
+    private TxEntity generateTxEntity() {
+        TxEntity txEntity = new TxEntity();
+        txEntity.setCoinId(Coins.AR.coinId());
+        txEntity.setSignId(WatchWallet.getWatchWallet(mApplication).getSignId());
+        txEntity.setCoinCode(Coins.AR.coinCode());
+        txEntity.setTimeStamp(getUniversalSignIndex(getApplication()));
+        txEntity.setBelongTo(mRepository.getBelongTo());
+        return txEntity;
+    }
+
+    protected long getUniversalSignIndex(Context context) {
+        long current = Utilities.getPrefs(context).getLong("universal_sign_index", 0);
+        Utilities.getPrefs(context).edit().putLong("universal_sign_index", current + 1).apply();
+        return current;
+    }
+
+    public static class Tx {
+        private final String owner;
+        private final String target;
+        private final String quantity;
+        private final String reward;
+        private final String dataSize;
+        private final String signatureData;
+        private final boolean parseSuccess;
+        private final JSONObject rawTx;
+        private final JSONObject parsedMessage;
+
+        public Tx(String owner, String target, String quantity, String reward, String dataSize, String signatureData, JSONObject rawTx, JSONObject parsedMessage) {
+            this.owner = owner;
+            this.target = target;
+            this.quantity = quantity;
+            this.reward = reward;
+            this.dataSize = dataSize;
+            this.signatureData = signatureData;
+            this.rawTx = rawTx;
+            this.parsedMessage = parsedMessage;
+            this.parseSuccess = true;
+        }
+
+        public Tx() {
+            this.parseSuccess = false;
+            this.owner = null;
+            this.target = null;
+            this.quantity = null;
+            this.reward = null;
+            this.dataSize = null;
+            this.signatureData = null;
+            this.rawTx = null;
+            this.parsedMessage = null;
+        }
+
+        public static Tx fromRCC(JSONObject object) throws JSONException {
+            JSONObject json = object.getJSONObject("formatted_json");
+            return new Tx(json.getString("owner"),
+                    json.getString("target"),
+                    json.getString("quantity"),
+                    json.getString("reward"),
+                    json.getString("data_size"),
+                    json.getString("signature_data"), object.getJSONObject("raw_json"), json);
+        }
+
+
+        public String getOwner() {
+            return owner;
+        }
+
+        public String getTarget() {
+            return target;
+        }
+
+        public String getQuantity() {
+            return quantity;
+        }
+
+        public String getReward() {
+            return reward;
+        }
+
+        public String getDataSize() {
+            return dataSize;
+        }
+
+        public String getSignatureData() {
+            return signatureData;
+        }
+
+        public boolean isParseSuccess() {
+            return parseSuccess;
+        }
+
+        public JSONObject getRawTx() {
+            return rawTx;
+        }
+
+        public JSONObject getParsedMessage() {
+            return parsedMessage;
+        }
+    }
+}

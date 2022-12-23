@@ -6,6 +6,7 @@ import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
 import com.sparrowwallet.hummingbird.registry.EthNFTItem;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
+import com.sparrowwallet.hummingbird.registry.arweave.ArweaveSignRequest;
 import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignRequest;
 import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolNFTItem;
@@ -33,6 +34,7 @@ public enum ScanResultTypes {
     UR_NEAR_SIGN_REQUEST,
     UR_CRYPTO_PSBT,
     UR_APTOS_SIGN_REQUEST,
+    UR_ARWEAVE_SIGN_REQUEST,
     UR_COSMOS_SIGN_REQUEST;
 
 
@@ -65,6 +67,8 @@ public enum ScanResultTypes {
                     return decodeResult instanceof CryptoPSBT;
                 case UR_COSMOS_SIGN_REQUEST:
                     return decodeResult instanceof CosmosSignRequest;
+                case UR_ARWEAVE_SIGN_REQUEST:
+                    return decodeResult instanceof ArweaveSignRequest;
                 default:
                     return false;
             }
@@ -103,6 +107,8 @@ public enum ScanResultTypes {
                     return EthNFTItem.fromCbor(dataItem);
                 case UR_CRYPTO_PSBT:
                     return CryptoPSBT.fromCbor(dataItem);
+                case UR_ARWEAVE_SIGN_REQUEST:
+                    return ArweaveSignRequest.fromCbor(dataItem);
                 case UR_BYTES:
                     return ((ByteString) dataItem).getBytes();
                 default:

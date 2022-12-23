@@ -6,6 +6,7 @@ import android.util.Log;
 import com.keystone.cold.cryptocore.lib.RCC;
 import com.keystone.cold.cryptocore.protocol.RequestBuilder;
 import com.keystone.cold.cryptocore.protocol.ResponseParser;
+
 import java.util.Objects;
 
 // Rust Signer currently only support K1 curve
@@ -25,17 +26,20 @@ public class RCCSigner {
         this.privKeyPath = Objects.requireNonNull(path);
         this.authToken = authToken;
         this.isMainWallet = isMainWallet;
-        this.portName =  portName;
+        this.portName = portName;
         this.requestId = requestId;
     }
 
-
     public String sign(String data) {
+        return sign(data, SignAlgo.SECP256K1);
+    }
+
+    public String sign(String data, SignAlgo algo) {
         if (TextUtils.isEmpty(data)) {
             return null;
         }
         RCC rcc = new RCC();
-        String command = composeCommand(data);
+        String command = composeCommand(data, algo);
 
         Log.e("Rust Signer:", command);
 
@@ -43,11 +47,11 @@ public class RCCSigner {
         return parseResponse(response);
     }
 
-    private String composeCommand(String data) {
+    private String composeCommand(String data, SignAlgo algo) {
         RequestBuilder rb = new RequestBuilder();
         rb.setSignId(requestId);
-        int seedId = isMainWallet? 0 : 0x50;
-        rb.setSignRequest(seedId, 0, authToken, privKeyPath, data, portName);
+        int seedId = isMainWallet ? 0 : 0x50;
+        rb.setSignRequest(seedId, algo.getValue(), authToken, privKeyPath, data, portName);
         return rb.build();
     }
 
@@ -66,4 +70,24 @@ public class RCCSigner {
         }
     }
 
+    public enum SignAlgo {
+        SECP256K1("secp256k1", 0),
+        RSA("rsa", 3);
+
+        private String name;
+        private int value;
+
+        SignAlgo(String name, int value) {
+            this.name = name;
+            this.value = value;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
 }

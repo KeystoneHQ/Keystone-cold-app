@@ -145,8 +145,12 @@ public class ArweaveViewModel extends AndroidViewModel {
         }
     }
 
+    public static String formatHex(byte[] data) {
+        return java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(data);
+    }
+
     private AddressEntity getArweaveAddress(String publicKey) {
-        String address = java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(Util.sha256(Hex.decode(publicKey)));
+        String address = formatHex(Util.sha256(Hex.decode(publicKey)));
         AddressEntity addressEntity = new AddressEntity();
         addressEntity.setCoinId(Coins.AR.coinId());
         Log.d(TAG, "getArweaveAddress: " + address);
