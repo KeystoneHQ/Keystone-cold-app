@@ -44,8 +44,6 @@ public class ArweaveTxViewModel extends AndroidViewModel {
     public static final String STATE_SIGN_FAIL = "signing_fail";
     public static final String STATE_SIGN_SUCCESS = "signing_success";
 
-    protected final MutableLiveData<SignState> signState = new MutableLiveData<>();
-
     public ArweaveTxViewModel(@NonNull Application application) {
         super(application);
         this.mApplication = application;
@@ -108,7 +106,8 @@ public class ArweaveTxViewModel extends AndroidViewModel {
         return result;
     }
 
-    public void handleSign(Tx tx) {
+    public MutableLiveData<SignState> handleSign(Tx tx) {
+        MutableLiveData<SignState> signState = new MutableLiveData<>();
         AppExecutors.getInstance().diskIO().execute(() -> {
             signState.postValue(new SignState(STATE_SIGNING, null));
             RustSigner signer = initSigner();
@@ -127,6 +126,12 @@ public class ArweaveTxViewModel extends AndroidViewModel {
                 signState.postValue(new SignState(STATE_SIGN_FAIL, null));
             }
         });
+        return signState;
+    }
+
+    public MutableLiveData<SignState> handleSignMessage(String message) {
+        MutableLiveData<SignState> signState = new MutableLiveData<>();
+        return signState;
     }
 
     private void insertDB(String signature, String txId, Tx tx) throws JSONException {

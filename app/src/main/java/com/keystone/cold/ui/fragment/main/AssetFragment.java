@@ -735,7 +735,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 }
             }
 
-            private void handleArweaveSignRequest(ScanResult result) {
+            private void handleArweaveSignRequest(ScanResult result) throws InvalidTransactionException {
                 ArweaveSignRequest arweaveSignRequest = (ArweaveSignRequest) result.resolve();
                 Bundle bundle = new Bundle();
                 ByteBuffer uuidBuffer = ByteBuffer.wrap(arweaveSignRequest.getRequestId());
@@ -750,16 +750,16 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 bundle.putString(SIGN_DATA, signData);
                 ArweaveSignRequest.SignType signType = arweaveSignRequest.getSignType();
 
-                SolMessageValidateUtil.DataType dataType = SolMessageValidateUtil.judgeDataType(signData);
-                switch (dataType) {
+                switch (signType) {
                     case TRANSACTION:
-                        mFragment.navigate(R.id.action_to_solTxConfirmFragment, bundle);
+                        mFragment.navigate(R.id.action_to_arweaveTxConfirmFragment, bundle);
+                        break;
+                    case DATAITEM:
+                        throw new InvalidTransactionException("Transaction type DataItem not supported yet");
                         break;
                     case MESSAGE:
-                        mFragment.navigate(R.id.action_to_solSignMessageFragment, bundle);
+                        mFragment.navigate(R.id.action_to_arweaveSignMessageFragment, bundle);
                         break;
-                    case INVALIDATE:
-                        throw new InvalidTransactionException("Invalid sign data");
                 }
             }
 

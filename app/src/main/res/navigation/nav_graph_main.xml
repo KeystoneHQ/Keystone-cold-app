@@ -1166,6 +1166,12 @@
         android:id="@+id/psbtBroadcastFragment"
         android:name="com.keystone.cold.ui.fragment.main.psbt.PSBTBroadcastFragment"
         android:label="PSBTBroadcastFragment"
+        tools:layout="@layout/broadcast_tx_fragment" />
+
+    <fragment
+        android:id="@+id/arweaveBroadcastFragment"
+        android:name="com.keystone.cold.ui.fragment.main.arweave.ArweaveBroadcastFragment"
+        android:label="ArweaveBroadcastFragment"
         tools:layout="@layout/broadcast_tx_fragment">
 
     </fragment>
@@ -1175,6 +1181,24 @@
         android:name="com.keystone.cold.ui.fragment.main.arweave.ArweaveAuthFragment"
         android:label="ArweaveAuthFragment"
         tools:layout="@layout/arweave_auth_fragment">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/arweaveTxConfirmFragment"
+        android:name="com.keystone.cold.ui.fragment.main.arweave.ArweaveTxConfirmFragment"
+        android:label="ArweaveTxConfirmFragment"
+        tools:layout="@layout/arweave_tx_confirm"
+        >
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/arweaveSignMessageFragment"
+        android:name="com.keystone.cold.ui.fragment.main.arweave.ArweaveSignMessageFragment"
+        android:label="ArweaveSignMessageFragment"
+        tools:layout="@layout/fragment_sol_sign_message"
+        >
 
     </fragment>
 
@@ -1237,6 +1261,22 @@
     <action
         android:id="@+id/action_to_solTxDetailFragment"
         app:destination="@id/solTxDetailFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_arweaveTxConfirmFragment"
+        app:destination="@id/arweaveTxConfirmFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_arweaveSignMessageFragment"
+        app:destination="@id/arweaveSignMessageFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
@@ -1357,6 +1397,14 @@
     <action
         android:id="@+id/action_to_exportXPubFragment"
         app:destination="@id/exportXPubFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_arweaveBroadcastFragment"
+        app:destination="@id/arweaveBroadcastFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
