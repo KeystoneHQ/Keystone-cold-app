@@ -29,11 +29,11 @@ public class ArweaveParser {
         int status = parser.getStatus();
         if (status == 200) {
             response = parser.getResponse();
-            Log.d("cosmos parse response:", response);
+            Log.d("arweave parse response:", response);
             return response;
         } else {
             String error = parser.getError();
-            Log.e("cosmos parse Error:", error);
+            Log.e("arweave parse Error:", error);
             return null;
         }
     }

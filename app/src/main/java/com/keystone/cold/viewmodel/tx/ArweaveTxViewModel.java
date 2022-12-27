@@ -1,5 +1,9 @@
 package com.keystone.cold.viewmodel.tx;
 
+import static com.keystone.cold.viewmodel.tx.SignState.STATE_SIGNING;
+import static com.keystone.cold.viewmodel.tx.SignState.STATE_SIGN_FAIL;
+import static com.keystone.cold.viewmodel.tx.SignState.STATE_SIGN_SUCCESS;
+
 import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
@@ -38,11 +42,6 @@ public class ArweaveTxViewModel extends AndroidViewModel {
     private final DataRepository mRepository;
     private final String hdPath = "M/44'/472'";
     protected AuthenticateModal.OnVerify.VerifyToken token;
-
-    public static final String STATE_NONE = "";
-    public static final String STATE_SIGNING = "signing";
-    public static final String STATE_SIGN_FAIL = "signing_fail";
-    public static final String STATE_SIGN_SUCCESS = "signing_success";
 
     public ArweaveTxViewModel(@NonNull Application application) {
         super(application);
@@ -106,8 +105,8 @@ public class ArweaveTxViewModel extends AndroidViewModel {
         return result;
     }
 
-    public MutableLiveData<SignState> handleSign(Tx tx) {
-        MutableLiveData<SignState> signState = new MutableLiveData<>();
+    public MutableLiveData<SignState> handleSign(Tx tx, int saltLen) {
+        MutableLiveData<SignState> signState = new MutableLiveData<>(null);
         AppExecutors.getInstance().diskIO().execute(() -> {
             signState.postValue(new SignState(STATE_SIGNING, null));
             RustSigner signer = initSigner();
@@ -115,13 +114,16 @@ public class ArweaveTxViewModel extends AndroidViewModel {
                 signState.postValue(new SignState(STATE_SIGN_FAIL, null));
                 return;
             }
-            String signature = signer.signRSA(tx.getSignatureData());
-            String txId = ArweaveViewModel.formatHex(Util.sha256(Hex.decode(signature)));
+            Log.d("sora", "handleSign: " + tx.getSignatureData());
+            String signature = signer.signRSA(tx.getSignatureData(), saltLen);
+            Log.d("sora", "siganture: " + signature);
             try {
+                String txId = ArweaveViewModel.formatHex(Util.sha256(Hex.decode(signature)));
                 insertDB(signature, txId, tx);
-                signState.postValue(new SignState(STATE_SIGN_SUCCESS, txId));
+                Log.d("sora", "handleSign: " + signature);
+                signState.postValue(new SignState(STATE_SIGN_SUCCESS, txId, signature));
                 new ClearTokenCallable().call();
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 signState.postValue(new SignState(STATE_SIGN_FAIL, null));
             }
@@ -129,8 +131,19 @@ public class ArweaveTxViewModel extends AndroidViewModel {
         return signState;
     }
 
-    public MutableLiveData<SignState> handleSignMessage(String message) {
-        MutableLiveData<SignState> signState = new MutableLiveData<>();
+    public MutableLiveData<SignState> handleSignMessage(String message, int saltLen) {
+        MutableLiveData<SignState> signState = new MutableLiveData<>(null);
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            signState.postValue(new SignState(STATE_SIGNING, null));
+            RustSigner signer = initSigner();
+            if (signer == null) {
+                signState.postValue(new SignState(STATE_SIGN_FAIL, null));
+                return;
+            }
+            String signature = signer.signRSA(message, saltLen);
+            signState.postValue(new SignState(STATE_SIGN_SUCCESS, null, signature));
+            new ClearTokenCallable().call();
+        });
         return signState;
     }
 

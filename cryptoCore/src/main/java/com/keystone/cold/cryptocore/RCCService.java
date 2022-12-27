@@ -3,7 +3,8 @@ package com.keystone.cold.cryptocore;
 import android.util.Log;
 
 import com.keystone.cold.cryptocore.lib.RCC;
-import com.keystone.cold.cryptocore.protocol.RequestBuilder;
+import com.keystone.cold.cryptocore.protocol.GetRSAPublicKeyRequestBuilder;
+import com.keystone.cold.cryptocore.protocol.SignRequestBuilder;
 import com.keystone.cold.cryptocore.protocol.ResponseParser;
 
 public class RCCService {
@@ -31,7 +32,7 @@ public class RCCService {
     }
 
     public static String getRSAPublicKey(Passport passport) {
-        RequestBuilder rb = new RequestBuilder();
+        GetRSAPublicKeyRequestBuilder rb = new GetRSAPublicKeyRequestBuilder();
         rb.setSignId(passport.FixedRequestId);
         int seedId = passport.isMainWallet? 0 : 0x50;
         Log.d(TAG, "getRSAPublicKey: " + seedId);

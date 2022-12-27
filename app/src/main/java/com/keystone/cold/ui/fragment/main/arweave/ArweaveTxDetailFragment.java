@@ -1,6 +1,7 @@
 package com.keystone.cold.ui.fragment.main.arweave;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.keystone.cold.R;
@@ -22,7 +23,12 @@ public class ArweaveTxDetailFragment extends BaseFragment<ArweaveTxDetailBinding
 
     @Override
     protected void init(View view) {
+        Log.d("sora", "init: " + tx);
         mBinding.txDetail.setText(tx);
+    }
+
+    public void setTx(String tx) {
+        this.tx = tx;
     }
 
     public static ArweaveTxDetailFragment newInstance(String tx) {

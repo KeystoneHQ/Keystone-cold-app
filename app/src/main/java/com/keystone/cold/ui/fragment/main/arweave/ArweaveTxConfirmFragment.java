@@ -41,6 +41,7 @@ import java.nio.ByteBuffer;
 import java.util.UUID;
 
 public class ArweaveTxConfirmFragment extends BaseFragment<ArweaveTxConfirmBinding> {
+    public static final String KEY_SALT_LEN = "salt_len";
     private ArweaveTxViewModel viewModel;
     private Fragment[] fragments;
 
@@ -63,31 +64,32 @@ public class ArweaveTxConfirmFragment extends BaseFragment<ArweaveTxConfirmBindi
         Bundle bundle = requireArguments();
         String signData = bundle.getString(SIGN_DATA);
         requestId = bundle.getString(REQUEST_ID);
+        int saltLen = bundle.getInt(KEY_SALT_LEN);
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         mRepository = ((MainApplication) mActivity.getApplication()).getRepository();
 
         viewModel = ViewModelProviders.of(this).get(ArweaveTxViewModel.class);
         viewModel.parseTransaction(signData).observe(this, (v) -> {
+            if (v == null) return;
             try {
                 rawTx = v.getRawTx().toString(2);
                 parsedTx = v.getParsedMessage().toString(2);
-                mBinding.sign.setOnClickListener(x -> handleSign(v));
+                mBinding.sign.setOnClickListener(x -> handleSign(v, saltLen));
+                initViewPager();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         });
-
-        initViewPager();
     }
 
     private void initViewPager() {
         String[] title = {getString(R.string.overview), getString(R.string.raw)};
         if (fragments == null) {
             fragments = new Fragment[title.length];
-            fragments[0] = ArweaveTxDetailFragment.newInstance(rawTx);
-            fragments[1] = ArweaveTxDetailFragment.newInstance(parsedTx);
+            fragments[0] = ArweaveTxDetailFragment.newInstance(parsedTx);
+            fragments[1] = ArweaveTxDetailFragment.newInstance(rawTx);
         }
-        mBinding.viewPager.setOffscreenPageLimit(1);
+        mBinding.viewPager.setOffscreenPageLimit(2);
         mBinding.viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager(),
                 BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             @NonNull
@@ -114,13 +116,13 @@ public class ArweaveTxConfirmFragment extends BaseFragment<ArweaveTxConfirmBindi
 
     }
 
-    private void handleSign(ArweaveTxViewModel.Tx tx) {
+    private void handleSign(ArweaveTxViewModel.Tx tx, int saltLen) {
         boolean fingerprintSignEnable = new FingerprintPolicyCallable(READ, TYPE_SIGN_TX).call();
         AuthenticateModal.show(mActivity,
                 getString(R.string.password_modal_title), "", fingerprintSignEnable,
                 token -> {
                     viewModel.setToken(token);
-                    subscribeSignState(viewModel.handleSign(tx));
+                    subscribeSignState(viewModel.handleSign(tx, saltLen));
                 }, forgetPassword);
     }
 
@@ -146,10 +148,11 @@ public class ArweaveTxConfirmFragment extends BaseFragment<ArweaveTxConfirmBindi
 
     private void subscribeSignState(MutableLiveData<SignState> signState) {
         signState.observe(this, s -> {
-            if (PSBTViewModel.STATE_SIGNING.equals(s.getStatus())) {
+            if (s == null) return;
+            if (SignState.STATE_SIGNING.equals(s.getStatus())) {
                 signingDialog = SigningDialog.newInstance();
                 signingDialog.show(mActivity.getSupportFragmentManager(), "");
-            } else if (PSBTViewModel.STATE_SIGN_SUCCESS.equals(s.getStatus())) {
+            } else if (SignState.STATE_SIGN_SUCCESS.equals(s.getStatus())) {
                 if (signingDialog != null) {
                     signingDialog.setState(SigningDialog.STATE_SUCCESS);
                 }
@@ -160,7 +163,7 @@ public class ArweaveTxConfirmFragment extends BaseFragment<ArweaveTxConfirmBindi
                     signingDialog = null;
                     onSignSuccess(s.getTxId());
                 }, 500);
-            } else if (PSBTViewModel.STATE_SIGN_FAIL.equals(s.getStatus())) {
+            } else if (SignState.STATE_SIGN_FAIL.equals(s.getStatus())) {
                 if (signingDialog == null) {
                     signingDialog = SigningDialog.newInstance();
                     signingDialog.show(mActivity.getSupportFragmentManager(), "");

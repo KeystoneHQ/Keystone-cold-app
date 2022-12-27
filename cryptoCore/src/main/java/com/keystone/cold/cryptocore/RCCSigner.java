@@ -4,7 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.keystone.cold.cryptocore.lib.RCC;
-import com.keystone.cold.cryptocore.protocol.RequestBuilder;
+import com.keystone.cold.cryptocore.protocol.SignRequestBuilder;
 import com.keystone.cold.cryptocore.protocol.ResponseParser;
 
 import java.util.Objects;
@@ -31,10 +31,10 @@ public class RCCSigner {
     }
 
     public String sign(String data) {
-        return sign(data, SignAlgo.SECP256K1);
+        return sign(data, SignAlgo.SECP256K1, 0);
     }
 
-    public String sign(String data, SignAlgo algo) {
+    public String sign(String data, SignAlgo algo, int saltLen) {
         if (TextUtils.isEmpty(data)) {
             return null;
         }
@@ -48,7 +48,7 @@ public class RCCSigner {
     }
 
     private String composeCommand(String data, SignAlgo algo) {
-        RequestBuilder rb = new RequestBuilder();
+        SignRequestBuilder rb = new SignRequestBuilder();
         rb.setSignId(requestId);
         int seedId = isMainWallet ? 0 : 0x50;
         rb.setSignRequest(seedId, algo.getValue(), authToken, privKeyPath, data, portName);

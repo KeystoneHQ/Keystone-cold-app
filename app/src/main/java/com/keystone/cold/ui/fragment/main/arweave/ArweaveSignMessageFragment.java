@@ -4,6 +4,7 @@ import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.REQUEST_ID;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.SIGN_DATA;
+import static com.keystone.cold.ui.fragment.main.arweave.ArweaveTxConfirmFragment.KEY_SALT_LEN;
 import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KEY_SIGNATURE_UR;
 import static com.keystone.cold.ui.fragment.main.solana.SolTxConfirmFragment.SIGN_DIALOG_FAIL_DELAY;
 import static com.keystone.cold.ui.fragment.main.solana.SolTxConfirmFragment.SIGN_DIALOG_REMOVE_OBSERVERS_DELAY;
@@ -66,6 +67,8 @@ public class ArweaveSignMessageFragment extends BaseFragment<FragmentSolSignMess
 
         rawHex = bundle.getString(SIGN_DATA);
         requestId = bundle.getString(REQUEST_ID);
+        int saltLen = bundle.getInt(KEY_SALT_LEN);
+
         try {
             messageUtf8 = new String(Hex.decode(rawHex), StandardCharsets.UTF_8);
             mBinding.message.setText(messageUtf8);
@@ -76,19 +79,19 @@ public class ArweaveSignMessageFragment extends BaseFragment<FragmentSolSignMess
         }
 
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
-        mBinding.sign.setOnClickListener(v -> handleSign(rawHex));
+        mBinding.sign.setOnClickListener(v -> handleSign(rawHex, saltLen));
         mBinding.address.setVisibility(View.GONE);
         mBinding.rawMessage.setText(rawHex);
         mBinding.message.setText(messageUtf8);
     }
 
-    private void handleSign(String message) {
+    private void handleSign(String message, int saltLen) {
         boolean fingerprintSignEnable = new FingerprintPolicyCallable(READ, TYPE_SIGN_TX).call();
         AuthenticateModal.show(mActivity,
                 getString(R.string.password_modal_title), "", fingerprintSignEnable,
                 token -> {
                     viewModel.setToken(token);
-                    subscribeSignState(viewModel.handleSignMessage(message));
+                    subscribeSignState(viewModel.handleSignMessage(message, saltLen));
                 }, forgetPassword);
     }
 

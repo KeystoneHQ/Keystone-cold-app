@@ -32,6 +32,7 @@ import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_MINT_ADD
 import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_NAME;
 import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_NFT_TYPE;
 import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.SOL_NFT;
+import static com.keystone.cold.ui.fragment.main.arweave.ArweaveTxConfirmFragment.KEY_SALT_LEN;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
 
@@ -735,7 +736,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 }
             }
 
-            private void handleArweaveSignRequest(ScanResult result) throws InvalidTransactionException {
+            private void handleArweaveSignRequest(ScanResult result) throws InvalidTransactionException, XfpNotMatchException {
                 ArweaveSignRequest arweaveSignRequest = (ArweaveSignRequest) result.resolve();
                 Bundle bundle = new Bundle();
                 ByteBuffer uuidBuffer = ByteBuffer.wrap(arweaveSignRequest.getRequestId());
@@ -746,6 +747,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     throw new XfpNotMatchException("Master fingerprint not match");
                 }
                 bundle.putString(REQUEST_ID, uuid.toString());
+                bundle.putInt(KEY_SALT_LEN, arweaveSignRequest.getSaltLen().getLength());
                 String signData = Hex.toHexString(arweaveSignRequest.getSignData());
                 bundle.putString(SIGN_DATA, signData);
                 ArweaveSignRequest.SignType signType = arweaveSignRequest.getSignType();
@@ -756,7 +758,6 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                         break;
                     case DATAITEM:
                         throw new InvalidTransactionException("Transaction type DataItem not supported yet");
-                        break;
                     case MESSAGE:
                         mFragment.navigate(R.id.action_to_arweaveSignMessageFragment, bundle);
                         break;
