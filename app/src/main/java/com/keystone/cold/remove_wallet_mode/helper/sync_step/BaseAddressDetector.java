@@ -27,11 +27,11 @@ public class BaseAddressDetector implements AddressDetector {
                     .collect(Collectors.toList());
             int size = addressEntities.size();
             if (size == 0) {
-                AppExecutors.getInstance().mainThread().execute(callback::noAddress);
+                callback.noAddress();
             } else if (size == 1) {
-                AppExecutors.getInstance().mainThread().execute(callback::oneAddress);
+                callback.oneAddress();
             } else {
-                AppExecutors.getInstance().mainThread().execute(callback::moreThanOneAddress);
+                callback.moreThanOneAddress();
             }
         });
 

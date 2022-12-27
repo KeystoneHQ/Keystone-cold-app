@@ -7,7 +7,7 @@ import com.keystone.cold.remove_wallet_mode.helper.sync_step.FewchaWalletAddress
 import com.keystone.cold.remove_wallet_mode.ui.status.AddressDetectStatus;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 
-public class SyncPageJumpHandler {
+public class SyncPageJumpHelper {
 
     public static void detect(String walletId, MutableLiveData<AddressDetectStatus> stepMode) {
         Wallet wallet = Wallet.getWalletById(walletId);

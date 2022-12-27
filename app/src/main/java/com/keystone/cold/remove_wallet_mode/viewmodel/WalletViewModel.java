@@ -7,7 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.keystone.cold.remove_wallet_mode.helper.SyncPageJumpHandler;
+import com.keystone.cold.remove_wallet_mode.helper.SyncPageJumpHelper;
 import com.keystone.cold.remove_wallet_mode.ui.model.WalletItem;
 import com.keystone.cold.remove_wallet_mode.ui.status.AddressDetectStatus;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
@@ -47,7 +47,7 @@ public class WalletViewModel extends AndroidViewModel {
     public LiveData<AddressDetectStatus> detectWalletItem(WalletItem walletItem) {
         MutableLiveData<AddressDetectStatus> stepMode = new MutableLiveData<>();
         if (Wallet.isSingleChainWallet(walletItem.getWalletId())) {  // Enter the processing flow of the single-chain wallet
-            SyncPageJumpHandler.detect(walletItem.getWalletId(), stepMode);
+            SyncPageJumpHelper.detect(walletItem.getWalletId(), stepMode);
         } else { //Enter the processing flow of the multi-chain wallet, compared with the single-chain wallet, there is usually one more page for selecting the coin
             stepMode.postValue(AddressDetectStatus.MULTI_CHAINS);
         }
