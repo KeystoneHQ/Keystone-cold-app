@@ -277,6 +277,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             case KEYSTONE:
                 if (coinCode.equals(Coins.DOT.coinCode()) || coinCode.equals(Coins.KSM.coinCode()))
                     return R.menu.asset_without_add;
+                if (Coins.isUTXOLike(coinCode)) {
+                    return R.menu.more;
+                }
                 return R.menu.asset;
             default:
                 return (showPublicKey) ? R.menu.asset_without_add : R.menu.asset;
@@ -838,15 +841,63 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         addCLickChangePathProcess(binding.changePath, closeDialog);
         addClickTutorialsProcess(binding.tutorials, closeDialog);
         addClickResetDBProcess(binding.resetDb, closeDialog);
+        addExportXPubProcess(binding.exportXpub, closeDialog);
+        addSearchProcess(binding.searchAddress, closeDialog);
         dialog.setContentView(binding.getRoot());
         dialog.show();
     }
 
     private void addClickTutorialsProcess(View view, Runnable additionProcess) {
-        view.setOnClickListener(v -> {
-            navigate(R.id.action_to_tutorialsFragment);
-            additionProcess.run();
-        });
+        if (isKeystoneExportXPub()) {
+            view.setVisibility(View.GONE);
+        } else {
+            view.setOnClickListener(v -> {
+                navigate(R.id.action_to_tutorialsFragment);
+                additionProcess.run();
+            });
+        }
+    }
+
+    private boolean isKeystoneExportXPub() {
+        return watchWallet.equals(WatchWallet.KEYSTONE) && Coins.isUTXOLike(coinCode);
+    }
+
+    private final Runnable forgetPassword = () -> {
+        Bundle bundle = new Bundle();
+        bundle.putString(ACTION, PreImportFragment.ACTION_RESET_PWD);
+        Navigation.findNavController(requireView())
+                .navigate(R.id.action_to_preImportFragment, bundle);
+    };
+
+
+    private void addExportXPubProcess(View view, Runnable additionProcess) {
+        if (!isKeystoneExportXPub()) {
+            view.setVisibility(View.GONE);
+        } else {
+            view.setOnClickListener(v -> {
+                AuthenticateModal.show(mActivity,
+                        getString(R.string.password_modal_title),
+                        "",
+                        false,
+                        (token) -> {
+                            Bundle data = new Bundle();
+                            data.putString(KEY_COIN_CODE, coinCode);
+                            navigate(R.id.action_to_exportXPubFragment, data);
+                        }, forgetPassword);
+                additionProcess.run();
+            });
+        }
+    }
+
+    private void addSearchProcess(View view, Runnable additionProcess) {
+        if (!isKeystoneExportXPub()) {
+            view.setVisibility(View.GONE);
+        } else {
+            view.setOnClickListener(v -> {
+                enterSearch();
+                additionProcess.run();
+            });
+        }
     }
 
     private void addClickResetDBProcess(View view, Runnable additionProcess) {
@@ -876,12 +927,16 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private void addClickSyncProcess(View view, View anchor, Runnable additionProcess) {
-        boolean isShowBadge = judgeShowBadge();
-        BadgeView bgView = null;
-        if (isShowBadge) {
-            bgView = generateBadgeView(anchor);
+        if (isKeystoneExportXPub()) {
+            view.setVisibility(View.GONE);
+        } else {
+            boolean isShowBadge = judgeShowBadge();
+            BadgeView bgView = null;
+            if (isShowBadge) {
+                bgView = generateBadgeView(anchor);
+            }
+            setSyncViewListener(view, additionProcess, bgView);
         }
-        setSyncViewListener(view, additionProcess, bgView);
     }
 
     private boolean judgeShowBadge() {
@@ -902,7 +957,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             isShowBadge = true;
         } else if (watchWallet == WatchWallet.KEPLR_WALLET && !Utilities.hasUserClickKeplrSyncLock(mActivity)) {
             isShowBadge = true;
-        }else if (watchWallet == WatchWallet.ARConnect && !Utilities.hasUserClickArweaveSyncLock(mActivity)) {
+        } else if (watchWallet == WatchWallet.ARConnect && !Utilities.hasUserClickArweaveSyncLock(mActivity)) {
             isShowBadge = true;
         }
         return isShowBadge;
@@ -1038,6 +1093,9 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     }
 
     private boolean isHideChangePath() {
+        if (isKeystoneExportXPub()) {
+            return true;
+        }
         if (watchWallet == WatchWallet.APTOS || watchWallet == WatchWallet.ARConnect
                 || watchWallet == WatchWallet.POLKADOT_JS || watchWallet == WatchWallet.KEPLR_WALLET) {
             return true;

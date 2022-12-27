@@ -656,6 +656,13 @@
         android:name="com.keystone.cold.ui.fragment.setup.MnemonicInputFragment"
         android:label="MnemonicInputFragment"
         tools:layout="@layout/mnemonic_input_fragment" />
+
+    <fragment
+        android:id="@+id/exportXPubFragment"
+        android:name="com.keystone.cold.ui.fragment.main.ExportXPubFragment"
+        android:label="ExportXPubFragment"
+        tools:layout="@layout/mnemonic_input_fragment" />
+
     <fragment
         android:id="@+id/assetFragment"
         android:name="com.keystone.cold.ui.fragment.main.AssetFragment"
@@ -1342,6 +1349,14 @@
     <action
         android:id="@+id/action_to_ArweaveAuthFragment"
         app:destination="@id/ArweaveAuthFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_exportXPubFragment"
+        app:destination="@id/exportXPubFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
