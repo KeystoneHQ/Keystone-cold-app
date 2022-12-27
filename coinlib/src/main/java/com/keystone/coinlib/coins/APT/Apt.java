@@ -1,4 +1,4 @@
-package com.keystone.coinlib.coins.APTOS;
+package com.keystone.coinlib.coins.APT;
 
 import com.keystone.coinlib.Util;
 import com.keystone.coinlib.coins.AbsCoin;
@@ -10,9 +10,9 @@ import com.keystone.coinlib.utils.Coins;
 import org.bouncycastle.util.encoders.Hex;
 
 
-public class Aptos extends AbsCoin {
+public class Apt extends AbsCoin {
 
-    protected Aptos(Coin impl) {
+    protected Apt(Coin impl) {
         super(impl);
     }
 

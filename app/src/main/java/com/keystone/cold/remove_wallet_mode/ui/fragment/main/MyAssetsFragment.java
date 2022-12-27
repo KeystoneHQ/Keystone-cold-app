@@ -1,5 +1,8 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main;
 
+import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
+import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,7 +35,10 @@ public class MyAssetsFragment extends BaseFragment<FragmentMyAssetsBinding> {
     private CoinAdapter coinAdapter;
 
     private final CoinAdapter.CoinClickCallback mCoinClickCallback = assetItem -> {
-
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_COIN_ID, assetItem.getCoinId());
+        bundle.putString(KEY_COIN_CODE, assetItem.getCoinCode());
+        navigate(R.id.action_to_assetFragment, bundle);
     };
 
     @Override

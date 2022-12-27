@@ -359,7 +359,7 @@ public class AddAddressViewModel extends AndroidViewModel {
     public static void addAptosAddress(AccountEntity accountEntity, DataRepository repository, int number, CoinEntity coinEntity, Runnable onComplete) {
         AppExecutors.getInstance().diskIO().execute(() -> {
 
-            AbsDeriver deriver = AbsDeriver.newInstance("APTOS");
+            AbsDeriver deriver = AbsDeriver.newInstance(Coins.APTOS.coinCode());
             if (deriver == null) {
                 Log.e("addAptosAddress", "deriver is null");
             } else {
@@ -392,7 +392,7 @@ public class AddAddressViewModel extends AndroidViewModel {
 
     public static String deriveAptosAddress(int account, int index, AddressEntity addressEntity) {
         String address = "";
-        AbsDeriver deriver = AbsDeriver.newInstance("APTOS");
+        AbsDeriver deriver = AbsDeriver.newInstance(Coins.APTOS.coinCode());
         if (deriver == null) {
             return address;
         }

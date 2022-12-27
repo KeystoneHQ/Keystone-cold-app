@@ -1,4 +1,4 @@
-package com.keystone.cold.remove_wallet_mode.ui.helper;
+package com.keystone.cold.remove_wallet_mode.helper;
 
 import com.keystone.coinlib.v8.ScriptLoader;
 import com.keystone.cold.MainApplication;

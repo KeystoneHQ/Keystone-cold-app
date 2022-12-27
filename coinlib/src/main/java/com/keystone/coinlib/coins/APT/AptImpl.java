@@ -1,4 +1,4 @@
-package com.keystone.coinlib.coins.APTOS;
+package com.keystone.coinlib.coins.APT;
 
 import androidx.annotation.NonNull;
 
@@ -8,7 +8,7 @@ import com.keystone.coinlib.interfaces.Coin;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
 
-public class AptosImpl implements Coin {
+public class AptImpl implements Coin {
 
     @Override
     public String coinCode() {

@@ -9,7 +9,7 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.remove_wallet_mode.ui.helper.CoinConfigHelper;
+import com.keystone.cold.remove_wallet_mode.helper.CoinConfigHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +95,7 @@ public class AssetsLiveData extends MediatorLiveData<List<AssetItem>> {
         DataRepository repository = MainApplication.getApplication().getRepository();
         return Transformations.map(repository.loadCoins(), input -> input.stream()
                 .filter(this::filterSomeEntity)
-                .map(this::convert)
+                .peek(this::convert)
                 .map(AssetItem::new)
                 .collect(Collectors.toList()));
     }
@@ -120,12 +120,11 @@ public class AssetsLiveData extends MediatorLiveData<List<AssetItem>> {
         }
     }
 
-    private CoinEntity convert(CoinEntity coinEntity) {
+    private void convert(CoinEntity coinEntity) {
         if (coinEntity.getCoinCode().equals("BTC")) {
             coinEntity.setName("BTC");
         } else if (coinEntity.getCoinCode().equals("TRON")) {
             coinEntity.setCoinCode("TRX");
         }
-        return coinEntity;
     }
 }

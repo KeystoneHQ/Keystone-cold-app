@@ -24,7 +24,7 @@ import com.keystone.cold.MainApplication;
 import com.keystone.cold.cryptocore.AptosParser;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
-import com.keystone.coinlib.coins.APTOS.AptosImpl;
+import com.keystone.coinlib.coins.APT.AptImpl;
 import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.cold.AppExecutors;
@@ -114,7 +114,7 @@ public class AptosViewModel extends Base {
 
     private void signTransaction(Signer signer) {
         signCallBack.startSign();
-        SignTxResult result = new AptosImpl().signHex(txHex, signer);
+        SignTxResult result = new AptImpl().signHex(txHex, signer);
         if (result == null) {
             signCallBack.onFail();
         } else {
@@ -124,7 +124,7 @@ public class AptosViewModel extends Base {
 
     private void signMessage(Signer signer) {
         signCallBack.startSign();
-        String result = new AptosImpl().signMessage(messageData, signer);
+        String result = new AptImpl().signMessage(messageData, signer);
         if (result == null) {
             signCallBack.onFail();
         } else {
