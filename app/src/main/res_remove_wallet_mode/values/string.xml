@@ -2,4 +2,73 @@
     <string name="drawer_menu_my_assets">My Assets</string>
     <string name="faq">FAQ</string>
 
+    <string name="connect_wallets">Connect SoftWare Wallets</string>
+
+    <string-array name="watch_wallet_list_remove_wallet_mode">
+        <item>Keystone Companion App</item>
+        <item>MetaMask</item>
+        <item>Keplr</item>
+        <item>Safe</item>
+        <item>BitKeep</item>
+        <item>BlueWallet</item>
+        <item>Solflare Wallet</item>
+        <item>SubWallet</item>
+        <item>Eternl</item>
+        <item>ArConnect</item>
+        <item>Petra Aptos Wallet</item>
+        <item>Fewcha Move Wallet</item>
+        <item>Sender Wallet</item>
+        <item>Rabby</item>
+        <item>Core</item>
+        <item>Polkadot.js</item>
+        <item>XRP Toolkit</item>
+        <item>Zapper</item>
+        <item>Yearn Finance</item>
+        <item>SushiSwap</item>
+    </string-array>
+    <string-array name="watch_wallet_ids" translatable="false">
+        <item>keystone</item>
+        <item>metamask</item>
+        <item>keplr</item>
+        <item>safe</item>
+        <item>bitkeep</item>
+        <item>bluewallet</item>
+        <item>solflare</item>
+        <item>subwallet</item>
+        <item>eternl</item>
+        <item>arconnect</item>
+        <item>petra</item>
+        <item>fewcha</item>
+        <item>sender</item>
+        <item>rabby</item>
+        <item>core</item>
+        <item>polkadot</item>
+        <item>xrp</item>
+        <item>zapper</item>
+        <item>yearn</item>
+        <item>sushiswap</item>
+    </string-array>
+    <string-array name="watch_wallet_summury_remove_wallet_mode">
+        <item>8 main chains including BTC, ETH, etc</item>
+        <item>ETH, AVAX, BSC, and all EVM tokens</item>
+        <item>Cosmos Eco</item>
+        <item>ETH, AVAX, BSC, and all EVM tokens</item>
+        <item>BTC, ETH and all EVM tokens</item>
+        <item>BTC</item>
+        <item>SOL and SPL tokens</item>
+        <item>DOT, KSM</item>
+        <item>ADA</item>
+        <item>AR</item>
+        <item>APT and related token</item>
+        <item>APT and related token</item>
+        <item>NEAR and related token</item>
+        <item>ETH, AVAX, BSC, and all EVM tokens</item>
+        <item>AVAX, ETH, BTC </item>
+        <item>DOT, KSM</item>
+        <item>XRP Toolkit</item>
+        <item>DeFi</item>
+        <item>DeFi</item>
+        <item>DeFi</item>
+    </string-array>
+
 </resources>
