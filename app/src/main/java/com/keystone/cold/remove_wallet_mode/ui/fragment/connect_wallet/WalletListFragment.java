@@ -11,6 +11,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentWalletListBinding;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.WalletListAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.model.WalletItem;
+import com.keystone.cold.remove_wallet_mode.ui.status.AddressDetectStatus;
 import com.keystone.cold.remove_wallet_mode.viewmodel.WalletViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
 
@@ -19,7 +20,6 @@ import java.util.List;
 public class WalletListFragment extends BaseFragment<FragmentWalletListBinding> {
 
     private LiveData<List<WalletItem>> walletLiveData;
-    private LiveData<Integer> stepMode;
 
     private WalletListAdapter walletListAdapter;
     private WalletViewModel walletViewModel;
@@ -60,27 +60,26 @@ public class WalletListFragment extends BaseFragment<FragmentWalletListBinding> 
         if (walletLiveData != null) {
             walletLiveData.removeObservers(this);
         }
-        if (stepMode != null) {
-            stepMode.removeObservers(this);
-        }
         super.onDestroyView();
     }
 
     private void handleItemClick(WalletItem walletItem) {
-        stepMode = walletViewModel.handleWalletItem(walletItem);
-        stepMode.observe(this, mode -> {
+        LiveData<AddressDetectStatus> stepMode = walletViewModel.detectWalletItem(walletItem);
+        stepMode.observe(WalletListFragment.this, mode -> {
             switch (mode) {
-                case 0: //no address，give error message
+                case NO_ADDRESS: //no address，give error message
                     break;
-                case 1: //one address, jump sync page directly
+                case ONE_ADDRESS: //one address, jump sync page directly
                     Toast.makeText(mActivity, "一个地址", Toast.LENGTH_SHORT).show();
                     break;
-                case 2: //more than one address, jump select address page
+                case MULTI_ADDRESSES: //more than one address, jump select address page
                     Toast.makeText(mActivity, "多个地址", Toast.LENGTH_SHORT).show();
                     break;
-                case 3: //multi chains wallet, step int select coin page
+                case MULTI_CHAINS: //multi chains wallet, step int select coin page
+                    Toast.makeText(mActivity, "多链钱包", Toast.LENGTH_SHORT).show();
                     break;
             }
+            stepMode.removeObservers(WalletListFragment.this);
         });
     }
 

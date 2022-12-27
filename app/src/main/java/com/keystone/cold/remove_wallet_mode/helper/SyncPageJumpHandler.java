@@ -4,32 +4,33 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.cold.remove_wallet_mode.helper.sync_step.AddressDetector;
 import com.keystone.cold.remove_wallet_mode.helper.sync_step.FewchaWalletAddressDetector;
+import com.keystone.cold.remove_wallet_mode.ui.status.AddressDetectStatus;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 
 public class SyncPageJumpHandler {
 
-    public static void detect(String walletId, MutableLiveData<Integer> stepMode) {
+    public static void detect(String walletId, MutableLiveData<AddressDetectStatus> stepMode) {
         Wallet wallet = Wallet.getWalletById(walletId);
         AddressDetector addressDetector = getWalletAddressDetector(wallet);
         if (addressDetector != null) {
             addressDetector.detect(new AddressDetector.Callback() {
                 @Override
                 public void oneAddress() {
-                    stepMode.postValue(1);
+                    stepMode.postValue(AddressDetectStatus.ONE_ADDRESS);
                 }
 
                 @Override
                 public void moreThanOneAddress() {
-                    stepMode.postValue(2);
+                    stepMode.postValue(AddressDetectStatus.MULTI_ADDRESSES);
                 }
 
                 @Override
                 public void noAddress() {
-                    stepMode.postValue(0);
+                    stepMode.postValue(AddressDetectStatus.NO_ADDRESS);
                 }
             });
         } else {
-            stepMode.postValue(0);
+            stepMode.postValue(AddressDetectStatus.NO_ADDRESS);
         }
     }
 
