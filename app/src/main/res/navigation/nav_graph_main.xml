@@ -165,6 +165,12 @@
         tools:layout="@layout/eth_tx_confirm" />
 
     <fragment
+        android:id="@+id/arweaveTxFragment"
+        android:name="com.keystone.cold.ui.fragment.main.arweave.ArweaveTxFragment"
+        android:label="ArweaveTxFragment"
+        tools:layout="@layout/arweave_tx" />
+
+    <fragment
         android:id="@+id/psbtTransactionFragment"
         android:name="com.keystone.cold.ui.fragment.main.psbt.PSBTTransactionFragment"
         android:label="PSBTTransactionFragment"
@@ -742,6 +748,13 @@
         <action
             android:id="@+id/action_to_polkadotTxFragment"
             app:destination="@id/polkadotTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_to_arweaveTxFragment"
+            app:destination="@id/arweaveTxFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"

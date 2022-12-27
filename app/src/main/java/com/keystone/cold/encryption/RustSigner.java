@@ -1,7 +1,5 @@
 package com.keystone.cold.encryption;
 
-import android.util.Log;
-
 import androidx.annotation.Nullable;
 
 import com.keystone.coinlib.interfaces.Signer;
@@ -33,7 +31,6 @@ public class RustSigner extends Signer {
     }
 
     public String signRSA(String data, int saltLen) {
-        Log.d("sora", "signRSA: " + data);
         return rccSigner.sign(data, RCCSigner.SignAlgo.RSA, saltLen);
     }
 

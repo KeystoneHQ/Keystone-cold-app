@@ -114,13 +114,10 @@ public class ArweaveTxViewModel extends AndroidViewModel {
                 signState.postValue(new SignState(STATE_SIGN_FAIL, null));
                 return;
             }
-            Log.d("sora", "handleSign: " + tx.getSignatureData());
             String signature = signer.signRSA(tx.getSignatureData(), saltLen);
-            Log.d("sora", "siganture: " + signature);
             try {
                 String txId = ArweaveViewModel.formatHex(Util.sha256(Hex.decode(signature)));
                 insertDB(signature, txId, tx);
-                Log.d("sora", "handleSign: " + signature);
                 signState.postValue(new SignState(STATE_SIGN_SUCCESS, txId, signature));
                 new ClearTokenCallable().call();
             } catch (Exception e) {

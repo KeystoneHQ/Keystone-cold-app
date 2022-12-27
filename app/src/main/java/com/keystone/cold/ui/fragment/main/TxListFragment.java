@@ -137,7 +137,10 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
                     navigate(R.id.action_to_ethTxFragment, bundle);
                 } else if (WatchWallet.POLKADOT_JS_SIGN_ID.equals(tx.getSignId())) {
                     navigate(R.id.action_to_polkadotTxFragment, bundle);
-                } else {
+                } else if (WatchWallet.ARWEAVE_SIGN_ID.equals(tx.getSignId())) {
+                    navigate(R.id.action_to_arweaveTxFragment, bundle);
+                }
+                else {
                     navigate(R.id.action_to_txFragment, bundle);
                 }
             };
