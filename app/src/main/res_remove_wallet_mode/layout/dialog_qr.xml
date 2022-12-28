@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_corner_8dp_white">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/ivClose"
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
+                android:layout_gravity="end"
+                android:layout_marginTop="@dimen/dp_12"
+                android:layout_marginEnd="@dimen/dp_12"
+                android:background="@drawable/ic_dialog_close"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/tvTittle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:text="Scan To Get More Information"
+                android:textColor="#4B4B4B"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+            <com.keystone.cold.ui.views.qrcode.QrCodeView
+                android:id="@+id/qrcode"
+                android:layout_width="210dp"
+                android:layout_height="210dp"
+                android:layout_marginHorizontal="@dimen/dp_39"
+                android:layout_marginTop="@dimen/dp_16"
+                android:background="@color/white"
+                android:keepScreenOn="true"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/img"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    tools:ignore="ContentDescription"
+                    tools:src="@drawable/ic_dialog_close" />
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="visible" />
+            </com.keystone.cold.ui.views.qrcode.QrCodeView>
+
+
+            <TextView
+                android:id="@+id/text2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="19dp"
+                android:gravity="center"
+                android:lineSpacingExtra="7dp"
+                android:text="What is passphrase wallet?"
+                android:textColor="#4B4B4B"
+                android:textSize="@dimen/sp_14" />
+
+
+            <TextView
+                android:id="@+id/tvLink"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="@dimen/dp_16"
+                android:gravity="center"
+                android:lineSpacingExtra="7dp"
+                android:text="https://keyst.one/t/passphrase"
+                android:textColor="#4B4B4B"
+                android:textSize="@dimen/sp_9" />
+
+        </LinearLayout>
+    </FrameLayout>
+
+
+</layout>
+
