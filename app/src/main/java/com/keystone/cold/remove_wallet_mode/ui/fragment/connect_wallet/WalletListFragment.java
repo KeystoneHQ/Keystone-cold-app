@@ -14,6 +14,7 @@ import com.keystone.cold.remove_wallet_mode.ui.model.WalletItem;
 import com.keystone.cold.remove_wallet_mode.ui.status.AddressDetectStatus;
 import com.keystone.cold.remove_wallet_mode.viewmodel.WalletViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.ui.fragment.Constants;
 
 import java.util.List;
 
@@ -73,7 +74,10 @@ public class WalletListFragment extends BaseFragment<FragmentWalletListBinding> 
                     Toast.makeText(mActivity, "一个地址", Toast.LENGTH_SHORT).show();
                     break;
                 case MULTI_ADDRESSES: //more than one address, jump select address page
-                    Toast.makeText(mActivity, "多个地址", Toast.LENGTH_SHORT).show();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constants.KEY_WALLET_ID, walletItem.getWalletId());
+                    navigate(R.id.action_to_selectAddressFragment, bundle);
+//                    Toast.makeText(mActivity, "多个地址", Toast.LENGTH_SHORT).show();
                     break;
                 case MULTI_CHAINS: //multi chains wallet, step int select coin page
                     Toast.makeText(mActivity, "多链钱包", Toast.LENGTH_SHORT).show();

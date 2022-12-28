@@ -1,5 +1,8 @@
 package com.keystone.cold.remove_wallet_mode.wallet;
 
+import com.keystone.coinlib.utils.Coins;
+import com.keystone.cold.config.FeatureFlags;
+
 public enum Wallet {
 
     KEYSTONE("keystone"),
@@ -62,6 +65,38 @@ public enum Wallet {
                 return false;
         }
         return false;
+    }
+
+
+    public Coins.Coin[] getSupportedCoins() {
+        switch (this) {
+            case KEYSTONE:
+                if(FeatureFlags.ENABLE_XTN) {
+                    return new Coins.Coin[]{Coins.BTC, Coins.BTC_LEGACY, Coins.BTC_NATIVE_SEGWIT, Coins.BCH, Coins.ETH, Coins.XRP, Coins.TRON, Coins.LTC, Coins.DASH, Coins.DOT, Coins.BTC_TESTNET_LEGACY, Coins.BTC_TESTNET_SEGWIT, Coins.BTC_TESTNET_NATIVE_SEGWIT};
+                }
+                else {
+                    return new Coins.Coin[]{Coins.BTC, Coins.BTC_LEGACY, Coins.BTC_NATIVE_SEGWIT, Coins.BCH, Coins.ETH, Coins.XRP, Coins.TRON, Coins.LTC, Coins.DASH, Coins.DOT};
+                }
+            case POLKADOT:
+                return new Coins.Coin[]{Coins.DOT, Coins.KSM};
+            case XRPTOOLKIT:
+                return new Coins.Coin[]{Coins.XRP};
+            case METAMASK:
+                return new Coins.Coin[]{Coins.ETH};
+            case SOLFLARE:
+                return new Coins.Coin[]{Coins.SOL};
+            case SENDER:
+                return new Coins.Coin[]{Coins.NEAR};
+            case CORE:
+                return new Coins.Coin[]{Coins.BTC_NATIVE_SEGWIT, Coins.ETH};
+            case BITKEEP:
+                return new Coins.Coin[]{Coins.BTC_NATIVE_SEGWIT, Coins.ETH};
+            case FEWCHA:
+                return new Coins.Coin[]{Coins.APTOS};
+            case KEPLR:
+                return new Coins.Coin[]{Coins.ATOM, Coins.OSMO, Coins.SCRT, Coins.AKT, Coins.CRO, Coins.IOV, Coins.ROWAN, Coins.CTK, Coins.IRIS, Coins.REGEN, Coins.XPRT, Coins.DVPN, Coins.IXO, Coins.NGM, Coins.BLD, Coins.BOOT, Coins.JUNO, Coins.STARS, Coins.AXL, Coins.SOMM, Coins.UMEE, Coins.GRAV, Coins.TGD, Coins.STRD, Coins.KAVA, Coins.EVMOS};
+        }
+        return new Coins.Coin[]{};
     }
 }
 

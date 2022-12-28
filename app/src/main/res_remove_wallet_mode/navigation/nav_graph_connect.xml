@@ -10,5 +10,23 @@
         android:id="@+id/walletListFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.WalletListFragment"
         android:label="WalletListFragment"
-        tools:layout="@layout/fragment_wallet_list" />
+        tools:layout="@layout/fragment_wallet_list">
+
+        <action
+            android:id="@+id/action_to_selectAddressFragment"
+            app:destination="@id/selectAddressFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/selectAddressFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.SelectAddressFragment"
+        android:label="SelectAddressFragment"
+        tools:layout="@layout/fragment_select_address" />
 </navigation>
