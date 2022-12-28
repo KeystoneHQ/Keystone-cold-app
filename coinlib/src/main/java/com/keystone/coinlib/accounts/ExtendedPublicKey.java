@@ -72,4 +72,15 @@ public class ExtendedPublicKey {
         System.arraycopy(this.key, 0, bytes, 45, 33);
         return new String(new B58().encodeToBytesChecked(bytes), StandardCharsets.US_ASCII);
     }
+
+    public String toVersion(ExtendedPublicKeyVersion version) {
+        byte[] bytes = new byte[78];
+        System.arraycopy(version.getVersionBytes(), 0, bytes, 0, 4);
+        bytes[4] = this.depth;
+        System.arraycopy(this.parentFingerprint, 0, bytes, 5, 4);
+        System.arraycopy(this.index, 0, bytes, 9, 4);
+        System.arraycopy(this.chainCode, 0, bytes, 13, 32);
+        System.arraycopy(this.key, 0, bytes, 45, 33);
+        return new String(new B58().encodeToBytesChecked(bytes), StandardCharsets.US_ASCII);
+    }
 }

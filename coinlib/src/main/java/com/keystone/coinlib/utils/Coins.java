@@ -190,6 +190,20 @@ public class Coins {
         }
     }
 
+    public static boolean isUTXOLike(@NonNull String coinCode) {
+        switch (coinCode) {
+            case "BTC":
+            case "BTC_LEGACY":
+            case "BTC_NATIVE_SEGWIT":
+            case "LTC":
+            case "DASH":
+            case "BCH":
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public static boolean isBTCTestnet(@NonNull String coinCode) {
         switch (coinCode) {
             case "BTC_TESTNET_SEGWIT":

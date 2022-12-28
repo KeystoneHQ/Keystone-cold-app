@@ -462,6 +462,8 @@
     <string name="decline">Decline</string>
     <string name="reset_polkadot_db">Reset Database</string>
     <string name="reset_polkadot_db_hint">This action will reset database for Polkadot.{js} / SubWallet, you have to import metadata again after this. </string>
+    <string name="export_xpub_text">Export XPUB</string>
+    <string name="export_xpub_hint">Scan the QR code to get XPUB</string>
     <string name="approve">Approve</string>
     <string name="approval">Approval</string>
     <string name="polkadot_hint">Hint: \n\nYou need to select the network to get your keys and connect software wallet separately on chains</string>
