@@ -1,4 +1,4 @@
-package com.keystone.cold.remove_wallet_mode.helper.sync_step;
+package com.keystone.cold.remove_wallet_mode.helper.sync_jump;
 
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;

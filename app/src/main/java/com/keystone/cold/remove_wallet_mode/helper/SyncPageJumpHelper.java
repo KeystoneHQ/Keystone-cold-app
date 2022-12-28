@@ -2,8 +2,8 @@ package com.keystone.cold.remove_wallet_mode.helper;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.keystone.cold.remove_wallet_mode.helper.sync_step.AddressDetector;
-import com.keystone.cold.remove_wallet_mode.helper.sync_step.FewchaWalletAddressDetector;
+import com.keystone.cold.remove_wallet_mode.helper.sync_jump.AddressDetector;
+import com.keystone.cold.remove_wallet_mode.helper.sync_jump.FewchaWalletAddressDetector;
 import com.keystone.cold.remove_wallet_mode.ui.status.AddressDetectStatus;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 
