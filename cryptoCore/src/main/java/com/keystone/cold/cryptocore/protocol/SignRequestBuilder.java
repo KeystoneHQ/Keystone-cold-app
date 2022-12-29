@@ -5,41 +5,33 @@ import com.keystone.cold.cryptocore.SignRequestProtoc;
 import com.keystone.cold.encryptioncore.utils.ByteFormatter;
 import com.keystone.cold.cryptocore.RCCABIProtoc;
 
-public class RequestBuilder {
+public class SignRequestBuilder {
     private final RCCABIProtoc.CommandRequest.Builder commandRequest;
     private final SignRequestProtoc.SignRequest.Builder signRequest;
-    private final GetRsaPublicKeyRequestProtoc.GetRsaPublicKeyRequest.Builder getRSAPublicKeyRequest;
 
-    public RequestBuilder () {
+    public SignRequestBuilder() {
         commandRequest = RCCABIProtoc.CommandRequest.newBuilder();
         signRequest = SignRequestProtoc.SignRequest.newBuilder();
-        getRSAPublicKeyRequest = GetRsaPublicKeyRequestProtoc.GetRsaPublicKeyRequest.newBuilder();
     }
     public String build() {
-        commandRequest.setGetRsaPublicKeyRequest(getRSAPublicKeyRequest);
+        commandRequest.setSignRequest(signRequest);
         byte[] data = commandRequest.build().toByteArray();
         return ByteFormatter.bytes2hex(data);
     }
 
-    public RequestBuilder setSignId(int id) {
+    public SignRequestBuilder setSignId(int id) {
         commandRequest.setRequestId(id);
         return this;
     }
 
-    public RequestBuilder setSignRequest(int seedId, int algoValue, String password, String path, String data, String portName) {
+    public SignRequestBuilder setSignRequest(int seedId, int algoValue, String password, String path, String data, String portName) {
         signRequest.setSeedId(seedId);
         signRequest.setAlgoValue(algoValue);
         signRequest.setPassword(password);
         signRequest.setDerivationPath(path);
         signRequest.setData(data);
         signRequest.setPortName(portName);
-        return this;
-    }
-
-    public RequestBuilder setGetRSAPublicKeyRequest(int seedId, String password, String portName) {
-        getRSAPublicKeyRequest.setSeedId(seedId);
-        getRSAPublicKeyRequest.setPassword(password);
-        getRSAPublicKeyRequest.setPortName(portName);
+        signRequest.putSigningOption("salt_len", "0");
         return this;
     }
 }

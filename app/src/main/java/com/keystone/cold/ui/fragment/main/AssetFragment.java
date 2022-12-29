@@ -32,6 +32,7 @@ import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_MINT_ADD
 import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_NAME;
 import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.KEY_NFT_TYPE;
 import static com.keystone.cold.ui.fragment.main.NFTConfirmFragment.SOL_NFT;
+import static com.keystone.cold.ui.fragment.main.arweave.ArweaveTxConfirmFragment.KEY_SALT_LEN;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
 
@@ -113,6 +114,7 @@ import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
 import com.sparrowwallet.hummingbird.registry.EthNFTItem;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
+import com.sparrowwallet.hummingbird.registry.arweave.ArweaveSignRequest;
 import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignRequest;
 import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolNFTItem;
@@ -488,6 +490,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     handleCryptoPSBT(result);
                 } else if (result.getType().equals(ScanResultTypes.UR_COSMOS_SIGN_REQUEST)) {
                     handleCosmosSignRequest(result);
+                } else if (result.getType().equals(ScanResultTypes.UR_ARWEAVE_SIGN_REQUEST)) {
+                    handleArweaveSignRequest(result);
                 } else {
                     throw new UnknowQrCodeException("unknown transaction!");
                 }
@@ -732,6 +736,34 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 }
             }
 
+            private void handleArweaveSignRequest(ScanResult result) throws InvalidTransactionException, XfpNotMatchException {
+                ArweaveSignRequest arweaveSignRequest = (ArweaveSignRequest) result.resolve();
+                Bundle bundle = new Bundle();
+                ByteBuffer uuidBuffer = ByteBuffer.wrap(arweaveSignRequest.getRequestId());
+                UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+                String requestMFP = Hex.toHexString(arweaveSignRequest.getMasterFingerprint());
+                String MFP = new GetMasterFingerprintCallable().call();
+                if (!requestMFP.equalsIgnoreCase(MFP)) {
+                    throw new XfpNotMatchException("Master fingerprint not match");
+                }
+                bundle.putString(REQUEST_ID, uuid.toString());
+                bundle.putInt(KEY_SALT_LEN, arweaveSignRequest.getSaltLen().getLength());
+                String signData = Hex.toHexString(arweaveSignRequest.getSignData());
+                bundle.putString(SIGN_DATA, signData);
+                ArweaveSignRequest.SignType signType = arweaveSignRequest.getSignType();
+
+                switch (signType) {
+                    case TRANSACTION:
+                        mFragment.navigate(R.id.action_to_arweaveTxConfirmFragment, bundle);
+                        break;
+                    case DATAITEM:
+                        throw new InvalidTransactionException("Transaction type DataItem not supported yet");
+                    case MESSAGE:
+                        mFragment.navigate(R.id.action_to_arweaveSignMessageFragment, bundle);
+                        break;
+                }
+            }
+
             @Override
             public boolean handleException(Exception e) {
                 e.printStackTrace();
@@ -801,6 +833,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_CRYPTO_PSBT));
         } else if (watchWallet == WatchWallet.KEPLR_WALLET) {
             desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_COSMOS_SIGN_REQUEST, ScanResultTypes.UR_ETH_SIGN_REQUEST));
+        } else if (watchWallet == WatchWallet.ARConnect) {
+            desiredResults.addAll(Collections.singletonList(ScanResultTypes.UR_ARWEAVE_SIGN_REQUEST));
         }
         scannerState.setDesiredResults(desiredResults);
         ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);

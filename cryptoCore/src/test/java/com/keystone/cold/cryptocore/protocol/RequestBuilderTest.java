@@ -7,7 +7,7 @@ import org.junit.Test;
 public class RequestBuilderTest extends TestCase {
     @Test
     public void testRequest() {
-        RequestBuilder rb = new RequestBuilder();
+        SignRequestBuilder rb = new SignRequestBuilder();
         rb.setSignId(0);
         rb.setSignRequest(0, 0, "1", "m/44'/60'/0'/0/0", "hellorust", "/dev/ttyMT1");
 

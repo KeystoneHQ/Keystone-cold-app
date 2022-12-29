@@ -1,8 +1,6 @@
 package com.keystone.cold.viewmodel.tx.psbt;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -28,6 +26,7 @@ import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
 import com.keystone.cold.ui.views.AuthenticateModal;
 import com.keystone.cold.viewmodel.WatchWallet;
+import com.keystone.cold.viewmodel.tx.SignState;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -202,23 +201,6 @@ public class PSBTViewModel extends AndroidViewModel {
         return addition.toString();
     }
 
-    public static class SignState {
-        private final String status;
-        private final String txId;
-
-        public SignState(String status, String txId) {
-            this.status = status;
-            this.txId = txId;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-
-        public String getTxId() {
-            return txId;
-        }
-    }
 }
 
 
