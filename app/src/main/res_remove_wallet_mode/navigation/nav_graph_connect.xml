@@ -50,5 +50,14 @@
         android:id="@+id/syncFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.SyncFragment"
         android:label="SyncFragment"
-        tools:layout="@layout/fragment_sync" />
+        tools:layout="@layout/fragment_sync">
+
+        <action
+            android:id="@+id/action_to_selectAddressFragment"
+            app:destination="@id/selectAddressFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
 </navigation>

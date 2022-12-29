@@ -49,6 +49,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.databinding.DialogAssetBottomBinding;
 import com.keystone.cold.databinding.FragmentAssetBinding;
 
+import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AddressViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.main.AddressNumberPicker;
@@ -60,11 +61,9 @@ import com.keystone.cold.util.ViewUtils;
 
 import java.util.Objects;
 
-public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements  NumberPickerCallback {
+public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements NumberPickerCallback {
 
     public static final String TAG = "AssetFragment";
-
-    public static final int DIALOG_DISMISS_DELAY_TIME = 500;
 
     private Fragment[] fragments;
     private String coinId;
@@ -106,7 +105,6 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
     private void initViewPager() {
@@ -171,7 +169,7 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         ProgressModalDialog dialog = ProgressModalDialog.newInstance();
         dialog.show(Objects.requireNonNull(mActivity.getSupportFragmentManager()), "");
         Handler handler = new Handler(MainApplication.getApplication().getMainLooper());
-        Runnable runnable = () -> handler.postDelayed(dialog::dismiss, DIALOG_DISMISS_DELAY_TIME);
+        Runnable runnable = () -> handler.postDelayed(dialog::dismiss, UIConstants.DIALOG_DISMISS_DELAY_TIME);
         AddressViewModel.Factory factory = new AddressViewModel.Factory(mActivity.getApplication(), coinId);
         AddressViewModel viewModel = ViewModelProviders.of(this, factory)
                 .get(AddressViewModel.class);
@@ -185,11 +183,13 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
     private void showBottomSheetMenu() {
         BottomSheetDialog dialog = new BottomSheetDialog(mActivity);
         DialogAssetBottomBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.dialog_asset_bottom, null, false);
+        binding.rlAddAddress.setVisibility(View.VISIBLE);
         binding.rlAddAddress.setOnClickListener(v -> {
             handleAddAddress();
             dialog.dismiss();
 
         });
+        binding.rlFAQ.setVisibility(View.VISIBLE);
         binding.rlFAQ.setOnClickListener(v -> {
             //todo FAQ
             dialog.dismiss();
