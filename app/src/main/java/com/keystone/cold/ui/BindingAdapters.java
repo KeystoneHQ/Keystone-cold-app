@@ -88,4 +88,15 @@ public class BindingAdapters {
             view.setText(formatter.format(time));
         }
     }
+
+    @BindingAdapter("wallet")
+    public static void setWalletIcon(ImageView view, String name) {
+        if (TextUtils.isEmpty(name)) {
+            return;
+        }
+        Context context = view.getContext();
+        int resId = context.getResources().getIdentifier("ic_wallet_" + name.toLowerCase(),
+                "drawable", context.getPackageName());
+        view.setImageResource(resId);
+    }
 }

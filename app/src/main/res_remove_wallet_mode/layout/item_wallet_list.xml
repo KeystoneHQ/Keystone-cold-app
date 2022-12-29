@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="walletItem"
+            type="com.keystone.cold.remove_wallet_mode.ui.model.WalletItem" />
+
+        <variable
+            name="callback"
+            type="com.keystone.cold.remove_wallet_mode.ui.adapter.WalletListAdapter.ClickCallback" />
+    </data>
+
+    <RelativeLayout
+        style="@style/selectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_52"
+        android:onClick="@{()->callback.onClick(walletItem)}"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/ivIcon"
+            android:layout_width="@dimen/dp_32"
+            android:layout_height="@dimen/dp_32"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dp_18"
+            app:wallet="@{walletItem.walletId}"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/ic_wallet_fewcha" />
+
+        <LinearLayout
+            android:id="@+id/llWalletInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dp_12"
+            android:layout_toEndOf="@id/ivIcon"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvWalletName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{walletItem.walletName}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold"
+                tools:text="Fewcha Move Wallet" />
+
+            <TextView
+                android:id="@+id/tvWalletSummary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_2"
+                android:text="@{walletItem.walletSummary}"
+                android:textColor="@color/white40"
+                android:textSize="@dimen/sp_10"
+                tools:text="APT and related token" />
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:src="@drawable/arrow_right" />
+
+        <include
+            layout="@layout/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+</layout>

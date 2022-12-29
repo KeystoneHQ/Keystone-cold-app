@@ -3,6 +3,7 @@ package com.keystone.cold.remove_wallet_mode.ui;
 import static com.keystone.cold.update.utils.Storage.hasSdcard;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -151,6 +152,11 @@ public class MainActivity extends FullScreenActivity {
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
                 mBinding.drawer.getChildAt(0).setX(mBinding.menuContainer.getWidth() + mBinding.menuContainer.getX());
             }
+        });
+
+        mBinding.llConnectSoftWareWallet.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ConnectWalletActivity.class);
+            startActivity(intent);
         });
     }
 

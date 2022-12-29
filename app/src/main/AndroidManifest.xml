@@ -124,6 +124,14 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".remove_wallet_mode.ui.ConnectWalletActivity"
+            android:screenOrientation="portrait"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
         <activity android:name=".ui.AttackWarningActivity" />
 
         <service android:name=".service.AttackCheckingService" />
