@@ -46,7 +46,7 @@
             android:layout_height="@dimen/dp_32"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/dp_18"
-            app:icon="@{assetItem.coinCode}"
+            app:coin_icon="@{assetItem.coinCode}"
             tools:ignore="ContentDescription"
             tools:src="@drawable/coin_btc" />
 

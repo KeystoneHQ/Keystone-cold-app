@@ -99,4 +99,15 @@ public class BindingAdapters {
                 "drawable", context.getPackageName());
         view.setImageResource(resId);
     }
+
+    @BindingAdapter("coin_icon")
+    public static void setCoinIcon(ImageView view, String name) {
+        if (TextUtils.isEmpty(name)) {
+            return;
+        }
+        Context context = view.getContext();
+        int resId = context.getResources().getIdentifier("ic_coin_" + name.toLowerCase(),
+                "drawable", context.getPackageName());
+        view.setImageResource(resId);
+    }
 }

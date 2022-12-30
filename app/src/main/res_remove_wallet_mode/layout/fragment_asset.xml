@@ -60,7 +60,7 @@
                     <ImageView
                         android:layout_width="26dp"
                         android:layout_height="26dp"
-                        app:icon="@{coinCode}"
+                        app:coin_icon="@{coinCode}"
                         tools:ignore="ContentDescription"
                         tools:src="@drawable/coin_apt" />
 

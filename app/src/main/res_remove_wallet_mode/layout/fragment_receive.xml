@@ -83,7 +83,7 @@
             android:layout_width="@dimen/dp_32"
             android:layout_height="@dimen/dp_32"
             android:layout_marginTop="@dimen/dp_8"
-            app:icon="@{coinCode}"
+            app:coin_icon="@{coinCode}"
             tools:ignore="ContentDescription"
             tools:src="@drawable/coin_apt" />
 
