@@ -71,4 +71,10 @@
         <item>DeFi</item>
     </string-array>
 
+
+    <string name="connect_who">Connect %s</string>>
+
+    <string name="connect_info">Connection QR Code</string>>
+
+
 </resources>
