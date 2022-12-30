@@ -85,7 +85,7 @@
 
 
             <TextView
-                android:id="@+id/text2"
+                android:id="@+id/tvSubTittle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"

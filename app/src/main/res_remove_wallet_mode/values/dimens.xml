@@ -34,6 +34,7 @@
 
     <dimen name="dp_4">4dp</dimen>
     <dimen name="dp_8">8dp</dimen>
+    <dimen name="dp_9">9dp</dimen>
 
     <dimen name="dp_10">10dp</dimen>
 

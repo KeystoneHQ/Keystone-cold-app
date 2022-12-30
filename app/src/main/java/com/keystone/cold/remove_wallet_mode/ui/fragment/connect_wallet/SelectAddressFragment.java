@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentSelectAddressBinding;
+import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.SelectedAddressAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.model.AddressItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AddressViewModel;
@@ -28,7 +29,6 @@ import java.util.Objects;
 public class SelectAddressFragment extends BaseFragment<FragmentSelectAddressBinding> implements NumberPickerCallback {
 
 
-    private static final long DIALOG_DISMISS_DELAY_TIME = 500;
     private AddressViewModel viewModel;
     private SelectedAddressAdapter selectedAddressAdapter;
     private LiveData<List<AddressItem>> addressLiveData;
@@ -108,7 +108,7 @@ public class SelectAddressFragment extends BaseFragment<FragmentSelectAddressBin
         ProgressModalDialog dialog = ProgressModalDialog.newInstance();
         dialog.show(Objects.requireNonNull(mActivity.getSupportFragmentManager()), "");
         Handler handler = new Handler(MainApplication.getApplication().getMainLooper());
-        Runnable runnable = () -> handler.postDelayed(dialog::dismiss, DIALOG_DISMISS_DELAY_TIME);
+        Runnable runnable = () -> handler.postDelayed(dialog::dismiss, UIConstants.DIALOG_DISMISS_DELAY_TIME);
         LiveData<Boolean> complete = viewModel.addAddress(value);
         complete.observe(this, result -> {
             runnable.run();

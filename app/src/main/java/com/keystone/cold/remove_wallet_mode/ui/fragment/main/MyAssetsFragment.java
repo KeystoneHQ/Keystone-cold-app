@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.cold.R;
-import com.keystone.cold.databinding.DialogAssetListBottomBinding;
+import com.keystone.cold.databinding.DialogAssetBottomBinding;
 import com.keystone.cold.databinding.FragmentMyAssetsBinding;
 import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.CoinAdapter;
@@ -92,12 +92,14 @@ public class MyAssetsFragment extends BaseFragment<FragmentMyAssetsBinding> {
 
     private void showBottomSheetMenu() {
         BottomSheetDialog dialog = new BottomSheetDialog(mActivity);
-        DialogAssetListBottomBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.dialog_asset_list_bottom, null, false);
+        DialogAssetBottomBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.dialog_asset_bottom, null, false);
+        binding.rlAddHideAsset.setVisibility(View.VISIBLE);
         binding.rlAddHideAsset.setOnClickListener(v -> {
             navigate(R.id.action_to_manageCoinFragment);
             dialog.dismiss();
 
         });
+        binding.rlFAQ.setVisibility(View.VISIBLE);
         binding.rlFAQ.setOnClickListener(v -> {
             //todo FAQ
             dialog.dismiss();

@@ -28,11 +28,44 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/rlAddHideAsset"
+            style="@style/selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_48"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingHorizontal="16dp"
+                android:text="@string/add_remove_coin"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:src="@drawable/arrow_right" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:background="@color/color_12ffffff" />
+
+        <RelativeLayout
             android:id="@+id/rlAddAddress"
             style="@style/selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_48"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -63,7 +96,8 @@
             style="@style/selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_48"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -71,6 +105,71 @@
                 android:layout_centerVertical="true"
                 android:paddingHorizontal="@dimen/dp_16"
                 android:text="@string/faq"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:src="@drawable/arrow_right" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:background="@color/color_12ffffff" />
+
+        <RelativeLayout
+            android:id="@+id/rlSelectAddress"
+            style="@style/selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_48"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingHorizontal="16dp"
+                android:text="@string/select_accounts"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:src="@drawable/arrow_right" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:background="@color/color_12ffffff" />
+
+
+        <RelativeLayout
+            android:id="@+id/rlTutorial"
+            style="@style/selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_48"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingHorizontal="16dp"
+                android:text="@string/tutorials"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_12" />
 

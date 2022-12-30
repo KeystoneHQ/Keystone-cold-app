@@ -76,5 +76,6 @@
 
     <string name="connect_info">Connection QR Code</string>>
 
+    <string name="select_accounts">Select Accounts</string>
 
 </resources>

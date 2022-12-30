@@ -28,7 +28,7 @@ public enum Wallet {
 
 
     private final String walletId;
-    private String walletName;
+    private final String walletName;
 
     Wallet(String walletId) {
         this.walletId = walletId;
@@ -38,6 +38,10 @@ public enum Wallet {
     Wallet(String walletId, String walletName) {
         this.walletId = walletId;
         this.walletName = walletName;
+    }
+
+    public String getWalletId() {
+        return walletId;
     }
 
     public String getWalletName() {
