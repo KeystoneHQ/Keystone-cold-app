@@ -7,7 +7,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.keystone.cold.R;
-import com.keystone.cold.databinding.AddressSyncItemBinding;
 import com.keystone.cold.databinding.ItemAddressSeletedListBinding;
 import com.keystone.cold.remove_wallet_mode.ui.model.AddressItem;
 import com.keystone.cold.ui.common.BaseBindingAdapter;
@@ -78,6 +77,16 @@ public class SelectedAddressAdapter extends BaseBindingAdapter<AddressItem, Item
 
     public boolean existSelectedAddress() {
         return checkedList.contains(true);
+    }
+
+    public List<Long> getAddressIds() {
+        List<Long> addressIds = new ArrayList<>();
+        for (int i = 0; i < checkedList.size(); i++) {
+            if (checkedList.get(i)) {
+                addressIds.add(getItems().get(i).getId());
+            }
+        }
+        return addressIds;
     }
 
     public interface AddressCallback {

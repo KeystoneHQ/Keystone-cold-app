@@ -130,4 +130,16 @@ public class SyncInfo implements Serializable {
         }
         return path.split("/").length - 1;
     }
+
+
+    @Override
+    public String toString() {
+        return "SyncInfo{" +
+                "coinId='" + coinId + '\'' +
+                ", path='" + path + '\'' +
+                ", address='" + address + '\'' +
+                ", name='" + name + '\'' +
+                ", addition='" + addition + '\'' +
+                '}';
+    }
 }

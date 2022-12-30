@@ -30,4 +30,6 @@ public interface Constants {
     String IS_FORCE = "is_force";
 
     String KEY_WALLET_ID = "wallet_id";
+    String KEY_ADDRESS_IDS = "address_ids";
+
 }

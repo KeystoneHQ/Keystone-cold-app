@@ -21,6 +21,7 @@ import com.keystone.cold.ui.fragment.main.AddressNumberPicker;
 import com.keystone.cold.ui.fragment.main.NumberPickerCallback;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -50,11 +51,11 @@ public class SelectAddressFragment extends BaseFragment<FragmentSelectAddressBin
         }
         mBinding.addrList.setAdapter(selectedAddressAdapter);
         mBinding.llAddAccounts.setOnClickListener(v -> handleAddAccounts());
-        mBinding.ivConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mActivity, "confirm",Toast.LENGTH_SHORT).show();
-            }
+        mBinding.ivConfirm.setOnClickListener((View.OnClickListener) v -> {
+            Bundle bundle = new Bundle();
+            bundle.putString(Constants.KEY_WALLET_ID, requireArguments().getString(Constants.KEY_WALLET_ID));
+            bundle.putSerializable(Constants.KEY_ADDRESS_IDS, (Serializable) selectedAddressAdapter.getAddressIds());
+            navigate(R.id.action_to_syncFragment, bundle);
         });
     }
 
@@ -87,7 +88,7 @@ public class SelectAddressFragment extends BaseFragment<FragmentSelectAddressBin
     }
 
     private void subscribeUi(LiveData<List<AddressItem>> address) {
-        address.observe(this, addressItems ->  {
+        address.observe(this, addressItems -> {
             selectedAddressAdapter.setItems(addressItems);
             mBinding.ivConfirm.setEnabled(selectedAddressAdapter.existSelectedAddress());
         });

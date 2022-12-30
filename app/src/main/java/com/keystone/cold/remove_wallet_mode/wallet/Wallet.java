@@ -16,7 +16,7 @@ public enum Wallet {
     ETERNL("eternl"),
     ARCONNECT("arconnect"),
     PETRA("petra"),
-    FEWCHA("fewcha"),
+    FEWCHA("fewcha", "Fewcha"),
     SENDER("sender"),
     RABBY("rabby"),
     CORE("core"),
@@ -28,9 +28,20 @@ public enum Wallet {
 
 
     private final String walletId;
+    private String walletName;
 
     Wallet(String walletId) {
         this.walletId = walletId;
+        this.walletName = "";
+    }
+
+    Wallet(String walletId, String walletName) {
+        this.walletId = walletId;
+        this.walletName = walletName;
+    }
+
+    public String getWalletName() {
+        return walletName;
     }
 
     public static Wallet getWalletById(String walletId) {
@@ -71,10 +82,9 @@ public enum Wallet {
     public Coins.Coin[] getSupportedCoins() {
         switch (this) {
             case KEYSTONE:
-                if(FeatureFlags.ENABLE_XTN) {
+                if (FeatureFlags.ENABLE_XTN) {
                     return new Coins.Coin[]{Coins.BTC, Coins.BTC_LEGACY, Coins.BTC_NATIVE_SEGWIT, Coins.BCH, Coins.ETH, Coins.XRP, Coins.TRON, Coins.LTC, Coins.DASH, Coins.DOT, Coins.BTC_TESTNET_LEGACY, Coins.BTC_TESTNET_SEGWIT, Coins.BTC_TESTNET_NATIVE_SEGWIT};
-                }
-                else {
+                } else {
                     return new Coins.Coin[]{Coins.BTC, Coins.BTC_LEGACY, Coins.BTC_NATIVE_SEGWIT, Coins.BCH, Coins.ETH, Coins.XRP, Coins.TRON, Coins.LTC, Coins.DASH, Coins.DOT};
                 }
             case POLKADOT:

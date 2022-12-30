@@ -71,7 +71,9 @@ public class WalletListFragment extends BaseFragment<FragmentWalletListBinding> 
                 case NO_ADDRESS: //no address，give error message
                     break;
                 case ONE_ADDRESS: //one address, jump sync page directly
-                    Toast.makeText(mActivity, "一个地址", Toast.LENGTH_SHORT).show();
+                    Bundle bundleData = new Bundle();
+                    bundleData.putString(Constants.KEY_WALLET_ID, walletItem.getWalletId());
+                    navigate(R.id.action_to_syncFragment, bundleData);
                     break;
                 case MULTI_ADDRESSES: //more than one address, jump select address page
                     Bundle bundle = new Bundle();
