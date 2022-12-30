@@ -112,7 +112,9 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         });
         binding.rlTutorial.setVisibility(View.VISIBLE);
         binding.rlTutorial.setOnClickListener(v -> {
-
+            Bundle bundle = new Bundle();
+            bundle.putString(Constants.KEY_WALLET_ID, wallet.getWalletId());
+            navigate(R.id.action_to_tutorialsFragment, bundle);
             dialog.dismiss();
         });
         dialog.setContentView(binding.getRoot());

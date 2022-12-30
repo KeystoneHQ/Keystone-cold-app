@@ -59,5 +59,22 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_to_tutorialsFragment"
+            app:destination="@id/tutorialsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/tutorialsFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.TutorialsFragment"
+        android:label="TutorialsFragment"
+        tools:layout="@layout/fragment_tutorial">
+
     </fragment>
 </navigation>
