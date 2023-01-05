@@ -74,7 +74,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
                     android:layout_marginTop="12dp"
+                    android:textAlignment="center"
                     android:text="@string/export_xpub_hint"
                     android:textColor="@color/white"
                     android:textSize="16sp"
@@ -104,9 +106,10 @@
                     android:padding="10dp">
 
                     <ImageView
+                        android:layout_marginTop="2dp"
                         android:layout_width="14dp"
                         android:layout_height="14dp"
-                        android:src="@drawable/information" />
+                        android:src="@drawable/icon_info_outlined" />
 
                     <TextView
                         android:id="@+id/hint"
