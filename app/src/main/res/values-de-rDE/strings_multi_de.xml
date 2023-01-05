@@ -80,7 +80,7 @@
   <string name="eos_hint">Here is your %s public key （safe to share）</string>
   <string name="eos_pubkey">Public Key：
 %s</string>
-  <string name="receive_warning">Please send only %s to this address! Sending any other coins on other chains will result in the loss of your deposit.</string>
+  <string name="receive_warning">Please send only %s to this address! Sending any other coins and tokens on other chains will result in the loss of your deposit.</string>
   <string name="receive_coin">Receive %s</string>
   <string name="version_update_hint"><![CDATA[Please visit: <font color=\"#00cdc3\">https://keyst.one/fw<font/> to check for firmware updates. If you are not using the latest firmware, download it from the official Keystone website and save it on a microSD card (FAT32 format). Transfer the file to your device as shown in the image below. (MicroSD card not included with purchase.)]]></string>
   <string name="version">Version </string>
