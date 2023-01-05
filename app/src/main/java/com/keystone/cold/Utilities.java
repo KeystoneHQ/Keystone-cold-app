@@ -384,7 +384,7 @@ public class Utilities {
 
     public static void setCurrentEthAccount(Context context, String code) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
-        sp.edit().putString(ETH_CURRENT_ACCOUNT, code).apply();
+        sp.edit().putString(ETH_CURRENT_ACCOUNT, code).commit();
     }
 
     public static String getCurrentEthAccount(Context context) {

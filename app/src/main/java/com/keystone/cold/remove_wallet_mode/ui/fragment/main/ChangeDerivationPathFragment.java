@@ -47,7 +47,7 @@ public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDer
     private String selectCode;
 
     private static final String[] SOL_ACCOUNT_CODES = {SOLAccount.SOLFLARE_BIP44.getCode(), SOLAccount.SOLFLARE_BIP44_ROOT.getCode(), SOLAccount.SOLFLARE_BIP44_CHANGE.getCode()};
-    private static final String[] ETH_ACCOUNT_CODES = {ETHAccount.LEDGER_LIVE.getCode(), ETHAccount.LEDGER_LEGACY.getCode(), ETHAccount.BIP44_STANDARD.getCode()};
+    private static final String[] ETH_ACCOUNT_CODES = {ETHAccount.BIP44_STANDARD.getCode(), ETHAccount.LEDGER_LIVE.getCode(), ETHAccount.LEDGER_LEGACY.getCode()};
     private static final String[] NEAR_ACCOUNT_CODES = {NEARAccount.MNEMONIC.getCode(), NEARAccount.LEDGER.getCode()};
 
     @Override
@@ -61,7 +61,7 @@ public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDer
         coinId = data.getString(KEY_COIN_ID);
 
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
-        mBinding.ivConfirm.setOnClickListener(v -> stepIntoMainActivity());
+        mBinding.ivConfirm.setOnClickListener(v -> save());
         syncViewModel = ViewModelProviders.of(mActivity).get(SyncViewModel.class);
         if (coinId.equals(Coins.ETH.coinId())) setupEthUI();
         else if (coinId.equals(Coins.SOL.coinId())) setupSolUI();
@@ -120,19 +120,19 @@ public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDer
         mBinding.patternCard1.setOnClickListener(v -> {
             syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.LEDGER_LIVE);
             Utilities.setCurrentEthAccount(mActivity, ETHAccount.LEDGER_LIVE.getCode());
-            setCardCheckedStatus(ETHAccount.LEDGER_LIVE.getCode(), ETH_ACCOUNT_CODES);
+            setCardCheckedStatus(ETHAccount.BIP44_STANDARD.getCode(), ETH_ACCOUNT_CODES);
         });
 
         mBinding.patternCard2.setOnClickListener(v -> {
             syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.LEDGER_LEGACY);
             Utilities.setCurrentEthAccount(mActivity, ETHAccount.LEDGER_LEGACY.getCode());
-            setCardCheckedStatus(ETHAccount.LEDGER_LEGACY.getCode(), ETH_ACCOUNT_CODES);
+            setCardCheckedStatus(ETHAccount.LEDGER_LIVE.getCode(), ETH_ACCOUNT_CODES);
         });
 
         mBinding.patternCard3.setOnClickListener(v -> {
             syncViewModel.getChainsMutableLiveData().postValue(ETHAccount.BIP44_STANDARD);
             Utilities.setCurrentEthAccount(mActivity, ETHAccount.BIP44_STANDARD.getCode());
-            setCardCheckedStatus(ETHAccount.BIP44_STANDARD.getCode(), ETH_ACCOUNT_CODES);
+            setCardCheckedStatus(ETHAccount.LEDGER_LEGACY.getCode(), ETH_ACCOUNT_CODES);
         });
         mBinding.derivationPattern1.setText(ETHAccount.BIP44_STANDARD.getDisplayPath());
         mBinding.derivationPattern2.setText(ETHAccount.LEDGER_LIVE.getDisplayPath());
@@ -157,7 +157,7 @@ public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDer
         mBinding.patternCard3.setBackgroundResource(checkedIndex == 2 ? R.drawable.bg_derivation_path_selected : R.drawable.bg_derivation_path_unselected);
     }
 
-    private void stepIntoMainActivity() {
+    private void save() {
         if (coinId.equals(Coins.ETH.coinId())) {
             if (!TextUtils.isEmpty(selectCode)) {
                 Utilities.setCurrentEthAccount(mActivity, selectCode);
@@ -171,8 +171,7 @@ public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDer
                 Utilities.setCurrentNearAccount(mActivity, selectCode);
             }
         }
-        startActivity(new Intent(mActivity, MainActivity.class));
-        mActivity.finish();
+        navigateUp();
     }
 
     @SuppressLint("ClickableViewAccessibility")

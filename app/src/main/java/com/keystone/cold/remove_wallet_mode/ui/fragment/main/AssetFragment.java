@@ -43,6 +43,7 @@ import com.allenliu.badgeview.BadgeFactory;
 import com.allenliu.badgeview.BadgeView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 
@@ -59,7 +60,9 @@ import com.keystone.cold.ui.modal.ProgressModalDialog;
 import com.keystone.cold.util.ViewUtils;
 
 
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 
 public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements NumberPickerCallback {
 
@@ -220,5 +223,40 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
             addressNumberPicker.setCallback(this);
         }
         addressNumberPicker.show(mActivity.getSupportFragmentManager(), "");
+    }
+
+    private enum AssetConfig {
+        ETH(Coins.ETH.coinId(), true, true, true),
+        DEFAULT("default", true, true, true),
+        ;
+
+        private String coinId;
+        private boolean showAddAddress;
+        private boolean showChangePath;
+        private boolean showFAQ;
+
+        AssetConfig(String coinId, boolean showAddAddress, boolean showChangePath, boolean showFAQ) {
+            this.coinId = coinId;
+            this.showAddAddress = showAddAddress;
+            this.showChangePath = showChangePath;
+            this.showFAQ = showFAQ;
+        }
+
+        public static AssetConfig getConfigByCoinId(String coinId) {
+            Optional<AssetConfig> config = Arrays.stream(AssetConfig.values()).filter(assetConfig -> assetConfig.coinId.equals(coinId)).findFirst();
+            return config.orElse(DEFAULT);
+        }
+
+        public boolean isShowAddAddress() {
+            return showAddAddress;
+        }
+
+        public boolean isShowChangePath() {
+            return showChangePath;
+        }
+
+        public boolean isShowFAQ() {
+            return showFAQ;
+        }
     }
 }

@@ -7,6 +7,7 @@ import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -100,7 +101,10 @@ public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
     }
 
     private void subscribeUi(LiveData<List<AddressItem>> address) {
-        address.observe(this, addressItems -> addressAdapter.setItems(addressItems));
+        address.observe(this, addressItems -> {
+            Log.d("sora", "subscribeUi: " + addressItems);
+            addressAdapter.setItems(addressItems);
+        });
     }
 
     public void exitEditAddressName() {

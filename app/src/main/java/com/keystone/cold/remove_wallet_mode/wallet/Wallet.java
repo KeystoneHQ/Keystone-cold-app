@@ -6,7 +6,7 @@ import com.keystone.cold.config.FeatureFlags;
 public enum Wallet {
 
     KEYSTONE("keystone"),
-    METAMASK("metamask"),
+    METAMASK("metamask", "MetaMask"),
     KEPLR("keplr"),
     SAFE("safe"),
     BITKEEP("bitkeep"),
@@ -74,6 +74,7 @@ public enum Wallet {
     public static boolean isSingleChainWallet(Wallet wallet) {
         //todo  Need to add other types
         switch (wallet) {
+            case METAMASK:
             case FEWCHA:
                 return true;
             case CORE:

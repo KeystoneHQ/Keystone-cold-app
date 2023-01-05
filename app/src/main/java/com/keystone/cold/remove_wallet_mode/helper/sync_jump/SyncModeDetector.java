@@ -1,12 +1,12 @@
 package com.keystone.cold.remove_wallet_mode.helper.sync_jump;
 
-public interface AddressDetector {
+public interface SyncModeDetector {
     interface Callback {
-        void oneAddress();
+        void useDirect();
 
-        void moreThanOneAddress();
+        void useSelectAddress();
 
-        void noAddress();
+        void invalid();
     }
 
     void detect(Callback callback);
