@@ -437,6 +437,8 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
             binding.addAddress.setVisibility(View.GONE);
             binding.resetDb.setVisibility(View.GONE);
             binding.changePath.setVisibility(View.GONE);
+            binding.searchAddress.setVisibility(View.GONE);
+            binding.exportXpub.setVisibility(View.GONE);
             binding.tutorials.setOnClickListener(v -> {
                 navigate(R.id.action_to_tutorialsFragment);
                 dialog.dismiss();
