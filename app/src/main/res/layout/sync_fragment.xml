@@ -29,16 +29,23 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:navigationIcon="@drawable/arrow_left"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
+            android:layout_height="?attr/actionBarSize">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:navigationIcon="@drawable/arrow_left"
+                app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            </androidx.appcompat.widget.Toolbar>
 
             <TextView
-                android:layout_marginEnd="80dp"
+                android:paddingHorizontal="6dp"
+                android:layout_marginHorizontal="40dp"
+                android:layout_centerInParent="true"
                 android:id="@+id/toolbar_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,7 +55,8 @@
                 android:ellipsize="end"
                 android:textColor="@android:color/white"
                 android:text="@string/sync_watch_wallet" />
-        </androidx.appcompat.widget.Toolbar>
+
+        </RelativeLayout>
 
         <include layout="@layout/divider" />
 
