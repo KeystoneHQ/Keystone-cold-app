@@ -183,13 +183,26 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
     private void showBottomSheetMenu() {
         BottomSheetDialog dialog = new BottomSheetDialog(mActivity);
         DialogAssetBottomBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.dialog_asset_bottom, null, false);
-        binding.rlAddAddress.setVisibility(View.VISIBLE);
+        AssetConfig config = AssetConfig.getConfigByCoinId(coinId);
+        if (config.isShowAddAddress()) {
+            binding.rlAddAddress.setVisibility(View.VISIBLE);
+        }
+        if (config.isShowChangePath()) {
+            binding.rlChangePath.setVisibility(View.VISIBLE);
+        }
+        if (config.isShowFAQ()) {
+            binding.rlFAQ.setVisibility(View.VISIBLE);
+        }
         binding.rlAddAddress.setOnClickListener(v -> {
             handleAddAddress();
             dialog.dismiss();
-
         });
-        binding.rlFAQ.setVisibility(View.VISIBLE);
+        binding.rlChangePath.setOnClickListener(v -> {
+            Bundle data = new Bundle();
+            data.putString(KEY_COIN_ID, coinId);
+            navigate(R.id.action_to_changeDerivationPathFragment, data);
+            dialog.dismiss();
+        });
         binding.rlFAQ.setOnClickListener(v -> {
             //todo FAQ
             dialog.dismiss();

@@ -85,11 +85,36 @@
                 android:src="@drawable/arrow_right" />
         </RelativeLayout>
 
-        <View
+        <include layout="@layout/component_divider_with_padding" />
+
+        <RelativeLayout
+            android:id="@+id/rlChangePath"
+            style="@style/selectableItemBackground"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
-            android:layout_marginHorizontal="@dimen/dp_16"
-            android:background="@color/color_12ffffff" />
+            android:layout_height="@dimen/dp_48"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingHorizontal="@dimen/dp_16"
+                android:text="@string/changePath"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:src="@drawable/arrow_right" />
+        </RelativeLayout>
+
+        <include layout="@layout/component_divider_with_padding" />
 
         <RelativeLayout
             android:id="@+id/rlFAQ"

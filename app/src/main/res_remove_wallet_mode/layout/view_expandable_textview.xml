@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2021 Keystone
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -16,9 +15,21 @@
   ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
-    <color name="color_12ffffff">#12ffffff</color>
-    <color name="color_1A1A1A">#1A1A1A</color>
-    <color name="primary">#00CDC3</color>
-    <color name="primary_20a">#3300CDC3</color>
-</resources>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/text_123"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:textColor="@color/white40" />
+
+    <ImageView
+        android:layout_marginStart="@dimen/dp_8"
+        android:id="@+id/icon_123"
+        android:layout_width="@dimen/dp_16"
+        android:layout_height="@dimen/dp_16"
+        android:src="@drawable/icon_unfold" />
+
+</merge>

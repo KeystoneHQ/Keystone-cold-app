@@ -2,6 +2,7 @@ package com.keystone.cold.remove_wallet_mode.ui.model;
 
 import static com.keystone.cold.remove_wallet_mode.helper.CoinConfigHelper.getCoinEco;
 
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.FilterableItem;
 
@@ -15,6 +16,9 @@ public class AssetItem implements FilterableItem {
     private List<String> ecology;
 
     private boolean show;
+
+    public static final String TEXT_ECOLOGY_EVM = "EVM";
+    public static final String TEXT_ECOLOGY_COSMOS = "COSMOS ECO";
 
 
     public AssetItem() {
@@ -60,6 +64,12 @@ public class AssetItem implements FilterableItem {
         this.ecology = ecology;
     }
 
+    public String getCanonicalCoinIdByEcology() {
+        if (this.ecology != null && this.ecology.contains(TEXT_ECOLOGY_EVM))
+            return Coins.ETH.coinId();
+        return this.coinId;
+    }
+
     public boolean isShow() {
         return show;
     }
@@ -67,7 +77,6 @@ public class AssetItem implements FilterableItem {
     public void setShow(boolean show) {
         this.show = show;
     }
-
 
     @Override
     public String toString() {
