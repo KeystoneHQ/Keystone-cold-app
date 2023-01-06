@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +26,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
+import androidx.navigation.NavGraph;
+import androidx.navigation.NavInflater;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.keystone.cold.AppExecutors;
@@ -35,8 +39,11 @@ import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.databinding.ActivityMainRemoveWalletModeBinding;
 import com.keystone.cold.databinding.CommonModalBinding;
 import com.keystone.cold.fingerprint.FingerprintKit;
+import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.DrawerAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.MyAssetsFragment;
+import com.keystone.cold.remove_wallet_mode.utils.SharePreferencesUtil;
+import com.keystone.cold.remove_wallet_mode.utils.VersionUtils;
 import com.keystone.cold.ui.common.FullScreenActivity;
 import com.keystone.cold.ui.fragment.AboutFragment;
 import com.keystone.cold.ui.fragment.main.AssetListFragment;
@@ -72,7 +79,6 @@ public class MainActivity extends FullScreenActivity {
         super.onCreate(savedInstanceState);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main_remove_wallet_mode);
-
         if (savedInstanceState != null) {
             currentFragmentIndex = savedInstanceState.getInt("currentFragmentIndex");
         }
@@ -93,10 +99,34 @@ public class MainActivity extends FullScreenActivity {
                 });
             }
         }
-        AppExecutors.getInstance().diskIO().execute(()->{
+        AppExecutors.getInstance().diskIO().execute(() -> {
             String mfp = new GetMasterFingerprintCallable().call();
-            runOnUiThread(() -> mBinding.mfp.setText(String.format("Master Key Fingerprint：%s",mfp)));
+            runOnUiThread(() -> mBinding.mfp.setText(String.format("Master Key Fingerprint：%s", mfp)));
         });
+
+        checkUpgrade();
+
+    }
+
+    private void checkUpgrade() {
+        if (isNewVersion()) {
+            setupNavController();
+        }
+    }
+
+    // Version upgrade information is displayed only for version 10
+    private boolean isNewVersion() {
+        return UIConstants.VERSION_M_10.equals(VersionUtils.getVersion()) && TextUtils.isEmpty(SharePreferencesUtil.getFirmwareVersion(this));
+    }
+
+    private void setupNavController() {
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavInflater inflater = Objects.requireNonNull(navHostFragment).getNavController().getNavInflater();
+        NavGraph graph = inflater.inflate(R.navigation.nav_graph_main_remove_wallet_mode);
+        graph.setStartDestination(R.id.upgradeInformationFragment);
+        navHostFragment.getNavController().setGraph(graph);
+        SharePreferencesUtil.setFirmwareVersion(this, VersionUtils.getVersion());
     }
 
     private void initNavController() {
@@ -105,7 +135,7 @@ public class MainActivity extends FullScreenActivity {
             String label = Objects.requireNonNull(destination.getLabel()).toString();
             int index = getFragmentIndexByLabel(label);
             Log.d("RemoveWalletMode", "index is " + index);
-            if (index != -1 ) {
+            if (index != -1) {
                 mBinding.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 currentFragmentIndex = index;
                 if (drawerAdapter != null) {
@@ -185,14 +215,14 @@ public class MainActivity extends FullScreenActivity {
             }
             switch (position) {
                 case R.id.drawer_wallet:
-                    mNavController.popBackStack(R.id.myAssetsFragment,false);
+                    mNavController.popBackStack(R.id.myAssetsFragment, false);
                     break;
                 case R.id.drawer_settings:
-                    mNavController.navigateUp();
+                    //mNavController.navigateUp();
                     mNavController.navigate(R.id.settingFragment);
                     break;
                 case R.id.drawer_about:
-                    mNavController.navigateUp();
+                    //mNavController.navigateUp();
                     mNavController.navigate(R.id.aboutFragment);
                     break;
             }
@@ -234,7 +264,7 @@ public class MainActivity extends FullScreenActivity {
     public void updateBadge() {
         boolean supportFingerprint = FingerprintKit.isHardwareDetected(this);
         if (Utilities.hasUserClickPatternLock(this)
-                &&(!supportFingerprint || Utilities.hasUserClickFingerprint(this))) {
+                && (!supportFingerprint || Utilities.hasUserClickFingerprint(this))) {
             toolbar.setNavigationIcon(R.drawable.ic_menu);
         }
         drawerAdapter.notifyDataSetChanged();

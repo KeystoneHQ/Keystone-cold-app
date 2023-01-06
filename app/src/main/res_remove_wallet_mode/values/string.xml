@@ -82,4 +82,13 @@
 
     <string name="select_accounts">Select Accounts</string>
 
+
+    <string-array name="step_label_remove_wallet_mode">
+        <item>Web Authentication</item>
+        <item>Set Password</item>
+        <item>Firmware Upgrade</item>
+        <item>Create/Import Wallet</item>
+        <item>Connect Software Wallets</item>
+    </string-array>
+
 </resources>

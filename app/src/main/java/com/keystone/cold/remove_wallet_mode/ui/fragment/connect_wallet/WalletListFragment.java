@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentWalletListBinding;
+import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.helper.SyncMode;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.WalletListAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.model.WalletItem;
@@ -32,6 +33,11 @@ public class WalletListFragment extends BaseFragment<FragmentWalletListBinding> 
 
     @Override
     protected void init(View view) {
+
+        if (mActivity != null && mActivity instanceof SetupVaultActivity) {
+            mBinding.toolbar.setVisibility(View.GONE);
+        }
+
         mBinding.toolbar.setNavigationOnClickListener(v -> {
             requireActivity().finish();
         });
