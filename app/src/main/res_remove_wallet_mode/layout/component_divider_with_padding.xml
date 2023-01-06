@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <!--
   ~ Copyright (c) 2021 Keystone
   ~
@@ -16,9 +18,8 @@
   ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
-    <color name="color_12ffffff">#12ffffff</color>
-    <color name="color_1A1A1A">#1A1A1A</color>
-    <color name="primary">#00CDC3</color>
-    <color name="primary_20a">#3300CDC3</color>
-</resources>
+<View xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_1"
+    android:layout_marginHorizontal="@dimen/dp_16"
+    android:background="@color/color_12ffffff" />

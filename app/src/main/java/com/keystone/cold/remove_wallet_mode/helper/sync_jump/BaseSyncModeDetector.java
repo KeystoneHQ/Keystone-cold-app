@@ -8,7 +8,7 @@ import com.keystone.cold.db.entity.AddressEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BaseAddressDetector implements AddressDetector {
+public class BaseSyncModeDetector implements SyncModeDetector {
 
     protected String coinId;
 
@@ -27,11 +27,11 @@ public class BaseAddressDetector implements AddressDetector {
                     .collect(Collectors.toList());
             int size = addressEntities.size();
             if (size == 0) {
-                callback.noAddress();
+                callback.invalid();
             } else if (size == 1) {
-                callback.oneAddress();
+                callback.useDirect();
             } else {
-                callback.moreThanOneAddress();
+                callback.useSelectAddress();
             }
         });
 

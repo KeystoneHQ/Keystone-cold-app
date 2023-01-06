@@ -1,6 +1,10 @@
 <resources>
     <string name="drawer_menu_my_assets">My Assets</string>
     <string name="faq">FAQ</string>
+    <string name="changePath">Change Derivation Path</string>
+    <string name="changePathText">Please select the derivation path that you would like to use for Ethereum.</string>
+    <string name="change_path_sub_text">The first 3 accounts (addresses) are displayed for each path.</string>
+    <string name="eth_standard_path">This path is the most common one that many software wallets use to generate addresses. Some examples include MetaMask, Rabby, BitKeep &amp; Core Wallet.</string>
 
     <string name="connect_wallets">Connect SoftWare Wallets</string>
 

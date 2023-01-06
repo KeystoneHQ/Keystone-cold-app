@@ -7,21 +7,27 @@ import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentAddressListBinding;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.AddressAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.model.AddressItem;
+import com.keystone.cold.remove_wallet_mode.ui.model.AssetItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AddressViewModel;
+import com.keystone.cold.remove_wallet_mode.viewmodel.AssetViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.ui.modal.ModalDialog;
 
 import java.util.List;
+import java.util.Optional;
 
 public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
 
@@ -75,15 +81,30 @@ public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
     protected void initData(Bundle savedInstanceState) {
         Bundle data = requireArguments();
         String coinId = data.getString(KEY_COIN_ID);
-        AddressViewModel.Factory factory = new AddressViewModel.Factory(mActivity.getApplication(), coinId);
-        viewModel = ViewModelProviders.of(getParentFragment(), factory)
-                .get(AddressViewModel.class);
-        addressLiveData = viewModel.getAddress();
-        subscribeUi(addressLiveData);
+
+        AssetViewModel assetViewModel = ViewModelProviders.of(this).get(AssetViewModel.class);
+
+        assetViewModel.loadAssets().observe(this, assets -> {
+            if (assets == null) return;
+            Optional<AssetItem> assetItem = assets.stream().filter(asset -> asset.getCoinId().equals(coinId)).findFirst();
+            if (assetItem.isPresent()) {
+                String canonicalCoinId = assetItem.get().getCanonicalCoinIdByEcology();
+                AddressViewModel.Factory factory = new AddressViewModel.Factory(mActivity.getApplication(), canonicalCoinId);
+                viewModel = ViewModelProviders.of(getParentFragment(), factory)
+                        .get(AddressViewModel.class);
+                addressLiveData = viewModel.getAddress();
+                subscribeUi(addressLiveData);
+            } else {
+                ModalDialog.showCommonModal(mActivity, "Invalid State", "Cannot find coin " + coinId, "Back", this::navigateUp);
+            }
+        });
     }
 
     private void subscribeUi(LiveData<List<AddressItem>> address) {
-        address.observe(this, addressItems -> addressAdapter.setItems(addressItems));
+        address.observe(this, addressItems -> {
+            Log.d("sora", "subscribeUi: " + addressItems);
+            addressAdapter.setItems(addressItems);
+        });
     }
 
     public void exitEditAddressName() {

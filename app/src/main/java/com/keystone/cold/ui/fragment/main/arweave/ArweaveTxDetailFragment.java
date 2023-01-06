@@ -23,7 +23,6 @@ public class ArweaveTxDetailFragment extends BaseFragment<ArweaveTxDetailBinding
 
     @Override
     protected void init(View view) {
-        Log.d("sora", "init: " + tx);
         mBinding.txDetail.setText(tx);
     }
 

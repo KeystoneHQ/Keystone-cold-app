@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentWalletListBinding;
+import com.keystone.cold.remove_wallet_mode.helper.SyncMode;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.WalletListAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.model.WalletItem;
-import com.keystone.cold.remove_wallet_mode.ui.status.AddressDetectStatus;
 import com.keystone.cold.remove_wallet_mode.viewmodel.WalletViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.Constants;
@@ -65,21 +65,20 @@ public class WalletListFragment extends BaseFragment<FragmentWalletListBinding> 
     }
 
     private void handleItemClick(WalletItem walletItem) {
-        LiveData<AddressDetectStatus> stepMode = walletViewModel.detectWalletItem(walletItem);
+        LiveData<SyncMode> stepMode = walletViewModel.determineSyncMode(walletItem);
         stepMode.observe(WalletListFragment.this, mode -> {
             switch (mode) {
-                case NO_ADDRESS: //no address，give error message
+                case INVALID: //no address，give error message
                     break;
-                case ONE_ADDRESS: //one address, jump sync page directly
+                case DIRECT:
                     Bundle bundleData = new Bundle();
                     bundleData.putString(Constants.KEY_WALLET_ID, walletItem.getWalletId());
                     navigate(R.id.action_to_syncFragment, bundleData);
                     break;
-                case MULTI_ADDRESSES: //more than one address, jump select address page
+                case SELECT_ADDRESS:
                     Bundle bundle = new Bundle();
                     bundle.putString(Constants.KEY_WALLET_ID, walletItem.getWalletId());
                     navigate(R.id.action_to_selectAddressFragment, bundle);
-//                    Toast.makeText(mActivity, "多个地址", Toast.LENGTH_SHORT).show();
                     break;
                 case MULTI_CHAINS: //multi chains wallet, step int select coin page
                     Toast.makeText(mActivity, "多链钱包", Toast.LENGTH_SHORT).show();

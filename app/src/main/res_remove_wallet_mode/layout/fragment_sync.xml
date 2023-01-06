@@ -135,7 +135,7 @@
 
                 <include
                     android:id="@+id/dynamic_qrcode_layout"
-                    layout="@layout/new_style_dynamic_qrcode" />
+                    layout="@layout/view_dynamic_qrcode" />
 
                 <LinearLayout
                     android:id="@+id/address"

@@ -13,21 +13,23 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.DialogAssetBottomBinding;
 import com.keystone.cold.databinding.FragmentSyncBinding;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.FewchaWalletViewModel;
+import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.MetamaskViewModel;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.Constants;
 import com.sparrowwallet.hummingbird.UR;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
-
-
     private Wallet wallet;
     private List<Long> addressIds;
 
@@ -83,7 +85,10 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                 fewchaWalletViewModel.setAddressIds(addressIds);
                 urMutableLiveData = fewchaWalletViewModel.generateSyncUR();
                 break;
-
+            case METAMASK:
+                MetamaskViewModel metamaskViewModel = ViewModelProviders.of(this).get(MetamaskViewModel.class);
+                urMutableLiveData = metamaskViewModel.generateSyncUR();
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + wallet);
         }
@@ -101,26 +106,86 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
     private void showBottomSheetMenu() {
         BottomSheetDialog dialog = new BottomSheetDialog(mActivity);
         DialogAssetBottomBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.dialog_asset_bottom, null, false);
-        binding.rlSelectAddress.setVisibility(View.VISIBLE);
+        WalletConfig config = WalletConfig.getConfigByWalletId(wallet.getWalletId());
+        if (config.isShowSelectAddress()) {
+            binding.rlSelectAddress.setVisibility(View.VISIBLE);
+        }
+        if (config.isShowTutorial()) {
+            binding.rlTutorial.setVisibility(View.VISIBLE);
+        }
+        if (config.isShowChangePath()) {
+            binding.rlChangePath.setVisibility(View.VISIBLE);
+        }
+
         binding.rlSelectAddress.setOnClickListener(v -> {
             navigateUp();
             Bundle bundle = new Bundle();
             bundle.putString(Constants.KEY_WALLET_ID, wallet.getWalletId());
             navigate(R.id.action_to_selectAddressFragment, bundle);
             dialog.dismiss();
-
         });
-        binding.rlTutorial.setVisibility(View.VISIBLE);
         binding.rlTutorial.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             bundle.putString(Constants.KEY_WALLET_ID, wallet.getWalletId());
             navigate(R.id.action_to_tutorialsFragment, bundle);
             dialog.dismiss();
         });
+        binding.rlChangePath.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putString(Constants.KEY_COIN_ID, config.getCoinId());
+            navigate(R.id.action_to_changeDerivationPathFragment, bundle);
+            dialog.dismiss();
+        });
         dialog.setContentView(binding.getRoot());
         dialog.show();
     }
 
+    private enum WalletConfig {
+        METAMASK(Wallet.METAMASK.getWalletId(), new String[]{Coins.ETH.coinId()}, true, false, true),
+        FEWCHA(Wallet.FEWCHA.getWalletId(), new String[]{Coins.APTOS.coinId()}, false, true, true),
+        DEFAULT("default", new String[]{}, false, false, true),
+        ;
+
+        private String walletId;
+
+        public String[] getCoinIds() {
+            return coinIds;
+        }
+
+        private String[] coinIds;
+        private boolean showChangePath;
+        private boolean showSelectAddress;
+        private boolean showTutorial;
+
+        WalletConfig(String walletId, String[] coinIds, boolean showChangePath, boolean showSelectAddress, boolean showTutorial) {
+            this.walletId = walletId;
+            this.coinIds = coinIds;
+            this.showChangePath = showChangePath;
+            this.showSelectAddress = showSelectAddress;
+            this.showTutorial = showTutorial;
+        }
+
+        public static WalletConfig getConfigByWalletId(String walletId) {
+            Optional<WalletConfig> config = Arrays.stream(WalletConfig.values()).filter(assetConfig -> assetConfig.walletId.equals(walletId)).findFirst();
+            return config.orElse(DEFAULT);
+        }
 
 
+        public boolean isShowChangePath() {
+            return showChangePath;
+        }
+
+        public boolean isShowSelectAddress() {
+            return showSelectAddress;
+        }
+
+        public boolean isShowTutorial() {
+            return showTutorial;
+        }
+
+        public String getCoinId() {
+            // should determine which coinId to use when it is a multi_chain wallet;
+            return coinIds[0];
+        }
+    }
 }

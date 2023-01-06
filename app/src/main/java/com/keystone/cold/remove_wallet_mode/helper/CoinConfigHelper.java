@@ -1,5 +1,8 @@
 package com.keystone.cold.remove_wallet_mode.helper;
 
+import static com.keystone.cold.remove_wallet_mode.ui.model.AssetItem.TEXT_ECOLOGY_COSMOS;
+import static com.keystone.cold.remove_wallet_mode.ui.model.AssetItem.TEXT_ECOLOGY_EVM;
+
 import com.keystone.coinlib.v8.ScriptLoader;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.remove_wallet_mode.ui.model.AssetItem;
@@ -144,10 +147,10 @@ public class CoinConfigHelper {
     public static List<String> getCoinEco(String coinCode) {
         List<String> ecology = new ArrayList<>();
         if (EVM_ECOLOGY != null && EVM_ECOLOGY.contains(coinCode)) {
-            ecology.add("EVM");
+            ecology.add(TEXT_ECOLOGY_EVM);
         }
         if (COSMOS_ECOLOGY != null && COSMOS_ECOLOGY.contains(coinCode)) {
-            ecology.add("COSMOS ECO");
+            ecology.add(TEXT_ECOLOGY_COSMOS);
         }
         if (!ecology.isEmpty()) {
             return ecology;
