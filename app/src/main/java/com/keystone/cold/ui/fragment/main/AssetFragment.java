@@ -1137,7 +1137,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         if ((watchWallet == WatchWallet.CORE_WALLET || watchWallet.equals(WatchWallet.BIT_KEEP)) && coinCode.equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) {
             return true;
         }
-        return false;
+        return isNearMnemonic();
     }
 
     private boolean isNearMnemonic() {
