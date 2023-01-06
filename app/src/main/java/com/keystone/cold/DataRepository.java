@@ -234,6 +234,10 @@ public class DataRepository {
         return mDb.accountDao().add(account);
     }
 
+    public void insertAccounts(List<AccountEntity> accounts) {
+        mDb.accountDao().addList(accounts);
+    }
+
     public void updateAccount(AccountEntity account) {
         mDb.accountDao().update(account);
     }

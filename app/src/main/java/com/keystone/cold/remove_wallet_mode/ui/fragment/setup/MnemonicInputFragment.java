@@ -307,8 +307,8 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
                     }
                 };
 
-                List<CoinEntity> coins = PresetData.generateCoins(mActivity);
-                viewModel.presetData(coins, onComplete);
+                //List<CoinEntity> coins = PresetData.generateCoins(mActivity);
+                viewModel.setup(onComplete);
             } else if (state == VAULT_STATE_CREATING_FAILED) {
                 vaultState.setValue(VAULT_STATE_NOT_CREATE);
                 viewModel.getVaultCreateState().removeObservers(this);

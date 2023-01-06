@@ -33,16 +33,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.MnemonicUtils;
-import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.utils.Bip39;
-import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.BuildConfig;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
-import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.callables.GetRandomEntropyCallable;
 import com.keystone.cold.callables.GetVaultIdCallable;
 import com.keystone.cold.callables.RestartSeCallable;
@@ -50,15 +47,12 @@ import com.keystone.cold.callables.UpdatePassphraseCallable;
 import com.keystone.cold.callables.VerifyMnemonicCallable;
 import com.keystone.cold.callables.WebAuthCallableUpgrade;
 import com.keystone.cold.callables.WriteMnemonicCallable;
-import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.util.ExtendedPublicKeyCacheHelper;
+import com.keystone.cold.remove_wallet_mode.helper.SetupManager;
 import com.keystone.cold.util.HashUtil;
-import com.keystone.cold.viewmodel.AddAddressViewModel;
 import com.keystone.cold.viewmodel.OneTimePasswordManager;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+
 import org.spongycastle.util.encoders.Base64;
 import org.spongycastle.util.encoders.Hex;
 
@@ -119,8 +113,8 @@ public class SetupVaultViewModel extends AndroidViewModel {
         webAuthCode.postValue(null);
         AppExecutors.getInstance().diskIO().execute(() -> {
             byte[] authData = null;
-            try{
-               authData = Base64.decode(data);
+            try {
+                authData = Base64.decode(data);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -409,195 +403,12 @@ public class SetupVaultViewModel extends AndroidViewModel {
         return mnemonic;
     }
 
-    public void presetData(List<CoinEntity> coins, final Runnable onComplete) {
+
+    //coin info initialization
+    public void setup(final Runnable onComplete) {
         AppExecutors.getInstance().diskIO().execute(() -> {
-            ExtendedPublicKeyCacheHelper.getInstance().clearCache();
-            for (CoinEntity coin : coins) {
-                CoinEntity coinEntity = mRepository.loadCoinSync(coin.getCoinId());
-                if (coinEntity != null) {
-                    List<AccountEntity> accountEntities = mRepository.loadAccountsForCoin(coinEntity);
-                    if (coin.getCoinCode().equals(Coins.ETH.coinCode())) {
-                        if (accountEntities.size() != coin.getAccounts().size()) {
-                            try {
-                                updateEthAccounts(accountEntities, coinEntity);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        continue;
-                    } else if (coin.getIndex() == Coins.SOL.coinIndex()) {
-                        if (accountEntities.size() != coin.getAccounts().size()) {
-                            updateSolAccounts(coin);
-                        }
-                        continue;
-                    } else if (coin.getIndex() == Coins.NEAR.coinIndex()) {
-                        if (accountEntities.size() != coin.getAccounts().size()) {
-                            updateNearAccounts(coin);
-                        }
-                        continue;
-                    } else if (accountEntities.size() != 0) {
-                        continue;
-                    }
-                } else {
-                    if (coin.getCoinCode().equals(Coins.ETH.coinCode())) {
-                        createEthAccounts(coin);
-                        continue;
-                    } else if (coin.getIndex() == Coins.SOL.coinIndex()) {
-                        createSolAccounts(coin);
-                        continue;
-                    } else if (coin.getIndex() == Coins.NEAR.coinIndex()) {
-                        createNearAccounts(coin);
-                        continue;
-                    } else if (coin.getIndex() == Coins.APTOS.coinIndex()) {
-                        createAptosAddress(coin);
-                        continue;
-                    } else if (Coins.isCosmosFamilyByCoinCode(coin.getCoinCode())) {
-                        createCosmosAddress(coin);
-                        continue;
-                    }
-                }
-                String xPub = new GetExtendedPublicKeyCallable(coin.getAccounts().get(0).getHdPath()).call();
-                coin.setExPub(xPub);
-                if (coinEntity == null) {
-                    long id = mRepository.insertCoin(coin);
-                    coin.setId(id);
-                } else {
-                    coin.setId(coinEntity.getId());
-                }
-                boolean isFirstAccount = true;
-                for (AccountEntity account : coin.getAccounts()) {
-                    if (!isFirstAccount) {
-                        xPub = new GetExtendedPublicKeyCallable(account.getHdPath()).call();
-                    }
-                    isFirstAccount = false;
-                    if (TextUtils.isEmpty(xPub)) {
-                        continue;
-                    }
-                    account.setCoinId(coin.getId());
-                    account.setExPub(xPub);
-                    mRepository.insertAccount(account);
-                    if (!Coins.showPublicKey(coin.getCoinCode())) {
-                        new AddAddressViewModel.AddAddressTask(coin, mRepository, null)
-                                .execute(coin.getDisplayName() + "-0");
-                    }
-                }
-            }
-            if (onComplete != null) {
-                AppExecutors.getInstance().diskIO().execute(() -> AppExecutors.getInstance().mainThread().execute(onComplete));
-            }
-            ExtendedPublicKeyCacheHelper.getInstance().clearCache();
+            SetupManager.setup(() -> AppExecutors.getInstance().mainThread().execute(onComplete));
         });
-    }
-
-    private void createCosmosAddress(CoinEntity coin) {
-        String coinXpub = ExtendedPublicKeyCacheHelper.getInstance().getExtendedPublicKey(coin.getAccounts().get(0).getHdPath());
-        coin.setExPub(coinXpub);
-        long id = mRepository.insertCoin(coin);
-        coin.setId(id);
-        AccountEntity account = coin.getAccounts().get(0);
-        account.setExPub(coinXpub);
-        account.setCoinId(id);
-        long accountId = mRepository.insertAccount(account);
-        account.setId(accountId);
-        AddAddressViewModel.addCosmosAddress(account, mRepository, 1, coin, null);
-    }
-
-    private void createAptosAddress(CoinEntity coin) {
-        String coinXpub = new GetExtendedPublicKeyCallable(coin.getAccounts().get(0).getHdPath()).call();
-        coin.setExPub(coinXpub);
-        long id = mRepository.insertCoin(coin);
-        coin.setId(id);
-        AccountEntity account = coin.getAccounts().get(0);
-        account.setExPub(coinXpub);
-        account.setCoinId(id);
-        long accountId = mRepository.insertAccount(account);
-        account.setId(accountId);
-        AddAddressViewModel.addAptosAddress(account, mRepository, 1, coin, null);
-    }
-
-    private void updateNearAccounts(CoinEntity coin) {
-        mRepository.deleteAccountsByCoin(coin);
-        mRepository.deleteCoin(coin);
-        mRepository.deleteAddressByCoin(coin);
-        createNearAccounts(coin);
-    }
-
-    private void createNearAccounts(CoinEntity coin) {
-        String coinXpub = new GetExtendedPublicKeyCallable(coin.getAccounts().get(0).getHdPath()).call();
-        coin.setExPub(coinXpub);
-        long id = mRepository.insertCoin(coin);
-        coin.setId(id);
-        for (AccountEntity account : coin.getAccounts()) {
-            String xPub = new GetExtendedPublicKeyCallable(account.getHdPath()).call();
-            account.setExPub(xPub);
-            account.setCoinId(id);
-            long accountId = mRepository.insertAccount(account);
-            account.setId(accountId);
-            AddAddressViewModel.addNearAccountAddress(account, mRepository, 1, coin, null);
-        }
-    }
-
-    private void updateSolAccounts(CoinEntity coin) {
-        mRepository.deleteAccountsByCoin(coin);
-        mRepository.deleteCoin(coin);
-        mRepository.deleteAddressByCoin(coin);
-        createSolAccounts(coin);
-    }
-
-
-    private void createSolAccounts(CoinEntity coin) {
-        String coinXpub = new GetExtendedPublicKeyCallable(coin.getAccounts().get(0).getHdPath()).call();
-        coin.setExPub(coinXpub);
-        long id = mRepository.insertCoin(coin);
-        coin.setId(id);
-        for (AccountEntity account : coin.getAccounts()) {
-            String xPub = new GetExtendedPublicKeyCallable(account.getHdPath()).call();
-            account.setExPub(xPub);
-            account.setCoinId(id);
-            long accountId = mRepository.insertAccount(account);
-            account.setId(accountId);
-            AddAddressViewModel.addSolAccountAddress(account, mRepository, 1, coin, null);
-        }
-    }
-
-    private void updateEthAccounts(List<AccountEntity> accountEntities, CoinEntity coinEntity) throws JSONException {
-        AccountEntity accountEntity = accountEntities.get(0);
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("eth_account", ETHAccount.BIP44_STANDARD.getCode());
-        accountEntity.setAddition(jsonObject.toString());
-        accountEntity.setHdPath(ETHAccount.BIP44_STANDARD.getPath());
-        mRepository.updateAccount(accountEntity);
-        addAccount(ETHAccount.LEDGER_LIVE, coinEntity);
-        addAccount(ETHAccount.LEDGER_LEGACY, coinEntity);
-    }
-
-    private void addAccount(ETHAccount ethAccount, CoinEntity coin) throws JSONException {
-        AccountEntity account = new AccountEntity();
-        String xPub = new GetExtendedPublicKeyCallable(ethAccount.getPath()).call();
-        account.setExPub(xPub);
-        account.setHdPath(ethAccount.getPath());
-        account.setCoinId(coin.getId());
-        JSONObject json = new JSONObject();
-        json.put("eth_account", ethAccount.getCode());
-        account.setAddition(json.toString());
-        long accountId = mRepository.insertAccount(account);
-        account.setId(accountId);
-        AddAddressViewModel.addEthAccountAddress(account, mRepository, 1, coin, null);
-    }
-
-    private void createEthAccounts(CoinEntity coin) {
-        String coinXpub = new GetExtendedPublicKeyCallable(coin.getAccounts().get(0).getHdPath()).call();
-        coin.setExPub(coinXpub);
-        long id = mRepository.insertCoin(coin);
-        coin.setId(id);
-        for (AccountEntity account : coin.getAccounts()) {
-            String xPub = new GetExtendedPublicKeyCallable(account.getHdPath()).call();
-            account.setExPub(xPub);
-            account.setCoinId(id);
-            long accountId = mRepository.insertAccount(account);
-            account.setId(accountId);
-            AddAddressViewModel.addEthAccountAddress(account, mRepository, 1, coin, null);
-        }
     }
 
     private void deleteHiddenVaultData() {

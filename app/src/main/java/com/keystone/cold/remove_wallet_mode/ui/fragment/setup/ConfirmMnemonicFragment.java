@@ -122,8 +122,8 @@ public class ConfirmMnemonicFragment extends MnemonicInputFragment {
                     }
                 };
 
-                List<CoinEntity> coins = PresetData.generateCoins(mActivity);
-                viewModel.presetData(coins, onComplete);
+                //List<CoinEntity> coins = PresetData.generateCoins(mActivity);
+                viewModel.setup(onComplete);
             } else if (state == VAULT_STATE_CREATING_FAILED) {
                 stateLiveData.setValue(VAULT_STATE_NOT_CREATE);
                 viewModel.getVaultCreateState().removeObservers(this);

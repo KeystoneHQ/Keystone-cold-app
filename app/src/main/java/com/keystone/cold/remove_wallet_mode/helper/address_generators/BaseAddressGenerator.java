@@ -23,15 +23,24 @@ public abstract class BaseAddressGenerator implements AddressGenerator {
         addAddress(coinId, count, statusCallBack);
     }
 
+
+    public void generateAddress(int count) {
+        addAddress(coinId, count, null);
+    }
+
     private void addAddress(final String coinId, int count, StatusCallBack statusCallBack) {
         DataRepository repository = MainApplication.getApplication().getRepository();
         CoinEntity coinEntity = repository.loadCoinSync(coinId);
-        AccountEntity accountEntity = repository.loadAccountsForCoin(coinEntity).get(0);
+        AccountEntity accountEntity = getAccountOfAddAddress(repository.loadAccountsForCoin(coinEntity));
+        if (accountEntity == null) {
+            if (statusCallBack != null) statusCallBack.onFail();
+            return;
+        }
         int addressLength = accountEntity.getAddressLength();
         int targetAddressCount = addressLength + count;
         List<AddressEntity> entities = generateAddress(accountEntity, coinEntity, count);
         if (entities == null || entities.isEmpty()) {
-            statusCallBack.onFail();
+            if (statusCallBack != null) statusCallBack.onFail();
             return;
         }
         coinEntity.setAddressCount(targetAddressCount);
@@ -39,9 +48,13 @@ public abstract class BaseAddressGenerator implements AddressGenerator {
         repository.updateAccount(accountEntity);
         repository.updateCoin(coinEntity);
         repository.insertAddress(entities);
-        statusCallBack.onSuccess();
+        if (statusCallBack != null) statusCallBack.onSuccess();
     }
 
+    //The coins of single account take the first account, and the coin of multiple accounts needs to rewrite this function
+    protected AccountEntity getAccountOfAddAddress(List<AccountEntity> accountEntities) {
+        return accountEntities.get(0);
+    }
 
     private List<AddressEntity> generateAddress(AccountEntity accountEntity, CoinEntity coinEntity, int count) {
         AbsDeriver deriver = AbsDeriver.newInstance(coinEntity.getCoinCode());

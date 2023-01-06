@@ -32,6 +32,9 @@ public interface AccountDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long add(AccountEntity account);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void addList(List<AccountEntity> account);
+
     @Query("SELECT * FROM accounts WHERE coinId=:id")
     List<AccountEntity> loadForCoin(long id);
 
