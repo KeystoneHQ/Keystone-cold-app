@@ -60,6 +60,7 @@ import androidx.databinding.Observable;
 import androidx.databinding.ObservableField;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
@@ -69,18 +70,22 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
+import com.keystone.coinlib.coins.polkadot.AddressCodec;
 import com.keystone.coinlib.exception.InvalidETHAccountException;
 import com.keystone.coinlib.exception.InvalidNEARAccountException;
 import com.keystone.coinlib.exception.InvalidSOLAccountException;
 import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
+import com.keystone.cold.DataRepository;
+import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.databinding.AssetFragmentBinding;
 import com.keystone.cold.databinding.DialogBottomSheetBinding;
 import com.keystone.cold.db.PresetData;
+import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.integration.chains.ArweaveViewModel;
 import com.keystone.cold.ui.MainActivity;
@@ -152,6 +157,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     private AddressNumberPicker mAddressNumberPicker;
     private boolean hasAddress;
     private WatchWallet watchWallet;
+    private DataRepository mRepository;
 
     @Override
     protected int setView() {
@@ -161,6 +167,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     @Override
     protected void init(View view) {
         watchWallet = WatchWallet.getWatchWallet(mActivity);
+        mRepository = ((MainApplication) mActivity.getApplication()).getRepository();
         if (watchWallet == WatchWallet.CORE_WALLET) {
             Bundle data = requireArguments();
             coinId = data.getString(KEY_COIN_ID);
@@ -1245,6 +1252,39 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 //                    if (fragments[0] != null && fragments[0] instanceof AddressFragment) {
 //                        ((AddressFragment) fragments[0]).updateAddressList();
 //                    }
+                    if (watchWallet == WatchWallet.POLKADOT_JS) {
+                        Log.d("sora", "initData: here");
+                        PolkadotViewModel polkadotViewModel = ViewModelProviders.of(this).get(PolkadotViewModel.class);
+                        try {
+                            polkadotViewModel.initialDB();
+                            LiveData<List<AddressEntity>> dot = mRepository.loadAddress(Coins.DOT.coinId());
+                            dot.observe(this, addressEntities -> addressEntities.forEach((a) -> {
+                                try {
+                                    byte[] pubkey = AddressCodec.decodeAddress(a.getAddressString());
+                                    String publicKey = Hex.toHexString(pubkey);
+                                    String path = a.getPath();
+                                    polkadotViewModel.importAddress(publicKey, path);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                dot.removeObservers(this);
+                            }));
+                            LiveData<List<AddressEntity>> ksm = mRepository.loadAddress(Coins.KSM.coinId());
+                            ksm.observe(this, addressEntities -> addressEntities.forEach((a) -> {
+                                try {
+                                    byte[] pubkey = AddressCodec.decodeAddress(a.getAddressString());
+                                    String publicKey = Hex.toHexString(pubkey);
+                                    String path = a.getPath();
+                                    polkadotViewModel.importAddress(publicKey, path);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                ksm.removeObservers(this);
+                            }));
+                        } catch (PolkadotViewModel.PolkadotException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     handler.postDelayed(dialog::dismiss, DIALOG_DISMISS_DELAY_TIME);
                 });
             });
