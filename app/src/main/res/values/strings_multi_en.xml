@@ -478,8 +478,8 @@
         <item>Fewcha</item>
 <!--        <item>ArConnect</item>-->
 <!--        <item>Core Wallet</item>-->
-<!--        <item>BitKeep</item>-->
-        <item>Keplr</item>
+        <item>BitKeep</item>
+        <!-- <item>Keplr</item> -->
         <item>SubWallet / Polkadot{.js}</item>
         <item>XRP Toolkit</item>
     </string-array>
@@ -491,8 +491,8 @@
         <item>aptos</item>
 <!--        <item>arweave</item>-->
 <!--        <item>coreWallet</item>-->
-<!--        <item>bitKeep</item>-->
-        <item>keplrWallet</item>
+        <item>bitKeep</item>
+        <!-- <item>keplrWallet</item> -->
         <item>polkadotJs</item>
         <item>xrpToolkit</item>
     </string-array>
@@ -504,8 +504,8 @@
         <item>Aptos</item>
 <!--        <item>AR</item>-->
 <!--        <item>AVAX, BTC, ETH, etc</item>-->
-<!--        <item>BTC, ETH</item>-->
-        <item>Cosmos</item>
+        <item>BTC, ETH</item>
+        <!-- <item>Cosmos</item> -->
         <item>DOT、KSM</item>
         <item>XRP</item>
     </string-array>
