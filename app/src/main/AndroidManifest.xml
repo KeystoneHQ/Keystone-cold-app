@@ -115,6 +115,11 @@
             </intent-filter>
         </activity>
 
+
+        <activity android:name=".ui.AttackWarningActivity" />
+
+
+        <!--        remove-wallet-mode-->
         <activity
             android:name=".remove_wallet_mode.ui.MainActivity"
             android:screenOrientation="portrait"
@@ -132,7 +137,20 @@
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
-        <activity android:name=".ui.AttackWarningActivity" />
+
+        <activity android:name=".remove_wallet_mode.ui.AttackWarningActivity" />
+
+        <activity
+            android:name=".remove_wallet_mode.ui.SetupVaultActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
 
         <service android:name=".service.AttackCheckingService" />
     </application>

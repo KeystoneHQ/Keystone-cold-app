@@ -15,23 +15,30 @@
  * in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.keystone.cold.ui;
+package com.keystone.cold.remove_wallet_mode.ui.fragment.setup;
 
 import android.os.Bundle;
+import android.view.View;
 
-import com.keystone.cold.R;
-import com.keystone.cold.config.FeatureFlags;
-import com.keystone.cold.ui.common.FullScreenActivity;
+import androidx.databinding.ViewDataBinding;
+import androidx.lifecycle.ViewModelProviders;
 
-public class SplashActivity extends FullScreenActivity {
+import com.keystone.cold.remove_wallet_mode.viewmodel.SetupVaultViewModel;
+import com.keystone.cold.ui.fragment.BaseFragment;
+
+public abstract class SetupVaultBaseFragment<T extends ViewDataBinding>
+        extends BaseFragment<T> {
+
+
+    protected SetupVaultViewModel viewModel;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (FeatureFlags.ENABLE_REMOVE_WALLET_MODE) {
-            setContentView(R.layout.activity_splash_remove_wallet_mode);
-        } else {
-            setContentView(R.layout.activity_splash);
-        }
+    protected void init(View view) {
+        viewModel = ViewModelProviders.of(mActivity).get(SetupVaultViewModel.class);
+    }
+
+    @Override
+    protected void initData(Bundle savedInstanceState) {
+
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -35,6 +36,7 @@
 
 
         <TextView
+            android:layout_centerVertical="true"
             android:id="@+id/tvTittle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,7 +47,8 @@
             android:maxLines="2"
             android:text="tittle"
             android:textColor="@color/white"
-            android:textSize="@dimen/newstepview_text_size" />
+            android:textSize="@dimen/sp_16"
+            tools:text="Connect Software Wallets"/>
     </RelativeLayout>
 
 </layout>
