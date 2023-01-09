@@ -5,6 +5,18 @@
     android:id="@+id/nav_graph_main_remove_wallet_mode.xml"
     app:startDestination="@id/myAssetsFragment">
 
+
+    <fragment
+        android:id="@+id/upgradeInformationFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.UpgradeInformationFragment"
+        android:label="UpgradeInformationFragment"
+        tools:layout="@layout/fragment_upgrade_info">
+
+        <action
+            android:id="@+id/action_to_myAssetsFragment"
+            app:destination="@id/myAssetsFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/myAssetsFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.MyAssetsFragment"
@@ -139,6 +151,71 @@
         tools:layout="@layout/fragment_receive" />
 
 
+
+<!--    //&#45;&#45;&#45;&#45;&#45;&#45;-->
+    <fragment
+        android:id="@+id/systemSettingFragment"
+        android:name="com.keystone.cold.ui.fragment.setting.SystemSettingFragment"
+        android:label="SystemSettingFragment"
+        tools:layout="@layout/system_setting">
+        <action
+            android:id="@+id/action_to_languagePreferenceFragment"
+            app:destination="@id/languagePreferenceFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_to_screenOffPreferenceFragment"
+            app:destination="@id/screenOffPreferenceFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_to_brightnessSettingFragment"
+            app:destination="@id/brightnessSettingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/fingerprintSettingFragment"
+        android:name="com.keystone.cold.ui.fragment.setting.FingerprintSettingFragment"
+        android:label="FingerprintPreferenceFragment"
+        tools:layout="@layout/fingerprint_setting">
+
+        <action
+            android:id="@+id/action_to_fingerprintManage"
+            app:destination="@id/fingerprintManageFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@id/action_to_fingerprintEnrollFragment"
+            app:destination="@id/fingerprintEnrollFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/languagePreferenceFragment"
+        android:name="com.keystone.cold.ui.fragment.setting.LanguagePreferenceFragment"
+        android:label="ListPreferenceFragment"
+        tools:layout="@layout/list_preference" />
+    <fragment
+        android:id="@+id/screenOffPreferenceFragment"
+        android:name="com.keystone.cold.ui.fragment.setting.ScreenOffPreferenceFragment"
+        android:label="ScreenOffPreferenceFragment"
+        tools:layout="@layout/list_preference" />
+    <fragment
+        android:id="@+id/brightnessSettingFragment"
+        android:name="com.keystone.cold.ui.fragment.setting.BrightnessSettingFragment"
+        android:label="BrightnessSettingFragment"
+        tools:layout="@layout/brightness_setting" />
 
     <action
         android:id="@+id/action_to_receiveCoinFragment"

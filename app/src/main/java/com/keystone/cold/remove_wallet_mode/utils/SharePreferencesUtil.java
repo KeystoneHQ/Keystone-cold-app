@@ -12,6 +12,8 @@ public class SharePreferencesUtil {
     public static final String COIN_CONFIG_VERSION_KEY = "coin_config_version_key";
     public static final String COIN_CONFIG_KEY = "coin_config_key";
 
+    public static final String FIRMWARE_VERSION_KEY = "firmware_version_key";
+
 
     public static int getCoinConfigVersion(Context context) {
         SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
@@ -32,4 +34,17 @@ public class SharePreferencesUtil {
         SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
         sp.edit().putString(COIN_CONFIG_KEY, config).apply();
     }
+
+
+    public static String getFirmwareVersion(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        return sp.getString(FIRMWARE_VERSION_KEY,"");
+
+    }
+
+    public static void setFirmwareVersion(Context context, String firmwareVersion) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
+        sp.edit().putString(FIRMWARE_VERSION_KEY, firmwareVersion).apply();
+    }
+
 }

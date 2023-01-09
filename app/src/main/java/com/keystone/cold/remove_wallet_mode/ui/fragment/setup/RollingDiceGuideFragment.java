@@ -15,23 +15,29 @@
  * in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.keystone.cold.ui;
+package com.keystone.cold.remove_wallet_mode.ui.fragment.setup;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.keystone.cold.R;
-import com.keystone.cold.config.FeatureFlags;
-import com.keystone.cold.ui.common.FullScreenActivity;
+import com.keystone.cold.databinding.RollingDiceGuideBinding;
+import com.keystone.cold.ui.fragment.BaseFragment;
 
-public class SplashActivity extends FullScreenActivity {
+public class RollingDiceGuideFragment extends BaseFragment<RollingDiceGuideBinding> {
+    @Override
+    protected int setView() {
+        return R.layout.rolling_dice_guide;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (FeatureFlags.ENABLE_REMOVE_WALLET_MODE) {
-            setContentView(R.layout.activity_splash_remove_wallet_mode);
-        } else {
-            setContentView(R.layout.activity_splash);
-        }
+    protected void init(View view) {
+        mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
+        mBinding.start.setOnClickListener(v -> navigate(R.id.action_to_rollingDiceFragment));
+    }
+
+    @Override
+    protected void initData(Bundle savedInstanceState) {
+
     }
 }

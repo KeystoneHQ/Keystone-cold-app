@@ -15,23 +15,30 @@
  * in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.keystone.cold.ui;
+package com.keystone.cold.remove_wallet_mode.ui;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+
 import com.keystone.cold.R;
-import com.keystone.cold.config.FeatureFlags;
+import com.keystone.cold.remove_wallet_mode.ui.fragment.boot.AttackWarningFragment;
 import com.keystone.cold.ui.common.FullScreenActivity;
 
-public class SplashActivity extends FullScreenActivity {
-
+public class AttackWarningActivity extends FullScreenActivity {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (FeatureFlags.ENABLE_REMOVE_WALLET_MODE) {
-            setContentView(R.layout.activity_splash_remove_wallet_mode);
-        } else {
-            setContentView(R.layout.activity_splash);
-        }
+        setContentView(R.layout.activity_attack_warning);
+
+        Bundle data = getIntent().getExtras();
+        AttackWarningFragment fragment =  AttackWarningFragment.newInstance(data);
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.container,fragment)
+                .commit();
+
+
     }
 }

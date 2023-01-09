@@ -1,5 +1,6 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +18,8 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.DialogAssetBottomBinding;
 import com.keystone.cold.databinding.FragmentSyncBinding;
+import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
+import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.FewchaWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.MetamaskViewModel;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
@@ -52,7 +55,12 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         wallet = Wallet.getWalletById(walletId);
         mBinding.setWallet(wallet.getWalletName());
 
-        mBinding.complete.setOnClickListener(v -> mActivity.finish());
+        mBinding.complete.setOnClickListener(v -> {
+            if (mActivity != null && mActivity instanceof SetupVaultActivity) {
+                startActivity(new Intent(mActivity, MainActivity.class));
+            }
+            mActivity.finish();
+        });
     }
 
     @Override

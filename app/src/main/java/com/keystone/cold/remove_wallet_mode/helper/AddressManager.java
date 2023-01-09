@@ -1,9 +1,12 @@
 package com.keystone.cold.remove_wallet_mode.helper;
 
 
+import static com.keystone.cold.MainApplication.getApplication;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.utils.Coins;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.AddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.AptosAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.EthereumAddressGenerator;
@@ -33,7 +36,8 @@ public class AddressManager {
 
     private static AddressGenerator getAddressGenerator(String coinId) {
         if (Coins.ETH.coinId().equals(coinId)){
-            return new EthereumAddressGenerator();
+            String code = Utilities.getCurrentEthAccount(getApplication());
+            return new EthereumAddressGenerator(code);
         }
         if (Coins.APTOS.coinId().equals(coinId)) {
             return new AptosAddressGenerator();

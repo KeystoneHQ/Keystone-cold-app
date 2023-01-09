@@ -1,26 +1,26 @@
 package com.keystone.cold.remove_wallet_mode.helper.address_generators;
 
-import static com.keystone.cold.MainApplication.getApplication;
-
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.utils.Coins;
-import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
+import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class EthereumAddressGenerator extends BaseAddressGenerator {
+import java.util.List;
 
-    public EthereumAddressGenerator() {
+public class EthereumAddressGenerator extends MultiAccountAddressGenerator {
+
+    public EthereumAddressGenerator(String code) {
+        super(code);
         coinId = Coins.ETH.coinId();
     }
 
     @Override
     protected String deriveAddress(int account, AddressEntity addressEntity, AbsDeriver deriver) {
-        String code = Utilities.getCurrentEthAccount(getApplication());
         ETHAccount ethAccount = ETHAccount.ofCode(code);
         String path;
         switch (ethAccount) {
@@ -46,5 +46,21 @@ public class EthereumAddressGenerator extends BaseAddressGenerator {
             exception.printStackTrace();
         }
         return address;
+    }
+
+    @Override
+    protected AccountEntity getAccountByRule(List<AccountEntity> accountEntities) {
+        ETHAccount account = ETHAccount.ofCode(code);
+        try {
+            for (int i = 0; i < accountEntities.size(); i++) {
+                JSONObject jsonObject = new JSONObject(accountEntities.get(i).getAddition());
+                if (jsonObject.get("eth_account").equals(account.getCode())) {
+                    return accountEntities.get(i);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
