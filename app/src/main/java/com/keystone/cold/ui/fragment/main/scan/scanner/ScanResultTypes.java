@@ -1,6 +1,7 @@
 package com.keystone.cold.ui.fragment.main.scan.scanner;
 
 import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
+import com.keystone.cold.remove_wallet_mode.exceptions.scanner.UnsupportedURException;
 import com.sparrowwallet.hummingbird.UR;
 import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
 import com.sparrowwallet.hummingbird.registry.EthNFTItem;
@@ -118,6 +119,34 @@ public enum ScanResultTypes {
         } catch (CborException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static ScanResultTypes fromUR(UR ur) throws UnsupportedURException {
+        String type = ur.getType();
+        switch (type) {
+            case "bytes":
+                return UR_BYTES;
+            case "eth-sign-request":
+                return UR_ETH_SIGN_REQUEST;
+            case "eth-nft-item":
+                return UR_ETH_NFT_ITEM;
+            case "sol-sign-request":
+                return UR_SOL_SIGN_REQUEST;
+            case "sol-nft-item":
+                return UR_SOL_NFT_ITEM;
+            case "near-sign-request":
+                return UR_NEAR_SIGN_REQUEST;
+            case "crypto-psbt":
+                return UR_CRYPTO_PSBT;
+            case "aptos-sign-request":
+                return UR_APTOS_SIGN_REQUEST;
+            case "arweave-sign-request":
+                return UR_ARWEAVE_SIGN_REQUEST;
+            case "cosmos-sign-request":
+                return UR_COSMOS_SIGN_REQUEST;
+            default:
+                throw new UnsupportedURException("%{displayMessage}%", "unsupported ur type: " + ur.getType());
         }
     }
 }

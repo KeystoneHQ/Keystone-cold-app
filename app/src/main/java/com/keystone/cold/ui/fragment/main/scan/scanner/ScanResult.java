@@ -1,7 +1,11 @@
 package com.keystone.cold.ui.fragment.main.scan.scanner;
 
+import com.keystone.cold.remove_wallet_mode.exceptions.scanner.UnsupportedURException;
+import com.sparrowwallet.hummingbird.UR;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.spongycastle.util.encoders.Hex;
 
 public class ScanResult {
     private ScanResultTypes type;
@@ -22,6 +26,11 @@ public class ScanResult {
     public ScanResult(ScanResultTypes type, String data) {
         this.type = type;
         this.data = data;
+    }
+
+    public ScanResult(UR ur) throws UnsupportedURException {
+        this.type = ScanResultTypes.fromUR(ur);
+        this.data = Hex.toHexString(ur.getCborBytes());
     }
 
     public ScanResultTypes getType() {

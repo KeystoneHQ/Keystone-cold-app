@@ -53,6 +53,9 @@ public class MyAssetsFragment extends BaseFragment<FragmentMyAssetsBinding> {
         mBinding.toolbar.setNavigationOnClickListener(((MainActivity) mActivity)::toggleDrawer);
         coinAdapter = new CoinAdapter(mActivity, mCoinClickCallback, false);
         mBinding.assetList.setAdapter(coinAdapter);
+        mBinding.ivScan.setOnClickListener((v) -> {
+            navigate(R.id.action_to_scanner);
+        });
     }
 
     @Override
