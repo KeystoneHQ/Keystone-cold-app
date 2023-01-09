@@ -80,7 +80,11 @@ public class ModalDialog extends DialogFragment {
         CommonModalBinding binding = DataBindingUtil.inflate(LayoutInflater.from(activity),
                 R.layout.common_modal, null, false);
         binding.title.setText(title);
-        binding.subTitle.setText(subTitle);
+        if (subTitle != null) {
+            binding.subTitle.setText(subTitle);
+        } else {
+            binding.subTitle.setVisibility(View.GONE);
+        }
         binding.close.setVisibility(View.GONE);
         binding.confirm.setText(buttonText);
         binding.confirm.setOnClickListener(v -> {

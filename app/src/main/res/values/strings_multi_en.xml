@@ -265,6 +265,7 @@
     <string name="web_auth_code">Your device authentication code is</string>
     <string name="Success">Success</string>
     <string name="fail">Failed</string>
+    <string name="unknown_error">Unknown Error</string>
     <string name="verify_way">Please Select verification method</string>
     <string name="verify_way_sharding">Verify Sharding</string>
     <string name="verify_way_mnemonic">Verify Recovery Phrase</string>

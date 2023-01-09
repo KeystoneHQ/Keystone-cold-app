@@ -37,6 +37,21 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_to_scanner"
+            app:destination="@id/scannerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/scannerFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.scanner.ScannerFragment"
+        android:label="scannerFragment"
+        tools:layout="@layout/fragment_scanner">
+
     </fragment>
 
     <fragment
@@ -150,9 +165,6 @@
         android:label="ReceiveCoinFragment"
         tools:layout="@layout/fragment_receive" />
 
-
-
-<!--    //&#45;&#45;&#45;&#45;&#45;&#45;-->
     <fragment
         android:id="@+id/systemSettingFragment"
         android:name="com.keystone.cold.ui.fragment.setting.SystemSettingFragment"

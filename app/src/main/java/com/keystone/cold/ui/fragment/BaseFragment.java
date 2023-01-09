@@ -36,6 +36,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.CommonModalBinding;
+import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
 
@@ -152,7 +153,7 @@ public abstract class BaseFragment<T extends ViewDataBinding> extends Fragment {
         try {
             dismissLoading();
             NavHostFragment.findNavController(this).popBackStack(id, inclusive);
-        } catch (IllegalArgumentException|IllegalStateException e) {
+        } catch (IllegalArgumentException | IllegalStateException e) {
             e.printStackTrace();
         }
     }
@@ -161,7 +162,7 @@ public abstract class BaseFragment<T extends ViewDataBinding> extends Fragment {
         try {
             dismissLoading();
             NavHostFragment.findNavController(this).navigate(id, data);
-        } catch (IllegalArgumentException|IllegalStateException e) {
+        } catch (IllegalArgumentException | IllegalStateException e) {
             e.printStackTrace();
         }
     }
@@ -218,5 +219,17 @@ public abstract class BaseFragment<T extends ViewDataBinding> extends Fragment {
                 progressModalDialog.dismiss();
             }
         });
+    }
+
+    public void alertException(BaseException exception, Runnable confirmCallback) {
+        Log.e(TAG, "displayException: ", exception);
+        dismissLoading();
+        ModalDialog.showCommonModal(
+                mActivity,
+                exception.getTitle() != null ? exception.getTitle() : getString(R.string.fail),
+                exception.getLocalizedMessage(),
+                getString(R.string.know),
+                confirmCallback
+        );
     }
 }
