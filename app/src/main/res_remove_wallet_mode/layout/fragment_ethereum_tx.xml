@@ -25,7 +25,7 @@
 
         <variable
             name="tx"
-            type="com.keystone.cold.model.Tx" />
+            type="com.keystone.cold.viewmodel.tx.GenericETHTxEntity" />
     </data>
 
     <ScrollView
@@ -281,7 +281,7 @@
                 android:layout_marginTop="12sp"/>
 
             <LinearLayout
-                android:id="@+id/fee_info"
+                android:id="@+id/legacy_fee_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -334,6 +334,139 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="12sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/eip1559_fee_estimated"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/fee_estimated_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="14dp"
+                    android:text="Max Priority fee"
+                    android:textColor="@color/white40"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/fee_estimated_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:text="@{tx.estimatedFee}"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    tools:text="0.00006840 ETH" />
+
+                <TextView
+                    android:id="@+id/fee_estimated_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:text="Max Priority fee () * Gas limit ()"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/priority_fee_too_high"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="3dp"
+                    android:visibility="gone"
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/information"
+                        app:tint="@color/red" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fee_too_high"
+                        android:layout_marginStart="5dp"
+                        android:textColor="@color/red" />
+                </LinearLayout>
+
+                <include
+                    layout="@layout/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/eip1559_fee_max"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/fee_max_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="14dp"
+                    android:text="Max fee"
+                    android:textColor="@color/white40"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/fee_max_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:text="@{tx.maxFee}"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    tools:text="0.00006840 ETH" />
+
+                <TextView
+                    android:id="@+id/fee_max_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:text="Max fee () * Gas limit () "
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/max_fee_too_high"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="3dp"
+                    android:visibility="gone"
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/information"
+                        app:tint="@color/red" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fee_too_high"
+                        android:layout_marginStart="5dp"
+                        android:textColor="@color/red" />
+                </LinearLayout>
+
+
+                <include
+                    layout="@layout/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="12sp" />
             </LinearLayout>
 
             <LinearLayout

@@ -18,6 +18,8 @@ import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
 
 public class EthereumConfirmTransactionFragment extends ConfirmTransactionFragment<EthereumTxViewModel> {
+    public static final int LEGACY_TRANSACTION = 0;
+    public static final int FEE_MARKET_TRANSACTION = 2;
 
     @Override
     protected void initViewModel() {

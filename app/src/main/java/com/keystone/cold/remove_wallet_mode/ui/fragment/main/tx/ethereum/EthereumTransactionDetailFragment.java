@@ -1,5 +1,10 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum;
 
+import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumConfirmTransactionFragment.FEE_MARKET_TRANSACTION;
+import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumConfirmTransactionFragment.LEGACY_TRANSACTION;
+import static com.keystone.cold.ui.fragment.main.web3.EthFeeMarketTxConfirmFragment.MAX_FEE_PER_GAS;
+import static com.keystone.cold.ui.fragment.main.web3.EthFeeMarketTxConfirmFragment.MAX_PRIORITY_PER_GAS;
+
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -60,24 +65,27 @@ public class EthereumTransactionDetailFragment extends BaseFragment<FragmentEthe
 
     @Override
     protected void init(View view) {
-
         mBinding.checkInfo.setVisibility(View.VISIBLE);
         mBinding.info.setOnClickListener(view1 -> realShowDialog());
         viewModel.parseTxData(requireArguments());
 
         viewModel = ViewModelProviders.of(getParentFragment()).get(EthereumTxViewModel.class);
-        viewModel.getObservableEthTx().observe(this, ethTxEntity -> {
-            this.genericETHTxEntity = ethTxEntity;
-            if (this.genericETHTxEntity != null) {
-                updateUI();
-            }
-        });
         viewModel.getObservableEthTx().observe(this, genericETHTxEntity -> {
             if (genericETHTxEntity != null) {
-                if (viewModel.getGasPrice(genericETHTxEntity.getFeeValue(), genericETHTxEntity.getGasLimitValue()).doubleValue() > MAX_PER_GAS) {
-                    viewModel.setExceeded(true);
+                if (viewModel.getTransactionType() == LEGACY_TRANSACTION) {
+                    if (viewModel.getGasPrice(genericETHTxEntity.getFeeValue(), genericETHTxEntity.getGasLimitValue()).doubleValue() > MAX_PER_GAS) {
+                        viewModel.setExceeded(true);
+                    }
+                    updateLegacyUI();
                 }
-                updateUI();
+                if (viewModel.getTransactionType() == FEE_MARKET_TRANSACTION) {
+                    double maxPriorityFee = genericETHTxEntity.getMaxPriorityFeePerGasValue().doubleValue();
+                    boolean isMaxPriorityFeeExceeded = maxPriorityFee > MAX_PRIORITY_PER_GAS;
+                    double maxfee = genericETHTxEntity.getMaxFeePerGasValue().doubleValue();
+                    boolean isMaxFeeExceeded = maxfee > MAX_FEE_PER_GAS;
+                    viewModel.setExceeded(isMaxPriorityFeeExceeded || isMaxFeeExceeded);
+                    updateEip1559UI();
+                }
             }
         });
         viewModel.parseTxException().observe(this, this::handleParseException);
@@ -118,12 +126,60 @@ public class EthereumTransactionDetailFragment extends BaseFragment<FragmentEthe
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    private void updateUI() {
+    private void updateLegacyUI() {
         updateNetworkName();
         mBinding.icon.setImageDrawable(mActivity.getDrawable(genericETHTxEntity.getIcon()));
         if (viewModel.isExceeded()) {
             mBinding.fee.setTextColor(Color.RED);
             mBinding.feeTooHigh.setVisibility(View.VISIBLE);
+        }
+        JSONObject abi = viewModel.getAbi();
+        if (abi != null) {
+            updateAbiView(abi);
+            mBinding.data.setVisibility(View.VISIBLE);
+            mBinding.undecodedData.setVisibility(View.GONE);
+        } else {
+            if (!TextUtils.isEmpty(viewModel.getInputData())) {
+                mBinding.data.setVisibility(View.GONE);
+                mBinding.undecodedData.setVisibility(View.VISIBLE);
+                mBinding.inputData.setText("0x" + viewModel.getInputData());
+                if (!TextUtils.isEmpty(viewModel.getSelectorMethodName())) {
+                    updateSelectorView();
+                }
+                showDialog();
+            } else {
+                mBinding.data.setVisibility(View.GONE);
+                mBinding.undecodedData.setVisibility(View.GONE);
+            }
+        }
+        mBinding.setTx(genericETHTxEntity);
+        processAndUpdateTo();
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private void updateEip1559UI() {
+        mBinding.network.setText(viewModel.getNetwork(viewModel.getChainId()));
+        String feeEstimatedContent = String.format("Max Priority fee (%s) * Gas limit (%s)",
+                genericETHTxEntity.getMaxPriorityFeePerGas(), genericETHTxEntity.getGasLimit());
+        String feeMaxContent = String.format("Max fee (%s) * Gas limit (%s)",
+                genericETHTxEntity.getMaxFeePerGas(), genericETHTxEntity.getGasLimit());
+        mBinding.icon.setImageDrawable(mActivity.getDrawable(genericETHTxEntity.getIcon()));
+        if (viewModel.isExceeded()) {
+            mBinding.maxFeeTooHigh.setVisibility(View.VISIBLE);
+            mBinding.priorityFeeTooHigh.setVisibility(View.VISIBLE);
+            mBinding.feeEstimatedValue.setTextColor(Color.RED);
+            mBinding.feeMaxValue.setTextColor(Color.RED);
+            SpannableStringBuilder spannableMaxEstimated = new SpannableStringBuilder(feeEstimatedContent);
+            spannableMaxEstimated.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.red)), 18,
+                    18 + genericETHTxEntity.getMaxPriorityFeePerGas().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            SpannableStringBuilder spannableMaxFee = new SpannableStringBuilder(feeMaxContent);
+            spannableMaxFee.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.red)), 9,
+                    9 + genericETHTxEntity.getMaxPriorityFeePerGas().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            mBinding.feeEstimatedDetail.setText(spannableMaxEstimated);
+            mBinding.feeMaxDetail.setText(spannableMaxFee);
+        } else {
+            mBinding.feeEstimatedDetail.setText(feeEstimatedContent);
+            mBinding.feeMaxDetail.setText(feeMaxContent);
         }
         JSONObject abi = viewModel.getAbi();
         if (abi != null) {

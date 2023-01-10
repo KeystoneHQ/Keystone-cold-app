@@ -33,10 +33,8 @@ public abstract class BaseTxViewModel extends AndroidViewModel {
 
     protected final DataRepository repository;
 
-
     protected final MutableLiveData<String> signState = new MutableLiveData<>();
     protected final MutableLiveData<String> rawFormatTx = new MutableLiveData<>();
-
 
     protected AuthenticateModal.OnVerify.VerifyToken token;
 

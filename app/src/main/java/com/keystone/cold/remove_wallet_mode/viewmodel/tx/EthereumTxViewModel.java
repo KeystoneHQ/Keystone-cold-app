@@ -1,6 +1,8 @@
 package com.keystone.cold.remove_wallet_mode.viewmodel.tx;
 
 import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
+import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumConfirmTransactionFragment.FEE_MARKET_TRANSACTION;
+import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumConfirmTransactionFragment.LEGACY_TRANSACTION;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.HD_PATH;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.REQUEST_ID;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.SIGN_DATA;
@@ -63,8 +65,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
 
     protected final DataRepository mRepository;
 
-    private String coinCode;
-
+    private int transactionType;
     private String txHex;
     private String messageData;
     private String hdPath;
@@ -74,14 +75,6 @@ public class EthereumTxViewModel extends BaseTxViewModel {
 
     private String requestId;
     private String signature;
-
-    public boolean isExceeded() {
-        return isExceeded;
-    }
-
-    public void setExceeded(boolean exceeded) {
-        isExceeded = exceeded;
-    }
 
     private boolean isExceeded;
 
@@ -95,6 +88,19 @@ public class EthereumTxViewModel extends BaseTxViewModel {
     private boolean isFromTFCard;
     private MutableLiveData<GenericETHTxEntity> observableEthTx = new MutableLiveData<>();
     protected final MutableLiveData<BaseException> parseTxException = new MutableLiveData<>();
+
+    public int getTransactionType() {
+        return transactionType;
+    }
+
+    public boolean isExceeded() {
+        return isExceeded;
+    }
+
+    public void setExceeded(boolean exceeded) {
+        isExceeded = exceeded;
+    }
+
 
 
     private static JSONObject chainIdJSONObject;
@@ -137,7 +143,6 @@ public class EthereumTxViewModel extends BaseTxViewModel {
     public EthereumTxViewModel(@NonNull Application application) {
         super(application);
         context = application;
-        coinCode = "ETH";
         mRepository = MainApplication.getApplication().getRepository();
         readPresetContractInfo();
     }
@@ -218,11 +223,25 @@ public class EthereumTxViewModel extends BaseTxViewModel {
     }
 
     public void parseTxData(Bundle bundle) {
+        transactionType = bundle.getInt(BundleKeys.ETH_TX_TYPE_KEY);
+        txHex = bundle.getString(BundleKeys.SIGN_DATA_KEY);
+        hdPath = bundle.getString(BundleKeys.HD_PATH_KEY);
+        requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
+        switch (transactionType) {
+            case LEGACY_TRANSACTION: {
+                parseLegacyTxData();
+                break;
+            }
+            case FEE_MARKET_TRANSACTION: {
+                parseEIP1559TxData();
+                break;
+            }
+        }
+    }
+
+    public void parseLegacyTxData() {
         AppExecutors.getInstance().diskIO().execute(() -> {
             try {
-                txHex = bundle.getString(BundleKeys.SIGN_DATA_KEY);
-                hdPath = bundle.getString(BundleKeys.HD_PATH_KEY);
-                requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
                 JSONObject ethTx = EthImpl.decodeTransaction(txHex, () -> isFromTFCard = true);
                 if (ethTx == null) {
                     observableEthTx.postValue(null);
@@ -252,12 +271,9 @@ public class EthereumTxViewModel extends BaseTxViewModel {
         });
     }
 
-    public void parseEIP1559TxData(Bundle bundle) {
+    public void parseEIP1559TxData() {
         AppExecutors.getInstance().diskIO().execute(() -> {
             try {
-                txHex = bundle.getString(SIGN_DATA);
-                requestId = bundle.getString(REQUEST_ID);
-                hdPath = bundle.getString(HD_PATH);
                 JSONObject ethTx = EthImpl.decodeEIP1559Transaction(txHex, () -> isFromTFCard = true);
                 if (ethTx == null) {
                     observableEthTx.postValue(null);
@@ -344,20 +360,22 @@ public class EthereumTxViewModel extends BaseTxViewModel {
     public void handleSign() {
         AppExecutors.getInstance().diskIO().execute(() -> {
             Signer signer = initSigner();
-            signTransaction(signer);
+            switch (transactionType) {
+                case LEGACY_TRANSACTION: {
+                    signTransaction(signer);
+                    break;
+                }
+                case FEE_MARKET_TRANSACTION: {
+                    signFeeMarketTransaction(signer);
+                    break;
+                }
+            }
         });
     }
 
     @Override
     public String getSignatureUR() {
         return null;
-    }
-
-    public void handleSignFeeMarket() {
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            Signer signer = initSigner();
-            signFeeMarketTransaction(signer);
-        });
     }
 
     public void handleSignEIP712TypedData() {
@@ -501,7 +519,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
     protected void updateAccountDb(int addressIndex) throws InvalidTransactionException {
         AccountEntity accountEntity = mRepository.loadTargetETHAccount(ETHAccount.ofCode(Utilities.getCurrentEthAccount(context)));
         if (accountEntity == null) {
-            throw new InvalidTransactionException(context.getString(R.string.incorrect_tx_data) ,"not have match account");
+            throw new InvalidTransactionException(context.getString(R.string.incorrect_tx_data), "not have match account");
         }
         CoinEntity coin = mRepository.loadCoinEntityByCoinCode(Coins.ETH.coinCode());
         List<AddressEntity> addressEntities = new ArrayList<>();
