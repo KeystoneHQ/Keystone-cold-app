@@ -74,5 +74,6 @@
     <dimen name="dp_57">57dp</dimen>
 
     <dimen name="dp_166">166dp</dimen>
+    <dimen name="dp_200">200dp</dimen>
 
 </resources>
