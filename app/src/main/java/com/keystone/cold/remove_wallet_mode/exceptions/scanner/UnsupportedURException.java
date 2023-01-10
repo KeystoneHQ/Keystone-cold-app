@@ -10,6 +10,6 @@ public class UnsupportedURException extends BaseException {
 
     @Override
     public String getTitle() {
-        return mContext.getString(R.string.invalid_qrcode);
+        return CONTEXT.getString(R.string.invalid_qrcode);
     }
 }

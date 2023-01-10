@@ -7,12 +7,11 @@ import android.content.Context;
 import androidx.annotation.Nullable;
 
 public abstract class BaseException extends Exception {
-    protected final Context mContext;
+    protected static final Context CONTEXT = getApplication().getApplicationContext();
     private final String localeMessage;
 
     public BaseException(String localeMessage, String message) {
         super(message);
-        this.mContext = getApplication().getApplicationContext();
         this.localeMessage = localeMessage;
     }
 

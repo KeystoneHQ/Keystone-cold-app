@@ -6,7 +6,7 @@ import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 public class XfpNotMatchException extends BaseException {
 
     public static XfpNotMatchException newInstance() {
-        return new XfpNotMatchException("Master fingerprint not match", "master fingerprint not match");
+        return new XfpNotMatchException(CONTEXT.getString(R.string.xfp_not_match), "master fingerprint not match");
     }
 
     public XfpNotMatchException(String localeMessage, String message) {
@@ -15,6 +15,6 @@ public class XfpNotMatchException extends BaseException {
 
     @Override
     public String getTitle() {
-        return mContext.getString(R.string.xfp_not_match);
+        return CONTEXT.getString(R.string.xfp_not_match);
     }
 }

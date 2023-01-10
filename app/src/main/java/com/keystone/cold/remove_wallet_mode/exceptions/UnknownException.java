@@ -13,6 +13,6 @@ public class UnknownException extends BaseException {
 
     @Override
     public String getTitle() {
-        return mContext.getString(R.string.unknown_error);
+        return CONTEXT.getString(R.string.unknown_error);
     }
 }
