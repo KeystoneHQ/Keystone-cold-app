@@ -17,22 +17,23 @@
 
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main;
 
-import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
-import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.keystone.cold.R;
-import com.keystone.cold.databinding.TxListBinding;
-import com.keystone.cold.databinding.TxListItemBinding;
+import com.keystone.cold.databinding.FragmentTxListBinding;
+import com.keystone.cold.databinding.ItemTxListBinding;
 import com.keystone.cold.model.Tx;
+import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
+import com.keystone.cold.remove_wallet_mode.viewmodel.record.TxRecordViewModel;
 import com.keystone.cold.ui.common.FilterableBaseBindingAdapter;
 import com.keystone.cold.ui.fragment.BaseFragment;
 
@@ -40,34 +41,58 @@ import com.keystone.cold.ui.fragment.BaseFragment;
 import java.util.List;
 
 
-public class TxListFragment extends BaseFragment<TxListBinding> {
+public class TxListFragment extends BaseFragment<FragmentTxListBinding> {
+
+    private TxRecordViewModel viewModel;
+    private LiveData<List<Tx>> txLiveData;
+    private TxAdapter adapter;
 
 
     static Fragment newInstance(@NonNull String coinId, @NonNull String coinCode) {
         TxListFragment fragment = new TxListFragment();
         Bundle args = new Bundle();
-        args.putString(KEY_COIN_ID, coinId);
-        args.putString(KEY_COIN_CODE, coinCode);
+        args.putString(BundleKeys.COIN_ID_KEY, coinId);
+        args.putString(BundleKeys.COIN_CODE_KEY, coinCode);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     protected int setView() {
-        return R.layout.tx_list;
+        return R.layout.fragment_tx_list;
     }
 
     @Override
     protected void init(View view) {
-
+        viewModel = ViewModelProviders.of(this).get(TxRecordViewModel.class);
+        adapter = new TxAdapter(mActivity);
+        mBinding.list.setAdapter(adapter);
     }
 
     @Override
     protected void initData(Bundle savedInstanceState) {
+        Bundle bundle = requireArguments();
+        String coinId = bundle.getString(BundleKeys.COIN_ID_KEY);
+        txLiveData = viewModel.loadTxs(coinId);
+        subscribeUI(txLiveData);
+    }
+
+    private void subscribeUI(LiveData<List<Tx>> txLiveData) {
+        txLiveData.observe(this, txEntities -> {
+            adapter.setItems(txEntities);
+        });
     }
 
 
-    class TxAdapter extends FilterableBaseBindingAdapter<Tx, TxListItemBinding> {
+    @Override
+    public void onDestroyView() {
+        if (txLiveData != null) {
+            txLiveData.removeObservers(this);
+        }
+        super.onDestroyView();
+    }
+
+    static class TxAdapter extends FilterableBaseBindingAdapter<Tx, ItemTxListBinding> {
 
         TxAdapter(Context context) {
             super(context);
@@ -75,18 +100,17 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
 
         @Override
         protected int getLayoutResId(int viewType) {
-            return R.layout.tx_list_item;
+            return R.layout.item_tx_list;
         }
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             super.onBindViewHolder(holder, position);
-
         }
 
         @Override
-        protected void onBindItem(TxListItemBinding binding, Tx item) {
-
+        protected void onBindItem(ItemTxListBinding binding, Tx item) {
+            binding.setTx(item);
         }
 
         @Override
