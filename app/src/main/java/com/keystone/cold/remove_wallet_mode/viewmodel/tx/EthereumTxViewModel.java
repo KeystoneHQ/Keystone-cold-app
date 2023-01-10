@@ -1,21 +1,4 @@
-/*
- * Copyright (c) 2021 Keystone
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-package com.keystone.cold.viewmodel.tx;
+package com.keystone.cold.remove_wallet_mode.viewmodel.tx;
 
 import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.HD_PATH;
@@ -38,23 +21,30 @@ import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.ens.EnsLoadManager;
-import com.keystone.coinlib.exception.InvalidETHAccountException;
-import com.keystone.coinlib.exception.InvalidPathException;
-import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.path.CoinPath;
 import com.keystone.coinlib.selector.MethodSignature;
 import com.keystone.coinlib.selector.SelectorLoadManager;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
+import com.keystone.cold.DataRepository;
+import com.keystone.cold.MainApplication;
+import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.encryption.RustSigner;
+import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidETHAccountException;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidPathException;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
+import com.keystone.cold.viewmodel.tx.GenericETHTxEntity;
+import com.keystone.cold.viewmodel.tx.TransactionType;
+import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,7 +58,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Web3TxViewModel extends Base {
+public class EthereumTxViewModel extends BaseTxViewModel {
+    private static final String TAG = "EthereumTxViewModel";
+
+    protected final DataRepository mRepository;
+
+    private String coinCode;
+
     private String txHex;
     private String messageData;
     private String hdPath;
@@ -79,6 +75,16 @@ public class Web3TxViewModel extends Base {
     private String requestId;
     private String signature;
 
+    public boolean isExceeded() {
+        return isExceeded;
+    }
+
+    public void setExceeded(boolean exceeded) {
+        isExceeded = exceeded;
+    }
+
+    private boolean isExceeded;
+
     private JSONArray tokensMap;
     private JSONObject abi;
     @SuppressLint("StaticFieldLeak")
@@ -88,6 +94,9 @@ public class Web3TxViewModel extends Base {
     private String selectorMethodName;
     private boolean isFromTFCard;
     private MutableLiveData<GenericETHTxEntity> observableEthTx = new MutableLiveData<>();
+    protected final MutableLiveData<BaseException> parseTxException = new MutableLiveData<>();
+
+
     private static JSONObject chainIdJSONObject;
     private SignCallBack signCallBack = new SignCallBack() {
         @Override
@@ -125,10 +134,11 @@ public class Web3TxViewModel extends Base {
         }
     }
 
-    public Web3TxViewModel(@NonNull Application application) {
+    public EthereumTxViewModel(@NonNull Application application) {
         super(application);
         context = application;
         coinCode = "ETH";
+        mRepository = MainApplication.getApplication().getRepository();
         readPresetContractInfo();
     }
 
@@ -178,7 +188,7 @@ public class Web3TxViewModel extends Base {
     public String recognizedSelector(String signature) {
         List<MethodSignature> methodSignatures = new SelectorLoadManager(signature).loadSelector();
         StringBuilder methods = new StringBuilder();
-        for (MethodSignature methodSignature: methodSignatures){
+        for (MethodSignature methodSignature : methodSignatures) {
             methods.append(methodSignature.getMethodName()).append(" ");
         }
         return methods.toString();
@@ -203,20 +213,20 @@ public class Web3TxViewModel extends Base {
         return observableEthTx;
     }
 
-    public MutableLiveData<Exception> parseTxException() {
+    public MutableLiveData<BaseException> parseTxException() {
         return parseTxException;
     }
 
     public void parseTxData(Bundle bundle) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             try {
-                txHex = bundle.getString(SIGN_DATA);
-                hdPath = bundle.getString(HD_PATH);
-                requestId = bundle.getString(REQUEST_ID);
+                txHex = bundle.getString(BundleKeys.SIGN_DATA_KEY);
+                hdPath = bundle.getString(BundleKeys.HD_PATH_KEY);
+                requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
                 JSONObject ethTx = EthImpl.decodeTransaction(txHex, () -> isFromTFCard = true);
                 if (ethTx == null) {
                     observableEthTx.postValue(null);
-                    parseTxException.postValue(new InvalidTransactionException("invalid transaction"));
+                    parseTxException.postValue(new InvalidTransactionException(context.getString(R.string.incorrect_tx_data), "invalid transaction"));
                     return;
                 }
                 chainId = ethTx.getLong("chainId");
@@ -251,7 +261,7 @@ public class Web3TxViewModel extends Base {
                 JSONObject ethTx = EthImpl.decodeEIP1559Transaction(txHex, () -> isFromTFCard = true);
                 if (ethTx == null) {
                     observableEthTx.postValue(null);
-                    parseTxException.postValue(new InvalidTransactionException("invalid transaction"));
+                    parseTxException.postValue(new InvalidTransactionException(context.getString(R.string.incorrect_tx_data), "invalid transaction"));
                     return;
                 }
                 if (ethTx.has("to") && ethTx.has("contract")) {
@@ -302,7 +312,7 @@ public class Web3TxViewModel extends Base {
             } catch (JSONException e) {
                 e.printStackTrace();
                 observableObject.postValue(null);
-                parseTxException.postValue(e);
+                parseTxException.postValue(new InvalidTransactionException(context.getString(R.string.incorrect_tx_data), "invalid transaction"));
             }
         });
         return observableObject;
@@ -325,7 +335,7 @@ public class Web3TxViewModel extends Base {
             } catch (JSONException e) {
                 e.printStackTrace();
                 observableObject.postValue(null);
-                parseTxException.postValue(e);
+                parseTxException.postValue(new InvalidTransactionException(context.getString(R.string.incorrect_tx_data), "invalid transaction"));
             }
         });
         return observableObject;
@@ -336,6 +346,11 @@ public class Web3TxViewModel extends Base {
             Signer signer = initSigner();
             signTransaction(signer);
         });
+    }
+
+    @Override
+    public String getSignatureUR() {
+        return null;
     }
 
     public void handleSignFeeMarket() {
@@ -449,7 +464,7 @@ public class Web3TxViewModel extends Base {
         addressEntity.setPath(path);
         ETHAccount target = ETHAccount.getAccountByPath(path);
         if (target == null) {
-            throw new InvalidTransactionException("unknown hd path");
+            throw new InvalidTransactionException(context.getString(R.string.incorrect_tx_data), "unknown hd path");
         }
         AddressEntity address = mRepository.loadAddressBypath(path);
         if (address == null) {
@@ -473,7 +488,7 @@ public class Web3TxViewModel extends Base {
             case BIP44_STANDARD:
                 try {
                     index = CoinPath.parsePath(hdPath).getValue();
-                } catch (InvalidPathException e) {
+                } catch (com.keystone.coinlib.exception.InvalidPathException e) {
                     e.printStackTrace();
                 }
                 break;
@@ -486,7 +501,7 @@ public class Web3TxViewModel extends Base {
     protected void updateAccountDb(int addressIndex) throws InvalidTransactionException {
         AccountEntity accountEntity = mRepository.loadTargetETHAccount(ETHAccount.ofCode(Utilities.getCurrentEthAccount(context)));
         if (accountEntity == null) {
-            throw new InvalidTransactionException("not have match account");
+            throw new InvalidTransactionException(context.getString(R.string.incorrect_tx_data) ,"not have match account");
         }
         CoinEntity coin = mRepository.loadCoinEntityByCoinCode(Coins.ETH.coinCode());
         List<AddressEntity> addressEntities = new ArrayList<>();
@@ -530,7 +545,7 @@ public class Web3TxViewModel extends Base {
             JSONObject addition = new JSONObject();
             addition.put("isFromTFCard", isFromTFCard);
             addition.put("requestId", requestId);
-            addition.put("signId", watchWallet.getSignId());
+            // addition.put("signId", watchWallet.getSignId());
             addition.put("signBy", ETHAccount.ofCode(Utilities.getCurrentEthAccount(context)).getCode());
             genericETHTxEntity.setAddition(addition.toString());
         } catch (JSONException e) {

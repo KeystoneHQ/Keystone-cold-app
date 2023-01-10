@@ -6,7 +6,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
-import com.keystone.cold.remove_wallet_mode.exceptions.scanner.UnimplementedException;
+import com.keystone.cold.remove_wallet_mode.exceptions.UnimplementedException;
 import com.keystone.cold.remove_wallet_mode.exceptions.scanner.XfpNotMatchException;
 import com.keystone.cold.remove_wallet_mode.helper.Destination;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
