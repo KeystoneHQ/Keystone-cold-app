@@ -6,15 +6,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.coinlib.Util;
-import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.Utilities;
@@ -29,21 +25,6 @@ import org.spongycastle.util.encoders.Hex;
 import java.security.SignatureException;
 
 public abstract class BaseTxViewModel extends AndroidViewModel {
-
-    public static BaseTxViewModel getTxViewModel(String coinCode, Fragment fragment) {
-        if (Coins.APTOS.coinCode().equals(coinCode)) {
-            return ViewModelProviders.of(fragment).get(AptosTxViewModel.class);
-        }
-        return null;
-    }
-
-
-    public static BaseTxViewModel getTxViewModel(String coinCode, FragmentActivity activity) {
-        if (Coins.APTOS.coinCode().equals(coinCode)) {
-            return ViewModelProviders.of(activity).get(AptosTxViewModel.class);
-        }
-        return null;
-    }
 
     public static final String STATE_SIGNING = "signing";
     public static final String STATE_SIGN_FAIL = "signing_fail";

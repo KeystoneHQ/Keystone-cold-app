@@ -25,6 +25,7 @@ import com.keystone.cold.cryptocore.AptosParser;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
+import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.ui.fragment.main.aptos.model.AptosTx;
 import com.keystone.cold.ui.fragment.main.aptos.model.AptosTxParser;
 import com.keystone.cold.util.AptosTransactionHelper;
@@ -69,9 +70,9 @@ public class AptosTxViewModel extends BaseTxViewModel {
     @Override
     public void parseTxData(Bundle bundle) {
         AppExecutors.getInstance().diskIO().execute(() -> {
-            txHex = bundle.getString(SIGN_DATA);
-            hdPath = bundle.getString(HD_PATH);
-            requestId = bundle.getString(REQUEST_ID);
+            txHex = bundle.getString(BundleKeys.SIGN_DATA_KEY);
+            hdPath = bundle.getString(BundleKeys.HD_PATH_KEY);
+            requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
             String data = AptosTransactionHelper.getPureSignData(txHex);
             String parseResult = AptosParser.parse(data);
             Log.i(TAG, "raw is " + parseResult);
@@ -93,7 +94,11 @@ public class AptosTxViewModel extends BaseTxViewModel {
                 jsonObject = new JSONObject();
             }
             parseJson = jsonObject.toString();
-            rawFormatTx.postValue(parseJson);
+            try {
+                rawFormatTx.postValue(jsonObject.toString(2));
+            } catch (JSONException exception) {
+                exception.printStackTrace();
+            }
             xPub = getXpubByPath(hdPath);
         });
     }

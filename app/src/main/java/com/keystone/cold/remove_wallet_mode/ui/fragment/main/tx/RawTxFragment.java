@@ -15,9 +15,10 @@ public class RawTxFragment extends BaseFragment<FragmentRawTxRemoveWalletModeBin
 
     private BaseTxViewModel viewModel;
 
-    public static Fragment newInstance(Bundle bundle) {
+    public static Fragment newInstance(Bundle bundle, BaseTxViewModel viewModel) {
         RawTxFragment fragment = new RawTxFragment();
         fragment.setArguments(bundle);
+        fragment.viewModel = viewModel;
         return fragment;
     }
 
@@ -33,9 +34,6 @@ public class RawTxFragment extends BaseFragment<FragmentRawTxRemoveWalletModeBin
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-        Bundle bundle = requireArguments();
-        String coinCode = bundle.getString(BundleKeys.COIN_CODE_KEY);
-        viewModel = BaseTxViewModel.getTxViewModel(coinCode, getParentFragment());
         if (viewModel != null) {
             viewModel.getRawFormatTx().observe(this, rawTx -> {
                 if (rawTx != null) {
