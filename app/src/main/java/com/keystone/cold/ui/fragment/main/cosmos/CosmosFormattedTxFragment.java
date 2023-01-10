@@ -1,7 +1,6 @@
 package com.keystone.cold.ui.fragment.main.cosmos;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -70,7 +69,8 @@ public class CosmosFormattedTxFragment extends BaseFragment<CosmosTxDetailBindin
         mBinding.setCoinName(viewModel.getCosmosCoinName(cosmosTx.getChainId()));
         mBinding.tvChainId.setText(cosmosTx.getChainId());
         if (cosmosTx.getFee() != null) {
-            mBinding.tvFee.setText(cosmosTx.getFee().getAmountValue() + " " + cosmosTx.getFee().getAmountDenom().toUpperCase());
+            String denom = cosmosTx.getFee().getAmountDenom() == null ? "" : cosmosTx.getFee().getAmountDenom().toUpperCase();
+            mBinding.tvFee.setText(cosmosTx.getFee().getAmountValue() + " " + denom);
             mBinding.tvGasLimit.setText(cosmosTx.getFee().getGas());
         }
         mBinding.cmMessages.setData(cosmosTx.getMsgs());
