@@ -91,4 +91,6 @@
         <item>Connect Software Wallets</item>
     </string-array>
 
+
+    <string name="xfp_not_match">Master fingerprint not match</string>
 </resources>

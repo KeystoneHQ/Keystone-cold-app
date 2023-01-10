@@ -55,6 +55,32 @@
     </fragment>
 
     <fragment
+        android:id="@+id/aptosConfirmTransactionFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.AptosConfirmTransactionFragment"
+        android:label="AptosConfirmTransactionFragment"
+        tools:layout="@layout/fragment_confirm_transaction">
+
+        <action
+            android:id="@+id/action_to_broadCastTxFragment"
+            app:destination="@id/broadCastTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/broadCastTxFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.BroadCastTxFragment"
+        android:label="BroadCastTxFragment"
+        tools:layout="@layout/fragment_broadcast_tx">
+    </fragment>
+
+
+
+    <fragment
         android:id="@+id/changeDerivationPathFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.ChangeDerivationPathFragment"
         android:label="ChangeDerivationPathFragment"
@@ -240,6 +266,14 @@
     <action
         android:id="@+id/action_to_changeDerivationPathFragment"
         app:destination="@id/changeDerivationPathFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_aptosConfirmTransactionFragment"
+        app:destination="@id/aptosConfirmTransactionFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
