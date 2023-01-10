@@ -1,4 +1,4 @@
-package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx;
+package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.aptos;
 
 import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
 import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
@@ -11,11 +11,13 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
+import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ConfirmTransactionFragment;
+import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.aptos.AptosFormattedTxFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.AptosTxViewModel;
 import com.keystone.cold.ui.views.AuthenticateModal;
 
-public class AptosConfirmTransactionFragment extends ConfirmTransactionFragment<AptosTxViewModel>{
+public class AptosConfirmTransactionFragment extends ConfirmTransactionFragment<AptosTxViewModel> {
 
 
     @Override
