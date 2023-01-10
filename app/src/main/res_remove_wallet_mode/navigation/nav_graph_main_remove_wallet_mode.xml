@@ -56,7 +56,7 @@
 
     <fragment
         android:id="@+id/aptosConfirmTransactionFragment"
-        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.AptosConfirmTransactionFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.aptos.AptosConfirmTransactionFragment"
         android:label="AptosConfirmTransactionFragment"
         tools:layout="@layout/fragment_confirm_transaction">
 
