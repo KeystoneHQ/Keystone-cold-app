@@ -19,7 +19,6 @@ import com.keystone.cold.remove_wallet_mode.viewmodel.tx.BaseTxViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.SigningDialog;
-import com.keystone.cold.viewmodel.tx.AptosViewModel;
 
 public abstract class ConfirmTransactionFragment<V extends BaseTxViewModel> extends BaseFragment<FragmentConfirmTransactionBinding> {
 
@@ -82,10 +81,10 @@ public abstract class ConfirmTransactionFragment<V extends BaseTxViewModel> exte
 
     protected void subscribeSignState() {
         viewModel.getSignState().observe(this, s -> {
-            if (AptosViewModel.STATE_SIGNING.equals(s)) {
+            if (BaseTxViewModel.STATE_SIGNING.equals(s)) {
                 signingDialog = SigningDialog.newInstance();
                 signingDialog.show(mActivity.getSupportFragmentManager(), "");
-            } else if (AptosViewModel.STATE_SIGN_SUCCESS.equals(s)) {
+            } else if (BaseTxViewModel.STATE_SIGN_SUCCESS.equals(s)) {
                 if (signingDialog != null) {
                     signingDialog.setState(SigningDialog.STATE_SUCCESS);
                 }
@@ -96,7 +95,7 @@ public abstract class ConfirmTransactionFragment<V extends BaseTxViewModel> exte
                     signingDialog = null;
                     onSignSuccess();
                 }, UIConstants.SIGN_DIALOG_SUCCESS_DELAY);
-            } else if (AptosViewModel.STATE_SIGN_FAIL.equals(s)) {
+            } else if (BaseTxViewModel.STATE_SIGN_FAIL.equals(s)) {
                 new Handler().postDelayed(() -> {
                     if (signingDialog != null) {
                         signingDialog.setState(SigningDialog.STATE_FAIL);
