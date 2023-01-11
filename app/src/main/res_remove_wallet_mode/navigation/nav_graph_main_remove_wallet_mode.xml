@@ -90,15 +90,28 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
-
     </fragment>
 
+    <fragment
+        android:id="@+id/aptosSignMessageFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.aptos.AptosSignMessageFragment"
+        android:label="AptosSignMessageFragment"
+        tools:layout="@layout/fragment_sign_message">
+
+        <action
+            android:id="@+id/action_to_broadCastTxFragment"
+            app:destination="@id/broadCastTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/broadCastTxFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.BroadCastTxFragment"
         android:label="BroadCastTxFragment"
-        tools:layout="@layout/fragment_broadcast_tx"></fragment>
+        tools:layout="@layout/fragment_broadcast_tx"/>
 
 
     <fragment
@@ -314,4 +327,13 @@
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
         app:popExitAnim="@android:anim/slide_out_right"/>
+
+    <action
+        android:id="@+id/action_to_aptosSignMessageFragment"
+        app:destination="@id/aptosSignMessageFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
 </navigation>

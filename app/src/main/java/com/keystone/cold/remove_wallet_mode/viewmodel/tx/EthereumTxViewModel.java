@@ -328,7 +328,8 @@ public class EthereumTxViewModel extends BaseTxViewModel {
         return observableObject;
     }
 
-    public MutableLiveData<JSONObject> parseRawMessage(Bundle bundle) {
+    @Override
+    public MutableLiveData<JSONObject> parseMessage(Bundle bundle) {
         MutableLiveData<JSONObject> observableObject = new MutableLiveData<>();
         AppExecutors.getInstance().networkIO().execute(() -> {
             try {
@@ -366,6 +367,11 @@ public class EthereumTxViewModel extends BaseTxViewModel {
                 }
             }
         });
+    }
+
+    @Override
+    public void handleSignMessage() {
+
     }
 
     @Override

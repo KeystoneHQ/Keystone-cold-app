@@ -16,16 +16,20 @@ import androidx.lifecycle.MutableLiveData;
 import com.keystone.coinlib.accounts.ExtendedPublicKey;
 import com.keystone.coinlib.coins.APT.AptImpl;
 import com.keystone.coinlib.coins.SignTxResult;
+import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.cryptocore.AptosParser;
+import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
+import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.AptosAddressGenerator;
 import com.keystone.cold.ui.fragment.main.aptos.model.AptosTx;
 import com.keystone.cold.ui.fragment.main.aptos.model.AptosTxParser;
 import com.keystone.cold.util.AptosTransactionHelper;
@@ -36,6 +40,7 @@ import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
 import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.UUID;
 
 public class AptosTxViewModel extends BaseTxViewModel {
@@ -103,6 +108,77 @@ public class AptosTxViewModel extends BaseTxViewModel {
         });
     }
 
+    @Override
+    public MutableLiveData<JSONObject> parseMessage(Bundle bundle) {
+        MutableLiveData<JSONObject> observableObject = new MutableLiveData<>();
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            try {
+                hdPath = bundle.getString(BundleKeys.HD_PATH_KEY);
+                requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
+                messageData = bundle.getString(BundleKeys.SIGN_DATA_KEY);
+                String fromAddress = getFromAddress(hdPath);
+                JSONObject object = new JSONObject();
+                object.put("hdPath", hdPath);
+                object.put("requestId", requestId);
+                object.put("data", messageData);
+                object.put("fromAddress", fromAddress);
+                observableObject.postValue(object);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                observableObject.postValue(null);
+            }
+        });
+        return observableObject;
+    }
+
+    public String getFromAddress(String path) {
+        try {
+            ensureAddressExist(path);
+            return repository.loadAddressBypath(path).getAddressString();
+        } catch (InvalidTransactionException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+
+    private void ensureAddressExist(String path) throws InvalidTransactionException {
+        path = path.toUpperCase();
+        AddressEntity addressEntity = new AddressEntity();
+        addressEntity.setPath(path);
+        AddressEntity address = repository.loadAddressBypath(path);
+        if (address == null) {
+            updateAccountDb(getAddressIndex(path));
+        }
+    }
+
+
+    private int getAddressIndex(String hdPath) {
+        int index = 0;
+        hdPath = hdPath.toUpperCase();
+        if (!hdPath.startsWith("M/")){
+            hdPath = "M/"+ hdPath;
+        }
+        hdPath = hdPath.replace("'", "");
+        String[] strings = hdPath.split("/");
+        if (strings.length == 6){
+            index = Integer.parseInt(strings[4]);
+        }
+        return index;
+    }
+
+    protected void updateAccountDb(int addressIndex) throws InvalidTransactionException {
+        CoinEntity coin = repository.loadCoinEntityByCoinCode(Coins.APTOS.coinCode());
+        List<AccountEntity> accounts= repository.loadAccountsForCoin(coin);
+        if (accounts == null || accounts.size() == 0) {
+            throw new InvalidTransactionException("not have match account");
+        }
+        int currentAddressCount = accounts.get(0).getAddressLength();
+        int count = addressIndex + 1 - currentAddressCount;
+        if (count > 0) {
+            new AptosAddressGenerator().generateAddress(count);
+        }
+    }
 
     private Signer initSigner() {
         String authToken = getAuthToken();
@@ -119,6 +195,14 @@ public class AptosTxViewModel extends BaseTxViewModel {
         AppExecutors.getInstance().diskIO().execute(() -> {
             Signer signer = initSigner();
             signTransaction(signer);
+        });
+    }
+
+    @Override
+    public void handleSignMessage() {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            Signer signer = initSigner();
+            signMessage(signer);
         });
     }
 
@@ -172,8 +256,8 @@ public class AptosTxViewModel extends BaseTxViewModel {
         if (result == null) {
             signCallBack.onFail();
         } else {
-            signCallBack.onSignTxSuccess();
             signature = result.signaturHex;
+            signCallBack.onSignTxSuccess();
             insertToDB(result.signaturHex, txHex, parseJson);
         }
     }
@@ -184,6 +268,7 @@ public class AptosTxViewModel extends BaseTxViewModel {
         if (result == null) {
             signCallBack.onFail();
         } else {
+            signature = result;
             signCallBack.onSignMsgSuccess();
         }
     }

@@ -5,11 +5,10 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.LiveData;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentAptosTxBinding;
-import com.keystone.cold.remove_wallet_mode.viewmodel.tx.AptosTxViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.main.aptos.model.AptosTransferTx;
 import com.keystone.cold.ui.fragment.main.aptos.model.AptosTx;
@@ -18,22 +17,16 @@ import java.math.BigDecimal;
 
 public class AptosFormattedTxFragment extends BaseFragment<FragmentAptosTxBinding> {
 
-    private AptosTxViewModel viewModel;
-    private boolean isFromRecord = false;
+    private LiveData<AptosTx> aptosTxLiveData;
 
 
-    public static Fragment newInstance(@NonNull Bundle bundle) {
+    public static Fragment newInstance(@NonNull Bundle bundle, LiveData<AptosTx> aptosTxLiveData) {
         AptosFormattedTxFragment fragment = new AptosFormattedTxFragment();
         fragment.setArguments(bundle);
+        fragment.aptosTxLiveData = aptosTxLiveData;
         return fragment;
     }
 
-    public static Fragment newInstance(@NonNull Bundle bundle, boolean isFromRecord) {
-        AptosFormattedTxFragment fragment = new AptosFormattedTxFragment();
-        fragment.isFromRecord = isFromRecord;
-        fragment.setArguments(bundle);
-        return fragment;
-    }
 
     @Override
     protected int setView() {
@@ -42,12 +35,13 @@ public class AptosFormattedTxFragment extends BaseFragment<FragmentAptosTxBindin
 
     @Override
     protected void init(View view) {
-        viewModel = ViewModelProviders.of(getParentFragment()).get(AptosTxViewModel.class);
-        viewModel.getAptosTxLiveData().observe(this, aptosTx -> {
-            if (aptosTx != null) {
-                updateUI(aptosTx);
-            }
-        });
+        if (aptosTxLiveData != null) {
+            aptosTxLiveData.observe(this, aptosTx -> {
+                if (aptosTx != null) {
+                    updateUI(aptosTx);
+                }
+            });
+        }
     }
 
     private void updateUI(AptosTx aptosTx) {
@@ -79,6 +73,15 @@ public class AptosFormattedTxFragment extends BaseFragment<FragmentAptosTxBindin
     @Override
     protected void initData(Bundle savedInstanceState) {
 
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        if (aptosTxLiveData != null) {
+            aptosTxLiveData.removeObservers(this);
+        }
+        super.onDestroyView();
     }
 
     private final static String APT_UNIT = "100000000";
