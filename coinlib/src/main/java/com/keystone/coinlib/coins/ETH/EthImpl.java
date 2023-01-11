@@ -111,7 +111,7 @@ public class EthImpl implements Coin {
         return RawTransaction.createTransaction(nonce, gasPrice, gasLimit, to, value, data);
     }
 
-    public static JSONObject decodeTransaction(String txHex, Callback callback) {
+    public static JSONObject decodeTransaction(String txHex, Callback whenLoadABIFromTFCard) {
         JSONObject metaData = new JSONObject();
         try {
             RawTransaction rawTx = TransactionDecoder.decode(txHex);
@@ -125,7 +125,7 @@ public class EthImpl implements Coin {
             } else {
                 metaData.put("chainId", 1);
             }
-            setMetaDataFromRawTx(txHex, metaData, rawTx, callback);
+            setMetaDataFromRawTx(txHex, metaData, rawTx, whenLoadABIFromTFCard);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

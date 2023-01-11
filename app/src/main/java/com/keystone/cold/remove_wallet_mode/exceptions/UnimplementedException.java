@@ -1,6 +1,4 @@
-package com.keystone.cold.remove_wallet_mode.exceptions.scanner;
-
-import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
+package com.keystone.cold.remove_wallet_mode.exceptions;
 
 
 // Should only use this exception in dev time.
