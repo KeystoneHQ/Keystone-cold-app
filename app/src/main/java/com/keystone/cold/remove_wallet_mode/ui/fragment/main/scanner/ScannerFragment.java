@@ -15,6 +15,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentScannerBinding;
 import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.remove_wallet_mode.exceptions.UnknownException;
+import com.keystone.cold.remove_wallet_mode.helper.Destination;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.scanner.processor.ProcessorManager;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.main.scan.scanner.CaptureHandler;
@@ -131,7 +132,7 @@ public class ScannerFragment extends BaseFragment<FragmentScannerBinding> implem
     @Override
     public void handleDecode(String text) {
         try {
-            ProcessorManager.ProcessorDestination destination = ProcessorManager.handleScanResult(new ScanResult(ScanResultTypes.PLAIN_TEXT, text));
+            Destination destination = ProcessorManager.handleScanResult(new ScanResult(ScanResultTypes.PLAIN_TEXT, text));
             handleNavigation(destination);
         } catch (Exception e) {
             displayException(e);
@@ -141,7 +142,7 @@ public class ScannerFragment extends BaseFragment<FragmentScannerBinding> implem
     @Override
     public void handleDecode(UR ur) {
         try {
-            ProcessorManager.ProcessorDestination destination = ProcessorManager.handleScanResult(new ScanResult(ur));
+            Destination destination = ProcessorManager.handleScanResult(new ScanResult(ur));
             handleNavigation(destination);
         } catch (Exception e) {
             displayException(e);
@@ -152,7 +153,7 @@ public class ScannerFragment extends BaseFragment<FragmentScannerBinding> implem
     public void handleDecode(SubstratePayload substratePayload) {
         // TODO: refactor to support multi-frame;
         try {
-            ProcessorManager.ProcessorDestination destination = ProcessorManager.handleScanResult(new ScanResult(ScanResultTypes.UOS, substratePayload.rawData));
+            Destination destination = ProcessorManager.handleScanResult(new ScanResult(ScanResultTypes.UOS, substratePayload.rawData));
             handleNavigation(destination);
         } catch (Exception e) {
             displayException(e);
@@ -167,7 +168,7 @@ public class ScannerFragment extends BaseFragment<FragmentScannerBinding> implem
         }
     }
 
-    private void handleNavigation(ProcessorManager.ProcessorDestination destination) {
+    private void handleNavigation(Destination destination) {
         navigateUp();
         navigate(destination.id, destination.bundle);
     }
