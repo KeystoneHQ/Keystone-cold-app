@@ -20,6 +20,7 @@ import com.keystone.cold.callables.GetPasswordTokenCallable;
 import com.keystone.cold.callables.VerifyFingerprintCallable;
 import com.keystone.cold.ui.views.AuthenticateModal;
 
+import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
 import java.security.SignatureException;
@@ -121,7 +122,11 @@ public abstract class BaseTxViewModel extends AndroidViewModel {
 
     public abstract void parseTxData(Bundle bundle);
 
+    public abstract MutableLiveData<JSONObject> parseMessage(Bundle bundle);
+
     public abstract void handleSign();
+
+    public abstract void handleSignMessage();
 
     public abstract String getSignatureUR();
 

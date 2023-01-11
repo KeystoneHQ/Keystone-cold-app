@@ -118,11 +118,11 @@ public class URProcessor implements Processor{
             AptosSignRequest.DataType dataType = aptosSignRequest.getType();
             switch (dataType) {
                 case MESSAGE:
-                    return new Destination(R.id.action_to_aptosMessageFragment, bundle);
+                    return new Destination(R.id.action_to_aptosSignMessageFragment, bundle);
                 case SINGLE:
                     AptosTransactionHelper.Type type = AptosTransactionHelper.judgeDataType(signData);
                     if (type == AptosTransactionHelper.Type.MESSAGE) {
-                        return new Destination(R.id.action_to_aptosMessageFragment, bundle);
+                        return new Destination(R.id.action_to_aptosSignMessageFragment, bundle);
                     } else {
                         return new Destination(R.id.action_to_aptosConfirmTransactionFragment, bundle);
                     }

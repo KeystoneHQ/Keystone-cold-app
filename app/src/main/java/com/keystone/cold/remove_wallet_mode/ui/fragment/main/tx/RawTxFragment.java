@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentRawTxRemoveWalletModeBinding;
@@ -13,12 +14,12 @@ import com.keystone.cold.ui.fragment.BaseFragment;
 
 public class RawTxFragment extends BaseFragment<FragmentRawTxRemoveWalletModeBinding> {
 
-    private BaseTxViewModel viewModel;
+    private LiveData<String> rawFormatTx;
 
-    public static Fragment newInstance(Bundle bundle, BaseTxViewModel viewModel) {
+    public static Fragment newInstance(Bundle bundle, LiveData<String> rawFormatTx) {
         RawTxFragment fragment = new RawTxFragment();
         fragment.setArguments(bundle);
-        fragment.viewModel = viewModel;
+        fragment.rawFormatTx = rawFormatTx;
         return fragment;
     }
 
@@ -34,8 +35,8 @@ public class RawTxFragment extends BaseFragment<FragmentRawTxRemoveWalletModeBin
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-        if (viewModel != null) {
-            viewModel.getRawFormatTx().observe(this, rawTx -> {
+        if (rawFormatTx != null) {
+            rawFormatTx.observe(this, rawTx -> {
                 if (rawTx != null) {
                     mBinding.rawTx.setText(rawTx);
                 } else {
@@ -48,8 +49,8 @@ public class RawTxFragment extends BaseFragment<FragmentRawTxRemoveWalletModeBin
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (viewModel != null) {
-            viewModel.getRawFormatTx().removeObservers(this);
+        if (rawFormatTx != null) {
+            rawFormatTx.removeObservers(this);
         }
     }
 }

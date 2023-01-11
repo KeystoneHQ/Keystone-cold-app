@@ -34,7 +34,7 @@ public class EthereumConfirmTransactionFragment extends ConfirmTransactionFragme
     protected TabLayoutConfig[] getTabLayouts() {
         TabLayoutConfig[] layoutConfigs = new TabLayoutConfig[2];
         layoutConfigs[0] = new TabLayoutConfig(getString(R.string.overview), EthereumTransactionDetailFragment.newInstance(requireArguments(), transaction));
-        layoutConfigs[1] = new TabLayoutConfig(getString(R.string.raw_data), RawTxFragment.newInstance(requireArguments(), viewModel));
+        layoutConfigs[1] = new TabLayoutConfig(getString(R.string.raw_data), RawTxFragment.newInstance(requireArguments(), viewModel.getRawFormatTx()));
         return layoutConfigs;
     }
 
