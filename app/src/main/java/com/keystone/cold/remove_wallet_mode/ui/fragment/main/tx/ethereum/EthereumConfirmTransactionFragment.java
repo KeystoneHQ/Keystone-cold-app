@@ -59,7 +59,7 @@ public class EthereumConfirmTransactionFragment extends ConfirmTransactionFragme
         if (ex != null) {
             ex.printStackTrace();
             alertException(ex, () -> {
-                popBackStack(R.id.assetFragment, false);
+                popBackStack(R.id.myAssetsFragment, false);
             });
             viewModel.parseTxException().setValue(null);
         }

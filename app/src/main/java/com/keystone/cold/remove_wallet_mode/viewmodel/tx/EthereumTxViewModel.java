@@ -287,8 +287,9 @@ public class EthereumTxViewModel extends BaseTxViewModel {
         });
     }
 
-    public void generateSignedTransaction(Web3TxEntity txEntity) {
+    public void generateSignedTransaction(String txId) {
         AppExecutors.getInstance().diskIO().execute(() -> {
+            Web3TxEntity txEntity = mRepository.loadETHTxSync(txId);
             EthereumTransaction transaction = EthereumTransaction.transformDbEntity(txEntity);
             rawFormatTx.postValue(transaction.getSignedHex());
             observableEthTx.postValue(transaction);

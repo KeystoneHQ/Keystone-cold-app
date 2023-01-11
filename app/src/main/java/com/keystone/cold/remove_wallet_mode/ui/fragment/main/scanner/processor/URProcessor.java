@@ -76,7 +76,7 @@ public class URProcessor implements Processor{
             }
             if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TRANSACTION.getType())) {
                 bundle.putInt(BundleKeys.ETH_TX_TYPE_KEY, EthereumTransaction.TransactionType.LEGACY.getType());
-                return new Destination(R.id.action_to_ethTxConfirmFragment, bundle);
+                return new Destination(R.id.action_to_ethereumConfirmTransactionFragment, bundle);
             } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_DATA.getType())) {
                 return new Destination(R.id.action_to_ethSignTypedDataFragment, bundle);
             } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.PERSONAL_MESSAGE.getType())) {
@@ -87,7 +87,7 @@ public class URProcessor implements Processor{
                 switch (type) {
                     case 0x02:
                         bundle.putInt(BundleKeys.ETH_TX_TYPE_KEY, EthereumTransaction.TransactionType.FEE_MARKET.getType());
-                        return new Destination(R.id.action_to_ethFeeMarketTxConfirmFragment, bundle);
+                        return new Destination(R.id.action_to_ethereumConfirmTransactionFragment, bundle);
                     default:
                         throw new UnknownQrCodeException("test", "unknown transaction!");
                 }
