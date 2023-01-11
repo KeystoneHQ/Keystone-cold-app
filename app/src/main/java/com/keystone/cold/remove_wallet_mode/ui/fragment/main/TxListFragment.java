@@ -33,9 +33,11 @@ import com.keystone.cold.databinding.FragmentTxListBinding;
 import com.keystone.cold.databinding.ItemTxListBinding;
 import com.keystone.cold.model.Tx;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
+import com.keystone.cold.remove_wallet_mode.helper.ReviewDestinationDetector;
 import com.keystone.cold.remove_wallet_mode.viewmodel.record.TxRecordViewModel;
 import com.keystone.cold.ui.common.FilterableBaseBindingAdapter;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.ui.fragment.main.TxCallback;
 
 
 import java.util.List;
@@ -47,6 +49,12 @@ public class TxListFragment extends BaseFragment<FragmentTxListBinding> {
     private LiveData<List<Tx>> txLiveData;
     private TxAdapter adapter;
 
+    private final TxCallback txCallback = tx -> {
+        ReviewDestinationDetector.ReviewDestination destination = ReviewDestinationDetector.detect(tx);
+        if (destination != null) {
+            navigate(destination.id, destination.bundle);
+        }
+    };
 
     static Fragment newInstance(@NonNull String coinId, @NonNull String coinCode) {
         TxListFragment fragment = new TxListFragment();
@@ -92,7 +100,7 @@ public class TxListFragment extends BaseFragment<FragmentTxListBinding> {
         super.onDestroyView();
     }
 
-    static class TxAdapter extends FilterableBaseBindingAdapter<Tx, ItemTxListBinding> {
+    class TxAdapter extends FilterableBaseBindingAdapter<Tx, ItemTxListBinding> {
 
         TxAdapter(Context context) {
             super(context);
@@ -111,6 +119,7 @@ public class TxListFragment extends BaseFragment<FragmentTxListBinding> {
         @Override
         protected void onBindItem(ItemTxListBinding binding, Tx item) {
             binding.setTx(item);
+            binding.setTxCallback(txCallback);
         }
 
         @Override
