@@ -33,6 +33,7 @@ import com.keystone.cold.databinding.FragmentTxListBinding;
 import com.keystone.cold.databinding.ItemTxListBinding;
 import com.keystone.cold.model.Tx;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
+import com.keystone.cold.remove_wallet_mode.helper.Destination;
 import com.keystone.cold.remove_wallet_mode.helper.ReviewDestinationDetector;
 import com.keystone.cold.remove_wallet_mode.viewmodel.record.TxRecordViewModel;
 import com.keystone.cold.ui.common.FilterableBaseBindingAdapter;
@@ -50,7 +51,7 @@ public class TxListFragment extends BaseFragment<FragmentTxListBinding> {
     private TxAdapter adapter;
 
     private final TxCallback txCallback = tx -> {
-        ReviewDestinationDetector.ReviewDestination destination = ReviewDestinationDetector.detect(tx);
+        Destination destination = ReviewDestinationDetector.detect(tx);
         if (destination != null) {
             navigate(destination.id, destination.bundle);
         }

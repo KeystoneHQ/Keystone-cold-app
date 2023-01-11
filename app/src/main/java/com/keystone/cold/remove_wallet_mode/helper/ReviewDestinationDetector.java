@@ -18,31 +18,22 @@ public class ReviewDestinationDetector {
 
     private static final String TAG = "ReviewDetector";
 
-    public static class ReviewDestination {
-        public int id;
-        public Bundle bundle;
 
-        public ReviewDestination(int id, Bundle bundle) {
-            this.id = id;
-            this.bundle = bundle;
-        }
-    }
-
-    public static ReviewDestination detect(Tx tx) {
+    public static Destination detect(Tx tx) {
 
         String txId = tx.getTxId();
         String coinId = tx.getCoinId();
         Bundle bundle = new Bundle();
         bundle.putString(BundleKeys.TX_ID_KEY, txId);
         if (Coins.APTOS.coinId().equals(coinId)) {
-            return new ReviewDestination(R.id.action_to_aptosTxDetailFragment, bundle);
+            return new Destination(R.id.action_to_aptosTxDetailFragment, bundle);
         } else if (Coins.ETH.coinId().equals(coinId)) {
             return detectEth(tx);
         }
         return null;
     }
 
-    private static ReviewDestination detectEth(Tx tx) {
+    private static Destination detectEth(Tx tx) {
         if (tx instanceof GenericETHTxEntity) {
             GenericETHTxEntity ethTxEntity = (GenericETHTxEntity) tx;
             String signedHex = ethTxEntity.getSignedHex();
@@ -50,15 +41,15 @@ public class ReviewDestinationDetector {
             bundle.putString(KEY_TX_ID, ethTxEntity.getTxId());
             try {
                 new JSONObject(signedHex);
-                return new ReviewDestination(R.id.action_to_ethTxFragment, bundle);
+                return new Destination(R.id.action_to_ethTxFragment, bundle);
             } catch (JSONException e) {
                 switch (ethTxEntity.getTxType()) {
                     case 0x00:
                         Log.i(TAG, "navigate: jump to new ethLegacyTxFragment");
-                        return new ReviewDestination(R.id.action_to_ethLegacyTxFragment, bundle);
+                        return new Destination(R.id.action_to_ethLegacyTxFragment, bundle);
                     case 0x02:
                         Log.i(TAG, "navigate: jump to ethFeeMarketTxFragment");
-                        return new ReviewDestination(R.id.action_to_ethFeeMarketTxFragment, bundle);
+                        return new Destination(R.id.action_to_ethFeeMarketTxFragment, bundle);
                 }
             }
         }
