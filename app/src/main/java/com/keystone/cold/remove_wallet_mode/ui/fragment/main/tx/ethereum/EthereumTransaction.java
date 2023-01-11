@@ -15,13 +15,12 @@
  * in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.keystone.cold.viewmodel.tx;
+package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum;
 
-import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
+import static com.keystone.cold.MainApplication.getApplication;
 
 import android.text.TextUtils;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
 import com.keystone.coinlib.coins.ETH.EthImpl;
@@ -31,15 +30,29 @@ import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.db.entity.Web3TxEntity;
 import com.keystone.cold.model.Tx;
+import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.viewmodel.WatchWallet;
+import com.keystone.cold.viewmodel.tx.TransactionType;
+import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
+import com.sparrowwallet.hummingbird.registry.EthSignature;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.spongycastle.util.encoders.Hex;
 
 import java.math.BigDecimal;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
+import java.util.UUID;
 
-public class GenericETHTxEntity implements Tx {
+public class EthereumTransaction implements Tx {
+
+    public static int MAX_PER_GAS = 1000;
+    public static int MAX_PRIORITY_PER_GAS = 1000;
+    public static int MAX_FEE_PER_GAS = 10000;
+
     // GenericTx params
     private String txId;
     private String amount;
@@ -73,8 +86,18 @@ public class GenericETHTxEntity implements Tx {
     private int txType; // 0x00:legacy  0x02:feeMarket
     private boolean isFromTFCard;
 
-    public static GenericETHTxEntity transformDbEntity(Web3TxEntity web3TxEntity) {
-        GenericETHTxEntity genericETHTxEntity = new GenericETHTxEntity();
+    // transaction related;
+    private String hdPath;
+    private String requestId;
+    private String txHex;
+
+    // abi related;
+    private String toContractName;
+    private JSONObject abi;
+    private String selectorMethodName;
+
+    public static EthereumTransaction transformDbEntity(Web3TxEntity web3TxEntity) {
+        EthereumTransaction transaction = new EthereumTransaction();
         try {
             JSONObject ethTx;
             int txType = web3TxEntity.getTxType();
@@ -87,51 +110,53 @@ public class GenericETHTxEntity implements Tx {
                     if (ethTx == null) {
                         return null;
                     }
-                    genericETHTxEntity = getGenericETHTxEntity(ethTx, web3TxEntity);
-                    genericETHTxEntity.setSignature(EthImpl.getSignature(web3TxEntity.getSignedHex()));
+                    transaction = getGenericETHTxEntity(ethTx, web3TxEntity);
+                    transaction.setSignature(EthImpl.getSignature(web3TxEntity.getSignedHex()));
                     long chainId = getChainIdByEIP155(ethTx.getLong("chainId"));
-                    genericETHTxEntity.setChainId(chainId);
+                    transaction.setChainId(chainId);
                     BigDecimal gasPrice = new BigDecimal(ethTx.getString("gasPrice"));
                     gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
-                    genericETHTxEntity.setGasLimit(nf.format(gasLimit));
-                    genericETHTxEntity.setGasLimitValue(gasLimit);
+                    transaction.setGasLimit(nf.format(gasLimit));
+                    transaction.setGasLimitValue(gasLimit);
                     BigDecimal fee = gasLimit.multiply(gasPrice).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
                     amount = new BigDecimal(ethTx.getString("value"));
                     value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-                    genericETHTxEntity.setAmountValue(amount);
-                    genericETHTxEntity.setAmount(nf.format(value) + Web3TxViewModel.getSymbol(chainId));
-                    genericETHTxEntity.setFee(nf.format(fee) + Web3TxViewModel.getSymbol(chainId));
-                    genericETHTxEntity.setFeeValue(fee);
+                    transaction.setAmountValue(amount);
+                    transaction.setAmount(nf.format(value) + Web3TxViewModel.getSymbol(chainId));
+                    transaction.setFee(nf.format(fee) + Web3TxViewModel.getSymbol(chainId));
+                    transaction.setFeeValue(fee);
                     JSONObject addition = new JSONObject(web3TxEntity.getAddition());
-                    genericETHTxEntity.setFromTFCard(addition.getBoolean("isFromTFCard"));
+                    transaction.setFromTFCard(addition.getBoolean("isFromTFCard"));
+                    transaction.setRequestId(addition.getString("requestId"));
                     break;
                 case 0x02:
                     ethTx = EthImpl.decodeEIP1559Transaction(web3TxEntity.getSignedHex(), null);
                     if (ethTx == null) {
                         return null;
                     }
-                    genericETHTxEntity = getGenericETHTxEntity(ethTx, web3TxEntity);
-                    genericETHTxEntity.setSignature(EthImpl.getEIP1559Signature(web3TxEntity.getSignedHex()));
-                    genericETHTxEntity.setChainId(ethTx.getInt("chainId"));
+                    transaction = getGenericETHTxEntity(ethTx, web3TxEntity);
+                    transaction.setSignature(EthImpl.getEIP1559Signature(web3TxEntity.getSignedHex()));
+                    transaction.setChainId(ethTx.getInt("chainId"));
                     BigDecimal gasPriorityPrice = new BigDecimal(ethTx.getString("maxPriorityFeePerGas"));
                     BigDecimal gasLimitPrice = new BigDecimal(ethTx.getString("maxFeePerGas"));
                     gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
                     BigDecimal estimatedFee = gasPriorityPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
                     BigDecimal maxFee = gasLimitPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-                    genericETHTxEntity.setMaxFeeValue(maxFee);
-                    genericETHTxEntity.setMaxPriorityFeePerGasValue(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP));
-                    genericETHTxEntity.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
-                    genericETHTxEntity.setMaxFeePerGasValue(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP));
-                    genericETHTxEntity.setMaxFeePerGas(nf.format(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
-                    genericETHTxEntity.setGasLimit(nf.format(gasLimit));
-                    genericETHTxEntity.setEstimatedFeeValue(estimatedFee);
-                    genericETHTxEntity.setEstimatedFee(nf.format(estimatedFee) + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
-                    genericETHTxEntity.setMaxFee(nf.format(maxFee) + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
+                    transaction.setMaxFeeValue(maxFee);
+                    transaction.setMaxPriorityFeePerGasValue(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP));
+                    transaction.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
+                    transaction.setMaxFeePerGasValue(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP));
+                    transaction.setMaxFeePerGas(nf.format(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
+                    transaction.setGasLimit(nf.format(gasLimit));
+                    transaction.setEstimatedFeeValue(estimatedFee);
+                    transaction.setEstimatedFee(nf.format(estimatedFee) + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
+                    transaction.setMaxFee(nf.format(maxFee) + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
                     amount = new BigDecimal(ethTx.getString("value"));
                     value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-                    genericETHTxEntity.setAmount(nf.format(value) + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
+                    transaction.setAmount(nf.format(value) + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
                     JSONObject additionJson = new JSONObject(web3TxEntity.getAddition());
-                    genericETHTxEntity.setFromTFCard(additionJson.getBoolean("isFromTFCard"));
+                    transaction.setFromTFCard(additionJson.getBoolean("isFromTFCard"));
+                    transaction.setRequestId(additionJson.getString("requestId"));
                     break;
                 default:
                     break;
@@ -139,10 +164,10 @@ public class GenericETHTxEntity implements Tx {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return genericETHTxEntity;
+        return transaction;
     }
 
-    public static Web3TxEntity transToDbEntity(GenericETHTxEntity genericETHTxEntity) {
+    public static Web3TxEntity transToDbEntity(EthereumTransaction genericETHTxEntity) {
         Web3TxEntity web3TxEntity = new Web3TxEntity();
         web3TxEntity.setTxId(genericETHTxEntity.getTxId());
         web3TxEntity.setSignedHex(genericETHTxEntity.getSignedHex());
@@ -154,8 +179,8 @@ public class GenericETHTxEntity implements Tx {
         return web3TxEntity;
     }
 
-    private static GenericETHTxEntity getGenericETHTxEntity(JSONObject ethTx, Web3TxEntity web3TxEntity) throws JSONException {
-        GenericETHTxEntity genericETHTxEntity = new GenericETHTxEntity();
+    private static EthereumTransaction getGenericETHTxEntity(JSONObject ethTx, Web3TxEntity web3TxEntity) throws JSONException {
+        EthereumTransaction genericETHTxEntity = new EthereumTransaction();
         genericETHTxEntity.setTxId(web3TxEntity.getTxId());
         genericETHTxEntity.setSignedHex(web3TxEntity.getSignedHex());
         genericETHTxEntity.setFrom(web3TxEntity.getFrom());
@@ -165,7 +190,8 @@ public class GenericETHTxEntity implements Tx {
         genericETHTxEntity.setAddition(web3TxEntity.getAddition());
         genericETHTxEntity.setMemo(ethTx.getString("data"));
         genericETHTxEntity.setTo(ethTx.getString("to"));
-        String currentBelongTo = Utilities.getCurrentBelongTo(MainApplication.getApplication());
+        genericETHTxEntity.setMemo(ethTx.getString("data"));
+        String currentBelongTo = Utilities.getCurrentBelongTo(getApplication());
         genericETHTxEntity.setBelongTo(currentBelongTo);
         return genericETHTxEntity;
     }
@@ -234,6 +260,24 @@ public class GenericETHTxEntity implements Tx {
         return memo;
     }
 
+    public boolean isFeeExceeded() {
+        if (txType == TransactionType.LEGACY.getType()) {
+            return getGasPrice(this.getFeeValue(), getGasLimitValue()).doubleValue() > MAX_PER_GAS;
+        } else {
+            double maxPriorityFee = getMaxPriorityFeePerGasValue().doubleValue();
+            boolean isMaxPriorityFeeExceeded = maxPriorityFee > MAX_PRIORITY_PER_GAS;
+            double maxfee = getMaxFeePerGasValue().doubleValue();
+            boolean isMaxFeeExceeded = maxfee > MAX_FEE_PER_GAS;
+            return isMaxPriorityFeeExceeded || isMaxFeeExceeded;
+        }
+    }
+
+    public BigDecimal getGasPrice(BigDecimal feeValue, BigDecimal limitValue) {
+        if (limitValue == null) return new BigDecimal(-1);
+        BigDecimal value = feeValue.multiply(BigDecimal.TEN.pow(18));
+        return value.divide(limitValue.multiply(BigDecimal.TEN.pow(9)), 8, BigDecimal.ROUND_HALF_UP);
+    }
+
     @Override
     public String getSignId() {
         try {
@@ -243,6 +287,54 @@ public class GenericETHTxEntity implements Tx {
             e.printStackTrace();
             return WatchWallet.METAMASK_SIGN_ID;
         }
+    }
+
+    public String getHdPath() {
+        return hdPath;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setHdPath(String hdPath) {
+        this.hdPath = hdPath;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
+
+    public void setToContractName(String toContractName) {
+        this.toContractName = toContractName;
+    }
+
+    public void setAbi(JSONObject abi) {
+        this.abi = abi;
+    }
+
+    public void setSelectorMethodName(String selectorMethodName) {
+        this.selectorMethodName = selectorMethodName;
+    }
+
+    public String getToContractName() {
+        return toContractName;
+    }
+
+    public JSONObject getAbi() {
+        return abi;
+    }
+
+    public String getSelectorMethodName() {
+        return selectorMethodName;
+    }
+
+    public String getTxHex() {
+        return txHex;
+    }
+
+    public void setTxHex(String txHex) {
+        this.txHex = txHex;
     }
 
     @Override
@@ -272,6 +364,22 @@ public class GenericETHTxEntity implements Tx {
 
     public String getSignature() {
         return signature;
+    }
+
+    public String getSignatureQRCode() {
+        try {
+            byte[] signature = Hex.decode(getSignature());
+            JSONObject addition = new JSONObject(getAddition());
+            UUID uuid = UUID.fromString(addition.optString("requestId"));
+            ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
+            byteBuffer.putLong(uuid.getMostSignificantBits());
+            byteBuffer.putLong(uuid.getLeastSignificantBits());
+            byte[] requestId = byteBuffer.array();
+            EthSignature ethSignature = new EthSignature(signature, requestId);
+            return ethSignature.toUR().toString();
+        } catch (Exception e) {
+            return Hex.toHexString(getSignature().getBytes(StandardCharsets.UTF_8));
+        }
     }
 
     public long getChainId() {
@@ -472,5 +580,21 @@ public class GenericETHTxEntity implements Tx {
 
     public void setFeeValue(BigDecimal feeValue) {
         this.feeValue = feeValue;
+    }
+
+    public enum TransactionType {
+        LEGACY(0x00),
+        FEE_MARKET(0x02);
+
+        private int type;
+
+        TransactionType(int type) {
+            this.type = type;
+        }
+
+        public int getType() {
+            return type;
+        }
+
     }
 }

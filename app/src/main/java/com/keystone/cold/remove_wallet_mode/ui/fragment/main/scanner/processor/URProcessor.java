@@ -1,8 +1,5 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.scanner.processor;
 
-import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumConfirmTransactionFragment.FEE_MARKET_TRANSACTION;
-import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumConfirmTransactionFragment.LEGACY_TRANSACTION;
-
 import android.os.Bundle;
 
 import com.keystone.coinlib.accounts.ETHAccount;
@@ -18,6 +15,7 @@ import com.keystone.cold.remove_wallet_mode.exceptions.scanner.XfpNotMatchExcept
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidETHAccountException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.remove_wallet_mode.helper.Destination;
+import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumTransaction;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
 import com.keystone.cold.util.AptosTransactionHelper;
@@ -77,7 +75,7 @@ public class URProcessor implements Processor{
                 throw new XfpNotMatchException("", "Master fingerprint not match");
             }
             if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TRANSACTION.getType())) {
-                bundle.putInt(BundleKeys.ETH_TX_TYPE_KEY, LEGACY_TRANSACTION);
+                bundle.putInt(BundleKeys.ETH_TX_TYPE_KEY, EthereumTransaction.TransactionType.LEGACY.getType());
                 return new Destination(R.id.action_to_ethTxConfirmFragment, bundle);
             } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_DATA.getType())) {
                 return new Destination(R.id.action_to_ethSignTypedDataFragment, bundle);
@@ -88,7 +86,7 @@ public class URProcessor implements Processor{
                 byte type = typedTransaction[0];
                 switch (type) {
                     case 0x02:
-                        bundle.putInt(BundleKeys.ETH_TX_TYPE_KEY, FEE_MARKET_TRANSACTION);
+                        bundle.putInt(BundleKeys.ETH_TX_TYPE_KEY, EthereumTransaction.TransactionType.FEE_MARKET.getType());
                         return new Destination(R.id.action_to_ethFeeMarketTxConfirmFragment, bundle);
                     default:
                         throw new UnknownQrCodeException("test", "unknown transaction!");

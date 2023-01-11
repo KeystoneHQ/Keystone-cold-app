@@ -5,12 +5,14 @@ import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX
 
 import android.os.Bundle;
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
+import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ConfirmTransactionFragment;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.EthereumTxViewModel;
@@ -18,18 +20,20 @@ import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
 
 public class EthereumConfirmTransactionFragment extends ConfirmTransactionFragment<EthereumTxViewModel> {
-    public static final int LEGACY_TRANSACTION = 0;
-    public static final int FEE_MARKET_TRANSACTION = 2;
+    private MutableLiveData<EthereumTransaction> transaction;
 
     @Override
     protected void initViewModel() {
         viewModel = ViewModelProviders.of(this).get(EthereumTxViewModel.class);
+        transaction = viewModel.getObservableEthTx();
+        viewModel.generateUnsignedTransaction(requireArguments());
+        viewModel.parseTxException().observe(this, this::handleParseException);
     }
 
     @Override
     protected TabLayoutConfig[] getTabLayouts() {
         TabLayoutConfig[] layoutConfigs = new TabLayoutConfig[2];
-        layoutConfigs[0] = new TabLayoutConfig(getString(R.string.overview), EthereumTransactionDetailFragment.newInstance(requireArguments()));
+        layoutConfigs[0] = new TabLayoutConfig(getString(R.string.overview), EthereumTransactionDetailFragment.newInstance(requireArguments(), transaction));
         layoutConfigs[1] = new TabLayoutConfig(getString(R.string.raw_data), RawTxFragment.newInstance(requireArguments(), viewModel));
         return layoutConfigs;
     }
@@ -49,6 +53,16 @@ public class EthereumConfirmTransactionFragment extends ConfirmTransactionFragme
                     viewModel.handleSign();
                     subscribeSignState();
                 }, forgetPassword);
+    }
+
+    private void handleParseException(BaseException ex) {
+        if (ex != null) {
+            ex.printStackTrace();
+            alertException(ex, () -> {
+                popBackStack(R.id.assetFragment, false);
+            });
+            viewModel.parseTxException().setValue(null);
+        }
     }
 
     private void checkExceedFeeDialog() {

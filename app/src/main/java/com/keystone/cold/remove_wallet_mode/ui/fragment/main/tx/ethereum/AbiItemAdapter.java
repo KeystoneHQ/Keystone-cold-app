@@ -22,6 +22,7 @@ package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum;
 import android.text.TextUtils;
 
 import com.keystone.coinlib.coins.ETH.Eth;
+import com.keystone.coinlib.ens.EnsLoadManager;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.EthereumTxViewModel;
 import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 
@@ -34,12 +35,10 @@ import java.util.List;
 
 public class AbiItemAdapter {
 
-    private String fromAddress;
-    private EthereumTxViewModel viewModel;
+    private EthereumTransaction transaction;
 
-    public AbiItemAdapter(String fromAddress, EthereumTxViewModel viewModel) {
-        this.fromAddress = fromAddress;
-        this.viewModel = viewModel;
+    public AbiItemAdapter(EthereumTransaction transaction) {
+        this.transaction = transaction;
     }
 
     public List<AbiItem> adapt(JSONObject tx) {
@@ -87,8 +86,8 @@ public class AbiItemAdapter {
                 if ("address[]".equals(type)) {
                     item = new StringBuilder();
                     String address = arr.getString(j);
-                    String ens = viewModel.loadEnsAddress(address);
-                    String addressSymbol = viewModel.recognizeAddress(address);
+                    String ens = EthereumTxViewModel.loadEnsAddress(address);
+                    String addressSymbol = EthereumTxViewModel.recognizeAddress(transaction, address);
                     address = Eth.Deriver.toChecksumAddress(address);
                     if (!TextUtils.isEmpty(ens)) {
                         item.append(String.format("<%s>\n", ens));

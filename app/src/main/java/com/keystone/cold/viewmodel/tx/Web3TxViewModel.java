@@ -53,7 +53,6 @@ import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.encryption.RustSigner;
-import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 
 import org.json.JSONArray;

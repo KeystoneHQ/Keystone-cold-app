@@ -25,7 +25,7 @@
 
         <variable
             name="tx"
-            type="com.keystone.cold.viewmodel.tx.GenericETHTxEntity" />
+            type="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumTransaction" />
     </data>
 
     <ScrollView
@@ -120,13 +120,13 @@
                 android:id="@+id/check_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/check_info"
-                android:textColor="@color/check_info_color"
-                android:textSize="13sp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:gravity="start"
-                android:visibility="gone"/>
+                android:text="@string/check_info"
+                android:textColor="@color/check_info_color"
+                android:textSize="13sp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/tx_id_info"
@@ -159,7 +159,7 @@
                     layout="@layout/divider"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="12sp"/>
+                    android:layout_marginTop="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -191,7 +191,7 @@
                     layout="@layout/divider"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="12sp"/>
+                    android:layout_marginTop="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -224,7 +224,7 @@
                     layout="@layout/divider"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="12sp"/>
+                    android:layout_marginTop="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -233,19 +233,20 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone">
+
                 <include
                     android:id="@+id/ens"
+                    layout="@layout/ens_item"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="6dp"
-                    layout="@layout/ens_item"/>
+                    android:layout_marginTop="6dp" />
 
                 <include
                     layout="@layout/divider"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="12sp"/>
+                    android:layout_marginTop="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -278,13 +279,14 @@
                 layout="@layout/divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="12sp"/>
+                android:layout_marginTop="12sp" />
 
             <LinearLayout
                 android:id="@+id/legacy_fee_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/fee_label"
@@ -311,21 +313,23 @@
                     android:id="@+id/fee_too_high"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="3dp"
-                    android:visibility="gone"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
                     <ImageView
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:src="@drawable/information"
                         app:tint="@color/red" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/fee_too_high"
                         android:layout_marginStart="5dp"
+                        android:text="@string/fee_too_high"
                         android:textColor="@color/red" />
                 </LinearLayout>
 
@@ -333,14 +337,15 @@
                     layout="@layout/divider"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="12sp"/>
+                    android:layout_marginTop="12sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/eip1559_fee_estimated"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/fee_estimated_label"
@@ -377,21 +382,23 @@
                     android:id="@+id/priority_fee_too_high"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="3dp"
-                    android:visibility="gone"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
                     <ImageView
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:src="@drawable/information"
                         app:tint="@color/red" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/fee_too_high"
                         android:layout_marginStart="5dp"
+                        android:text="@string/fee_too_high"
                         android:textColor="@color/red" />
                 </LinearLayout>
 
@@ -406,7 +413,8 @@
                 android:id="@+id/eip1559_fee_max"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/fee_max_label"
@@ -443,21 +451,23 @@
                     android:id="@+id/max_fee_too_high"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="3dp"
-                    android:visibility="gone"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
                     <ImageView
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:src="@drawable/information"
                         app:tint="@color/red" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/fee_too_high"
                         android:layout_marginStart="5dp"
+                        android:text="@string/fee_too_high"
                         android:textColor="@color/red" />
                 </LinearLayout>
 
@@ -500,8 +510,8 @@
                     android:id="@+id/info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="15dp"
@@ -515,8 +525,8 @@
                         android:layout_marginStart="3dp"
                         android:layout_marginTop="3dp"
                         android:text="@string/undecoded_tip"
-                        android:textSize="13sp"
                         android:textColor="@color/undecoded_tip_color"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
 
                     <ImageView
@@ -537,8 +547,9 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="14dp">
+                    android:layout_marginTop="14dp"
+                    android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -557,7 +568,7 @@
                         android:text="@string/from_tfcard"
                         android:textColor="@color/white"
                         android:textSize="13sp"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -608,6 +619,32 @@
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     tools:text="transfer" />
+            </LinearLayout>
+
+            <include layout="@layout/divider" />
+
+            <LinearLayout
+                android:id="@+id/qrcode_container"
+                android:visibility="gone"
+                android:orientation="vertical"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/broadcast_hint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/please_broadcast_with_hot"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <include
+                    android:id="@+id/qrcode"
+                    layout="@layout/dynamic_qrcode" />
             </LinearLayout>
 
         </LinearLayout>

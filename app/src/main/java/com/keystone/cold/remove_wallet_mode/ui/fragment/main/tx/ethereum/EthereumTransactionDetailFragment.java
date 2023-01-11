@@ -1,10 +1,5 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum;
 
-import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumConfirmTransactionFragment.FEE_MARKET_TRANSACTION;
-import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumConfirmTransactionFragment.LEGACY_TRANSACTION;
-import static com.keystone.cold.ui.fragment.main.web3.EthFeeMarketTxConfirmFragment.MAX_FEE_PER_GAS;
-import static com.keystone.cold.ui.fragment.main.web3.EthFeeMarketTxConfirmFragment.MAX_PRIORITY_PER_GAS;
-
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,10 +10,9 @@ import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.coins.ETH.Eth;
 import com.keystone.coinlib.coins.ETH.GnosisHandler;
@@ -30,30 +24,29 @@ import com.keystone.cold.databinding.AbiItemBinding;
 import com.keystone.cold.databinding.AbiItemMethodBinding;
 import com.keystone.cold.databinding.EnsItemBinding;
 import com.keystone.cold.databinding.FragmentEthereumTxBinding;
-import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.EthereumTxViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
-import com.keystone.cold.viewmodel.tx.GenericETHTxEntity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class EthereumTransactionDetailFragment extends BaseFragment<FragmentEthereumTxBinding> {
-    private EthereumTxViewModel viewModel;
     public static Pattern patternEns = Pattern.compile("(?<=\\<)[^\\>]+");
     public static Pattern pattern = Pattern.compile("(?<=\\()[^\\)]+");
     public static Pattern pattern1 = Pattern.compile("(?<=\\[)[^]]+");
-    public static int MAX_PER_GAS = 1000;
 
-    private GenericETHTxEntity genericETHTxEntity;
+    private final MutableLiveData<EthereumTransaction> transaction;
 
-    public static EthereumTransactionDetailFragment newInstance(@NonNull Bundle bundle) {
-        EthereumTransactionDetailFragment fragment = new EthereumTransactionDetailFragment();
+    public EthereumTransactionDetailFragment(MutableLiveData<EthereumTransaction> transaction) {
+        this.transaction = transaction;
+    }
+
+    public static EthereumTransactionDetailFragment newInstance(Bundle bundle, MutableLiveData<EthereumTransaction> transaction) {
+        EthereumTransactionDetailFragment fragment = new EthereumTransactionDetailFragment(transaction);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -67,28 +60,7 @@ public class EthereumTransactionDetailFragment extends BaseFragment<FragmentEthe
     protected void init(View view) {
         mBinding.checkInfo.setVisibility(View.VISIBLE);
         mBinding.info.setOnClickListener(view1 -> realShowDialog());
-        viewModel.parseTxData(requireArguments());
-
-        viewModel = ViewModelProviders.of(getParentFragment()).get(EthereumTxViewModel.class);
-        viewModel.getObservableEthTx().observe(this, genericETHTxEntity -> {
-            if (genericETHTxEntity != null) {
-                if (viewModel.getTransactionType() == LEGACY_TRANSACTION) {
-                    if (viewModel.getGasPrice(genericETHTxEntity.getFeeValue(), genericETHTxEntity.getGasLimitValue()).doubleValue() > MAX_PER_GAS) {
-                        viewModel.setExceeded(true);
-                    }
-                    updateLegacyUI();
-                }
-                if (viewModel.getTransactionType() == FEE_MARKET_TRANSACTION) {
-                    double maxPriorityFee = genericETHTxEntity.getMaxPriorityFeePerGasValue().doubleValue();
-                    boolean isMaxPriorityFeeExceeded = maxPriorityFee > MAX_PRIORITY_PER_GAS;
-                    double maxfee = genericETHTxEntity.getMaxFeePerGasValue().doubleValue();
-                    boolean isMaxFeeExceeded = maxfee > MAX_FEE_PER_GAS;
-                    viewModel.setExceeded(isMaxPriorityFeeExceeded || isMaxFeeExceeded);
-                    updateEip1559UI();
-                }
-            }
-        });
-        viewModel.parseTxException().observe(this, this::handleParseException);
+        transaction.observe(this, this::updateUI);
     }
 
     private void showDialog() {
@@ -115,36 +87,56 @@ public class EthereumTransactionDetailFragment extends BaseFragment<FragmentEthe
                 null);
     }
 
-    private void handleParseException(BaseException ex) {
-        if (ex != null) {
-            ex.printStackTrace();
-            alertException(ex, () -> {
-                popBackStack(R.id.assetFragment, false);
-            });
-            viewModel.parseTxException().setValue(null);
-        }
-    }
-
     @SuppressLint("UseCompatLoadingForDrawables")
-    private void updateLegacyUI() {
-        updateNetworkName();
-        mBinding.icon.setImageDrawable(mActivity.getDrawable(genericETHTxEntity.getIcon()));
-        if (viewModel.isExceeded()) {
-            mBinding.fee.setTextColor(Color.RED);
-            mBinding.feeTooHigh.setVisibility(View.VISIBLE);
+    private void updateUI(EthereumTransaction transaction) {
+        mBinding.network.setText(EthereumTxViewModel.getNetwork(transaction.getChainId()));
+        mBinding.icon.setImageDrawable(mActivity.getDrawable(transaction.getIcon()));
+
+        if (transaction.getTxType() == EthereumTransaction.TransactionType.LEGACY.getType()) {
+            mBinding.legacyFeeInfo.setVisibility(View.VISIBLE);
+            if (transaction.isFeeExceeded()) {
+                mBinding.fee.setTextColor(Color.RED);
+                mBinding.feeTooHigh.setVisibility(View.VISIBLE);
+            }
         }
-        JSONObject abi = viewModel.getAbi();
-        if (abi != null) {
-            updateAbiView(abi);
+        if (transaction.getTxType() == EthereumTransaction.TransactionType.FEE_MARKET.getType()) {
+            mBinding.eip1559FeeEstimated.setVisibility(View.VISIBLE);
+            mBinding.eip1559FeeMax.setVisibility(View.VISIBLE);
+            String feeEstimatedContent = String.format("Max Priority fee (%s) * Gas limit (%s)",
+                    transaction.getMaxPriorityFeePerGas(), transaction.getGasLimit());
+            String feeMaxContent = String.format("Max fee (%s) * Gas limit (%s)",
+                    transaction.getMaxFeePerGas(), transaction.getGasLimit());
+            if (transaction.isFeeExceeded()) {
+                mBinding.maxFeeTooHigh.setVisibility(View.VISIBLE);
+                mBinding.priorityFeeTooHigh.setVisibility(View.VISIBLE);
+                mBinding.feeEstimatedValue.setTextColor(Color.RED);
+                mBinding.feeMaxValue.setTextColor(Color.RED);
+                SpannableStringBuilder spannableMaxEstimated = new SpannableStringBuilder(feeEstimatedContent);
+                spannableMaxEstimated.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.red)), 18,
+                        18 + transaction.getMaxPriorityFeePerGas().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                SpannableStringBuilder spannableMaxFee = new SpannableStringBuilder(feeMaxContent);
+                spannableMaxFee.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.red)), 9,
+                        9 + transaction.getMaxPriorityFeePerGas().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                mBinding.feeEstimatedDetail.setText(spannableMaxEstimated);
+                mBinding.feeMaxDetail.setText(spannableMaxFee);
+            } else {
+                mBinding.feeEstimatedDetail.setText(feeEstimatedContent);
+                mBinding.feeMaxDetail.setText(feeMaxContent);
+            }
+        }
+
+        if (transaction.getAbi() != null) {
+            updateAbiView(transaction);
             mBinding.data.setVisibility(View.VISIBLE);
             mBinding.undecodedData.setVisibility(View.GONE);
         } else {
-            if (!TextUtils.isEmpty(viewModel.getInputData())) {
+            if (!TextUtils.isEmpty(transaction.getMemo())) {
                 mBinding.data.setVisibility(View.GONE);
                 mBinding.undecodedData.setVisibility(View.VISIBLE);
-                mBinding.inputData.setText("0x" + viewModel.getInputData());
-                if (!TextUtils.isEmpty(viewModel.getSelectorMethodName())) {
-                    updateSelectorView();
+                mBinding.inputData.setText("0x" + transaction.getMemo());
+                if (!TextUtils.isEmpty(transaction.getSelectorMethodName())) {
+                    mBinding.tvSelector.setText(transaction.getSelectorMethodName());
+                    mBinding.llSelector.setVisibility(View.VISIBLE);
                 }
                 showDialog();
             } else {
@@ -152,72 +144,20 @@ public class EthereumTransactionDetailFragment extends BaseFragment<FragmentEthe
                 mBinding.undecodedData.setVisibility(View.GONE);
             }
         }
-        mBinding.setTx(genericETHTxEntity);
-        processAndUpdateTo();
-    }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private void updateEip1559UI() {
-        mBinding.network.setText(viewModel.getNetwork(viewModel.getChainId()));
-        String feeEstimatedContent = String.format("Max Priority fee (%s) * Gas limit (%s)",
-                genericETHTxEntity.getMaxPriorityFeePerGas(), genericETHTxEntity.getGasLimit());
-        String feeMaxContent = String.format("Max fee (%s) * Gas limit (%s)",
-                genericETHTxEntity.getMaxFeePerGas(), genericETHTxEntity.getGasLimit());
-        mBinding.icon.setImageDrawable(mActivity.getDrawable(genericETHTxEntity.getIcon()));
-        if (viewModel.isExceeded()) {
-            mBinding.maxFeeTooHigh.setVisibility(View.VISIBLE);
-            mBinding.priorityFeeTooHigh.setVisibility(View.VISIBLE);
-            mBinding.feeEstimatedValue.setTextColor(Color.RED);
-            mBinding.feeMaxValue.setTextColor(Color.RED);
-            SpannableStringBuilder spannableMaxEstimated = new SpannableStringBuilder(feeEstimatedContent);
-            spannableMaxEstimated.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.red)), 18,
-                    18 + genericETHTxEntity.getMaxPriorityFeePerGas().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-            SpannableStringBuilder spannableMaxFee = new SpannableStringBuilder(feeMaxContent);
-            spannableMaxFee.setSpan(new ForegroundColorSpan(MainApplication.getApplication().getColor(R.color.red)), 9,
-                    9 + genericETHTxEntity.getMaxPriorityFeePerGas().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-            mBinding.feeEstimatedDetail.setText(spannableMaxEstimated);
-            mBinding.feeMaxDetail.setText(spannableMaxFee);
-        } else {
-            mBinding.feeEstimatedDetail.setText(feeEstimatedContent);
-            mBinding.feeMaxDetail.setText(feeMaxContent);
+        mBinding.setTx(transaction);
+        processAndUpdateTo(transaction);
+        if (transaction.getSignature() != null) {
+            mBinding.qrcodeContainer.setVisibility(View.VISIBLE);
+            mBinding.qrcode.qrcode.setData(transaction.getSignatureQRCode());
         }
-        JSONObject abi = viewModel.getAbi();
-        if (abi != null) {
-            updateAbiView(abi);
-            mBinding.data.setVisibility(View.VISIBLE);
-            mBinding.undecodedData.setVisibility(View.GONE);
-        } else {
-            if (!TextUtils.isEmpty(viewModel.getInputData())) {
-                mBinding.data.setVisibility(View.GONE);
-                mBinding.undecodedData.setVisibility(View.VISIBLE);
-                mBinding.inputData.setText("0x" + viewModel.getInputData());
-                if (!TextUtils.isEmpty(viewModel.getSelectorMethodName())) {
-                    updateSelectorView();
-                }
-                showDialog();
-            } else {
-                mBinding.data.setVisibility(View.GONE);
-                mBinding.undecodedData.setVisibility(View.GONE);
-            }
-        }
-        mBinding.setTx(genericETHTxEntity);
-        processAndUpdateTo();
     }
 
-    private void updateSelectorView() {
-        mBinding.tvSelector.setText(viewModel.getSelectorMethodName());
-        mBinding.llSelector.setVisibility(View.VISIBLE);
-    }
-
-    private void updateNetworkName() {
-        mBinding.network.setText(viewModel.getNetwork(viewModel.getChainId()));
-    }
-
-    private void processAndUpdateTo() {
+    private void processAndUpdateTo(EthereumTransaction transaction) {
         AppExecutors.getInstance().diskIO().execute(() -> {
-            String to = genericETHTxEntity.getTo();
-            String ens = viewModel.loadEnsAddress(to);
-            String addressSymbol = viewModel.recognizeAddress(to);
+            String to = transaction.getTo();
+            String ens = EthereumTxViewModel.loadEnsAddress(to);
+            String addressSymbol = EthereumTxViewModel.recognizeAddress(transaction,to);
             if (!TextUtils.isEmpty(addressSymbol)) {
                 to = to + String.format(" (%s)", addressSymbol);
             } else if (GnosisHandler.gnosisContractAddresses.contains(to.toLowerCase())) {
@@ -241,34 +181,34 @@ public class EthereumTransactionDetailFragment extends BaseFragment<FragmentEthe
         });
     }
 
-    private void updateAbiView(JSONObject abi) {
-        if (abi != null) {
-            if (viewModel.isFromTFCard()) {
-                mBinding.tfcardTip.setVisibility(View.VISIBLE);
-            }
-            String contract = abi.optString("contract");
-            boolean isUniswap = contract.toLowerCase().contains("uniswap");
-            AppExecutors.getInstance().diskIO().execute(() -> {
-                List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(genericETHTxEntity.getFrom(), viewModel).adapt(abi);
-                AppExecutors.getInstance().mainThread().execute(() -> {
-                    if (itemList == null) {
-                        AbiItemMethodBinding abiItemMethodBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
-                                R.layout.abi_item_method, null, false);
-                        try {
-                            abiItemMethodBinding.value.setText(abi.toString(2));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        mBinding.container.addView(abiItemMethodBinding.getRoot());
-                    } else {
-                        addViewToData(isUniswap, itemList);
-                    }
-                });
-            });
+    private void updateAbiView(EthereumTransaction transaction) {
+        JSONObject abi = transaction.getAbi();
+        if (transaction.isFromTFCard()) {
+            mBinding.tfcardTip.setVisibility(View.VISIBLE);
         }
+        String contract = abi.optString("contract");
+        boolean isUniswap = contract.toLowerCase().contains("uniswap");
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            List<AbiItemAdapter.AbiItem> itemList = new AbiItemAdapter(transaction).adapt(abi);
+            AppExecutors.getInstance().mainThread().execute(() -> {
+                if (itemList == null) {
+                    AbiItemMethodBinding abiItemMethodBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+                            R.layout.abi_item_method, null, false);
+                    try {
+                        abiItemMethodBinding.value.setText(abi.toString(2));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    mBinding.container.addView(abiItemMethodBinding.getRoot());
+                } else {
+                    addViewToData(transaction, isUniswap, itemList);
+                }
+            });
+        });
+
     }
 
-    private void addViewToData(boolean isUniswap, List<AbiItemAdapter.AbiItem> itemList) {
+    private void addViewToData(EthereumTransaction transaction, boolean isUniswap, List<AbiItemAdapter.AbiItem> itemList) {
         for (int i = 0; i < itemList.size(); i++) {
             AbiItemAdapter.AbiItem item = itemList.get(i);
             if ("method".equals(item.key)) {
@@ -283,8 +223,8 @@ public class EthereumTransactionDetailFragment extends BaseFragment<FragmentEthe
                 continue;
             }
             if ("address".equals(item.type)) {
-                String ens = viewModel.loadEnsAddress(item.value);
-                String addressSymbol = viewModel.recognizeAddress(item.value);
+                String ens = EthereumTxViewModel.loadEnsAddress(item.value);
+                String addressSymbol = EthereumTxViewModel.recognizeAddress(transaction, item.value);
                 if (addressSymbol == null) {
                     if (GnosisHandler.gnosisContractAddresses.contains(item.value.toLowerCase())) {
                         addressSymbol = "Safe";
@@ -311,7 +251,7 @@ public class EthereumTransactionDetailFragment extends BaseFragment<FragmentEthe
                     R.layout.abi_item, null, false);
             binding.key.setText(item.key);
             if (isUniswap && "to".equals(item.key)) {
-                if (!item.value.equalsIgnoreCase(genericETHTxEntity.getFrom())) {
+                if (!item.value.equalsIgnoreCase(transaction.getFrom())) {
                     item.value += String.format(" [%s]", getString(R.string.inconsistent_address));
                 }
             }
