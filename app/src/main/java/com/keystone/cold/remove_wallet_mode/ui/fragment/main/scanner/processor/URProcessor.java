@@ -115,6 +115,7 @@ public class URProcessor implements Processor{
             bundle.putString(BundleKeys.REQUEST_ID_KEY, uuid.toString());
             bundle.putString(BundleKeys.SIGN_DATA_KEY, signData);
             bundle.putString(BundleKeys.HD_PATH_KEY, "M/" + hdPath);
+            bundle.putString(BundleKeys.SIGN_ORIGIN_KEY, aptosSignRequest.getOrigin());
             AptosSignRequest.DataType dataType = aptosSignRequest.getType();
             switch (dataType) {
                 case MESSAGE:
