@@ -87,7 +87,7 @@
                         android:textSize="15sp"
                         android:breakStrategy="simple"
                         android:textStyle="bold"
-                        android:text="@string/sync_with_keystone_vault"/>
+                        android:text="@string/tutorials"/>
 
                     <ImageView
                         android:id="@+id/info"
