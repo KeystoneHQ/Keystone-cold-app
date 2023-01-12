@@ -8,6 +8,7 @@ public interface BundleKeys {
     String REQUEST_ID_KEY = "request_id_key";
     String HD_PATH_KEY = "hd_path_key";
     String DATA_TYPE_KEY = "data_type_key";
+    String SIGN_ORIGIN_KEY = "sign_origin_key";
     String TX_ID_KEY = "tx_id_key";
     String ETH_TX_TYPE_KEY = "eth_tx_type_key";
 }

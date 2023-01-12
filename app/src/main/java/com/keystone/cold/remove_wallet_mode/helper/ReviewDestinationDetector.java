@@ -26,7 +26,7 @@ public class ReviewDestinationDetector {
         Bundle bundle = new Bundle();
         bundle.putString(BundleKeys.TX_ID_KEY, txId);
         if (Coins.APTOS.coinId().equals(coinId)) {
-            return new Destination(R.id.action_to_aptosTxDetailFragment, bundle);
+            return new Destination(R.id.action_to_aptosReviewTransactionFragment, bundle);
         } else if (Coins.ETH.coinId().equals(coinId)) {
             return detectEth(tx);
         }

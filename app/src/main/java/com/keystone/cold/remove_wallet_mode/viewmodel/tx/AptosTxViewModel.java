@@ -1,9 +1,5 @@
 package com.keystone.cold.remove_wallet_mode.viewmodel.tx;
 
-import static com.keystone.cold.ui.fragment.main.AssetFragment.HD_PATH;
-import static com.keystone.cold.ui.fragment.main.AssetFragment.REQUEST_ID;
-import static com.keystone.cold.ui.fragment.main.AssetFragment.SIGN_DATA;
-
 import android.app.Application;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -16,12 +12,12 @@ import androidx.lifecycle.MutableLiveData;
 import com.keystone.coinlib.accounts.ExtendedPublicKey;
 import com.keystone.coinlib.coins.APT.AptImpl;
 import com.keystone.coinlib.coins.SignTxResult;
-import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
+import com.keystone.cold.R;
 import com.keystone.cold.cryptocore.AptosParser;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
@@ -29,7 +25,9 @@ import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidAccountException;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.AptosAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.main.aptos.model.AptosTx;
 import com.keystone.cold.ui.fragment.main.aptos.model.AptosTxParser;
 import com.keystone.cold.util.AptosTransactionHelper;
@@ -57,6 +55,7 @@ public class AptosTxViewModel extends BaseTxViewModel {
     private String parseJson;
     private String signature;
 
+    private String origin;
 
     private final MutableLiveData<AptosTx> aptosTxLiveData;
 
@@ -78,6 +77,7 @@ public class AptosTxViewModel extends BaseTxViewModel {
             txHex = bundle.getString(BundleKeys.SIGN_DATA_KEY);
             hdPath = bundle.getString(BundleKeys.HD_PATH_KEY);
             requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
+            origin = bundle.getString(BundleKeys.SIGN_ORIGIN_KEY);
             String data = AptosTransactionHelper.getPureSignData(txHex);
             String parseResult = AptosParser.parse(data);
             Log.i(TAG, "raw is " + parseResult);
@@ -131,18 +131,49 @@ public class AptosTxViewModel extends BaseTxViewModel {
         return observableObject;
     }
 
+    public void parseTransactionFromRecord(String txId) {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            TxEntity txEntity = repository.loadTxSync(txId);
+            parseAptosTxEntity(txEntity);
+        });
+    }
+
+    private void parseAptosTxEntity(TxEntity txEntity) {
+        String addition = txEntity.getAddition();
+        if (TextUtils.isEmpty(addition)) {
+            return;
+        }
+        try {
+            JSONObject root = new JSONObject(addition);
+            JSONObject additions = root.getJSONObject("additions");
+            String coin = additions.getString("coin");
+            if (!TextUtils.isEmpty(coin) && coin.equals(Coins.APTOS.coinId())) {
+                String parseMessage = additions.getJSONObject("addition").getString("parse_message");
+                AptosTx aptosTx = AptosTxParser.parse(parseMessage);
+                if (aptosTx != null) {
+                    aptosTx.setSignatureUR(txEntity.getSignedHex());
+                    aptosTxLiveData.postValue(aptosTx);
+                    rawFormatTx.postValue(new JSONObject(parseMessage).toString(2));
+                }
+            }
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+
     public String getFromAddress(String path) {
         try {
             ensureAddressExist(path);
             return repository.loadAddressBypath(path).getAddressString();
-        } catch (InvalidTransactionException e) {
+        } catch (InvalidAccountException e) {
             e.printStackTrace();
         }
         return "";
     }
 
 
-    private void ensureAddressExist(String path) throws InvalidTransactionException {
+    private void ensureAddressExist(String path) throws InvalidAccountException {
         path = path.toUpperCase();
         AddressEntity addressEntity = new AddressEntity();
         addressEntity.setPath(path);
@@ -156,22 +187,22 @@ public class AptosTxViewModel extends BaseTxViewModel {
     private int getAddressIndex(String hdPath) {
         int index = 0;
         hdPath = hdPath.toUpperCase();
-        if (!hdPath.startsWith("M/")){
-            hdPath = "M/"+ hdPath;
+        if (!hdPath.startsWith("M/")) {
+            hdPath = "M/" + hdPath;
         }
         hdPath = hdPath.replace("'", "");
         String[] strings = hdPath.split("/");
-        if (strings.length == 6){
+        if (strings.length == 6) {
             index = Integer.parseInt(strings[4]);
         }
         return index;
     }
 
-    protected void updateAccountDb(int addressIndex) throws InvalidTransactionException {
+    protected void updateAccountDb(int addressIndex) throws InvalidAccountException {
         CoinEntity coin = repository.loadCoinEntityByCoinCode(Coins.APTOS.coinCode());
-        List<AccountEntity> accounts= repository.loadAccountsForCoin(coin);
+        List<AccountEntity> accounts = repository.loadAccountsForCoin(coin);
         if (accounts == null || accounts.size() == 0) {
-            throw new InvalidTransactionException("not have match account");
+            throw new InvalidAccountException(getApplication().getString(R.string.incorrect_tx_data), "not have match account");
         }
         int currentAddressCount = accounts.get(0).getAddressLength();
         int count = addressIndex + 1 - currentAddressCount;
@@ -303,12 +334,21 @@ public class AptosTxViewModel extends BaseTxViewModel {
     private TxEntity generateAptosTxEntity() {
         TxEntity txEntity = new TxEntity();
         txEntity.setCoinId(Coins.APTOS.coinId());
-        //todo 根据ur中的origin字段进行匹配设置，此处暂时忽略，先跑通整体流程
-        txEntity.setSignId("");
+        txEntity.setSignId(getSignId());
         txEntity.setCoinCode(Coins.APTOS.coinCode());
         txEntity.setTimeStamp(getUniversalSignIndex(getApplication()));
         txEntity.setBelongTo(repository.getBelongTo());
         txEntity.setSignedHex(getSignatureUR());
         return txEntity;
+    }
+
+
+    // Current only fewcha support aptos.
+    // If add other wallets in the future, need to rewrite
+    private String getSignId() {
+        if (TextUtils.isEmpty(origin)) {
+            return Wallet.FEWCHA.getSignId();
+        }
+        return Wallet.UNKNOWNWALLET.getSignId();
     }
 }
