@@ -19,12 +19,15 @@ import com.keystone.cold.remove_wallet_mode.viewmodel.tx.EthereumTxViewModel;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
 
+import java.util.Objects;
+
 public class EthereumConfirmTransactionFragment extends ConfirmTransactionFragment<EthereumTxViewModel> {
     private MutableLiveData<EthereumTransaction> transaction;
 
     @Override
     protected void initViewModel() {
         viewModel = ViewModelProviders.of(this).get(EthereumTxViewModel.class);
+        viewModel.reset();
         transaction = viewModel.getObservableEthTx();
         viewModel.generateUnsignedTransaction(requireArguments());
         viewModel.parseTxException().observe(this, this::handleParseException);
@@ -66,7 +69,7 @@ public class EthereumConfirmTransactionFragment extends ConfirmTransactionFragme
     }
 
     private void checkExceedFeeDialog() {
-        if (viewModel.isExceeded()) {
+        if (Objects.requireNonNull(transaction.getValue()).isFeeExceeded()) {
             ModalDialog.showTwoButtonCommonModal(mActivity,
                     getString(R.string.atention),
                     getString(R.string.exceed_fee),

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="coinName"
+            type="String" />
+
+        <variable
+            name="tx"
+            type="com.keystone.cold.model.Tx" />
+    </data>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:navigationIcon="@drawable/arrow_left"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/msg_confirm_title"
+                android:textColor="@android:color/white"
+                android:textSize="15sp" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <include layout="@layout/divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp">
+
+                        <ImageView
+                            android:id="@+id/icon"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="16dp"
+                            android:src="@drawable/coin_eth"
+                            tools:ignore="ContentDescription" />
+
+                        <TextView
+                            android:id="@+id/network"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/coinCode"
+                            android:layout_centerInParent="true"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_toEndOf="@id/icon"
+                            android:text="Ethereum"
+                            android:textColor="@color/white40"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                        <include
+                            layout="@layout/divider"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_alignParentBottom="true" />
+                    </RelativeLayout>
+                    <LinearLayout
+                        android:id="@+id/domainNameContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginHorizontal="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="12dp"
+                            android:text="Domain Name"
+                            android:textColor="@color/white40"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="8dp"
+                            android:layout_marginBottom="12dp"
+                            android:ellipsize="end"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:lineSpacingExtra="3dp"
+                            android:breakStrategy="simple"
+                            tools:text="memo" />
+
+                        <include
+                            layout="@layout/divider"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/verifyingContractContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginHorizontal="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="12dp"
+                            android:text="Verifying Contract"
+                            android:textColor="@color/white40"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/verifyingContract"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="8dp"
+                            android:layout_marginBottom="12dp"
+                            android:ellipsize="end"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:lineSpacingExtra="3dp"
+                            android:breakStrategy="simple"
+                            tools:text="memo" />
+
+                        <include
+                            layout="@layout/divider"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ens_to_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="4dp">
+
+                        <include
+                            android:id="@+id/ens"
+                            layout="@layout/ens_item"/>
+                        <include
+                            layout="@layout/divider"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="12dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/primaryTypeContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginHorizontal="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="12dp"
+                            android:text="Primary Type"
+                            android:textColor="@color/white40"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/primaryType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="8dp"
+                            android:layout_marginBottom="12dp"
+                            android:ellipsize="end"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:lineSpacingExtra="3dp"
+                            android:breakStrategy="simple"
+                            tools:text="memo" />
+
+                        <include
+                            layout="@layout/divider"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginHorizontal="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="12dp"
+                            android:text="Message"
+                            android:textColor="@color/white40"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="20dp"
+                            android:src="@drawable/data_bg1"/>
+
+                        <TextView
+                            android:id="@+id/message"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="8dp"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginTop="-5dp"
+                            android:paddingHorizontal="10dp"
+                            android:ellipsize="end"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:lineSpacingExtra="3dp"
+                            android:breakStrategy="simple"
+                            android:background="@drawable/data_bg"
+                            tools:text="memo" />
+
+                        <include
+                            layout="@layout/divider"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+
+            <Button
+                android:id="@+id/sign"
+                style="@style/AcceptButton"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/sign" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</layout>
