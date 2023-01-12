@@ -10,7 +10,8 @@ public abstract class ReviewTransactionFragment<V extends BaseTxViewModel> exten
     @Override
     protected void init(View view) {
         super.init(view);
+        mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         mBinding.sign.setVisibility(View.GONE);
-        mBinding.toolbar.setTitle(R.string.signing_history);
+        mBinding.toolbarTitle.setText(R.string.signing_history);
     }
 }

@@ -56,8 +56,8 @@
 
     <fragment
         android:id="@+id/ethereumConfirmTransactionFragment"
-        android:label="ethereumConfirmTransactionFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumConfirmTransactionFragment"
+        android:label="ethereumConfirmTransactionFragment"
         tools:layout="@layout/fragment_confirm_transaction">
         <action
             android:id="@+id/action_to_broadCastTxFragment"
@@ -70,8 +70,8 @@
 
     <fragment
         android:id="@+id/ethereumReviewTransactionFragment"
-        android:label="ethereumReviewTransactionFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumReviewTransactionFragment"
+        android:label="ethereumReviewTransactionFragment"
         tools:layout="@layout/fragment_confirm_transaction">
 
     </fragment>
@@ -107,11 +107,19 @@
             app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
 
+
+    <fragment
+        android:id="@+id/aptosReviewTransactionFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.aptos.AptosReviewTransactionFragment"
+        android:label="AptosReviewTransactionFragment"
+        tools:layout="@layout/fragment_confirm_transaction"/>
+
+
     <fragment
         android:id="@+id/broadCastTxFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.BroadCastTxFragment"
         android:label="BroadCastTxFragment"
-        tools:layout="@layout/fragment_broadcast_tx"/>
+        tools:layout="@layout/fragment_broadcast_tx" />
 
 
     <fragment
@@ -321,12 +329,13 @@
         app:popEnterAnim="@android:anim/slide_in_left"
         app:popExitAnim="@android:anim/slide_out_right" />
 
-    <action android:id="@+id/action_to_ethereumReviewTransactionFragment"
+    <action
+        android:id="@+id/action_to_ethereumReviewTransactionFragment"
         app:destination="@id/ethereumReviewTransactionFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
-        app:popExitAnim="@android:anim/slide_out_right"/>
+        app:popExitAnim="@android:anim/slide_out_right" />
 
     <action
         android:id="@+id/action_to_aptosSignMessageFragment"
@@ -335,5 +344,14 @@
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
         app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_aptosReviewTransactionFragment"
+        app:destination="@id/aptosReviewTransactionFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
 
 </navigation>

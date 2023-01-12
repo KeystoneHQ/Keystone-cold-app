@@ -24,8 +24,21 @@ public enum Wallet {
     XRPTOOLKIT("xrp"),
     ZAPPER("zapper"),
     YEARN("yearn"),
-    SUSHISWAP("sushiswap");
+    SUSHISWAP("sushiswap"),
+    UNKNOWNWALLET("unknownwallet");
 
+    public static final String XRP_TOOLKIT_SIGN_ID = "xrp_toolkit_sign_id";
+    public static final String POLKADOT_JS_SIGN_ID = "polkadot_js_sign_id";
+    public static final String METAMASK_SIGN_ID = "metamask_sign_id";
+    public static final String SOLANA_SIGN_ID = "solana_sign_id";
+    public static final String NEAR_SIGN_ID = "near_sign_id";
+    public static final String APTOS_SIGN_ID = "aptos_sign_id";
+    public static final String CORE_WALLET_SIGN_ID = "core_wallet_sign_id";
+    public static final String BIT_KEEP_SIGN_ID = "bit_keep_sign_id";
+    public static final String ARWEAVE_SIGN_ID = "arweave_sign_id";
+    public static final String KEPLR_WALLET_SIGN_ID = "keplr_wallet_sign_id";
+
+    public static final String UNKOWN_WALLET_SIGN_ID = "unknown_wallet_sign_id";
 
     private final String walletId;
     private final String walletName;
@@ -46,6 +59,32 @@ public enum Wallet {
 
     public String getWalletName() {
         return walletName;
+    }
+
+    public String getSignId() {
+        switch (this) {
+            case POLKADOT:
+                return POLKADOT_JS_SIGN_ID;
+            case XRPTOOLKIT:
+                return XRP_TOOLKIT_SIGN_ID;
+            case METAMASK:
+                return METAMASK_SIGN_ID;
+            case SOLFLARE:
+                return SOLANA_SIGN_ID;
+            case SENDER:
+                return NEAR_SIGN_ID;
+            case FEWCHA:
+                return APTOS_SIGN_ID;
+            case CORE:
+                return CORE_WALLET_SIGN_ID;
+            case BITKEEP:
+                return BIT_KEEP_SIGN_ID;
+            case ARCONNECT:
+                return ARWEAVE_SIGN_ID;
+            case KEPLR:
+                return KEPLR_WALLET_SIGN_ID;
+        }
+        return UNKOWN_WALLET_SIGN_ID;
     }
 
     public static Wallet getWalletById(String walletId) {
@@ -113,5 +152,7 @@ public enum Wallet {
         }
         return new Coins.Coin[]{};
     }
+
+
 }
 

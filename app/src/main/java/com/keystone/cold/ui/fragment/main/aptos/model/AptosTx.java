@@ -14,6 +14,8 @@ public class AptosTx {
     private long maxGasAmount;
     private long expirationTimestampSecs;
 
+    private String signatureUR;
+
     public long getChainId() {
         return chainId;
     }
@@ -71,6 +73,14 @@ public class AptosTx {
 
     public void setExpirationTimestampSecs(long expirationTimestampSecs) {
         this.expirationTimestampSecs = expirationTimestampSecs;
+    }
+
+    public String getSignatureUR() {
+        return signatureUR;
+    }
+
+    public void setSignatureUR(String signatureUR) {
+        this.signatureUR = signatureUR;
     }
 
     @Override

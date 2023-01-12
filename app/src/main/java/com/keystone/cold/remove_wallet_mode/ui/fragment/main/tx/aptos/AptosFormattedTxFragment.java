@@ -1,6 +1,7 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.aptos;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -66,6 +67,11 @@ public class AptosFormattedTxFragment extends BaseFragment<FragmentAptosTxBindin
             mBinding.llReceiver.setVisibility(View.GONE);
             mBinding.payload.setVisibility(View.VISIBLE);
             mBinding.payload.setData(aptosTx.getPayLoad());
+        }
+        if (!TextUtils.isEmpty(aptosTx.getSignatureUR())) {
+            mBinding.checkInfo.setVisibility(View.GONE);
+            mBinding.qr.setVisibility(View.VISIBLE);
+            mBinding.qrcode.qrcode.setData(aptosTx.getSignatureUR());
         }
     }
 
