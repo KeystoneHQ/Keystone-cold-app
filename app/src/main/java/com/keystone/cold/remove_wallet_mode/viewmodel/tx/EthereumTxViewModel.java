@@ -45,6 +45,7 @@ import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidETHAccountExcep
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumTransaction;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
+import com.sparrowwallet.hummingbird.registry.EthSignature;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,19 +53,19 @@ import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
 import java.math.BigDecimal;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class EthereumTxViewModel extends BaseTxViewModel {
     private static final String TAG = "EthereumTxViewModel";
 
     protected final DataRepository mRepository;
 
-    private int transactionType;
-    private String txHex;
     private String messageData;
     private String hdPath;
     private long chainId;
@@ -81,9 +82,6 @@ public class EthereumTxViewModel extends BaseTxViewModel {
     private MutableLiveData<EthereumTransaction> observableEthTx = new MutableLiveData<>();
     protected final MutableLiveData<BaseException> parseTxException = new MutableLiveData<>();
 
-    public int getTransactionType() {
-        return transactionType;
-    }
 
     public boolean isExceeded() {
         return isExceeded;
@@ -111,6 +109,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
         public void onSignTxSuccess(String txId, String signedTxHex, String signatureHex) {
             signature = signatureHex;
             insertDB(txId, signedTxHex, signatureHex);
+            observableEthTx.getValue().setSignature(signatureHex);
             signState.postValue(STATE_SIGN_SUCCESS);
             new ClearTokenCallable().call();
         }
@@ -138,6 +137,11 @@ public class EthereumTxViewModel extends BaseTxViewModel {
         mRepository = MainApplication.getApplication().getRepository();
     }
 
+    @Override
+    public void parseTxData(Bundle bundle) {
+
+    }
+
     public static String loadEnsAddress(String address) {
         EnsLoadManager ensLoadManager = new EnsLoadManager(address);
         return ensLoadManager.load();
@@ -153,7 +157,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
                     break;
                 }
             }
-            if (TextUtils.isEmpty(addressSymbol)) {
+            if (TextUtils.isEmpty(addressSymbol) && transaction != null) {
                 if (!TextUtils.isEmpty(transaction.getTo()) && transaction.getTo().equalsIgnoreCase(to)) {
                     addressSymbol = transaction.getToContractName();
                 } else {
@@ -197,19 +201,16 @@ public class EthereumTxViewModel extends BaseTxViewModel {
         }
     }
 
+    public void reset() {
+        observableEthTx.postValue(null);
+    }
+
     public MutableLiveData<EthereumTransaction> getObservableEthTx() {
         return observableEthTx;
     }
 
     public MutableLiveData<BaseException> parseTxException() {
         return parseTxException;
-    }
-
-    public void parseTxData(Bundle bundle) {
-        transactionType = bundle.getInt(BundleKeys.ETH_TX_TYPE_KEY);
-        txHex = bundle.getString(BundleKeys.SIGN_DATA_KEY);
-        hdPath = bundle.getString(BundleKeys.HD_PATH_KEY);
-        requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
     }
 
     public void generateUnsignedTransaction(Bundle bundle) {
@@ -358,11 +359,11 @@ public class EthereumTxViewModel extends BaseTxViewModel {
             Signer signer = initSigner();
             switch (Objects.requireNonNull(transaction).getTxType()) {
                 case 0x00: {
-                    signTransaction(signer);
+                    signTransaction(transaction, signer);
                     break;
                 }
                 case 0x02: {
-                    signFeeMarketTransaction(signer);
+                    signFeeMarketTransaction(transaction, signer);
                     break;
                 }
             }
@@ -370,13 +371,22 @@ public class EthereumTxViewModel extends BaseTxViewModel {
     }
 
     @Override
-    public void handleSignMessage() {
-
-    }
-
-    @Override
     public String getSignatureUR() {
-        return null;
+        EthereumTransaction transaction = observableEthTx.getValue();
+        if (transaction == null ) {
+            //sign typed data
+            byte[] signature = Hex.decode(this.signature);
+            UUID uuid = UUID.fromString(this.requestId);
+            ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
+            byteBuffer.putLong(uuid.getMostSignificantBits());
+            byteBuffer.putLong(uuid.getLeastSignificantBits());
+            byte[] requestId = byteBuffer.array();
+            EthSignature ethSignature = new EthSignature(signature, requestId);
+            return ethSignature.toUR().toString();
+        }
+        else {
+            return observableEthTx.getValue().getSignatureQRCode();
+        }
     }
 
     public void handleSignEIP712TypedData() {
@@ -386,7 +396,8 @@ public class EthereumTxViewModel extends BaseTxViewModel {
         });
     }
 
-    public void handleSignPersonalMessage() {
+    @Override
+    public void handleSignMessage() {
         AppExecutors.getInstance().diskIO().execute(() -> {
             Signer signer = initSigner();
             signPersonalMessage(signer);
@@ -533,9 +544,9 @@ public class EthereumTxViewModel extends BaseTxViewModel {
         mRepository.insertETHTx(EthereumTransaction.transToDbEntity(transaction));
     }
 
-    private void signTransaction(Signer signer) {
+    private void signTransaction(EthereumTransaction transaction, Signer signer) {
         signCallBack.startSign();
-        SignTxResult result = new EthImpl(chainId).signHex(txHex, signer);
+        SignTxResult result = new EthImpl(chainId).signHex(transaction.getTxHex(), signer);
         if (result == null) {
             signCallBack.onFail();
         } else {
@@ -543,9 +554,9 @@ public class EthereumTxViewModel extends BaseTxViewModel {
         }
     }
 
-    private void signFeeMarketTransaction(Signer signer) {
+    private void signFeeMarketTransaction(EthereumTransaction transaction, Signer signer) {
         signCallBack.startSign();
-        SignTxResult result = new EthImpl(chainId).signEIP1559Hex(txHex, signer);
+        SignTxResult result = new EthImpl(chainId).signEIP1559Hex(transaction.getTxHex(), signer);
         if (result == null) {
             signCallBack.onFail();
         } else {

@@ -78,9 +78,9 @@ public class URProcessor implements Processor{
                 bundle.putInt(BundleKeys.ETH_TX_TYPE_KEY, EthereumTransaction.TransactionType.LEGACY.getType());
                 return new Destination(R.id.action_to_ethereumConfirmTransactionFragment, bundle);
             } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_DATA.getType())) {
-                return new Destination(R.id.action_to_ethSignTypedDataFragment, bundle);
+                return new Destination(R.id.action_to_ethereumSignTypedDataFragment, bundle);
             } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.PERSONAL_MESSAGE.getType())) {
-                return new Destination(R.id.action_to_ethSignMessageFragment, bundle);
+                return new Destination(R.id.action_to_ethereumSignMessageFragment, bundle);
             } else if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TYPED_TRANSACTION.getType())) {
                 byte[] typedTransaction = ethSignRequest.getSignData();
                 byte type = typedTransaction[0];

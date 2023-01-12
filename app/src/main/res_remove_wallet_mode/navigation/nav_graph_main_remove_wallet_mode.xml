@@ -76,6 +76,34 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/ethereumSignMessageFragment"
+        android:label="ethereumSignMessageFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumSignMessageFragment"
+        tools:layout="@layout/fragment_sign_message">
+        <action
+            android:id="@+id/action_to_broadCastTxFragment"
+            app:destination="@id/broadCastTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ethereumSignTypedDataFragment"
+        android:label="ethereumSignTypedDataFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumSignTypedDataFragment"
+        tools:layout="@layout/fragment_ethereum_sign_typed_data">
+        <action
+            android:id="@+id/action_to_broadCastTxFragment"
+            app:destination="@id/broadCastTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
 
     <fragment
         android:id="@+id/aptosConfirmTransactionFragment"
@@ -340,6 +368,22 @@
     <action
         android:id="@+id/action_to_aptosSignMessageFragment"
         app:destination="@id/aptosSignMessageFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_ethereumSignMessageFragment"
+        app:destination="@id/ethereumSignMessageFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_ethereumSignTypedDataFragment"
+        app:destination="@id/ethereumSignTypedDataFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
