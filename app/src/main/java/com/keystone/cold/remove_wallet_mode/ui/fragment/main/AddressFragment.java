@@ -102,7 +102,6 @@ public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
 
     private void subscribeUi(LiveData<List<AddressItem>> address) {
         address.observe(this, addressItems -> {
-            Log.d("sora", "subscribeUi: " + addressItems);
             addressAdapter.setItems(addressItems);
         });
     }

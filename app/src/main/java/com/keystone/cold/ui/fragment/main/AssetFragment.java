@@ -1253,7 +1253,6 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 //                        ((AddressFragment) fragments[0]).updateAddressList();
 //                    }
                     if (watchWallet == WatchWallet.POLKADOT_JS) {
-                        Log.d("sora", "initData: here");
                         PolkadotViewModel polkadotViewModel = ViewModelProviders.of(this).get(PolkadotViewModel.class);
                         try {
                             polkadotViewModel.initialDB();

@@ -109,7 +109,6 @@ public class EthereumTxViewModel extends BaseTxViewModel {
         public void onSignTxSuccess(String txId, String signedTxHex, String signatureHex) {
             signature = signatureHex;
             insertDB(txId, signedTxHex, signatureHex);
-            observableEthTx.getValue().setSignature(signatureHex);
             signState.postValue(STATE_SIGN_SUCCESS);
             new ClearTokenCallable().call();
         }
@@ -222,6 +221,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
             int transactionType = bundle.getInt(BundleKeys.ETH_TX_TYPE_KEY);
             String fromAddress = getFromAddress(hdPath);
             EthereumTransaction transaction = new EthereumTransaction();
+            transaction.setTxType(transactionType);
             JSONObject ethTx = null;
             switch (transaction.getTxType()) {
                 case 0x00: {
@@ -244,7 +244,6 @@ public class EthereumTxViewModel extends BaseTxViewModel {
                 transaction.setHdPath(hdPath);
                 transaction.setFrom(fromAddress);
                 transaction.setRequestId(requestId);
-                transaction.setTxType(transactionType);
 
                 transaction.setChainId(ethTx.getLong("chainId"));
                 transaction.setTo(ethTx.getString("to"));
@@ -301,9 +300,9 @@ public class EthereumTxViewModel extends BaseTxViewModel {
         MutableLiveData<JSONObject> observableObject = new MutableLiveData<>();
         AppExecutors.getInstance().networkIO().execute(() -> {
             try {
-                String typedDataHex = bundle.getString(SIGN_DATA);
-                hdPath = bundle.getString(HD_PATH);
-                requestId = bundle.getString(REQUEST_ID);
+                String typedDataHex = bundle.getString(BundleKeys.SIGN_DATA_KEY);
+                hdPath = bundle.getString(BundleKeys.HD_PATH_KEY);
+                requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
                 String fromAddress = getFromAddress(hdPath);
                 messageData = new String(Hex.decode(typedDataHex), StandardCharsets.UTF_8);
                 //LegacyTypedData is a JSON Array;
@@ -334,9 +333,9 @@ public class EthereumTxViewModel extends BaseTxViewModel {
         MutableLiveData<JSONObject> observableObject = new MutableLiveData<>();
         AppExecutors.getInstance().networkIO().execute(() -> {
             try {
-                hdPath = bundle.getString(HD_PATH);
-                requestId = bundle.getString(REQUEST_ID);
-                messageData = bundle.getString(SIGN_DATA);
+                hdPath = bundle.getString(BundleKeys.HD_PATH_KEY);
+                requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
+                messageData = bundle.getString(BundleKeys.SIGN_DATA_KEY);
                 String fromAddress = getFromAddress(hdPath);
                 JSONObject object = new JSONObject();
                 object.put("hdPath", hdPath);
@@ -356,8 +355,11 @@ public class EthereumTxViewModel extends BaseTxViewModel {
     public void handleSign() {
         AppExecutors.getInstance().diskIO().execute(() -> {
             EthereumTransaction transaction = observableEthTx.getValue();
-            Signer signer = initSigner();
-            switch (Objects.requireNonNull(transaction).getTxType()) {
+            if (transaction == null) {
+                return;
+            }
+            Signer signer = initSigner(transaction.getHdPath());
+            switch (transaction.getTxType()) {
                 case 0x00: {
                     signTransaction(transaction, signer);
                     break;
@@ -391,7 +393,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
 
     public void handleSignEIP712TypedData() {
         AppExecutors.getInstance().diskIO().execute(() -> {
-            Signer signer = initSigner();
+            Signer signer = initSigner(hdPath);
             signEIP712TypedData(signer);
         });
     }
@@ -399,7 +401,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
     @Override
     public void handleSignMessage() {
         AppExecutors.getInstance().diskIO().execute(() -> {
-            Signer signer = initSigner();
+            Signer signer = initSigner(hdPath);
             signPersonalMessage(signer);
         });
     }
@@ -534,7 +536,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
             transaction.setSignature(signatureHex);
             JSONObject addition = new JSONObject();
             addition.put("isFromTFCard", transaction.isFromTFCard());
-            addition.put("requestId", requestId);
+            addition.put("requestId", transaction.getRequestId());
             // addition.put("signId", watchWallet.getSignId());
             addition.put("signBy", ETHAccount.ofCode(Utilities.getCurrentEthAccount(context)).getCode());
             transaction.setAddition(addition.toString());
@@ -584,7 +586,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
         }
     }
 
-    private Signer initSigner() {
+    private Signer initSigner(String hdPath) {
         String authToken = getAuthToken();
         if (TextUtils.isEmpty(authToken)) {
             Log.w(TAG, "authToken null");

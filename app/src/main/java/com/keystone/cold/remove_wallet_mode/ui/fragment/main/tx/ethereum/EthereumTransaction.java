@@ -370,7 +370,7 @@ public class EthereumTransaction implements Tx {
         try {
             byte[] signature = Hex.decode(getSignature());
             JSONObject addition = new JSONObject(getAddition());
-            UUID uuid = UUID.fromString(addition.optString("requestId"));
+            UUID uuid = UUID.fromString(getRequestId());
             ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
             byteBuffer.putLong(uuid.getMostSignificantBits());
             byteBuffer.putLong(uuid.getLeastSignificantBits());
@@ -378,7 +378,10 @@ public class EthereumTransaction implements Tx {
             EthSignature ethSignature = new EthSignature(signature, requestId);
             return ethSignature.toUR().toString();
         } catch (Exception e) {
-            return Hex.toHexString(getSignature().getBytes(StandardCharsets.UTF_8));
+            e.printStackTrace();
+            byte[] signature = Hex.decode(getSignature());
+            EthSignature ethSignature = new EthSignature(signature);
+            return ethSignature.toUR().toString();
         }
     }
 
