@@ -112,11 +112,11 @@ public class AptosTxViewModel extends BaseTxViewModel {
     public MutableLiveData<JSONObject> parseMessage(Bundle bundle) {
         MutableLiveData<JSONObject> observableObject = new MutableLiveData<>();
         AppExecutors.getInstance().networkIO().execute(() -> {
+            hdPath = bundle.getString(BundleKeys.HD_PATH_KEY);
+            requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
+            messageData = bundle.getString(BundleKeys.SIGN_DATA_KEY);
+            String fromAddress = getFromAddress(hdPath);
             try {
-                hdPath = bundle.getString(BundleKeys.HD_PATH_KEY);
-                requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
-                messageData = bundle.getString(BundleKeys.SIGN_DATA_KEY);
-                String fromAddress = getFromAddress(hdPath);
                 JSONObject object = new JSONObject();
                 object.put("hdPath", hdPath);
                 object.put("requestId", requestId);
@@ -127,6 +127,7 @@ public class AptosTxViewModel extends BaseTxViewModel {
                 e.printStackTrace();
                 observableObject.postValue(null);
             }
+            xPub = getXpubByPath(hdPath);
         });
         return observableObject;
     }
