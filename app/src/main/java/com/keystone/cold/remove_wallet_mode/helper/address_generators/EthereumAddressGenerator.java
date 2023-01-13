@@ -63,4 +63,23 @@ public class EthereumAddressGenerator extends MultiAccountAddressGenerator {
         }
         return null;
     }
+
+    public static String getAddress(int index, String code) {
+        ETHAccount ethAccount = ETHAccount.ofCode(code);
+        String path;
+        switch (ethAccount) {
+            case LEDGER_LIVE:
+                path = ethAccount.getPath() + "/" + index + "'/0/0";
+                break;
+            case LEDGER_LEGACY:
+                path = ethAccount.getPath() + "/" + index;
+                break;
+            default:
+                path = ethAccount.getPath() + "/0/" + index;
+        }
+        String xPub = new GetExtendedPublicKeyCallable(path).call();
+        AbsDeriver deriver = AbsDeriver.newInstance(Coins.ETH.coinCode());
+        assert deriver != null;
+        return deriver.derive(xPub);
+    }
 }
