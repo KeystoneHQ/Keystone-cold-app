@@ -89,6 +89,7 @@ public class EthereumTransactionDetailFragment extends BaseFragment<FragmentEthe
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void updateUI(EthereumTransaction transaction) {
+        if (transaction == null) return;
         mBinding.network.setText(EthereumTxViewModel.getNetwork(transaction.getChainId()));
         mBinding.icon.setImageDrawable(mActivity.getDrawable(transaction.getIcon()));
 

@@ -73,7 +73,7 @@ public class EthereumSignTypedDataFragment extends BaseFragment<FragmentEthereum
 
     @Override
     protected int setView() {
-        return R.layout.eth_sign_typed_data;
+        return R.layout.fragment_ethereum_sign_typed_data;
     }
 
     @Override
