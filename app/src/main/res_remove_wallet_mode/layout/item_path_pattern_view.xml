@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="pathPattern"
+            type="String" />
+
+        <variable
+            name="patternName"
+            type="String" />
+
+        <variable
+            name="isRecommend"
+            type="boolean" />
+
+        <variable
+            name="isSelected"
+            type="androidx.databinding.ObservableField&lt;Boolean>" />
+    </data>
+    <!--    android:background="@drawable/bg_derivation_path_selected"-->
+
+    <LinearLayout
+        android:id="@+id/pattern_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@{isSelected ? @drawable/bg_derivation_path_selected : @drawable/bg_derivation_path_unselected}"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/derivation_pattern"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{pathPattern}"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/derivation_pattern_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{patternName}"
+                    android:textColor="@color/primary" />
+            </LinearLayout>
+
+            <TextView
+                visibleGone="@{isRecommend}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_16"
+                android:background="@drawable/bg_derivation_path_recommended"
+                android:text="Recommended"
+                android:textColor="@color/primary" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/address_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <include layout="@layout/divider" />
+
+        <com.keystone.cold.remove_wallet_mode.ui.views.ExpandableTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="@dimen/dp_10"
+            app:collapsedLines="1"
+            app:isExpanded="false"
+            app:text="@string/eth_standard_path" />
+    </LinearLayout>
+
+
+</layout>

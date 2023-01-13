@@ -16,6 +16,8 @@
   -->
 
 <resources>
+    <dimen name="sp_1">1sp</dimen>
+
     <dimen name="sp_2">2sp</dimen>
 
     <dimen name="sp_8">8sp</dimen>
@@ -24,6 +26,8 @@
     <dimen name="sp_10">10sp</dimen>
 
     <dimen name="sp_12">12sp</dimen>
+    <dimen name="sp_13">13sp</dimen>
+
     <dimen name="sp_14">14sp</dimen>
     <dimen name="sp_15">15sp</dimen>
     <dimen name="sp_16">16sp</dimen>
