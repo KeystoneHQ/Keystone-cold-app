@@ -62,25 +62,15 @@ public class CosmosMessageFragment extends BaseFragment<CosmosSignMessageBinding
                 message = jsonObject.getString("data");
                 String fromAddress = jsonObject.getString("signer");
                 mBinding.address.setText(fromAddress);
-                if (CharSetUtil.isUTF8Format(Hex.decode(message))) {
-                    String messageUtf8 = new String(Hex.decode(message), StandardCharsets.UTF_8);
-                    mBinding.message.setText(messageUtf8);
-                } else {
-                    mBinding.llMsgUtf8.setVisibility(View.GONE);
-                }
                 mBinding.rawMessage.setText(message);
-                liveData.removeObservers(CosmosMessageFragment.this);
-            } catch (UnsupportedOperationException e) {
                 mBinding.llMsgUtf8.setVisibility(View.GONE);
-                mBinding.rawMessage.setText(message);
-                liveData.removeObservers(CosmosMessageFragment.this);
             } catch (JSONException e) {
                 e.printStackTrace();
                 handleParseException(e);
             }
         }
+        liveData.removeObservers(CosmosMessageFragment.this);
     }
-
 
     private void handleParseException(Exception ex) {
         if (ex != null) {
