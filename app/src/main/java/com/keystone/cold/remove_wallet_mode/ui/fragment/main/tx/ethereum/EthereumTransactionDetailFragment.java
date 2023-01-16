@@ -58,7 +58,6 @@ public class EthereumTransactionDetailFragment extends BaseFragment<FragmentEthe
 
     @Override
     protected void init(View view) {
-        mBinding.checkInfo.setVisibility(View.VISIBLE);
         mBinding.info.setOnClickListener(view1 -> realShowDialog());
         transaction.observe(this, this::updateUI);
     }
@@ -90,8 +89,8 @@ public class EthereumTransactionDetailFragment extends BaseFragment<FragmentEthe
     @SuppressLint("UseCompatLoadingForDrawables")
     private void updateUI(EthereumTransaction transaction) {
         if (transaction == null) return;
-        mBinding.network.setText(EthereumTxViewModel.getNetwork(transaction.getChainId()));
-        mBinding.icon.setImageDrawable(mActivity.getDrawable(transaction.getIcon()));
+        mBinding.setCheckInfoTitle(EthereumTxViewModel.getNetwork(transaction.getChainId()));
+        mBinding.checkInfoLayout.icon.setImageDrawable(mActivity.getDrawable(transaction.getIcon()));
 
         if (transaction.getTxType() == EthereumTransaction.TransactionType.LEGACY.getType()) {
             mBinding.legacyFeeInfo.setVisibility(View.VISIBLE);
