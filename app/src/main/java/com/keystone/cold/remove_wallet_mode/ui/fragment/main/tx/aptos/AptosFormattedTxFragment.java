@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentAptosTxBinding;
 import com.keystone.cold.ui.fragment.BaseFragment;
@@ -46,6 +47,8 @@ public class AptosFormattedTxFragment extends BaseFragment<FragmentAptosTxBindin
     }
 
     private void updateUI(AptosTx aptosTx) {
+        mBinding.setCoinCode(Coins.APTOS.coinCode());
+        mBinding.setCheckInfoTitle(Coins.APTOS.coinName());
         mBinding.tvSender.setText(aptosTx.getSender());
         mBinding.tvSequenceNo.setText(String.valueOf(aptosTx.getSequenceNumber()));
         mBinding.tvExpirationTimeStamp.setText(String.valueOf(aptosTx.getExpirationTimestampSecs()));
@@ -69,7 +72,7 @@ public class AptosFormattedTxFragment extends BaseFragment<FragmentAptosTxBindin
             mBinding.payload.setData(aptosTx.getPayLoad());
         }
         if (!TextUtils.isEmpty(aptosTx.getSignatureUR())) {
-            mBinding.checkInfo.setVisibility(View.GONE);
+            mBinding.checkInfoLayout.llHint.setVisibility(View.GONE);
             mBinding.qr.setVisibility(View.VISIBLE);
             mBinding.qrcode.qrcode.setData(aptosTx.getSignatureUR());
         }
