@@ -67,9 +67,12 @@ public class ChangePathViewModel extends AndroidViewModel {
     private List<PathPatternItem> getPathPatternData(String coinId) {
         List<PathPatternItem> pathPatternItems = new ArrayList<>();
         if (Coins.ETH.coinId().equals(coinId)) {
+            String code = Utilities.getCurrentEthAccount(getApplication());
+            ETHAccount account = ETHAccount.ofCode(code);
             for (ETHAccount ethAccount : ETHAccount.values()) {
-                boolean isRecommend = ethAccount.getName().equals(ETHAccount.LEDGER_LIVE.getName());
-                PathPatternItem pathPatternItem = new PathPatternItem(ethAccount.getCode(), ethAccount.getDisplayPath(), ethAccount.getName(), isRecommend, getEthPairs(ethAccount));
+                boolean isSelected = ethAccount == account;
+                boolean isRecommend = ethAccount.getName().equals(ETHAccount.BIP44_STANDARD.getName());
+                PathPatternItem pathPatternItem = new PathPatternItem(ethAccount.getCode(), ethAccount.getDisplayPath(), ethAccount.getName(), isRecommend, getEthPairs(ethAccount), isSelected);
                 pathPatternItems.add(pathPatternItem);
             }
             return pathPatternItems;

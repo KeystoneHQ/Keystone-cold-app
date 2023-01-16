@@ -14,14 +14,13 @@ public class PathPatternItem {
     private final List<Pair<String, String>> pairs;
     private final ObservableField<Boolean> isSelect = new ObservableField<>();
 
-    public PathPatternItem(String code, String pathPattern, String patternName, boolean isRecommend, List<Pair<String, String>> pairs) {
+    public PathPatternItem(String code, String pathPattern, String patternName, boolean isRecommend, List<Pair<String, String>> pairs, boolean isSelect) {
         this.code = code;
         this.pathPattern = pathPattern;
         this.patternName = patternName;
         this.isRecommend = isRecommend;
         this.pairs = pairs;
-        // default value of "isSelected" is the value of "isRecommend"
-        this.isSelect.set(isRecommend);
+        this.isSelect.set(isSelect);
     }
 
     public String getCode() {
