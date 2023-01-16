@@ -14,6 +14,7 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.db.entity.AddressEntity;
+import com.keystone.cold.remove_wallet_mode.helper.AddressFilterManager;
 import com.keystone.cold.remove_wallet_mode.helper.AddressManager;
 import com.keystone.cold.remove_wallet_mode.helper.AddressNameConvertHelper;
 import com.keystone.cold.remove_wallet_mode.ui.model.AddressItem;
@@ -25,26 +26,23 @@ public class AddressViewModel extends AndroidViewModel {
 
     private final String coinId;
     private final DataRepository repository;
-    private final LiveData<List<AddressItem>> observableAddress;
-
+    private final LiveData<List<AddressEntity>> addressEntity;
 
     public AddressViewModel(@NonNull Application application, DataRepository repository, final String coinId) {
         super(application);
         this.coinId = coinId;
         this.repository = repository;
-        observableAddress = Transformations.map(repository.loadAddress(coinId),
-                input -> input.stream()
-                        .map(AddressItem::new)
-                        .peek(addressItem -> {
-                            addressItem.setName(AddressNameConvertHelper.convertName(addressItem.getCoinId(), addressItem.getName()));
-                        })
-                        .collect(Collectors.toList()));
+        addressEntity = repository.loadAddress(coinId);
     }
 
     public LiveData<List<AddressItem>> getAddress() {
-        return observableAddress;
+        return Transformations.map(addressEntity,
+                input -> input.stream()
+                        .filter(AddressFilterManager::filterAddress)
+                        .map(AddressItem::new)
+                        .peek(addressItem -> addressItem.setName(AddressNameConvertHelper.convertName(addressItem.getCoinId(), addressItem.getName())))
+                        .collect(Collectors.toList()));
     }
-
 
     public void updateAddress(AddressItem addressItem) {
         AppExecutors.getInstance().diskIO().execute(() -> {
@@ -53,7 +51,6 @@ public class AddressViewModel extends AndroidViewModel {
             repository.updateAddress(addressEntity);
         });
     }
-
 
     public LiveData<Boolean> addAddress(int count) {
         MutableLiveData<Boolean> status = new MutableLiveData<>();

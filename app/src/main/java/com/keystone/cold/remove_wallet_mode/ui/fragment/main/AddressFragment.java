@@ -7,13 +7,11 @@ import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
@@ -32,9 +30,8 @@ import java.util.Optional;
 public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
 
     private AddressViewModel viewModel;
-    private LiveData<List<AddressItem>> addressLiveData;
     private AddressAdapter addressAdapter;
-
+    private LiveData<List<AddressItem>> addressItems;
 
     public static Fragment newInstance(@NonNull String coinId, @NonNull String coinCode) {
         AddressFragment fragment = new AddressFragment();
@@ -92,8 +89,12 @@ public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
                 AddressViewModel.Factory factory = new AddressViewModel.Factory(mActivity.getApplication(), canonicalCoinId);
                 viewModel = ViewModelProviders.of(getParentFragment(), factory)
                         .get(AddressViewModel.class);
-                addressLiveData = viewModel.getAddress();
-                subscribeUi(addressLiveData);
+                if (addressItems != null) {
+                    addressItems.removeObservers(this);
+                    addressItems = null;
+                }
+                addressItems = viewModel.getAddress();
+                subscribeUi(addressItems);
             } else {
                 ModalDialog.showCommonModal(mActivity, "Invalid State", "Cannot find coin " + coinId, "Back", this::navigateUp);
             }
@@ -101,9 +102,7 @@ public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
     }
 
     private void subscribeUi(LiveData<List<AddressItem>> address) {
-        address.observe(this, addressItems -> {
-            addressAdapter.setItems(addressItems);
-        });
+        address.observe(this, addressItems -> addressAdapter.setItems(addressItems));
     }
 
     public void exitEditAddressName() {
@@ -112,8 +111,8 @@ public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
 
     @Override
     public void onDestroyView() {
-        if (addressLiveData != null) {
-            addressLiveData.removeObservers(this);
+        if (addressItems != null) {
+            addressItems.removeObservers(this);
         }
         super.onDestroyView();
     }
