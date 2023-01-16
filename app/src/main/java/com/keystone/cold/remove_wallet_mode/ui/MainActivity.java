@@ -40,6 +40,7 @@ import com.keystone.cold.databinding.ActivityMainRemoveWalletModeBinding;
 import com.keystone.cold.databinding.CommonModalBinding;
 import com.keystone.cold.fingerprint.FingerprintKit;
 import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
+import com.keystone.cold.remove_wallet_mode.helper.PreGenerateAddressHelper;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.DrawerAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.MyAssetsFragment;
 import com.keystone.cold.remove_wallet_mode.utils.SharePreferencesUtil;
@@ -105,7 +106,7 @@ public class MainActivity extends FullScreenActivity {
         });
 
         checkUpgrade();
-
+        PreGenerateAddressHelper.preGenerateAddress();
     }
 
     private void checkUpgrade() {

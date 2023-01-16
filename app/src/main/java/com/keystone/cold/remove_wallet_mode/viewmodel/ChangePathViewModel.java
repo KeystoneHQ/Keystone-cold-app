@@ -20,6 +20,7 @@ import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.EthereumAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.SolanaAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.ui.model.PathPatternItem;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 
@@ -72,12 +73,20 @@ public class ChangePathViewModel extends AndroidViewModel {
             for (ETHAccount ethAccount : ETHAccount.values()) {
                 boolean isSelected = ethAccount == account;
                 boolean isRecommend = ethAccount.getName().equals(ETHAccount.BIP44_STANDARD.getName());
-                PathPatternItem pathPatternItem = new PathPatternItem(ethAccount.getCode(), ethAccount.getDisplayPath(), ethAccount.getName(), isRecommend, getEthPairs(ethAccount), isSelected);
+                PathPatternItem pathPatternItem = new PathPatternItem(ethAccount.getCode(), ethAccount.getDisplayPath(), ethAccount.getName(), isRecommend, getEthAccountAddresses(ethAccount), isSelected);
                 pathPatternItems.add(pathPatternItem);
             }
             return pathPatternItems;
         } else if (Coins.SOL.coinId().equals(coinId)) {
-
+            String code = Utilities.getCurrentSolAccount(getApplication());
+            SOLAccount account = SOLAccount.ofCode(code);
+            for (SOLAccount solAccount : SOLAccount.values()) {
+                boolean isSelected = solAccount == account;
+                boolean isRecommend = solAccount.getName().equals(SOLAccount.SOLFLARE_BIP44.getName());
+                PathPatternItem pathPatternItem = new PathPatternItem(solAccount.getCode(), solAccount.getDisplayPath(), solAccount.getName(), isRecommend, getSolAccountAddresses(solAccount), isSelected);
+                pathPatternItems.add(pathPatternItem);
+            }
+            return pathPatternItems;
         } else if (Coins.NEAR.coinId().equals(coinId)) {
 
         }
@@ -85,6 +94,31 @@ public class ChangePathViewModel extends AndroidViewModel {
         return null;
     }
 
+    private List<Pair<String, String>> getEthAccountAddresses(ETHAccount ethAccount) {
+        List<Pair<String, String>> result = new ArrayList<>();
+        String ethDerivationPath = Utilities.getEthDerivationPaths(getApplication());
+        if (!TextUtils.isEmpty(ethDerivationPath)) {
+            String masterFingerPrint = new GetMasterFingerprintCallable().call();
+            try {
+                JSONObject derivationPaths = new JSONObject(ethDerivationPath);
+                String preMasterFingerPrint = derivationPaths.optString("master_fingerprint");
+                if (masterFingerPrint.equalsIgnoreCase(preMasterFingerPrint)) {
+                    JSONObject accountPaths = (JSONObject) derivationPaths.get("eth_derivation_paths");
+                    JSONArray jsonArray = (JSONArray) accountPaths.get(ethAccount.getCode());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        result.add(Pair.create("" + i, (String) jsonArray.get(i)));
+                    }
+                } else {
+                    result.addAll(getEthPairs(ethAccount));
+                }
+            } catch (JSONException exception) {
+                exception.printStackTrace();
+            }
+        } else {
+            result.addAll(getEthPairs(ethAccount));
+        }
+        return result;
+    }
 
     private List<Pair<String, String>> getEthPairs(ETHAccount ethAccount) {
         List<Pair<String, String>> result = new ArrayList<>();
@@ -94,43 +128,39 @@ public class ChangePathViewModel extends AndroidViewModel {
         return result;
     }
 
-    private MutableLiveData<List<Pair<String, String>>> getSolAccounts(SOLAccount solAccount) {
-        MutableLiveData<List<Pair<String, String>>> mutableLiveData = new MutableLiveData<>();
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            List<Pair<String, String>> result = new ArrayList<>();
-            String solDerivationPath = Utilities.getSolDerivationPaths(getApplication());
-            if (!TextUtils.isEmpty(solDerivationPath)) {
-                String masterFingerPrint = new GetMasterFingerprintCallable().call();
-                try {
-                    JSONObject derivationPaths = new JSONObject(solDerivationPath);
-                    String preMasterFingerPrint = derivationPaths.optString("master_fingerprint");
-                    if (masterFingerPrint.equalsIgnoreCase(preMasterFingerPrint)) {
-                        JSONObject accountPaths = (JSONObject) derivationPaths.get("sol_derivation_paths");
-                        JSONArray jsonArray = (JSONArray) accountPaths.get(solAccount.getCode());
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            result.add(Pair.create("" + i, (String) jsonArray.get(i)));
-                        }
-                    } else {
-                        result.addAll(getPairs(solAccount));
+    private List<Pair<String, String>> getSolAccountAddresses(SOLAccount solAccount) {
+        List<Pair<String, String>> result = new ArrayList<>();
+        String solDerivationPath = Utilities.getSolDerivationPaths(getApplication());
+        if (!TextUtils.isEmpty(solDerivationPath)) {
+            String masterFingerPrint = new GetMasterFingerprintCallable().call();
+            try {
+                JSONObject derivationPaths = new JSONObject(solDerivationPath);
+                String preMasterFingerPrint = derivationPaths.optString("master_fingerprint");
+                if (masterFingerPrint.equalsIgnoreCase(preMasterFingerPrint)) {
+                    JSONObject accountPaths = (JSONObject) derivationPaths.get("sol_derivation_paths");
+                    JSONArray jsonArray = (JSONArray) accountPaths.get(solAccount.getCode());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        result.add(Pair.create("" + i, (String) jsonArray.get(i)));
                     }
-                } catch (JSONException exception) {
-                    exception.printStackTrace();
+                } else {
+                    result.addAll(getSolPairs(solAccount));
                 }
-            } else {
-                result.addAll(getPairs(solAccount));
+            } catch (JSONException exception) {
+                exception.printStackTrace();
             }
-            mutableLiveData.postValue(result);
-        });
-        return mutableLiveData;
+        } else {
+            result.addAll(getSolPairs(solAccount));
+        }
+        return result;
     }
 
 
-    private List<Pair<String, String>> getPairs(SOLAccount solAccount) {
+    private List<Pair<String, String>> getSolPairs(SOLAccount solAccount) {
         List<Pair<String, String>> result = new ArrayList<>();
         AccountEntity accountEntity = repository.loadTargetSOLAccount(solAccount);
         if (accountEntity != null) {
             for (int i = 0; i < 3; i++) {
-                result.add(i, Pair.create("" + i, AddAddressViewModel.deriveSolAddress(accountEntity, i, null)));
+                result.add(i, Pair.create("" + i, SolanaAddressGenerator.getAddress(i, solAccount.getCode())));
             }
         }
         return result;

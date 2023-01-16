@@ -84,6 +84,7 @@ public class Utilities {
     public static final String PREFERENCE_KUSAMA_KEY_SYNCED = "user_click_kusama_sync";
     public static final String PREFERENCE_ARWEAVE_KEY_SYNCED = "user_click_arweave_sync";
 
+    public static final String ETH_DERIVATION_PATHS = "eth_derivation_paths";
     public static final String SOL_DERIVATION_PATHS = "sol_derivation_paths";
     public static final String NEAR_DERIVATION_PATHS = "near_derivation_paths";
 
@@ -410,6 +411,16 @@ public class Utilities {
     public static String getCurrentNearAccount(Context context) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
         return sp.getString(NEAR_CURRENT_ACCOUNT, NEARAccount.MNEMONIC.getCode());
+    }
+
+    public static void setEthDerivationPaths(Context context, String paths) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        sp.edit().putString(ETH_DERIVATION_PATHS, paths).apply();
+    }
+
+    public static String getEthDerivationPaths(Context context){
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        return sp.getString(ETH_DERIVATION_PATHS, "");
     }
 
     public static void setSolDerivationPaths(Context context, String paths) {
