@@ -17,6 +17,7 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -26,6 +27,14 @@
         <variable
             name="tx"
             type="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumTransaction" />
+
+        <variable
+            name="coinCode"
+            type="String" />
+
+        <variable
+            name="checkInfoTitle"
+            type="String" />
     </data>
 
     <ScrollView
@@ -38,95 +47,11 @@
             android:orientation="vertical"
             tools:showIn="@layout/tx_confirm_fragment">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp">
-
-                <ImageView
-                    android:id="@+id/icon"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/coin_eth"
-                    tools:ignore="ContentDescription" />
-
-                <TextView
-                    android:id="@+id/network"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/coinCode"
-                    android:layout_centerInParent="true"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_toEndOf="@id/icon"
-                    android:text="Ethereum"
-                    android:textColor="@color/white40"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/unit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="@{tx.coinCode}"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    tools:text="BTC" />
-
-                <TextView
-                    android:id="@+id/amount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_toStartOf="@id/unit"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    tools:text="2.62407806" />
-
-                <TextView
-                    android:id="@+id/time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/amount"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="16dp"
-                    android:textColor="@color/white40"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    app:time="@{tx.timeStamp}"
-                    tools:text="2018/06/01 15:40" />
-
-                <include
-                    layout="@layout/divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_alignParentBottom="true" />
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/check_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:gravity="start"
-                android:text="@string/check_info"
-                android:textColor="@color/check_info_color"
-                android:textSize="13sp"
-                android:visibility="gone" />
+            <include
+                android:id="@+id/check_info_layout"
+                layout="@layout/view_transaction_check_info"
+                bind:coinCode="@{coinCode}"
+                bind:title="@{checkInfoTitle}" />
 
             <LinearLayout
                 android:id="@+id/tx_id_info"
@@ -625,12 +550,12 @@
 
             <LinearLayout
                 android:id="@+id/qrcode_container"
-                android:visibility="gone"
-                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="30dp"
                 android:layout_marginTop="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/broadcast_hint"

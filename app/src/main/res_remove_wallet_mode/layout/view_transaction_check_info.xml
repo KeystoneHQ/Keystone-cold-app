@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="coinCode"
+            type="String" />
+
+        <variable
+            name="title"
+            type="String" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/dp_16"
+            android:paddingVertical="@dimen/dp_10"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="@dimen/dp_26"
+                android:layout_height="@dimen/dp_26"
+                app:icon="@{coinCode}"
+                tools:ignore="ContentDescription"
+                tools:src="@drawable/coin_eth" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_10"
+                android:text="@{title}"
+                android:textColor="@color/white"
+                tools:text="ETH" />
+        </LinearLayout>
+
+        <include layout="@layout/divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:gravity="center_vertical"
+            android:paddingVertical="@dimen/dp_24"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="@dimen/dp_16"
+                android:layout_marginStart="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_1"
+                android:src="@drawable/ic_reminder"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_10"
+                android:text="@string/check_info"
+                android:textColor="@color/check_info_color" />
+        </LinearLayout>
+
+        <include layout="@layout/divider" />
+    </LinearLayout>
+</layout>
