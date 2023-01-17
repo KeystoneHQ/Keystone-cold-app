@@ -11,4 +11,6 @@ public interface BundleKeys {
     String SIGN_ORIGIN_KEY = "sign_origin_key";
     String TX_ID_KEY = "tx_id_key";
     String ETH_TX_TYPE_KEY = "eth_tx_type_key";
+    String WALLET_ID_KEY = "wallet_id_key";
+
 }

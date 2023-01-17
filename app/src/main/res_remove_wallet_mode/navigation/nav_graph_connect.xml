@@ -82,9 +82,24 @@
         android:id="@+id/changeDerivationPathFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.ChangeDerivationPathFragment"
         android:label="changeDerivationPathFragment"
-        tools:layout="@layout/fragment_change_derivation_path"
-        />
+        tools:layout="@layout/fragment_change_derivation_path">
 
+        <action
+            android:id="@+id/action_to_selectAddressFragment"
+            app:destination="@id/selectAddressFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_to_syncFragment"
+            app:destination="@id/syncFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/tutorialsFragment"

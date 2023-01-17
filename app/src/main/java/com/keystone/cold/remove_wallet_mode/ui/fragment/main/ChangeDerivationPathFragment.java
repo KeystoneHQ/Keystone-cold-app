@@ -4,6 +4,7 @@ import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
 
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.lifecycle.LiveData;
@@ -11,15 +12,20 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentChangeDerivationPathBinding;
+import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
+import com.keystone.cold.remove_wallet_mode.helper.SyncMode;
 import com.keystone.cold.remove_wallet_mode.ui.model.PathPatternItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.ChangePathViewModel;
+import com.keystone.cold.remove_wallet_mode.viewmodel.WalletViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.ui.fragment.Constants;
 
 import java.util.List;
 
 
 public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDerivationPathBinding> {
     private String coinId;
+    private String walletId;
     private String selectCode;
     private ChangePathViewModel viewModel;
 
@@ -32,6 +38,7 @@ public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDer
     protected void init(View view) {
         Bundle data = requireArguments();
         coinId = data.getString(KEY_COIN_ID);
+        walletId = data.getString(BundleKeys.WALLET_ID_KEY);
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         mBinding.ivConfirm.setOnClickListener(v -> save());
         mBinding.pathPatternView.setOnItemClick(code -> selectCode = code);
@@ -53,6 +60,31 @@ public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDer
 
     private void save() {
         viewModel.save(coinId, selectCode);
-        navigateUp();
+        if (!TextUtils.isEmpty(walletId)) {
+            stepSync();
+        } else {
+            navigateUp();
+        }
+    }
+
+    private void stepSync() {
+        WalletViewModel walletViewModel = ViewModelProviders.of(this).get(WalletViewModel.class);
+        LiveData<SyncMode> stepMode = walletViewModel.determineSyncMode(walletId);
+        stepMode.observe(this, mode -> {
+            popBackStack(R.id.walletListFragment, false);
+            switch (mode) {
+                case DIRECT:
+                    Bundle bundleData = new Bundle();
+                    bundleData.putString(Constants.KEY_WALLET_ID, walletId);
+                    navigate(R.id.action_to_syncFragment, bundleData);
+                    break;
+                case SELECT_ADDRESS:
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constants.KEY_WALLET_ID, walletId);
+                    navigate(R.id.action_to_selectAddressFragment, bundle);
+                    break;
+            }
+            stepMode.removeObservers(this);
+        });
     }
 }

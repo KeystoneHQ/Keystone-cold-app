@@ -83,6 +83,10 @@ public class SelectAddressFragment extends BaseFragment<FragmentSelectAddressBin
         AddressViewModel.Factory factory = new AddressViewModel.Factory(mActivity.getApplication(), coinId);
         viewModel = ViewModelProviders.of(this, factory)
                 .get(AddressViewModel.class);
+        if (addressLiveData != null) {
+            addressLiveData.removeObservers(this);
+            addressLiveData = null;
+        }
         addressLiveData = viewModel.getAddress();
         subscribeUi(addressLiveData);
     }

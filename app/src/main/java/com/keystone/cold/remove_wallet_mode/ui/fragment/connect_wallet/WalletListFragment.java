@@ -71,7 +71,7 @@ public class WalletListFragment extends BaseFragment<FragmentWalletListBinding> 
     }
 
     private void handleItemClick(WalletItem walletItem) {
-        LiveData<SyncMode> stepMode = walletViewModel.determineSyncMode(walletItem);
+        LiveData<SyncMode> stepMode = walletViewModel.determineSyncMode(walletItem.getWalletId());
         stepMode.observe(WalletListFragment.this, mode -> {
             switch (mode) {
                 case INVALID: //no address，give error message

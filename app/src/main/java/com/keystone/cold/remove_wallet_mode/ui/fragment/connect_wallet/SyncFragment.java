@@ -18,11 +18,13 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.DialogAssetBottomBinding;
 import com.keystone.cold.databinding.FragmentSyncBinding;
+import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.BlueWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.FewchaWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.MetamaskViewModel;
+import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SolFlareViewModel;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.Constants;
@@ -102,6 +104,11 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                 BlueWalletViewModel blueWalletViewModel = ViewModelProviders.of(this).get(BlueWalletViewModel.class);
                 urMutableLiveData = blueWalletViewModel.generateSyncUR();
                 break;
+            case SOLFLARE:
+                SolFlareViewModel solFlareViewModel = ViewModelProviders.of(this).get(SolFlareViewModel.class);
+                solFlareViewModel.setAddressIds(addressIds);
+                urMutableLiveData = solFlareViewModel.generateSyncUR();
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + wallet);
         }
@@ -146,6 +153,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         binding.rlChangePath.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             bundle.putString(Constants.KEY_COIN_ID, config.getCoinId());
+            bundle.putString(BundleKeys.WALLET_ID_KEY, config.getWalletId());
             navigate(R.id.action_to_changeDerivationPathFragment, bundle);
             dialog.dismiss();
         });
@@ -156,6 +164,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
     private enum WalletConfig {
         METAMASK(Wallet.METAMASK.getWalletId(), new String[]{Coins.ETH.coinId()}, true, false, true),
         FEWCHA(Wallet.FEWCHA.getWalletId(), new String[]{Coins.APTOS.coinId()}, false, true, true),
+        SOLFLARE(Wallet.SOLFLARE.getWalletId(), new String[]{Coins.SOL.coinId()}, true, true, true),
         DEFAULT("default", new String[]{}, false, false, true),
         ;
 
@@ -183,6 +192,10 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
             return config.orElse(DEFAULT);
         }
 
+
+        public String getWalletId() {
+            return walletId;
+        }
 
         public boolean isShowChangePath() {
             return showChangePath;
