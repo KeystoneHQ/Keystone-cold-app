@@ -36,15 +36,6 @@ public class EthereumAddressGenerator extends MultiAccountAddressGenerator {
         String xPub = new GetExtendedPublicKeyCallable(path).call();
         String address = deriver.derive(xPub);
         addressEntity.setPath(path);
-        try {
-            JSONObject innerJson = new JSONObject();
-            innerJson.put("xPub", xPub);
-            JSONObject addition = new JSONObject();
-            addition.put("addition", innerJson);
-            addressEntity.setAddition(addition.toString());
-        } catch (JSONException exception) {
-            exception.printStackTrace();
-        }
         return address;
     }
 

@@ -12,6 +12,7 @@ public enum SyncMode {
     public static void detect(String walletId, MutableLiveData<SyncMode> stepMode) {
         Wallet wallet = Wallet.getWalletById(walletId);
         switch (wallet) {
+            case BLUEWALLET:
             case METAMASK:
                 stepMode.postValue(DIRECT);
                 break;

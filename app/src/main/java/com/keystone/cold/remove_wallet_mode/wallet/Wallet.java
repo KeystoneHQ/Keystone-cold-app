@@ -115,6 +115,7 @@ public enum Wallet {
         switch (wallet) {
             case METAMASK:
             case FEWCHA:
+            case BLUEWALLET:
                 return true;
             case CORE:
                 return false;
@@ -137,12 +138,13 @@ public enum Wallet {
                 return new Coins.Coin[]{Coins.XRP};
             case METAMASK:
                 return new Coins.Coin[]{Coins.ETH};
+            case BLUEWALLET:
+                return new Coins.Coin[]{Coins.BTC, Coins.BTC_LEGACY, Coins.BTC_NATIVE_SEGWIT};
             case SOLFLARE:
                 return new Coins.Coin[]{Coins.SOL};
             case SENDER:
                 return new Coins.Coin[]{Coins.NEAR};
             case CORE:
-                return new Coins.Coin[]{Coins.BTC_NATIVE_SEGWIT, Coins.ETH};
             case BITKEEP:
                 return new Coins.Coin[]{Coins.BTC_NATIVE_SEGWIT, Coins.ETH};
             case FEWCHA:
