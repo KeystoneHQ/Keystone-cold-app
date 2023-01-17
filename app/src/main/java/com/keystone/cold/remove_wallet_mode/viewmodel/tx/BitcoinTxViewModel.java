@@ -13,6 +13,7 @@ import com.keystone.coinlib.coins.BTC.BtcImpl;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.utils.Coins;
+import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
@@ -45,6 +46,8 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
     public static final String BTCNativeSegwitPath = "M/84'/0'/0'";
     public static final List<String> BTCPaths = new ArrayList<>(Arrays.asList(BTCLegacyPath, BTCNestedSegwitPath, BTCNativeSegwitPath));
 
+    private static String RAW_PSBT = "raw_message";
+
     public MutableLiveData<PSBT> getObservablePsbt() {
         return observablePsbt;
     }
@@ -66,14 +69,34 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
 
     @Override
     public void parseTxData(Bundle bundle) {
-        try {
-            String psbtB64 = bundle.getString(BundleKeys.SIGN_DATA_KEY);
-            String mfp = new GetMasterFingerprintCallable().call();
-            PSBT psbt = parsePsbtBase64(psbtB64, mfp);
-            observablePsbt.postValue(psbt);
-        } catch (BaseException e) {
-            parseTxException.postValue(e);
-        }
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            try {
+                String psbtB64 = bundle.getString(BundleKeys.SIGN_DATA_KEY);
+                String mfp = new GetMasterFingerprintCallable().call();
+                PSBT psbt = parsePsbtBase64(psbtB64, mfp);
+                observablePsbt.postValue(psbt);
+            } catch (BaseException e) {
+                parseTxException.postValue(e);
+            }
+        });
+    }
+
+    public void parseExistingTransaction(String txId) {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            try {
+                TxEntity tx = mRepository.loadTxSync(txId);
+                JSONObject object = new JSONObject(tx.getAddition());
+                String psbtB64 = object.getString("raw_message");
+                String mfp = new GetMasterFingerprintCallable().call();
+                PSBT psbt = parsePsbtBase64(psbtB64, mfp);
+                observablePsbt.postValue(psbt);
+            } catch (BaseException e) {
+                parseTxException.postValue(e);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
+
     }
 
     public PSBT parsePsbtBase64(String psbt, String myMasterFingerprint) throws InvalidTransactionException {
@@ -173,7 +196,7 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
     private String generateAddition(PSBT psbt) throws JSONException {
         JSONObject parsedMessage = psbt.generateParsedMessage();
         JSONObject addition = new JSONObject();
-        addition.put("raw_message", psbt.getRawData());
+        addition.put(RAW_PSBT, psbt.getRawData());
         addition.put("parsed_messsage", parsedMessage);
         return addition.toString();
     }
