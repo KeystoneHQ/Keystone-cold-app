@@ -4,10 +4,10 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.AptosAddressGenerator;
 
-public class AptosCreator extends ED25519CoinCreator{
+public class AptosCreator extends ED25519CoinCreator {
 
-    public AptosCreator(Coins.Coin coin) {
-        super(coin);
+    public AptosCreator() {
+        super(Coins.APTOS);
     }
 
     @Override

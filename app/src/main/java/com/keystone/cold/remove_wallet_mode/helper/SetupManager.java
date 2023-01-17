@@ -5,6 +5,7 @@ import com.keystone.cold.remove_wallet_mode.helper.setup.AptosCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.BaseCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.Creator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.EthereumCreator;
+import com.keystone.cold.remove_wallet_mode.helper.setup.SolanaCreator;
 
 
 public class SetupManager {
@@ -31,9 +32,11 @@ public class SetupManager {
     private static Creator getCreator(Coins.Coin coin) {
         String coinId = coin.coinId();
         if (coinId.equals(Coins.APTOS.coinId())) {
-            return new AptosCreator(Coins.APTOS);
+            return new AptosCreator();
         } else if (coinId.equals(Coins.ETH.coinId())) {
-            return new EthereumCreator(Coins.ETH);
+            return new EthereumCreator();
+        } else if (coinId.equals(Coins.SOL.coinId())) {
+            return new SolanaCreator();
         }
         return null;
     }

@@ -15,8 +15,8 @@ import java.util.stream.Stream;
 
 public class EthereumCreator extends BaseCreator {
 
-    public EthereumCreator(Coins.Coin coin) {
-        super(coin);
+    public EthereumCreator() {
+        super(Coins.ETH);
     }
 
     @Override

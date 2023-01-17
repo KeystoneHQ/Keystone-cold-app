@@ -227,8 +227,9 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
 
     private enum AssetConfig {
         ETH(Coins.ETH.coinId(), true, true, true),
-        DEFAULT("default", true, true, true),
-        ;
+        APT(Coins.APTOS.coinId(), true, false, true),
+        SOL(Coins.SOL.coinId(), true, true, true),
+        DEFAULT("default", true, true, true);
 
         private String coinId;
         private boolean showAddAddress;

@@ -90,7 +90,7 @@ public abstract class BaseAddressGenerator implements AddressGenerator {
 
     private boolean existAddress(String coinId, String path) {
         DataRepository repository = MainApplication.getApplication().getRepository();
-        return repository.loadAddressByPathAndCoinId(coinId, path) != null;
+        return repository.loadAddressByPathAndCoinId(path, coinId) != null;
     }
 
     protected abstract String deriveAddress(int index, AddressEntity addressEntity, AbsDeriver deriver);
