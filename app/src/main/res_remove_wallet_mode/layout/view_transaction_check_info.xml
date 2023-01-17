@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="coinCode"
             type="String" />
@@ -48,19 +48,22 @@
         <include layout="@layout/divider" />
 
         <LinearLayout
+            android:id="@+id/llHint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginVertical="@dimen/dp_16"
+            android:background="@drawable/bg_sign_hint"
             android:gravity="center_vertical"
-            android:paddingVertical="@dimen/dp_24"
+            android:paddingVertical="@dimen/dp_8"
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
-                android:layout_width="@dimen/dp_16"
-                android:layout_height="@dimen/dp_16"
+                android:layout_width="@dimen/dp_14"
+                android:layout_height="@dimen/dp_12"
                 android:layout_marginStart="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_1"
-                android:src="@drawable/ic_reminder"
+                android:background="@drawable/ic_reminder"
                 tools:ignore="ContentDescription" />
 
             <TextView
@@ -68,7 +71,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_10"
                 android:text="@string/check_info"
-                android:textColor="@color/check_info_color" />
+                android:textColor="@color/check_info_color"
+                android:textSize="@dimen/sp_10" />
         </LinearLayout>
 
         <include layout="@layout/divider" />

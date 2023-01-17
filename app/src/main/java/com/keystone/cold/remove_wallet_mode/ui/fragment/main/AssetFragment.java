@@ -43,10 +43,12 @@ import com.allenliu.badgeview.BadgeFactory;
 import com.allenliu.badgeview.BadgeView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 
+import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.DialogAssetBottomBinding;
 import com.keystone.cold.databinding.FragmentAssetBinding;
 
@@ -229,12 +231,13 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         ETH(Coins.ETH.coinId(), true, true, true),
         APT(Coins.APTOS.coinId(), true, false, true),
         SOL(Coins.SOL.coinId(), true, true, true),
+        SOL_BIP44_ROOT(Coins.SOL.coinId() + "_" + SOLAccount.SOLFLARE_BIP44_ROOT.getCode(), false, true, true),
         DEFAULT("default", true, true, true);
 
-        private String coinId;
-        private boolean showAddAddress;
-        private boolean showChangePath;
-        private boolean showFAQ;
+        private final String coinId;
+        private final boolean showAddAddress;
+        private final boolean showChangePath;
+        private final boolean showFAQ;
 
         AssetConfig(String coinId, boolean showAddAddress, boolean showChangePath, boolean showFAQ) {
             this.coinId = coinId;
@@ -244,7 +247,14 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         }
 
         public static AssetConfig getConfigByCoinId(String coinId) {
-            Optional<AssetConfig> config = Arrays.stream(AssetConfig.values()).filter(assetConfig -> assetConfig.coinId.equals(coinId)).findFirst();
+            if (Coins.SOL.coinId().equals(coinId)) {
+                String code = Utilities.getCurrentSolAccount(MainApplication.getApplication());
+                if (SOLAccount.SOLFLARE_BIP44_ROOT.getCode().equals(code)) {
+                    coinId = coinId + "_" + code;
+                }
+            }
+            String finalCoinId = coinId;
+            Optional<AssetConfig> config = Arrays.stream(AssetConfig.values()).filter(assetConfig -> assetConfig.coinId.equals(finalCoinId)).findFirst();
             return config.orElse(DEFAULT);
         }
 

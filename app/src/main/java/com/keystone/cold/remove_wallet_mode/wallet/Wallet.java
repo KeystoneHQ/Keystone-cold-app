@@ -115,6 +115,7 @@ public enum Wallet {
         switch (wallet) {
             case METAMASK:
             case FEWCHA:
+            case SOLFLARE:
             case BLUEWALLET:
                 return true;
             case CORE:

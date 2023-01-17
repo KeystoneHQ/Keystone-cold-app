@@ -3,6 +3,7 @@ package com.keystone.cold.remove_wallet_mode.helper;
 import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.cold.remove_wallet_mode.helper.sync_jump.FewchaWalletSyncModeDetector;
+import com.keystone.cold.remove_wallet_mode.helper.sync_jump.SolflareWalletSyncModeDetector;
 import com.keystone.cold.remove_wallet_mode.helper.sync_jump.SyncModeDetector;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 
@@ -50,6 +51,8 @@ public enum SyncMode {
         switch (wallet) {
             case FEWCHA:
                 return new FewchaWalletSyncModeDetector();
+            case SOLFLARE:
+                return new SolflareWalletSyncModeDetector();
             default:
                 return null;
         }

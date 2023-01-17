@@ -17,11 +17,17 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="coinCode"
+            type="String" />
 
-
+        <variable
+            name="checkInfoTitle"
+            type="String" />
     </data>
 
     <ScrollView
@@ -35,51 +41,11 @@
             android:orientation="vertical"
             tools:showIn="@layout/tx_confirm_fragment">
 
-            <RelativeLayout
-                android:id="@+id/llChainInfo"
-                android:layout_width="match_parent"
-                android:layout_height="50dp">
-
-                <ImageView
-                    android:id="@+id/icon"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/coin_apt"
-                    tools:ignore="ContentDescription" />
-
-                <TextView
-                    android:id="@+id/network"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/coinCode"
-                    android:layout_centerInParent="true"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_toEndOf="@id/icon"
-                    android:text="Aptos"
-                    android:textColor="@color/white40"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <include
-                    layout="@layout/divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_alignParentBottom="true" />
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/check_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:gravity="start"
-                android:text="@string/check_info"
-                android:textColor="@color/check_info_color"
-                android:textSize="13sp" />
+            <include
+                android:id="@+id/check_info_layout"
+                layout="@layout/view_transaction_check_info"
+                bind:coinCode="@{coinCode}"
+                bind:title="@{checkInfoTitle}" />
 
             <LinearLayout
                 android:id="@+id/llMethod"
