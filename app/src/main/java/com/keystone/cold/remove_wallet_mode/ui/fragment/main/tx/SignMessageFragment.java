@@ -15,6 +15,7 @@ import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.BaseTxViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
+import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
 
@@ -80,6 +81,8 @@ public abstract class SignMessageFragment<V extends BaseTxViewModel> extends Bas
                     }
                     signingDialog = null;
                     onSignSuccess();
+                    viewModel.getSignState().setValue("");
+                    viewModel.getSignState().removeObservers(this);
                 }, UIConstants.SIGN_DIALOG_SUCCESS_DELAY);
             } else if (BaseTxViewModel.STATE_SIGN_FAIL.equals(s)) {
                 new Handler().postDelayed(() -> {
@@ -96,6 +99,18 @@ public abstract class SignMessageFragment<V extends BaseTxViewModel> extends Bas
                 }, UIConstants.SIGN_DIALOG_REMOVE_OBSERVERS_DELAY);
             }
         });
+    }
+
+    protected void handleParseException(Exception ex) {
+        if (ex != null) {
+            ex.printStackTrace();
+            ModalDialog.showCommonModal(mActivity,
+                    getString(R.string.invalid_data),
+                    getString(R.string.incorrect_tx_data),
+                    getString(R.string.confirm),
+                    null);
+            popBackStack(R.id.myAssetsFragment, false);
+        }
     }
 
     protected abstract void onSignSuccess();

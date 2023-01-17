@@ -2,6 +2,8 @@ package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx;
 
 import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 
+import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
+import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
 import android.os.Bundle;
@@ -13,12 +15,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.keystone.cold.R;
+import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.databinding.FragmentConfirmTransactionBinding;
 import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.BaseTxViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.SigningDialog;
+import com.keystone.cold.ui.views.AuthenticateModal;
 
 public abstract class ConfirmTransactionFragment<V extends BaseTxViewModel> extends BaseFragment<FragmentConfirmTransactionBinding> {
 
@@ -94,6 +98,8 @@ public abstract class ConfirmTransactionFragment<V extends BaseTxViewModel> exte
                     }
                     signingDialog = null;
                     onSignSuccess();
+                    viewModel.getSignState().setValue("");
+                    viewModel.getSignState().removeObservers(this);
                 }, UIConstants.SIGN_DIALOG_SUCCESS_DELAY);
             } else if (BaseTxViewModel.STATE_SIGN_FAIL.equals(s)) {
                 new Handler().postDelayed(() -> {
@@ -110,6 +116,17 @@ public abstract class ConfirmTransactionFragment<V extends BaseTxViewModel> exte
                 }, UIConstants.SIGN_DIALOG_REMOVE_OBSERVERS_DELAY);
             }
         });
+    }
+
+    protected void handleSign() {
+        boolean fingerprintSignEnable = new FingerprintPolicyCallable(READ, TYPE_SIGN_TX).call();
+        AuthenticateModal.show(mActivity,
+                getString(R.string.password_modal_title), "", fingerprintSignEnable,
+                token -> {
+                    viewModel.setToken(token);
+                    viewModel.handleSign();
+                    subscribeSignState();
+                }, forgetPassword);
     }
 
     protected abstract void onSignSuccess();

@@ -48,23 +48,10 @@ public class AptosConfirmTransactionFragment extends ConfirmTransactionFragment<
         data.putString(BundleKeys.SIGNATURE_UR_KEY, signatureURString);
         data.putString(BundleKeys.COIN_CODE_KEY, Coins.APTOS.coinCode());
         navigate(R.id.action_to_broadCastTxFragment, data);
-        viewModel.getSignState().setValue("");
-        viewModel.getSignState().removeObservers(this);
     }
 
     @Override
     protected void initData(Bundle savedInstanceState) {
         viewModel.parseTxData(requireArguments());
-    }
-
-    private void handleSign() {
-        boolean fingerprintSignEnable = new FingerprintPolicyCallable(READ, TYPE_SIGN_TX).call();
-        AuthenticateModal.show(mActivity,
-                getString(R.string.password_modal_title), "", fingerprintSignEnable,
-                token -> {
-                    viewModel.setToken(token);
-                    viewModel.handleSign();
-                    subscribeSignState();
-                }, forgetPassword);
     }
 }
