@@ -20,6 +20,7 @@ import com.keystone.cold.databinding.DialogAssetBottomBinding;
 import com.keystone.cold.databinding.FragmentSyncBinding;
 import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
+import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.BlueWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.FewchaWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.MetamaskViewModel;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
@@ -96,6 +97,10 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
             case METAMASK:
                 MetamaskViewModel metamaskViewModel = ViewModelProviders.of(this).get(MetamaskViewModel.class);
                 urMutableLiveData = metamaskViewModel.generateSyncUR();
+                break;
+            case BLUEWALLET:
+                BlueWalletViewModel blueWalletViewModel = ViewModelProviders.of(this).get(BlueWalletViewModel.class);
+                urMutableLiveData = blueWalletViewModel.generateSyncUR();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + wallet);

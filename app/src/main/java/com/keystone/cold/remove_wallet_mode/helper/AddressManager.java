@@ -9,6 +9,9 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.AddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.AptosAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinLegacyAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNativeSegwitAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNestedSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.EthereumAddressGenerator;
 
 
@@ -35,6 +38,15 @@ public class AddressManager {
     }
 
     private static AddressGenerator getAddressGenerator(String coinId) {
+        if (Coins.BTC_LEGACY.coinId().equals(coinId)) {
+            return new BitcoinLegacyAddressGenerator();
+        }
+        if (Coins.BTC.coinId().equals(coinId)) {
+            return new BitcoinNestedSegwitAddressGenerator();
+        }
+        if (Coins.BTC_NATIVE_SEGWIT.coinId().equals(coinId)) {
+            return new BitcoinNativeSegwitAddressGenerator();
+        }
         if (Coins.ETH.coinId().equals(coinId)){
             String code = Utilities.getCurrentEthAccount(getApplication());
             return new EthereumAddressGenerator(code);
