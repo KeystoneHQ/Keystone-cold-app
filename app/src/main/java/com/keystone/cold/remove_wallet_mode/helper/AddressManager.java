@@ -48,12 +48,14 @@ public class AddressManager {
         if (Coins.BTC_NATIVE_SEGWIT.coinId().equals(coinId)) {
             return new BitcoinNativeSegwitAddressGenerator();
         }
-        if (Coins.ETH.coinId().equals(coinId)){
+        if (Coins.ETH.coinId().equals(coinId)) {
             String code = Utilities.getCurrentEthAccount(getApplication());
             return new EthereumAddressGenerator(code);
-        } else if (Coins.APTOS.coinId().equals(coinId)) {
+        }
+        if (Coins.APTOS.coinId().equals(coinId)) {
             return new AptosAddressGenerator();
-        } else if (Coins.SOL.coinId().equals(coinId)) {
+        }
+        if (Coins.SOL.coinId().equals(coinId)) {
             String code = Utilities.getCurrentSolAccount(getApplication());
             return new SolanaAddressGenerator(code);
         }
