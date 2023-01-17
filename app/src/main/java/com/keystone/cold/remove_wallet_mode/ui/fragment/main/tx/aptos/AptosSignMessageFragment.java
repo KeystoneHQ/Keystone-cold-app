@@ -61,19 +61,6 @@ public class AptosSignMessageFragment extends SignMessageFragment<AptosTxViewMod
         }
     }
 
-
-    private void handleParseException(Exception ex) {
-        if (ex != null) {
-            ex.printStackTrace();
-            ModalDialog.showCommonModal(mActivity,
-                    getString(R.string.invalid_data),
-                    getString(R.string.incorrect_tx_data),
-                    getString(R.string.confirm),
-                    null);
-            popBackStack(R.id.myAssetsFragment, false);
-        }
-    }
-
     @Override
     protected void onSignSuccess() {
         String signatureURString = viewModel.getSignatureUR();
@@ -81,7 +68,5 @@ public class AptosSignMessageFragment extends SignMessageFragment<AptosTxViewMod
         data.putString(BundleKeys.SIGNATURE_UR_KEY, signatureURString);
         data.putString(BundleKeys.COIN_CODE_KEY, Coins.APTOS.coinCode());
         navigate(R.id.action_to_broadCastTxFragment, data);
-        viewModel.getSignState().setValue("");
-        viewModel.getSignState().removeObservers(this);
     }
 }

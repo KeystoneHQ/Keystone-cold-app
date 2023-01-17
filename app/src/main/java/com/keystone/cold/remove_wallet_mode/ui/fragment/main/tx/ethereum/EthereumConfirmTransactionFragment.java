@@ -47,17 +47,6 @@ public class EthereumConfirmTransactionFragment extends ConfirmTransactionFragme
         mBinding.sign.setOnClickListener((v) -> checkExceedFeeDialog());
     }
 
-    private void handleSign() {
-        boolean fingerprintSignEnable = new FingerprintPolicyCallable(READ, TYPE_SIGN_TX).call();
-        AuthenticateModal.show(mActivity,
-                getString(R.string.password_modal_title), "", fingerprintSignEnable,
-                token -> {
-                    viewModel.setToken(token);
-                    viewModel.handleSign();
-                    subscribeSignState();
-                }, forgetPassword);
-    }
-
     private void handleParseException(BaseException ex) {
         if (ex != null) {
             ex.printStackTrace();
@@ -89,7 +78,5 @@ public class EthereumConfirmTransactionFragment extends ConfirmTransactionFragme
         data.putString(BundleKeys.SIGNATURE_UR_KEY, signatureURString);
         data.putString(BundleKeys.COIN_CODE_KEY, Coins.ETH.coinCode());
         navigate(R.id.action_to_broadCastTxFragment, data);
-        viewModel.getSignState().setValue("");
-        viewModel.getSignState().removeObservers(this);
     }
 }

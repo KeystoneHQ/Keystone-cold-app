@@ -61,18 +61,6 @@ public class EthereumSignMessageFragment extends SignMessageFragment<EthereumTxV
         }
     }
 
-    private void handleParseException(Exception ex) {
-        if (ex != null) {
-            ex.printStackTrace();
-            ModalDialog.showCommonModal(mActivity,
-                    getString(R.string.invalid_data),
-                    getString(R.string.incorrect_tx_data),
-                    getString(R.string.confirm),
-                    null);
-            popBackStack(R.id.myAssetsFragment, false);
-        }
-    }
-
     @Override
     protected void onSignSuccess() {
         String signatureURString = viewModel.getSignatureUR();
