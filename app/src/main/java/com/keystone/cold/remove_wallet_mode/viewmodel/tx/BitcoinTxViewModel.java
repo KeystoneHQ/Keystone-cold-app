@@ -25,12 +25,14 @@ import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.bitcoin.PSBT;
-import com.keystone.cold.viewmodel.WatchWallet;
-import com.keystone.cold.viewmodel.tx.SignState;
+import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
+import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.spongycastle.util.encoders.Base64;
+import org.spongycastle.util.encoders.Hex;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -39,31 +41,36 @@ import java.util.List;
 import java.util.Objects;
 
 public class BitcoinTxViewModel extends BaseTxViewModel {
-    private static String TAG = "BitcoinTxViewModel";
+    private static final String TAG = "BitcoinTxViewModel";
 
     public static final String BTCLegacyPath = "M/44'/0'/0'";
     public static final String BTCNestedSegwitPath = "M/49'/0'/0'";
     public static final String BTCNativeSegwitPath = "M/84'/0'/0'";
-    public static final List<String> BTCPaths = new ArrayList<>(Arrays.asList(BTCLegacyPath, BTCNestedSegwitPath, BTCNativeSegwitPath));
 
-    private static String RAW_PSBT = "raw_message";
+    private static final String RAW_PSBT = "raw_message";
 
     public MutableLiveData<PSBT> getObservablePsbt() {
         return observablePsbt;
     }
 
-    private MutableLiveData<PSBT> observablePsbt = new MutableLiveData<>(null);
+    private final MutableLiveData<PSBT> observablePsbt = new MutableLiveData<>(null);
     protected final MutableLiveData<BaseException> parseTxException = new MutableLiveData<>();
+
     public MutableLiveData<BaseException> parseTxException() {
         return parseTxException;
     }
 
-    private final Application mApplication;
     private final DataRepository mRepository;
+    private String signedPSBT;
+
+    public String getCoinCode() {
+        return coinCode;
+    }
+
+    private String coinCode;
 
     public BitcoinTxViewModel(@NonNull Application application) {
         super(application);
-        this.mApplication = application;
         this.mRepository = MainApplication.getApplication().getRepository();
     }
 
@@ -74,6 +81,7 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
                 String psbtB64 = bundle.getString(BundleKeys.SIGN_DATA_KEY);
                 String mfp = new GetMasterFingerprintCallable().call();
                 PSBT psbt = parsePsbtBase64(psbtB64, mfp);
+                coinCode = getCoinCodeFromPSBT(psbt);
                 observablePsbt.postValue(psbt);
             } catch (BaseException e) {
                 parseTxException.postValue(e);
@@ -85,10 +93,12 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
         AppExecutors.getInstance().diskIO().execute(() -> {
             try {
                 TxEntity tx = mRepository.loadTxSync(txId);
+                signedPSBT = tx.getSignedHex();
                 JSONObject object = new JSONObject(tx.getAddition());
                 String psbtB64 = object.getString("raw_message");
                 String mfp = new GetMasterFingerprintCallable().call();
                 PSBT psbt = parsePsbtBase64(psbtB64, mfp);
+                coinCode = tx.getCoinCode();
                 observablePsbt.postValue(psbt);
             } catch (BaseException e) {
                 parseTxException.postValue(e);
@@ -121,49 +131,52 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
 
     @Override
     public void handleSign() {
-        PSBT psbt = observablePsbt.getValue();
-        if (psbt == null) return;
-        SignCallback callback = new SignCallback() {
-            @Override
-            public void startSign() {
-                signState.postValue(STATE_SIGNING);
-            }
-
-            @Override
-            public void onFail() {
-                signState.postValue(STATE_SIGN_FAIL);
-                new ClearTokenCallable().call();
-            }
-
-            @Override
-            public void onSuccess(String txId, String psbtB64) {
-                try {
-                    TxEntity tx = adaptPSBTtoTxEntity(psbt);
-                    if (TextUtils.isEmpty(txId)) {
-                        txId = "unknown_txid_" + Math.abs(tx.hashCode());
-                    }
-                    tx.setTxId(txId);
-                    tx.setSignedHex(psbtB64);
-                    tx.setAddition(generateAddition(psbt));
-                    mRepository.insertTx(tx);
-                    signState.postValue(STATE_SIGN_SUCCESS);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    signState.postValue(STATE_SIGN_FAIL);
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            PSBT psbt = observablePsbt.getValue();
+            if (psbt == null) return;
+            SignCallback callback = new SignCallback() {
+                @Override
+                public void startSign() {
+                    signState.postValue(STATE_SIGNING);
                 }
-                new ClearTokenCallable().call();
-            }
 
-            @Override
-            public void postProgress(int progress) {
+                @Override
+                public void onFail() {
+                    signState.postValue(STATE_SIGN_FAIL);
+                    new ClearTokenCallable().call();
+                }
 
-            }
-        };
+                @Override
+                public void onSuccess(String txId, String psbtB64) {
+                    try {
+                        TxEntity tx = adaptPSBTtoTxEntity(psbt);
+                        if (TextUtils.isEmpty(txId)) {
+                            txId = "unknown_txid_" + Math.abs(tx.hashCode());
+                        }
+                        tx.setTxId(txId);
+                        tx.setSignedHex(psbtB64);
+                        signedPSBT = psbtB64;
+                        tx.setAddition(generateAddition(psbt));
+                        mRepository.insertTx(tx);
+                        signState.postValue(STATE_SIGN_SUCCESS);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        signState.postValue(STATE_SIGN_FAIL);
+                    }
+                    new ClearTokenCallable().call();
+                }
 
-        callback.startSign();
-        Signer[] signer = initSigners(psbt);
-        Btc btc = new Btc(new BtcImpl());
-        btc.signPsbt(psbt.getRawData(), callback, signer);
+                @Override
+                public void postProgress(int progress) {
+
+                }
+            };
+
+            callback.startSign();
+            Signer[] signer = initSigners(psbt);
+            Btc btc = new Btc(new BtcImpl());
+            btc.signPsbt(psbt.getRawData(), callback, signer);
+        });
     }
 
     private Signer[] initSigners(PSBT psbt) {
@@ -185,8 +198,8 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
         TxEntity tx = new TxEntity();
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMaximumFractionDigits(20);
-        String coinCode = getCoinCodeFromPSBT(psbt);
-        tx.setSignId(WatchWallet.getWatchWallet(mApplication).getSignId());
+        // TODO get origin and update this line.
+        tx.setSignId(Wallet.UNKOWN_WALLET_SIGN_ID);
         tx.setCoinCode(coinCode);
         tx.setCoinId(Coins.coinIdFromCoinCode(coinCode));
         tx.setBelongTo(mRepository.getBelongTo());
@@ -201,7 +214,8 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
         return addition.toString();
     }
 
-    private String getCoinCodeFromPSBT(PSBT psbt) {
+    public static String getCoinCodeFromPSBT(PSBT psbt) {
+        // TODO add LTC support;
         String canonicalPath = psbt.getMySigningInputs().get(0).getCanonicalHDPath();
         if (canonicalPath.startsWith(BTCLegacyPath)) {
             return Coins.BTC_LEGACY.coinCode();
@@ -223,6 +237,7 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
 
     @Override
     public String getSignatureUR() {
-        return null;
+        CryptoPSBT cryptoPSBT = new CryptoPSBT(Base64.decode(signedPSBT));
+        return cryptoPSBT.toUR().toString();
     }
 }

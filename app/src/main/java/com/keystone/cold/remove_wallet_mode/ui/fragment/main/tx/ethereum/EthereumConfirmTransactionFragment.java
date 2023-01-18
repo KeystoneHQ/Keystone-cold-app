@@ -1,8 +1,5 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum;
 
-import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
-import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
-
 import android.os.Bundle;
 
 import androidx.lifecycle.MutableLiveData;
@@ -10,14 +7,12 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
-import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ConfirmTransactionFragment;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.EthereumTxViewModel;
 import com.keystone.cold.ui.modal.ModalDialog;
-import com.keystone.cold.ui.views.AuthenticateModal;
 
 import java.util.Objects;
 

@@ -456,7 +456,6 @@ public class Coins {
     public static String getCosmosCoinCode(String chainId) {
         String coinId = getCosmosCoinId(chainId);
         return coinCodeFromCoinId(coinId);
-
     }
 
     public static boolean isDefaultOpen(String coinCode) {

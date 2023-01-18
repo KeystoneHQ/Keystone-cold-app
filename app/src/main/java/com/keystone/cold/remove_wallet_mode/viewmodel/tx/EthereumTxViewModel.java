@@ -537,6 +537,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
             JSONObject addition = new JSONObject();
             addition.put("isFromTFCard", transaction.isFromTFCard());
             addition.put("requestId", transaction.getRequestId());
+            // TODO update sign ID;
             // addition.put("signId", watchWallet.getSignId());
             addition.put("signBy", ETHAccount.ofCode(Utilities.getCurrentEthAccount(context)).getCode());
             transaction.setAddition(addition.toString());

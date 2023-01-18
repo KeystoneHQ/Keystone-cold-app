@@ -78,8 +78,8 @@
 
     <fragment
         android:id="@+id/ethereumSignMessageFragment"
-        android:label="ethereumSignMessageFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumSignMessageFragment"
+        android:label="ethereumSignMessageFragment"
         tools:layout="@layout/fragment_sign_message">
         <action
             android:id="@+id/action_to_broadCastTxFragment"
@@ -92,8 +92,8 @@
 
     <fragment
         android:id="@+id/ethereumSignTypedDataFragment"
-        android:label="ethereumSignTypedDataFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumSignTypedDataFragment"
+        android:label="ethereumSignTypedDataFragment"
         tools:layout="@layout/fragment_ethereum_sign_typed_data">
         <action
             android:id="@+id/action_to_broadCastTxFragment"
@@ -157,7 +157,7 @@
         android:id="@+id/aptosReviewTransactionFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.aptos.AptosReviewTransactionFragment"
         android:label="AptosReviewTransactionFragment"
-        tools:layout="@layout/fragment_confirm_transaction"/>
+        tools:layout="@layout/fragment_confirm_transaction" />
 
     <fragment
         android:id="@+id/solanaSignMessageFragment"
@@ -178,7 +178,7 @@
         android:id="@+id/solanaReviewTransactionFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.solana.SolanaReviewTransactionFragment"
         android:label="SolanaReviewTransactionFragment"
-        tools:layout="@layout/fragment_confirm_transaction"/>
+        tools:layout="@layout/fragment_confirm_transaction" />
 
 
     <fragment
@@ -363,6 +363,26 @@
         android:label="BrightnessSettingFragment"
         tools:layout="@layout/brightness_setting" />
 
+    <fragment
+        android:id="@+id/bitcoinConfirmTransactionFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.bitcoin.BitcoinConfirmTransactionFragment"
+        android:label="bitcoinConfirmTransactionFragment"
+        tools:layout="@layout/fragment_confirm_transaction">
+        <action
+            android:id="@+id/action_to_broadCastTxFragment"
+            app:destination="@id/broadCastTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bitcoinReviewTransactionFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.bitcoin.BitcoinReviewTransactionFragment"
+        android:label="bitcoinReviewTransactionFragment"
+        tools:layout="@layout/fragment_confirm_transaction" />
+
     <action
         android:id="@+id/action_to_receiveCoinFragment"
         app:destination="@id/receiveCoinFragment"
@@ -458,4 +478,20 @@
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
         app:popExitAnim="@android:anim/slide_out_right" />
+    <action
+        android:id="@+id/action_to_bitcoinConfirmTransactionFragment"
+        app:destination="@id/bitcoinConfirmTransactionFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_bitcoinReviewTransactionFragment"
+        app:destination="@id/bitcoinReviewTransactionFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
 </navigation>
