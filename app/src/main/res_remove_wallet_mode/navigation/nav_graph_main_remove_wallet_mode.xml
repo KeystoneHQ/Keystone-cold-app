@@ -120,6 +120,23 @@
             app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
 
+
+    <fragment
+        android:id="@+id/solanaConfirmTransactionFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.solana.SolanaConfirmTransactionFragment"
+        android:label="SolanaConfirmTransactionFragment"
+        tools:layout="@layout/fragment_confirm_transaction">
+
+        <action
+            android:id="@+id/action_to_broadCastTxFragment"
+            app:destination="@id/broadCastTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+
     <fragment
         android:id="@+id/aptosSignMessageFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.aptos.AptosSignMessageFragment"
@@ -397,5 +414,11 @@
         app:popEnterAnim="@android:anim/slide_in_left"
         app:popExitAnim="@android:anim/slide_out_right" />
 
-
+    <action
+        android:id="@+id/action_to_solanaConfirmTransactionFragment"
+        app:destination="@id/solanaConfirmTransactionFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
 </navigation>
