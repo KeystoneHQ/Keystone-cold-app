@@ -193,6 +193,9 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
             binding.rlAddAddress.setVisibility(View.VISIBLE);
         }
         if (config.isShowChangePath()) {
+            if (coinId.equals(Coins.BTC.coinId())) {
+                binding.changePathText.setText(R.string.change_address_type);
+            }
             binding.rlChangePath.setVisibility(View.VISIBLE);
         }
         if (config.isShowFAQ()) {
@@ -228,6 +231,7 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
     }
 
     private enum AssetConfig {
+        BTC(Coins.BTC.coinId(), true, true, true, true),
         ETH(Coins.ETH.coinId(), true, true, true),
         APT(Coins.APTOS.coinId(), true, false, true),
         SOL(Coins.SOL.coinId(), true, true, true),
@@ -239,11 +243,26 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         private final boolean showChangePath;
         private final boolean showFAQ;
 
+        public boolean isShowExportXPub() {
+            return showExportXPub;
+        }
+
+        private final boolean showExportXPub;
+
+        AssetConfig(String coinId, boolean showAddAddress, boolean showChangePath, boolean showFAQ, boolean showExportXPub) {
+            this.coinId = coinId;
+            this.showAddAddress = showAddAddress;
+            this.showChangePath = showChangePath;
+            this.showFAQ = showFAQ;
+            this.showExportXPub = showExportXPub;
+        }
+
         AssetConfig(String coinId, boolean showAddAddress, boolean showChangePath, boolean showFAQ) {
             this.coinId = coinId;
             this.showAddAddress = showAddAddress;
             this.showChangePath = showChangePath;
             this.showFAQ = showFAQ;
+            this.showExportXPub = false;
         }
 
         public static AssetConfig getConfigByCoinId(String coinId) {

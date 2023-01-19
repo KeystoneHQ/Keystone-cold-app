@@ -37,9 +37,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
+import com.keystone.coinlib.accounts.BTCAccount;
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
+import com.keystone.cold.remove_wallet_mode.viewmodel.tx.BitcoinTxViewModel;
 import com.keystone.cold.ui.modal.ModalDialog;
 
 public class Utilities {
@@ -69,6 +71,7 @@ public class Utilities {
     public static final String ETH_CURRENT_ACCOUNT = "eth_current_account";
     public static final String SOL_CURRENT_ACCOUNT = "sol_current_account";
     public static final String NEAR_CURRENT_ACCOUNT = "near_current_account";
+    public static final String BTC_CURRENT_ACCOUNT = "btc_current_account";
 
     public static final String WEB3_GUIDE_TIMES = "web3_guide_times";
 
@@ -84,9 +87,11 @@ public class Utilities {
     public static final String PREFERENCE_KUSAMA_KEY_SYNCED = "user_click_kusama_sync";
     public static final String PREFERENCE_ARWEAVE_KEY_SYNCED = "user_click_arweave_sync";
 
+    // Used for store addresses displayed in change path fragment
     public static final String ETH_DERIVATION_PATHS = "eth_derivation_paths";
     public static final String SOL_DERIVATION_PATHS = "sol_derivation_paths";
     public static final String NEAR_DERIVATION_PATHS = "near_derivation_paths";
+    public static final String BTC_DERIVATION_PATHS = "btc_derivation_paths";
 
     public static final String POLKADOT_DB_INITIALIZED = "polkadot_db_initialized";
 
@@ -403,6 +408,16 @@ public class Utilities {
         return sp.getString(SOL_CURRENT_ACCOUNT, SOLAccount.SOLFLARE_BIP44.getCode());
     }
 
+    public static void setCurrentBTCAccount(Context context, String code) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        sp.edit().putString(BTC_CURRENT_ACCOUNT, code).apply();
+    }
+
+    public static String getCurrentBTCAccount(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        return sp.getString(BTC_CURRENT_ACCOUNT, BTCAccount.NATIVE_SEGWIT.getCode());
+    }
+
     public static void setCurrentNearAccount(Context context, String code) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
         sp.edit().putString(NEAR_CURRENT_ACCOUNT, code).apply();
@@ -431,6 +446,16 @@ public class Utilities {
     public static String getSolDerivationPaths(Context context){
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
         return sp.getString(SOL_DERIVATION_PATHS, "");
+    }
+
+    public static void setBTCDerivationPaths(Context context, String paths) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        sp.edit().putString(BTC_DERIVATION_PATHS, paths).apply();
+    }
+
+    public static String getBTCDerivationPaths(Context context){
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        return sp.getString(BTC_DERIVATION_PATHS, "");
     }
 
     public static void setNearDerivationPaths(Context context, String paths) {

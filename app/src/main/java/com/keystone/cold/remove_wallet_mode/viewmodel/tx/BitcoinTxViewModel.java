@@ -46,6 +46,7 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
     public static final String BTCLegacyPath = "M/44'/0'/0'";
     public static final String BTCNestedSegwitPath = "M/49'/0'/0'";
     public static final String BTCNativeSegwitPath = "M/84'/0'/0'";
+    public static final List<String> BTCPaths = new ArrayList<>(Arrays.asList(BTCLegacyPath, BTCNestedSegwitPath, BTCNativeSegwitPath));
 
     private static final String RAW_PSBT = "raw_message";
 

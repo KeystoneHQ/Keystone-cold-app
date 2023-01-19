@@ -26,6 +26,7 @@ import android.text.TextUtils;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
+import com.keystone.coinlib.accounts.BTCAccount;
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
@@ -248,6 +249,12 @@ public class DataRepository {
 
     public void deleteAccountsByCoin(CoinEntity coin) {
         mDb.accountDao().deleteByCoin(coin.getId());
+    }
+
+    public AccountEntity loadTargetBTCAccount(BTCAccount account) {
+        CoinEntity coinEntity = this.loadCoinSync(account.getCoinId());
+        List<AccountEntity> accountEntityList = this.loadAccountsForCoin(coinEntity);
+        return accountEntityList.get(0);
     }
 
     public AccountEntity loadTargetETHAccount(ETHAccount account) {
