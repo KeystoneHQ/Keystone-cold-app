@@ -29,6 +29,8 @@ public class ReviewDestinationDetector {
             return new Destination(R.id.action_to_aptosReviewTransactionFragment, bundle);
         } else if (Coins.ETH.coinId().equals(coinId)) {
             return detectEth(tx);
+        } else if (Coins.SOL.coinId().equals(coinId)) {
+            return new Destination(R.id.action_to_solanaReviewTransactionFragment, bundle);
         }
         return null;
     }
