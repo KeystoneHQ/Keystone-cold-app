@@ -44,17 +44,6 @@ public class BitcoinReviewTransactionFragment extends ConfirmTransactionFragment
 
     }
 
-    private void handleSign() {
-        boolean fingerprintSignEnable = new FingerprintPolicyCallable(READ, TYPE_SIGN_TX).call();
-        AuthenticateModal.show(mActivity,
-                getString(R.string.password_modal_title), "", fingerprintSignEnable,
-                token -> {
-                    viewModel.setToken(token);
-                    viewModel.handleSign();
-                    subscribeSignState();
-                }, forgetPassword);
-    }
-
     private void handleParseException(BaseException ex) {
         if (ex != null) {
             ex.printStackTrace();
