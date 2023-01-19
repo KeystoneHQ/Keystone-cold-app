@@ -166,7 +166,7 @@ public class URProcessor implements Processor{
                 case TRANSACTION:
                     return new Destination(R.id.action_to_solanaConfirmTransactionFragment, bundle);
                 case MESSAGE:
-                    return new Destination(R.id.action_to_solSignMessageFragment, bundle);
+                    return new Destination(R.id.action_to_solanaSignMessageFragment, bundle);
                 case INVALIDATE:
                     throw new InvalidTransactionException("test", "unknown sign type");
             }

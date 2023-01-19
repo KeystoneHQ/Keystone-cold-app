@@ -160,6 +160,21 @@
         tools:layout="@layout/fragment_confirm_transaction"/>
 
     <fragment
+        android:id="@+id/solanaSignMessageFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.solana.SolanaSignMessageFragment"
+        android:label="SolanaSignMessageFragment"
+        tools:layout="@layout/fragment_sign_message">
+
+        <action
+            android:id="@+id/action_to_broadCastTxFragment"
+            app:destination="@id/broadCastTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
         android:id="@+id/solanaReviewTransactionFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.solana.SolanaReviewTransactionFragment"
         android:label="SolanaReviewTransactionFragment"
@@ -431,6 +446,14 @@
     <action
         android:id="@+id/action_to_solanaReviewTransactionFragment"
         app:destination="@id/solanaReviewTransactionFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_solanaSignMessageFragment"
+        app:destination="@id/solanaSignMessageFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"

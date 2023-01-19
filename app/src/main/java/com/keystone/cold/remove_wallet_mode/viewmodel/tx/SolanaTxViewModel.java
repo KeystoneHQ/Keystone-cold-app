@@ -88,7 +88,36 @@ public class SolanaTxViewModel extends BaseTxViewModel {
 
     @Override
     public MutableLiveData<JSONObject> parseMessage(Bundle bundle) {
-        return null;
+        MutableLiveData<JSONObject> observableObject = new MutableLiveData<>();
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            try {
+                messageData = bundle.getString(BundleKeys.SIGN_DATA_KEY);
+                hdPath = bundle.getString(BundleKeys.HD_PATH_KEY);
+                requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
+                String fromAddress = getFromAddress(hdPath);
+                JSONObject object = new JSONObject();
+                object.put("data", messageData);
+                object.put("fromAddress", fromAddress);
+                observableObject.postValue(object);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                observableObject.postValue(null);
+            }
+        });
+        return observableObject;
+    }
+
+    private String getFromAddress(String path) {
+        try {
+            ensureAddressExist(path);
+            AddressEntity addressEntity = repository.loadAddressBypath(path);
+            if (addressEntity != null) {
+                return addressEntity.getAddressString();
+            }
+        } catch (InvalidTransactionException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     private Signer initSigner() {
@@ -122,7 +151,21 @@ public class SolanaTxViewModel extends BaseTxViewModel {
 
     @Override
     public void handleSignMessage() {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            Signer signer = initSigner();
+            signMessage(signer);
+        });
+    }
 
+    private void signMessage(Signer signer) {
+        signCallBack.startSign();
+        String result = new SolImpl().signMessage(messageData, signer);
+        if (result == null) {
+            signCallBack.onFail();
+        } else {
+            signature = result;
+            signCallBack.onSignMsgSuccess();
+        }
     }
 
     @Override
@@ -160,7 +203,7 @@ public class SolanaTxViewModel extends BaseTxViewModel {
                 String parsedMessage = additions.getJSONObject("addition").getString("parsed_message");
                 JSONObject jsonObject = new JSONObject(parsedMessage);
                 rawFormatTx.postValue(jsonObject.toString(2));
-                jsonObject.put("record",true);
+                jsonObject.put("record", true);
                 jsonObject.put("signatureUR", txEntity.getSignedHex());
                 parsedTxData.postValue(jsonObject);
             }
@@ -233,7 +276,7 @@ public class SolanaTxViewModel extends BaseTxViewModel {
     }
 
 
-    // Current only SOLFLARE support aptos.
+    // Current only SOLFLARE support solana.
     // If add other wallets in the future, need to rewrite
     private String getSignId() {
         return Wallet.SOLFLARE.getSignId();
