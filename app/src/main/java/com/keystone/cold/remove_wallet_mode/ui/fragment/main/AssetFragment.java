@@ -52,6 +52,7 @@ import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.DialogAssetBottomBinding;
 import com.keystone.cold.databinding.FragmentAssetBinding;
 
+import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AddressViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
@@ -198,6 +199,9 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
             }
             binding.rlChangePath.setVisibility(View.VISIBLE);
         }
+        if (config.isShowExportXPub()) {
+            binding.rlExportXPUB.setVisibility(View.VISIBLE);
+        }
         if (config.isShowFAQ()) {
             binding.rlFAQ.setVisibility(View.VISIBLE);
         }
@@ -207,8 +211,14 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         });
         binding.rlChangePath.setOnClickListener(v -> {
             Bundle data = new Bundle();
-            data.putString(KEY_COIN_ID, coinId);
+            data.putString(BundleKeys.COIN_ID_KEY, coinId);
             navigate(R.id.action_to_changeDerivationPathFragment, data);
+            dialog.dismiss();
+        });
+        binding.rlExportXPUB.setOnClickListener(v -> {
+            Bundle data = new Bundle();
+            data.putString(BundleKeys.COIN_CODE_KEY, coinCode);
+            navigate(R.id.action_from_assetFragment_to_exportXPUBFragment, data);
             dialog.dismiss();
         });
         binding.rlFAQ.setOnClickListener(v -> {

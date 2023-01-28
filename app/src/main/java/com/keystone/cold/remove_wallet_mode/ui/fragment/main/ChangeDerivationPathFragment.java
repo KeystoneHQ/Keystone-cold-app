@@ -38,7 +38,7 @@ public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDer
     @Override
     protected void init(View view) {
         Bundle data = requireArguments();
-        coinId = data.getString(KEY_COIN_ID);
+        coinId = data.getString(BundleKeys.COIN_ID_KEY);
         walletId = data.getString(BundleKeys.WALLET_ID_KEY);
         if (coinId.equals(Coins.BTC.coinId())) {
             mBinding.toolbar.setTitle(R.string.change_address_type);

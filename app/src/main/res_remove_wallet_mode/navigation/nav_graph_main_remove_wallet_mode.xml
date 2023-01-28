@@ -187,6 +187,11 @@
         android:label="BroadCastTxFragment"
         tools:layout="@layout/fragment_broadcast_tx" />
 
+    <fragment
+        android:id="@+id/exportXPUBFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.ExportXPubFragment"
+        android:label="ExportXPUBFragment"
+        tools:layout="@layout/fragment_export_xpub" />
 
     <fragment
         android:id="@+id/changeDerivationPathFragment"
@@ -290,7 +295,15 @@
         android:id="@+id/assetFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.AssetFragment"
         android:label="AssetFragment"
-        tools:layout="@layout/fragment_asset" />
+        tools:layout="@layout/fragment_asset">
+        <action
+            android:id="@+id/action_from_assetFragment_to_exportXPUBFragment"
+            app:destination="@id/exportXPUBFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
 
 
     <fragment

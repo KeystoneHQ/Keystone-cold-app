@@ -14,7 +14,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.coinlib.accounts.BTCAccount;
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.FragmentAddressListBinding;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.AddressAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.model.AddressItem;
@@ -78,14 +81,20 @@ public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
     protected void initData(Bundle savedInstanceState) {
         Bundle data = requireArguments();
         String coinId = data.getString(KEY_COIN_ID);
-
         AssetViewModel assetViewModel = ViewModelProviders.of(this).get(AssetViewModel.class);
 
         assetViewModel.loadAssets().observe(this, assets -> {
             if (assets == null) return;
+            BTCAccount btcAccount = null;
+            if (coinId.equals(Coins.BTC.coinId())) {
+                btcAccount = BTCAccount.ofCode(Utilities.getCurrentBTCAccount(mActivity));
+            }
             Optional<AssetItem> assetItem = assets.stream().filter(asset -> asset.getCoinId().equals(coinId)).findFirst();
             if (assetItem.isPresent()) {
                 String canonicalCoinId = assetItem.get().getCanonicalCoinIdByEcology();
+                if (btcAccount != null) {
+                    canonicalCoinId = btcAccount.getCoinId();
+                }
                 AddressViewModel.Factory factory = new AddressViewModel.Factory(mActivity.getApplication(), canonicalCoinId);
                 viewModel = ViewModelProviders.of(getParentFragment(), factory)
                         .get(AddressViewModel.class);
