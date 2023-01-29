@@ -17,6 +17,7 @@
 
 package com.keystone.cold.ui.fragment.main;
 
+import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
 import static com.keystone.cold.ui.fragment.Constants.KEY_ID;
@@ -24,6 +25,9 @@ import static com.keystone.cold.ui.fragment.main.AssetFragment.DATA_TYPE;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.HD_PATH;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.REQUEST_ID;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.SIGN_DATA;
+import static com.keystone.cold.ui.fragment.main.keystone.TxConfirmFragment.KEY_TX_DATA;
+import static com.keystone.cold.ui.fragment.main.polkadot.PolkadotTxConfirm.KEY_PARSED_TRANSACTION;
+import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
 import static com.keystone.cold.viewmodel.CoinListViewModel.coinEntityComparator;
 
 import android.content.Context;
@@ -33,6 +37,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -51,7 +56,9 @@ import com.allenliu.badgeview.BadgeFactory;
 import com.allenliu.badgeview.BadgeView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.coins.polkadot.AddressCodec;
+import com.keystone.coinlib.exception.CoinNotFindException;
 import com.keystone.coinlib.exception.InvalidETHAccountException;
 import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.utils.Coins;
@@ -67,12 +74,15 @@ import com.keystone.cold.databinding.DialogBottomSheetBinding;
 import com.keystone.cold.db.PresetData;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
+import com.keystone.cold.protocol.ZipUtil;
+import com.keystone.cold.protocol.parser.ProtoParser;
 import com.keystone.cold.ui.MainActivity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerState;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerViewModel;
+import com.keystone.cold.ui.modal.PolkadotErrorDialog;
 import com.keystone.cold.util.StepFragmentHelper;
 import com.keystone.cold.util.ViewUtils;
 import com.keystone.cold.viewmodel.CoinListViewModel;
@@ -88,6 +98,9 @@ import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignRequest;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.spongycastle.util.encoders.Base64;
 import org.spongycastle.util.encoders.Hex;
 
@@ -300,8 +313,112 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
                     handleETHSignRequest(result);
                 } else if (result.getType().equals(ScanResultTypes.UR_COSMOS_SIGN_REQUEST)) {
                     handleCosmosSignRequest(result);
+                } else if (result.getType().equals(ScanResultTypes.UOS)) {
+                    handleUOS(result);
+                } else if (result.getType().equals(ScanResultTypes.UR_BYTES)) {
+                    handleURBytes(result);
                 } else {
                     throw new UnknowQrCodeException("unknown transaction!");
+                }
+            }
+
+            private void handleURBytes(ScanResult result) throws UnknowQrCodeException, XfpNotMatchException, InvalidTransactionException, JSONException, CoinNotFindException {
+                String hex = Hex.toHexString((byte[]) result.resolve());
+                //xrp toolkit tx, metamask tx, webauth tx, decode as JSON
+                JSONObject object = tryDecodeAsJson(hex);
+
+                //keystone, try decode as protobuf
+                if (object == null) {
+                    object = tryDecodeAsProtobuf(hex);
+                }
+
+                if (object != null) {
+                    decodeAndProcess(object);
+                } else {
+                    throw new UnknowQrCodeException("unknown UR qr code");
+                }
+            }
+
+            private boolean checkWebAuth(JSONObject object) throws JSONException {
+                JSONObject webAuth = object.optJSONObject("data");
+                if (webAuth != null && webAuth.optString("type").equals("webAuth")) {
+                    String data = object.getString("data");
+                    Bundle bundle = new Bundle();
+                    bundle.putString(WEB_AUTH_DATA, data);
+                    bundle.putBoolean(IS_SETUP_VAULT, false);
+                    mFragment.navigate(R.id.action_QRCodeScan_to_result, bundle);
+                    return true;
+                }
+                return false;
+            }
+
+            private void decodeAndProcess(JSONObject object)
+                    throws
+                    CoinNotFindException,
+                    JSONException,
+                    XfpNotMatchException, UnknowQrCodeException, InvalidTransactionException {
+                if (checkWebAuth(object)) return;
+                if (object.optString("type").equals("TYPE_SIGN_TX")) {
+                    handleSign(object);
+                    return;
+                }
+                throw new UnknowQrCodeException("unknown qr code type");
+            }
+
+            private void handleSign(JSONObject object)
+                    throws InvalidTransactionException,
+                    CoinNotFindException,
+                    XfpNotMatchException {
+                String xfp = new GetMasterFingerprintCallable().call();
+                if (!object.optString("xfp").equals(xfp)) {
+                    throw new XfpNotMatchException("xfp not match");
+                }
+                try {
+                    JSONObject transaction = object.getJSONObject("signTx");
+                    String coinCode = transaction.getString("coinCode");
+                    if (!WatchWallet.isSupported(mActivity.getApplication(), coinCode) || transaction.has("omniTx")) {
+                        throw new CoinNotFindException("not support " + coinCode);
+                    }
+                    Bundle bundle = new Bundle();
+                    bundle.putString(KEY_TX_DATA, object.getJSONObject("signTx").toString());
+                    mFragment.navigate(R.id.action_to_txConfirmFragment, bundle);
+                } catch (JSONException e) {
+                    throw new InvalidTransactionException("invalid transaction");
+                }
+            }
+
+            private JSONObject tryDecodeAsJson(String hex) {
+                try {
+                    return new JSONObject(new String(Hex.decode(hex)));
+                } catch (Exception ignored) {
+                }
+                return null;
+            }
+
+            private JSONObject tryDecodeAsProtobuf(String hex) {
+                JSONObject object;
+                hex = ZipUtil.unzip(hex);
+                object = new ProtoParser(Hex.decode(hex)).parseToJson();
+                return object;
+            }
+
+            private void handleUOS(ScanResult result) {
+                try {
+                    String res = result.getData();
+                    PolkadotViewModel polkadotViewModel = ViewModelProviders.of(mFragment).get(PolkadotViewModel.class);
+                    JSONObject json = polkadotViewModel.parseTransaction(res);
+                    String type = json.getString("transaction_type");
+                    JSONArray content = json.getJSONArray("content");
+                    if (type.equals("Read")) {
+                        PolkadotErrorDialog.show(mActivity, getString(R.string.notice), getString(R.string.decline), content, () -> mFragment.navigateUp());
+                    } else {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(KEY_TX_DATA, res);
+                        bundle.putString(KEY_PARSED_TRANSACTION, json.toString());
+                        mFragment.navigate(R.id.action_to_polkadotTxConfirm, bundle);
+                    }
+                } catch (Exception e) {
+                    handleException(e);
                 }
             }
 
@@ -422,6 +539,8 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
             desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_CRYPTO_PSBT, ScanResultTypes.UR_ETH_SIGN_REQUEST));
         } else if (watchWallet == WatchWallet.KEPLR_WALLET) {
             desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_COSMOS_SIGN_REQUEST, ScanResultTypes.UR_ETH_SIGN_REQUEST));
+        } else if (watchWallet == WatchWallet.KEYSTONE) {
+            desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_BYTES, ScanResultTypes.UOS));
         }
         scannerState.setDesiredResults(desiredResults);
         ScannerViewModel scannerViewModel = ViewModelProviders.of(mActivity).get(ScannerViewModel.class);
