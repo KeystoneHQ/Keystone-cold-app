@@ -18,6 +18,7 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
+import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.callables.GetMessageCallable;
@@ -27,6 +28,10 @@ import com.keystone.cold.cryptocore.ArweaveParser;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.RustSigner;
 import com.keystone.cold.integration.chains.ArweaveViewModel;
+import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
+import com.keystone.cold.remove_wallet_mode.exceptions.InvalidStateException;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidAccountException;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.ui.views.AuthenticateModal;
 import com.keystone.cold.viewmodel.WatchWallet;
 
@@ -34,6 +39,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
+import java.nio.charset.StandardCharsets;
 import java.security.SignatureException;
 
 public class ArweaveTxViewModel extends AndroidViewModel {
@@ -42,6 +48,12 @@ public class ArweaveTxViewModel extends AndroidViewModel {
     private final DataRepository mRepository;
     private final String hdPath = "M/44'/472'";
     protected AuthenticateModal.OnVerify.VerifyToken token;
+
+    public MutableLiveData<BaseException> getObserverException() {
+        return observerException;
+    }
+
+    private MutableLiveData<BaseException> observerException;
 
     public ArweaveTxViewModel(@NonNull Application application) {
         super(application);
@@ -90,15 +102,36 @@ public class ArweaveTxViewModel extends AndroidViewModel {
         MutableLiveData<Tx> result = new MutableLiveData<>(null);
         AppExecutors.getInstance().diskIO().execute(() -> {
             try {
-                String jsonString = ArweaveParser.parse(jsonHex);
-                JSONObject object = new JSONObject(jsonString);
-                String status = object.getString("status");
+                String json = new String(Hex.decode(jsonHex), StandardCharsets.UTF_8);
+                JSONObject object = new JSONObject(json);
+                String owner = object.optString("owner");
+                String pubkey = ArweaveViewModel.getARPublicKey();
+                if (pubkey == null ) {
+                    observerException.postValue(new InvalidStateException(mApplication.getString(R.string.incorrect_tx_data), "invalid state, pubkey cannot find"));
+                    result.postValue(new Tx());
+                }
+                String myOwner = ArweaveViewModel.formatHex(Hex.decode(pubkey));
+                if (owner.equals("")) {
+                    object.put("owner", myOwner);
+                }
+                else {
+                    if (!owner.equalsIgnoreCase(myOwner)) {
+                        observerException.postValue(new InvalidTransactionException(mApplication.getString(R.string.incorrect_tx_data), "invalid transaction, owner not match"));
+                        result.postValue(new Tx());
+                    }
+                }
+                String jsonString = ArweaveParser.parse(Hex.toHexString(object.toString().getBytes(StandardCharsets.UTF_8)));
+                JSONObject rccObject = new JSONObject(jsonString);
+                String status = rccObject.getString("status");
                 if (status.equals("success")) {
-                    result.postValue(Tx.fromRCC(object));
+                    result.postValue(Tx.fromRCC(rccObject));
                 } else {
+                    observerException.postValue(new InvalidTransactionException(mApplication.getString(R.string.incorrect_tx_data), "invalid transaction, transaction parsed failed"));
                     result.postValue(new Tx());
                 }
             } catch (JSONException e) {
+                e.printStackTrace();
+                observerException.postValue(new InvalidTransactionException(mApplication.getString(R.string.incorrect_tx_data), "invalid transaction, json error"));
                 result.postValue(new Tx());
             }
         });
