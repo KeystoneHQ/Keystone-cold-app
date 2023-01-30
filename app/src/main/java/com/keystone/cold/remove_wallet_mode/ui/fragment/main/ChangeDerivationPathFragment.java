@@ -10,6 +10,7 @@ import android.view.View;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentChangeDerivationPathBinding;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
@@ -37,8 +38,11 @@ public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDer
     @Override
     protected void init(View view) {
         Bundle data = requireArguments();
-        coinId = data.getString(KEY_COIN_ID);
+        coinId = data.getString(BundleKeys.COIN_ID_KEY);
         walletId = data.getString(BundleKeys.WALLET_ID_KEY);
+        if (coinId.equals(Coins.BTC.coinId())) {
+            mBinding.toolbar.setTitle(R.string.change_address_type);
+        }
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         mBinding.ivConfirm.setOnClickListener(v -> save());
         mBinding.pathPatternView.setOnItemClick(code -> selectCode = code);

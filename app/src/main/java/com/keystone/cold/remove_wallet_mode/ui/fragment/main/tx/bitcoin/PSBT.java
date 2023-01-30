@@ -20,7 +20,6 @@ import org.spongycastle.util.encoders.Hex;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 public class PSBT {
@@ -292,7 +291,7 @@ public class PSBT {
         try {
             int length = inputs.length();
             if (length == 0) {
-                throw new InvalidTransactionException(MainApplication.getApplication().getString(R.string.incorrect_tx_data),"Transaction has no input");
+                throw new InvalidTransactionException(MainApplication.getApplication().getString(R.string.incorrect_tx_data), "Transaction has no input");
             }
             for (int i = 0; i < length; i++) {
                 JSONObject jsonInput = inputs.getJSONObject(i);
@@ -346,16 +345,14 @@ public class PSBT {
     }
 
     private static String calculateCanonicalPath(Pubkey pubkey) {
-        AtomicReference<String> canonicalHDPath = new AtomicReference<>(null);
-        BitcoinTxViewModel.BTCPaths.forEach(a -> {
-            String path = pubkey.path;
-            String xpub = new GetExtendedPublicKeyCallable(path).call();
-            ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(xpub);
-            if (Hex.toHexString(extendedPublicKey.getKey()).equalsIgnoreCase(pubkey.pubkey)) {
-                canonicalHDPath.set(path);
-            }
-        });
-        return canonicalHDPath.get();
+        String canonicalHDPath = null;
+        String path = pubkey.path;
+        String xpub = new GetExtendedPublicKeyCallable(path).call();
+        ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(xpub);
+        if (Hex.toHexString(extendedPublicKey.getKey()).equalsIgnoreCase(pubkey.pubkey)) {
+            canonicalHDPath = path;
+        }
+        return canonicalHDPath;
     }
 
     public JSONObject generateParsedMessage() throws JSONException {

@@ -2,6 +2,8 @@ package com.keystone.cold.remove_wallet_mode.ui.fragment.main.scanner.processor;
 
 import android.os.Bundle;
 
+import androidx.lifecycle.ViewModelProviders;
+
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.cold.MainApplication;
@@ -21,16 +23,19 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
 import com.keystone.cold.util.AptosTransactionHelper;
 import com.keystone.cold.util.SolMessageValidateUtil;
+import com.keystone.cold.viewmodel.tx.psbt.PSBTViewModel;
+import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
 
+import org.spongycastle.util.encoders.Base64;
 import org.spongycastle.util.encoders.Hex;
 
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
-public class URProcessor implements Processor{
+public class URProcessor implements Processor {
     @Override
     public Destination run(ScanResult r) throws BaseException {
         if (r.getType().equals(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
@@ -39,7 +44,9 @@ public class URProcessor implements Processor{
             return new AptosSignRequestProcessor().run(r.resolve());
         } else if (r.getType().equals(ScanResultTypes.UR_SOL_SIGN_REQUEST)) {
             return new SolSignRequestProcessor().run(r.resolve());
-        }else {
+        } else if (r.getType().equals(ScanResultTypes.UR_CRYPTO_PSBT)) {
+            return new CryptoPSBTProcessor().run(r.resolve());
+        } else {
             throw UnimplementedException.newInstance();
         }
     }
@@ -100,7 +107,6 @@ public class URProcessor implements Processor{
             return null;
         }
     }
-
 
     private static class AptosSignRequestProcessor implements URResolver {
 
@@ -171,6 +177,19 @@ public class URProcessor implements Processor{
                     throw new InvalidTransactionException("test", "unknown sign type");
             }
             throw UnimplementedException.newInstance();
+        }
+    }
+
+    private static class CryptoPSBTProcessor implements URResolver {
+
+        @Override
+        public Destination run(Object object) throws BaseException {
+            CryptoPSBT psbt = (CryptoPSBT) object;
+            byte[] bytes = psbt.getPsbt();
+            String psbtB64 = Base64.toBase64String(bytes);
+            Bundle data = new Bundle();
+            data.putString(BundleKeys.SIGN_DATA_KEY, psbtB64);
+            return new Destination(R.id.action_to_bitcoinConfirmTransactionFragment, data);
         }
     }
 }

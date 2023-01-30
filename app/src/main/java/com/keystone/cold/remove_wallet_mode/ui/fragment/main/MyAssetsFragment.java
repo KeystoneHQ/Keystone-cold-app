@@ -4,6 +4,7 @@ import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -66,6 +67,7 @@ public class MyAssetsFragment extends BaseFragment<FragmentMyAssetsBinding> {
 
     private void subscribeUi(LiveData<List<AssetItem>> assets) {
         assets.observe(this, assetItems -> {
+            Log.d("sora", "subscribeUi: " + assetItems);
             if (assetItems != null) {
                 coinAdapter.setItems(filterDisplayCoins(assetItems));
             }

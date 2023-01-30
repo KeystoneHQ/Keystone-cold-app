@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.keystone.coinlib.accounts.BTCAccount;
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
@@ -19,9 +20,13 @@ import com.keystone.cold.MainApplication;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.db.entity.AccountEntity;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinLegacyAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNativeSegwitAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNestedSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.EthereumAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.SolanaAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.ui.model.PathPatternItem;
+import com.keystone.cold.remove_wallet_mode.viewmodel.tx.BitcoinTxViewModel;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
 
 import org.json.JSONArray;
@@ -52,6 +57,10 @@ public class ChangePathViewModel extends AndroidViewModel {
         } else if (coinId.equals(Coins.NEAR.coinId())) {
             if (!TextUtils.isEmpty(code)) {
                 Utilities.setCurrentNearAccount(getApplication(), code);
+            }
+        } else if (coinId.equals(Coins.BTC.coinId())) {
+            if (!TextUtils.isEmpty(code)) {
+                Utilities.setCurrentBTCAccount(getApplication(), code);
             }
         }
     }
@@ -89,6 +98,16 @@ public class ChangePathViewModel extends AndroidViewModel {
             return pathPatternItems;
         } else if (Coins.NEAR.coinId().equals(coinId)) {
 
+        } else if (Coins.BTC.coinId().equals(coinId)) {
+            String code = Utilities.getCurrentBTCAccount(getApplication());
+            BTCAccount account = BTCAccount.ofCode(code);
+            for (BTCAccount btcAccount : BTCAccount.values()) {
+                boolean isSelected = btcAccount.equals(account);
+                boolean isRecommend = btcAccount.equals(BTCAccount.NATIVE_SEGWIT);
+                PathPatternItem pathPatternItem = new PathPatternItem(btcAccount.getCode(), btcAccount.getDisplayPath(), btcAccount.getName(), isRecommend, getBTCAccountAddresses(btcAccount), isSelected);
+                pathPatternItems.add(pathPatternItem);
+            }
+            return pathPatternItems;
         }
 
         return null;
@@ -124,6 +143,50 @@ public class ChangePathViewModel extends AndroidViewModel {
         List<Pair<String, String>> result = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             result.add(i, Pair.create("" + i, EthereumAddressGenerator.getAddress(i, ethAccount.getCode())));
+        }
+        return result;
+    }
+
+    private List<Pair<String, String>> getBTCAccountAddresses(BTCAccount btcAccount) {
+        List<Pair<String, String>> result = new ArrayList<>();
+        String btcDerivationPaths = Utilities.getBTCDerivationPaths(getApplication());
+        if (!TextUtils.isEmpty(btcDerivationPaths)) {
+            String masterFingerPrint = new GetMasterFingerprintCallable().call();
+            try {
+                JSONObject derivationPaths = new JSONObject(btcDerivationPaths);
+                String preMasterFingerPrint = derivationPaths.optString("master_fingerprint");
+                if (masterFingerPrint.equalsIgnoreCase(preMasterFingerPrint)) {
+                    JSONObject accountPaths = (JSONObject) derivationPaths.get("btc_derivation_paths");
+                    JSONArray jsonArray = (JSONArray) accountPaths.get(btcAccount.getCode());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        result.add(Pair.create("" + i, (String) jsonArray.get(i)));
+                    }
+                } else {
+                    result.addAll(getBTCPairs(btcAccount));
+                }
+            } catch (JSONException exception) {
+                exception.printStackTrace();
+            }
+        } else {
+            result.addAll(getBTCPairs(btcAccount));
+        }
+        return result;
+    }
+
+    private List<Pair<String, String>> getBTCPairs(BTCAccount btcAccount) {
+        List<Pair<String, String>> result = new ArrayList<>();
+        if (btcAccount.getCode().equals(BTCAccount.LEGACY.getCode())) {
+            for (int i = 0; i < 3; i++) {
+                result.add(i, Pair.create("" + i, BitcoinLegacyAddressGenerator.getAddress(i)));
+            }
+        } else if (btcAccount.getCode().equals(BTCAccount.NESTED_SEGWIT.getCode())) {
+            for (int i = 0; i < 3; i++) {
+                result.add(i, Pair.create("" + i, BitcoinNestedSegwitAddressGenerator.getAddress(i)));
+            }
+        } else {
+            for (int i = 0; i < 3; i++) {
+                result.add(i, Pair.create("" + i, BitcoinNativeSegwitAddressGenerator.getAddress(i)));
+            }
         }
         return result;
     }

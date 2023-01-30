@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentBitcoinTxBinding;
+import com.keystone.cold.remove_wallet_mode.viewmodel.tx.BitcoinTxViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
 
 import org.json.JSONArray;
@@ -37,10 +38,14 @@ public class BitcoinTransactionDetailsFragment extends BaseFragment<FragmentBitc
 
     @Override
     protected void init(View view) {
+        mBinding.contentContainer.setVisibility(View.GONE);
         psbt.observe(this, v -> {
+            if (v == null) return;
             try {
-                mBinding.setCoinCode(Coins.BTC.coinCode());
-                mBinding.setCheckInfoTitle(Coins.BTC.coinName());
+                mBinding.contentContainer.setVisibility(View.VISIBLE);
+                String coinCode = BitcoinTxViewModel.getCoinCodeFromPSBT(v);
+                mBinding.setCoinCode(coinCode);
+                mBinding.setCheckInfoTitle(Coins.coinNameFromCoinCode(coinCode));
                 JSONObject parsedPSBT;
                 List<JSONObject> inputs = new ArrayList<>();
                 List<JSONObject> outputs = new ArrayList<>();

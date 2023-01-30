@@ -37,111 +37,119 @@
         android:orientation="vertical"
         tools:showIn="@layout/tx_confirm_fragment">
 
-        <include
-            bind:coinCode="@{coinCode}"
-            bind:title="@{checkInfoTitle}"
-            layout="@layout/view_transaction_check_info" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/from_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:itemCount="1"
-            tools:listitem="@layout/tx_detail_item" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/arrow_down"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="8dp"
-                android:layout_marginStart="120dp"
-                android:src="@drawable/tx_arrow_down"
-                tools:ignore="ContentDescription" />
-        </RelativeLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/to_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:itemCount="1"
-            tools:listitem="@layout/tx_detail_item" />
-
-        <include
-            layout="@layout/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp" />
-
-        <RelativeLayout
-            android:id="@+id/fee_info"
-            android:layout_width="match_parent"
-            android:layout_height="49dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="14dp"
-                android:text="@string/tx_fee"
-                android:textColor="@color/white40"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/fee"
-                android:layout_width="184dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="14dp"
-                android:layout_marginEnd="16dp"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                tools:text="0.00006840 BTC" />
-
-            <include
-                layout="@layout/divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentBottom="true" />
-        </RelativeLayout>
-
         <LinearLayout
-            android:id="@+id/qr"
+            android:id="@+id/content_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/qrcode_container"
+            <include
+                layout="@layout/view_transaction_check_info"
+                bind:coinCode="@{coinCode}"
+                bind:title="@{checkInfoTitle}" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/from_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="30dp"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="1"
+                tools:listitem="@layout/tx_detail_item" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/arrow_down"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="8dp"
+                    android:layout_marginStart="120dp"
+                    android:src="@drawable/tx_arrow_down"
+                    tools:ignore="ContentDescription" />
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/to_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="1"
+                tools:listitem="@layout/tx_detail_item" />
+
+            <include
+                layout="@layout/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp" />
+
+            <RelativeLayout
+                android:id="@+id/fee_info"
+                android:layout_width="match_parent"
+                android:layout_height="49dp">
 
                 <TextView
-                    android:id="@+id/broadcast_hint"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/please_broadcast_with_hot"
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/tx_fee"
+                    android:textColor="@color/white40"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
-                <include
-                    android:id="@+id/qrcode"
-                    layout="@layout/dynamic_qrcode" />
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/fee"
+                    android:layout_width="184dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginEnd="16dp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    tools:text="0.00006840 BTC" />
 
+                <include
+                    layout="@layout/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/qr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/qrcode_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/broadcast_hint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/please_broadcast_with_hot"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <include
+                        android:id="@+id/qrcode"
+                        layout="@layout/dynamic_qrcode" />
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
+
     </com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout>
 </layout>
