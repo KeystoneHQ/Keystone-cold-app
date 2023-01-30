@@ -2,6 +2,8 @@ package com.keystone.cold.remove_wallet_mode.helper;
 
 
 import static com.keystone.cold.MainApplication.getApplication;
+import static com.keystone.cold.remove_wallet_mode.helper.address_generators.SubstrateAddressGenerator.CHAIN_DOT;
+import static com.keystone.cold.remove_wallet_mode.helper.address_generators.SubstrateAddressGenerator.CHAIN_KSM;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -13,6 +15,7 @@ import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinLeg
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNativeSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNestedSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.EthereumAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.SubstrateAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.SolanaAddressGenerator;
 
 
@@ -58,6 +61,14 @@ public class AddressManager {
         if (Coins.SOL.coinId().equals(coinId)) {
             String code = Utilities.getCurrentSolAccount(getApplication());
             return new SolanaAddressGenerator(code);
+        }
+        if (Coins.isPolkadotFamily(Coins.coinCodeFromCoinId(coinId))) {
+            if (Coins.DOT.coinId().equals(coinId)) {
+                return SubstrateAddressGenerator.factory(CHAIN_DOT);
+            }
+            if (Coins.KSM.coinId().equals(coinId)) {
+                return SubstrateAddressGenerator.factory(CHAIN_KSM);
+            }
         }
 
         return null;

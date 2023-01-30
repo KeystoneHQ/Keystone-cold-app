@@ -44,8 +44,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            tools:showIn="@layout/tx_confirm_fragment">
+            android:orientation="vertical">
 
             <include
                 android:id="@+id/check_info_layout"
