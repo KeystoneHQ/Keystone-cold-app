@@ -132,7 +132,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:paddingHorizontal="@dimen/dp_16"
-                android:text="@string/export_xpub"
+                android:text="@string/export_xpub_text"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_12" />
 
