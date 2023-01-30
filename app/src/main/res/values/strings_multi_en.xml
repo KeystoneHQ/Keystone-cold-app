@@ -814,4 +814,8 @@
     <string name="unsupport_message_hint">This message can not be decoded as readable text. Please check raw data for more information.</string>
     <string name="message_tittle">Message</string>
 
+    <string-array name="generate_arweave_address_step">
+        <item>Finding P &amp; Q ...</item>
+        <item>Generating address ...</item>
+    </string-array>
 </resources>
