@@ -32,7 +32,7 @@
 <!--    <item>Core Wallet</item>-->
 <!--    <item>BitKeep</item>-->
     <item>Keplr</item>
-    <item>Polkadot{.js}</item>
+    <item>SubWallet / Polkadot{.js}</item>
     <item>XRP Toolkit</item>
   </string-array>
   <string-array name="watch_wallet_summury">
