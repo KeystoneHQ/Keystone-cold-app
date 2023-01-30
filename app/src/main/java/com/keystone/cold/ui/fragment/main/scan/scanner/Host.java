@@ -35,6 +35,8 @@ public interface Host {
 
     void handleDecode(SubstratePayload substratePayload);
 
+    void handleUOS(String uosHex);
+
     void handleProgress(int total, int scan);
 
     void handleProgressPercent(double percent);

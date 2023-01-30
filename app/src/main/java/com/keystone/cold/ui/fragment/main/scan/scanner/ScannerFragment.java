@@ -266,6 +266,29 @@ public class ScannerFragment extends BaseFragment<ScannerFragmentBinding>
     }
 
     @Override
+    public void handleUOS(String uosHex) {
+        watchWallet = WatchWallet.getWatchWallet(mActivity);
+        runInSubThread(() -> {
+            try {
+                ScanResultTypes srt = this.desiredTypes.stream().filter(dt -> dt.equals(ScanResultTypes.UOS)).findFirst().orElse(null);
+                if (srt != null) {
+                    scannerState.handleScanResult(new ScanResult(srt, uosHex));
+                } else {
+                    throw new UnExpectedQRException("un expected qrcode");
+                }
+            } catch (Exception e) {
+                if (!scannerState.handleException(e)) {
+                    if (e instanceof UnExpectedQRException) {
+                        alert(getString(R.string.unresolve_tx), getString(R.string.unresolve_tx_hint, watchWallet.getWalletName(mActivity)));
+                    } else {
+                        alert(getString(R.string.invalid_data), getString(R.string.unsupported_qrcode));
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
     public void alert(String message) {
         alert(null, message);
     }

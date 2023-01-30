@@ -151,9 +151,19 @@ public class ScannerFragment extends BaseFragment<FragmentScannerBinding> implem
 
     @Override
     public void handleDecode(SubstratePayload substratePayload) {
-        // TODO: refactor to support multi-frame;
+        // TODO: remove this function because there is no usage.
         try {
             Destination destination = ProcessorManager.handleScanResult(new ScanResult(ScanResultTypes.UOS, substratePayload.rawData));
+            handleNavigation(destination);
+        } catch (Exception e) {
+            displayException(e);
+        }
+    }
+
+    @Override
+    public void handleUOS(String uosHex) {
+        try {
+            Destination destination = ProcessorManager.handleScanResult(new ScanResult(ScanResultTypes.UOS, uosHex));
             handleNavigation(destination);
         } catch (Exception e) {
             displayException(e);
