@@ -6,7 +6,6 @@ import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX
 import static com.keystone.cold.ui.fragment.main.AssetFragment.REQUEST_ID;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.SIGN_DATA;
 import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KEY_SIGNATURE_UR;
-import static com.keystone.cold.ui.fragment.main.keystone.BroadcastTxFragment.KEY_TXID;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
 import android.os.Bundle;
@@ -30,7 +29,6 @@ import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
 import com.keystone.cold.viewmodel.tx.ArweaveTxViewModel;
 import com.keystone.cold.viewmodel.tx.SignState;
-import com.keystone.cold.viewmodel.tx.psbt.PSBTViewModel;
 import com.sparrowwallet.hummingbird.registry.arweave.ArweaveSignature;
 
 import org.json.JSONException;
@@ -72,13 +70,19 @@ public class ArweaveTxConfirmFragment extends BaseFragment<ArweaveTxConfirmBindi
         viewModel.parseTransaction(signData).observe(this, (v) -> {
             if (v == null) return;
             try {
-                rawTx = v.getRawTx().toString(2);
-                parsedTx = v.getParsedMessage().toString(2);
-                mBinding.sign.setOnClickListener(x -> handleSign(v, saltLen));
-                initViewPager();
+                if (v.isParseSuccess()) {
+                    rawTx = v.getRawTx().toString(2);
+                    parsedTx = v.getParsedMessage().toString(2);
+                    mBinding.sign.setOnClickListener(x -> handleSign(v, saltLen));
+                    initViewPager();
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        });
+        viewModel.getObserverException().observe(this, (e) -> {
+            if (e != null)
+                alertException(e, this::navigateUp);
         });
     }
 

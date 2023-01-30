@@ -28,6 +28,7 @@ import com.keystone.cold.ui.views.AuthenticateModal;
 import com.sparrowwallet.hummingbird.UR;
 import com.sparrowwallet.hummingbird.registry.arweave.ArweaveCryptoAccount;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
@@ -103,6 +104,26 @@ public class ArweaveViewModel extends AndroidViewModel {
             Log.d(TAG, "getRSAPublicKey: " + result);
             addArweaveAddressToDB(result);
         });
+    }
+
+    public static String getARPublicKey() {
+        DataRepository mRepo = MainApplication.getApplication().getRepository();
+        try {
+            CoinEntity coin = mRepo.loadCoinSync(Coins.AR.coinId());
+            if (coin == null) {
+                return null;
+            }
+            List<AccountEntity> accounts = mRepo.loadAccountsForCoin(coin);
+            if (accounts.size() == 0) {
+                return null;
+            }
+            AccountEntity accountEntity = accounts.get(0);
+            JSONObject addition = new JSONObject(accountEntity.getAddition());
+            return addition.getString("public_key");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private void addArweaveAddressToDB(String publicKey) {
