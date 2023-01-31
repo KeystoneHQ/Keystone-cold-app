@@ -12,6 +12,7 @@ import com.keystone.cold.db.entity.CoinEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class BaseAddressGenerator implements AddressGenerator {
 
@@ -47,6 +48,7 @@ public abstract class BaseAddressGenerator implements AddressGenerator {
         accountEntity.setAddressLength(targetAddressCount);
         repository.updateAccount(accountEntity);
         repository.updateCoin(coinEntity);
+        entities = entities.stream().filter(entity -> !existAddress(coinId, entity.getPath())).collect(Collectors.toList());
         repository.insertAddress(entities);
         if (statusCallBack != null) statusCallBack.onSuccess();
     }
@@ -67,9 +69,6 @@ public abstract class BaseAddressGenerator implements AddressGenerator {
             List<AddressEntity> entities = new ArrayList<>();
             for (int index = addressLength; index < targetAddressCount; index++) {
                 AddressEntity addressEntity = generateAddressEntity(coinEntity, index, deriver);
-                if (existAddress(coinEntity.getCoinId(), addressEntity.getPath())) {
-                    continue;
-                }
                 entities.add(addressEntity);
             }
             return entities;
