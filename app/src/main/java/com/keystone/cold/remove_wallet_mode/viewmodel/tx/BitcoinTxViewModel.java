@@ -82,6 +82,7 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
                 String psbtB64 = bundle.getString(BundleKeys.SIGN_DATA_KEY);
                 String mfp = new GetMasterFingerprintCallable().call();
                 PSBT psbt = parsePsbtBase64(psbtB64, mfp);
+                rawFormatTx.postValue(psbtB64);
                 coinCode = getCoinCodeFromPSBT(psbt);
                 observablePsbt.postValue(psbt);
             } catch (BaseException e) {

@@ -13,6 +13,7 @@ import com.keystone.cold.databinding.FragmentSubstrateTxBinding;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
+import com.keystone.cold.ui.modal.PolkadotErrorDialog;
 import com.keystone.cold.viewmodel.PolkadotViewModel;
 import com.keystone.cold.viewmodel.tx.PolkadotJsTxConfirmViewModel;
 
@@ -21,16 +22,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SubstrateTransactionDetailFragment extends BaseFragment<FragmentSubstrateTxBinding> {
-    private MutableLiveData<JSONObject> transaction;
+    private final MutableLiveData<SubstrateTransaction> transaction;
 
-    private PolkadotJsTxConfirmViewModel viewModel;
-    private PolkadotViewModel polkadotViewModel;
-
-    public SubstrateTransactionDetailFragment(MutableLiveData<JSONObject> transaction) {
+    public SubstrateTransactionDetailFragment(MutableLiveData<SubstrateTransaction> transaction) {
         this.transaction = transaction;
     }
 
-    public static SubstrateTransactionDetailFragment newInstance(Bundle bundle, MutableLiveData<JSONObject> transaction) {
+    public static SubstrateTransactionDetailFragment newInstance(Bundle bundle, MutableLiveData<SubstrateTransaction> transaction) {
         SubstrateTransactionDetailFragment fragment = new SubstrateTransactionDetailFragment(transaction);
         fragment.setArguments(bundle);
         return fragment;
@@ -43,8 +41,6 @@ public class SubstrateTransactionDetailFragment extends BaseFragment<FragmentSub
 
     @Override
     protected void init(View view) {
-        polkadotViewModel = ViewModelProviders.of(this).get(PolkadotViewModel.class);
-        viewModel = ViewModelProviders.of(this).get(PolkadotJsTxConfirmViewModel.class);
         transaction.observe(this, (v) -> {
             if (v != null) {
                 UpdateUI(v);
@@ -52,8 +48,9 @@ public class SubstrateTransactionDetailFragment extends BaseFragment<FragmentSub
         });
     }
 
-    private void UpdateUI(JSONObject object) {
+    private void UpdateUI(SubstrateTransaction transaction) {
         try {
+            JSONObject object = transaction.getParsedTransaction();
             String type = object.getString("transaction_type");
             JSONArray content = object.getJSONArray("content");
             mBinding.checkInfo.head.setVisibility(View.GONE);
@@ -61,29 +58,30 @@ public class SubstrateTransactionDetailFragment extends BaseFragment<FragmentSub
                 case "Sign": {
                     mBinding.txDetail.updateUI(content);
                     mBinding.checkInfo.head.setVisibility(View.VISIBLE);
-                    TxEntity tx = viewModel.generateAndPostSubstrateTxV2(object, data);
-                    mBinding.setCoinCode(tx.getCoinCode());
-                    mBinding.setCheckInfoTitle(Coins.coinNameFromCoinCode(tx.getCoinCode()));
+                    mBinding.checkInfo.checkInfoContent.setText(R.string.check_info_dot);
+                    mBinding.setCoinCode(transaction.getCoinCode());
+                    mBinding.setCheckInfoTitle(Coins.coinNameFromCoinCode(transaction.getCoinCode()));
                     break;
                 }
                 case "Stub": {
                     mBinding.txDetail.updateUI(content);
                     break;
                 }
-                // "Read" has already handled in scanner
+                case "Read": {
+                    PolkadotErrorDialog.show(mActivity, getString(R.string.notice), getString(R.string.decline), content, this::navigateUp);
+                    break;
+                }
                 default: {
                     ModalDialog.showCommonModal(mActivity, "Warning", "Action " + type + " is not supported currently", "OK", null);
                     navigateUp();
                 }
             }
-        }catch (PolkadotViewModel.PolkadotException | JSONException e) {
+            if (transaction.getSignedHex() != null) {
+                mBinding.qrcodeContainer.setVisibility(View.VISIBLE);
+                mBinding.qrcode.qrcode.setData(transaction.getSignedHex());
+            }
+        } catch (JSONException e) {
             e.printStackTrace();
-        } catch (InvalidAccountException e) {
-            ModalDialog.showCommonModal(mActivity,
-                    getString(R.string.account_not_match),
-                    getString(R.string.account_not_match_detail),
-                    getString(R.string.confirm),
-                    this::navigateUp);
         }
     }
 

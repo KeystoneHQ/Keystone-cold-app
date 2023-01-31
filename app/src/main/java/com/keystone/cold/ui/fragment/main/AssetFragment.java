@@ -946,7 +946,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             view.setVisibility(View.GONE);
         } else {
             view.setOnClickListener(v -> {
-                ModalDialog.showCommonModal(mActivity, getString(R.string.warning), getString(R.string.reset_polkadot_db_hint), getString(R.string.confirm), () -> {
+                ModalDialog.showTwoButtonCommonModal(mActivity, getString(R.string.warning), getString(R.string.reset_polkadot_db_hint), getString(R.string.cancel), getString(R.string.confirm), additionProcess, () -> {
                     PolkadotViewModel viewModel = ViewModelProviders.of(mActivity).get(PolkadotViewModel.class);
                     viewModel.resetDB();
                     additionProcess.run();

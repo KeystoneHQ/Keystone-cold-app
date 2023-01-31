@@ -188,6 +188,19 @@
         tools:layout="@layout/fragment_broadcast_tx" />
 
     <fragment
+        android:id="@+id/substrateConfirmTransactionFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.substrate.SubstrateConfirmTransactionFragment"
+        android:label="SubstrateConfirmTransactionFragment"
+        tools:layout="@layout/fragment_confirm_transaction" />
+
+    <fragment
+        android:id="@+id/substrateReviewTransactionFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.substrate.SubstrateReviewTransactionFragment"
+        android:label="SubstrateReviewTransactionFragment"
+        tools:layout="@layout/fragment_confirm_transaction" />
+
+
+    <fragment
         android:id="@+id/exportXPUBFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.ExportXPubFragment"
         android:label="ExportXPUBFragment"
@@ -502,6 +515,22 @@
     <action
         android:id="@+id/action_to_bitcoinReviewTransactionFragment"
         app:destination="@id/bitcoinReviewTransactionFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_substrateConfirmTransactionFragment"
+        app:destination="@id/substrateConfirmTransactionFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_substrateReviewTransactionFragment"
+        app:destination="@id/substrateReviewTransactionFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
