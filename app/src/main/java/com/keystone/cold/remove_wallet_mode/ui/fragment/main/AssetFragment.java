@@ -59,8 +59,10 @@ import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.main.AddressNumberPicker;
 import com.keystone.cold.ui.fragment.main.NumberPickerCallback;
 
+import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
 import com.keystone.cold.util.ViewUtils;
+import com.keystone.cold.viewmodel.PolkadotViewModel;
 
 
 import java.util.Arrays;
@@ -170,22 +172,6 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
                 .bind(anchor);
     }
 
-    @Override
-    public void onValueSet(int value) {
-        ProgressModalDialog dialog = ProgressModalDialog.newInstance();
-        dialog.show(Objects.requireNonNull(mActivity.getSupportFragmentManager()), "");
-        Handler handler = new Handler(MainApplication.getApplication().getMainLooper());
-        Runnable runnable = () -> handler.postDelayed(dialog::dismiss, UIConstants.DIALOG_DISMISS_DELAY_TIME);
-        AddressViewModel.Factory factory = new AddressViewModel.Factory(mActivity.getApplication(), coinId);
-        AddressViewModel viewModel = ViewModelProviders.of(this, factory)
-                .get(AddressViewModel.class);
-        LiveData<Boolean> complete = viewModel.addAddress(value);
-        complete.observe(AssetFragment.this, result -> {
-            runnable.run();
-            complete.removeObservers(AssetFragment.this);
-        });
-    }
-
     private void showBottomSheetMenu() {
         BottomSheetDialog dialog = new BottomSheetDialog(mActivity);
         DialogAssetBottomBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.dialog_asset_bottom, null, false);
@@ -204,6 +190,9 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         }
         if (config.isShowFAQ()) {
             binding.rlFAQ.setVisibility(View.VISIBLE);
+        }
+        if (config.isShowResetDB()) {
+            binding.rlResetDB.setVisibility(View.VISIBLE);
         }
         binding.rlAddAddress.setOnClickListener(v -> {
             handleAddAddress();
@@ -225,8 +214,36 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
             //todo FAQ
             dialog.dismiss();
         });
+        binding.rlResetDB.setOnClickListener(v -> {
+            ModalDialog.showTwoButtonCommonModal(mActivity, getString(R.string.warning), getString(R.string.reset_polkadot_db_hint), getString(R.string.cancel), getString(R.string.confirm), dialog::dismiss, () -> {
+                PolkadotViewModel viewModel = ViewModelProviders.of(mActivity).get(PolkadotViewModel.class);
+                viewModel.resetDB();
+                dialog.dismiss();
+            });
+        });
         dialog.setContentView(binding.getRoot());
         dialog.show();
+    }
+
+    /**
+     * handleAddAddress goes here
+     * @param value how many accounts will be added;
+     */
+    @Override
+
+    public void onValueSet(int value) {
+        ProgressModalDialog dialog = ProgressModalDialog.newInstance();
+        dialog.show(Objects.requireNonNull(mActivity.getSupportFragmentManager()), "");
+        Handler handler = new Handler(MainApplication.getApplication().getMainLooper());
+        Runnable runnable = () -> handler.postDelayed(dialog::dismiss, UIConstants.DIALOG_DISMISS_DELAY_TIME);
+        AddressViewModel.Factory factory = new AddressViewModel.Factory(mActivity.getApplication(), coinId);
+        AddressViewModel viewModel = ViewModelProviders.of(this, factory)
+                .get(AddressViewModel.class);
+        LiveData<Boolean> complete = viewModel.addAddress(value);
+        complete.observe(AssetFragment.this, result -> {
+            runnable.run();
+            complete.removeObservers(AssetFragment.this);
+        });
     }
 
     private void handleAddAddress() {
@@ -241,38 +258,32 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
     }
 
     private enum AssetConfig {
-        BTC(Coins.BTC.coinId(), true, true, true, true),
+        BTC(Coins.BTC.coinId(), true, true, true, true, false),
         ETH(Coins.ETH.coinId(), true, true, true),
         APT(Coins.APTOS.coinId(), true, false, true),
         SOL(Coins.SOL.coinId(), true, true, true),
         SOL_BIP44_ROOT(Coins.SOL.coinId() + "_" + SOLAccount.SOLFLARE_BIP44_ROOT.getCode(), false, true, true),
-        DEFAULT("default", true, true, true);
+        DOT(Coins.DOT.coinId(), true, false, true, false, true),
+        DEFAULT("default", true, true, true, false, true);
 
         private final String coinId;
         private final boolean showAddAddress;
         private final boolean showChangePath;
         private final boolean showFAQ;
-
-        public boolean isShowExportXPub() {
-            return showExportXPub;
-        }
-
+        private final boolean showResetDB;
         private final boolean showExportXPub;
 
-        AssetConfig(String coinId, boolean showAddAddress, boolean showChangePath, boolean showFAQ, boolean showExportXPub) {
+        AssetConfig(String coinId, boolean showAddAddress, boolean showChangePath, boolean showFAQ, boolean showExportXPub, boolean showResetDB) {
             this.coinId = coinId;
             this.showAddAddress = showAddAddress;
             this.showChangePath = showChangePath;
             this.showFAQ = showFAQ;
             this.showExportXPub = showExportXPub;
+            this.showResetDB = showResetDB;
         }
 
         AssetConfig(String coinId, boolean showAddAddress, boolean showChangePath, boolean showFAQ) {
-            this.coinId = coinId;
-            this.showAddAddress = showAddAddress;
-            this.showChangePath = showChangePath;
-            this.showFAQ = showFAQ;
-            this.showExportXPub = false;
+            this(coinId, showAddAddress, showChangePath, showFAQ, false, false);
         }
 
         public static AssetConfig getConfigByCoinId(String coinId) {
@@ -297,6 +308,14 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
 
         public boolean isShowFAQ() {
             return showFAQ;
+        }
+
+        public boolean isShowResetDB() {
+            return showResetDB;
+        }
+
+        public boolean isShowExportXPub() {
+            return showExportXPub;
         }
     }
 }
