@@ -5,10 +5,10 @@ import android.view.View;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentTutorialBinding;
+import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.ui.modal.QRDialog;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.BaseFragment;
-import com.keystone.cold.ui.fragment.Constants;
 import com.keystone.cold.ui.fragment.main.tutorials.TutorialItem;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialBinding> {
 
     @Override
     protected void init(View view) {
-        wallet = Wallet.getWalletById(requireArguments().getString(Constants.KEY_WALLET_ID));
+        wallet = Wallet.getWalletById(requireArguments().getString(BundleKeys.WALLET_ID_KEY));
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         List<TutorialItem> tutorialItems = initTutorialsData();
         mBinding.tutorialList.setItemData(tutorialItems);

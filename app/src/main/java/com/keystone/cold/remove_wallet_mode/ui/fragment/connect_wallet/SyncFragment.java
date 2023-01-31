@@ -27,7 +27,6 @@ import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.MetamaskVie
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SolFlareViewModel;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.BaseFragment;
-import com.keystone.cold.ui.fragment.Constants;
 import com.sparrowwallet.hummingbird.UR;
 
 import java.util.Arrays;
@@ -51,9 +50,9 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
 
         Bundle data = getArguments();
-        String walletId = data.getString(Constants.KEY_WALLET_ID);
-        if (data.containsKey(Constants.KEY_ADDRESS_IDS)) {
-            addressIds = (List<Long>) data.getSerializable(Constants.KEY_ADDRESS_IDS);
+        String walletId = data.getString(BundleKeys.WALLET_ID_KEY);
+        if (data.containsKey(BundleKeys.ADDRESS_IDS_KEY)) {
+            addressIds = (List<Long>) data.getSerializable(BundleKeys.ADDRESS_IDS_KEY);
         }
         wallet = Wallet.getWalletById(walletId);
         mBinding.setWallet(wallet.getWalletName());
@@ -140,19 +139,19 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         binding.rlSelectAddress.setOnClickListener(v -> {
             navigateUp();
             Bundle bundle = new Bundle();
-            bundle.putString(Constants.KEY_WALLET_ID, wallet.getWalletId());
+            bundle.putString(BundleKeys.WALLET_ID_KEY, wallet.getWalletId());
             navigate(R.id.action_to_selectAddressFragment, bundle);
             dialog.dismiss();
         });
         binding.rlTutorial.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
-            bundle.putString(Constants.KEY_WALLET_ID, wallet.getWalletId());
+            bundle.putString(BundleKeys.WALLET_ID_KEY, wallet.getWalletId());
             navigate(R.id.action_to_tutorialsFragment, bundle);
             dialog.dismiss();
         });
         binding.rlChangePath.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
-            bundle.putString(Constants.KEY_COIN_ID, config.getCoinId());
+            bundle.putString(BundleKeys.COIN_ID_KEY, config.getCoinId());
             bundle.putString(BundleKeys.WALLET_ID_KEY, config.getWalletId());
             navigate(R.id.action_to_changeDerivationPathFragment, bundle);
             dialog.dismiss();

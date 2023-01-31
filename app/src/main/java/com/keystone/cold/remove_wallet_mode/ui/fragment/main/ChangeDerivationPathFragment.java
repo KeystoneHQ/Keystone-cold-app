@@ -1,8 +1,5 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main;
 
-import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
-
-
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,7 +16,6 @@ import com.keystone.cold.remove_wallet_mode.ui.model.PathPatternItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.ChangePathViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.WalletViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
-import com.keystone.cold.ui.fragment.Constants;
 
 import java.util.List;
 
@@ -79,12 +75,12 @@ public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDer
             switch (mode) {
                 case DIRECT:
                     Bundle bundleData = new Bundle();
-                    bundleData.putString(Constants.KEY_WALLET_ID, walletId);
+                    bundleData.putString(BundleKeys.WALLET_ID_KEY, walletId);
                     navigate(R.id.action_to_syncFragment, bundleData);
                     break;
                 case SELECT_ADDRESS:
                     Bundle bundle = new Bundle();
-                    bundle.putString(Constants.KEY_WALLET_ID, walletId);
+                    bundle.putString(BundleKeys.WALLET_ID_KEY, walletId);
                     navigate(R.id.action_to_selectAddressFragment, bundle);
                     break;
             }
