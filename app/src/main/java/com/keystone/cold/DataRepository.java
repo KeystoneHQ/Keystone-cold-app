@@ -252,9 +252,14 @@ public class DataRepository {
     }
 
     public AccountEntity loadTargetBTCAccount(BTCAccount account) {
-        CoinEntity coinEntity = this.loadCoinSync(account.getCoinId());
-        List<AccountEntity> accountEntityList = this.loadAccountsForCoin(coinEntity);
-        return accountEntityList.get(0);
+        try {
+            CoinEntity coinEntity = this.loadCoinSync(account.getCoinId());
+            List<AccountEntity> accountEntityList = this.loadAccountsForCoin(coinEntity);
+            return accountEntityList.get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public AccountEntity loadTargetETHAccount(ETHAccount account) {
@@ -274,10 +279,15 @@ public class DataRepository {
     }
 
     public AccountEntity loadArweaveAccount() {
-        CoinEntity coinEntity = this.loadCoinSync(Coins.AR.coinId());
-        List<AccountEntity> accountEntityList = this.loadAccountsForCoin(coinEntity);
-        if (accountEntityList.size() > 0) return accountEntityList.get(0);
-        return null;
+        try {
+            CoinEntity coinEntity = this.loadCoinSync(Coins.AR.coinId());
+            List<AccountEntity> accountEntityList = this.loadAccountsForCoin(coinEntity);
+            if (accountEntityList.size() > 0) return accountEntityList.get(0);
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public AccountEntity loadTargetSOLAccount(SOLAccount account) {
