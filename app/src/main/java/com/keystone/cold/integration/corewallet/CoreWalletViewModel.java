@@ -25,6 +25,7 @@ import java.util.List;
 
 public class CoreWalletViewModel extends AndroidViewModel {
     private final String BTCNativeSegwitPath = "M/84'/0'/0'";
+    private final String BTCLegacyPath = "M/44'/0'/0'";
 
     public CoreWalletViewModel(@NonNull Application application) {
         super(application);
@@ -69,6 +70,6 @@ public class CoreWalletViewModel extends AndroidViewModel {
     }
 
     private CryptoHDKey generateCryptoHDKeyForBitcoin() {
-        return URRegistryHelper.generateCryptoHDKey(BTCNativeSegwitPath, 0);
+        return URRegistryHelper.generateCryptoHDKey(BTCLegacyPath, 0);
     }
 }
