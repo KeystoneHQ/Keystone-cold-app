@@ -9,13 +9,13 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentWalletListBinding;
+import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.helper.SyncMode;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.WalletListAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.model.WalletItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.WalletViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
-import com.keystone.cold.ui.fragment.Constants;
 
 import java.util.List;
 
@@ -78,12 +78,12 @@ public class WalletListFragment extends BaseFragment<FragmentWalletListBinding> 
                     break;
                 case DIRECT:
                     Bundle bundleData = new Bundle();
-                    bundleData.putString(Constants.KEY_WALLET_ID, walletItem.getWalletId());
+                    bundleData.putString(BundleKeys.WALLET_ID_KEY, walletItem.getWalletId());
                     navigate(R.id.action_to_syncFragment, bundleData);
                     break;
                 case SELECT_ADDRESS:
                     Bundle bundle = new Bundle();
-                    bundle.putString(Constants.KEY_WALLET_ID, walletItem.getWalletId());
+                    bundle.putString(BundleKeys.WALLET_ID_KEY, walletItem.getWalletId());
                     navigate(R.id.action_to_selectAddressFragment, bundle);
                     break;
                 case MULTI_CHAINS: //multi chains wallet, step int select coin page

@@ -3,7 +3,6 @@ package com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
@@ -11,13 +10,13 @@ import androidx.lifecycle.ViewModelProviders;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentSelectAddressBinding;
+import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.SelectedAddressAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.model.AddressItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AddressViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.SelectAddressViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
-import com.keystone.cold.ui.fragment.Constants;
 import com.keystone.cold.ui.fragment.main.AddressNumberPicker;
 import com.keystone.cold.ui.fragment.main.NumberPickerCallback;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
@@ -53,8 +52,8 @@ public class SelectAddressFragment extends BaseFragment<FragmentSelectAddressBin
         mBinding.llAddAccounts.setOnClickListener(v -> handleAddAccounts());
         mBinding.ivConfirm.setOnClickListener((View.OnClickListener) v -> {
             Bundle bundle = new Bundle();
-            bundle.putString(Constants.KEY_WALLET_ID, requireArguments().getString(Constants.KEY_WALLET_ID));
-            bundle.putSerializable(Constants.KEY_ADDRESS_IDS, (Serializable) selectedAddressAdapter.getAddressIds());
+            bundle.putString(BundleKeys.WALLET_ID_KEY, requireArguments().getString(BundleKeys.WALLET_ID_KEY));
+            bundle.putSerializable(BundleKeys.ADDRESS_IDS_KEY, (Serializable) selectedAddressAdapter.getAddressIds());
             navigate(R.id.action_to_syncFragment, bundle);
         });
     }
@@ -70,7 +69,7 @@ public class SelectAddressFragment extends BaseFragment<FragmentSelectAddressBin
     @Override
     protected void initData(Bundle savedInstanceState) {
         Bundle data = requireArguments();
-        String walletId = data.getString(Constants.KEY_WALLET_ID);
+        String walletId = data.getString(BundleKeys.WALLET_ID_KEY);
         SelectAddressViewModel selectAddressViewModel = ViewModelProviders.of(this).get(SelectAddressViewModel.class);
         LiveData<String> coinIdLiveData = selectAddressViewModel.getCoinId(walletId);
         coinIdLiveData.observe(this, coinId -> {
