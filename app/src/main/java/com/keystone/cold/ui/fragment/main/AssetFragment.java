@@ -817,7 +817,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                             getString(R.string.cancel),
                             getString(R.string.switch_wallet),
                             null, () -> {
-                                Utilities.setCurrentSolAccount(mActivity, ((InvalidNEARAccountException) e).getTarget().getCode());
+                                Utilities.setCurrentNearAccount(mActivity, ((InvalidNEARAccountException) e).getTarget().getCode());
                                 popBackStack(R.id.assetFragment, false);
                             });
                     return true;
