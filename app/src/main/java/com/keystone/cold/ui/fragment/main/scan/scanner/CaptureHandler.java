@@ -77,9 +77,11 @@ public final class CaptureHandler extends Handler {
                 Result result = (Result) message.obj;
                 String text = result.getText();
                 String hex = Hex.toHexString(result.getRawBytes());
-                if (polkadotDecoder.tryReadFirst(hex)) {
-                    polkadotDecode(result);
-                    return;
+                if (!text.startsWith("UR") && !text.startsWith("ur")) {
+                    if (polkadotDecoder.tryReadFirst(hex)) {
+                        polkadotDecode(result);
+                        return;
+                    }
                 }
                 tryDecode(text);
                 break;
