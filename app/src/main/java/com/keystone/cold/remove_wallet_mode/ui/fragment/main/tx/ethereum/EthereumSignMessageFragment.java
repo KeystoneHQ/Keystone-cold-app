@@ -45,6 +45,7 @@ public class EthereumSignMessageFragment extends SignMessageFragment<EthereumTxV
                 if (CharSetUtil.isUTF8Format(Hex.decode(message))) {
                     String messageUtf8 = new String(Hex.decode(message), StandardCharsets.UTF_8);
                     mBinding.message.setText(messageUtf8);
+                    mBinding.llMsgUtf8.setVisibility(View.VISIBLE);
                 } else {
                     mBinding.llMsgUtf8.setVisibility(View.GONE);
                 }
