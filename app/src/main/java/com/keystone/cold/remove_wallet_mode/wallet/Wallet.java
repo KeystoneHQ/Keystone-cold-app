@@ -117,6 +117,8 @@ public enum Wallet {
             case FEWCHA:
             case SOLFLARE:
             case BLUEWALLET:
+            case SUBWALLET:
+            case POLKADOT:
                 return true;
             case CORE:
                 return false;

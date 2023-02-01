@@ -77,6 +77,33 @@
             app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
 
+    <fragment
+        android:id="@+id/selectNetworkFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.SelectNetworkFragment"
+        android:label="SelectNetworkFragment"
+        tools:layout="@layout/fragment_select_network">
+        <action
+            android:id="@+id/action_selectNetworkFragment_to_selectOneAddressFragment"
+            app:destination="@id/selectOneAddressFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/selectOneAddressFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.SelectOneAddressFragment"
+        android:label="SelectOneAddressFragment"
+        tools:layout="@layout/fragment_select_one_address">
+        <action
+            android:id="@+id/action_selectOneAddressFragment_to_syncFragment"
+            app:destination="@id/syncFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/changeDerivationPathFragment"
@@ -108,4 +135,12 @@
         tools:layout="@layout/fragment_tutorial">
 
     </fragment>
+
+    <action
+        android:id="@+id/action_to_selectOneAddressFragment"
+        app:destination="@id/selectOneAddressFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
 </navigation>

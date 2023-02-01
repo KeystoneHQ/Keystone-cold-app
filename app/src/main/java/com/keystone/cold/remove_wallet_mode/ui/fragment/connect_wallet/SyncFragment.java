@@ -25,6 +25,7 @@ import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.BlueWalletV
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.FewchaWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.MetamaskViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SolFlareViewModel;
+import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SubstrateWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.sparrowwallet.hummingbird.UR;
@@ -89,11 +90,19 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
 
     private void generateSyncData() {
         MutableLiveData<UR> urMutableLiveData;
+        MutableLiveData<String> substrateSyncData = null;
         switch (wallet) {
             case FEWCHA:
                 FewchaWalletViewModel fewchaWalletViewModel = ViewModelProviders.of(this).get(FewchaWalletViewModel.class);
                 fewchaWalletViewModel.setAddressIds(addressIds);
                 urMutableLiveData = fewchaWalletViewModel.generateSyncUR();
+                break;
+            case POLKADOT:
+            case SUBWALLET:
+                SubstrateWalletViewModel substrateWalletViewModel = ViewModelProviders.of(this).get(SubstrateWalletViewModel.class);
+                substrateWalletViewModel.setAddressId(addressIds.get(0));
+                urMutableLiveData = null;
+                substrateSyncData = substrateWalletViewModel.generateSyncData();
                 break;
             case METAMASK:
                 MetamaskViewModel metamaskViewModel = ViewModelProviders.of(this).get(MetamaskViewModel.class);
@@ -119,6 +128,15 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                 urMutableLiveData.removeObservers(this);
             });
         }
+        if (substrateSyncData != null) {
+            MutableLiveData<String> finalSubstrateSyncData = substrateSyncData;
+            finalSubstrateSyncData.observe(this, data -> {
+                if (data != null) {
+                    mBinding.dynamicQrcodeLayout.qrcode.setData(data);
+                }
+                finalSubstrateSyncData.removeObservers(this);
+            });
+        }
     }
 
 
@@ -127,6 +145,9 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         DialogAssetBottomBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.dialog_asset_bottom, null, false);
         WalletConfig config = WalletConfig.getConfigByWalletId(wallet.getWalletId());
         if (config.isShowSelectAddress()) {
+            if (wallet.equals(Wallet.POLKADOT) || wallet.equals(Wallet.SUBWALLET)) {
+                binding.selectAccountText.setText(R.string.select_another_account);
+            }
             binding.rlSelectAddress.setVisibility(View.VISIBLE);
         }
         if (config.isShowTutorial()) {
@@ -137,10 +158,18 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         }
 
         binding.rlSelectAddress.setOnClickListener(v -> {
-            navigateUp();
-            Bundle bundle = new Bundle();
-            bundle.putString(BundleKeys.WALLET_ID_KEY, wallet.getWalletId());
-            navigate(R.id.action_to_selectAddressFragment, bundle);
+            if (wallet.equals(Wallet.POLKADOT) || wallet.equals(Wallet.SUBWALLET)) {
+                navigateUp();
+                Bundle bundle = new Bundle();
+                bundle.putString(BundleKeys.WALLET_ID_KEY, wallet.getWalletId());
+                bundle.putString(BundleKeys.COIN_ID_KEY, requireArguments().getString(BundleKeys.COIN_ID_KEY));
+                navigate(R.id.action_to_selectOneAddressFragment, bundle);
+            } else {
+                navigateUp();
+                Bundle bundle = new Bundle();
+                bundle.putString(BundleKeys.WALLET_ID_KEY, wallet.getWalletId());
+                navigate(R.id.action_to_selectAddressFragment, bundle);
+            }
             dialog.dismiss();
         });
         binding.rlTutorial.setOnClickListener(v -> {
@@ -164,6 +193,8 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         METAMASK(Wallet.METAMASK.getWalletId(), new String[]{Coins.ETH.coinId()}, true, false, true),
         FEWCHA(Wallet.FEWCHA.getWalletId(), new String[]{Coins.APTOS.coinId()}, false, true, true),
         SOLFLARE(Wallet.SOLFLARE.getWalletId(), new String[]{Coins.SOL.coinId()}, true, true, true),
+        POLKADOT(Wallet.POLKADOT.getWalletId(), new String[]{Coins.DOT.coinId(), Coins.KSM.coinId()}, false, true, true),
+        SUBWALLET(Wallet.SUBWALLET.getWalletId(), new String[]{Coins.DOT.coinId(), Coins.KSM.coinId()}, false, true, true),
         DEFAULT("default", new String[]{}, false, false, true),
         ;
 
