@@ -81,6 +81,11 @@ public class WalletListFragment extends BaseFragment<FragmentWalletListBinding> 
                     bundleData.putString(BundleKeys.WALLET_ID_KEY, walletItem.getWalletId());
                     navigate(R.id.action_to_syncFragment, bundleData);
                     break;
+                case SUBSTRATE:
+                    Bundle bundle2 = new Bundle();
+                    bundle2.putString(BundleKeys.WALLET_ID_KEY, walletItem.getWalletId());
+                    navigate(R.id.action_to_selectNetworkFragment, bundle2);
+                    break;
                 case SELECT_ADDRESS:
                     Bundle bundle = new Bundle();
                     bundle.putString(BundleKeys.WALLET_ID_KEY, walletItem.getWalletId());

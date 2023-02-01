@@ -47,6 +47,15 @@
                 android:text="@{@string/connect_who(wallet)}"
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />
+
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/action_more"
+                android:layout_width="@dimen/dp_32"
+                android:layout_height="@dimen/dp_24"
+                android:layout_gravity="end|center"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:src="@drawable/more" />
         </androidx.appcompat.widget.Toolbar>
 
 

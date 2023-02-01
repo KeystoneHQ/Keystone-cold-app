@@ -82,6 +82,7 @@
     <string name="connect_info">Connection QR Code</string>>
 
     <string name="select_accounts">Select Accounts</string>
+    <string name="select_another_account">Select Another Account</string>
 
 
     <string-array name="step_label_remove_wallet_mode">

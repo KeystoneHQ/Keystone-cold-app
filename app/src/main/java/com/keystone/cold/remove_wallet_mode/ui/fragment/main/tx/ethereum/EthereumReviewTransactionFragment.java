@@ -48,8 +48,4 @@ public class EthereumReviewTransactionFragment extends ReviewTransactionFragment
 
     }
 
-    @Override
-    protected void onSignSuccess() {
-
-    }
 }

@@ -14,4 +14,10 @@ public abstract class ReviewTransactionFragment<V extends BaseTxViewModel> exten
         mBinding.sign.setVisibility(View.GONE);
         mBinding.toolbarTitle.setText(R.string.signing_history);
     }
+
+
+    @Override
+    protected void onSignSuccess() {
+
+    }
 }

@@ -8,7 +8,7 @@ import com.keystone.cold.remove_wallet_mode.helper.sync_jump.SyncModeDetector;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 
 public enum SyncMode {
-    INVALID, DIRECT, SELECT_ADDRESS, MULTI_CHAINS;
+    INVALID, DIRECT, SELECT_ADDRESS, MULTI_CHAINS, SUBSTRATE;
 
     public static void detect(String walletId, MutableLiveData<SyncMode> stepMode) {
         Wallet wallet = Wallet.getWalletById(walletId);
@@ -16,6 +16,10 @@ public enum SyncMode {
             case BLUEWALLET:
             case METAMASK:
                 stepMode.postValue(DIRECT);
+                break;
+            case POLKADOT:
+            case SUBWALLET:
+                stepMode.postValue(SUBSTRATE);
                 break;
             default:
                 complexDetect(wallet, stepMode);

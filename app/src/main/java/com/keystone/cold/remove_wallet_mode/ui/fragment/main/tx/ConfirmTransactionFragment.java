@@ -45,6 +45,7 @@ public abstract class ConfirmTransactionFragment<V extends BaseTxViewModel> exte
         initViewModel();
         setupView();
         setupViewPager();
+        mBinding.toolbar.setNavigationOnClickListener((v) -> this.navigateUp());
     }
 
     protected abstract void initViewModel();
