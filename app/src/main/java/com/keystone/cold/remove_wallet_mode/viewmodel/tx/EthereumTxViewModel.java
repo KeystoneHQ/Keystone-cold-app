@@ -375,7 +375,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
     @Override
     public String getSignatureUR() {
         EthereumTransaction transaction = observableEthTx.getValue();
-        if (transaction == null ) {
+        if (transaction == null) {
             //sign typed data
             byte[] signature = Hex.decode(this.signature);
             UUID uuid = UUID.fromString(this.requestId);
@@ -385,8 +385,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
             byte[] requestId = byteBuffer.array();
             EthSignature ethSignature = new EthSignature(signature, requestId);
             return ethSignature.toUR().toString();
-        }
-        else {
+        } else {
             return observableEthTx.getValue().getSignatureQRCode();
         }
     }

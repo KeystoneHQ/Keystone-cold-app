@@ -32,13 +32,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Base64;
-import org.spongycastle.util.encoders.Hex;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class BitcoinTxViewModel extends BaseTxViewModel {
     private static final String TAG = "BitcoinTxViewModel";
@@ -100,6 +98,7 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
                 String psbtB64 = object.getString("raw_message");
                 String mfp = new GetMasterFingerprintCallable().call();
                 PSBT psbt = parsePsbtBase64(psbtB64, mfp);
+                psbt.setSignedBase64(signedPSBT);
                 coinCode = tx.getCoinCode();
                 observablePsbt.postValue(psbt);
             } catch (BaseException e) {
