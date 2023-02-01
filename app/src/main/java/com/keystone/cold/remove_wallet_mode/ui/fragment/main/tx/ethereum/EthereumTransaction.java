@@ -369,7 +369,6 @@ public class EthereumTransaction implements Tx {
     public String getSignatureQRCode() {
         try {
             byte[] signature = Hex.decode(getSignature());
-            JSONObject addition = new JSONObject(getAddition());
             UUID uuid = UUID.fromString(getRequestId());
             ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
             byteBuffer.putLong(uuid.getMostSignificantBits());

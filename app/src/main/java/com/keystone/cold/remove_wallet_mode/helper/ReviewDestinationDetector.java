@@ -43,15 +43,14 @@ public class ReviewDestinationDetector {
             bundle.putString(KEY_TX_ID, ethTxEntity.getTxId());
             try {
                 new JSONObject(signedHex);
-                return new Destination(R.id.action_to_ethTxFragment, bundle);
+                return new Destination(R.id.action_to_ethereumReviewTransactionFragment, bundle);
             } catch (JSONException e) {
                 switch (ethTxEntity.getTxType()) {
                     case 0x00:
-                        Log.i(TAG, "navigate: jump to new ethLegacyTxFragment");
-                        return new Destination(R.id.action_to_ethLegacyTxFragment, bundle);
+                        return new Destination(R.id.action_to_ethereumReviewTransactionFragment, bundle);
                     case 0x02:
                         Log.i(TAG, "navigate: jump to ethFeeMarketTxFragment");
-                        return new Destination(R.id.action_to_ethFeeMarketTxFragment, bundle);
+                        return new Destination(R.id.action_to_ethereumReviewTransactionFragment, bundle);
                 }
             }
         }

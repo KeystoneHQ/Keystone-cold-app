@@ -78,6 +78,10 @@ public class BitcoinTransactionDetailsFragment extends BaseFragment<FragmentBitc
 
                 mBinding.fee.setText(fee);
 
+                if (v.getSignedBase64() != null){
+                    mBinding.qrcodeContainer.setVisibility(View.VISIBLE);
+                    mBinding.qrcode.qrcode.setData(v.getSignatureQRCode());
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }

@@ -47,5 +47,4 @@ public class EthereumReviewTransactionFragment extends ReviewTransactionFragment
     protected void setupView() {
 
     }
-
 }

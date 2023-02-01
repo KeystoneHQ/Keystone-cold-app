@@ -11,10 +11,12 @@ import com.keystone.cold.R;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.BitcoinTxViewModel;
+import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.spongycastle.util.encoders.Base64;
 import org.spongycastle.util.encoders.Hex;
 
 import java.math.BigDecimal;
@@ -278,9 +280,24 @@ public class PSBT {
     private final String myMasterFingerprint;
     private final String rawData;
 
+    private String signedBase64;
+
     public PSBT(String rawData, String myMasterFingerprint) {
         this.rawData = rawData;
         this.myMasterFingerprint = myMasterFingerprint;
+    }
+
+    public String getSignedBase64() {
+        return signedBase64;
+    }
+
+    public void setSignedBase64(String signedBase64) {
+        this.signedBase64 = signedBase64;
+    }
+
+    public String getSignatureQRCode() {
+        CryptoPSBT cryptoPSBT = new CryptoPSBT(Base64.decode(this.signedBase64));
+        return cryptoPSBT.toUR().toString();
     }
 
     public String getRawData() {

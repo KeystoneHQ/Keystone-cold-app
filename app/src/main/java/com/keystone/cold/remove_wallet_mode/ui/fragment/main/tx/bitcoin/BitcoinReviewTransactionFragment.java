@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProviders;
 import com.keystone.cold.R;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
-import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ConfirmTransactionFragment;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ReviewTransactionFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.BitcoinTxViewModel;
@@ -21,9 +20,6 @@ public class BitcoinReviewTransactionFragment extends ReviewTransactionFragment<
     protected void initViewModel() {
         viewModel = ViewModelProviders.of(this).get(BitcoinTxViewModel.class);
         viewModel.reset();
-        Bundle data = requireArguments();
-        String txId = data.getString(BundleKeys.TX_ID_KEY);
-        viewModel.parseExistingTransaction(txId);
     }
 
     @Override
@@ -41,7 +37,10 @@ public class BitcoinReviewTransactionFragment extends ReviewTransactionFragment<
             if (v == null) return;
             dialog.dismiss();
         });
+        Bundle data = requireArguments();
         viewModel.parseTxException().observe(this, this::handleParseException);
+        String txId = data.getString(BundleKeys.TX_ID_KEY);
+        viewModel.parseExistingTransaction(txId);
     }
 
     private void handleParseException(BaseException ex) {
