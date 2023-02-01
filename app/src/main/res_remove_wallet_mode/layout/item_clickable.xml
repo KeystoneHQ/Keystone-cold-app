@@ -23,7 +23,7 @@
 
         <variable
             name="callback"
-            type="com.keystone.cold.remove_wallet_mode.ui.adapter.SelectedAddressAdapter.AddressCallback" />
+            type="com.keystone.cold.remove_wallet_mode.ui.adapter.ClickableAdapter.ClickableCallback" />
 
         <variable
             name="clickableItem"
@@ -61,7 +61,7 @@
                 android:enabled="false"
                 android:importantForAutofill="no"
                 android:singleLine="true"
-                android:text="@{networkItem.name}"
+                android:text="@{clickableItem.name}"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_16"
                 android:textStyle="bold"
