@@ -21,7 +21,8 @@ public class ClickableAdapter extends BaseBindingAdapter<ClickableItem, ItemClic
 
     @Override
     protected void onBindItem(ItemClickableBinding binding, ClickableItem item) {
-
+        binding.setCallback(callback);
+        binding.setClickableItem(item);
     }
 
     public interface ClickableCallback {
