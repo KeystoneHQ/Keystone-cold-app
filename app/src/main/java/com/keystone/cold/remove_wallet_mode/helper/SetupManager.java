@@ -3,6 +3,7 @@ package com.keystone.cold.remove_wallet_mode.helper;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.remove_wallet_mode.helper.setup.AptosCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.BaseCreator;
+import com.keystone.cold.remove_wallet_mode.helper.setup.BitcoinCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.Creator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.EthereumCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.SolanaCreator;
@@ -38,10 +39,16 @@ public class SetupManager {
             return new EthereumCreator();
         } else if (coinId.equals(Coins.SOL.coinId())) {
             return new SolanaCreator();
-        } else if(coinId.equals(Coins.DOT.coinId())) {
+        } else if (coinId.equals(Coins.DOT.coinId())) {
             return new SubstrateCreator(Coins.DOT);
-        } else if(coinId.equals(Coins.KSM.coinId())) {
+        } else if (coinId.equals(Coins.KSM.coinId())) {
             return new SubstrateCreator(Coins.KSM);
+        } else if (coinId.equals(Coins.BTC_LEGACY.coinId())) {
+            return new BitcoinCreator(Coins.BTC_LEGACY);
+        } else if (coinId.equals(Coins.BTC.coinId())) {
+            return new BitcoinCreator(Coins.BTC);
+        } else if (coinId.equals(Coins.BTC_NATIVE_SEGWIT.coinId())) {
+            return new BitcoinCreator(Coins.BTC_NATIVE_SEGWIT);
         }
         return null;
     }
