@@ -1,10 +1,14 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.substrate;
 
+import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
+import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
+
 import android.os.Bundle;
 
 import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
+import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
@@ -12,14 +16,18 @@ import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ConfirmTransacti
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.SubstrateTxViewModel;
 import com.keystone.cold.ui.modal.PolkadotErrorDialog;
+import com.keystone.cold.ui.views.AuthenticateModal;
 import com.keystone.cold.viewmodel.PolkadotViewModel;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SubstrateConfirmTransactionFragment extends ConfirmTransactionFragment<SubstrateTxViewModel> {
-    PolkadotViewModel polkadotViewModel = ViewModelProviders.of(this).get(PolkadotViewModel.class);
+    PolkadotViewModel polkadotViewModel;
+
     @Override
     protected void initViewModel() {
+        polkadotViewModel = ViewModelProviders.of(this).get(PolkadotViewModel.class);
         viewModel = ViewModelProviders.of(this).get(SubstrateTxViewModel.class);
         viewModel.reset();
     }
@@ -34,15 +42,13 @@ public class SubstrateConfirmTransactionFragment extends ConfirmTransactionFragm
 
     @Override
     protected void setupView() {
-        try {
-            Bundle bundle = requireArguments();
-            String rawTx = bundle.getString(BundleKeys.SIGN_DATA_KEY);
-            JSONObject parsedMessage = polkadotViewModel.parseTransaction(rawTx);
-            bundle.putString(BundleKeys.PARSED_TRANSACTION_KEY, parsedMessage.toString());
+        Bundle bundle = requireArguments();
+        String rawTx = bundle.getString(BundleKeys.SIGN_DATA_KEY);
+        polkadotViewModel.parseTransactionAsync(rawTx).observe(this, (v) -> {
+            if (v == null) return;
+            bundle.putString(BundleKeys.PARSED_TRANSACTION_KEY, v.toString());
             viewModel.parseTxData(bundle);
-        } catch (Exception e){
-            handleParseException(new InvalidTransactionException(getString(R.string.incorrect_tx_data), "invalid transaction"));
-        }
+        });
 
         viewModel.getTransaction().observe(this, (v) -> {
             try {
@@ -52,7 +58,7 @@ public class SubstrateConfirmTransactionFragment extends ConfirmTransactionFragm
                     case "Sign": {
                         mBinding.sign.setText(R.string.sign);
                         String signContent = polkadotViewModel.getSignContent(checksum).getString("value");
-                        mBinding.sign.setOnClickListener((_v) -> viewModel.handleSignContent(signContent));
+                        mBinding.sign.setOnClickListener((_v) -> handleSignContent(signContent));
                         break;
                     }
                     case "Stub": {
@@ -90,6 +96,17 @@ public class SubstrateConfirmTransactionFragment extends ConfirmTransactionFragm
     @Override
     protected void handleSign() {
         super.handleSign();
+    }
+
+    private void handleSignContent(String signContent) {
+        boolean fingerprintSignEnable = new FingerprintPolicyCallable(READ, TYPE_SIGN_TX).call();
+        AuthenticateModal.show(mActivity,
+                getString(R.string.password_modal_title), "", fingerprintSignEnable,
+                token -> {
+                    viewModel.setToken(token);
+                    viewModel.handleSignContent(signContent);
+                    subscribeSignState();
+                }, forgetPassword);
     }
 
     @Override

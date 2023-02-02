@@ -214,6 +214,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
 
     public void generateUnsignedTransaction(Bundle bundle) {
         AppExecutors.getInstance().diskIO().execute(() -> {
+            isParsing.postValue(true);
             String txHex = bundle.getString(BundleKeys.SIGN_DATA_KEY);
             rawFormatTx.postValue(txHex);
             String hdPath = bundle.getString(BundleKeys.HD_PATH_KEY);
@@ -236,6 +237,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
                     break;
             }
             if (ethTx == null) {
+                isParsing.postValue(false);
                 parseTxException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
                 return;
             }
@@ -283,6 +285,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
                 parseTxException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
                 return;
             }
+            isParsing.postValue(false);
             observableEthTx.postValue(transaction);
         });
     }

@@ -222,6 +222,7 @@ public abstract class BaseFragment<T extends ViewDataBinding> extends Fragment {
     }
 
     public void alertException(BaseException exception, Runnable confirmCallback) {
+        Log.e(TAG, "displayException: " + exception.getMessage());
         Log.e(TAG, "displayException: ", exception);
         dismissLoading();
         ModalDialog.showCommonModal(

@@ -37,8 +37,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class SubstrateTxViewModel extends BaseTxViewModel {
-    private MutableLiveData<SubstrateTransaction> transaction = new MutableLiveData<>(null);
-    private MutableLiveData<BaseException> exception = new MutableLiveData<>(null);
+    private final MutableLiveData<SubstrateTransaction> transaction = new MutableLiveData<>(null);
+    private final MutableLiveData<BaseException> exception = new MutableLiveData<>(null);
 
     String coinCode;
     protected final DataRepository mRepository;
@@ -61,38 +61,50 @@ public class SubstrateTxViewModel extends BaseTxViewModel {
 
     @Override
     public void parseTxData(Bundle bundle) {
-        try {
-            String data = bundle.getString(BundleKeys.SIGN_DATA_KEY);
-            String parsedTransaction = bundle.getString(BundleKeys.PARSED_TRANSACTION_KEY);
-            rawFormatTx.postValue(data);
-            JSONObject pt = new JSONObject(parsedTransaction);
-            generateAndPostSubstrateTxV2(pt, data);
-            SubstrateTransaction substrateTransaction = SubstrateTransaction.factory(parsedTransaction, data);
-            coinCode = substrateTransaction.getCoinCode();
-            transaction.postValue(substrateTransaction);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            exception.postValue(new InvalidTransactionException(MainApplication.getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
-        } catch (InvalidAccountException e) {
-            exception.postValue(e);
-        }
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            try {
+                isParsing.postValue(true);
+                String data = bundle.getString(BundleKeys.SIGN_DATA_KEY);
+                String parsedTransaction = bundle.getString(BundleKeys.PARSED_TRANSACTION_KEY);
+                JSONObject pt = new JSONObject(parsedTransaction);
+                generateAndPostSubstrateTxV2(pt, data);
+                SubstrateTransaction substrateTransaction = SubstrateTransaction.factory(parsedTransaction, data);
+                rawFormatTx.postValue(substrateTransaction.getType().equals("Stub")? "Transaction too large": data);
+                coinCode = substrateTransaction.getCoinCode();
+                transaction.postValue(substrateTransaction);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                exception.postValue(new InvalidTransactionException(MainApplication.getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
+            } catch (InvalidAccountException | InvalidTransactionException e) {
+                exception.postValue(e);
+            } finally {
+                isParsing.postValue(false);
+            }
+        });
     }
 
     public void parseExistingTransaction(String txId) {
-        try {
-            TxEntity txEntity = mRepository.loadTxSync(txId);
-            JSONObject addition = new JSONObject(txEntity.getAddition());
-            String parsedTransaction = addition.getString("parsed_transaction");
-            String rawTx = addition.getString("raw_message");
-            rawFormatTx.postValue(rawTx);
-            SubstrateTransaction substrateTransaction = SubstrateTransaction.factory(parsedTransaction, rawTx);
-            coinCode = substrateTransaction.getCoinCode();
-            substrateTransaction.setSignedHex(txEntity.getSignedHex());
-            transaction.postValue(substrateTransaction);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            exception.postValue(new InvalidTransactionException(MainApplication.getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
-        }
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            try {
+                isParsing.postValue(true);
+                TxEntity txEntity = mRepository.loadTxSync(txId);
+                JSONObject addition = new JSONObject(txEntity.getAddition());
+                String parsedTransaction = addition.getString("parsed_transaction");
+                String rawTx = addition.getString("raw_message");
+                rawFormatTx.postValue(rawTx);
+                SubstrateTransaction substrateTransaction = SubstrateTransaction.factory(parsedTransaction, rawTx);
+                coinCode = substrateTransaction.getCoinCode();
+                substrateTransaction.setSignedHex(txEntity.getSignedHex());
+                transaction.postValue(substrateTransaction);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                exception.postValue(new InvalidTransactionException(MainApplication.getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
+            } catch (InvalidTransactionException e) {
+                exception.postValue(e);
+            }finally {
+                isParsing.postValue(false);
+            }
+        });
     }
 
     public void generateAndPostSubstrateTxV2(JSONObject parsedTransaction, String transactionHex) throws JSONException, InvalidAccountException {

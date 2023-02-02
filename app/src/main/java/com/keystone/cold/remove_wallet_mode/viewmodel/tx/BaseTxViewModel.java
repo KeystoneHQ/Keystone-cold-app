@@ -36,6 +36,7 @@ public abstract class BaseTxViewModel extends AndroidViewModel {
 
     protected final MutableLiveData<String> signState = new MutableLiveData<>();
     protected final MutableLiveData<String> rawFormatTx = new MutableLiveData<>();
+    protected MutableLiveData<Boolean> isParsing = new MutableLiveData<>(null);
 
     protected AuthenticateModal.OnVerify.VerifyToken token;
 
@@ -132,6 +133,10 @@ public abstract class BaseTxViewModel extends AndroidViewModel {
 
     public LiveData<String> getRawFormatTx() {
         return rawFormatTx;
+    }
+
+    public MutableLiveData<Boolean> getIsParsing() {
+        return isParsing;
     }
 
 }

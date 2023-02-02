@@ -77,6 +77,7 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
     public void parseTxData(Bundle bundle) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             try {
+                isParsing.postValue(true);
                 String psbtB64 = bundle.getString(BundleKeys.SIGN_DATA_KEY);
                 String mfp = new GetMasterFingerprintCallable().call();
                 PSBT psbt = parsePsbtBase64(psbtB64, mfp);
@@ -85,6 +86,8 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
                 observablePsbt.postValue(psbt);
             } catch (BaseException e) {
                 parseTxException.postValue(e);
+            } finally {
+                isParsing.postValue(false);
             }
         });
     }
@@ -92,6 +95,7 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
     public void parseExistingTransaction(String txId) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             try {
+                isParsing.postValue(true);
                 TxEntity tx = mRepository.loadTxSync(txId);
                 signedPSBT = tx.getSignedHex();
                 rawFormatTx.postValue(signedPSBT);
@@ -106,6 +110,8 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
                 parseTxException.postValue(e);
             } catch (JSONException e) {
                 e.printStackTrace();
+            } finally {
+                isParsing.postValue(false);
             }
         });
 

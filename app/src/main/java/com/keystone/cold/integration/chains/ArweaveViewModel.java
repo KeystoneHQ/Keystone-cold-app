@@ -99,9 +99,7 @@ public class ArweaveViewModel extends AndroidViewModel {
             generatingAddress.postValue(true);
             boolean isMainWallet = Utilities.getCurrentBelongTo(MainApplication.getApplication()).equals("main");
             String portName = EncryptionCoreProvider.getInstance().getPortName();
-            Log.d(TAG, "getRSAPublicKey: " + portName);
             String result = RCCService.getRSAPublicKey(new RCCService.Passport(token.password, isMainWallet, portName));
-            Log.d(TAG, "getRSAPublicKey: " + result);
             addArweaveAddressToDB(result);
         });
     }
@@ -174,7 +172,6 @@ public class ArweaveViewModel extends AndroidViewModel {
         String address = formatHex(Util.sha256(Hex.decode(publicKey)));
         AddressEntity addressEntity = new AddressEntity();
         addressEntity.setCoinId(Coins.AR.coinId());
-        Log.d(TAG, "getArweaveAddress: " + address);
         addressEntity.setAddressString(address);
         addressEntity.setName("AR Account");
         addressEntity.setBelongTo(Utilities.getCurrentBelongTo(mContext));
