@@ -43,7 +43,7 @@ public class SelectOneAddressFragment extends BaseFragment<FragmentSelectOneAddr
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         clickAddressAdapter = new ClickAddressAdapter(mActivity, addr -> {
             Bundle bundle = new Bundle();
-            bundle.putString(BundleKeys.WALLET_ID_KEY, requireArguments().getString(Constants.KEY_WALLET_ID));
+            bundle.putString(BundleKeys.WALLET_ID_KEY, requireArguments().getString(BundleKeys.WALLET_ID_KEY));
             bundle.putSerializable(BundleKeys.ADDRESS_IDS_KEY, (Serializable) Collections.singletonList(addr.getId()));
             bundle.putString(BundleKeys.COIN_ID_KEY, addr.getCoinId());
             navigate(R.id.action_selectOneAddressFragment_to_syncFragment, bundle);

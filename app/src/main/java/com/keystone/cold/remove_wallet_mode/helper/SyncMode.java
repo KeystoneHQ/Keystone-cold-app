@@ -17,7 +17,7 @@ public enum SyncMode {
             case METAMASK:
                 stepMode.postValue(DIRECT);
                 break;
-            case POLKADOT:
+            case POLKADOTJS:
             case SUBWALLET:
                 stepMode.postValue(SUBSTRATE);
                 break;
