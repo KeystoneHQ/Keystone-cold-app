@@ -2,8 +2,6 @@ package com.keystone.cold.remove_wallet_mode.helper;
 
 
 import static com.keystone.cold.MainApplication.getApplication;
-import static com.keystone.cold.remove_wallet_mode.helper.address_generators.SubstrateAddressGenerator.CHAIN_DOT;
-import static com.keystone.cold.remove_wallet_mode.helper.address_generators.SubstrateAddressGenerator.CHAIN_KSM;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -64,10 +62,10 @@ public class AddressManager {
         }
         if (Coins.isPolkadotFamily(Coins.coinCodeFromCoinId(coinId))) {
             if (Coins.DOT.coinId().equals(coinId)) {
-                return SubstrateAddressGenerator.factory(CHAIN_DOT);
+                return new SubstrateAddressGenerator(Coins.DOT);
             }
             if (Coins.KSM.coinId().equals(coinId)) {
-                return SubstrateAddressGenerator.factory(CHAIN_KSM);
+                return new SubstrateAddressGenerator(Coins.KSM);
             }
         }
 

@@ -1,6 +1,7 @@
 package com.keystone.cold.remove_wallet_mode.helper.address_generators;
 
 import com.keystone.coinlib.coins.AbsDeriver;
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AddressEntity;
 
@@ -8,17 +9,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SubstrateAddressGenerator extends BaseAddressGenerator {
-    public static String CHAIN_DOT = "polkadot";
-    public static String CHAIN_KSM = "kusama";
-
     private String rootPath; // path: //polkadot | //kusama | etc..
 
-    public SubstrateAddressGenerator(String chain) {
-        this.rootPath = "//" + chain;
-    }
-
-    public static SubstrateAddressGenerator factory(String chain) {
-        return new SubstrateAddressGenerator(chain);
+    public SubstrateAddressGenerator(Coins.Coin coin) {
+        this.coinId = coin.coinId();
+        this.rootPath = coin.getAccounts()[0];
     }
 
     @Override
