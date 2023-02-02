@@ -23,16 +23,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AddressViewModel extends AndroidViewModel {
-
-    private final String coinId;
+    private String coinId;
     private final DataRepository repository;
-    private final LiveData<List<AddressEntity>> addressEntity;
+    private LiveData<List<AddressEntity>> addressEntity;
 
     public AddressViewModel(@NonNull Application application, DataRepository repository, final String coinId) {
         super(application);
         this.coinId = coinId;
         this.repository = repository;
         addressEntity = repository.loadAddress(coinId);
+    }
+
+    public void updateCoinId(String coinId) {
+        if (!this.coinId.equals(coinId)) {
+            this.coinId = coinId;
+            addressEntity = repository.loadAddress(coinId);
+        }
     }
 
     public LiveData<List<AddressItem>> getAddress() {

@@ -98,6 +98,7 @@ public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
                 AddressViewModel.Factory factory = new AddressViewModel.Factory(mActivity.getApplication(), canonicalCoinId);
                 viewModel = ViewModelProviders.of(getParentFragment(), factory)
                         .get(AddressViewModel.class);
+                viewModel.updateCoinId(canonicalCoinId);
                 if (addressItems != null) {
                     addressItems.removeObservers(this);
                     addressItems = null;
