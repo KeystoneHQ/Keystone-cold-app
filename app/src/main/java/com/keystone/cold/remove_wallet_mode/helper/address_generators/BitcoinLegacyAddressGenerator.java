@@ -1,6 +1,5 @@
 package com.keystone.cold.remove_wallet_mode.helper.address_generators;
 
-import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
