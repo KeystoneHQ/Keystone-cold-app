@@ -94,6 +94,7 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
             try {
                 TxEntity tx = mRepository.loadTxSync(txId);
                 signedPSBT = tx.getSignedHex();
+                rawFormatTx.postValue(signedPSBT);
                 JSONObject object = new JSONObject(tx.getAddition());
                 String psbtB64 = object.getString("raw_message");
                 String mfp = new GetMasterFingerprintCallable().call();

@@ -721,6 +721,14 @@
         <item><u>https://keyst.one/bitKeep</u></item>
     </string-array>
 
+    <string-array name="tutorials_name_blue_wallet">
+        <item>BlueWallet</item>
+    </string-array>
+
+    <string-array name="tutorials_link_blue_wallet">
+        <item><u>https://keyst.one/bluewallet</u></item>
+    </string-array>
+
     <string-array name="tutorials_name_arconnect">
         <item>ARConnect</item>
     </string-array>

@@ -31,9 +31,10 @@
             type="String" />
     </data>
 
-    <com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:nestedScrollingEnabled="false"
         android:orientation="vertical">
 
         <LinearLayout
@@ -51,6 +52,7 @@
                 android:id="@+id/from_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
                 android:visibility="visible"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="1"
@@ -74,6 +76,7 @@
                 android:id="@+id/to_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
                 android:visibility="visible"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="1"
@@ -121,7 +124,8 @@
                 android:id="@+id/qr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/qrcode_container"
@@ -129,8 +133,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="30dp"
                     android:layout_marginTop="20dp"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/broadcast_hint"
@@ -144,11 +147,13 @@
 
                     <include
                         android:id="@+id/qrcode"
-                        layout="@layout/dynamic_qrcode" />
+                        layout="@layout/dynamic_qrcode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>
 
-    </com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout>
+    </ScrollView>
 </layout>

@@ -65,8 +65,6 @@ public class BitcoinTransactionDetailsFragment extends BaseFragment<FragmentBitc
                     outputs.add(o);
                 }
 
-                mBinding.qr.setVisibility(View.GONE);
-
                 PSBTInputAdapter inputAdapter = new PSBTInputAdapter(mActivity);
 
                 inputAdapter.setItems(inputs);
@@ -79,7 +77,7 @@ public class BitcoinTransactionDetailsFragment extends BaseFragment<FragmentBitc
                 mBinding.fee.setText(fee);
 
                 if (v.getSignedBase64() != null){
-                    mBinding.qrcodeContainer.setVisibility(View.VISIBLE);
+                    mBinding.qr.setVisibility(View.VISIBLE);
                     mBinding.qrcode.qrcode.setData(v.getSignatureQRCode());
                 }
             } catch (JSONException e) {
