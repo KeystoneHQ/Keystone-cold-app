@@ -93,7 +93,7 @@ public class BlueWalletViewModel extends AndroidViewModel {
     private CryptoOutput generateNativeSegwitOutput(String masterKeyFingerprint) {
         List<ScriptExpression> scriptExpressions = new ArrayList<>();
         scriptExpressions.add(ScriptExpression.WITNESS_PUBLIC_KEY_HASH);
-        String xpub = new GetExtendedPublicKeyCallable(BitcoinTxViewModel.BTCNestedSegwitPath).call();
+        String xpub = new GetExtendedPublicKeyCallable(BitcoinTxViewModel.BTCNativeSegwitPath).call();
         return new CryptoOutput(scriptExpressions, generateCryptoHDKey(masterKeyFingerprint, xpub, PURPOSE_NATIVE_SEGWIT));
     }
 }

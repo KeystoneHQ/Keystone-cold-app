@@ -72,6 +72,9 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialBinding> {
             case CORE:
                 id = R.array.tutorials_name_core_wallet;
                 break;
+            case BLUEWALLET:
+                id = R.array.tutorials_name_blue_wallet;
+                break;
             case BITKEEP:
                 id = R.array.tutorials_name_bit_keep;
                 break;
@@ -107,6 +110,9 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialBinding> {
                 break;
             case CORE:
                 id = R.array.tutorials_link_core_wallet;
+                break;
+            case BLUEWALLET:
+                id = R.array.tutorials_link_blue_wallet;
                 break;
             case BITKEEP:
                 id = R.array.tutorials_link_bit_keep;

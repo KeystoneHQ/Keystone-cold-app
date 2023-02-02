@@ -28,7 +28,10 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.keystone.coinlib.accounts.BTCAccount;
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.FragmentTxListBinding;
 import com.keystone.cold.databinding.ItemTxListBinding;
 import com.keystone.cold.model.Tx;
@@ -82,7 +85,12 @@ public class TxListFragment extends BaseFragment<FragmentTxListBinding> {
     protected void initData(Bundle savedInstanceState) {
         Bundle bundle = requireArguments();
         String coinId = bundle.getString(BundleKeys.COIN_ID_KEY);
-        txLiveData = viewModel.loadTxs(coinId);
+        String canonicalCoinId = coinId;
+        if (Coins.BTC.coinId().equals(coinId)) {
+            BTCAccount btcAccount = BTCAccount.ofCode(Utilities.getCurrentBTCAccount(mActivity));
+            canonicalCoinId = btcAccount.getCoinId();
+        }
+        txLiveData = viewModel.loadTxs(canonicalCoinId);
         subscribeUI(txLiveData);
     }
 

@@ -400,7 +400,7 @@ public class Utilities {
 
     public static void setCurrentSolAccount(Context context, String code) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
-        sp.edit().putString(SOL_CURRENT_ACCOUNT, code).apply();
+        sp.edit().putString(SOL_CURRENT_ACCOUNT, code).commit();
     }
 
     public static String getCurrentSolAccount(Context context) {
@@ -410,7 +410,7 @@ public class Utilities {
 
     public static void setCurrentBTCAccount(Context context, String code) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
-        sp.edit().putString(BTC_CURRENT_ACCOUNT, code).apply();
+        sp.edit().putString(BTC_CURRENT_ACCOUNT, code).commit();
     }
 
     public static String getCurrentBTCAccount(Context context) {
@@ -420,7 +420,7 @@ public class Utilities {
 
     public static void setCurrentNearAccount(Context context, String code) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
-        sp.edit().putString(NEAR_CURRENT_ACCOUNT, code).apply();
+        sp.edit().putString(NEAR_CURRENT_ACCOUNT, code).commit();
     }
 
     public static String getCurrentNearAccount(Context context) {
