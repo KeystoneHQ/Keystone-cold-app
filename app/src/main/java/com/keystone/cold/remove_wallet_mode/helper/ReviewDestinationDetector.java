@@ -44,7 +44,7 @@ public class ReviewDestinationDetector {
             GenericETHTxEntity ethTxEntity = (GenericETHTxEntity) tx;
             String signedHex = ethTxEntity.getSignedHex();
             Bundle bundle = new Bundle();
-            bundle.putString(KEY_TX_ID, ethTxEntity.getTxId());
+            bundle.putString(BundleKeys.TX_ID_KEY, ethTxEntity.getTxId());
             try {
                 new JSONObject(signedHex);
                 return new Destination(R.id.action_to_ethereumReviewTransactionFragment, bundle);
