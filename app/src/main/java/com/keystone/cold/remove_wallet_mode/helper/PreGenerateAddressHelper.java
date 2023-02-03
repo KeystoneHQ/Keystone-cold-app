@@ -16,8 +16,8 @@ import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinLeg
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNativeSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNestedSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.EthereumAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.NearAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.SolanaAddressGenerator;
-import com.keystone.cold.viewmodel.AddAddressViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -214,23 +214,25 @@ public class PreGenerateAddressHelper {
         try {
             JSONObject derivationPaths = new JSONObject();
             JSONObject accountPaths = new JSONObject();
-            NEARAccount[] nearAccounts = new NEARAccount[]{NEARAccount.MNEMONIC, NEARAccount.LEDGER};
-            for (NEARAccount nearAccount : nearAccounts) {
+            Arrays.stream(NEARAccount.values()).forEach(nearAccount -> {
                 JSONArray addresses = new JSONArray();
                 AccountEntity accountEntity = repository.loadTargetNearAccount(nearAccount);
-                if (accountEntity == null) {
-                    continue;
+                if (accountEntity != null) {
+                    int addressLength = 3;
+                    if (nearAccount == NEARAccount.MNEMONIC) {
+                        addressLength = 1;
+                    }
+                    for (int index = 0; index < addressLength; index++) {
+                        String address = NearAddressGenerator.getAddress(index, nearAccount.getCode());
+                        addresses.put(address);
+                    }
+                    try {
+                        accountPaths.put(nearAccount.getCode(), addresses);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-                int addressLength = 3;
-                if (nearAccount == NEARAccount.MNEMONIC) {
-                    addressLength = 1;
-                }
-                for (int index = 0; index < addressLength; index++) {
-                    String address = AddAddressViewModel.deriveNearAddress(accountEntity, index, null);
-                    addresses.put(address);
-                }
-                accountPaths.put(nearAccount.getCode(), addresses);
-            }
+            });
             derivationPaths.put(Utilities.NEAR_DERIVATION_PATHS, accountPaths);
             derivationPaths.put(VERSION, 1);
             derivationPaths.put(MFP, masterFingerPrint);
