@@ -73,23 +73,22 @@ public class WalletListFragment extends BaseFragment<FragmentWalletListBinding> 
     private void handleItemClick(WalletItem walletItem) {
         LiveData<SyncMode> stepMode = walletViewModel.determineSyncMode(walletItem.getWalletId());
         stepMode.observe(WalletListFragment.this, mode -> {
+            Bundle bundle = new Bundle();
+            bundle.putString(BundleKeys.WALLET_ID_KEY, walletItem.getWalletId());
             switch (mode) {
                 case INVALID: //no address，give error message
                     break;
                 case DIRECT:
-                    Bundle bundleData = new Bundle();
-                    bundleData.putString(BundleKeys.WALLET_ID_KEY, walletItem.getWalletId());
-                    navigate(R.id.action_to_syncFragment, bundleData);
+                    navigate(R.id.action_to_syncFragment, bundle);
                     break;
                 case SUBSTRATE:
-                    Bundle bundle2 = new Bundle();
-                    bundle2.putString(BundleKeys.WALLET_ID_KEY, walletItem.getWalletId());
-                    navigate(R.id.action_to_selectNetworkFragment, bundle2);
+                    navigate(R.id.action_to_selectNetworkFragment, bundle);
                     break;
                 case SELECT_ADDRESS:
-                    Bundle bundle = new Bundle();
-                    bundle.putString(BundleKeys.WALLET_ID_KEY, walletItem.getWalletId());
                     navigate(R.id.action_to_selectAddressFragment, bundle);
+                    break;
+                case SELECT_ONE_ADDRESS:
+                    navigate(R.id.action_to_selectOneAddressFragment, bundle);
                     break;
                 case MULTI_CHAINS: //multi chains wallet, step int select coin page
                     Toast.makeText(mActivity, "多链钱包", Toast.LENGTH_SHORT).show();

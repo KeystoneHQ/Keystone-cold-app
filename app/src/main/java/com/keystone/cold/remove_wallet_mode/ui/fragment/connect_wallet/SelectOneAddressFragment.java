@@ -2,6 +2,7 @@ package com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.lifecycle.LiveData;
@@ -12,17 +13,16 @@ import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentSelectOneAddressBinding;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
+import com.keystone.cold.remove_wallet_mode.helper.WalletMapToCoinHelper;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.ClickAddressAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.model.AddressItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AddressViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
-import com.keystone.cold.ui.fragment.Constants;
 import com.keystone.cold.ui.fragment.main.AddressNumberPicker;
 import com.keystone.cold.ui.fragment.main.NumberPickerCallback;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -50,17 +50,23 @@ public class SelectOneAddressFragment extends BaseFragment<FragmentSelectOneAddr
         });
         Bundle data = requireArguments();
         String coinId = data.getString(BundleKeys.COIN_ID_KEY);
-        AddressViewModel.Factory factory = new AddressViewModel.Factory(mActivity.getApplication(), coinId);
-        viewModel = ViewModelProviders.of(this, factory)
-                .get(AddressViewModel.class);
-        if (addressLiveData != null) {
-            addressLiveData.removeObservers(this);
-            addressLiveData = null;
+        String walletId = data.getString(BundleKeys.WALLET_ID_KEY);
+        if (TextUtils.isEmpty(coinId) && !TextUtils.isEmpty(walletId)) {
+            coinId = WalletMapToCoinHelper.mapToCoinId(walletId);
         }
-        mBinding.addrList.setAdapter(clickAddressAdapter);
-        mBinding.llAddAccounts.setOnClickListener(v -> handleAddAccounts());
-        addressLiveData = viewModel.getAddress();
-        subscribeUi(addressLiveData);
+        if (!TextUtils.isEmpty(coinId)) {
+            AddressViewModel.Factory factory = new AddressViewModel.Factory(mActivity.getApplication(), coinId);
+            viewModel = ViewModelProviders.of(this, factory)
+                    .get(AddressViewModel.class);
+            if (addressLiveData != null) {
+                addressLiveData.removeObservers(this);
+                addressLiveData = null;
+            }
+            mBinding.addrList.setAdapter(clickAddressAdapter);
+            mBinding.llAddAccounts.setOnClickListener(v -> handleAddAccounts());
+            addressLiveData = viewModel.getAddress();
+            subscribeUi(addressLiveData);
+        }
     }
 
     private void subscribeUi(LiveData<List<AddressItem>> address) {
