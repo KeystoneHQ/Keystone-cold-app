@@ -43,6 +43,7 @@ import com.allenliu.badgeview.BadgeFactory;
 import com.allenliu.badgeview.BadgeView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.MainApplication;
@@ -263,6 +264,8 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         APT(Coins.APTOS.coinId(), true, false, true),
         SOL(Coins.SOL.coinId(), true, true, true),
         SOL_BIP44_ROOT(Coins.SOL.coinId() + "_" + SOLAccount.SOLFLARE_BIP44_ROOT.getCode(), false, true, true),
+        NEAR(Coins.NEAR.coinId(), false, true, true),
+        NEAR_LEDGER(Coins.NEAR.coinId()+ "_" + NEARAccount.LEDGER.getCode(), true, true, true),
         DOT(Coins.DOT.coinId(), true, false, true, false, true),
         DEFAULT("default", true, true, true, false, true);
 
@@ -290,6 +293,11 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
             if (Coins.SOL.coinId().equals(coinId)) {
                 String code = Utilities.getCurrentSolAccount(MainApplication.getApplication());
                 if (SOLAccount.SOLFLARE_BIP44_ROOT.getCode().equals(code)) {
+                    coinId = coinId + "_" + code;
+                }
+            } else if (Coins.NEAR.coinId().equals(coinId)) {
+                String code = Utilities.getCurrentNearAccount(MainApplication.getApplication());
+                if (NEARAccount.LEDGER.getCode().equals(code)) {
                     coinId = coinId + "_" + code;
                 }
             }
