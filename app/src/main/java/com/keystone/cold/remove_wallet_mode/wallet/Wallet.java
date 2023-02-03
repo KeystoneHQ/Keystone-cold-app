@@ -11,7 +11,7 @@ public enum Wallet {
     SAFE("safe"),
     BITKEEP("bitkeep"),
     BLUEWALLET("bluewallet", "BlueWallet"),
-    SOLFLARE("solflare"),
+    SOLFLARE("solflare", "Solflare"),
     SUBWALLET("subwallet", "SubWallet"),
     ETERNL("eternl"),
     ARCONNECT("arconnect"),
