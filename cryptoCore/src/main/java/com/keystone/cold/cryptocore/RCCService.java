@@ -35,9 +35,6 @@ public class RCCService {
         GetRSAPublicKeyRequestBuilder rb = new GetRSAPublicKeyRequestBuilder();
         rb.setSignId(passport.FixedRequestId);
         int seedId = passport.isMainWallet? 0 : 0x50;
-        Log.d(TAG, "getRSAPublicKey: " + seedId);
-        Log.d(TAG, "getRSAPublicKey: " + passport.authToken);
-        Log.d(TAG, "getRSAPublicKey: " + passport.portName);
         rb.setGetRSAPublicKeyRequest(seedId, passport.authToken, passport.portName);
         String command = rb.build();
 

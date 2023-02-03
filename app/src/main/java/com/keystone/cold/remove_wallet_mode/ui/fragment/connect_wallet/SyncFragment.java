@@ -104,7 +104,6 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         if (substrateSyncData != null) {
             substrateSyncData.observe(this, data -> {
                 if (data != null) {
-                    Log.d(TAG, "generateSyncData: " + data);
                     mBinding.dynamicQrcodeLayout.qrcode.disableMultipart();
                     mBinding.dynamicQrcodeLayout.qrcode.setData(data);
                     substrateSyncData.removeObservers(this);
