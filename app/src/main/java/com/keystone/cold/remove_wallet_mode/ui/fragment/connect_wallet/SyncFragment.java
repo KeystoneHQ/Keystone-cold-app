@@ -85,24 +85,41 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-        generateSyncData();
+        switch (wallet) {
+            case POLKADOTJS:
+            case SUBWALLET:
+                generateSubstrateSyncData();
+                break;
+            default:
+                generateURSyncData();
+        }
     }
 
-    private void generateSyncData() {
+    private void generateSubstrateSyncData() {
+        MutableLiveData<String> substrateSyncData;
+        SubstrateWalletViewModel substrateWalletViewModel = ViewModelProviders.of(this).get(SubstrateWalletViewModel.class);
+        substrateWalletViewModel.setCoinId(requireArguments().getString(BundleKeys.COIN_ID_KEY));
+        substrateWalletViewModel.setAddressId(addressIds.get(0));
+        substrateSyncData = substrateWalletViewModel.generateSyncData();
+        if (substrateSyncData != null) {
+            substrateSyncData.observe(this, data -> {
+                if (data != null) {
+                    Log.d(TAG, "generateSyncData: " + data);
+                    mBinding.dynamicQrcodeLayout.qrcode.disableMultipart();
+                    mBinding.dynamicQrcodeLayout.qrcode.setData(data);
+                    substrateSyncData.removeObservers(this);
+                }
+            });
+        }
+    }
+
+    private void generateURSyncData() {
         MutableLiveData<UR> urMutableLiveData;
-        MutableLiveData<String> substrateSyncData = null;
         switch (wallet) {
             case FEWCHA:
                 FewchaWalletViewModel fewchaWalletViewModel = ViewModelProviders.of(this).get(FewchaWalletViewModel.class);
                 fewchaWalletViewModel.setAddressIds(addressIds);
                 urMutableLiveData = fewchaWalletViewModel.generateSyncUR();
-                break;
-            case POLKADOT:
-            case SUBWALLET:
-                SubstrateWalletViewModel substrateWalletViewModel = ViewModelProviders.of(this).get(SubstrateWalletViewModel.class);
-                substrateWalletViewModel.setAddressId(addressIds.get(0));
-                urMutableLiveData = null;
-                substrateSyncData = substrateWalletViewModel.generateSyncData();
                 break;
             case METAMASK:
                 MetamaskViewModel metamaskViewModel = ViewModelProviders.of(this).get(MetamaskViewModel.class);
@@ -124,17 +141,8 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
             urMutableLiveData.observe(this, ur -> {
                 if (ur != null) {
                     mBinding.dynamicQrcodeLayout.qrcode.displayUR(ur);
+                    urMutableLiveData.removeObservers(this);
                 }
-                urMutableLiveData.removeObservers(this);
-            });
-        }
-        if (substrateSyncData != null) {
-            MutableLiveData<String> finalSubstrateSyncData = substrateSyncData;
-            finalSubstrateSyncData.observe(this, data -> {
-                if (data != null) {
-                    mBinding.dynamicQrcodeLayout.qrcode.setData(data);
-                }
-                finalSubstrateSyncData.removeObservers(this);
             });
         }
     }
@@ -145,7 +153,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         DialogAssetBottomBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.dialog_asset_bottom, null, false);
         WalletConfig config = WalletConfig.getConfigByWalletId(wallet.getWalletId());
         if (config.isShowSelectAddress()) {
-            if (wallet.equals(Wallet.POLKADOT) || wallet.equals(Wallet.SUBWALLET)) {
+            if (wallet.equals(Wallet.POLKADOTJS) || wallet.equals(Wallet.SUBWALLET)) {
                 binding.selectAccountText.setText(R.string.select_another_account);
             }
             binding.rlSelectAddress.setVisibility(View.VISIBLE);
@@ -158,7 +166,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         }
 
         binding.rlSelectAddress.setOnClickListener(v -> {
-            if (wallet.equals(Wallet.POLKADOT) || wallet.equals(Wallet.SUBWALLET)) {
+            if (wallet.equals(Wallet.POLKADOTJS) || wallet.equals(Wallet.SUBWALLET)) {
                 navigateUp();
                 Bundle bundle = new Bundle();
                 bundle.putString(BundleKeys.WALLET_ID_KEY, wallet.getWalletId());
@@ -193,7 +201,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         METAMASK(Wallet.METAMASK.getWalletId(), new String[]{Coins.ETH.coinId()}, true, false, true),
         FEWCHA(Wallet.FEWCHA.getWalletId(), new String[]{Coins.APTOS.coinId()}, false, true, true),
         SOLFLARE(Wallet.SOLFLARE.getWalletId(), new String[]{Coins.SOL.coinId()}, true, true, true),
-        POLKADOT(Wallet.POLKADOT.getWalletId(), new String[]{Coins.DOT.coinId(), Coins.KSM.coinId()}, false, true, true),
+        POLKADOT(Wallet.POLKADOTJS.getWalletId(), new String[]{Coins.DOT.coinId(), Coins.KSM.coinId()}, false, true, true),
         SUBWALLET(Wallet.SUBWALLET.getWalletId(), new String[]{Coins.DOT.coinId(), Coins.KSM.coinId()}, false, true, true),
         DEFAULT("default", new String[]{}, false, false, true),
         ;

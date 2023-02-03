@@ -8,6 +8,7 @@ public class UnknownException extends BaseException {
     }
 
     public static UnknownException newInstance(Exception e) {
+        e.printStackTrace();
         return new UnknownException(null, "unknown exception, please create proper exception type before release. error details: \n" + e.getMessage());
     }
 

@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.utils.SDCardUtil;
 import com.keystone.cold.AppExecutors;
@@ -132,6 +133,24 @@ public class PolkadotViewModel extends AndroidViewModel {
             e.printStackTrace();
             throw new PolkadotException("Invalid Response");
         }
+    }
+
+    public MutableLiveData<JSONObject> parseTransactionAsync(String transactionHex){
+        MutableLiveData<JSONObject> result = new MutableLiveData<>(null);
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            String response = PolkadotService.parse(transactionHex, dbPath);
+            try {
+                result.postValue(new JSONObject(response));
+            } catch (JSONException e) {
+                e.printStackTrace();
+                try {
+                    result.postValue(new JSONObject().put("status", "failed"));
+                } catch (JSONException jsonException) {
+                    jsonException.printStackTrace();
+                }
+            }
+        });
+        return result;
     }
 
     public JSONObject handleStub(int checksum) throws PolkadotException {

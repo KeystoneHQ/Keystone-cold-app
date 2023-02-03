@@ -57,7 +57,7 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialBinding> {
             case SOLFLARE:
                 id = R.array.tutorials_name_sol;
                 break;
-            case POLKADOT:
+            case POLKADOTJS:
                 id = R.array.tutorials_name_polkadot;
                 break;
             case XRPTOOLKIT:
@@ -96,7 +96,7 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialBinding> {
             case SOLFLARE:
                 id = R.array.tutorials_link_sol;
                 break;
-            case POLKADOT:
+            case POLKADOTJS:
                 id = R.array.tutorials_link_polkadot;
                 break;
             case XRPTOOLKIT:

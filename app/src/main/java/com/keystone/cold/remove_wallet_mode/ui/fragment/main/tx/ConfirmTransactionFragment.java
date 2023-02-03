@@ -21,11 +21,15 @@ import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.BaseTxViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
+import com.keystone.cold.ui.modal.ProgressModalDialog;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
 
+import java.util.Objects;
+
 public abstract class ConfirmTransactionFragment<V extends BaseTxViewModel> extends BaseFragment<FragmentConfirmTransactionBinding> {
 
+    protected ProgressModalDialog pendingDialog;
     private SigningDialog signingDialog;
     protected V viewModel;
 
@@ -46,6 +50,15 @@ public abstract class ConfirmTransactionFragment<V extends BaseTxViewModel> exte
         setupView();
         setupViewPager();
         mBinding.toolbar.setNavigationOnClickListener((v) -> this.navigateUp());
+        viewModel.getIsParsing().observe(this, (v) -> {
+            if (v == null) return;
+            if (v) {
+                pendingDialog = ProgressModalDialog.newInstance();
+                pendingDialog.show(Objects.requireNonNull(mActivity.getSupportFragmentManager()), "");
+            } else {
+                if (pendingDialog != null) pendingDialog.dismiss();
+            }
+        });
     }
 
     protected abstract void initViewModel();

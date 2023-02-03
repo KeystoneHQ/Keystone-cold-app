@@ -1,6 +1,9 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.substrate;
 
 import com.keystone.coinlib.utils.Coins;
+import com.keystone.cold.MainApplication;
+import com.keystone.cold.R;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,14 +28,16 @@ public class SubstrateTransaction {
         this.checksum = checksum;
     }
 
-    public static SubstrateTransaction factory(String jsonStr, String rawHex) throws JSONException {
+    public static SubstrateTransaction factory(String jsonStr, String rawHex) throws JSONException, InvalidTransactionException {
         JSONObject pt = new JSONObject(jsonStr);
+        String status = pt.optString("status", "success");
+        if (status.equals("failed")) throw new InvalidTransactionException(MainApplication.getApplication().getString(R.string.incorrect_tx_data), "invalid transaction");
         String type = pt.getString("transaction_type");
         int checksum = pt.optInt("checksum", 0);
-        JSONObject networkInfo = pt.getJSONObject("network_info");
-        String network = networkInfo.getString("network_title");
         String coinCode = null;
         if (type.equals("Sign")) {
+            JSONObject networkInfo = pt.getJSONObject("network_info");
+            String network = networkInfo.getString("network_title");
             switch (network) {
                 case "Polkadot": {
                     coinCode = Coins.DOT.coinCode();

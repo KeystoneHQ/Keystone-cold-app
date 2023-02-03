@@ -56,7 +56,7 @@ public class SubstrateTransactionDetailFragment extends BaseFragment<FragmentSub
             mBinding.checkInfo.head.setVisibility(View.GONE);
             switch (type) {
                 case "Sign": {
-                    mBinding.txDetail.updateUI(content);
+                    mBinding.txView.txDetail.updateUI(content);
                     mBinding.checkInfo.head.setVisibility(View.VISIBLE);
                     mBinding.checkInfo.checkInfoContent.setText(R.string.check_info_dot);
                     mBinding.setCoinCode(transaction.getCoinCode());
@@ -64,10 +64,11 @@ public class SubstrateTransactionDetailFragment extends BaseFragment<FragmentSub
                     break;
                 }
                 case "Stub": {
-                    mBinding.txDetail.updateUI(content);
+                    mBinding.txView.txDetail.updateUI(content);
                     break;
                 }
                 case "Read": {
+                    mBinding.root.setVisibility(View.GONE);
                     PolkadotErrorDialog.show(mActivity, getString(R.string.notice), getString(R.string.decline), content, this::navigateUp);
                     break;
                 }

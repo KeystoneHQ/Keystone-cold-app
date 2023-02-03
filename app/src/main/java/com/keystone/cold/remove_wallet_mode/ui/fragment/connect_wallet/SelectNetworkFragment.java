@@ -24,7 +24,7 @@ public class SelectNetworkFragment extends BaseFragment<FragmentSelectNetworkBin
     protected void init(View view) {
         ClickableAdapter.ClickableCallback callback = item -> {
             Bundle bundle = new Bundle();
-            bundle.putString(BundleKeys.WALLET_ID_KEY, requireArguments().getString(Constants.KEY_WALLET_ID));
+            bundle.putString(BundleKeys.WALLET_ID_KEY, requireArguments().getString(BundleKeys.WALLET_ID_KEY));
             bundle.putString(BundleKeys.COIN_ID_KEY, item.getId());
             navigate(R.id.action_selectNetworkFragment_to_selectOneAddressFragment, bundle);
         };

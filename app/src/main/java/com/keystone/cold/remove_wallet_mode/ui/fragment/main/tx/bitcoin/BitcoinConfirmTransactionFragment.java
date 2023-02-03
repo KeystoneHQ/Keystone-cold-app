@@ -16,7 +16,6 @@ import com.keystone.cold.ui.modal.ProgressModalDialog;
 import java.util.Objects;
 
 public class BitcoinConfirmTransactionFragment extends ConfirmTransactionFragment<BitcoinTxViewModel> {
-    ProgressModalDialog dialog = ProgressModalDialog.newInstance();
 
     @Override
     protected void initViewModel() {
@@ -37,19 +36,13 @@ public class BitcoinConfirmTransactionFragment extends ConfirmTransactionFragmen
     @Override
     protected void setupView() {
         mBinding.toolbar.setNavigationOnClickListener((v) -> navigateUp());
-        dialog.show(Objects.requireNonNull(mActivity.getSupportFragmentManager()), "");
         mBinding.sign.setOnClickListener(v -> {
             handleSign();
-        });
-        viewModel.getObservablePsbt().observe(this, (v) -> {
-            if (v == null) return;
-            dialog.dismiss();
         });
     }
 
     private void handleParseException(BaseException ex) {
         if (ex != null) {
-            dialog.dismiss();
             ex.printStackTrace();
             alertException(ex, () -> {
                 popBackStack(R.id.myAssetsFragment, false);

@@ -15,7 +15,6 @@ import com.keystone.cold.ui.modal.ProgressModalDialog;
 import java.util.Objects;
 
 public class BitcoinReviewTransactionFragment extends ReviewTransactionFragment<BitcoinTxViewModel> {
-    ProgressModalDialog dialog = ProgressModalDialog.newInstance();
     @Override
     protected void initViewModel() {
         viewModel = ViewModelProviders.of(this).get(BitcoinTxViewModel.class);
@@ -32,11 +31,6 @@ public class BitcoinReviewTransactionFragment extends ReviewTransactionFragment<
 
     @Override
     protected void setupView() {
-        dialog.show(Objects.requireNonNull(mActivity.getSupportFragmentManager()), "");
-        viewModel.getObservablePsbt().observe(this, (v) -> {
-            if (v == null) return;
-            dialog.dismiss();
-        });
         Bundle data = requireArguments();
         viewModel.parseTxException().observe(this, this::handleParseException);
         String txId = data.getString(BundleKeys.TX_ID_KEY);
@@ -45,7 +39,6 @@ public class BitcoinReviewTransactionFragment extends ReviewTransactionFragment<
 
     private void handleParseException(BaseException ex) {
         if (ex != null) {
-            dialog.dismiss();
             ex.printStackTrace();
             alertException(ex, () -> {
                 popBackStack(R.id.myAssetsFragment, false);

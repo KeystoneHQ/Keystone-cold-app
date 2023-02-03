@@ -10,9 +10,9 @@ public enum Wallet {
     KEPLR("keplr"),
     SAFE("safe"),
     BITKEEP("bitkeep"),
-    BLUEWALLET("bluewallet"),
+    BLUEWALLET("bluewallet", "BlueWallet"),
     SOLFLARE("solflare"),
-    SUBWALLET("subwallet"),
+    SUBWALLET("subwallet", "SubWallet"),
     ETERNL("eternl"),
     ARCONNECT("arconnect"),
     PETRA("petra"),
@@ -20,7 +20,7 @@ public enum Wallet {
     SENDER("sender"),
     RABBY("rabby"),
     CORE("core"),
-    POLKADOT("polkadot"),
+    POLKADOTJS("polkadotjs", "Polkadot.{js}"),
     XRPTOOLKIT("xrp"),
     ZAPPER("zapper"),
     YEARN("yearn"),
@@ -63,7 +63,7 @@ public enum Wallet {
 
     public String getSignId() {
         switch (this) {
-            case POLKADOT:
+            case POLKADOTJS:
                 return POLKADOT_JS_SIGN_ID;
             case XRPTOOLKIT:
                 return XRP_TOOLKIT_SIGN_ID;
@@ -118,7 +118,7 @@ public enum Wallet {
             case SOLFLARE:
             case BLUEWALLET:
             case SUBWALLET:
-            case POLKADOT:
+            case POLKADOTJS:
                 return true;
             case CORE:
                 return false;
@@ -135,7 +135,7 @@ public enum Wallet {
                 } else {
                     return new Coins.Coin[]{Coins.BTC, Coins.BTC_LEGACY, Coins.BTC_NATIVE_SEGWIT, Coins.BCH, Coins.ETH, Coins.XRP, Coins.TRON, Coins.LTC, Coins.DASH, Coins.DOT};
                 }
-            case POLKADOT:
+            case POLKADOTJS:
                 return new Coins.Coin[]{Coins.DOT, Coins.KSM};
             case XRPTOOLKIT:
                 return new Coins.Coin[]{Coins.XRP};

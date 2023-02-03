@@ -17,14 +17,23 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.keystone.coinlib.coins.polkadot.AddressCodec;
+import com.keystone.coinlib.utils.Coins;
+import com.keystone.cold.AppExecutors;
+import com.keystone.cold.DataRepository;
+import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.DialogAssetBottomBinding;
 import com.keystone.cold.databinding.FragmentMyAssetsBinding;
+import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.CoinAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.model.AssetItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AssetViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.viewmodel.PolkadotViewModel;
+
+import org.spongycastle.util.encoders.Hex;
 
 import java.util.List;
 import java.util.Objects;
@@ -63,11 +72,11 @@ public class MyAssetsFragment extends BaseFragment<FragmentMyAssetsBinding> {
     protected void initData(Bundle savedInstanceState) {
         AssetViewModel assetViewModel = ViewModelProviders.of(mActivity).get(AssetViewModel.class);
         subscribeUi(assetViewModel.loadAssets());
+        hookSubstrateAddresses();
     }
 
     private void subscribeUi(LiveData<List<AssetItem>> assets) {
         assets.observe(this, assetItems -> {
-            Log.d("sora", "subscribeUi: " + assetItems);
             if (assetItems != null) {
                 coinAdapter.setItems(filterDisplayCoins(assetItems));
             }
@@ -113,4 +122,38 @@ public class MyAssetsFragment extends BaseFragment<FragmentMyAssetsBinding> {
         dialog.show();
     }
 
+    private void hookSubstrateAddresses() {
+        AppExecutors.getInstance().diskIO().execute(() -> {});
+        PolkadotViewModel polkadotViewModel = ViewModelProviders.of(this).get(PolkadotViewModel.class);
+        DataRepository mRepository = MainApplication.getApplication().getRepository();
+        try {
+            polkadotViewModel.initialDB();
+            LiveData<List<AddressEntity>> dot = mRepository.loadAddress(Coins.DOT.coinId());
+            dot.observe(this, addressEntities -> addressEntities.forEach((a) -> {
+                try {
+                    byte[] pubkey = AddressCodec.decodeAddress(a.getAddressString());
+                    String publicKey = Hex.toHexString(pubkey);
+                    String path = a.getPath();
+                    polkadotViewModel.importAddress(publicKey, path);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                dot.removeObservers(this);
+            }));
+            LiveData<List<AddressEntity>> ksm = mRepository.loadAddress(Coins.KSM.coinId());
+            ksm.observe(this, addressEntities -> addressEntities.forEach((a) -> {
+                try {
+                    byte[] pubkey = AddressCodec.decodeAddress(a.getAddressString());
+                    String publicKey = Hex.toHexString(pubkey);
+                    String path = a.getPath();
+                    polkadotViewModel.importAddress(publicKey, path);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ksm.removeObservers(this);
+            }));
+        } catch (PolkadotViewModel.PolkadotException e) {
+            e.printStackTrace();
+        }
+    }
 }
