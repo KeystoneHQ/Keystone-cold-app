@@ -106,15 +106,14 @@ public class ArweaveTxViewModel extends AndroidViewModel {
                 JSONObject object = new JSONObject(json);
                 String owner = object.optString("owner");
                 String pubkey = ArweaveViewModel.getARPublicKey();
-                if (pubkey == null ) {
+                if (pubkey == null) {
                     observerException.postValue(new InvalidStateException(mApplication.getString(R.string.incorrect_tx_data), "invalid state, pubkey cannot find"));
                     result.postValue(new Tx());
                 }
                 String myOwner = ArweaveViewModel.formatHex(Hex.decode(pubkey));
                 if (owner.equals("")) {
                     object.put("owner", myOwner);
-                }
-                else {
+                } else {
                     if (!owner.equalsIgnoreCase(myOwner)) {
                         observerException.postValue(new InvalidTransactionException(mApplication.getString(R.string.incorrect_tx_data), "invalid transaction, owner not match"));
                         result.postValue(new Tx());
@@ -152,10 +151,11 @@ public class ArweaveTxViewModel extends AndroidViewModel {
                 String txId = ArweaveViewModel.formatHex(Util.sha256(Hex.decode(signature)));
                 insertDB(signature, txId, tx);
                 signState.postValue(new SignState(STATE_SIGN_SUCCESS, txId, signature));
-                new ClearTokenCallable().call();
             } catch (Exception e) {
                 e.printStackTrace();
                 signState.postValue(new SignState(STATE_SIGN_FAIL, null));
+            } finally {
+                new ClearTokenCallable().call();
             }
         });
         return signState;
@@ -168,6 +168,7 @@ public class ArweaveTxViewModel extends AndroidViewModel {
             RustSigner signer = initSigner();
             if (signer == null) {
                 signState.postValue(new SignState(STATE_SIGN_FAIL, null));
+                new ClearTokenCallable().call();
                 return;
             }
             String signature = signer.signRSA(message, saltLen);
