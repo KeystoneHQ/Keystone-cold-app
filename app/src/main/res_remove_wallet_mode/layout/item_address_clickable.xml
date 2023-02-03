@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:layout_toEndOf="@id/addr"
-                android:text="@{addressItem.path}"
+                android:text="@{addressItem.displayPath}"
                 android:textColor="@color/white40"
                 android:textSize="12sp"
                 tools:text="(//polkadot)" />

@@ -326,6 +326,12 @@
         tools:layout="@layout/fragment_receive" />
 
     <fragment
+        android:id="@+id/nearAccountInfoFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.near.NearAccountInfoFragment"
+        android:label="NearAccountInfoFragment"
+        tools:layout="@layout/fragment_near_account_info" />
+
+    <fragment
         android:id="@+id/systemSettingFragment"
         android:name="com.keystone.cold.ui.fragment.setting.SystemSettingFragment"
         android:label="SystemSettingFragment"
@@ -504,6 +510,15 @@
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
         app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_nearAccountInformationFragment"
+        app:destination="@id/nearAccountInfoFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
     <action
         android:id="@+id/action_to_bitcoinConfirmTransactionFragment"
         app:destination="@id/bitcoinConfirmTransactionFragment"
