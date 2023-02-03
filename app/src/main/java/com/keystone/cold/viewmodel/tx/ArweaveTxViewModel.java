@@ -53,7 +53,7 @@ public class ArweaveTxViewModel extends AndroidViewModel {
         return observerException;
     }
 
-    private MutableLiveData<BaseException> observerException;
+    private final MutableLiveData<BaseException> observerException = new MutableLiveData<>(null);
 
     public ArweaveTxViewModel(@NonNull Application application) {
         super(application);
