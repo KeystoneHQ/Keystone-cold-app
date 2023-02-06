@@ -6,6 +6,7 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
+import com.keystone.cold.util.ExtendedPublicKeyCacheHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,7 +34,7 @@ public class EthereumAddressGenerator extends MultiAccountAddressGenerator {
             default:
                 path = ethAccount.getPath() + "/0/" + account;
         }
-        String xPub = new GetExtendedPublicKeyCallable(path).call();
+        String xPub = ExtendedPublicKeyCacheHelper.getInstance().getExtendedPublicKey(path);
         String address = deriver.derive(xPub);
         addressEntity.setPath(path);
         return address;

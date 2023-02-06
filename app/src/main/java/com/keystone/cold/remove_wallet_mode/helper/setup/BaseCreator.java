@@ -6,17 +6,14 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.Utilities;
-import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
+import com.keystone.cold.util.ExtendedPublicKeyCacheHelper;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class BaseCreator extends Creator {
 
-    private static final Map<String, String> EXTENDED_PUBLIC_KEY_CACHE = new HashMap<>();
     protected final DataRepository repository = MainApplication.getApplication().getRepository();
     protected Coins.Coin coin;
 
@@ -48,7 +45,7 @@ public abstract class BaseCreator extends Creator {
         CoinEntity coinEntity = mapToCoinEntity(coin);
         boolean isFirstAccount = true;
         for (AccountEntity account : coinEntity.getAccounts()) {
-            String xPub = getExtendedPublicKey(account.getHdPath());
+            String xPub = ExtendedPublicKeyCacheHelper.getInstance().getExtendedPublicKey(account.getHdPath());
             if (TextUtils.isEmpty(xPub)) {
                 continue;
             }
@@ -95,21 +92,6 @@ public abstract class BaseCreator extends Creator {
     }
 
     protected abstract void addAccount(CoinEntity entity);
-
-    protected String getExtendedPublicKey(String pubKeyPath) {
-        if (EXTENDED_PUBLIC_KEY_CACHE.containsKey(pubKeyPath)) {
-            return EXTENDED_PUBLIC_KEY_CACHE.get(pubKeyPath);
-        } else {
-            String xPub = new GetExtendedPublicKeyCallable(pubKeyPath).call();
-            EXTENDED_PUBLIC_KEY_CACHE.put(pubKeyPath, xPub);
-            return xPub;
-        }
-    }
-
-    public static void clearCache() {
-        EXTENDED_PUBLIC_KEY_CACHE.clear();
-    }
-
 
     public static boolean isDefaultOpen(String coinCode) {
         switch (coinCode) {
