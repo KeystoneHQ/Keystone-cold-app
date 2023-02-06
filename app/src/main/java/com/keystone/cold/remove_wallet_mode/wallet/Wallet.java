@@ -15,7 +15,7 @@ public enum Wallet {
     SUBWALLET("subwallet", "SubWallet"),
     ETERNL("eternl"),
     ARCONNECT("arconnect"),
-    PETRA("petra"),
+    PETRA("petra", "Petra"),
     FEWCHA("fewcha", "Fewcha"),
     SENDER("sender"),
     RABBY("rabby"),
@@ -37,6 +37,7 @@ public enum Wallet {
     public static final String BIT_KEEP_SIGN_ID = "bit_keep_sign_id";
     public static final String ARWEAVE_SIGN_ID = "arweave_sign_id";
     public static final String KEPLR_WALLET_SIGN_ID = "keplr_wallet_sign_id";
+    public static final String PETRA_WALLET_SIGN_ID = "petra_wallet_sign_id";
 
     public static final String UNKOWN_WALLET_SIGN_ID = "unknown_wallet_sign_id";
 
@@ -75,6 +76,8 @@ public enum Wallet {
                 return NEAR_SIGN_ID;
             case FEWCHA:
                 return APTOS_SIGN_ID;
+            case PETRA:
+                return PETRA_WALLET_SIGN_ID;
             case CORE:
                 return CORE_WALLET_SIGN_ID;
             case BITKEEP:
