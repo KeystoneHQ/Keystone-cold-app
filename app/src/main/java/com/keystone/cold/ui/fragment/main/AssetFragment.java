@@ -471,6 +471,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     public static final String REQUEST_ID = "requestId";
     public static final String HD_PATH = "hdPath";
     public static final String DATA_TYPE = "dataType";
+    public static final String ORIGIN_DATA = "originData";
 
     private void scanQrCode() {
         ScannerState scannerState = new ScannerState() {
@@ -637,6 +638,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 bundle.putString(REQUEST_ID, uuid.toString());
                 bundle.putString(SIGN_DATA, signData);
                 bundle.putString(HD_PATH, "M/" + hdPath);
+                bundle.putString(ORIGIN_DATA, aptosSignRequest.getOrigin());
                 AptosSignRequest.DataType dataType = aptosSignRequest.getType();
                 switch (dataType) {
                     case MESSAGE:

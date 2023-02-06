@@ -1,6 +1,7 @@
 package com.keystone.cold.viewmodel.tx;
 
 import static com.keystone.cold.ui.fragment.main.AssetFragment.HD_PATH;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.ORIGIN_DATA;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.REQUEST_ID;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.SIGN_DATA;
 
@@ -37,6 +38,7 @@ import com.keystone.cold.ui.fragment.main.aptos.model.AptosTxData;
 import com.keystone.cold.ui.fragment.main.aptos.model.AptosTxParser;
 import com.keystone.cold.util.AptosTransactionHelper;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
+import com.keystone.cold.viewmodel.WatchWallet;
 import com.sparrowwallet.hummingbird.registry.aptos.AptosSignature;
 
 import org.json.JSONException;
@@ -59,6 +61,7 @@ public class AptosViewModel extends Base {
     private String txHex;
     private String messageData;
     private String hdPath;
+    private String origin;
 
     private String requestId;
     private String signature;
@@ -170,6 +173,7 @@ public class AptosViewModel extends Base {
             txHex = bundle.getString(SIGN_DATA);
             hdPath = bundle.getString(HD_PATH);
             requestId = bundle.getString(REQUEST_ID);
+            origin = bundle.getString(ORIGIN_DATA);
             String data = AptosTransactionHelper.getPureSignData(txHex);
             String parseResult = AptosParser.parse(data);
             Log.i(TAG, "raw is " + parseResult);
@@ -366,12 +370,21 @@ public class AptosViewModel extends Base {
     private TxEntity generateAptosTxEntity() {
         TxEntity txEntity = new TxEntity();
         txEntity.setCoinId(Coins.APTOS.coinId());
-        txEntity.setSignId(watchWallet.getSignId());
+        txEntity.setSignId(getWalletId());
         txEntity.setCoinCode(Coins.APTOS.coinCode());
         txEntity.setTimeStamp(getUniversalSignIndex(getApplication()));
         txEntity.setBelongTo(mRepository.getBelongTo());
         txEntity.setSignedHex(getSignatureUR());
         return txEntity;
+    }
+
+    private String getWalletId() {
+        if (!TextUtils.isEmpty(origin)) {
+            if (origin.equalsIgnoreCase("Petra")) {
+                return WatchWallet.PETRA_WALLET_SIGN_ID;
+            }
+        }
+        return watchWallet.getSignId();
     }
 
     public void parseAptosTxEntity(TxEntity txEntity) {
