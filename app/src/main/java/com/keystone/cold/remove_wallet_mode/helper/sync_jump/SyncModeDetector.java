@@ -6,6 +6,8 @@ public interface SyncModeDetector {
 
         void useSelectAddress();
 
+        void useSelectOneAddress();
+
         void invalid();
     }
 

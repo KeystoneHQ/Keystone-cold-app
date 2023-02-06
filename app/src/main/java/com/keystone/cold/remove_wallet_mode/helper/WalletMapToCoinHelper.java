@@ -12,8 +12,10 @@ public class WalletMapToCoinHelper {
                 return Coins.APTOS.coinId();
             case SOLFLARE:
                 return Coins.SOL.coinId();
+            case SENDER:
+                return Coins.NEAR.coinId();
             default:
-                throw new RuntimeException("unsupported wallet!!!");
+                return null;
         }
     }
 }

@@ -6,6 +6,7 @@ import com.keystone.cold.remove_wallet_mode.helper.setup.BaseCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.BitcoinCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.Creator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.EthereumCreator;
+import com.keystone.cold.remove_wallet_mode.helper.setup.NearCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.SolanaCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.SubstrateCreator;
 
@@ -49,6 +50,8 @@ public class SetupManager {
             return new BitcoinCreator(Coins.BTC);
         } else if (coinId.equals(Coins.BTC_NATIVE_SEGWIT.coinId())) {
             return new BitcoinCreator(Coins.BTC_NATIVE_SEGWIT);
+        } else if (coinId.equals(Coins.NEAR.coinId())) {
+            return new NearCreator();
         }
         return null;
     }

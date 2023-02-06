@@ -3,12 +3,13 @@ package com.keystone.cold.remove_wallet_mode.helper;
 import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.cold.remove_wallet_mode.helper.sync_jump.FewchaWalletSyncModeDetector;
+import com.keystone.cold.remove_wallet_mode.helper.sync_jump.SenderWalletSyncModeDetector;
 import com.keystone.cold.remove_wallet_mode.helper.sync_jump.SolflareWalletSyncModeDetector;
 import com.keystone.cold.remove_wallet_mode.helper.sync_jump.SyncModeDetector;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 
 public enum SyncMode {
-    INVALID, DIRECT, SELECT_ADDRESS, MULTI_CHAINS, SUBSTRATE;
+    INVALID, DIRECT, SELECT_ADDRESS, MULTI_CHAINS, SUBSTRATE, SELECT_ONE_ADDRESS;
 
     public static void detect(String walletId, MutableLiveData<SyncMode> stepMode) {
         Wallet wallet = Wallet.getWalletById(walletId);
@@ -41,6 +42,11 @@ public enum SyncMode {
                 }
 
                 @Override
+                public void useSelectOneAddress() {
+                    stepMode.postValue(SELECT_ONE_ADDRESS);
+                }
+
+                @Override
                 public void invalid() {
                     stepMode.postValue(INVALID);
                 }
@@ -57,6 +63,8 @@ public enum SyncMode {
                 return new FewchaWalletSyncModeDetector();
             case SOLFLARE:
                 return new SolflareWalletSyncModeDetector();
+            case SENDER:
+                return new SenderWalletSyncModeDetector();
             default:
                 return null;
         }

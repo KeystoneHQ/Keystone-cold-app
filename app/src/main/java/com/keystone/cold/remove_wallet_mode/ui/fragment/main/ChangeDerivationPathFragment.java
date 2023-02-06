@@ -72,16 +72,17 @@ public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDer
         LiveData<SyncMode> stepMode = walletViewModel.determineSyncMode(walletId);
         stepMode.observe(this, mode -> {
             popBackStack(R.id.walletListFragment, false);
+            Bundle bundle = new Bundle();
+            bundle.putString(BundleKeys.WALLET_ID_KEY, walletId);
             switch (mode) {
                 case DIRECT:
-                    Bundle bundleData = new Bundle();
-                    bundleData.putString(BundleKeys.WALLET_ID_KEY, walletId);
-                    navigate(R.id.action_to_syncFragment, bundleData);
+                    navigate(R.id.action_to_syncFragment, bundle);
                     break;
                 case SELECT_ADDRESS:
-                    Bundle bundle = new Bundle();
-                    bundle.putString(BundleKeys.WALLET_ID_KEY, walletId);
                     navigate(R.id.action_to_selectAddressFragment, bundle);
+                    break;
+                case SELECT_ONE_ADDRESS:
+                    navigate(R.id.action_to_selectOneAddressFragment, bundle);
                     break;
             }
             stepMode.removeObservers(this);

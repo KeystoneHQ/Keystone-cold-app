@@ -31,7 +31,11 @@ public class BaseSyncModeDetector implements SyncModeDetector {
             } else if (size == 1) {
                 callback.useDirect();
             } else {
-                callback.useSelectAddress();
+                if (isSelectOneAddress()) {
+                    callback.useSelectOneAddress();
+                } else {
+                    callback.useSelectAddress();
+                }
             }
         });
 
@@ -43,4 +47,8 @@ public class BaseSyncModeDetector implements SyncModeDetector {
         return true;
     }
 
+    // Override this method if only a single address can be selected for sync
+    protected boolean isSelectOneAddress() {
+        return false;
+    }
 }

@@ -119,6 +119,7 @@ public enum Wallet {
             case BLUEWALLET:
             case SUBWALLET:
             case POLKADOTJS:
+            case SENDER:
                 return true;
             case CORE:
                 return false;

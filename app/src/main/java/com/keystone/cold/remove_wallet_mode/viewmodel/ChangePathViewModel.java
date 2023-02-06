@@ -24,10 +24,9 @@ import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinLeg
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNativeSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNestedSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.EthereumAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.NearAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.SolanaAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.ui.model.PathPatternItem;
-import com.keystone.cold.remove_wallet_mode.viewmodel.tx.BitcoinTxViewModel;
-import com.keystone.cold.viewmodel.AddAddressViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -97,7 +96,15 @@ public class ChangePathViewModel extends AndroidViewModel {
             }
             return pathPatternItems;
         } else if (Coins.NEAR.coinId().equals(coinId)) {
-
+            String code = Utilities.getCurrentNearAccount(getApplication());
+            NEARAccount account = NEARAccount.ofCode(code);
+            for (NEARAccount nearAccount : NEARAccount.values()) {
+                boolean isSelected = nearAccount == account;
+                boolean isRecommend = nearAccount.getName().equals(NEARAccount.MNEMONIC.getName());
+                PathPatternItem pathPatternItem = new PathPatternItem(nearAccount.getCode(), nearAccount.getDisplayPath(), nearAccount.getName(), isRecommend, getNearAccountAddresses(nearAccount), isSelected);
+                pathPatternItems.add(pathPatternItem);
+            }
+            return pathPatternItems;
         } else if (Coins.BTC.coinId().equals(coinId)) {
             String code = Utilities.getCurrentBTCAccount(getApplication());
             BTCAccount account = BTCAccount.ofCode(code);
@@ -229,42 +236,38 @@ public class ChangePathViewModel extends AndroidViewModel {
         return result;
     }
 
-    private MutableLiveData<List<Pair<String, String>>> getNearAccounts(NEARAccount nearAccount) {
-        MutableLiveData<List<Pair<String, String>>> mutableLiveData = new MutableLiveData<>();
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            List<Pair<String, String>> result = new ArrayList<>();
-            String nearDerivationPath = Utilities.getNearDerivationPaths(getApplication());
-            if (!TextUtils.isEmpty(nearDerivationPath)) {
-                String masterFingerPrint = new GetMasterFingerprintCallable().call();
-                try {
-                    JSONObject derivationPaths = new JSONObject(nearDerivationPath);
-                    String preMasterFingerPrint = derivationPaths.optString("master_fingerprint");
-                    if (masterFingerPrint.equalsIgnoreCase(preMasterFingerPrint)) {
-                        JSONObject accountPaths = (JSONObject) derivationPaths.get("near_derivation_paths");
-                        JSONArray jsonArray = (JSONArray) accountPaths.get(nearAccount.getCode());
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            result.add(Pair.create("" + i, (String) jsonArray.get(i)));
-                        }
-                    } else {
-                        result.addAll(getPairs(nearAccount));
+    private List<Pair<String, String>> getNearAccountAddresses(NEARAccount nearAccount) {
+        List<Pair<String, String>> result = new ArrayList<>();
+        String nearDerivationPath = Utilities.getNearDerivationPaths(getApplication());
+        if (!TextUtils.isEmpty(nearDerivationPath)) {
+            String masterFingerPrint = new GetMasterFingerprintCallable().call();
+            try {
+                JSONObject derivationPaths = new JSONObject(nearDerivationPath);
+                String preMasterFingerPrint = derivationPaths.optString("master_fingerprint");
+                if (masterFingerPrint.equalsIgnoreCase(preMasterFingerPrint)) {
+                    JSONObject accountPaths = (JSONObject) derivationPaths.get("near_derivation_paths");
+                    JSONArray jsonArray = (JSONArray) accountPaths.get(nearAccount.getCode());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        result.add(Pair.create("" + i, (String) jsonArray.get(i)));
                     }
-                } catch (JSONException exception) {
-                    exception.printStackTrace();
+                } else {
+                    result.addAll(getNearPairs(nearAccount));
                 }
-            } else {
-                result.addAll(getPairs(nearAccount));
+            } catch (JSONException exception) {
+                exception.printStackTrace();
             }
-            mutableLiveData.postValue(result);
-        });
-        return mutableLiveData;
+        } else {
+            result.addAll(getNearPairs(nearAccount));
+        }
+        return result;
     }
 
-    private List<Pair<String, String>> getPairs(NEARAccount nearAccount) {
+    private List<Pair<String, String>> getNearPairs(NEARAccount nearAccount) {
         List<Pair<String, String>> result = new ArrayList<>();
         AccountEntity accountEntity = repository.loadTargetNearAccount(nearAccount);
         if (accountEntity != null) {
             for (int i = 0; i < 3; i++) {
-                result.add(i, Pair.create("" + i, AddAddressViewModel.deriveNearAddress(accountEntity, i, null)));
+                result.add(i, Pair.create("" + i, NearAddressGenerator.getAddress(i, nearAccount.getCode())));
             }
         }
         return result;

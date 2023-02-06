@@ -24,6 +24,7 @@ import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.BlueWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.FewchaWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.MetamaskViewModel;
+import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SenderWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SolFlareViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SubstrateWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
@@ -133,6 +134,11 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                 solFlareViewModel.setAddressIds(addressIds);
                 urMutableLiveData = solFlareViewModel.generateSyncUR();
                 break;
+            case SENDER:
+                SenderWalletViewModel senderWalletViewModel = ViewModelProviders.of(this).get(SenderWalletViewModel.class);
+                senderWalletViewModel.setAddressIds(addressIds);
+                urMutableLiveData = senderWalletViewModel.generateSyncUR();
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + wallet);
         }
@@ -200,6 +206,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         METAMASK(Wallet.METAMASK.getWalletId(), new String[]{Coins.ETH.coinId()}, true, false, true),
         FEWCHA(Wallet.FEWCHA.getWalletId(), new String[]{Coins.APTOS.coinId()}, false, true, true),
         SOLFLARE(Wallet.SOLFLARE.getWalletId(), new String[]{Coins.SOL.coinId()}, true, true, true),
+        SENDER(Wallet.SENDER.getWalletId(), new String[]{Coins.NEAR.coinId()}, true, false, true),
         POLKADOT(Wallet.POLKADOTJS.getWalletId(), new String[]{Coins.DOT.coinId(), Coins.KSM.coinId()}, false, true, true),
         SUBWALLET(Wallet.SUBWALLET.getWalletId(), new String[]{Coins.DOT.coinId(), Coins.KSM.coinId()}, false, true, true),
         DEFAULT("default", new String[]{}, false, false, true),

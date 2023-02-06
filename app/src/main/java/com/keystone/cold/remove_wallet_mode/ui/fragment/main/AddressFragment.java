@@ -57,13 +57,17 @@ public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
             public void onClick(AddressItem addr) {
                 if (addressAdapter.isEditing()) {
                     addressAdapter.exitEdit();
+                    return;
+                }
+                Bundle bundle = requireArguments();
+                Bundle data = new Bundle();
+                data.putString(KEY_COIN_CODE, bundle.getString(KEY_COIN_CODE));
+                data.putString(KEY_ADDRESS, addr.getAddress());
+                data.putString(KEY_ADDRESS_NAME, addr.getName());
+                data.putString(KEY_ADDRESS_PATH, addr.getPath());
+                if (Coins.NEAR.coinCode().equals(bundle.getString(KEY_COIN_CODE))) {
+                    navigate(R.id.action_to_nearAccountInformationFragment, data);
                 } else {
-                    Bundle bundle = requireArguments();
-                    Bundle data = new Bundle();
-                    data.putString(KEY_COIN_CODE, bundle.getString(KEY_COIN_CODE));
-                    data.putString(KEY_ADDRESS, addr.getAddress());
-                    data.putString(KEY_ADDRESS_NAME, addr.getName());
-                    data.putString(KEY_ADDRESS_PATH, addr.getPath());
                     navigate(R.id.action_to_receiveCoinFragment, data);
                 }
             }

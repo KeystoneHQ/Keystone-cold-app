@@ -11,6 +11,7 @@ public class AddressItem implements FilterableItem {
     private String name;
     private final String address;
     private final String path;
+    private final String displayPath;
 
 
     public AddressItem(AddressEntity addressEntity) {
@@ -18,7 +19,8 @@ public class AddressItem implements FilterableItem {
         this.coinId = addressEntity.getCoinId();
         this.name = addressEntity.getName();
         this.address = addressEntity.getAddressString();
-        this.path = addressEntity.getDisplayPath();
+        this.displayPath = addressEntity.getDisplayPath();
+        this.path = addressEntity.getPath();
     }
 
     public long getId() {
@@ -41,6 +43,10 @@ public class AddressItem implements FilterableItem {
         return address;
     }
 
+    public String getDisplayPath() {
+        return displayPath;
+    }
+
     public String getPath() {
         return path;
     }
@@ -58,6 +64,7 @@ public class AddressItem implements FilterableItem {
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", path='" + path + '\'' +
+                ", displayPath='" + displayPath + '\'' +
                 '}';
     }
 }
