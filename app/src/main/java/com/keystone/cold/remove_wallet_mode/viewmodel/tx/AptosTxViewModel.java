@@ -350,6 +350,9 @@ public class AptosTxViewModel extends BaseTxViewModel {
         if (TextUtils.isEmpty(origin)) {
             return Wallet.FEWCHA.getSignId();
         }
+        if ("Petra".equalsIgnoreCase(origin)) {
+            return Wallet.PETRA.getSignId();
+        }
         return Wallet.UNKNOWNWALLET.getSignId();
     }
 }

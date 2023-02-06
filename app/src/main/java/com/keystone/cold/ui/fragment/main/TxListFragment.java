@@ -424,6 +424,8 @@ public class TxListFragment extends BaseFragment<TxListBinding> {
         boolean shouldShow;
         if (watchWallet.equals(WatchWallet.KEYSTONE)) {
             shouldShow = !tx.getSignId().contains("_sign_id");
+        } else if (watchWallet.equals(WatchWallet.APTOS)) {
+            shouldShow = watchWallet.containsSignId(tx.getSignId());
         } else {
             shouldShow = tx.getSignId().equals(watchWallet.getSignId());
         }

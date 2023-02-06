@@ -54,6 +54,7 @@ public enum WatchWallet {
     public static final String BIT_KEEP_SIGN_ID = "bit_keep_sign_id";
     public static final String ARWEAVE_SIGN_ID = "arweave_sign_id";
     public static final String KEPLR_WALLET_SIGN_ID = "keplr_wallet_sign_id";
+    public static final String PETRA_WALLET_SIGN_ID = "petra_wallet_sign_id";
 
     private final String walletId;
 
@@ -166,5 +167,15 @@ public enum WatchWallet {
                 return KEPLR_WALLET_SIGN_ID;
         }
         return null;
+    }
+
+    public boolean containsSignId(String signId) {
+        switch (this) {
+            case APTOS:
+                if (APTOS_SIGN_ID.equals(signId) || PETRA_WALLET_SIGN_ID.equals(signId)) {
+                    return true;
+                }
+        }
+        return false;
     }
 }
