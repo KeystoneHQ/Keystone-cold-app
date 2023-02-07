@@ -2,9 +2,8 @@ package com.keystone.cold.remove_wallet_mode.ui.fragment.main.scanner.processor;
 
 import android.os.Bundle;
 
-import androidx.lifecycle.ViewModelProviders;
-
 import com.keystone.coinlib.accounts.ETHAccount;
+import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
@@ -23,16 +22,19 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
 import com.keystone.cold.util.AptosTransactionHelper;
 import com.keystone.cold.util.SolMessageValidateUtil;
-import com.keystone.cold.viewmodel.tx.psbt.PSBTViewModel;
 import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
+import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
 
 import org.spongycastle.util.encoders.Base64;
 import org.spongycastle.util.encoders.Hex;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class URProcessor implements Processor {
@@ -44,6 +46,8 @@ public class URProcessor implements Processor {
             return new AptosSignRequestProcessor().run(r.resolve());
         } else if (r.getType().equals(ScanResultTypes.UR_SOL_SIGN_REQUEST)) {
             return new SolSignRequestProcessor().run(r.resolve());
+        } else if (r.getType().equals(ScanResultTypes.UR_NEAR_SIGN_REQUEST)) {
+            return new NearSignRequestProcessor().run(r.resolve());
         } else if (r.getType().equals(ScanResultTypes.UR_CRYPTO_PSBT)) {
             return new CryptoPSBTProcessor().run(r.resolve());
         } else {
@@ -167,6 +171,7 @@ public class URProcessor implements Processor {
             String signData = Hex.toHexString(solSignRequest.getSignData());
             bundle.putString(BundleKeys.SIGN_DATA_KEY, signData);
             bundle.putString(BundleKeys.HD_PATH_KEY, "M/" + hdPath);
+            bundle.putString(BundleKeys.SIGN_ORIGIN_KEY, solSignRequest.getOrigin());
             SolMessageValidateUtil.DataType dataType = SolMessageValidateUtil.judgeDataType(signData);
             switch (dataType) {
                 case TRANSACTION:
@@ -177,6 +182,38 @@ public class URProcessor implements Processor {
                     throw new InvalidTransactionException("test", "unknown sign type");
             }
             throw UnimplementedException.newInstance();
+        }
+    }
+
+    private static class NearSignRequestProcessor implements URResolver {
+
+        @Override
+        public Destination run(Object object) throws BaseException {
+
+            NearSignRequest nearSignRequest = (NearSignRequest) object;
+            ByteBuffer uuidBuffer = ByteBuffer.wrap(nearSignRequest.getRequestId());
+            UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+            String hdPath = nearSignRequest.getDerivationPath();
+            NEARAccount target = NEARAccount.getAccountByPath(hdPath);
+            if (target == null) {
+                throw new InvalidTransactionException("test", "unknown hd path");
+            }
+            String requestMFP = Hex.toHexString(nearSignRequest.getMasterFingerprint());
+            String MFP = new GetMasterFingerprintCallable().call();
+            if (!requestMFP.equalsIgnoreCase(MFP)) {
+                throw XfpNotMatchException.newInstance();
+            }
+            List<byte[]> signDataList = nearSignRequest.getSignDataList();
+            List<String> signHexList = new ArrayList<>(signDataList.size());
+            for (byte[] signData : signDataList) {
+                signHexList.add(Hex.toHexString(signData));
+            }
+            Bundle bundle = new Bundle();
+            bundle.putString(BundleKeys.REQUEST_ID_KEY, uuid.toString());
+            bundle.putSerializable(BundleKeys.SIGN_DATA_KEY, (Serializable) signHexList);
+            bundle.putString(BundleKeys.HD_PATH_KEY, "M/" + hdPath);
+            bundle.putString(BundleKeys.SIGN_ORIGIN_KEY, nearSignRequest.getOrigin());
+            return new Destination(R.id.action_to_nearConfirmTransactionFragment, bundle);
         }
     }
 
