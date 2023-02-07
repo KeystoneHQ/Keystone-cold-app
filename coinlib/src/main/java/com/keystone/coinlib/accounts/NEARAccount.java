@@ -125,7 +125,7 @@ public enum NEARAccount {
         }
         if (isMnemonic(path)) return MNEMONIC;
         if (isLedger(path)) return LEDGER;
-        return null;
+        return MNEMONIC;
     }
 
     public boolean isBelongCurrentAccount(String addition) {

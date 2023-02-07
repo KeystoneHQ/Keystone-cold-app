@@ -247,7 +247,7 @@ public class SolanaTxViewModel extends BaseTxViewModel {
             addition.put("signature", signature);
             addition.put("raw_message", rawMessage);
             addition.put("parsed_message", parsedMessage);
-            addition.put("sign_by", SOLAccount.getAccountByPath(hdPath));
+            addition.put("sign_by", SOLAccount.getAccountByPath(hdPath).getCode());
             JSONObject additions = new JSONObject();
             additions.put("coin", Coins.SOL.coinId());
             additions.put("addition", addition);

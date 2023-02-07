@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.Util;
+import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.coins.NEAR.NearImpl;
 import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.interfaces.Signer;
@@ -260,7 +261,7 @@ public class NearTxViewModel extends BaseTxViewModel {
                 addition.put("signature", signature);
                 addition.put("raw_message", rawMessage);
                 addition.put("parsed_message", parsedMessage);
-                addition.put("sign_by", Utilities.getCurrentNearAccount(getApplication()));
+                addition.put("sign_by", NEARAccount.getAccountByPath(hdPath).getCode());
                 addition.put("sign_batch_info", getSignTogether(signBatchId, i));
                 JSONObject additions = new JSONObject();
                 additions.put("coin", Coins.NEAR.coinId());

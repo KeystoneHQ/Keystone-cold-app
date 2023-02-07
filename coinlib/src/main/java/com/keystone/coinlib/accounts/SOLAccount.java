@@ -220,7 +220,7 @@ public enum SOLAccount {
         if (isLedgerBip44(path)) return SOLFLARE_BIP44;
         if (isLedgerRoot(path)) return SOLFLARE_BIP44_ROOT;
         if (isLedgerBip44Change(path)) return SOLFLARE_BIP44_CHANGE;
-        return null;
+        return SOLFLARE_BIP44;
     }
 
 

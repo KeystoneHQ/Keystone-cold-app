@@ -12,6 +12,7 @@ import com.keystone.cold.Utilities;
 import com.keystone.cold.model.Tx;
 import com.keystone.cold.remove_wallet_mode.helper.tx_loader.EthTxLoader;
 import com.keystone.cold.remove_wallet_mode.helper.tx_loader.GeneralTxLoader;
+import com.keystone.cold.remove_wallet_mode.helper.tx_loader.NearTxLoader;
 import com.keystone.cold.remove_wallet_mode.helper.tx_loader.SolTxLoader;
 import com.keystone.cold.remove_wallet_mode.helper.tx_loader.TxLoader;
 
@@ -33,6 +34,9 @@ public class TxRecordManager {
         } else if (Coins.SOL.coinId().equals(coinId)) {
             String code = Utilities.getCurrentSolAccount(getApplication());
             return new SolTxLoader(code);
+        } else if (Coins.NEAR.coinId().equals(coinId)) {
+            String code = Utilities.getCurrentNearAccount(getApplication());
+            return new NearTxLoader(code);
         } else {
             return new GeneralTxLoader(coinId);
         }
