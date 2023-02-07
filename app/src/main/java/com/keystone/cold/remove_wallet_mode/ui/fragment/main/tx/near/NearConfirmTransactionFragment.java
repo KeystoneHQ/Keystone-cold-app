@@ -21,7 +21,7 @@ public class NearConfirmTransactionFragment extends ConfirmTransactionFragment<N
     protected TabLayoutConfig[] getTabLayouts() {
         TabLayoutConfig[] tabLayoutConfigs = new TabLayoutConfig[2];
         tabLayoutConfigs[0] = new TabLayoutConfig(getString(R.string.overview), NearTransactionDetailFragment.newInstance(requireArguments(), viewModel.getNearTxLiveData()));
-        tabLayoutConfigs[1] = new TabLayoutConfig(getString(R.string.raw_data), RawTxFragment.newInstance(requireArguments(), viewModel.getRawFormatTx()));
+        tabLayoutConfigs[1] = new TabLayoutConfig(getString(R.string.raw), RawTxFragment.newInstance(requireArguments(), viewModel.getRawFormatTx()));
         return tabLayoutConfigs;
     }
 

@@ -171,6 +171,7 @@ public class URProcessor implements Processor {
             String signData = Hex.toHexString(solSignRequest.getSignData());
             bundle.putString(BundleKeys.SIGN_DATA_KEY, signData);
             bundle.putString(BundleKeys.HD_PATH_KEY, "M/" + hdPath);
+            bundle.putString(BundleKeys.SIGN_ORIGIN_KEY, solSignRequest.getOrigin());
             SolMessageValidateUtil.DataType dataType = SolMessageValidateUtil.judgeDataType(signData);
             switch (dataType) {
                 case TRANSACTION:
@@ -211,6 +212,7 @@ public class URProcessor implements Processor {
             bundle.putString(BundleKeys.REQUEST_ID_KEY, uuid.toString());
             bundle.putSerializable(BundleKeys.SIGN_DATA_KEY, (Serializable) signHexList);
             bundle.putString(BundleKeys.HD_PATH_KEY, "M/" + hdPath);
+            bundle.putString(BundleKeys.SIGN_ORIGIN_KEY, nearSignRequest.getOrigin());
             return new Destination(R.id.action_to_nearConfirmTransactionFragment, bundle);
         }
     }
