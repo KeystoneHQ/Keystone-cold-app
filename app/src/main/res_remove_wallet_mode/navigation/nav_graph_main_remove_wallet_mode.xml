@@ -194,6 +194,12 @@
         android:label="SolanaReviewTransactionFragment"
         tools:layout="@layout/fragment_confirm_transaction" />
 
+    <fragment
+        android:id="@+id/nearReviewTransactionFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.near.NearReviewTransactionFragment"
+        android:label="NearReviewTransactionFragment"
+        tools:layout="@layout/fragment_confirm_transaction" />
+
 
     <fragment
         android:id="@+id/broadCastTxFragment"
@@ -536,6 +542,14 @@
     <action
         android:id="@+id/action_to_nearConfirmTransactionFragment"
         app:destination="@id/nearTxConfirmFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_nearReviewTransactionFragment"
+        app:destination="@id/nearReviewTransactionFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"

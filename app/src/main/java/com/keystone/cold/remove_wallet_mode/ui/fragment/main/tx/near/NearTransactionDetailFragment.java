@@ -1,6 +1,7 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.near;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -39,11 +40,16 @@ public class NearTransactionDetailFragment extends BaseFragment<FragmentNearTxBi
         mBinding.setCoinCode(Coins.NEAR.coinCode());
         mBinding.setCheckInfoTitle(Coins.NEAR.coinName());
         if (nearTxLiveData != null) {
-            nearTxLiveData.observe(this,  nearTx -> {
+            nearTxLiveData.observe(this, nearTx -> {
                 if (nearTx != null) {
+                    mBinding.setCheckInfoTitle(nearTx.getNetWork());
                     mBinding.from.setText(nearTx.getSignerId());
                     mBinding.to.setText(nearTx.getReceiverId());
                     mBinding.actions.setData(nearTx);
+                    if (!TextUtils.isEmpty(nearTx.getUr())) {
+                        mBinding.qrcode.qrcode.setData(nearTx.getUr());
+                        mBinding.qr.setVisibility(View.VISIBLE);
+                    }
                 }
             });
         }
