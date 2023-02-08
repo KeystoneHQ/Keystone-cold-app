@@ -340,7 +340,7 @@ public class SyncFragment extends SetupVaultBaseFragment<SyncFragmentBinding> {
                         if (syncInfoList.size() == 1) {
                             mBinding.fromPath.setText(syncInfoList.get(0).getPath().toLowerCase());
                         } else {
-                            mBinding.fromPath.setText("m/44'/637'*'/0'/0'");
+                            mBinding.fromPath.setText("m/44'/637'/*'/0'/0'");
                         }
                     }
                     URLiveData.removeObservers(this);
