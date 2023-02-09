@@ -218,8 +218,8 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
             ModalDialog.showTwoButtonCommonModal(mActivity, getString(R.string.warning), getString(R.string.reset_polkadot_db_hint), getString(R.string.cancel), getString(R.string.confirm), dialog::dismiss, () -> {
                 PolkadotViewModel viewModel = ViewModelProviders.of(mActivity).get(PolkadotViewModel.class);
                 viewModel.resetDB();
-                dialog.dismiss();
             });
+            dialog.dismiss();
         });
         dialog.setContentView(binding.getRoot());
         dialog.show();

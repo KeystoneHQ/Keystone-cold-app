@@ -949,8 +949,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 ModalDialog.showTwoButtonCommonModal(mActivity, getString(R.string.warning), getString(R.string.reset_polkadot_db_hint), getString(R.string.cancel), getString(R.string.confirm), additionProcess, () -> {
                     PolkadotViewModel viewModel = ViewModelProviders.of(mActivity).get(PolkadotViewModel.class);
                     viewModel.resetDB();
-                    additionProcess.run();
                 });
+                additionProcess.run();
             });
         }
     }
