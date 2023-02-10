@@ -90,8 +90,8 @@ public class CoinAdapter extends FilterableBaseBindingAdapter<CoinEntity, AssetI
 
     private AssetItem adaptCoinModelToAssetItem(CoinModel coinModel) {
         if (WatchWallet.getWatchWallet(context).equals(WatchWallet.CORE_WALLET)) {
-            if (coinModel.getCoinCode().equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) {
-                return new AssetItem(Coins.BTC_NATIVE_SEGWIT.coinName(), coinModel.getCoinCode(), coinModel.getCoinCode(), "", false, coinModel.getAddressCount());
+            if (coinModel.getCoinCode().equals(Coins.BTC_CORE_WALLET.coinCode())) {
+                return new AssetItem(Coins.BTC_CORE_WALLET.coinName(), coinModel.getCoinCode(), coinModel.getCoinCode(), "", false, coinModel.getAddressCount());
             } else {
                 // ETH, but we treat as AVAX here;
                 return new AssetItem(Coins.AVAX.coinName(),

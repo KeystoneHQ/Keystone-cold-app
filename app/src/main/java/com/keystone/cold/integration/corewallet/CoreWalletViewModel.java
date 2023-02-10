@@ -44,8 +44,9 @@ public class CoreWalletViewModel extends AndroidViewModel {
     private CryptoMultiAccounts generateCryptoMultiAccounts(ETHAccount ethAccount) {
         byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
         List<CryptoHDKey> cryptoHDKeyList = new ArrayList<>();
-        CryptoHDKey bitcoin = generateCryptoHDKeyForBitcoin();
-        cryptoHDKeyList.add(bitcoin);
+        // For coreWallet is using M/44'/60'/0' to derive bech32 bitcoin addresses, so we do not need to export bitcoin keys.
+        // CryptoHDKey bitcoin = generateCryptoHDKeyForBitcoin();
+        // cryptoHDKeyList.add(bitcoin);
         switch (ethAccount) {
             case LEDGER_LEGACY: {
                 CryptoHDKey ledgerLegacy = URRegistryHelper.generateCryptoHDKeyForLedgerLegacy();
