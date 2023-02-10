@@ -120,7 +120,7 @@ public enum WatchWallet {
             case NEAR:
                 return new Coins.Coin[]{Coins.NEAR};
             case CORE_WALLET:
-                return new Coins.Coin[]{Coins.BTC_NATIVE_SEGWIT, Coins.ETH};
+                return new Coins.Coin[]{Coins.BTC_CORE_WALLET, Coins.ETH};
             case BIT_KEEP:
                 return new Coins.Coin[]{Coins.BTC_NATIVE_SEGWIT, Coins.ETH};
             case APTOS:

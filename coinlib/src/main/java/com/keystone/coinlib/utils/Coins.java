@@ -31,6 +31,8 @@ import java.util.Optional;
 
 public class Coins {
     public static final Coin BTC = new Coin("bitcoin", "BTC", "Bitcoin (Nested Segwit)", 0); // AKA P2SH
+    // coreWallet use M/44'/60'/0' to derive bech32 bitcoin addresses.
+    public static final Coin BTC_CORE_WALLET = new Coin("bitcoin_core_wallet", "BTC_CORE_WALLET", "Bitcoin (Core Wallet)", 60);
     public static final Coin BTC_LEGACY = new Coin("bitcoin_legacy", "BTC_LEGACY", "Bitcoin (Legacy)", 0);
     public static final Coin BTC_NATIVE_SEGWIT = new Coin("bitcoin_native_segwit", "BTC_NATIVE_SEGWIT", "Bitcoin (Native Segwit)", 0);
     public static final Coin BTC_TESTNET_SEGWIT = new Coin("bitcoin_testnet", "BTC_TESTNET_SEGWIT", "Bitcoin (Nested Segwit)", 1); // AKA P2SH
@@ -101,6 +103,7 @@ public class Coins {
 
     public static final List<Coin> SUPPORTED_COINS = Arrays.asList(
             BTC,
+            BTC_CORE_WALLET,
             BTC_LEGACY,
             BTC_NATIVE_SEGWIT,
             BTC_TESTNET_SEGWIT,

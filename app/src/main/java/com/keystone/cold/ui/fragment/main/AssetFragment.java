@@ -173,8 +173,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
             coinId = data.getString(KEY_COIN_ID);
             coinCode = data.getString(KEY_COIN_CODE);
             mBinding.customTitle.setVisibility(View.GONE);
-            if (coinCode.equals(Coins.BTC_NATIVE_SEGWIT.coinCode())) {
-                mBinding.toolbar.setTitle(Coins.BTC_NATIVE_SEGWIT.coinName());
+            if (coinCode.equals(Coins.BTC_CORE_WALLET.coinCode())) {
+                mBinding.toolbar.setTitle(Coins.BTC_CORE_WALLET.coinName());
             } else {
                 // We treat ETH as AVAX, for they share the same accounts;
                 mBinding.toolbar.setTitle(Coins.AVAX.coinName());
