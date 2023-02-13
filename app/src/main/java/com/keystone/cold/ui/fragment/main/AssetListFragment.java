@@ -277,7 +277,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_scan) {
-            if (watchWallet.equals(WatchWallet.CORE_WALLET) || watchWallet == WatchWallet.BIT_KEEP || watchWallet.equals(WatchWallet.KEPLR_WALLET)) {
+            if (watchWallet.equals(WatchWallet.KEYSTONE) || watchWallet.equals(WatchWallet.CORE_WALLET) || watchWallet == WatchWallet.BIT_KEEP || watchWallet.equals(WatchWallet.KEPLR_WALLET)) {
                 scanQrCode();
             } else {
                 AndPermission.with(this)
