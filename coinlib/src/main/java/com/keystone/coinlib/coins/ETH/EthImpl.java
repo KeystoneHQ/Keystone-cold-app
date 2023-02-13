@@ -229,6 +229,16 @@ public class EthImpl implements Coin {
         }
     }
 
+    public String directSign(String hex, Signer signer) {
+        byte[] encodedTransaction = Hex.decode(hex);
+        byte[] transactionHash = Hash.sha3(encodedTransaction);
+        String signature = signer.sign(Hex.toHexString(transactionHash));
+        if (!TextUtils.isEmpty(signature) && signature.length() >= 128) {
+            return signature.substring(0, 128);
+        }
+        return null;
+    }
+
     public SignTxResult signEIP1559Hex(String hex, Signer signer) {
         byte[] encodedTransaction = Hex.decode(hex);
         byte[] transactionHash = Hash.sha3(encodedTransaction);

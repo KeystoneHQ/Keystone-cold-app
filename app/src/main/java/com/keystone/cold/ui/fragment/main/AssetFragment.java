@@ -121,6 +121,7 @@ import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
 import com.sparrowwallet.hummingbird.registry.arweave.ArweaveSignRequest;
 import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignRequest;
+import com.sparrowwallet.hummingbird.registry.evm.EvmSignRequest;
 import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolNFTItem;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
@@ -472,6 +473,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
     public static final String HD_PATH = "hdPath";
     public static final String DATA_TYPE = "dataType";
     public static final String ORIGIN_DATA = "originData";
+    public static final String CUSTOM_CHAIN_IDENTIFIER = "customChainIdentifier";
 
     private void scanQrCode() {
         ScannerState scannerState = new ScannerState() {
@@ -500,6 +502,8 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     handleCosmosSignRequest(result);
                 } else if (result.getType().equals(ScanResultTypes.UR_ARWEAVE_SIGN_REQUEST)) {
                     handleArweaveSignRequest(result);
+                } else if (result.getType().equals(ScanResultTypes.UR_EVM_SIGN_REQUEST)) {
+                    handleEvmSignRequest(result);
                 } else {
                     throw new UnknowQrCodeException("unknown transaction!");
                 }
@@ -622,6 +626,34 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                 }
             }
 
+
+            private void handleEvmSignRequest(ScanResult result) throws XfpNotMatchException, InvalidTransactionException {
+                EvmSignRequest evmSignRequest = (EvmSignRequest) result.resolve();
+                String requestMFP = Hex.toHexString(evmSignRequest.getMasterFingerprint());
+                String MFP = new GetMasterFingerprintCallable().call();
+                if (!requestMFP.equalsIgnoreCase(MFP)) {
+                    throw new XfpNotMatchException("Master fingerprint not match");
+                }
+                ByteBuffer uuidBuffer = ByteBuffer.wrap(evmSignRequest.getRequestId());
+                UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+                String hdPath = evmSignRequest.getDerivationPath();
+                String signData = Hex.toHexString(evmSignRequest.getSignData());
+
+                Bundle bundle = new Bundle();
+                bundle.putString(REQUEST_ID, uuid.toString());
+                bundle.putString(SIGN_DATA, signData);
+                bundle.putString(HD_PATH, "M/" + hdPath);
+                String dataType = evmSignRequest.getDataType();
+                if (dataType.equals(EvmSignRequest.DataType.AMINO_TRANSACTION.getType())
+                        || dataType.equals(EvmSignRequest.DataType.DIRECT_TRANSACTION.getType())) {
+                    bundle.putString(DATA_TYPE, dataType);
+                    bundle.putLong(CUSTOM_CHAIN_IDENTIFIER, evmSignRequest.getCustomChainIdentifier());
+                    mFragment.navigate(R.id.action_to_cosmosTxConfirmFragment, bundle);
+                } else {
+                    throw new InvalidTransactionException("The format is not supported");
+                }
+
+            }
 
             private void handleAptosSignRequest(ScanResult result) throws XfpNotMatchException, UnknowQrCodeException {
                 AptosSignRequest aptosSignRequest = (AptosSignRequest) result.resolve();
@@ -841,7 +873,7 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
         } else if (watchWallet == WatchWallet.BIT_KEEP) {
             desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_CRYPTO_PSBT));
         } else if (watchWallet == WatchWallet.KEPLR_WALLET) {
-            desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_COSMOS_SIGN_REQUEST, ScanResultTypes.UR_ETH_SIGN_REQUEST));
+            desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_COSMOS_SIGN_REQUEST, ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_EVM_SIGN_REQUEST));
         } else if (watchWallet == WatchWallet.ARConnect) {
             desiredResults.addAll(Collections.singletonList(ScanResultTypes.UR_ARWEAVE_SIGN_REQUEST));
         }

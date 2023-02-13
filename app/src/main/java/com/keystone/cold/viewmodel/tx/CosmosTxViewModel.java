@@ -1,5 +1,6 @@
 package com.keystone.cold.viewmodel.tx;
 
+import static com.keystone.cold.ui.fragment.main.AssetFragment.CUSTOM_CHAIN_IDENTIFIER;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.DATA_TYPE;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.HD_PATH;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.REQUEST_ID;
@@ -15,6 +16,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.accounts.ExtendedPublicKey;
+import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.coins.cosmos.CosmosImpl;
 import com.keystone.coinlib.interfaces.Signer;
@@ -32,7 +34,10 @@ import com.keystone.cold.ui.fragment.main.cosmos.model.CosmosTxData;
 import com.keystone.cold.ui.fragment.main.cosmos.model.msg.Msg;
 import com.keystone.cold.ui.fragment.main.cosmos.model.msg.MsgSignData;
 import com.keystone.cold.util.HashUtil;
+import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignRequest;
 import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignature;
+import com.sparrowwallet.hummingbird.registry.evm.EvmSignRequest;
+import com.sparrowwallet.hummingbird.registry.evm.EvmSignature;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,6 +68,23 @@ public class CosmosTxViewModel extends Base {
 
     private final MutableLiveData<CosmosTx> cosmosTxLiveData;
     private final MutableLiveData<CosmosTxData> cosmosTxDataMutableLiveData;
+
+    private long evmChainId;
+
+    private enum SignMode {
+        COSMOS("cosmos"), EVM("evm");
+
+        private String signMode;
+
+        SignMode(String signMode) {
+            this.signMode = signMode;
+        }
+
+        public String getSignMode() {
+            return signMode;
+        }
+    }
+    private SignMode signMode = SignMode.COSMOS;
 
 
     private final SignCallBack signCallBack = new SignCallBack() {
@@ -119,11 +141,20 @@ public class CosmosTxViewModel extends Base {
             hdPath = bundle.getString(HD_PATH);
             requestId = bundle.getString(REQUEST_ID);
             dataType = bundle.getString(DATA_TYPE);
+            evmChainId = bundle.getLong(CUSTOM_CHAIN_IDENTIFIER);
             try {
-                if ("sign-type-amino".equals(dataType)) {
+                if (CosmosSignRequest.DataType.AMINO.getType().equals(dataType)) {
                     parseAminoTx();
-                } else if ("sign-type-direct".equals(dataType)) {
+                    signMode = SignMode.COSMOS;
+                } else if (CosmosSignRequest.DataType.DIRECT.getType().equals(dataType)) {
                     parseDirectTx();
+                    signMode = SignMode.COSMOS;
+                } else if (EvmSignRequest.DataType.AMINO_TRANSACTION.getType().equals(dataType)) {
+                    parseAminoTx();
+                    signMode = SignMode.EVM;
+                } else if (EvmSignRequest.DataType.DIRECT_TRANSACTION.getType().equals(dataType)) {
+                    parseDirectTx();
+                    signMode = SignMode.EVM;
                 }
             } catch (Exception e){
                 e.printStackTrace();
@@ -244,11 +275,20 @@ public class CosmosTxViewModel extends Base {
 
     private void signTransaction(Signer signer) {
         signCallBack.startSign();
-        SignTxResult result = new CosmosImpl().signHex(txHex, signer);
-        if (result == null) {
+        String signature = null;
+        switch (signMode) {
+            case COSMOS:
+                SignTxResult result = new CosmosImpl().signHex(txHex, signer);
+                signature = result.signaturHex;
+                break;
+            case EVM:
+                signature = new EthImpl(evmChainId).directSign(txHex, signer);
+                break;
+        }
+        if (signature == null) {
             signCallBack.onFail();
         } else {
-            signCallBack.onSignTxSuccess(result.signaturHex);
+            signCallBack.onSignTxSuccess(signature);
         }
     }
 
@@ -279,12 +319,19 @@ public class CosmosTxViewModel extends Base {
         byteBuffer.putLong(uuid.getMostSignificantBits());
         byteBuffer.putLong(uuid.getLeastSignificantBits());
         byte[] requestId = byteBuffer.array();
-        byte[] publicKey = null;
-        if (xPub != null) {
-            publicKey = getPublicKey(xPub);
+        switch (signMode) {
+            case COSMOS:
+                byte[] publicKey = null;
+                if (xPub != null) {
+                    publicKey = getPublicKey(xPub);
+                }
+                CosmosSignature cosmosSignature = new CosmosSignature(signatureByte, requestId, publicKey);
+                return cosmosSignature.toUR().toString();
+            case EVM:
+                EvmSignature evmSignature = new EvmSignature(signatureByte, requestId);
+                return evmSignature.toUR().toString();
         }
-        CosmosSignature cosmosSignature = new CosmosSignature(signatureByte, requestId, publicKey);
-        return cosmosSignature.toUR().toString();
+       return "";
     }
 
     private byte[] getPublicKey(String xPub) {
@@ -302,7 +349,8 @@ public class CosmosTxViewModel extends Base {
             addition.put("signature", signature);
             addition.put("raw_message", rawMessage);
             addition.put("parse_message", parseJson);
-
+            addition.put("sign_mode", signMode.getSignMode());
+            addition.put("chain_id", chainId);
             JSONObject additions = new JSONObject();
             additions.put("coin", getCosmosCoinId(chainId));
             additions.put("addition", addition);

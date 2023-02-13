@@ -9,6 +9,7 @@ import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
 import com.sparrowwallet.hummingbird.registry.arweave.ArweaveSignRequest;
 import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignRequest;
+import com.sparrowwallet.hummingbird.registry.evm.EvmSignRequest;
 import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolNFTItem;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
@@ -36,7 +37,8 @@ public enum ScanResultTypes {
     UR_CRYPTO_PSBT,
     UR_APTOS_SIGN_REQUEST,
     UR_ARWEAVE_SIGN_REQUEST,
-    UR_COSMOS_SIGN_REQUEST;
+    UR_COSMOS_SIGN_REQUEST,
+    UR_EVM_SIGN_REQUEST;
 
 
     public boolean isType(String text) {
@@ -70,6 +72,8 @@ public enum ScanResultTypes {
                     return decodeResult instanceof CosmosSignRequest;
                 case UR_ARWEAVE_SIGN_REQUEST:
                     return decodeResult instanceof ArweaveSignRequest;
+                case UR_EVM_SIGN_REQUEST:
+                    return decodeResult instanceof EvmSignRequest;
                 default:
                     return false;
             }
@@ -92,6 +96,8 @@ public enum ScanResultTypes {
             List<DataItem> items = CborDecoder.decode(cborPayload);
             DataItem dataItem = items.get(0);
             switch (this) {
+                case UR_EVM_SIGN_REQUEST:
+                    return EvmSignRequest.fromCbor(dataItem);
                 case UR_COSMOS_SIGN_REQUEST:
                     return CosmosSignRequest.fromCbor(dataItem);
                 case UR_APTOS_SIGN_REQUEST:
@@ -145,6 +151,8 @@ public enum ScanResultTypes {
                 return UR_ARWEAVE_SIGN_REQUEST;
             case "cosmos-sign-request":
                 return UR_COSMOS_SIGN_REQUEST;
+            case "evm-sign-request":
+                return UR_EVM_SIGN_REQUEST;
             default:
                 throw new UnsupportedURException("%{displayMessage}%", "unsupported ur type: " + ur.getType());
         }

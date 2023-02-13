@@ -48,7 +48,7 @@ public class TxEntity implements Tx {
     /**
      *
      * TxEntity类的额外信息，内部是JSON
-     * 目前仅用于Solana Near Polkadot Bitcion 其他币种暂时没有用到
+     * 目前仅用于Solana Near Polkadot Bitcion Cosmos相关币种 其他币种暂时没有用到
      * @Solana {
      *     {
      *         "additioins":{
@@ -114,6 +114,20 @@ public class TxEntity implements Tx {
      *     }
      * }
      *
+     * @Cosmos {
+     *     {
+     *         "additioins":{
+     *              "coin":"xxx",
+     *              "addition":{
+     *                  "signature":"adfas",
+     *                  "raw_message":"raw_message",
+     *                  "parsed_message":"parsed_message",
+     *                  "sign_mode": "evm",  //evm or cosmos
+     *                  "chain_id": "injective-1" //  cosmos chain id
+     *               }
+     *          }
+     *     }
+     * }
      *
      */
     private String addition;
