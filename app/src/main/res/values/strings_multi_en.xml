@@ -254,6 +254,10 @@
     <string name="tx_to">To</string>
     <string name="tx_fee">Fee</string>
     <string name="tx_memo">Memo</string>
+    <string name="tx_value">Value</string>
+    <string name="tx_name">Name</string>
+    <string name="tx_data">Data</string>
+    <string name="tx_tags">Tags</string>
     <string name="tx_confirm">Verify Fingerprint</string>
     <string name="tx_confirm_title">Confirm Transaction Details</string>
     <string name="msg_confirm_title">Confirm Message Details</string>
