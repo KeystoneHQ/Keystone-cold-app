@@ -262,6 +262,13 @@ public class Coins {
         return coin.isPresent() ? coin.get().coinName() : "";
     }
 
+    public static Coins.Coin coinOfCoinId(String coinId) {
+        Optional<Coin> coin = SUPPORTED_COINS.stream()
+                .filter(c -> coinId.equals(c.coinId))
+                .findFirst();
+        return coin.orElse(null);
+    }
+
     public static class Coin {
         private final String coinId;
         private final String coinCode;
