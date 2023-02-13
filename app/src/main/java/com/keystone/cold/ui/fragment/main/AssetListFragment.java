@@ -21,6 +21,7 @@ import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_ID;
 import static com.keystone.cold.ui.fragment.Constants.KEY_ID;
+import static com.keystone.cold.ui.fragment.main.AssetFragment.CUSTOM_CHAIN_IDENTIFIER;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.DATA_TYPE;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.HD_PATH;
 import static com.keystone.cold.ui.fragment.main.AssetFragment.REQUEST_ID;
@@ -37,8 +38,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -56,7 +55,6 @@ import com.allenliu.badgeview.BadgeFactory;
 import com.allenliu.badgeview.BadgeView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.accounts.ETHAccount;
-import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.coins.polkadot.AddressCodec;
 import com.keystone.coinlib.exception.CoinNotFindException;
 import com.keystone.coinlib.exception.InvalidETHAccountException;
@@ -95,6 +93,7 @@ import com.keystone.cold.viewmodel.exceptions.UnknowQrCodeException;
 import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignRequest;
+import com.sparrowwallet.hummingbird.registry.evm.EvmSignRequest;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
@@ -317,6 +316,8 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
                     handleUOS(result);
                 } else if (result.getType().equals(ScanResultTypes.UR_BYTES)) {
                     handleURBytes(result);
+                } else if (result.getType().equals(ScanResultTypes.UR_EVM_SIGN_REQUEST)) {
+                    handleEvmSignRequest(result);
                 } else {
                     throw new UnknowQrCodeException("unknown transaction!");
                 }
@@ -448,6 +449,34 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
                 }
             }
 
+            private void handleEvmSignRequest(ScanResult result) throws XfpNotMatchException, InvalidTransactionException {
+                EvmSignRequest evmSignRequest = (EvmSignRequest) result.resolve();
+                String requestMFP = Hex.toHexString(evmSignRequest.getMasterFingerprint());
+                String MFP = new GetMasterFingerprintCallable().call();
+                if (!requestMFP.equalsIgnoreCase(MFP)) {
+                    throw new XfpNotMatchException("Master fingerprint not match");
+                }
+                ByteBuffer uuidBuffer = ByteBuffer.wrap(evmSignRequest.getRequestId());
+                UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+                String hdPath = evmSignRequest.getDerivationPath();
+                String signData = Hex.toHexString(evmSignRequest.getSignData());
+
+                Bundle bundle = new Bundle();
+                bundle.putString(REQUEST_ID, uuid.toString());
+                bundle.putString(SIGN_DATA, signData);
+                bundle.putString(HD_PATH, "M/" + hdPath);
+                String dataType = evmSignRequest.getDataType();
+                if (dataType.equals(EvmSignRequest.DataType.AMINO_TRANSACTION.getType())
+                        || dataType.equals(EvmSignRequest.DataType.DIRECT_TRANSACTION.getType())) {
+                    bundle.putString(DATA_TYPE, dataType);
+                    bundle.putLong(CUSTOM_CHAIN_IDENTIFIER, evmSignRequest.getCustomChainIdentifier());
+                    mFragment.navigate(R.id.action_to_cosmosTxConfirmFragment, bundle);
+                } else {
+                    throw new InvalidTransactionException("The format is not supported");
+                }
+
+            }
+
             private void handleCryptoPSBT(ScanResult result) throws InvalidTransactionException {
                 CryptoPSBT cryptoPSBT = (CryptoPSBT) result.resolve();
                 byte[] bytes = cryptoPSBT.getPsbt();
@@ -538,7 +567,7 @@ public class AssetListFragment extends BaseFragment<AssetListFragmentBinding> {
         } else if (watchWallet == WatchWallet.BIT_KEEP) {
             desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_CRYPTO_PSBT, ScanResultTypes.UR_ETH_SIGN_REQUEST));
         } else if (watchWallet == WatchWallet.KEPLR_WALLET) {
-            desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_COSMOS_SIGN_REQUEST, ScanResultTypes.UR_ETH_SIGN_REQUEST));
+            desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_COSMOS_SIGN_REQUEST, ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_EVM_SIGN_REQUEST));
         } else if (watchWallet == WatchWallet.KEYSTONE) {
             desiredResults.addAll(Arrays.asList(ScanResultTypes.UR_ETH_SIGN_REQUEST, ScanResultTypes.UR_BYTES, ScanResultTypes.UOS));
         }
