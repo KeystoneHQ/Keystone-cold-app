@@ -23,6 +23,7 @@ import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.databinding.ArweaveTxConfirmBinding;
+import com.keystone.cold.model.ArweaveTransaction;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.SigningDialog;
@@ -44,7 +45,7 @@ public class ArweaveTxConfirmFragment extends BaseFragment<ArweaveTxConfirmBindi
     private Fragment[] fragments;
 
     private String rawTx;
-    private String parsedTx;
+    private ArweaveTransaction parsedTx;
 
     private SigningDialog signingDialog;
 
@@ -72,7 +73,7 @@ public class ArweaveTxConfirmFragment extends BaseFragment<ArweaveTxConfirmBindi
             try {
                 if (v.isParseSuccess()) {
                     rawTx = v.getRawTx().toString(2);
-                    parsedTx = v.getParsedMessage().toString(2);
+                    parsedTx = ArweaveTransaction.fromJSON(v.getRawTx());
                     mBinding.sign.setOnClickListener(x -> handleSign(v, saltLen));
                     initViewPager();
                 }
@@ -90,7 +91,7 @@ public class ArweaveTxConfirmFragment extends BaseFragment<ArweaveTxConfirmBindi
         String[] title = {getString(R.string.overview), getString(R.string.raw)};
         if (fragments == null) {
             fragments = new Fragment[title.length];
-            fragments[0] = ArweaveTxDetailFragment.newInstance(parsedTx);
+            fragments[0] = ArweaveParsedTxFragment.newInstance(parsedTx);
             fragments[1] = ArweaveTxDetailFragment.newInstance(rawTx);
         }
         mBinding.viewPager.setOffscreenPageLimit(2);

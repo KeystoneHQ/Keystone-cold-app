@@ -184,6 +184,7 @@ public class ArweaveTxViewModel extends AndroidViewModel {
         JSONObject rawTx = tx.getRawTx();
         rawTx.put("signature", ArweaveViewModel.formatHex(Hex.decode(signature)));
         txEntity.setSignedHex(rawTx.toString());
+        tx.parsedMessage.put("id", txId);
         txEntity.setAddition(
                 new JSONObject().put("rawTx", tx.rawTx)
                         .put("parsedMessage", tx.parsedMessage)
