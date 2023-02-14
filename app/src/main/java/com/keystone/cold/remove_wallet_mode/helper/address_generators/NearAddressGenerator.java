@@ -6,6 +6,7 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
+import com.keystone.cold.util.ExtendedPublicKeyCacheHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,7 +33,7 @@ public class NearAddressGenerator extends MultiAccountAddressGenerator {
                 path = "M/44'/397'/0'/0'/" + index + "'";
                 break;
         }
-        String xPub = new GetExtendedPublicKeyCallable(path).call();
+        String xPub = ExtendedPublicKeyCacheHelper.getInstance().getExtendedPublicKey(path);
         String address = deriver.derive(xPub);
         addressEntity.setPath(path);
 

@@ -12,6 +12,7 @@ import com.keystone.cold.remove_wallet_mode.helper.address_generators.AptosAddre
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinLegacyAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNativeSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNestedSegwitAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.CosmosAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.EthereumAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.NearAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.SubstrateAddressGenerator;
@@ -72,6 +73,9 @@ public class AddressManager {
         if (Coins.NEAR.coinId().equals(coinId)) {
             String code = Utilities.getCurrentNearAccount(getApplication());
             return new NearAddressGenerator(code);
+        }
+        if (Coins.isCosmosFamilyByCoinId(coinId)) {
+            return new CosmosAddressGenerator(Coins.coinOfCoinId(coinId));
         }
         return null;
     }

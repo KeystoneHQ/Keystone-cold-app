@@ -5,6 +5,7 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.BitcoinTxViewModel;
+import com.keystone.cold.util.ExtendedPublicKeyCacheHelper;
 
 public class BitcoinLegacyAddressGenerator extends BaseAddressGenerator{
     public BitcoinLegacyAddressGenerator() {
@@ -14,7 +15,7 @@ public class BitcoinLegacyAddressGenerator extends BaseAddressGenerator{
     @Override
     protected String deriveAddress(int index, AddressEntity addressEntity, AbsDeriver deriver) {
         String path = BitcoinTxViewModel.BTCLegacyPath + "/0/" + index;
-        String xPub = new GetExtendedPublicKeyCallable(path).call();
+        String xPub = ExtendedPublicKeyCacheHelper.getInstance().getExtendedPublicKey(path);
         String address = deriver.derive(xPub);
         addressEntity.setPath(path);
         return address;

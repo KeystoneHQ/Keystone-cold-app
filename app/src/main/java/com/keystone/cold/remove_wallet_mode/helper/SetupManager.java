@@ -2,13 +2,14 @@ package com.keystone.cold.remove_wallet_mode.helper;
 
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.remove_wallet_mode.helper.setup.AptosCreator;
-import com.keystone.cold.remove_wallet_mode.helper.setup.BaseCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.BitcoinCreator;
+import com.keystone.cold.remove_wallet_mode.helper.setup.CosmosCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.Creator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.EthereumCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.NearCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.SolanaCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.SubstrateCreator;
+import com.keystone.cold.util.ExtendedPublicKeyCacheHelper;
 
 
 public class SetupManager {
@@ -18,7 +19,7 @@ public class SetupManager {
     }
 
     public static void setup(Callback callback) {
-        BaseCreator.clearCache();
+        ExtendedPublicKeyCacheHelper.getInstance().clearCache();
         Coins.SUPPORTED_COINS.stream()
                 .filter(coin -> !coin.coinCode().equals(Coins.AR.coinCode()))
                 .forEach(coin -> {
@@ -27,7 +28,7 @@ public class SetupManager {
                         creator.setUp();
                     }
                 });
-        BaseCreator.clearCache();
+        ExtendedPublicKeyCacheHelper.getInstance().clearCache();
         if (callback != null) callback.onComplete();
     }
 
@@ -52,6 +53,8 @@ public class SetupManager {
             return new BitcoinCreator(Coins.BTC_NATIVE_SEGWIT);
         } else if (coinId.equals(Coins.NEAR.coinId())) {
             return new NearCreator();
+        } else if (Coins.isCosmosFamilyByCoinId(coinId)) {
+            return new CosmosCreator(Coins.coinOfCoinId(coinId));
         }
         return null;
     }

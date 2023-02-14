@@ -2,10 +2,10 @@ package com.keystone.cold.remove_wallet_mode.helper.setup;
 
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.utils.Coins;
-import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.EthereumAddressGenerator;
+import com.keystone.cold.util.ExtendedPublicKeyCacheHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,7 +39,7 @@ public class EthereumCreator extends BaseCreator {
 
     private void addAcccountForUpdate(ETHAccount ethAccount, CoinEntity coin) throws JSONException {
         AccountEntity account = new AccountEntity();
-        String xPub = getExtendedPublicKey(ethAccount.getPath());
+        String xPub = ExtendedPublicKeyCacheHelper.getInstance().getExtendedPublicKey(ethAccount.getPath());
         account.setExPub(xPub);
         account.setHdPath(ethAccount.getPath());
         account.setCoinId(coin.getId());
