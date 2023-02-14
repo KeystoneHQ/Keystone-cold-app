@@ -1,7 +1,5 @@
 package com.keystone.cold.model;
 
-import android.util.Log;
-
 import com.keystone.coinlib.Util;
 import com.keystone.cold.integration.chains.ArweaveViewModel;
 
@@ -25,6 +23,9 @@ public class ArweaveTransaction {
     public static final String AR_KEY_TAGS = "tags";
     public static final String AR_KEY_SIGNATURE = "signature";
     public static final String AR_KEY_DATA = "data";
+    public static final String AR_KEY_SIGNATURE_DATA = "signature_data";
+    public static final String AR_KEY_FORMATTED_JSON = "formatted_json";
+    public static final String AR_KEY_RAW_JSON = "raw_json";
 
     private final String from;
     private final String to;
@@ -34,13 +35,16 @@ public class ArweaveTransaction {
     private final String data;
     private final Tag[] tags;
     private final String signature;
+    private String signatureData;
 
-    public static ArweaveTransaction fromJSON(JSONObject parsedTx) throws JSONException {
-        String owner = parsedTx.getString(AR_KEY_OWNER);
+    private final JSONObject rawTx;
+
+    public static ArweaveTransaction fromJSON(JSONObject rawTx) throws JSONException {
+        String owner = rawTx.getString(AR_KEY_OWNER);
         String from = ArweaveViewModel.formatHex(Util.sha256(Base64.getUrlDecoder().decode(owner)));
-        String to = parsedTx.getString(AR_KEY_TARGET);
+        String to = rawTx.getString(AR_KEY_TARGET);
         BigDecimal divider = new BigDecimal(String.valueOf(10)).pow(12);
-        String value = parsedTx.optString(AR_KEY_QUANTITY);
+        String value = rawTx.optString(AR_KEY_QUANTITY);
 
         DecimalFormat df = new DecimalFormat();
 
@@ -51,22 +55,30 @@ public class ArweaveTransaction {
         df.setGroupingUsed(false);
 
         value = df.format(new BigDecimal(value).setScale(12, RoundingMode.HALF_UP).divide(divider, RoundingMode.HALF_UP)) + " AR";
-        String fee = parsedTx.optString(AR_KEY_REWARD);
+        String fee = rawTx.optString(AR_KEY_REWARD);
         fee = df.format(new BigDecimal(fee).setScale(12, RoundingMode.HALF_UP).divide(divider, RoundingMode.HALF_UP)) + " AR";
-        String id = parsedTx.optString(AR_KEY_ID);
+        String id = rawTx.optString(AR_KEY_ID);
 
-        if (parsedTx.optJSONArray(AR_KEY_TAGS) != null) {
-            Tag[] tags = Tag.fromJSONArray(parsedTx.getJSONArray(AR_KEY_TAGS));
-            String signature = parsedTx.optString(AR_KEY_SIGNATURE);
-            String data = parsedTx.optString(AR_KEY_DATA);
-            return new ArweaveTransaction(from, to, value, fee, id, data, tags, signature);
+        if (rawTx.optJSONArray(AR_KEY_TAGS) != null) {
+            Tag[] tags = Tag.fromJSONArray(rawTx.getJSONArray(AR_KEY_TAGS));
+            String signature = rawTx.optString(AR_KEY_SIGNATURE);
+            String data = rawTx.optString(AR_KEY_DATA);
+            return new ArweaveTransaction(from, to, value, fee, id, data, tags, signature, rawTx);
         }
-        String signature = parsedTx.optString(AR_KEY_SIGNATURE);
-        String data = parsedTx.optString(AR_KEY_DATA);
-        return new ArweaveTransaction(from, to, value, fee, id, data, new Tag[0], signature);
+        String signature = rawTx.optString(AR_KEY_SIGNATURE);
+        String data = rawTx.optString(AR_KEY_DATA);
+        return new ArweaveTransaction(from, to, value, fee, id, data, new Tag[0], signature, rawTx);
     }
 
-    public ArweaveTransaction(String from, String to, String value, String fee, String id, String data, Tag[] tags, String signature) {
+    public static ArweaveTransaction fromRCC(JSONObject rccObject) throws JSONException {
+        JSONObject json = rccObject.getJSONObject(AR_KEY_FORMATTED_JSON);
+        JSONObject raw = rccObject.getJSONObject(AR_KEY_RAW_JSON);
+        ArweaveTransaction arweaveTransaction = ArweaveTransaction.fromJSON(raw);
+        arweaveTransaction.setSignatureData(json.getString(AR_KEY_SIGNATURE_DATA));
+        return arweaveTransaction;
+    }
+
+    public ArweaveTransaction(String from, String to, String value, String fee, String id, String data, Tag[] tags, String signature, JSONObject rawTx) {
         this.from = from;
         this.to = to;
         this.value = value;
@@ -75,6 +87,8 @@ public class ArweaveTransaction {
         this.data = data;
         this.tags = tags;
         this.signature = signature;
+        this.rawTx = rawTx;
+        this.signatureData = null;
     }
 
     public String getFrom() {
@@ -107,6 +121,18 @@ public class ArweaveTransaction {
 
     public String getSignature() {
         return signature;
+    }
+
+    public String getSignatureData() {
+        return signatureData;
+    }
+
+    public void setSignatureData(String signatureData) {
+        this.signatureData = signatureData;
+    }
+
+    public JSONObject getRawTx() {
+        return rawTx;
     }
 
     public static class Tag {
