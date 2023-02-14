@@ -45,7 +45,7 @@ public class ReceiveCoinFragment extends BaseFragment<FragmentReceiveBinding> {
         Bundle data = getArguments();
         Objects.requireNonNull(data);
         String coinCode = data.getString(KEY_COIN_CODE);
-        if(coinCode.startsWith("BTC")) {
+        if (coinCode.startsWith("BTC")) {
             mBinding.setDisplayName("BTC");
         } else {
             mBinding.setDisplayName(coinCode);
@@ -60,10 +60,10 @@ public class ReceiveCoinFragment extends BaseFragment<FragmentReceiveBinding> {
     }
 
     private void setWarningInfo(String coinCode) {
-        if(coinCode.startsWith("BTC")) {
+        if (coinCode.startsWith("BTC")) {
             mBinding.setHintInfo("BTC");
         } else {
-            String info = coinCode;
+            String info = coinCode + " " + getString(R.string.general_receive_info);
             switch (coinCode.toUpperCase()) {
                 case "ETH":
                     info = getString(R.string.eth_receive_info);
