@@ -39,6 +39,8 @@ public class ArweaveTransaction {
 
     private final JSONObject rawTx;
 
+    private String signatureUR;
+
     public static ArweaveTransaction fromJSON(JSONObject rawTx) throws JSONException {
         String owner = rawTx.getString(AR_KEY_OWNER);
         String from = ArweaveViewModel.formatHex(Util.sha256(Base64.getUrlDecoder().decode(owner)));
@@ -133,6 +135,14 @@ public class ArweaveTransaction {
 
     public JSONObject getRawTx() {
         return rawTx;
+    }
+
+    public String getSignatureUR() {
+        return signatureUR;
+    }
+
+    public void setSignatureUR(String signatureUR) {
+        this.signatureUR = signatureUR;
     }
 
     public static class Tag {

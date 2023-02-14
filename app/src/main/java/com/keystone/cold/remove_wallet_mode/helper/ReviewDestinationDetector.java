@@ -37,6 +37,8 @@ public class ReviewDestinationDetector {
             return new Destination(R.id.action_to_substrateReviewTransactionFragment, bundle);
         } else if (Coins.NEAR.coinId().equals(coinId)) {
             return new Destination(R.id.action_to_nearReviewTransactionFragment, bundle);
+        } else if (Coins.AR.coinCode().equals(coinId)) {
+            return new Destination(R.id.action_to_arweaveReviewTransactionFragment, bundle);
         }
         return null;
     }
@@ -53,9 +55,7 @@ public class ReviewDestinationDetector {
             } catch (JSONException e) {
                 switch (ethTxEntity.getTxType()) {
                     case 0x00:
-                        return new Destination(R.id.action_to_ethereumReviewTransactionFragment, bundle);
                     case 0x02:
-                        Log.i(TAG, "navigate: jump to ethFeeMarketTxFragment");
                         return new Destination(R.id.action_to_ethereumReviewTransactionFragment, bundle);
                 }
             }

@@ -40,6 +40,14 @@ public class ARweaveTxViewModel extends BaseTxViewModel {
     private final static String TAG = "ARweaveTxViewModel";
     private final String hdPath = "M/44'/472'";
 
+    public MutableLiveData<ArweaveTransaction> getObservableTransaction() {
+        return observableTransaction;
+    }
+
+    public MutableLiveData<BaseException> getObservableException() {
+        return observableException;
+    }
+
     private final MutableLiveData<ArweaveTransaction> observableTransaction = new MutableLiveData<>(null);
     private final MutableLiveData<BaseException> observableException = new MutableLiveData<>(null);
     private final Application mApplication;
@@ -53,10 +61,16 @@ public class ARweaveTxViewModel extends BaseTxViewModel {
     private int saltLen;
     private String messageData;
     private String signature;
+    private String origin;
 
     public void reset() {
         observableException.postValue(null);
         observableTransaction.postValue(null);
+        requestId = null;
+        saltLen = 0;
+        messageData = null;
+        signature = null;
+        origin = null;
     }
 
     @Override
@@ -64,6 +78,8 @@ public class ARweaveTxViewModel extends BaseTxViewModel {
         String signData = bundle.getString(BundleKeys.SIGN_DATA_KEY);
         requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
         saltLen = bundle.getInt(BundleKeys.SALT_LEN_KEY);
+        origin = bundle.getString(BundleKeys.SIGN_ORIGIN_KEY);
+        rawFormatTx.postValue(signData);
 
         AppExecutors.getInstance().diskIO().execute(() -> {
             try {
@@ -103,7 +119,12 @@ public class ARweaveTxViewModel extends BaseTxViewModel {
         TxEntity txEntity = repository.loadTxSync(txId);
         try {
             JSONObject signedRawTx = new JSONObject(txEntity.getSignedHex());
+            rawFormatTx.postValue(txEntity.getSignedHex());
+            JSONObject addition = new JSONObject(txEntity.getAddition());
+            requestId = addition.getString("requestId");
+            signature = addition.getString("signature");
             ArweaveTransaction transaction = ArweaveTransaction.fromJSON(signedRawTx);
+            transaction.setSignatureUR(this.getSignatureUR());
             observableTransaction.postValue(transaction);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -177,6 +198,8 @@ public class ARweaveTxViewModel extends BaseTxViewModel {
         txEntity.setSignedHex(rawTx.toString());
         txEntity.setAddition(
                 new JSONObject().put("rawTx", tx.getRawTx())
+                        .put("requestId", requestId)
+                        .put("signature", signature)
                         .toString()
         );
         repository.insertTx(txEntity);
@@ -215,7 +238,7 @@ public class ARweaveTxViewModel extends BaseTxViewModel {
         byteBuffer.putLong(uuid.getMostSignificantBits());
         byteBuffer.putLong(uuid.getLeastSignificantBits());
         byte[] requestId = byteBuffer.array();
-        ArweaveSignature arweaveSignature = new ArweaveSignature(requestId, signature);
+        ArweaveSignature arweaveSignature = new ArweaveSignature(signature, requestId);
         return arweaveSignature.toUR().toString();
     }
 }

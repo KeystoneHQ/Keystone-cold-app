@@ -61,6 +61,8 @@ public class ArweaveTxViewModel extends AndroidViewModel {
         this.mRepository = MainApplication.getApplication().getRepository();
     }
 
+    private String requestId;
+
     public void setToken(AuthenticateModal.OnVerify.VerifyToken token) {
         this.token = token;
     }
@@ -188,6 +190,8 @@ public class ArweaveTxViewModel extends AndroidViewModel {
         txEntity.setAddition(
                 new JSONObject().put("rawTx", tx.rawTx)
                         .put("parsedMessage", tx.parsedMessage)
+                        .put("requestId", requestId)
+                        .put("signature", signature)
                         .toString()
         );
         mRepository.insertTx(txEntity);
@@ -207,6 +211,10 @@ public class ArweaveTxViewModel extends AndroidViewModel {
         long current = Utilities.getPrefs(context).getLong("universal_sign_index", 0);
         Utilities.getPrefs(context).edit().putLong("universal_sign_index", current + 1).apply();
         return current;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
     public static class Tx {

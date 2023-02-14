@@ -44,6 +44,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
+import java.nio.ByteBuffer;
+import java.util.UUID;
+
 public class ArweaveTxFragment extends BaseFragment<ArweaveTxBinding> {
     private TxEntity txEntity;
 
@@ -57,6 +60,7 @@ public class ArweaveTxFragment extends BaseFragment<ArweaveTxBinding> {
     private String rawTx;
     private String parsedTx;
     private String signature;
+    private String requestId;
     private UR ur;
 
     @Override
@@ -73,7 +77,13 @@ public class ArweaveTxFragment extends BaseFragment<ArweaveTxBinding> {
                     rawTx = object.getJSONObject("rawTx").toString(2);
                     parsedTx = object.getJSONObject("parsedMessage").toString(2);
                     signature = signedRawTx.getString("signature");
-                    ArweaveSignature arweaveSignature = new ArweaveSignature(Hex.decode(signature));
+                    requestId = object.getString("requestId");
+                    UUID uuid = UUID.fromString(requestId);
+                    ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
+                    byteBuffer.putLong(uuid.getMostSignificantBits());
+                    byteBuffer.putLong(uuid.getLeastSignificantBits());
+                    byte[] requestId = byteBuffer.array();
+                    ArweaveSignature arweaveSignature = new ArweaveSignature(Hex.decode(signature), requestId);
                     ur = arweaveSignature.toUR();
                     initViewPager();
                 } catch (JSONException e) {
