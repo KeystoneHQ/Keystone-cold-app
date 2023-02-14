@@ -68,10 +68,11 @@ public class ArweaveTxFragment extends BaseFragment<ArweaveTxBinding> {
             this.txEntity = txEntity;
             if (this.txEntity != null) {
                 try {
+                    JSONObject signedRawTx = new JSONObject(txEntity.getSignedHex());
                     JSONObject object = new JSONObject(txEntity.getAddition());
                     rawTx = object.getJSONObject("rawTx").toString(2);
                     parsedTx = object.getJSONObject("parsedMessage").toString(2);
-                    signature = object.getString("signature");
+                    signature = signedRawTx.getString("signature");
                     ArweaveSignature arweaveSignature = new ArweaveSignature(Hex.decode(signature));
                     ur = arweaveSignature.toUR();
                     initViewPager();
