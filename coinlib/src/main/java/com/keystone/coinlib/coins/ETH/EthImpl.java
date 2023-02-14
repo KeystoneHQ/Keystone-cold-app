@@ -189,6 +189,9 @@ public class EthImpl implements Coin {
         ABIReader abiReader = new ABIReader();
         ABIReader.DecodedFunctionCall call = abiReader.decodeCall(rawTx.getData(), contract, rawTx.getTo());
         if (call != null) {
+            if (metaData.optLong("chainId") == 56 && "Erc20".equals(contract.getName())) {
+                contract.setName("BEP-20");
+            }
             JSONObject data = call.toJson();
             data.put("contract", contract.getName());
             metaData.put("data", data.toString());
