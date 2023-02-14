@@ -68,6 +68,7 @@ public class ArweaveTxConfirmFragment extends BaseFragment<ArweaveTxConfirmBindi
         mRepository = ((MainApplication) mActivity.getApplication()).getRepository();
 
         viewModel = ViewModelProviders.of(this).get(ArweaveTxViewModel.class);
+        viewModel.setRequestId(requestId);
         viewModel.parseTransaction(signData).observe(this, (v) -> {
             if (v == null) return;
             try {

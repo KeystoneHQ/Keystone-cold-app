@@ -124,6 +124,20 @@ public class ArweaveViewModel extends AndroidViewModel {
         }
     }
 
+    public static String getARAddress() {
+        DataRepository mRepo = MainApplication.getApplication().getRepository();
+        CoinEntity coin = mRepo.loadCoinSync(Coins.AR.coinId());
+        if (coin == null) {
+            return null;
+        }
+        List<AccountEntity> accounts = mRepo.loadAccountsForCoin(coin);
+        if (accounts.size() == 0) {
+            return null;
+        }
+        List<AddressEntity> addresses = mRepo.loadAddressSync(coin.getCoinId());
+        return addresses.get(0).getAddressString();
+    }
+
     private void addArweaveAddressToDB(String publicKey) {
         try {
             CoinEntity coin = mRepo.loadCoinSync(Coins.AR.coinId());

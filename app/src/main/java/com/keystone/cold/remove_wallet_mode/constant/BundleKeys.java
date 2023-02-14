@@ -14,4 +14,5 @@ public interface BundleKeys {
     String WALLET_ID_KEY = "wallet_id_key";
     String PARSED_TRANSACTION_KEY = "parsed_transaction_key";
     String ADDRESS_IDS_KEY = "address_ids_key";
+    String SALT_LEN_KEY = "salt_len_key";
 }

@@ -1,5 +1,7 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.scanner.processor;
 
+import static com.keystone.cold.ui.fragment.main.arweave.ArweaveTxConfirmFragment.KEY_SALT_LEN;
+
 import android.os.Bundle;
 
 import com.keystone.coinlib.accounts.ETHAccount;
@@ -25,6 +27,7 @@ import com.keystone.cold.util.SolMessageValidateUtil;
 import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
+import com.sparrowwallet.hummingbird.registry.arweave.ArweaveSignRequest;
 import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
 
@@ -50,6 +53,8 @@ public class URProcessor implements Processor {
             return new NearSignRequestProcessor().run(r.resolve());
         } else if (r.getType().equals(ScanResultTypes.UR_CRYPTO_PSBT)) {
             return new CryptoPSBTProcessor().run(r.resolve());
+        } else if (r.getType().equals(ScanResultTypes.UR_ARWEAVE_SIGN_REQUEST)) {
+            return new ARweaveSignRequestProcessor().run(r.resolve());
         } else {
             throw UnimplementedException.newInstance();
         }
@@ -227,6 +232,36 @@ public class URProcessor implements Processor {
             Bundle data = new Bundle();
             data.putString(BundleKeys.SIGN_DATA_KEY, psbtB64);
             return new Destination(R.id.action_to_bitcoinConfirmTransactionFragment, data);
+        }
+    }
+
+    private static class ARweaveSignRequestProcessor implements URResolver {
+
+        @Override
+        public Destination run(Object object) throws BaseException {
+            ArweaveSignRequest arweaveSignRequest = (ArweaveSignRequest) object;
+            Bundle bundle = new Bundle();
+            ByteBuffer uuidBuffer = ByteBuffer.wrap(arweaveSignRequest.getRequestId());
+            UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+            String requestMFP = Hex.toHexString(arweaveSignRequest.getMasterFingerprint());
+            String MFP = new GetMasterFingerprintCallable().call();
+            if (!requestMFP.equalsIgnoreCase(MFP)) {
+                throw new XfpNotMatchException("test", "Master fingerprint not match");
+            }
+            bundle.putString(BundleKeys.REQUEST_ID_KEY, uuid.toString());
+            bundle.putInt(KEY_SALT_LEN, arweaveSignRequest.getSaltLen().getLength());
+            String signData = Hex.toHexString(arweaveSignRequest.getSignData());
+            bundle.putString(BundleKeys.SIGN_DATA_KEY, signData);
+            bundle.putString(BundleKeys.SIGN_ORIGIN_KEY, arweaveSignRequest.getOrigin());
+            ArweaveSignRequest.SignType signType = arweaveSignRequest.getSignType();
+            switch (signType) {
+                case TRANSACTION:
+                    return new Destination(R.id.action_to_arweaveConfirmTransactionFragment, bundle);
+                case DATAITEM:
+                    throw new InvalidTransactionException("test", "Transaction type DataItem not supported yet");
+                default:
+                    return new Destination(R.id.action_to_arweaveSignMessageFragment, bundle);
+            }
         }
     }
 }
