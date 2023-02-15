@@ -249,7 +249,7 @@ public class URProcessor implements Processor {
                 throw new XfpNotMatchException("test", "Master fingerprint not match");
             }
             bundle.putString(BundleKeys.REQUEST_ID_KEY, uuid.toString());
-            bundle.putInt(KEY_SALT_LEN, arweaveSignRequest.getSaltLen().getLength());
+            bundle.putInt(BundleKeys.SALT_LEN_KEY, arweaveSignRequest.getSaltLen().getLength());
             String signData = Hex.toHexString(arweaveSignRequest.getSignData());
             bundle.putString(BundleKeys.SIGN_DATA_KEY, signData);
             bundle.putString(BundleKeys.SIGN_ORIGIN_KEY, arweaveSignRequest.getOrigin());
