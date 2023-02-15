@@ -736,11 +736,11 @@
     </string-array>
 
     <string-array name="tutorials_name_arconnect">
-        <item>ARConnect</item>
+        <item>ArConnect</item>
     </string-array>
 
     <string-array name="tutorials_link_arconnect">
-        <item><u>https://keyst.one/arconnect</u></item>
+        <item><u>https://keyst.one/t/arconnect</u></item>
     </string-array>
 
     <string-array name="tutorials_name_sender">
