@@ -7,7 +7,7 @@ public enum Wallet {
 
     KEYSTONE("keystone"),
     METAMASK("metamask", "MetaMask"),
-    KEPLR("keplr"),
+    KEPLR("keplr", "Keplr"),
     SAFE("safe"),
     BITKEEP("bitkeep"),
     BLUEWALLET("bluewallet", "BlueWallet"),
@@ -17,7 +17,7 @@ public enum Wallet {
     ARCONNECT("arconnect"),
     PETRA("petra", "Petra"),
     FEWCHA("fewcha", "Fewcha"),
-    SENDER("sender"),
+    SENDER("sender", "Sender"),
     RABBY("rabby"),
     CORE("core"),
     POLKADOTJS("polkadotjs", "Polkadot.{js}"),
@@ -125,6 +125,7 @@ public enum Wallet {
             case ARCONNECT:
             case SENDER:
                 return true;
+            case KEPLR:
             case CORE:
                 return false;
         }

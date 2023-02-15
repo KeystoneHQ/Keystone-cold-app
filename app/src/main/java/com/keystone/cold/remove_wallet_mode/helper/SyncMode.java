@@ -9,7 +9,7 @@ import com.keystone.cold.remove_wallet_mode.helper.sync_jump.SyncModeDetector;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 
 public enum SyncMode {
-    INVALID, DIRECT, SELECT_ADDRESS, MULTI_CHAINS, SUBSTRATE, SELECT_ONE_ADDRESS;
+    INVALID, DIRECT, SELECT_ADDRESS, SELECT_COINS, SUBSTRATE, SELECT_ONE_ADDRESS;
 
     public static void detect(String walletId, MutableLiveData<SyncMode> stepMode) {
         Wallet wallet = Wallet.getWalletById(walletId);
@@ -17,11 +17,15 @@ public enum SyncMode {
             case BLUEWALLET:
             case METAMASK:
             case ARCONNECT:
+            case KEPLR:
                 stepMode.postValue(DIRECT);
                 break;
             case POLKADOTJS:
             case SUBWALLET:
                 stepMode.postValue(SUBSTRATE);
+                break;
+            case CORE:
+                stepMode.postValue(SELECT_COINS);
                 break;
             default:
                 complexDetect(wallet, stepMode);

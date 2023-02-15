@@ -39,7 +39,7 @@ public class BaseCryptoMultiAccountsSyncViewModel extends AndroidViewModel {
         return data;
     }
 
-    private List<SyncInfo> getSyncInfos() {
+    protected List<SyncInfo> getSyncInfos() {
         List<AddressEntity> addressEntities = MainApplication.getApplication().getRepository().loadAddressSync(coinId);
         return addressEntities.stream()
                 .filter(this::filterSomeAddress)
@@ -54,7 +54,7 @@ public class BaseCryptoMultiAccountsSyncViewModel extends AndroidViewModel {
         return addressIds.contains(addressEntity.getId());
     }
 
-    private SyncInfo addressEntityToSyncInfo(AddressEntity addressEntity) {
+    protected SyncInfo addressEntityToSyncInfo(AddressEntity addressEntity) {
         SyncInfo syncInfo = new SyncInfo();
         syncInfo.setCoinId(addressEntity.getCoinId());
         syncInfo.setAddress(addressEntity.getAddressString());
