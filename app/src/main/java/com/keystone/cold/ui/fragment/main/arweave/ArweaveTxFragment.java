@@ -34,6 +34,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.databinding.ArweaveTxBinding;
 import com.keystone.cold.databinding.PolkadotTxBinding;
 import com.keystone.cold.db.entity.TxEntity;
+import com.keystone.cold.model.ArweaveTransaction;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.viewmodel.CoinListViewModel;
 import com.sparrowwallet.hummingbird.UR;
@@ -58,7 +59,7 @@ public class ArweaveTxFragment extends BaseFragment<ArweaveTxBinding> {
     private Fragment[] fragments;
 
     private String rawTx;
-    private String parsedTx;
+    private ArweaveTransaction parsedTx;
     private String signature;
     private String requestId;
     private UR ur;
@@ -75,7 +76,7 @@ public class ArweaveTxFragment extends BaseFragment<ArweaveTxBinding> {
                     JSONObject signedRawTx = new JSONObject(txEntity.getSignedHex());
                     JSONObject object = new JSONObject(txEntity.getAddition());
                     rawTx = signedRawTx.toString(2);
-                    parsedTx = object.getJSONObject("parsedMessage").toString(2);
+                    parsedTx = ArweaveTransaction.fromJSON(signedRawTx);
                     signature = object.getString("signature");
                     requestId = object.getString("requestId");
                     UUID uuid = UUID.fromString(requestId);
@@ -97,7 +98,7 @@ public class ArweaveTxFragment extends BaseFragment<ArweaveTxBinding> {
         String[] title = {getString(R.string.overview), getString(R.string.raw), getString(R.string.qr)};
         if (fragments == null) {
             fragments = new Fragment[title.length];
-            fragments[0] = ArweaveTxDetailFragment.newInstance(parsedTx);
+            fragments[0] = ArweaveParsedTxFragment.newInstance(parsedTx);
             fragments[1] = ArweaveTxDetailFragment.newInstance(rawTx);
             fragments[2] = URFragment.newInstance(ur);
         }

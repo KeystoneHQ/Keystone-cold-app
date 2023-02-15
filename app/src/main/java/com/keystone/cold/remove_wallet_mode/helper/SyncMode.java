@@ -16,6 +16,7 @@ public enum SyncMode {
         switch (wallet) {
             case BLUEWALLET:
             case METAMASK:
+            case ARCONNECT:
                 stepMode.postValue(DIRECT);
                 break;
             case POLKADOTJS:

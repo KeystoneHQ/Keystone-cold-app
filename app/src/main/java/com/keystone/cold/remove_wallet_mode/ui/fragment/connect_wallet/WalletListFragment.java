@@ -1,20 +1,29 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet;
 
+import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.ArweaveAuthFragment.AR_AUTH_RESULT_KEY;
+import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.ArweaveAuthFragment.AR_SETUP_INITIAL;
+import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.ArweaveAuthFragment.AR_SETUP_REJECTED;
+import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.ArweaveAuthFragment.AR_SETUP_STATUS_KEY;
+import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.ArweaveAuthFragment.AR_SETUP_SUCCESS;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentWalletListBinding;
+import com.keystone.cold.integration.chains.ArweaveViewModel;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.helper.SyncMode;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.WalletListAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.model.WalletItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.WalletViewModel;
+import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.BaseFragment;
 
 import java.util.List;
@@ -71,6 +80,14 @@ public class WalletListFragment extends BaseFragment<FragmentWalletListBinding> 
     }
 
     private void handleItemClick(WalletItem walletItem) {
+        if (walletItem.getWalletId().equals(Wallet.ARCONNECT.getWalletId())) {
+            handleArweaveProcess(walletItem);
+        } else {
+            handleNormalProcess(walletItem);
+        }
+    }
+
+    private void handleNormalProcess(WalletItem walletItem) {
         LiveData<SyncMode> stepMode = walletViewModel.determineSyncMode(walletItem.getWalletId());
         stepMode.observe(WalletListFragment.this, mode -> {
             Bundle bundle = new Bundle();
@@ -96,6 +113,31 @@ public class WalletListFragment extends BaseFragment<FragmentWalletListBinding> 
             }
             stepMode.removeObservers(WalletListFragment.this);
         });
+    }
+
+    private void handleArweaveProcess(WalletItem walletItem) {
+        ArweaveViewModel arweaveViewModel = ViewModelProviders.of(this).get(ArweaveViewModel.class);
+        LiveData<Boolean> hasAR = arweaveViewModel.hasArweaveAddress();
+        hasAR.observe(this, (v) -> {
+            if (!v) {
+                navigate(R.id.action_to_ArweaveAuthFragment);
+                FragmentManager fragmentManager = this.getParentFragmentManager();
+                fragmentManager.setFragmentResultListener(AR_AUTH_RESULT_KEY, this, (s, bundle) -> {
+                    String result = bundle.getString(AR_SETUP_STATUS_KEY);
+                    switch (result) {
+                        case AR_SETUP_SUCCESS:
+                            handleNormalProcess(walletItem);
+                        case AR_SETUP_REJECTED:
+                            fragmentManager.clearFragmentResultListener(AR_AUTH_RESULT_KEY);
+                            break;
+                    }
+                });
+            } else {
+                handleNormalProcess(walletItem);
+            }
+            hasAR.removeObservers(this);
+        });
+
     }
 
     private int getWallet() {

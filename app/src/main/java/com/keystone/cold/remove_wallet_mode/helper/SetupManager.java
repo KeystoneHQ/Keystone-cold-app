@@ -2,6 +2,7 @@ package com.keystone.cold.remove_wallet_mode.helper;
 
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.remove_wallet_mode.helper.setup.AptosCreator;
+import com.keystone.cold.remove_wallet_mode.helper.setup.ArweaveCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.BitcoinCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.CosmosCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.Creator;
@@ -55,6 +56,8 @@ public class SetupManager {
             return new NearCreator();
         } else if (Coins.isCosmosFamilyByCoinId(coinId)) {
             return new CosmosCreator(Coins.coinOfCoinId(coinId));
+        } else if (coinId.equals(Coins.AR.coinId())) {
+            return new ArweaveCreator();
         }
         return null;
     }

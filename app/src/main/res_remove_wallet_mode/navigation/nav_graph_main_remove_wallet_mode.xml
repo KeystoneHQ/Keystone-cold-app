@@ -322,7 +322,17 @@
         android:id="@+id/manageCoinFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.ManageCoinFragment"
         android:label="ManageCoinFragment"
-        tools:layout="@layout/fragment_manage_coin" />
+        tools:layout="@layout/fragment_manage_coin">
+
+        <action
+            android:id="@+id/action_from_manageCoinFragment_to_ArweaveAuthFragment"
+            app:destination="@id/ArweaveAuthFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/assetFragment"
@@ -460,6 +470,12 @@
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.arweave.ARweaveSignMessageFragment"
         android:label="arweaveSignMessageFragment"
         tools:layout="@layout/fragment_sign_message" />
+
+    <fragment
+        android:id="@+id/ArweaveAuthFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.ArweaveAuthFragment"
+        android:label="ArweaveAuthFragment"
+        tools:layout="@layout/arweave_auth_fragment" />
 
     <action
         android:id="@+id/action_to_receiveCoinFragment"

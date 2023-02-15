@@ -70,7 +70,10 @@ public class ReceiveCoinFragment extends BaseFragment<ReceiveFragmentBinding> {
         index = data.getInt(KEY_ADDRESS_INDEX);
         mBinding.setAddress(address);
         mBinding.setAddressName(data.getString(KEY_ADDRESS_NAME));
-        mBinding.setPath(data.getString(KEY_ADDRESS_PATH));
+        if (coinCode.equals(Coins.AR.coinCode())){
+            mBinding.path.setVisibility(View.GONE);
+        }
+        mBinding.setPath(data.getString(KEY_ADDRESS_PATH, ""));
         mBinding.qrcode.setData(address);
         setupMenu();
     }

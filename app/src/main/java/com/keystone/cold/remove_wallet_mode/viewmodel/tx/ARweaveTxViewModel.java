@@ -116,20 +116,22 @@ public class ARweaveTxViewModel extends BaseTxViewModel {
     }
 
     public void parseExistingTransaction(String txId) {
-        TxEntity txEntity = repository.loadTxSync(txId);
-        try {
-            JSONObject signedRawTx = new JSONObject(txEntity.getSignedHex());
-            rawFormatTx.postValue(txEntity.getSignedHex());
-            JSONObject addition = new JSONObject(txEntity.getAddition());
-            requestId = addition.getString("requestId");
-            signature = addition.getString("signature");
-            ArweaveTransaction transaction = ArweaveTransaction.fromJSON(signedRawTx);
-            transaction.setSignatureUR(this.getSignatureUR());
-            observableTransaction.postValue(transaction);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            observableException.postValue(new InvalidTransactionException(mApplication.getString(R.string.incorrect_tx_data), "invalid transaction, json error"));
-        }
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            TxEntity txEntity = repository.loadTxSync(txId);
+            try {
+                JSONObject signedRawTx = new JSONObject(txEntity.getSignedHex());
+                rawFormatTx.postValue(txEntity.getSignedHex());
+                JSONObject addition = new JSONObject(txEntity.getAddition());
+                requestId = addition.getString("requestId");
+                signature = addition.getString("signature");
+                ArweaveTransaction transaction = ArweaveTransaction.fromJSON(signedRawTx);
+                transaction.setSignatureUR(this.getSignatureUR());
+                observableTransaction.postValue(transaction);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                observableException.postValue(new InvalidTransactionException(mApplication.getString(R.string.incorrect_tx_data), "invalid transaction, json error"));
+            }
+        });
     }
 
     @Override
@@ -157,14 +159,15 @@ public class ARweaveTxViewModel extends BaseTxViewModel {
     @Override
     public void handleSign() {
         AppExecutors.getInstance().diskIO().execute(() -> {
+            signState.postValue(STATE_SIGNING);
             ArweaveTransaction arweaveTransaction = observableTransaction.getValue();
             if (arweaveTransaction == null) return;
             RustSigner signer = initSigner();
             if (signer == null) {
-                // throw error;
+                signState.postValue(STATE_SIGN_FAIL);
                 return;
             }
-            String signature = signer.signRSA(arweaveTransaction.getSignatureData(), saltLen);
+            signature = signer.signRSA(arweaveTransaction.getSignatureData(), saltLen);
             try {
                 String txId = ArweaveViewModel.formatHex(Util.sha256(Hex.decode(signature)));
                 insertDB(signature, txId, arweaveTransaction);

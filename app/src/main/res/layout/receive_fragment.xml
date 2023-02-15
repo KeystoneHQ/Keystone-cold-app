@@ -21,7 +21,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="coinCode"
             type="String" />
@@ -116,6 +115,7 @@
             android:textSize="12sp"
             tools:text="19zhQ 2rKq Xm5r y1pj Co83 JbBK 5zUr bdKgc" />
         <TextView
+            android:id="@+id/path"
             android:layout_width="148dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"

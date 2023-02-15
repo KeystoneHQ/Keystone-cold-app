@@ -403,10 +403,12 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
 
         if (coinCode.equals(Coins.AR.coinCode())) {
             ArweaveViewModel arweaveViewModel = ViewModelProviders.of(this).get(ArweaveViewModel.class);
-            arweaveViewModel.hasArweaveAddress().observe(this, value -> {
+            LiveData<Boolean> hasAR = arweaveViewModel.hasArweaveAddress();
+            hasAR.observe(this, value -> {
                 if (!value) {
                     navigate(R.id.action_to_ArweaveAuthFragment);
                 }
+                hasAR.removeObservers(this);
             });
         }
     }
