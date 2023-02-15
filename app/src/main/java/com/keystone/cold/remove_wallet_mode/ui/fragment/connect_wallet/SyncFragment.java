@@ -18,6 +18,7 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.DialogAssetBottomBinding;
 import com.keystone.cold.databinding.FragmentSyncBinding;
+import com.keystone.cold.integration.chains.ArweaveViewModel;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
@@ -138,6 +139,10 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                 SenderWalletViewModel senderWalletViewModel = ViewModelProviders.of(this).get(SenderWalletViewModel.class);
                 senderWalletViewModel.setAddressIds(addressIds);
                 urMutableLiveData = senderWalletViewModel.generateSyncUR();
+                break;
+            case ARCONNECT:
+                ArweaveViewModel arweaveViewModel = ViewModelProviders.of(this).get(ArweaveViewModel.class);
+                urMutableLiveData = arweaveViewModel.generateSyncData();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + wallet);

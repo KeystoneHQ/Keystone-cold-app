@@ -37,7 +37,7 @@ public class ReviewDestinationDetector {
             return new Destination(R.id.action_to_substrateReviewTransactionFragment, bundle);
         } else if (Coins.NEAR.coinId().equals(coinId)) {
             return new Destination(R.id.action_to_nearReviewTransactionFragment, bundle);
-        } else if (Coins.AR.coinCode().equals(coinId)) {
+        } else if (Coins.AR.coinId().equals(coinId)) {
             return new Destination(R.id.action_to_arweaveReviewTransactionFragment, bundle);
         }
         return null;

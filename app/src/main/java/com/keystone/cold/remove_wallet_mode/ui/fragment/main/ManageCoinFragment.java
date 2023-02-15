@@ -25,8 +25,10 @@ import android.view.View;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentManageCoinBinding;
+import com.keystone.cold.integration.chains.ArweaveViewModel;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.CoinAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.model.AssetItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AssetViewModel;
@@ -75,6 +77,16 @@ public class ManageCoinFragment extends BaseFragment<FragmentManageCoinBinding> 
         assets.observe(this, assetItems -> {
             if (assetItems != null) {
                 mCoinAdapter.setItems(assetItems);
+                if (assetItems.stream().anyMatch(a -> a.getCoinId().equals(Coins.AR.coinId()))) {
+                    ArweaveViewModel viewModel = ViewModelProviders.of(this).get(ArweaveViewModel.class);
+                    LiveData<Boolean> hasAR = viewModel.hasArweaveAddress();
+                    hasAR.observe(this, (v) -> {
+                        if (!v) {
+                            navigate(R.id.action_from_manageCoinFragment_to_ArweaveAuthFragment);
+                        }
+                        hasAR.removeObservers(this);
+                    });
+                }
             }
         });
     }
