@@ -24,6 +24,7 @@ import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.BlueWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.FewchaWalletViewModel;
+import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.KeplrWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.MetamaskViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SenderWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SolFlareViewModel;
@@ -143,6 +144,10 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
             case ARCONNECT:
                 ArweaveViewModel arweaveViewModel = ViewModelProviders.of(this).get(ArweaveViewModel.class);
                 urMutableLiveData = arweaveViewModel.generateSyncData();
+                break;
+            case KEPLR:
+                KeplrWalletViewModel keplrWalletViewModel = ViewModelProviders.of(this).get(KeplrWalletViewModel.class);
+                urMutableLiveData = keplrWalletViewModel.generateSyncUR();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + wallet);

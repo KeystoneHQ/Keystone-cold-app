@@ -107,8 +107,8 @@ public class WalletListFragment extends BaseFragment<FragmentWalletListBinding> 
                 case SELECT_ONE_ADDRESS:
                     navigate(R.id.action_to_selectOneAddressFragment, bundle);
                     break;
-                case MULTI_CHAINS: //multi chains wallet, step int select coin page
-                    Toast.makeText(mActivity, "多链钱包", Toast.LENGTH_SHORT).show();
+                case SELECT_COINS:
+                    Toast.makeText(mActivity, "选择币种", Toast.LENGTH_SHORT).show();
                     break;
             }
             stepMode.removeObservers(WalletListFragment.this);

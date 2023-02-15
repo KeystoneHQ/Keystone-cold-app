@@ -80,8 +80,7 @@
       "MATIC",
       "OKB",
       "AVAX",
-      "CRO",
-      "KAVA",
+      "HT",
       "FTM",
       "KLAY",
       "OP",
@@ -89,8 +88,7 @@
       "THETA",
       "IOTX",
       "EVMOS",
-      "ONE",
-      "ROWAN"
+      "ONE"
     ],
     "cosmos": [
       "ATOM",

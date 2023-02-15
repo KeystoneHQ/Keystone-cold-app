@@ -45,11 +45,7 @@ public class WalletViewModel extends AndroidViewModel {
 
     public LiveData<SyncMode> determineSyncMode(String  walletId) {
         MutableLiveData<SyncMode> stepMode = new MutableLiveData<>();
-        if (Wallet.isSingleChainWallet(walletId)) {  // Enter the processing flow of the single-chain wallet
-            SyncMode.detect(walletId, stepMode);
-        } else { //Enter the processing flow of the multi-chain wallet, compared with the single-chain wallet, there is usually one more page for selecting the coin
-            stepMode.postValue(SyncMode.MULTI_CHAINS);
-        }
+        SyncMode.detect(walletId, stepMode);
         return stepMode;
     }
 }
