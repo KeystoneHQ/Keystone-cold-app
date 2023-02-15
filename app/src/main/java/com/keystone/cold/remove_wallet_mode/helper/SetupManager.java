@@ -21,8 +21,7 @@ public class SetupManager {
 
     public static void setup(Callback callback) {
         ExtendedPublicKeyCacheHelper.getInstance().clearCache();
-        Coins.SUPPORTED_COINS.stream()
-                .filter(coin -> !coin.coinCode().equals(Coins.AR.coinCode()))
+        Coins.SUPPORTED_COINS
                 .forEach(coin -> {
                     Creator creator = getCreator(coin);
                     if (creator != null) {

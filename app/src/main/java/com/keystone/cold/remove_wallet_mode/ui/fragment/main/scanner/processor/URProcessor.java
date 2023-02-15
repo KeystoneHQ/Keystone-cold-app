@@ -1,7 +1,5 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.scanner.processor;
 
-import static com.keystone.cold.ui.fragment.main.arweave.ArweaveTxConfirmFragment.KEY_SALT_LEN;
-
 import android.os.Bundle;
 
 import com.keystone.coinlib.accounts.ETHAccount;
@@ -16,7 +14,6 @@ import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.remove_wallet_mode.exceptions.UnimplementedException;
 import com.keystone.cold.remove_wallet_mode.exceptions.scanner.UnknownQrCodeException;
 import com.keystone.cold.remove_wallet_mode.exceptions.scanner.XfpNotMatchException;
-import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidETHAccountException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.remove_wallet_mode.helper.Destination;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumTransaction;
@@ -78,20 +75,12 @@ public class URProcessor implements Processor {
             bundle.putString(BundleKeys.SIGN_DATA_KEY, Hex.toHexString(ethSignRequest.getSignData()));
             bundle.putString(BundleKeys.HD_PATH_KEY, "M/" + hdPath);
 
-            ETHAccount current = ETHAccount.ofCode(Utilities.getCurrentEthAccount(MainApplication.getApplication()));
             ETHAccount target = ETHAccount.getAccountByPath(hdPath);
             if (target == null) {
                 throw new InvalidTransactionException("test", "unknown hd path");
             }
-            if (!target.equals(current)) {
-                if (!current.isChildrenPath(hdPath)) {
-                    //standard and ledger_live has overlap of 1st address
-                    throw new InvalidETHAccountException("test", "not expected ETH account", current, target);
-                }
-            }
 
             String MFP = new GetMasterFingerprintCallable().call();
-
             if (!requestMFP.equalsIgnoreCase(MFP)) {
                 throw new XfpNotMatchException("", "Master fingerprint not match");
             }
