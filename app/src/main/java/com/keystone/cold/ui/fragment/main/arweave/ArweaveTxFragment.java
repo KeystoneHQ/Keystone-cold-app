@@ -74,9 +74,9 @@ public class ArweaveTxFragment extends BaseFragment<ArweaveTxBinding> {
                 try {
                     JSONObject signedRawTx = new JSONObject(txEntity.getSignedHex());
                     JSONObject object = new JSONObject(txEntity.getAddition());
-                    rawTx = object.getJSONObject("rawTx").toString(2);
+                    rawTx = signedRawTx.toString(2);
                     parsedTx = object.getJSONObject("parsedMessage").toString(2);
-                    signature = signedRawTx.getString("signature");
+                    signature = object.getString("signature");
                     requestId = object.getString("requestId");
                     UUID uuid = UUID.fromString(requestId);
                     ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
