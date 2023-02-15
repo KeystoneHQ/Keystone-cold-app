@@ -7,8 +7,8 @@ import androidx.annotation.NonNull;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.db.entity.AddressEntity;
+import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.main.SyncInfo;
-import com.keystone.cold.viewmodel.WatchWallet;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ public class KeplrWalletViewModel extends BaseCryptoMultiAccountsSyncViewModel {
     @Override
     protected List<SyncInfo> getSyncInfos() {
         Set<Integer> coinIndexSet = new HashSet<>();
-        return Arrays.stream(WatchWallet.KEPLR_WALLET.getSupportedCoins())
+        return Arrays.stream(Wallet.KEPLR.getSupportedCoins())
                 .filter(coin -> filterRepeatedCoinIndex(coinIndexSet, coin))
                 .map(this::getCoinAddress)
                 .map(this::addressEntityToSyncInfo)
