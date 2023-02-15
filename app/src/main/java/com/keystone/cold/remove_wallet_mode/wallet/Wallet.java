@@ -14,7 +14,7 @@ public enum Wallet {
     SOLFLARE("solflare", "Solflare"),
     SUBWALLET("subwallet", "SubWallet"),
     ETERNL("eternl"),
-    ARCONNECT("arconnect"),
+    ARCONNECT("arconnect", "ArConnect"),
     PETRA("petra", "Petra"),
     FEWCHA("fewcha", "Fewcha"),
     SENDER("sender", "Sender"),

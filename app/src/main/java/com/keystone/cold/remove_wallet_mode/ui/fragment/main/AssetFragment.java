@@ -267,8 +267,10 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         NEAR(Coins.NEAR.coinId(), false, true, true),
         NEAR_LEDGER(Coins.NEAR.coinId()+ "_" + NEARAccount.LEDGER.getCode(), true, true, true),
         DOT(Coins.DOT.coinId(), true, false, true, false, true),
+        AR(Coins.AR.coinId(), false, false, true),
         //cosmos use default config
         DEFAULT("default", false, false, true, false, false);
+
 
         private final String coinId;
         private final boolean showAddAddress;
