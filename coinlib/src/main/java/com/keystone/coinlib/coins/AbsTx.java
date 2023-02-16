@@ -94,9 +94,10 @@ public abstract class AbsTx {
             }
 
             CoinType coinType = account.getParent();
-            if ((coinType.getValue()!=0 && coinType.getValue() != 1) && !coinCode.equals(Coins.coinCodeOfIndex(coinType.getValue()))) {
-                throw new InvalidTransactionException("invalid hdPath, error coinIndex");
-            }
+            
+//            if ((coinType.getValue()!=0 && coinType.getValue() != 1) && !coinCode.equals(Coins.coinCodeOfIndex(coinType.getValue()))) {
+//                throw new InvalidTransactionException("invalid hdPath, error coinIndex");
+//            }
 
             if(coinType.getValue() == 0 && !Coins.isBTCMainnet(coinCode)) {
                 throw new InvalidTransactionException("invalid hdPath, error coinIndex");

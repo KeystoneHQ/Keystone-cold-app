@@ -115,7 +115,7 @@ public class AddAddressViewModel extends AndroidViewModel {
                     addressEntity.setIndex(index);
                     addressEntity.setName("ETH-" + index);
                     addressEntity.setBelongTo(coinEntity.getBelongTo());
-                    if (repository.loadAddressBypath(addressEntity.getPath()) != null) {
+                    if (repository.loadAddressByPathAndCoinId(addressEntity.getPath(), Coins.ETH.coinId()) != null) {
                         continue;
                     }
                     addressEntities.add(addressEntity);

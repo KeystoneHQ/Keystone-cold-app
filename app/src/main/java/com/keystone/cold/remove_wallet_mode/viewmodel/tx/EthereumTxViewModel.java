@@ -442,7 +442,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
     public String getFromAddress(String path) {
         try {
             ensureAddressExist(path);
-            return mRepository.loadAddressBypath(path).getAddressString();
+            return mRepository.loadAddressByPathAndCoinId(path, Coins.ETH.coinId()).getAddressString();
         } catch (InvalidTransactionException | InvalidETHAccountException e) {
             parseTxException.postValue(e);
             e.printStackTrace();
@@ -460,7 +460,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
         if (target == null) {
             throw new InvalidTransactionException(context.getString(R.string.incorrect_tx_data), "unknown hd path");
         }
-        AddressEntity address = mRepository.loadAddressBypath(path);
+        AddressEntity address = mRepository.loadAddressByPathAndCoinId(path, Coins.ETH.coinId());
         if (address == null) {
             updateAccountDb(getAddressIndex(account, path));
         }

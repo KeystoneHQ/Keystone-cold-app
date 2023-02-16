@@ -270,7 +270,7 @@ public class KeystoneTxViewModel extends Base {
 
         return Stream.of(externalPath)
                 .distinct()
-                .map(path -> mRepository.loadAddressBypath(path).getAddressString())
+                .map(path -> mRepository.loadAddressByPathAndCoinId(path, Coins.coinIdFromCoinCode(coinCode)).getAddressString())
                 .reduce((s1, s2) -> s1 + AbsTx.SEPARATOR + s2)
                 .orElse("");
     }
@@ -315,7 +315,7 @@ public class KeystoneTxViewModel extends Base {
                 }
             }
         }
-        AddressEntity address = mRepository.loadAddressBypath(maxIndexHdPath);
+        AddressEntity address = mRepository.loadAddressByPathAndCoinId(maxIndexHdPath, Coins.coinIdFromCoinCode(coinCode));
         if (address == null) {
             addAddress(getAddressIndex(maxIndexHdPath));
         }
