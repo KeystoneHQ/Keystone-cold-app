@@ -152,6 +152,21 @@
     </fragment>
 
     <fragment
+        android:id="@+id/cosmosConfirmTransactionFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cosmos.CosmosConfirmTransactionFragment"
+        android:label="CosmosConfirmTransactionFragment"
+        tools:layout="@layout/fragment_confirm_transaction">
+
+        <action
+            android:id="@+id/action_to_broadCastTxFragment"
+            app:destination="@id/broadCastTxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
         android:id="@+id/aptosSignMessageFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.aptos.AptosSignMessageFragment"
         android:label="AptosSignMessageFragment"
@@ -592,6 +607,14 @@
     <action
         android:id="@+id/action_to_nearReviewTransactionFragment"
         app:destination="@id/nearReviewTransactionFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_cosmosConfirmTransactionFragment"
+        app:destination="@id/cosmosConfirmTransactionFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"

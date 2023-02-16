@@ -24,6 +24,7 @@ import com.keystone.cold.util.SolMessageValidateUtil;
 import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
+import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignRequest;
 import com.sparrowwallet.hummingbird.registry.arweave.ArweaveSignRequest;
 import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
@@ -52,6 +53,8 @@ public class URProcessor implements Processor {
             return new CryptoPSBTProcessor().run(r.resolve());
         } else if (r.getType().equals(ScanResultTypes.UR_ARWEAVE_SIGN_REQUEST)) {
             return new ARweaveSignRequestProcessor().run(r.resolve());
+        } else if (r.getType().equals(ScanResultTypes.UR_COSMOS_SIGN_REQUEST)) {
+            return new CosmosSignRequestProcessor().run(r.resolve());
         } else {
             throw UnimplementedException.newInstance();
         }
@@ -251,6 +254,38 @@ public class URProcessor implements Processor {
                 default:
                     return new Destination(R.id.action_to_arweaveSignMessageFragment, bundle);
             }
+        }
+    }
+
+    private static class CosmosSignRequestProcessor implements URResolver {
+
+        @Override
+        public Destination run(Object object) throws BaseException {
+            CosmosSignRequest cosmosSignRequest = (CosmosSignRequest) object;
+            String requestMFP = Hex.toHexString(cosmosSignRequest.getMasterFingerprint());
+            String MFP = new GetMasterFingerprintCallable().call();
+            if (!requestMFP.equalsIgnoreCase(MFP)) {
+                throw XfpNotMatchException.newInstance();
+            }
+            ByteBuffer uuidBuffer = ByteBuffer.wrap(cosmosSignRequest.getRequestId());
+            UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+            String hdPath = cosmosSignRequest.getDerivationPath();
+            String signData = Hex.toHexString(cosmosSignRequest.getSignData());
+
+            Bundle bundle = new Bundle();
+            bundle.putString(BundleKeys.REQUEST_ID_KEY, uuid.toString());
+            bundle.putString(BundleKeys.SIGN_DATA_KEY, signData);
+            bundle.putString(BundleKeys.HD_PATH_KEY, "M/" + hdPath);
+            bundle.putString(BundleKeys.SIGN_ORIGIN_KEY, cosmosSignRequest.getOrigin());
+
+            String dataType = cosmosSignRequest.getType().getType();
+            if (dataType.equals(CosmosSignRequest.DataType.AMINO.getType()) || dataType.equals(CosmosSignRequest.DataType.DIRECT.getType())) {
+                bundle.putString(BundleKeys.DATA_TYPE_KEY, cosmosSignRequest.getType().getType());
+                return new Destination(R.id.action_to_cosmosConfirmTransactionFragment, bundle);
+            } else if (dataType.equals(CosmosSignRequest.DataType.MESSAGE.getType())) {
+                return new Destination(R.id.action_to_cosmosMessageFragment, bundle);
+            }
+            throw UnimplementedException.newInstance();
         }
     }
 }
