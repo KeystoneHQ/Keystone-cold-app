@@ -13,6 +13,9 @@ import com.keystone.cold.cryptocore.CosmosParser;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cosmos.model.CosmosTx;
+import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cosmos.model.msg.Msg;
+import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cosmos.model.msg.MsgSignData;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,7 +70,42 @@ public class CosmosTxViewModel extends BaseTxViewModel {
 
     @Override
     public MutableLiveData<JSONObject> parseMessage(Bundle bundle) {
-        return null;
+        MutableLiveData<JSONObject> observableObject = new MutableLiveData<>();
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            try {
+                messageData = bundle.getString(BundleKeys.SIGN_DATA_KEY);
+                hdPath = bundle.getString(BundleKeys.HD_PATH_KEY);
+                requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
+                String signer = null;
+                String data = null;
+                String aminoMessage = new String(Hex.decode(messageData));
+                CosmosTx cosmosTx = CosmosTx.from(aminoMessage);
+                if (cosmosTx != null) {
+                    chainId = cosmosTx.getChainId();
+                    if (cosmosTx.getMsgs() != null && cosmosTx.getMsgs().size() != 0) {
+                        for (Msg msg : cosmosTx.getMsgs()) {
+                            if (msg instanceof MsgSignData) {
+                                signer = ((MsgSignData) msg).getSigner();
+                                data = ((MsgSignData) msg).getData();
+                                break;
+                            }
+                        }
+                    }
+                }
+                JSONObject object = new JSONObject();
+                object.put("hdPath", hdPath);
+                object.put("requestId", requestId);
+                object.put("data", data);
+                object.put("chainId", chainId);
+                object.put("signer", signer);
+                observableObject.postValue(object);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                observableObject.postValue(null);
+            }
+            xPub = getXpubByPath(hdPath);
+        });
+        return observableObject;
     }
 
     @Override

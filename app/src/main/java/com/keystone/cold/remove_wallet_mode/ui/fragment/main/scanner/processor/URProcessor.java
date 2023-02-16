@@ -283,7 +283,7 @@ public class URProcessor implements Processor {
                 bundle.putString(BundleKeys.DATA_TYPE_KEY, cosmosSignRequest.getType().getType());
                 return new Destination(R.id.action_to_cosmosConfirmTransactionFragment, bundle);
             } else if (dataType.equals(CosmosSignRequest.DataType.MESSAGE.getType())) {
-                return new Destination(R.id.action_to_cosmosMessageFragment, bundle);
+                return new Destination(R.id.action_to_cosmosSignMessageFragment, bundle);
             }
             throw UnimplementedException.newInstance();
         }
