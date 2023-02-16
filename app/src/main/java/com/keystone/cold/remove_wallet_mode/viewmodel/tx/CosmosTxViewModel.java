@@ -2,37 +2,56 @@ package com.keystone.cold.remove_wallet_mode.viewmodel.tx;
 
 import android.app.Application;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.keystone.coinlib.accounts.ExtendedPublicKey;
+import com.keystone.coinlib.coins.SignTxResult;
+import com.keystone.coinlib.coins.cosmos.CosmosImpl;
+import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.cryptocore.CosmosParser;
 import com.keystone.cold.db.entity.AddressEntity;
+import com.keystone.cold.db.entity.TxEntity;
+import com.keystone.cold.encryption.RustSigner;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cosmos.model.CosmosTx;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cosmos.model.msg.Msg;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cosmos.model.msg.MsgSignData;
+import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
+import com.keystone.cold.util.HashUtil;
+import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignature;
 
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
+import java.nio.ByteBuffer;
+import java.util.Objects;
+import java.util.UUID;
+
 public class CosmosTxViewModel extends BaseTxViewModel {
 
+    private static final String TAG = CosmosTxViewModel.class.getSimpleName();
     private String txHex;
     private String messageData;
     private String hdPath;
     private String dataType;
+    private String origin;
 
     private String requestId;
 
     private String xPub;
     private String chainId;
     private String parseJson;
+
+    private String signature;
 
 
     private final MutableLiveData<CosmosTx> cosmosTxLiveData;
@@ -55,6 +74,7 @@ public class CosmosTxViewModel extends BaseTxViewModel {
             hdPath = bundle.getString(BundleKeys.HD_PATH_KEY);
             requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
             dataType = bundle.getString(BundleKeys.DATA_TYPE_KEY);
+            origin = bundle.getString(BundleKeys.SIGN_ORIGIN_KEY);
             try {
                 if ("sign-type-amino".equals(dataType)) {
                     parseAminoTx();
@@ -110,17 +130,38 @@ public class CosmosTxViewModel extends BaseTxViewModel {
 
     @Override
     public void handleSign() {
-
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            Signer signer = initSigner();
+            signTransaction(signer);
+        });
     }
+
 
     @Override
     public void handleSignMessage() {
-
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            Signer signer = initSigner();
+            signMessage(signer);
+        });
     }
 
     @Override
     public String getSignatureUR() {
-        return null;
+        if (TextUtils.isEmpty(signature) || TextUtils.isEmpty(requestId)) {
+            return "";
+        }
+        byte[] signatureByte = Hex.decode(signature);
+        UUID uuid = UUID.fromString(requestId);
+        ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
+        byteBuffer.putLong(uuid.getMostSignificantBits());
+        byteBuffer.putLong(uuid.getLeastSignificantBits());
+        byte[] requestId = byteBuffer.array();
+        byte[] publicKey = null;
+        if (xPub != null) {
+            publicKey = getPublicKey(xPub);
+        }
+        CosmosSignature cosmosSignature = new CosmosSignature(signatureByte, requestId, publicKey);
+        return cosmosSignature.toUR().toString();
     }
 
 
@@ -187,5 +228,90 @@ public class CosmosTxViewModel extends BaseTxViewModel {
             return coinType.equals(String.valueOf(Coins.EVMOS.coinIndex()));
         }
         return false;
+    }
+
+    private Signer initSigner() {
+        String authToken = getAuthToken();
+        if (TextUtils.isEmpty(authToken)) {
+            Log.w(TAG, "authToken null");
+            return null;
+        }
+        return new RustSigner(hdPath.toLowerCase(), authToken);
+    }
+
+    private void signTransaction(Signer signer) {
+        signCallBack.startSign();
+        SignTxResult result = new CosmosImpl().signHex(txHex, signer);
+        if (result == null) {
+            signCallBack.onFail();
+        } else {
+            signCallBack.onSignTxSuccess();
+            signature = result.signaturHex;
+            insertDB(signature, txHex, parseJson);
+        }
+    }
+
+    private void signMessage(Signer signer) {
+        signCallBack.startSign();
+        String result = new CosmosImpl().signMessage(messageData, signer);
+        if (result == null) {
+            signCallBack.onFail();
+        } else {
+            signCallBack.onSignMsgSuccess();
+            signature = result;
+        }
+    }
+
+    private void insertDB(String signature, String rawMessage, String parseJson) {
+        TxEntity txEntity = generateCosmosTxEntity();
+        String txId = Hex.toHexString(Objects.requireNonNull(HashUtil.sha256(Hex.decode(txHex))));
+        txEntity.setTxId(txId);
+        String additionsString = null;
+        try {
+            JSONObject addition = new JSONObject();
+            addition.put("signature", signature);
+            addition.put("raw_message", rawMessage);
+            addition.put("parse_message", parseJson);
+
+            JSONObject additions = new JSONObject();
+            additions.put("coin", getCosmosCoinId());
+            additions.put("addition", addition);
+            JSONObject root = new JSONObject();
+            root.put("additions", additions);
+            additionsString = root.toString();
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+        if (!TextUtils.isEmpty(additionsString)) {
+            //addition结构详见 com.keystone.cold.db.entity.TxEntity addition字段
+            txEntity.setAddition(additionsString);
+            repository.insertTx(txEntity);
+        }
+    }
+
+    private TxEntity generateCosmosTxEntity() {
+        TxEntity txEntity = new TxEntity();
+        String coinId = getCosmosCoinId();
+        txEntity.setCoinId(coinId);
+        txEntity.setSignId(getSignId());
+        String coinCode = getCosmosCoinCode();
+        txEntity.setCoinCode(coinCode);
+        txEntity.setTimeStamp(getUniversalSignIndex(getApplication()));
+        txEntity.setBelongTo(repository.getBelongTo());
+        txEntity.setSignedHex(getSignatureUR());
+        return txEntity;
+    }
+
+    private String getSignId() {
+        return Wallet.KEPLR.getSignId();
+    }
+
+    public String getCosmosCoinId() {
+        return Coins.getCosmosCoinId(chainId);
+    }
+
+    private byte[] getPublicKey(String xPub) {
+        ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(xPub);
+        return extendedPublicKey.getKey();
     }
 }
