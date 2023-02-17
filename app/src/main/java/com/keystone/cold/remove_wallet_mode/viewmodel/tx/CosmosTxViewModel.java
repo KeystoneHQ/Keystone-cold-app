@@ -146,7 +146,7 @@ public class CosmosTxViewModel extends BaseTxViewModel {
                 object.put("requestId", requestId);
                 object.put("data", data);
                 object.put("chainId", chainId);
-                object.put("signer", signer);
+                object.put("fromAddress", signer);
                 observableObject.postValue(object);
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -8,9 +8,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
+import androidx.lifecycle.LiveData;
+
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.databinding.FragmentSignMessageBinding;
+import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.BaseTxViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
@@ -18,6 +22,13 @@ import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
+import com.keystone.cold.util.CharSetUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.spongycastle.util.encoders.Hex;
+
+import java.nio.charset.StandardCharsets;
 
 public abstract class SignMessageFragment<V extends BaseTxViewModel> extends BaseFragment<FragmentSignMessageBinding> {
 
@@ -40,11 +51,49 @@ public abstract class SignMessageFragment<V extends BaseTxViewModel> extends Bas
     protected void init(View view) {
         initViewModel();
         setupView();
+    }
+
+    protected void setupView() {
+        mBinding.setCoinCode(getCoinCode());
+        mBinding.setCoinName(getCoinName());
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         mBinding.sign.setOnClickListener(v -> handleSign());
     }
 
-    protected abstract void setupView();
+    private void onMessageParsed(LiveData<JSONObject> liveData, JSONObject jsonObject) {
+        if (jsonObject != null) {
+            String message = null;
+            try {
+                message = jsonObject.getString("data");
+                String fromAddress = jsonObject.getString("fromAddress");
+                mBinding.address.setText(fromAddress);
+                if (CharSetUtil.isHexString(message)) {
+                    byte[] messageBytes = Hex.decode(message);
+                    if (CharSetUtil.isUTF8Format(messageBytes)) {
+                        String messageUtf8 = new String(messageBytes, StandardCharsets.UTF_8);
+                        mBinding.message.setText(messageUtf8);
+                    } else {
+                        mBinding.llMsgUtf8.setVisibility(View.GONE);
+                    }
+                } else {
+                    mBinding.llMsgUtf8.setVisibility(View.GONE);
+                }
+                mBinding.rawMessage.setText(message);
+            } catch (UnsupportedOperationException e) {
+                mBinding.llMsgUtf8.setVisibility(View.GONE);
+                mBinding.rawMessage.setText(message);
+            } catch (Exception e) {
+                e.printStackTrace();
+                handleParseException(e);
+            } finally {
+                liveData.removeObservers(this);
+            }
+        }
+    }
+
+    protected abstract String getCoinName();
+
+    protected abstract String getCoinCode();
 
     protected abstract void initViewModel();
 
@@ -62,7 +111,8 @@ public abstract class SignMessageFragment<V extends BaseTxViewModel> extends Bas
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-
+        LiveData<JSONObject> liveData = viewModel.parseMessage(requireArguments());
+        liveData.observe(this, o -> onMessageParsed(liveData, o));
     }
 
 
@@ -113,5 +163,11 @@ public abstract class SignMessageFragment<V extends BaseTxViewModel> extends Bas
         }
     }
 
-    protected abstract void onSignSuccess();
+    protected void onSignSuccess() {
+        String signatureURString = viewModel.getSignatureUR();
+        Bundle data = new Bundle();
+        data.putString(BundleKeys.SIGNATURE_UR_KEY, signatureURString);
+        data.putString(BundleKeys.COIN_CODE_KEY, getCoinCode());
+        navigate(R.id.action_to_broadCastTxFragment, data);
+    }
 }
