@@ -6,13 +6,16 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
+import com.keystone.cold.model.ArweaveTransaction;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ReviewTransactionFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.ARweaveTxViewModel;
 
-public class ARweaveReviewTransactionFragment extends ReviewTransactionFragment<ARweaveTxViewModel> {
+import org.json.JSONObject;
+
+public class ARweaveReviewTransactionFragment extends ReviewTransactionFragment<ArweaveTransaction, ARweaveTxViewModel> {
     @Override
     protected void initViewModel() {
         viewModel = ViewModelProviders.of(this).get(ARweaveTxViewModel.class);
@@ -33,14 +36,5 @@ public class ARweaveReviewTransactionFragment extends ReviewTransactionFragment<
         String txId = data.getString(BundleKeys.TX_ID_KEY);
         viewModel.parseExistingTransaction(txId);
         viewModel.getObservableException().observe(this, this::handleParseException);
-    }
-
-    private void handleParseException(BaseException ex) {
-        if (ex != null) {
-            ex.printStackTrace();
-            alertException(ex, () -> {
-                popBackStack(R.id.assetFragment, false);
-            });
-        }
     }
 }

@@ -82,7 +82,7 @@ public class EthereumSignTypedDataFragment extends BaseFragment<FragmentEthereum
         viewModel = ViewModelProviders.of(this).get(EthereumTxViewModel.class);
         LiveData<JSONObject> liveData = viewModel.parseEIP712TypedData(requireArguments());
         liveData.observe(this, o -> onMessageParsed(liveData, o));
-        viewModel.parseTxException().observe(this, this::handleParseException);
+        viewModel.getObservableException().observe(this, this::handleParseException);
         mBinding.sign.setOnClickListener(v -> handleSign());
     }
 
@@ -167,7 +167,7 @@ public class EthereumSignTypedDataFragment extends BaseFragment<FragmentEthereum
                     getString(R.string.incorrect_tx_data),
                     getString(R.string.confirm),
                     null);
-            viewModel.parseTxException().setValue(null);
+            viewModel.getObservableException().setValue(null);
             popBackStack(R.id.assetFragment, false);
         }
     }

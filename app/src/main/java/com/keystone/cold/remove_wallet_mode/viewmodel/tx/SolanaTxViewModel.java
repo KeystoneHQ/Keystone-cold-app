@@ -33,7 +33,7 @@ import java.nio.ByteBuffer;
 import java.util.UUID;
 
 
-public class SolanaTxViewModel extends BaseTxViewModel {
+public class SolanaTxViewModel extends BaseTxViewModel<JSONObject> {
 
 
     private static final String TAG = "SolanaTxViewModel";
@@ -48,16 +48,9 @@ public class SolanaTxViewModel extends BaseTxViewModel {
 
     private String parsedMessage;
 
-    private final MutableLiveData<JSONObject> parsedTxData;
-
 
     public SolanaTxViewModel(@NonNull Application application) {
         super(application);
-        parsedTxData = new MutableLiveData<>();
-    }
-
-    public MutableLiveData<JSONObject> getParsedTxData() {
-        return parsedTxData;
     }
 
     @Override
@@ -73,14 +66,14 @@ public class SolanaTxViewModel extends BaseTxViewModel {
                 try {
                     ensureAddressExist(hdPath);
                     JSONObject jsonObject = new JSONObject(parsedMessage);
-                    parsedTxData.postValue(jsonObject);
+                    observableTransaction.postValue(jsonObject);
                     rawFormatTx.postValue(jsonObject.toString(2));
                 } catch (JSONException | InvalidTransactionException e) {
                     e.printStackTrace();
                 }
             } else {
                 Log.e(TAG, "parse solana transaction failed");
-                parsedTxData.postValue(null);
+                observableTransaction.postValue(null);
                 rawFormatTx.postValue("");
             }
         });
@@ -205,7 +198,7 @@ public class SolanaTxViewModel extends BaseTxViewModel {
                 rawFormatTx.postValue(jsonObject.toString(2));
                 jsonObject.put("record", true);
                 jsonObject.put("signatureUR", txEntity.getSignedHex());
-                parsedTxData.postValue(jsonObject);
+                observableTransaction.postValue(jsonObject);
             }
         } catch (JSONException exception) {
             exception.printStackTrace();

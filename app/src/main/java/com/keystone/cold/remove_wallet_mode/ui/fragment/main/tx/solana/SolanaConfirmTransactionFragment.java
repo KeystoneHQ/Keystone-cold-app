@@ -1,8 +1,5 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.solana;
 
-import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
-import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
-
 import android.os.Bundle;
 
 import androidx.lifecycle.ViewModelProviders;
@@ -14,7 +11,9 @@ import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ConfirmTransacti
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.SolanaTxViewModel;
 
-public class SolanaConfirmTransactionFragment extends ConfirmTransactionFragment<SolanaTxViewModel> {
+import org.json.JSONObject;
+
+public class SolanaConfirmTransactionFragment extends ConfirmTransactionFragment<JSONObject, SolanaTxViewModel> {
 
     @Override
     protected void initViewModel() {
@@ -24,8 +23,8 @@ public class SolanaConfirmTransactionFragment extends ConfirmTransactionFragment
     @Override
     protected TabLayoutConfig[] getTabLayouts() {
         TabLayoutConfig[] tabLayoutConfigs = new TabLayoutConfig[3];
-        tabLayoutConfigs[0] = new TabLayoutConfig(getString(R.string.overview), SolanaTransactionDetailFragment.newInstance(requireArguments(), viewModel.getParsedTxData(), "overview"));
-        tabLayoutConfigs[1] = new TabLayoutConfig(getString(R.string.details), SolanaTransactionDetailFragment.newInstance(requireArguments(), viewModel.getParsedTxData(), "details"));
+        tabLayoutConfigs[0] = new TabLayoutConfig(getString(R.string.overview), SolanaTransactionDetailFragment.newInstance(requireArguments(), viewModel.getObservableTransaction(), "overview"));
+        tabLayoutConfigs[1] = new TabLayoutConfig(getString(R.string.details), SolanaTransactionDetailFragment.newInstance(requireArguments(), viewModel.getObservableTransaction(), "details"));
         tabLayoutConfigs[2] = new TabLayoutConfig(getString(R.string.raw_data), RawTxFragment.newInstance(requireArguments(), viewModel.getRawFormatTx()));
         return tabLayoutConfigs;
     }

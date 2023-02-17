@@ -5,7 +5,7 @@ import android.view.View;
 import com.keystone.cold.R;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.BaseTxViewModel;
 
-public abstract class ReviewTransactionFragment<V extends BaseTxViewModel> extends ConfirmTransactionFragment<V> {
+public abstract class ReviewTransactionFragment<T, V extends BaseTxViewModel<T>> extends ConfirmTransactionFragment<T, V> {
 
     @Override
     protected void init(View view) {

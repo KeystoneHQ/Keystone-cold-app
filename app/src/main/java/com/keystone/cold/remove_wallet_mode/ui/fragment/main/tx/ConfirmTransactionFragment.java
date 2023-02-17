@@ -18,6 +18,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.databinding.FragmentConfirmTransactionBinding;
 import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
+import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.BaseTxViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.setup.PreImportFragment;
@@ -27,7 +28,7 @@ import com.keystone.cold.ui.views.AuthenticateModal;
 
 import java.util.Objects;
 
-public abstract class ConfirmTransactionFragment<V extends BaseTxViewModel> extends BaseFragment<FragmentConfirmTransactionBinding> {
+public abstract class ConfirmTransactionFragment<T, V extends BaseTxViewModel<T>> extends BaseFragment<FragmentConfirmTransactionBinding> {
 
     protected ProgressModalDialog pendingDialog;
     private SigningDialog signingDialog;
@@ -59,6 +60,16 @@ public abstract class ConfirmTransactionFragment<V extends BaseTxViewModel> exte
                 if (pendingDialog != null) pendingDialog.dismiss();
             }
         });
+    }
+
+    protected void handleParseException(BaseException ex) {
+        if (ex != null) {
+            ex.printStackTrace();
+            alertException(ex, () -> {
+                popBackStack(R.id.myAssetsFragment, false);
+            });
+            viewModel.getObservableException().setValue(null);
+        }
     }
 
     protected abstract void initViewModel();
