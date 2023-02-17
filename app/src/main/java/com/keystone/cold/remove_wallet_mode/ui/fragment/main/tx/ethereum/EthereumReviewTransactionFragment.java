@@ -20,7 +20,6 @@ public class EthereumReviewTransactionFragment extends ReviewTransactionFragment
         viewModel = ViewModelProviders.of(this).get(EthereumTxViewModel.class);
         String txId = data.getString(BundleKeys.TX_ID_KEY);
         viewModel.generateSignedTransaction(txId);
-        viewModel.getObservableException().observe(this, this::handleParseException);
     }
 
     @Override

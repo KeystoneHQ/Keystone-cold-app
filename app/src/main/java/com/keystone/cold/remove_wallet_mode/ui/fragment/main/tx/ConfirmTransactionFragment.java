@@ -60,6 +60,7 @@ public abstract class ConfirmTransactionFragment<T, V extends BaseTxViewModel<T>
                 if (pendingDialog != null) pendingDialog.dismiss();
             }
         });
+        viewModel.getObservableException().observe(this, this::handleParseException);
     }
 
     protected void handleParseException(BaseException ex) {
@@ -85,6 +86,11 @@ public abstract class ConfirmTransactionFragment<T, V extends BaseTxViewModel<T>
 
     private void setupViewPager() {
         TabLayoutConfig[] configs = getTabLayouts();
+
+        if (configs.length == 1) {
+            mBinding.transaction.tab.setVisibility(View.GONE);
+        }
+
         mBinding.transaction.viewPager.setOffscreenPageLimit(configs.length);
         mBinding.transaction.viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager(),
                 BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {

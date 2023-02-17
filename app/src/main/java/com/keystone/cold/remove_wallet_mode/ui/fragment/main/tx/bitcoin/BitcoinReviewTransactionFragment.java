@@ -32,7 +32,6 @@ public class BitcoinReviewTransactionFragment extends ReviewTransactionFragment<
     @Override
     protected void setupView() {
         Bundle data = requireArguments();
-        viewModel.getObservableException().observe(this, this::handleParseException);
         String txId = data.getString(BundleKeys.TX_ID_KEY);
         viewModel.parseExistingTransaction(txId);
     }

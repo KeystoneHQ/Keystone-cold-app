@@ -19,7 +19,6 @@ public class ARweaveConfirmTransactionFragment extends ConfirmTransactionFragmen
     protected void initViewModel() {
         viewModel = ViewModelProviders.of(this).get(ARweaveTxViewModel.class);
         viewModel.reset();
-        viewModel.getObservableException().observe(this, this::handleParseException);
     }
 
     @Override

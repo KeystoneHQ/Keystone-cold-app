@@ -30,9 +30,5 @@ public class SubstrateReviewTransactionFragment extends ReviewTransactionFragmen
 
     @Override
     protected void setupView() {
-        viewModel.getObservableException().observe(this, (e) -> {
-            if (e == null) return;
-            handleParseException(e);
-        });
     }
 }

@@ -21,7 +21,6 @@ public class BitcoinConfirmTransactionFragment extends ConfirmTransactionFragmen
     protected void initViewModel() {
         viewModel = ViewModelProviders.of(this).get(BitcoinTxViewModel.class);
         viewModel.reset();
-        viewModel.getObservableException().observe(this, this::handleParseException);
         viewModel.parseTxData(requireArguments());
     }
 
