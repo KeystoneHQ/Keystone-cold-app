@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProviders;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
-import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ConfirmTransactionFragment;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.EthereumTxViewModel;
@@ -16,16 +15,16 @@ import com.keystone.cold.ui.modal.ModalDialog;
 
 import java.util.Objects;
 
-public class EthereumConfirmTransactionFragment extends ConfirmTransactionFragment<EthereumTxViewModel> {
+public class EthereumConfirmTransactionFragment extends ConfirmTransactionFragment<EthereumTransaction, EthereumTxViewModel> {
     private MutableLiveData<EthereumTransaction> transaction;
 
     @Override
     protected void initViewModel() {
         viewModel = ViewModelProviders.of(this).get(EthereumTxViewModel.class);
         viewModel.reset();
-        transaction = viewModel.getObservableEthTx();
+        transaction = viewModel.getObservableTransaction();
         viewModel.generateUnsignedTransaction(requireArguments());
-        viewModel.parseTxException().observe(this, this::handleParseException);
+        viewModel.getObservableException().observe(this, this::handleParseException);
     }
 
     @Override
@@ -40,16 +39,6 @@ public class EthereumConfirmTransactionFragment extends ConfirmTransactionFragme
     protected void setupView() {
         mBinding.toolbar.setNavigationOnClickListener((v) -> navigateUp());
         mBinding.sign.setOnClickListener((v) -> checkExceedFeeDialog());
-    }
-
-    private void handleParseException(BaseException ex) {
-        if (ex != null) {
-            ex.printStackTrace();
-            alertException(ex, () -> {
-                popBackStack(R.id.myAssetsFragment, false);
-            });
-            viewModel.parseTxException().setValue(null);
-        }
     }
 
     private void checkExceedFeeDialog() {

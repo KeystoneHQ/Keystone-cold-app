@@ -9,9 +9,10 @@ import com.keystone.cold.R;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ConfirmTransactionFragment;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
+import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.near.model.NearTx;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.NearTxViewModel;
 
-public class NearConfirmTransactionFragment extends ConfirmTransactionFragment<NearTxViewModel> {
+public class NearConfirmTransactionFragment extends ConfirmTransactionFragment<NearTx, NearTxViewModel> {
     @Override
     protected void initViewModel() {
         viewModel = ViewModelProviders.of(this).get(NearTxViewModel.class);
@@ -20,7 +21,7 @@ public class NearConfirmTransactionFragment extends ConfirmTransactionFragment<N
     @Override
     protected TabLayoutConfig[] getTabLayouts() {
         TabLayoutConfig[] tabLayoutConfigs = new TabLayoutConfig[2];
-        tabLayoutConfigs[0] = new TabLayoutConfig(getString(R.string.overview), NearTransactionDetailFragment.newInstance(requireArguments(), viewModel.getNearTxLiveData()));
+        tabLayoutConfigs[0] = new TabLayoutConfig(getString(R.string.overview), NearTransactionDetailFragment.newInstance(requireArguments(), viewModel.getObservableTransaction()));
         tabLayoutConfigs[1] = new TabLayoutConfig(getString(R.string.raw), RawTxFragment.newInstance(requireArguments(), viewModel.getRawFormatTx()));
         return tabLayoutConfigs;
     }

@@ -15,9 +15,10 @@ import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ConfirmTransacti
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.aptos.AptosFormattedTxFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.AptosTxViewModel;
+import com.keystone.cold.ui.fragment.main.aptos.model.AptosTx;
 import com.keystone.cold.ui.views.AuthenticateModal;
 
-public class AptosConfirmTransactionFragment extends ConfirmTransactionFragment<AptosTxViewModel> {
+public class AptosConfirmTransactionFragment extends ConfirmTransactionFragment<AptosTx, AptosTxViewModel> {
 
 
     @Override
@@ -28,7 +29,7 @@ public class AptosConfirmTransactionFragment extends ConfirmTransactionFragment<
     @Override
     protected TabLayoutConfig[] getTabLayouts() {
         TabLayoutConfig[] tabLayoutConfigs = new TabLayoutConfig[2];
-        tabLayoutConfigs[0] = new TabLayoutConfig(getString(R.string.overview), AptosFormattedTxFragment.newInstance(requireArguments(), viewModel.getAptosTxLiveData()));
+        tabLayoutConfigs[0] = new TabLayoutConfig(getString(R.string.overview), AptosFormattedTxFragment.newInstance(requireArguments(), viewModel.getObservableTransaction()));
         tabLayoutConfigs[1] = new TabLayoutConfig(getString(R.string.raw_data), RawTxFragment.newInstance(requireArguments(), viewModel.getRawFormatTx()));
         return tabLayoutConfigs;
     }

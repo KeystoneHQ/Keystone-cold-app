@@ -12,33 +12,21 @@ import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ReviewTransactionFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.EthereumTxViewModel;
 
-public class EthereumReviewTransactionFragment extends ReviewTransactionFragment<EthereumTxViewModel> {
-    private MutableLiveData<EthereumTransaction> transaction;
+public class EthereumReviewTransactionFragment extends ReviewTransactionFragment<EthereumTransaction, EthereumTxViewModel> {
 
     @Override
     protected void initViewModel() {
         Bundle data = requireArguments();
         viewModel = ViewModelProviders.of(this).get(EthereumTxViewModel.class);
-        transaction = viewModel.getObservableEthTx();
         String txId = data.getString(BundleKeys.TX_ID_KEY);
         viewModel.generateSignedTransaction(txId);
-        viewModel.parseTxException().observe(this, this::handleParseException);
-    }
-
-    private void handleParseException(BaseException ex) {
-        if (ex != null) {
-            ex.printStackTrace();
-            alertException(ex, () -> {
-                popBackStack(R.id.assetFragment, false);
-            });
-            viewModel.parseTxException().setValue(null);
-        }
+        viewModel.getObservableException().observe(this, this::handleParseException);
     }
 
     @Override
     protected TabLayoutConfig[] getTabLayouts() {
         TabLayoutConfig[] layoutConfigs = new TabLayoutConfig[2];
-        layoutConfigs[0] = new TabLayoutConfig(getString(R.string.overview), EthereumTransactionDetailFragment.newInstance(requireArguments(), transaction));
+        layoutConfigs[0] = new TabLayoutConfig(getString(R.string.overview), EthereumTransactionDetailFragment.newInstance(requireArguments(), viewModel.getObservableTransaction()));
         layoutConfigs[1] = new TabLayoutConfig(getString(R.string.raw_data), RawTxFragment.newInstance(requireArguments(), viewModel.getRawFormatTx()));
         return layoutConfigs;
     }

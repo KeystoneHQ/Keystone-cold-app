@@ -61,7 +61,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class EthereumTxViewModel extends BaseTxViewModel {
+public class EthereumTxViewModel extends BaseTxViewModel<EthereumTransaction> {
     private static final String TAG = "EthereumTxViewModel";
 
     protected final DataRepository mRepository;
@@ -79,9 +79,6 @@ public class EthereumTxViewModel extends BaseTxViewModel {
     @SuppressLint("StaticFieldLeak")
     private final Context context;
     private boolean isLegacyTypedData;
-    private MutableLiveData<EthereumTransaction> observableEthTx = new MutableLiveData<>();
-    protected final MutableLiveData<BaseException> parseTxException = new MutableLiveData<>();
-
 
     public boolean isExceeded() {
         return isExceeded;
@@ -201,15 +198,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
     }
 
     public void reset() {
-        observableEthTx.postValue(null);
-    }
-
-    public MutableLiveData<EthereumTransaction> getObservableEthTx() {
-        return observableEthTx;
-    }
-
-    public MutableLiveData<BaseException> parseTxException() {
-        return parseTxException;
+        observableTransaction.postValue(null);
     }
 
     public void generateUnsignedTransaction(Bundle bundle) {
@@ -238,7 +227,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
             }
             if (ethTx == null) {
                 isParsing.postValue(false);
-                parseTxException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
+                observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
                 return;
             }
             try {
@@ -282,11 +271,11 @@ public class EthereumTxViewModel extends BaseTxViewModel {
                 }
 
             } catch (JSONException e) {
-                parseTxException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
+                observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
                 return;
             }
             isParsing.postValue(false);
-            observableEthTx.postValue(transaction);
+            observableTransaction.postValue(transaction);
         });
     }
 
@@ -295,7 +284,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
             Web3TxEntity txEntity = mRepository.loadETHTxSync(txId);
             EthereumTransaction transaction = EthereumTransaction.transformDbEntity(txEntity);
             rawFormatTx.postValue(transaction.getSignedHex());
-            observableEthTx.postValue(transaction);
+            observableTransaction.postValue(transaction);
         });
     }
 
@@ -325,7 +314,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
             } catch (JSONException e) {
                 e.printStackTrace();
                 observableObject.postValue(null);
-                parseTxException.postValue(new InvalidTransactionException(context.getString(R.string.incorrect_tx_data), "invalid transaction"));
+                observableException.postValue(new InvalidTransactionException(context.getString(R.string.incorrect_tx_data), "invalid transaction"));
             }
         });
         return observableObject;
@@ -349,7 +338,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
             } catch (JSONException e) {
                 e.printStackTrace();
                 observableObject.postValue(null);
-                parseTxException.postValue(new InvalidTransactionException(context.getString(R.string.incorrect_tx_data), "invalid transaction"));
+                observableException.postValue(new InvalidTransactionException(context.getString(R.string.incorrect_tx_data), "invalid transaction"));
             }
         });
         return observableObject;
@@ -357,7 +346,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
 
     public void handleSign() {
         AppExecutors.getInstance().diskIO().execute(() -> {
-            EthereumTransaction transaction = observableEthTx.getValue();
+            EthereumTransaction transaction = observableTransaction.getValue();
             if (transaction == null) {
                 return;
             }
@@ -377,7 +366,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
 
     @Override
     public String getSignatureUR() {
-        EthereumTransaction transaction = observableEthTx.getValue();
+        EthereumTransaction transaction = observableTransaction.getValue();
         if (transaction == null) {
             //sign typed data
             byte[] signature = Hex.decode(this.signature);
@@ -389,7 +378,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
             EthSignature ethSignature = new EthSignature(signature, requestId);
             return ethSignature.toUR().toString();
         } else {
-            return observableEthTx.getValue().getSignatureQRCode();
+            return observableTransaction.getValue().getSignatureQRCode();
         }
     }
 
@@ -444,7 +433,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
             ensureAddressExist(path);
             return mRepository.loadAddressByPathAndCoinId(path, Coins.ETH.coinId()).getAddressString();
         } catch (InvalidTransactionException | InvalidETHAccountException e) {
-            parseTxException.postValue(e);
+            observableException.postValue(e);
             e.printStackTrace();
         }
         return "";
@@ -530,7 +519,7 @@ public class EthereumTxViewModel extends BaseTxViewModel {
     }
 
     private void insertDB(String txId, String signedTxHex, String signatureHex) {
-        EthereumTransaction transaction = observableEthTx.getValue();
+        EthereumTransaction transaction = observableTransaction.getValue();
         if (transaction == null) return;
         try {
             transaction.setTxId(txId);

@@ -10,19 +10,14 @@ import androidx.lifecycle.ViewModelProviders;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
-import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ConfirmTransactionFragment;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.SubstrateTxViewModel;
-import com.keystone.cold.ui.modal.PolkadotErrorDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
 import com.keystone.cold.viewmodel.PolkadotViewModel;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class SubstrateConfirmTransactionFragment extends ConfirmTransactionFragment<SubstrateTxViewModel> {
+public class SubstrateConfirmTransactionFragment extends ConfirmTransactionFragment<SubstrateTransaction, SubstrateTxViewModel> {
     PolkadotViewModel polkadotViewModel;
 
     @Override
@@ -35,7 +30,7 @@ public class SubstrateConfirmTransactionFragment extends ConfirmTransactionFragm
     @Override
     protected TabLayoutConfig[] getTabLayouts() {
         TabLayoutConfig[] configs = new TabLayoutConfig[2];
-        configs[0] = new TabLayoutConfig(getString(R.string.overview), SubstrateTransactionDetailFragment.newInstance(requireArguments(), viewModel.getTransaction()));
+        configs[0] = new TabLayoutConfig(getString(R.string.overview), SubstrateTransactionDetailFragment.newInstance(requireArguments(), viewModel.getObservableTransaction()));
         configs[1] = new TabLayoutConfig(getString(R.string.raw_data), RawTxFragment.newInstance(requireArguments(), viewModel.getRawFormatTx()));
         return configs;
     }
@@ -50,7 +45,7 @@ public class SubstrateConfirmTransactionFragment extends ConfirmTransactionFragm
             viewModel.parseTxData(bundle);
         });
 
-        viewModel.getTransaction().observe(this, (v) -> {
+        viewModel.getObservableTransaction().observe(this, (v) -> {
             try {
                 if (v == null) return;
                 int checksum = v.getChecksum();
@@ -77,20 +72,10 @@ public class SubstrateConfirmTransactionFragment extends ConfirmTransactionFragm
                 handleParseException(new InvalidTransactionException(getString(R.string.incorrect_tx_data), "invalid transaction"));
             }
         });
-        viewModel.getException().observe(this, (e) -> {
+        viewModel.getObservableException().observe(this, (e) -> {
             if (e == null) return;
             handleParseException(e);
         });
-    }
-
-    private void handleParseException(BaseException ex) {
-        if (ex != null) {
-            ex.printStackTrace();
-            alertException(ex, () -> {
-                popBackStack(R.id.myAssetsFragment, false);
-            });
-            viewModel.getException().setValue(null);
-        }
     }
 
     @Override

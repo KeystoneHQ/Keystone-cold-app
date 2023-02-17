@@ -7,13 +7,14 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
+import com.keystone.cold.model.ArweaveTransaction;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ConfirmTransactionFragment;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.ARweaveTxViewModel;
 
-public class ARweaveConfirmTransactionFragment extends ConfirmTransactionFragment<ARweaveTxViewModel> {
+public class ARweaveConfirmTransactionFragment extends ConfirmTransactionFragment<ArweaveTransaction, ARweaveTxViewModel> {
     @Override
     protected void initViewModel() {
         viewModel = ViewModelProviders.of(this).get(ARweaveTxViewModel.class);
@@ -33,15 +34,6 @@ public class ARweaveConfirmTransactionFragment extends ConfirmTransactionFragmen
     protected void setupView() {
         viewModel.parseTxData(requireArguments());
         mBinding.sign.setOnClickListener((v) -> handleSign());
-    }
-
-    private void handleParseException(BaseException ex) {
-        if (ex != null) {
-            ex.printStackTrace();
-            alertException(ex, () -> {
-                popBackStack(R.id.myAssetsFragment, false);
-            });
-        }
     }
 
     @Override

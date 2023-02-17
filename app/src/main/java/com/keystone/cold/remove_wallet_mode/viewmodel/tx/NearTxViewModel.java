@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class NearTxViewModel extends BaseTxViewModel {
+public class NearTxViewModel extends BaseTxViewModel<NearTx> {
 
     private static final String TAG = NearTxViewModel.class.getSimpleName();
 
@@ -49,18 +49,12 @@ public class NearTxViewModel extends BaseTxViewModel {
 
     private int transactionNum;
 
-    private final MutableLiveData<NearTx> nearTxLiveData;
     private Signer signer;
     private String origin;
 
 
     public NearTxViewModel(@NonNull Application application) {
         super(application);
-        nearTxLiveData = new MutableLiveData<>();
-    }
-
-    public LiveData<NearTx> getNearTxLiveData() {
-        return nearTxLiveData;
     }
 
     @Override
@@ -91,7 +85,7 @@ public class NearTxViewModel extends BaseTxViewModel {
                     }
                     Log.e(TAG, String.format("onSuccess is %s", json));
                     NearTx nearTx = NearTx.from(json);
-                    nearTxLiveData.postValue(nearTx);
+                    observableTransaction.postValue(nearTx);
 
                     JSONObject jsonObject = null;
                     try {
@@ -173,7 +167,7 @@ public class NearTxViewModel extends BaseTxViewModel {
     private void parseNearTxEntity(TxEntity txEntity) {
         String addition = txEntity.getAddition();
         if (TextUtils.isEmpty(addition)) {
-            nearTxLiveData.postValue(null);
+            observableTransaction.postValue(null);
         }
         try {
             JSONObject root = new JSONObject(addition);
@@ -184,14 +178,14 @@ public class NearTxViewModel extends BaseTxViewModel {
                 NearTx nearTx = NearTx.from(parsedMessage);
                 nearTx.setRawData(parsedMessage);
                 nearTx.setUr(txEntity.getSignedHex());
-                nearTxLiveData.postValue(nearTx);
+                observableTransaction.postValue(nearTx);
                 rawFormatTx.postValue(new JSONObject(parsedMessage).toString(2));
                 return;
             }
         } catch (JSONException exception) {
             exception.printStackTrace();
         }
-        nearTxLiveData.postValue(null);
+        observableTransaction.postValue(null);
     }
 
     private String getFormattedJson(String nearStr) {

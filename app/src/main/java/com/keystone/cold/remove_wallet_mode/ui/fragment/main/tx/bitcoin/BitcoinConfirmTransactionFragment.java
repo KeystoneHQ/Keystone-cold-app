@@ -15,20 +15,20 @@ import com.keystone.cold.ui.modal.ProgressModalDialog;
 
 import java.util.Objects;
 
-public class BitcoinConfirmTransactionFragment extends ConfirmTransactionFragment<BitcoinTxViewModel> {
+public class BitcoinConfirmTransactionFragment extends ConfirmTransactionFragment<PSBT, BitcoinTxViewModel> {
 
     @Override
     protected void initViewModel() {
         viewModel = ViewModelProviders.of(this).get(BitcoinTxViewModel.class);
         viewModel.reset();
-        viewModel.parseTxException().observe(this, this::handleParseException);
+        viewModel.getObservableException().observe(this, this::handleParseException);
         viewModel.parseTxData(requireArguments());
     }
 
     @Override
     protected TabLayoutConfig[] getTabLayouts() {
         TabLayoutConfig[] configs = new TabLayoutConfig[2];
-        configs[0] = new TabLayoutConfig(getString(R.string.overview), BitcoinTransactionDetailsFragment.newInstance(requireArguments(), viewModel.getObservablePsbt()));
+        configs[0] = new TabLayoutConfig(getString(R.string.overview), BitcoinTransactionDetailsFragment.newInstance(requireArguments(), viewModel.getObservableTransaction()));
         configs[1] = new TabLayoutConfig(getString(R.string.raw_data), RawTxFragment.newInstance(requireArguments(), viewModel.getRawFormatTx()));
         return configs;
     }
@@ -39,16 +39,6 @@ public class BitcoinConfirmTransactionFragment extends ConfirmTransactionFragmen
         mBinding.sign.setOnClickListener(v -> {
             handleSign();
         });
-    }
-
-    private void handleParseException(BaseException ex) {
-        if (ex != null) {
-            ex.printStackTrace();
-            alertException(ex, () -> {
-                popBackStack(R.id.myAssetsFragment, false);
-            });
-            viewModel.parseTxException().setValue(null);
-        }
     }
 
     @Override

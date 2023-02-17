@@ -36,20 +36,10 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-public class ARweaveTxViewModel extends BaseTxViewModel {
+public class ARweaveTxViewModel extends BaseTxViewModel<ArweaveTransaction> {
     private final static String TAG = "ARweaveTxViewModel";
     private final String hdPath = "M/44'/472'";
 
-    public MutableLiveData<ArweaveTransaction> getObservableTransaction() {
-        return observableTransaction;
-    }
-
-    public MutableLiveData<BaseException> getObservableException() {
-        return observableException;
-    }
-
-    private final MutableLiveData<ArweaveTransaction> observableTransaction = new MutableLiveData<>(null);
-    private final MutableLiveData<BaseException> observableException = new MutableLiveData<>(null);
     private final Application mApplication;
 
     public ARweaveTxViewModel(@NonNull Application application) {

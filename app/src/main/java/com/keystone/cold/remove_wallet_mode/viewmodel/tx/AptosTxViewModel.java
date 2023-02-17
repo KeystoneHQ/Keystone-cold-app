@@ -41,7 +41,7 @@ import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.UUID;
 
-public class AptosTxViewModel extends BaseTxViewModel {
+public class AptosTxViewModel extends BaseTxViewModel<AptosTx> {
 
     private static final String TAG = "AptosTxViewModel";
 
@@ -57,19 +57,9 @@ public class AptosTxViewModel extends BaseTxViewModel {
 
     private String origin;
 
-    private final MutableLiveData<AptosTx> aptosTxLiveData;
-
-
     public AptosTxViewModel(@NonNull Application application) {
         super(application);
-        aptosTxLiveData = new MutableLiveData<>();
     }
-
-
-    public LiveData<AptosTx> getAptosTxLiveData() {
-        return aptosTxLiveData;
-    }
-
 
     @Override
     public void parseTxData(Bundle bundle) {
@@ -89,7 +79,7 @@ public class AptosTxViewModel extends BaseTxViewModel {
                     Log.i(TAG, "format result is " + aptosExploreFormat);
                     jsonObject = new JSONObject(aptosExploreFormat);
                     AptosTx aptosTx = AptosTxParser.parse(aptosExploreFormat);
-                    aptosTxLiveData.postValue(aptosTx);
+                    observableTransaction.postValue(aptosTx);
                     Log.i(TAG, "aptosTx is " + aptosTx);
                 } catch (JSONException exception) {
                     exception.printStackTrace();
@@ -153,7 +143,7 @@ public class AptosTxViewModel extends BaseTxViewModel {
                 AptosTx aptosTx = AptosTxParser.parse(parseMessage);
                 if (aptosTx != null) {
                     aptosTx.setSignatureUR(txEntity.getSignedHex());
-                    aptosTxLiveData.postValue(aptosTx);
+                    observableTransaction.postValue(aptosTx);
                     rawFormatTx.postValue(new JSONObject(parseMessage).toString(2));
                 }
             }

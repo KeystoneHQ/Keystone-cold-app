@@ -19,7 +19,6 @@ import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
-import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidAccountException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.substrate.SubstrateTransaction;
@@ -36,10 +35,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class SubstrateTxViewModel extends BaseTxViewModel {
-    private final MutableLiveData<SubstrateTransaction> transaction = new MutableLiveData<>(null);
-    private final MutableLiveData<BaseException> exception = new MutableLiveData<>(null);
-
+public class SubstrateTxViewModel extends BaseTxViewModel<SubstrateTransaction> {
     String coinCode;
     protected final DataRepository mRepository;
 
@@ -55,8 +51,6 @@ public class SubstrateTxViewModel extends BaseTxViewModel {
         coinCode = null;
         txEntity = null;
         addressEntity = null;
-        transaction.postValue(null);
-        exception.postValue(null);
     }
 
     @Override
@@ -71,12 +65,12 @@ public class SubstrateTxViewModel extends BaseTxViewModel {
                 SubstrateTransaction substrateTransaction = SubstrateTransaction.factory(parsedTransaction, data);
                 rawFormatTx.postValue(substrateTransaction.getType().equals("Stub")? "Transaction too large": data);
                 coinCode = substrateTransaction.getCoinCode();
-                transaction.postValue(substrateTransaction);
+                observableTransaction.postValue(substrateTransaction);
             } catch (JSONException e) {
                 e.printStackTrace();
-                exception.postValue(new InvalidTransactionException(MainApplication.getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
+                observableException.postValue(new InvalidTransactionException(MainApplication.getApplication().getString(R.string.incorrect_tx_data), "invalid observableTransaction"));
             } catch (InvalidAccountException | InvalidTransactionException e) {
-                exception.postValue(e);
+                observableException.postValue(e);
             } finally {
                 isParsing.postValue(false);
             }
@@ -95,12 +89,12 @@ public class SubstrateTxViewModel extends BaseTxViewModel {
                 SubstrateTransaction substrateTransaction = SubstrateTransaction.factory(parsedTransaction, rawTx);
                 coinCode = substrateTransaction.getCoinCode();
                 substrateTransaction.setSignedHex(txEntity.getSignedHex());
-                transaction.postValue(substrateTransaction);
+                observableTransaction.postValue(substrateTransaction);
             } catch (JSONException e) {
                 e.printStackTrace();
-                exception.postValue(new InvalidTransactionException(MainApplication.getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
+                observableException.postValue(new InvalidTransactionException(MainApplication.getApplication().getString(R.string.incorrect_tx_data), "invalid observableTransaction"));
             } catch (InvalidTransactionException e) {
-                exception.postValue(e);
+                observableException.postValue(e);
             }finally {
                 isParsing.postValue(false);
             }
@@ -151,14 +145,6 @@ public class SubstrateTxViewModel extends BaseTxViewModel {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public MutableLiveData<SubstrateTransaction> getTransaction() {
-        return transaction;
-    }
-
-    public MutableLiveData<BaseException> getException() {
-        return exception;
     }
 
     public String getCoinCode() {

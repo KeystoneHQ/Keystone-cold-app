@@ -18,6 +18,7 @@ import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.callables.GetMessageCallable;
 import com.keystone.cold.callables.GetPasswordTokenCallable;
 import com.keystone.cold.callables.VerifyFingerprintCallable;
+import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.ui.views.AuthenticateModal;
 
 import org.json.JSONObject;
@@ -25,7 +26,7 @@ import org.spongycastle.util.encoders.Hex;
 
 import java.security.SignatureException;
 
-public abstract class BaseTxViewModel extends AndroidViewModel {
+public abstract class BaseTxViewModel<T> extends AndroidViewModel {
 
     public static final String STATE_SIGNING = "signing";
     public static final String STATE_SIGN_FAIL = "signing_fail";
@@ -44,6 +45,8 @@ public abstract class BaseTxViewModel extends AndroidViewModel {
         return signState;
     }
 
+    protected final MutableLiveData<BaseException> observableException = new MutableLiveData<>();
+    protected final MutableLiveData<T> observableTransaction = new MutableLiveData<>();
 
     interface SignCallBack {
         void startSign();
@@ -84,6 +87,14 @@ public abstract class BaseTxViewModel extends AndroidViewModel {
     public BaseTxViewModel(@NonNull Application application) {
         super(application);
         repository = MainApplication.getApplication().getRepository();
+    }
+
+    public MutableLiveData<BaseException> getObservableException() {
+        return observableException;
+    }
+
+    public MutableLiveData<T> getObservableTransaction() {
+        return observableTransaction;
     }
 
     public void setToken(AuthenticateModal.OnVerify.VerifyToken token) {

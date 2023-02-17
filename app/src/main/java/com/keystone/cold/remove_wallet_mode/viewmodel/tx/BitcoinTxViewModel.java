@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class BitcoinTxViewModel extends BaseTxViewModel {
+public class BitcoinTxViewModel extends BaseTxViewModel<PSBT> {
     private static final String TAG = "BitcoinTxViewModel";
 
     public static final String BTCLegacyPath = "M/44'/0'/0'";
@@ -47,17 +47,6 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
     public static final List<String> BTCPaths = new ArrayList<>(Arrays.asList(BTCLegacyPath, BTCNestedSegwitPath, BTCNativeSegwitPath));
 
     private static final String RAW_PSBT = "raw_message";
-
-    public MutableLiveData<PSBT> getObservablePsbt() {
-        return observablePsbt;
-    }
-
-    private final MutableLiveData<PSBT> observablePsbt = new MutableLiveData<>(null);
-    protected final MutableLiveData<BaseException> parseTxException = new MutableLiveData<>();
-
-    public MutableLiveData<BaseException> parseTxException() {
-        return parseTxException;
-    }
 
     private final DataRepository mRepository;
     private String signedPSBT;
@@ -83,9 +72,9 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
                 PSBT psbt = parsePsbtBase64(psbtB64, mfp);
                 rawFormatTx.postValue(psbtB64);
                 coinCode = getCoinCodeFromPSBT(psbt);
-                observablePsbt.postValue(psbt);
+                observableTransaction.postValue(psbt);
             } catch (BaseException e) {
-                parseTxException.postValue(e);
+                observableException.postValue(e);
             } finally {
                 isParsing.postValue(false);
             }
@@ -105,9 +94,9 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
                 PSBT psbt = parsePsbtBase64(psbtB64, mfp);
                 psbt.setSignedBase64(signedPSBT);
                 coinCode = tx.getCoinCode();
-                observablePsbt.postValue(psbt);
+                observableTransaction.postValue(psbt);
             } catch (BaseException e) {
-                parseTxException.postValue(e);
+                observableException.postValue(e);
             } catch (JSONException e) {
                 e.printStackTrace();
             } finally {
@@ -140,7 +129,7 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
     @Override
     public void handleSign() {
         AppExecutors.getInstance().diskIO().execute(() -> {
-            PSBT psbt = observablePsbt.getValue();
+            PSBT psbt = observableTransaction.getValue();
             if (psbt == null) return;
             SignCallback callback = new SignCallback() {
                 @Override
@@ -235,7 +224,8 @@ public class BitcoinTxViewModel extends BaseTxViewModel {
     }
 
     public void reset() {
-        observablePsbt.postValue(null);
+        observableTransaction.postValue(null);
+        observableException.postValue(null);
     }
 
     @Override
