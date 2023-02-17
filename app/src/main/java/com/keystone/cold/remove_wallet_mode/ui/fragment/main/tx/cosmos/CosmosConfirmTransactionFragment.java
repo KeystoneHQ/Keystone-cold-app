@@ -8,9 +8,10 @@ import com.keystone.cold.R;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ConfirmTransactionFragment;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
+import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cosmos.model.CosmosTx;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.CosmosTxViewModel;
 
-public class CosmosConfirmTransactionFragment extends ConfirmTransactionFragment<CosmosTxViewModel> {
+public class CosmosConfirmTransactionFragment extends ConfirmTransactionFragment<CosmosTx, CosmosTxViewModel> {
 
     @Override
     protected void initViewModel() {
@@ -20,7 +21,7 @@ public class CosmosConfirmTransactionFragment extends ConfirmTransactionFragment
     @Override
     protected TabLayoutConfig[] getTabLayouts() {
         TabLayoutConfig[] tabLayoutConfigs = new TabLayoutConfig[2];
-        tabLayoutConfigs[0] = new TabLayoutConfig(getString(R.string.overview), CosmosTransactionDetailFragment.newInstance(requireArguments(), viewModel.getCosmosTxLiveData()));
+        tabLayoutConfigs[0] = new TabLayoutConfig(getString(R.string.overview), CosmosTransactionDetailFragment.newInstance(requireArguments(), viewModel.getObservableTransaction()));
         tabLayoutConfigs[1] = new TabLayoutConfig(getString(R.string.raw), RawTxFragment.newInstance(requireArguments(), viewModel.getRawFormatTx()));
         return tabLayoutConfigs;
     }

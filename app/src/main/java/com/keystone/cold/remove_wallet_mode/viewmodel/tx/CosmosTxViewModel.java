@@ -40,7 +40,7 @@ import java.nio.ByteBuffer;
 import java.util.Objects;
 import java.util.UUID;
 
-public class CosmosTxViewModel extends BaseTxViewModel {
+public class CosmosTxViewModel extends BaseTxViewModel<CosmosTx> {
 
     private static final String TAG = CosmosTxViewModel.class.getSimpleName();
     private String txHex;
@@ -56,9 +56,6 @@ public class CosmosTxViewModel extends BaseTxViewModel {
     private String parseJson;
 
     private String signature;
-
-    private final MutableLiveData<CosmosTx> cosmosTxLiveData;
-
 
     private long evmChainId;
 
@@ -79,12 +76,6 @@ public class CosmosTxViewModel extends BaseTxViewModel {
 
     public CosmosTxViewModel(@NonNull Application application) {
         super(application);
-        cosmosTxLiveData = new MutableLiveData<>();
-    }
-
-
-    public LiveData<CosmosTx> getCosmosTxLiveData() {
-        return cosmosTxLiveData;
     }
 
     @Override
@@ -224,7 +215,7 @@ public class CosmosTxViewModel extends BaseTxViewModel {
                 if (cosmosTx != null) {
                     cosmosTx.setUr(txEntity.getSignedHex());
                 }
-                cosmosTxLiveData.postValue(cosmosTx);
+                observableTransaction.postValue(cosmosTx);
             }
         } catch (JSONException exception) {
             exception.printStackTrace();
@@ -240,7 +231,7 @@ public class CosmosTxViewModel extends BaseTxViewModel {
         if (parseResult != null) {
             parseJson = CosmosTx.transformDirectToAmino(parseResult);
             CosmosTx cosmosTx = CosmosTx.from(parseJson);
-            cosmosTxLiveData.postValue(cosmosTx);
+            observableTransaction.postValue(cosmosTx);
             if (cosmosTx != null) {
                 chainId = cosmosTx.getChainId();
             }
@@ -255,7 +246,7 @@ public class CosmosTxViewModel extends BaseTxViewModel {
     private void parseAminoTx() {
         parseJson = new String(Hex.decode(txHex));
         CosmosTx cosmosTx = CosmosTx.from(parseJson);
-        cosmosTxLiveData.postValue(cosmosTx);
+        observableTransaction.postValue(cosmosTx);
         if (cosmosTx != null) {
             chainId = cosmosTx.getChainId();
         }
