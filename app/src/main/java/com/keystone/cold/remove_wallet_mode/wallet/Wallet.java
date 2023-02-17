@@ -39,7 +39,7 @@ public enum Wallet {
     public static final String KEPLR_WALLET_SIGN_ID = "keplr_wallet_sign_id";
     public static final String PETRA_WALLET_SIGN_ID = "petra_wallet_sign_id";
 
-    public static final String UNKOWN_WALLET_SIGN_ID = "unknown_wallet_sign_id";
+    public static final String UNKNOWN_WALLET_SIGN_ID = "unknown_wallet_sign_id";
 
     private final String walletId;
     private final String walletName;
@@ -87,7 +87,7 @@ public enum Wallet {
             case KEPLR:
                 return KEPLR_WALLET_SIGN_ID;
         }
-        return UNKOWN_WALLET_SIGN_ID;
+        return UNKNOWN_WALLET_SIGN_ID;
     }
 
     public static Wallet getWalletById(String walletId) {
