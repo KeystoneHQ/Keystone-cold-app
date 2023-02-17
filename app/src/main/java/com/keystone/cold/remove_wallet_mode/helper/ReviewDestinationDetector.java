@@ -1,7 +1,5 @@
 package com.keystone.cold.remove_wallet_mode.helper;
 
-import static com.keystone.cold.ui.fragment.main.TxFragment.KEY_TX_ID;
-
 import android.os.Bundle;
 import android.util.Log;
 
@@ -39,6 +37,11 @@ public class ReviewDestinationDetector {
             return new Destination(R.id.action_to_nearReviewTransactionFragment, bundle);
         } else if (Coins.AR.coinId().equals(coinId)) {
             return new Destination(R.id.action_to_arweaveReviewTransactionFragment, bundle);
+        } else if (Coins.isCosmosFamilyByCoinId(coinId)) {
+            if (tx instanceof GenericETHTxEntity) {
+                return detectEth(tx);
+            }
+            return new Destination(R.id.action_to_cosmosReviewTransactionFragment, bundle);
         }
         return null;
     }

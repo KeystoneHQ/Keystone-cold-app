@@ -64,6 +64,7 @@ public class CosmosTx {
     private List<Msg> msgs;
     private String sequence;
 
+    private String ur;
 
     public CosmosTx(String accountNumber, String chainId, Fee fee, String memo, List<Msg> msgs, String sequence) {
         this.accountNumber = accountNumber;
@@ -109,6 +110,13 @@ public class CosmosTx {
         return Coins.coinNameFromCoinCode(Coins.getCosmosCoinCode(chainId));
     }
 
+    public String getUr() {
+        return ur;
+    }
+
+    public void setUr(String ur) {
+        this.ur = ur;
+    }
 
     @Override
     public String toString() {

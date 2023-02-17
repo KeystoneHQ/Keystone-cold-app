@@ -165,6 +165,36 @@ public class CosmosTxViewModel extends BaseTxViewModel {
     }
 
 
+    public void parseTransactionFromRecord(String txId) {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            TxEntity txEntity = repository.loadTxSync(txId);
+            parseCosmosTxEntity(txEntity);
+        });
+    }
+
+    private void parseCosmosTxEntity(TxEntity txEntity) {
+        String addition = txEntity.getAddition();
+        if (TextUtils.isEmpty(addition)) {
+            return;
+        }
+        try {
+            JSONObject root = new JSONObject(addition);
+            JSONObject additions = root.getJSONObject("additions");
+            String coin = additions.getString("coin");
+            if (!TextUtils.isEmpty(coin)) {
+                String parseMessage = additions.getJSONObject("addition").getString("parse_message");
+                rawFormatTx.postValue(new JSONObject(parseMessage).toString(2));
+                CosmosTx cosmosTx = CosmosTx.from(parseMessage);
+                if (cosmosTx != null) {
+                    cosmosTx.setUr(txEntity.getSignedHex());
+                }
+                cosmosTxLiveData.postValue(cosmosTx);
+            }
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+    }
+
     public String getCosmosCoinCode() {
         return Coins.getCosmosCoinCode(chainId);
     }
@@ -314,4 +344,5 @@ public class CosmosTxViewModel extends BaseTxViewModel {
         ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(xPub);
         return extendedPublicKey.getKey();
     }
+
 }

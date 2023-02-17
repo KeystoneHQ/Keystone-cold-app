@@ -1,6 +1,7 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cosmos;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -43,15 +44,21 @@ public class CosmosTransactionDetailFragment extends BaseFragment<FragmentCosmos
     }
 
     private void updateUI(CosmosTx cosmosTx) {
-        mBinding.setCoinCode(cosmosTx.getCoinCode());
-        mBinding.setCheckInfoTitle(cosmosTx.getCoinName());
-        mBinding.tvChainId.setText(cosmosTx.getChainId());
-        if (cosmosTx.getFee() != null) {
-            String denom = cosmosTx.getFee().getAmountDenom() == null ? "" : cosmosTx.getFee().getAmountDenom().toUpperCase();
-            mBinding.tvFee.setText(cosmosTx.getFee().getAmountValue() + " " + denom);
-            mBinding.tvGasLimit.setText(cosmosTx.getFee().getGas());
+        if (cosmosTx != null) {
+            mBinding.setCoinCode(cosmosTx.getCoinCode());
+            mBinding.setCheckInfoTitle(cosmosTx.getCoinName());
+            mBinding.tvChainId.setText(cosmosTx.getChainId());
+            if (cosmosTx.getFee() != null) {
+                String denom = cosmosTx.getFee().getAmountDenom() == null ? "" : cosmosTx.getFee().getAmountDenom().toUpperCase();
+                mBinding.tvFee.setText(cosmosTx.getFee().getAmountValue() + " " + denom);
+                mBinding.tvGasLimit.setText(cosmosTx.getFee().getGas());
+            }
+            mBinding.cmMessages.setData(cosmosTx.getMsgs());
+            if (!TextUtils.isEmpty(cosmosTx.getUr())) {
+                mBinding.qrcode.qrcode.setData(cosmosTx.getUr());
+                mBinding.qr.setVisibility(View.VISIBLE);
+            }
         }
-        mBinding.cmMessages.setData(cosmosTx.getMsgs());
     }
 
     @Override
