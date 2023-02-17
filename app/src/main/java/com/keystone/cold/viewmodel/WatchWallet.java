@@ -55,6 +55,7 @@ public enum WatchWallet {
     public static final String ARWEAVE_SIGN_ID = "arweave_sign_id";
     public static final String KEPLR_WALLET_SIGN_ID = "keplr_wallet_sign_id";
     public static final String PETRA_WALLET_SIGN_ID = "petra_wallet_sign_id";
+    public static final String UNKNOWN_WALLET_SIGN_ID = "unknown_wallet_sign_id";
 
     private final String walletId;
 

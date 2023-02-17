@@ -17,62 +17,39 @@
 
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum;
 
-import static com.keystone.cold.MainApplication.getApplication;
-
-import android.text.TextUtils;
-
-import androidx.annotation.NonNull;
+import static com.keystone.cold.remove_wallet_mode.viewmodel.tx.EthereumTxViewModel.getSymbol;
 
 import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.utils.Coins;
-import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
-import com.keystone.cold.Utilities;
-import com.keystone.cold.db.entity.Web3TxEntity;
-import com.keystone.cold.model.Tx;
-import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
-import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
-import com.keystone.cold.viewmodel.WatchWallet;
-import com.keystone.cold.viewmodel.tx.TransactionType;
-import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
-import com.sparrowwallet.hummingbird.registry.EthSignature;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.spongycastle.util.encoders.Hex;
 
 import java.math.BigDecimal;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
-import java.util.UUID;
 
-public class EthereumTransaction implements Tx {
+public class EthereumTransaction {
 
     public static int MAX_PER_GAS = 1000;
     public static int MAX_PRIORITY_PER_GAS = 1000;
     public static int MAX_FEE_PER_GAS = 10000;
 
-    // GenericTx params
+    // transaction ui
     private String txId;
     private String amount;
-    private BigDecimal amountValue;
     private String from;
     private String to;
     private String fee;
-    private BigDecimal feeValue;
-    private String signedHex;
-    private long timeStamp;
     private String memo;
-    private String belongTo;
-
-    // feeMarket params
+    private String gasLimit;
     private String estimatedFee;
     private String maxFee;
     private String maxFeePerGas;
     private String maxPriorityFeePerGas;
-    private String gasLimit;
 
+    // feeMarket params
+    private BigDecimal feeValue;
     private BigDecimal estimatedFeeValue;
     private BigDecimal maxFeeValue;
     private BigDecimal maxFeePerGasValue;
@@ -80,241 +57,161 @@ public class EthereumTransaction implements Tx {
     private BigDecimal gasLimitValue;
 
     // another params
-    private String signature;
     private long chainId;
-    private String addition;
     private int txType; // 0x00:legacy  0x02:feeMarket
     private boolean isFromTFCard;
-
-    // transaction related;
-    private String hdPath;
-    private String requestId;
-    private String txHex;
 
     // abi related;
     private String toContractName;
     private JSONObject abi;
     private String selectorMethodName;
 
-    public static EthereumTransaction transformDbEntity(Web3TxEntity web3TxEntity) {
+    private String signatureUR;
+
+    private final static NumberFormat nf = NumberFormat.getInstance();
+
+    static {
+        nf.setMaximumFractionDigits(20);
+    }
+
+    public static EthereumTransaction generateLegacyTransaction(String txHex, String from, boolean isSigned) {
         EthereumTransaction transaction = new EthereumTransaction();
+        transaction.from = from;
+        transaction.txType = TransactionType.LEGACY.getType();
+        JSONObject ethTx = EthImpl.decodeTransaction(txHex, () -> {
+            transaction.isFromTFCard = true;
+        });
+        if (ethTx == null) return null;
         try {
-            JSONObject ethTx;
-            int txType = web3TxEntity.getTxType();
-            NumberFormat nf = NumberFormat.getInstance();
-            nf.setMaximumFractionDigits(20);
-            BigDecimal gasLimit, amount, value;
-            switch (txType) {
-                case 0x00:
-                    ethTx = EthImpl.decodeTransaction(web3TxEntity.getSignedHex(), null);
-                    if (ethTx == null) {
-                        return null;
-                    }
-                    transaction = getGenericETHTxEntity(ethTx, web3TxEntity);
-                    transaction.setSignature(EthImpl.getSignature(web3TxEntity.getSignedHex()));
-                    long chainId = getChainIdByEIP155(ethTx.getLong("chainId"));
-                    transaction.setChainId(chainId);
-                    BigDecimal gasPrice = new BigDecimal(ethTx.getString("gasPrice"));
-                    gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
-                    transaction.setGasLimit(nf.format(gasLimit));
-                    transaction.setGasLimitValue(gasLimit);
-                    BigDecimal fee = gasLimit.multiply(gasPrice).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-                    amount = new BigDecimal(ethTx.getString("value"));
-                    value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-                    transaction.setAmountValue(amount);
-                    transaction.setAmount(nf.format(value) + Web3TxViewModel.getSymbol(chainId));
-                    transaction.setFee(nf.format(fee) + Web3TxViewModel.getSymbol(chainId));
-                    transaction.setFeeValue(fee);
-                    JSONObject addition = new JSONObject(web3TxEntity.getAddition());
-                    transaction.setFromTFCard(addition.getBoolean("isFromTFCard"));
-                    transaction.setRequestId(addition.getString("requestId"));
-                    break;
-                case 0x02:
-                    ethTx = EthImpl.decodeEIP1559Transaction(web3TxEntity.getSignedHex(), null);
-                    if (ethTx == null) {
-                        return null;
-                    }
-                    transaction = getGenericETHTxEntity(ethTx, web3TxEntity);
-                    transaction.setSignature(EthImpl.getEIP1559Signature(web3TxEntity.getSignedHex()));
-                    transaction.setChainId(ethTx.getInt("chainId"));
-                    BigDecimal gasPriorityPrice = new BigDecimal(ethTx.getString("maxPriorityFeePerGas"));
-                    BigDecimal gasLimitPrice = new BigDecimal(ethTx.getString("maxFeePerGas"));
-                    gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
-                    BigDecimal estimatedFee = gasPriorityPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-                    BigDecimal maxFee = gasLimitPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-                    transaction.setMaxFeeValue(maxFee);
-                    transaction.setMaxPriorityFeePerGasValue(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP));
-                    transaction.setMaxPriorityFeePerGas(nf.format(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
-                    transaction.setMaxFeePerGasValue(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP));
-                    transaction.setMaxFeePerGas(nf.format(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI");
-                    transaction.setGasLimit(nf.format(gasLimit));
-                    transaction.setEstimatedFeeValue(estimatedFee);
-                    transaction.setEstimatedFee(nf.format(estimatedFee) + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
-                    transaction.setMaxFee(nf.format(maxFee) + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
-                    amount = new BigDecimal(ethTx.getString("value"));
-                    value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
-                    transaction.setAmount(nf.format(value) + Web3TxViewModel.getSymbol(ethTx.getInt("chainId")));
-                    JSONObject additionJson = new JSONObject(web3TxEntity.getAddition());
-                    transaction.setFromTFCard(additionJson.getBoolean("isFromTFCard"));
-                    transaction.setRequestId(additionJson.getString("requestId"));
-                    break;
-                default:
-                    break;
+            if (isSigned) {
+                transaction.chainId = getChainIdByEIP155(ethTx.getLong("chainId"));
+            } else {
+                transaction.chainId = ethTx.getLong("chainId");
             }
+            String symbol = getSymbol(transaction.chainId);
+            setupCommonValue(transaction, ethTx, symbol);
+
+            BigDecimal gasPrice = new BigDecimal(ethTx.getString("gasPrice"));
+            String gasLimit = ethTx.getString("gasLimit");
+            BigDecimal gasLimitValue = new BigDecimal(gasLimit);
+            double feeValue = gasLimitValue.multiply(gasPrice)
+                    .divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
+
+            transaction.feeValue = BigDecimal.valueOf(feeValue);
+            transaction.fee = nf.format(feeValue) + symbol;
+            transaction.gasLimit = gasLimit;
+
         } catch (JSONException e) {
             e.printStackTrace();
+            return null;
         }
         return transaction;
     }
 
-    public static Web3TxEntity transToDbEntity(EthereumTransaction genericETHTxEntity) {
-        Web3TxEntity web3TxEntity = new Web3TxEntity();
-        web3TxEntity.setTxId(genericETHTxEntity.getTxId());
-        web3TxEntity.setSignedHex(genericETHTxEntity.getSignedHex());
-        web3TxEntity.setFrom(genericETHTxEntity.getFrom());
-        web3TxEntity.setTimeStamp(genericETHTxEntity.getTimeStamp());
-        web3TxEntity.setBelongTo(genericETHTxEntity.getBelongTo());
-        web3TxEntity.setTxType(genericETHTxEntity.getTxType());
-        web3TxEntity.setAddition(genericETHTxEntity.getAddition());
-        return web3TxEntity;
+    public static EthereumTransaction generateFeeMarketTransaction(String txHex, String from) {
+        EthereumTransaction transaction = new EthereumTransaction();
+        transaction.from = from;
+        transaction.txType = TransactionType.FEE_MARKET.getType();
+        JSONObject ethTx = EthImpl.decodeEIP1559Transaction(txHex, () -> {
+            transaction.isFromTFCard = true;
+        });
+        if (ethTx == null) return null;
+        try {
+            transaction.chainId = ethTx.getLong("chainId");
+            String symbol = getSymbol(transaction.chainId);
+            setupCommonValue(transaction, ethTx, symbol);
+
+            BigDecimal gasPriorityPrice = new BigDecimal(ethTx.getString("maxPriorityFeePerGas"));
+            BigDecimal gasLimitPrice = new BigDecimal(ethTx.getString("maxFeePerGas"));
+            BigDecimal gasLimit = new BigDecimal(ethTx.getString("gasLimit"));
+            BigDecimal estimatedFee = gasPriorityPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
+            BigDecimal maxFee = gasLimitPrice.multiply(gasLimit).divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP);
+            transaction.maxPriorityFeePerGasValue = gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP);
+            transaction.maxPriorityFeePerGas = nf.format(gasPriorityPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI";
+
+            transaction.maxFeePerGasValue = gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP);
+            transaction.maxFeePerGas = nf.format(gasLimitPrice.divide(BigDecimal.TEN.pow(9), 8, BigDecimal.ROUND_HALF_UP)) + " GWEI";
+
+            transaction.gasLimitValue = gasLimit;
+            transaction.gasLimit = nf.format(gasLimit);
+
+            transaction.estimatedFeeValue = estimatedFee;
+            transaction.estimatedFee = nf.format(estimatedFee) + symbol;
+
+            transaction.maxFeeValue = maxFee;
+            transaction.maxFee = nf.format(maxFee) + symbol;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return transaction;
     }
 
-    private static EthereumTransaction getGenericETHTxEntity(JSONObject ethTx, Web3TxEntity web3TxEntity) throws JSONException {
-        EthereumTransaction genericETHTxEntity = new EthereumTransaction();
-        genericETHTxEntity.setTxId(web3TxEntity.getTxId());
-        genericETHTxEntity.setSignedHex(web3TxEntity.getSignedHex());
-        genericETHTxEntity.setFrom(web3TxEntity.getFrom());
-        genericETHTxEntity.setTimeStamp(web3TxEntity.getTimeStamp());
-        genericETHTxEntity.setBelongTo(web3TxEntity.getBelongTo());
-        genericETHTxEntity.setTxType(web3TxEntity.getTxType());
-        genericETHTxEntity.setAddition(web3TxEntity.getAddition());
-        genericETHTxEntity.setMemo(ethTx.getString("data"));
-        genericETHTxEntity.setTo(ethTx.getString("to"));
-        genericETHTxEntity.setMemo(ethTx.getString("data"));
-        String currentBelongTo = Utilities.getCurrentBelongTo(getApplication());
-        genericETHTxEntity.setBelongTo(currentBelongTo);
-        return genericETHTxEntity;
+    private static void setupCommonValue(EthereumTransaction transaction, JSONObject ethTx, String symbol) throws JSONException {
+        transaction.chainId = ethTx.getLong("chainId");
+        transaction.to = ethTx.getString("to");
+        if (ethTx.has("to") && ethTx.has("contract")) {
+            transaction.toContractName = ethTx.getString("contract");
+        }
+        transaction.memo = ethTx.getString("data");
+        try {
+            transaction.abi = new JSONObject(transaction.memo);
+        } catch (JSONException e) {
+            transaction.selectorMethodName = ethTx.optString("selectorMethodName");
+        }
+
+        BigDecimal amount = new BigDecimal(ethTx.getString("value"));
+        double value = amount.divide(BigDecimal.TEN.pow(18), 8, BigDecimal.ROUND_HALF_UP).doubleValue();
+        transaction.amount = nf.format(value) + symbol;
     }
 
     private static long getChainIdByEIP155(long chainId) {
         return (chainId - 8 - 27) / 2;
     }
 
-    @NonNull
-    @Override
     public String getTxId() {
         return txId;
     }
 
-    @Override
-    public String getCoinId() {
-        return Coins.ETH.coinId();
-    }
-
-    @Override
-    public String getCoinCode() {
-        if (this.chainId == 43114) return Coins.AVAX.coinCode();
-        if (this.chainId == 9000 || this.chainId == 9001) {
-            return Coins.EVMOS.coinCode();
-        }
-        return Coins.ETH.coinCode();
-    }
-
-    @Override
     public String getDisplayName() {
         return Coins.ETH.coinCode();
     }
 
-    @Override
     public String getAmount() {
         return amount;
     }
 
-    @Override
     public String getFrom() {
         return from;
     }
 
-    @Override
     public String getTo() {
         return to;
     }
 
-    @Override
     public String getFee() {
         return fee;
     }
 
-    @Override
-    public String getSignedHex() {
-        return signedHex;
-    }
-
-    @Override
-    public long getTimeStamp() {
-        return timeStamp;
-    }
-
-    @Override
     public String getMemo() {
         return memo;
     }
 
     public boolean isFeeExceeded() {
         if (txType == TransactionType.LEGACY.getType()) {
-            return getGasPrice(this.getFeeValue(), getGasLimitValue()).doubleValue() > MAX_PER_GAS;
+            if (gasLimitValue == null) {
+                return false;
+            }
+            BigDecimal value = feeValue.multiply(BigDecimal.TEN.pow(18));
+            BigDecimal gasPrice = value.divide(gasLimitValue.multiply(BigDecimal.TEN.pow(9)), 8, BigDecimal.ROUND_HALF_UP);
+            return gasPrice.doubleValue() > MAX_PER_GAS;
         } else {
-            double maxPriorityFee = getMaxPriorityFeePerGasValue().doubleValue();
+            double maxPriorityFee = maxPriorityFeePerGasValue.doubleValue();
             boolean isMaxPriorityFeeExceeded = maxPriorityFee > MAX_PRIORITY_PER_GAS;
-            double maxfee = getMaxFeePerGasValue().doubleValue();
+            double maxfee = maxFeePerGasValue.doubleValue();
             boolean isMaxFeeExceeded = maxfee > MAX_FEE_PER_GAS;
             return isMaxPriorityFeeExceeded || isMaxFeeExceeded;
         }
-    }
-
-    public BigDecimal getGasPrice(BigDecimal feeValue, BigDecimal limitValue) {
-        if (limitValue == null) return new BigDecimal(-1);
-        BigDecimal value = feeValue.multiply(BigDecimal.TEN.pow(18));
-        return value.divide(limitValue.multiply(BigDecimal.TEN.pow(9)), 8, BigDecimal.ROUND_HALF_UP);
-    }
-
-    @Override
-    public String getSignId() {
-        try {
-            JSONObject jsonObject = new JSONObject(this.addition);
-            return jsonObject.optString("signId", WatchWallet.METAMASK_SIGN_ID);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return WatchWallet.METAMASK_SIGN_ID;
-        }
-    }
-
-    public String getHdPath() {
-        return hdPath;
-    }
-
-    public String getRequestId() {
-        return requestId;
-    }
-
-    public void setHdPath(String hdPath) {
-        this.hdPath = hdPath;
-    }
-
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
-    }
-
-    public void setToContractName(String toContractName) {
-        this.toContractName = toContractName;
-    }
-
-    public void setAbi(JSONObject abi) {
-        this.abi = abi;
-    }
-
-    public void setSelectorMethodName(String selectorMethodName) {
-        this.selectorMethodName = selectorMethodName;
     }
 
     public String getToContractName() {
@@ -327,19 +224,6 @@ public class EthereumTransaction implements Tx {
 
     public String getSelectorMethodName() {
         return selectorMethodName;
-    }
-
-    public String getTxHex() {
-        return txHex;
-    }
-
-    public void setTxHex(String txHex) {
-        this.txHex = txHex;
-    }
-
-    @Override
-    public String getBelongTo() {
-        return belongTo;
     }
 
     public String getEstimatedFee() {
@@ -362,28 +246,6 @@ public class EthereumTransaction implements Tx {
         return gasLimit;
     }
 
-    public String getSignature() {
-        return signature;
-    }
-
-    public String getSignatureQRCode() {
-        try {
-            byte[] signature = Hex.decode(getSignature());
-            UUID uuid = UUID.fromString(getRequestId());
-            ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
-            byteBuffer.putLong(uuid.getMostSignificantBits());
-            byteBuffer.putLong(uuid.getLeastSignificantBits());
-            byte[] requestId = byteBuffer.array();
-            EthSignature ethSignature = new EthSignature(signature, requestId);
-            return ethSignature.toUR().toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-            byte[] signature = Hex.decode(getSignature());
-            EthSignature ethSignature = new EthSignature(signature);
-            return ethSignature.toUR().toString();
-        }
-    }
-
     public long getChainId() {
         return chainId;
     }
@@ -393,10 +255,6 @@ public class EthereumTransaction implements Tx {
         if (this.chainId == 43114) return R.drawable.coin_avax;
         if (this.chainId == 9000 || this.chainId == 9001) return R.drawable.coin_evmos;
         return R.drawable.coin_eth_token;
-    }
-
-    public String getAddition() {
-        return addition;
     }
 
     public int getTxType() {
@@ -411,177 +269,16 @@ public class EthereumTransaction implements Tx {
         this.txId = txId;
     }
 
-    public void setAmount(String amount) {
-        this.amount = amount;
-    }
-
-    public void setFrom(String from) {
-        this.from = from;
-    }
-
-    public void setTo(String to) {
-        this.to = to;
-    }
-
-    public void setFee(String fee) {
-        this.fee = fee;
-    }
-
-    public void setSignedHex(String signedHex) {
-        this.signedHex = signedHex;
-    }
-
-    public void setTimeStamp(long timeStamp) {
-        this.timeStamp = timeStamp;
-    }
-
-    public void setMemo(String memo) {
-        this.memo = memo;
-    }
-
-    public void setBelongTo(String belongTo) {
-        this.belongTo = belongTo;
-    }
-
-    public void setEstimatedFee(String estimatedFee) {
-        this.estimatedFee = estimatedFee;
-    }
-
-    public void setMaxFee(String maxFee) {
-        this.maxFee = maxFee;
-    }
-
-    public void setMaxFeePerGas(String maxFeePerGas) {
-        this.maxFeePerGas = maxFeePerGas;
-    }
-
-    public void setMaxPriorityFeePerGas(String maxPriorityFeePerGas) {
-        this.maxPriorityFeePerGas = maxPriorityFeePerGas;
-    }
-
-    public void setGasLimit(String gasLimit) {
-        this.gasLimit = gasLimit;
-    }
-
-    public void setSignature(String signature) {
-        this.signature = signature;
-    }
-
-    public void setChainId(long chainId) {
-        this.chainId = chainId;
-    }
-
-    public void setAddition(String addition) {
-        this.addition = addition;
-    }
-
-    public void setTxType(int txType) {
-        this.txType = txType;
-    }
-
     public void setFromTFCard(boolean fromTFCard) {
         isFromTFCard = fromTFCard;
     }
 
-    @Override
-    public boolean filter(String s) {
-
-        if (TextUtils.isEmpty(s)) {
-            return true;
-        }
-        s = s.toLowerCase();
-        return from.toLowerCase().contains(s)
-                || to.toLowerCase().contains(s)
-                || txId.toLowerCase().contains(s)
-                || memo.toLowerCase().contains(s);
+    public String getSignatureUR() {
+        return signatureUR;
     }
 
-    @Override
-    public String toString() {
-        return "GenericETHTxEntity{" +
-                "txId='" + txId + '\'' +
-                ", amount='" + amount + '\'' +
-                ", amountValue=" + amountValue +
-                ", from='" + from + '\'' +
-                ", to='" + to + '\'' +
-                ", fee='" + fee + '\'' +
-                ", feeValue=" + feeValue +
-                ", signedHex='" + signedHex + '\'' +
-                ", timeStamp=" + timeStamp +
-                ", memo='" + memo + '\'' +
-                ", belongTo='" + belongTo + '\'' +
-                ", estimatedFee='" + estimatedFee + '\'' +
-                ", maxFee='" + maxFee + '\'' +
-                ", maxFeePerGas='" + maxFeePerGas + '\'' +
-                ", maxPriorityFeePerGas='" + maxPriorityFeePerGas + '\'' +
-                ", gasLimit='" + gasLimit + '\'' +
-                ", estimatedFeeValue=" + estimatedFeeValue +
-                ", maxFeeValue=" + maxFeeValue +
-                ", maxFeePerGasValue=" + maxFeePerGasValue +
-                ", maxPriorityFeePerGasValue=" + maxPriorityFeePerGasValue +
-                ", gasLimitValue=" + gasLimitValue +
-                ", signature='" + signature + '\'' +
-                ", chainId=" + chainId +
-                ", addition='" + addition + '\'' +
-                ", txType=" + txType +
-                ", isFromTFCard=" + isFromTFCard +
-                '}';
-    }
-
-    public BigDecimal getEstimatedFeeValue() {
-        return estimatedFeeValue;
-    }
-
-    public void setEstimatedFeeValue(BigDecimal estimatedFeeValue) {
-        this.estimatedFeeValue = estimatedFeeValue;
-    }
-
-    public BigDecimal getMaxFeeValue() {
-        return maxFeeValue;
-    }
-
-    public void setMaxFeeValue(BigDecimal maxFeeValue) {
-        this.maxFeeValue = maxFeeValue;
-    }
-
-    public BigDecimal getMaxFeePerGasValue() {
-        return maxFeePerGasValue;
-    }
-
-    public void setMaxFeePerGasValue(BigDecimal maxFeePerGasValue) {
-        this.maxFeePerGasValue = maxFeePerGasValue;
-    }
-
-    public BigDecimal getMaxPriorityFeePerGasValue() {
-        return maxPriorityFeePerGasValue;
-    }
-
-    public void setMaxPriorityFeePerGasValue(BigDecimal maxPriorityFeePerGasValue) {
-        this.maxPriorityFeePerGasValue = maxPriorityFeePerGasValue;
-    }
-
-    public BigDecimal getGasLimitValue() {
-        return gasLimitValue;
-    }
-
-    public void setGasLimitValue(BigDecimal gasLimitValue) {
-        this.gasLimitValue = gasLimitValue;
-    }
-
-    public BigDecimal getAmountValue() {
-        return amountValue;
-    }
-
-    public void setAmountValue(BigDecimal amountValue) {
-        this.amountValue = amountValue;
-    }
-
-    public BigDecimal getFeeValue() {
-        return feeValue;
-    }
-
-    public void setFeeValue(BigDecimal feeValue) {
-        this.feeValue = feeValue;
+    public void setSignatureUR(String signatureUR) {
+        this.signatureUR = signatureUR;
     }
 
     public enum TransactionType {

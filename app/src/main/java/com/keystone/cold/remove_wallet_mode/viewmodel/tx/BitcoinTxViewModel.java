@@ -196,7 +196,7 @@ public class BitcoinTxViewModel extends BaseTxViewModel<PSBT> {
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMaximumFractionDigits(20);
         // TODO get origin and update this line.
-        tx.setSignId(Wallet.UNKOWN_WALLET_SIGN_ID);
+        tx.setSignId(Wallet.UNKNOWN_WALLET_SIGN_ID);
         tx.setCoinCode(coinCode);
         tx.setCoinId(Coins.coinIdFromCoinCode(coinCode));
         tx.setBelongTo(mRepository.getBelongTo());

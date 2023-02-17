@@ -147,9 +147,9 @@ public class EthereumTransactionDetailFragment extends BaseFragment<FragmentEthe
 
         mBinding.setTx(transaction);
         processAndUpdateTo(transaction);
-        if (transaction.getSignature() != null) {
+        if (transaction.getSignatureUR() != null) {
             mBinding.qrcodeContainer.setVisibility(View.VISIBLE);
-            mBinding.qrcode.qrcode.setData(transaction.getSignatureQRCode());
+            mBinding.qrcode.qrcode.setData(transaction.getSignatureUR());
         }
     }
 
