@@ -24,6 +24,8 @@ import com.keystone.cold.util.SolMessageValidateUtil;
 import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
+import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignRequest;
+import com.sparrowwallet.hummingbird.registry.evm.EvmSignRequest;
 import com.sparrowwallet.hummingbird.registry.arweave.ArweaveSignRequest;
 import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
@@ -52,6 +54,10 @@ public class URProcessor implements Processor {
             return new CryptoPSBTProcessor().run(r.resolve());
         } else if (r.getType().equals(ScanResultTypes.UR_ARWEAVE_SIGN_REQUEST)) {
             return new ARweaveSignRequestProcessor().run(r.resolve());
+        } else if (r.getType().equals(ScanResultTypes.UR_COSMOS_SIGN_REQUEST)) {
+            return new CosmosSignRequestProcessor().run(r.resolve());
+        } else if (r.getType().equals(ScanResultTypes.UR_EVM_SIGN_REQUEST)) {
+            return new EvmSignRequestProcessor().run(r.resolve());
         } else {
             throw UnimplementedException.newInstance();
         }
@@ -250,6 +256,70 @@ public class URProcessor implements Processor {
                     throw new InvalidTransactionException("test", "Transaction type DataItem not supported yet");
                 default:
                     return new Destination(R.id.action_to_arweaveSignMessageFragment, bundle);
+            }
+        }
+    }
+
+    private static class CosmosSignRequestProcessor implements URResolver {
+
+        @Override
+        public Destination run(Object object) throws BaseException {
+            CosmosSignRequest cosmosSignRequest = (CosmosSignRequest) object;
+            String requestMFP = Hex.toHexString(cosmosSignRequest.getMasterFingerprint());
+            String MFP = new GetMasterFingerprintCallable().call();
+            if (!requestMFP.equalsIgnoreCase(MFP)) {
+                throw XfpNotMatchException.newInstance();
+            }
+            ByteBuffer uuidBuffer = ByteBuffer.wrap(cosmosSignRequest.getRequestId());
+            UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+            String hdPath = cosmosSignRequest.getDerivationPath();
+            String signData = Hex.toHexString(cosmosSignRequest.getSignData());
+
+            Bundle bundle = new Bundle();
+            bundle.putString(BundleKeys.REQUEST_ID_KEY, uuid.toString());
+            bundle.putString(BundleKeys.SIGN_DATA_KEY, signData);
+            bundle.putString(BundleKeys.HD_PATH_KEY, "M/" + hdPath);
+            bundle.putString(BundleKeys.SIGN_ORIGIN_KEY, cosmosSignRequest.getOrigin());
+
+            String dataType = cosmosSignRequest.getType().getType();
+            if (dataType.equals(CosmosSignRequest.DataType.AMINO.getType()) || dataType.equals(CosmosSignRequest.DataType.DIRECT.getType())) {
+                bundle.putString(BundleKeys.DATA_TYPE_KEY, cosmosSignRequest.getType().getType());
+                return new Destination(R.id.action_to_cosmosConfirmTransactionFragment, bundle);
+            } else if (dataType.equals(CosmosSignRequest.DataType.MESSAGE.getType())) {
+                return new Destination(R.id.action_to_cosmosSignMessageFragment, bundle);
+            }
+            throw UnimplementedException.newInstance();
+        }
+    }
+
+    private static class EvmSignRequestProcessor implements URResolver {
+
+        @Override
+        public Destination run(Object object) throws BaseException {
+            EvmSignRequest evmSignRequest = (EvmSignRequest) object;
+            String requestMFP = Hex.toHexString(evmSignRequest.getMasterFingerprint());
+            String MFP = new GetMasterFingerprintCallable().call();
+            if (!requestMFP.equalsIgnoreCase(MFP)) {
+                throw XfpNotMatchException.newInstance();
+            }
+            ByteBuffer uuidBuffer = ByteBuffer.wrap(evmSignRequest.getRequestId());
+            UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+            String hdPath = evmSignRequest.getDerivationPath();
+            String signData = Hex.toHexString(evmSignRequest.getSignData());
+
+            Bundle bundle = new Bundle();
+            bundle.putString(BundleKeys.REQUEST_ID_KEY, uuid.toString());
+            bundle.putString(BundleKeys.SIGN_DATA_KEY, signData);
+            bundle.putString(BundleKeys.HD_PATH_KEY, "M/" + hdPath);
+            bundle.putString(BundleKeys.SIGN_ORIGIN_KEY, evmSignRequest.getOrigin());
+            String dataType = evmSignRequest.getDataType();
+            if (dataType.equals(EvmSignRequest.DataType.AMINO_TRANSACTION.getType())
+                    || dataType.equals(EvmSignRequest.DataType.DIRECT_TRANSACTION.getType())) {
+                bundle.putString(BundleKeys.DATA_TYPE_KEY, dataType);
+                bundle.putLong(BundleKeys.CUSTOM_CHAIN_IDENTIFIER_KEY, evmSignRequest.getCustomChainIdentifier());
+                return new Destination(R.id.action_to_cosmosConfirmTransactionFragment, bundle);
+            } else {
+                throw UnimplementedException.newInstance();
             }
         }
     }

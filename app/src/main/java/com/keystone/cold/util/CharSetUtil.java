@@ -1,5 +1,7 @@
 package com.keystone.cold.util;
 
+import android.text.TextUtils;
+
 /**
  * utf-8编码规则：
  * utf-8是一种可变长编码， 使用1——4个字节表示一个字符。
@@ -85,4 +87,17 @@ public class CharSetUtil {
         return (value & (0xC0)) != 0x80;
     }
 
+
+    public static boolean isHexString(String str) {
+        if (TextUtils.isEmpty(str)) {
+            return false;
+        }
+        str = str.replace("0x", "");
+        str = str.replace("0X", "");
+        String regex = "^[A-Fa-f0-9]+$";
+        if (str.matches(regex)) {
+            return true;
+        }
+        return false;
+    }
 }
