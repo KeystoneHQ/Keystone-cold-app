@@ -6,11 +6,10 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
-import com.keystone.cold.DataRepository;
-import com.keystone.cold.MainApplication;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.model.Tx;
 import com.keystone.cold.remove_wallet_mode.helper.tx_loader.EthTxLoader;
+import com.keystone.cold.remove_wallet_mode.helper.tx_loader.EvmosTxLoader;
 import com.keystone.cold.remove_wallet_mode.helper.tx_loader.GeneralTxLoader;
 import com.keystone.cold.remove_wallet_mode.helper.tx_loader.NearTxLoader;
 import com.keystone.cold.remove_wallet_mode.helper.tx_loader.SolTxLoader;
@@ -37,6 +36,8 @@ public class TxRecordManager {
         } else if (Coins.NEAR.coinId().equals(coinId)) {
             String code = Utilities.getCurrentNearAccount(getApplication());
             return new NearTxLoader(code);
+        } else if (Coins.EVMOS.coinId().equals(coinId)) {
+            return new EvmosTxLoader();
         } else {
             return new GeneralTxLoader(coinId);
         }

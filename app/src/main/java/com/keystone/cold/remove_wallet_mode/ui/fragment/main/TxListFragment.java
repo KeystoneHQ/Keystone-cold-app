@@ -77,7 +77,9 @@ public class TxListFragment extends BaseFragment<FragmentTxListBinding> {
     @Override
     protected void init(View view) {
         viewModel = ViewModelProviders.of(this).get(TxRecordViewModel.class);
-        adapter = new TxAdapter(mActivity);
+        if (adapter == null) {
+            adapter = new TxAdapter(mActivity);
+        }
         mBinding.list.setAdapter(adapter);
     }
 
