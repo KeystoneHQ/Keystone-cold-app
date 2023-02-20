@@ -4,12 +4,12 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.remove_wallet_mode.helper.address_generators.SubstrateAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinCashAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.DashAddressGenerator;
 
-public class SubstrateCreator extends BaseCreator {
-
-    public SubstrateCreator(Coins.Coin coin) {
-        super(coin);
+public class BitcoinCashCreator extends BaseCreator{
+    public BitcoinCashCreator() {
+        super(Coins.BCH);
     }
 
     @Override
@@ -19,15 +19,15 @@ public class SubstrateCreator extends BaseCreator {
 
     @Override
     protected void generateDefaultAddress(CoinEntity coinEntity) {
-        new SubstrateAddressGenerator(coin).generateAddress(1);
+        new BitcoinCashAddressGenerator().generateAddress(1);
     }
 
     @Override
     protected void addAccount(CoinEntity entity) {
         AccountEntity accountEntity = new AccountEntity();
-        String pubkey = new GetExtendedPublicKeyCallable(coin.getAccounts()[0]).call();
-        accountEntity.setHdPath(coin.getAccounts()[0]);
-        accountEntity.setExPub(pubkey);
+        String xpub = new GetExtendedPublicKeyCallable(BitcoinCashAddressGenerator.PATH).call();
+        accountEntity.setHdPath(BitcoinCashAddressGenerator.PATH);
+        accountEntity.setExPub(xpub);
         entity.addAccount(accountEntity);
     }
 }

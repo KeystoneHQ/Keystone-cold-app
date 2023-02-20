@@ -3,13 +3,18 @@ package com.keystone.cold.remove_wallet_mode.helper;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.remove_wallet_mode.helper.setup.AptosCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.ArweaveCreator;
+import com.keystone.cold.remove_wallet_mode.helper.setup.BitcoinCashCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.BitcoinCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.CosmosCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.Creator;
+import com.keystone.cold.remove_wallet_mode.helper.setup.DashCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.EthereumCreator;
+import com.keystone.cold.remove_wallet_mode.helper.setup.LitecoinCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.NearCreator;
+import com.keystone.cold.remove_wallet_mode.helper.setup.RippleCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.SolanaCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.SubstrateCreator;
+import com.keystone.cold.remove_wallet_mode.helper.setup.TronCreator;
 import com.keystone.cold.util.ExtendedPublicKeyCacheHelper;
 
 
@@ -57,6 +62,16 @@ public class SetupManager {
             return new CosmosCreator(Coins.coinOfCoinId(coinId));
         } else if (coinId.equals(Coins.AR.coinId())) {
             return new ArweaveCreator();
+        } else if (coinId.equals(Coins.LTC.coinId())) {
+            return new LitecoinCreator();
+        } else if (coinId.equals(Coins.BCH.coinId())) {
+            return new BitcoinCashCreator();
+        } else if (coinId.equals(Coins.DASH.coinId())) {
+            return new DashCreator();
+        } else if (coinId.equals(Coins.TRON.coinId())) {
+            return new TronCreator();
+        } else if (coinId.equals(Coins.XRP.coinId())) {
+            return new RippleCreator();
         }
         return null;
     }
