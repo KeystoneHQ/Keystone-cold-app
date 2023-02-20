@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="callback"
+            type="com.keystone.cold.remove_wallet_mode.ui.adapter.CheckableAdapter.CheckableCallback" />
+
+        <variable
+            name="checkableItem"
+            type="com.keystone.cold.remove_wallet_mode.ui.model.CheckableItem" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_52"
+            android:background="?attr/selectableItemBackground"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:onClick="@{()->callback.onClick(checkableItem)}"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/dp_16">
+
+            <ImageView
+                android:layout_width="@dimen/dp_26"
+                android:layout_height="@dimen/dp_26"
+                android:src="@{checkableItem.iconResId}"
+                android:visibility="@{checkableItem.iconVisibility()}"
+                tools:src="@drawable/coin_dot" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/dp_12">
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:clickable="false"
+                    android:enabled="false"
+                    android:importantForAutofill="no"
+                    android:singleLine="true"
+                    android:text="@{checkableItem.name}"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold"
+                    tools:ignore="LabelFor"
+                    tools:text="Polkadot" />
+
+                <TextView
+                    visibleGone="@{TextUtils.isEmpty(checkableItem.description)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/hint"
+                    android:textSize="@dimen/sp_9"
+                    tools:text="description" />
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/cbShow"
+                android:layout_width="@dimen/dp_22"
+                android:layout_height="@dimen/dp_22"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:button="@drawable/checkbox"
+                android:checked="@{checkableItem.checked}"
+                android:clickable="false" />
+
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+    </LinearLayout>
+</layout>

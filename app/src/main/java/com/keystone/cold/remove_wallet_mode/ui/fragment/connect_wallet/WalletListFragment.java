@@ -1,7 +1,6 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet;
 
 import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.ArweaveAuthFragment.AR_AUTH_RESULT_KEY;
-import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.ArweaveAuthFragment.AR_SETUP_INITIAL;
 import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.ArweaveAuthFragment.AR_SETUP_REJECTED;
 import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.ArweaveAuthFragment.AR_SETUP_STATUS_KEY;
 import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.ArweaveAuthFragment.AR_SETUP_SUCCESS;
@@ -96,19 +95,23 @@ public class WalletListFragment extends BaseFragment<FragmentWalletListBinding> 
                 case INVALID: //no address，give error message
                     break;
                 case DIRECT:
+                    // export xpub to sync
                     navigate(R.id.action_to_syncFragment, bundle);
                     break;
                 case SUBSTRATE:
-                    navigate(R.id.action_to_selectNetworkFragment, bundle);
+                    // select network, select one account, then sync.
+                    navigate(R.id.action_to_chooseNetworkFragment, bundle);
                     break;
                 case SELECT_ADDRESS:
+                    // select accounts to sync
                     navigate(R.id.action_to_selectAddressFragment, bundle);
                     break;
                 case SELECT_ONE_ADDRESS:
+                    // select one account to sync
                     navigate(R.id.action_to_selectOneAddressFragment, bundle);
                     break;
                 case SELECT_COINS:
-                    Toast.makeText(mActivity, "选择币种", Toast.LENGTH_SHORT).show();
+                    navigate(R.id.action_walletListFragment_to_selectNetworksFragment, bundle);
                     break;
             }
             stepMode.removeObservers(WalletListFragment.this);

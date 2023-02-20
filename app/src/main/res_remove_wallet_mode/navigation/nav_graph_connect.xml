@@ -37,8 +37,16 @@
             app:popExitAnim="@android:anim/slide_out_right" />
 
         <action
-            android:id="@+id/action_to_selectNetworkFragment"
-            app:destination="@id/selectNetworkFragment"
+            android:id="@+id/action_to_chooseNetworkFragment"
+            app:destination="@id/chooseNetworkFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_walletListFragment_to_selectNetworksFragment"
+            app:destination="@id/selectNetworksFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
@@ -100,12 +108,12 @@
     </fragment>
 
     <fragment
-        android:id="@+id/selectNetworkFragment"
-        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.SelectNetworkFragment"
-        android:label="SelectNetworkFragment"
-        tools:layout="@layout/fragment_select_network">
+        android:id="@+id/chooseNetworkFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.ChooseNetworkFragment"
+        android:label="ChooseNetworkFragment"
+        tools:layout="@layout/fragment_choose_network">
         <action
-            android:id="@+id/action_selectNetworkFragment_to_selectOneAddressFragment"
+            android:id="@+id/action_chooseNetworkFragment_to_selectOneAddressFragment"
             app:destination="@id/selectOneAddressFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
@@ -165,4 +173,21 @@
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
         app:popExitAnim="@android:anim/slide_out_right" />
+    <navigation
+        android:id="@+id/navigation"
+        app:startDestination="@id/selectNetworksFragment">
+        <fragment
+            android:id="@+id/selectNetworksFragment"
+            android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.SelectNetworksFragment"
+            android:label="SelectNetworksFragment"
+            tools:layout="@layout/fragment_choose_network">
+            <action
+                android:id="@+id/action_selectNetworksFragment_to_syncFragment"
+                app:destination="@id/syncFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@android:anim/slide_in_left"
+                app:popExitAnim="@android:anim/slide_out_right" />
+        </fragment>
+    </navigation>
 </navigation>

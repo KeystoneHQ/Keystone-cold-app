@@ -17,11 +17,18 @@ import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.protocol.EncodeConfig;
 import com.keystone.cold.protocol.builder.SyncBuilder;
 import com.keystone.cold.viewmodel.WatchWallet;
+import com.sparrowwallet.hummingbird.UR;
+import com.sparrowwallet.hummingbird.registry.RegistryType;
 
+import org.spongycastle.util.encoders.Hex;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class KeystoneViewModel extends AndroidViewModel {
     private final DataRepository mRepository;
+
+    private List<String> openedCoins = new ArrayList<>();
 
     public KeystoneViewModel(@NonNull Application application) {
         super(application);
@@ -37,16 +44,15 @@ public class KeystoneViewModel extends AndroidViewModel {
         return false;
     }
 
-    public LiveData<String> generateSyncKeystone() {
-        MutableLiveData<String> sync = new MutableLiveData<>();
-        sync.setValue("");
+    public LiveData<UR> generateSyncKeystone() {
+        MutableLiveData<UR> sync = new MutableLiveData<>();
         AppExecutors.getInstance().diskIO().execute(() -> {
             List<CoinEntity> coinEntities = mRepository.loadCoinsSync();
             SyncBuilder syncBuilder = new SyncBuilder(EncodeConfig.DEFAULT);
             for (CoinEntity entity : coinEntities) {
                 if (!isSupported(entity)) continue;
                 SyncBuilder.Coin coin = new SyncBuilder.Coin();
-                coin.setActive(entity.isShow());
+                coin.setActive(openedCoins.contains(entity.getCoinId()));
                 coin.setCoinCode(entity.getCoinCode());
                 List<AccountEntity> accounts = mRepository.loadAccountsForCoin(entity);
                 for (AccountEntity accountEntity : accounts) {
@@ -68,12 +74,21 @@ public class KeystoneViewModel extends AndroidViewModel {
                 }
             }
             if (syncBuilder.getCoinsCount() == 0) {
-                sync.postValue("");
+                sync.postValue(null);
             } else {
-                sync.postValue(syncBuilder.build());
+                try {
+                    sync.postValue(new UR(RegistryType.BYTES, Hex.decode(syncBuilder.build())));
+                } catch (UR.InvalidTypeException e) {
+                    e.printStackTrace();
+                    sync.postValue(null);
+                }
             }
 
         });
         return sync;
+    }
+
+    public void setOpenedCoins(List<String> openedCoins) {
+        this.openedCoins = openedCoins;
     }
 }
