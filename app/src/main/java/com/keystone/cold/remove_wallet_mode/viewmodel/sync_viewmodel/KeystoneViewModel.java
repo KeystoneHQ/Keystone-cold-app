@@ -22,8 +22,13 @@ import com.sparrowwallet.hummingbird.registry.RegistryType;
 
 import org.spongycastle.util.encoders.Hex;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import co.nstant.in.cbor.CborBuilder;
+import co.nstant.in.cbor.CborEncoder;
+import co.nstant.in.cbor.CborException;
 
 public class KeystoneViewModel extends AndroidViewModel {
     private final DataRepository mRepository;
@@ -77,7 +82,14 @@ public class KeystoneViewModel extends AndroidViewModel {
                 sync.postValue(null);
             } else {
                 try {
-                    sync.postValue(new UR(RegistryType.BYTES, Hex.decode(syncBuilder.build())));
+                    try {
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        (new CborEncoder(baos)).encode((new CborBuilder()).add(Hex.decode(syncBuilder.build())).build());
+                        byte[] cbor = baos.toByteArray();
+                        sync.postValue(new UR(RegistryType.BYTES, cbor));
+                    } catch (CborException var4) {
+                        var4.printStackTrace();
+                    }
                 } catch (UR.InvalidTypeException e) {
                     e.printStackTrace();
                     sync.postValue(null);

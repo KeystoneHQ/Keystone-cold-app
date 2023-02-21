@@ -77,11 +77,12 @@
                     tools:text="Polkadot" />
 
                 <TextView
-                    visibleGone="@{TextUtils.isEmpty(checkableItem.description)}"
+                    visibleGone="@{!TextUtils.isEmpty(checkableItem.description)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/hint"
                     android:textSize="@dimen/sp_9"
+                    android:text="@{checkableItem.description}"
                     tools:text="description" />
             </LinearLayout>
 

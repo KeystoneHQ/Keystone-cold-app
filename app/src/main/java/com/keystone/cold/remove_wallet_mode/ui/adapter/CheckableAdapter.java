@@ -1,5 +1,6 @@
 package com.keystone.cold.remove_wallet_mode.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import com.keystone.cold.R;
@@ -14,6 +15,7 @@ public class CheckableAdapter extends BaseBindingAdapter<CheckableItem, ItemChec
     private final CheckableCallback callback;
     private final List<CheckableItem> checkedList = new ArrayList<>();
 
+    @SuppressLint("NotifyDataSetChanged")
     public CheckableAdapter(Context context, CheckableCallback onChecked) {
         super(context);
         this.callback = item -> {
@@ -27,6 +29,7 @@ public class CheckableAdapter extends BaseBindingAdapter<CheckableItem, ItemChec
                     onChecked.onClick(item);
                 }
             }
+            notifyDataSetChanged();
         };
     }
 
@@ -36,7 +39,7 @@ public class CheckableAdapter extends BaseBindingAdapter<CheckableItem, ItemChec
 
     @Override
     protected int getLayoutResId(int viewType) {
-        return R.layout.item_clickable;
+        return R.layout.item_checkable;
     }
 
     @Override

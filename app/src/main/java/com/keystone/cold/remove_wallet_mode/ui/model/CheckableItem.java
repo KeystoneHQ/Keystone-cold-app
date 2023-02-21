@@ -54,4 +54,15 @@ public class CheckableItem {
     public String getDescription() {
         return description;
     }
+
+    @Override
+    public String toString() {
+        return "CheckableItem{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", iconResId=" + iconResId +
+                ", description='" + description + '\'' +
+                ", checked=" + checked +
+                '}';
+    }
 }

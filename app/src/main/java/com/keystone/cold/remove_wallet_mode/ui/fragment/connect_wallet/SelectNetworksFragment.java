@@ -3,6 +3,7 @@ package com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.coinlib.utils.Coins;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 public class SelectNetworksFragment extends BaseFragment<FragmentSelectNetworksBinding> {
     @Override
     protected int setView() {
-        return R.layout.fragment_choose_network;
+        return R.layout.fragment_select_networks;
     }
 
     @Override
@@ -40,12 +41,14 @@ public class SelectNetworksFragment extends BaseFragment<FragmentSelectNetworksB
             viewModel.setOpenedCoins(items.stream().map(CheckableItem::getId).collect(Collectors.toList()));
             Bundle bundle = new Bundle();
             bundle.putString(BundleKeys.WALLET_ID_KEY, walletId);
-            navigate(R.id.action_selectNetworksFragment_to_selectOneAddressFragment, bundle);
+            navigate(R.id.action_selectNetworksFragment_to_syncFragment, bundle);
         });
-        checkableAdapter.setItems(getNetworkList(walletId));
+        getNetworkList(walletId).observe(this, checkableAdapter::setItems);
+
     }
 
-    private List<CheckableItem> getNetworkList(String walletId) {
+    private MutableLiveData<List<CheckableItem>> getNetworkList(String walletId) {
+        MutableLiveData<List<CheckableItem>> listMutableLiveData = new MutableLiveData<>();
         Wallet wallet = Wallet.getWalletById(walletId);
         List<CheckableItem> list;
         if (wallet == Wallet.KEYSTONE) {
@@ -63,7 +66,8 @@ public class SelectNetworksFragment extends BaseFragment<FragmentSelectNetworksB
         } else {
             list = new ArrayList<>();
         }
-        return list;
+        listMutableLiveData.postValue(list);
+        return listMutableLiveData;
     }
 
     @Override
