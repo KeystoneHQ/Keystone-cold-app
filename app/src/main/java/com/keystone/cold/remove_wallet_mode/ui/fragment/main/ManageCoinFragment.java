@@ -77,7 +77,7 @@ public class ManageCoinFragment extends BaseFragment<FragmentManageCoinBinding> 
         assets.observe(this, assetItems -> {
             if (assetItems != null) {
                 mCoinAdapter.setItems(assetItems);
-                if (assetItems.stream().anyMatch(a -> a.getCoinId().equals(Coins.AR.coinId()))) {
+                if (this.assetItems.stream().anyMatch(a -> a.getCoinId().equals(Coins.AR.coinId()))) {
                     ArweaveViewModel viewModel = ViewModelProviders.of(this).get(ArweaveViewModel.class);
                     LiveData<Boolean> hasAR = viewModel.hasArweaveAddress();
                     hasAR.observe(this, (v) -> {

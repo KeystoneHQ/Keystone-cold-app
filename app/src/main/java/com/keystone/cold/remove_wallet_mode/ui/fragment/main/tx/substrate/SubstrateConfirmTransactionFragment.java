@@ -72,10 +72,6 @@ public class SubstrateConfirmTransactionFragment extends ConfirmTransactionFragm
                 handleParseException(new InvalidTransactionException(getString(R.string.incorrect_tx_data), "invalid transaction"));
             }
         });
-        viewModel.getObservableException().observe(this, (e) -> {
-            if (e == null) return;
-            handleParseException(e);
-        });
     }
 
     @Override

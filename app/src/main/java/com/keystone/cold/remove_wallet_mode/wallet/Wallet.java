@@ -5,7 +5,7 @@ import com.keystone.cold.config.FeatureFlags;
 
 public enum Wallet {
 
-    KEYSTONE("keystone"),
+    KEYSTONE("keystone", "Keystone App"),
     METAMASK("metamask", "MetaMask"),
     KEPLR("keplr", "Keplr"),
     SAFE("safe"),

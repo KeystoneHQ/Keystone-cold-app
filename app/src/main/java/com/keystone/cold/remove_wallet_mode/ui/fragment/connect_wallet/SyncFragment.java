@@ -10,6 +10,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -25,6 +26,7 @@ import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.BlueWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.FewchaWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.KeplrWalletViewModel;
+import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.KeystoneViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.MetamaskViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SenderWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SolFlareViewModel;
@@ -116,8 +118,12 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
     }
 
     private void generateURSyncData() {
-        MutableLiveData<UR> urMutableLiveData;
+        LiveData<UR> urMutableLiveData;
         switch (wallet) {
+            case KEYSTONE:
+                KeystoneViewModel keystoneViewModel = ViewModelProviders.of(this).get(KeystoneViewModel.class);
+                urMutableLiveData = keystoneViewModel.generateSyncKeystone();
+                break;
             case FEWCHA:
                 FewchaWalletViewModel fewchaWalletViewModel = ViewModelProviders.of(this).get(FewchaWalletViewModel.class);
                 fewchaWalletViewModel.setAddressIds(addressIds);

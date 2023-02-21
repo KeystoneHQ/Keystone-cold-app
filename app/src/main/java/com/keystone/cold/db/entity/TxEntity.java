@@ -25,6 +25,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.keystone.cold.model.Tx;
+import com.keystone.cold.protocol.builder.SignTxResultBuilder;
 
 @Entity(tableName = "txs", indices = {@Index("txId")})
 
@@ -46,50 +47,49 @@ public class TxEntity implements Tx {
     private String belongTo;
 
     /**
-     *
      * TxEntity类的额外信息，内部是JSON
      * 目前仅用于Solana Near Polkadot Bitcion Cosmos相关币种 其他币种暂时没有用到
+     *
      * @Solana {
-     *     {
-     *         "additioins":{
-     *              "coin":"solana",
-     *              "addition":{
-     *                  "signature":"adfas",
-     *                  "raw_message":"raw_message",
-     *                  "parsed_message":"parsed_message",
-     *                  "sign_by":"bip44"
-     *               }
-     *          }
-     *     }
+     * {
+     * "additioins":{
+     * "coin":"solana",
+     * "addition":{
+     * "signature":"adfas",
+     * "raw_message":"raw_message",
+     * "parsed_message":"parsed_message",
+     * "sign_by":"bip44"
+     * }
+     * }
+     * }
      * }
      * @coin 表示币种
      * @addition 表示附加信息
      * @signature 表示签名
      * @raw_message 表示原始信息
      * @parsed_message 表示解析后的信息
-     *
      * @Near {
-     *     {
-     *         "additioins":{
-     *              "coin":"near",
-     *              "addition":{
-     *                  "signature":"adfas",
-     *                  "raw_message":"raw_message",
-     *                  "parsed_message":"parsed_message",
-     *                  "sign_by":"bip44",
-     *                  "sign_batch_info":{
-     *                      "batch_id":"xxx",
-     *                      "order":"0"
-     *                  }
-     *               }
-     *          }
-     *     }
+     * {
+     * "additioins":{
+     * "coin":"near",
+     * "addition":{
+     * "signature":"adfas",
+     * "raw_message":"raw_message",
+     * "parsed_message":"parsed_message",
+     * "sign_by":"bip44",
+     * "sign_batch_info":{
+     * "batch_id":"xxx",
+     * "order":"0"
+     * }
+     * }
+     * }
+     * }
      * }
      * @Polkadot {
-     *     addition: {
-     *         "raw_message": "raw_message",
-     *         "parsed_message": "",
-     *     }
+     * addition: {
+     * "raw_message": "raw_message",
+     * "parsed_message": "",
+     * }
      * }
      * @coin 表示币种
      * @addition 表示附加信息
@@ -97,38 +97,34 @@ public class TxEntity implements Tx {
      * @raw_message 表示原始信息
      * @parsed_message 表示解析后的信息
      * @sign_batch_info 表示同一批次交易的签名信息 （考虑后期可能支持一次签多笔交易，预留该字段）
-     *      @batch_id  批次id（同一批次中所有交易id的Keccak-256 hash）
-     *      @order  这一批次的第几个交易
-     *
-     *
+     * @batch_id 批次id（同一批次中所有交易id的Keccak-256 hash）
+     * @order 这一批次的第几个交易
      * @Bitcoin {
-     *     coin: "bitcoin",
-     *     addition: {
-     *          "raw_message": "raw_message",
-     *          "parsed_message": {
-     *              "_version": 0,
-     *              "inputs": [],
-     *              "outputs": [],
-     *              "fee": "",
-     *          }
-     *     }
+     * coin: "bitcoin",
+     * addition: {
+     * "raw_message": "raw_message",
+     * "parsed_message": {
+     * "_version": 0,
+     * "inputs": [],
+     * "outputs": [],
+     * "fee": "",
      * }
-     *
+     * }
+     * }
      * @Cosmos {
-     *     {
-     *         "additioins":{
-     *              "coin":"xxx",
-     *              "addition":{
-     *                  "signature":"adfas",
-     *                  "raw_message":"raw_message",
-     *                  "parsed_message":"parsed_message",
-     *                  "sign_mode": "evm",  //evm or cosmos
-     *                  "chain_id": "injective-1" //  cosmos chain id
-     *               }
-     *          }
-     *     }
+     * {
+     * "additioins":{
+     * "coin":"xxx",
+     * "addition":{
+     * "signature":"adfas",
+     * "raw_message":"raw_message",
+     * "parsed_message":"parsed_message",
+     * "sign_mode": "evm",  //evm or cosmos
+     * "chain_id": "injective-1" //  cosmos chain id
      * }
-     *
+     * }
+     * }
+     * }
      */
     private String addition;
 
@@ -167,7 +163,7 @@ public class TxEntity implements Tx {
 
     @Override
     public String getDisplayName() {
-        if(coinCode.startsWith("BTC")) {
+        if (coinCode.startsWith("BTC")) {
             return "BTC";
         }
         return coinCode;
@@ -249,12 +245,21 @@ public class TxEntity implements Tx {
         this.timeStamp = timeStamp;
     }
 
-    public void setAddition(String json){
+    public void setAddition(String json) {
         this.addition = json;
     }
 
-    public String getAddition(){
+    public String getAddition() {
         return this.addition;
+    }
+
+    public String getSignResult() {
+        if (signedHex == null || signId == null || txId.isEmpty()) return null;
+        SignTxResultBuilder signTxResult = new SignTxResultBuilder();
+        signTxResult.setRawTx(signedHex)
+                .setSignId(signId)
+                .setTxId(txId);
+        return signTxResult.build();
     }
 
     @Override

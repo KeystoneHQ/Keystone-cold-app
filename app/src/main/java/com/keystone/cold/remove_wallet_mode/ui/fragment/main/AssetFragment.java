@@ -265,9 +265,14 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         SOL(Coins.SOL.coinId(), true, true, true),
         SOL_BIP44_ROOT(Coins.SOL.coinId() + "_" + SOLAccount.SOLFLARE_BIP44_ROOT.getCode(), false, true, true),
         NEAR(Coins.NEAR.coinId(), false, true, true),
-        NEAR_LEDGER(Coins.NEAR.coinId()+ "_" + NEARAccount.LEDGER.getCode(), true, true, true),
+        NEAR_LEDGER(Coins.NEAR.coinId() + "_" + NEARAccount.LEDGER.getCode(), true, true, true),
         DOT(Coins.DOT.coinId(), true, false, true, false, true),
         AR(Coins.AR.coinId(), false, false, true),
+        LTC(Coins.LTC.coinId(), true, false, true, true, false),
+        DASH(Coins.DASH.coinId(), true, false, true, true, false),
+        BCH(Coins.BCH.coinId(), true, false, true, true, false),
+        TRON(Coins.TRON.coinId(), true, false, true),
+        XRP(Coins.XRP.coinId(), true, false, true),
         //cosmos use default config
         DEFAULT("default", false, false, true, false, false);
 

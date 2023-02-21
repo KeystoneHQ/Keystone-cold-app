@@ -24,7 +24,6 @@ public class EthereumConfirmTransactionFragment extends ConfirmTransactionFragme
         viewModel.reset();
         transaction = viewModel.getObservableTransaction();
         viewModel.generateUnsignedTransaction(requireArguments());
-        viewModel.getObservableException().observe(this, this::handleParseException);
     }
 
     @Override

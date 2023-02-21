@@ -21,4 +21,5 @@
     <color name="color_1A1A1A">#1A1A1A</color>
     <color name="primary">#00CDC3</color>
     <color name="primary_20a">#3300CDC3</color>
+    <color name="hint">#666666</color>
 </resources>

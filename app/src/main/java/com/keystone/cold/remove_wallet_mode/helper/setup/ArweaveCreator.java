@@ -34,6 +34,7 @@ public class ArweaveCreator extends Creator {
         entity.setShow(isDefaultOpen(Coins.AR.coinCode()));
 
         AccountEntity accountEntity = new AccountEntity();
+        // AR public key is stored in AccountEntity.addition.public_key
         accountEntity.setHdPath(Coins.AR.getAccounts()[0]);
         entity.addAccount(accountEntity);
         return entity;

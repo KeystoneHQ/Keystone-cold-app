@@ -1,14 +1,18 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.scanner.processor;
 
+import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
+import static com.keystone.cold.ui.fragment.main.keystone.TxConfirmFragment.KEY_TX_DATA;
+import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
+
 import android.os.Bundle;
 
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
-import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
-import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
+import com.keystone.cold.protocol.ZipUtil;
+import com.keystone.cold.protocol.parser.ProtoParser;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.remove_wallet_mode.exceptions.UnimplementedException;
@@ -30,6 +34,8 @@ import com.sparrowwallet.hummingbird.registry.arweave.ArweaveSignRequest;
 import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.spongycastle.util.encoders.Base64;
 import org.spongycastle.util.encoders.Hex;
 
@@ -58,6 +64,8 @@ public class URProcessor implements Processor {
             return new CosmosSignRequestProcessor().run(r.resolve());
         } else if (r.getType().equals(ScanResultTypes.UR_EVM_SIGN_REQUEST)) {
             return new EvmSignRequestProcessor().run(r.resolve());
+        } else if (r.getType().equals(ScanResultTypes.UR_BYTES)) {
+            return new BytesProcessor().run(r.resolve());
         } else {
             throw UnimplementedException.newInstance();
         }
@@ -320,6 +328,87 @@ public class URProcessor implements Processor {
                 return new Destination(R.id.action_to_cosmosConfirmTransactionFragment, bundle);
             } else {
                 throw UnimplementedException.newInstance();
+            }
+        }
+    }
+
+    private static class BytesProcessor implements URResolver {
+
+        @Override
+        public Destination run(Object object) throws BaseException {
+            String hex = Hex.toHexString((byte[]) object);
+            //xrp toolkit tx, metamask tx, webauth tx, decode as JSON
+            JSONObject json = tryDecodeAsJson(hex);
+
+            //keystone, try decode as protobuf
+            if (json == null) {
+                json = tryDecodeAsProtobuf(hex);
+            }
+
+            if (json != null) {
+                Destination destination = decodeAndProcess(json);
+                if (destination == null) {
+                    throw new UnknownQrCodeException("test", "unknown UR qr code");
+                }
+                return destination;
+            } else {
+                throw new UnknownQrCodeException("test", "unknown UR qr code");
+            }
+        }
+
+        private JSONObject tryDecodeAsJson(String hex) {
+            try {
+                return new JSONObject(new String(Hex.decode(hex)));
+            } catch (Exception ignored) {
+            }
+            return null;
+        }
+
+        private JSONObject tryDecodeAsProtobuf(String hex) {
+            JSONObject object;
+            hex = ZipUtil.unzip(hex);
+            object = new ProtoParser(Hex.decode(hex)).parseToJson();
+            return object;
+        }
+
+        private Destination decodeAndProcess(JSONObject object) throws BaseException {
+            Destination destination = checkWebAuth(object);
+            if (destination != null) return destination;
+            if (object.optString("type").equals("TYPE_SIGN_TX")) {
+                return handleSign(object);
+            }
+            throw new UnknownQrCodeException("test", "unknown qr code type");
+        }
+
+        private Destination checkWebAuth(JSONObject object) {
+            try {
+                JSONObject webAuth = object.optJSONObject("data");
+                if (webAuth != null && webAuth.optString("type").equals("webAuth")) {
+                    String data = object.getString("data");
+                    Bundle bundle = new Bundle();
+                    bundle.putString(WEB_AUTH_DATA, data);
+                    bundle.putBoolean(IS_SETUP_VAULT, false);
+                    return new Destination(R.id.action_QRCodeScan_to_result, bundle);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        private Destination handleSign(JSONObject object)
+                throws BaseException {
+            String xfp = new GetMasterFingerprintCallable().call();
+            if (!object.optString("xfp").equals(xfp)) {
+                throw new XfpNotMatchException("test", "xft not match");
+            }
+            try {
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_TX_DATA, object.getJSONObject("signTx").toString());
+                return new Destination(R.id.action_to_txConfirmFragment, bundle);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
             }
         }
     }
