@@ -20,6 +20,8 @@ import com.keystone.cold.MainApplication;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.db.entity.AccountEntity;
+import com.keystone.cold.remove_wallet_mode.helper.PreGenerateAddressHelper;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinCoreNativeSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinLegacyAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNativeSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNestedSegwitAddressGenerator;
@@ -127,9 +129,10 @@ public class ChangePathViewModel extends AndroidViewModel {
             String masterFingerPrint = new GetMasterFingerprintCallable().call();
             try {
                 JSONObject derivationPaths = new JSONObject(ethDerivationPath);
-                String preMasterFingerPrint = derivationPaths.optString("master_fingerprint");
-                if (masterFingerPrint.equalsIgnoreCase(preMasterFingerPrint)) {
-                    JSONObject accountPaths = (JSONObject) derivationPaths.get("eth_derivation_paths");
+                String preMasterFingerPrint = derivationPaths.optString(PreGenerateAddressHelper.MFP);
+                int version = derivationPaths.optInt(PreGenerateAddressHelper.VERSION);
+                if (masterFingerPrint.equalsIgnoreCase(preMasterFingerPrint) && version == PreGenerateAddressHelper.CURRENT_VERSION_ETH) {
+                    JSONObject accountPaths = (JSONObject) derivationPaths.get(Utilities.ETH_DERIVATION_PATHS);
                     JSONArray jsonArray = (JSONArray) accountPaths.get(ethAccount.getCode());
                     for (int i = 0; i < jsonArray.length(); i++) {
                         result.add(Pair.create("" + i, (String) jsonArray.get(i)));
@@ -161,9 +164,10 @@ public class ChangePathViewModel extends AndroidViewModel {
             String masterFingerPrint = new GetMasterFingerprintCallable().call();
             try {
                 JSONObject derivationPaths = new JSONObject(btcDerivationPaths);
-                String preMasterFingerPrint = derivationPaths.optString("master_fingerprint");
-                if (masterFingerPrint.equalsIgnoreCase(preMasterFingerPrint)) {
-                    JSONObject accountPaths = (JSONObject) derivationPaths.get("btc_derivation_paths");
+                String preMasterFingerPrint = derivationPaths.optString(PreGenerateAddressHelper.MFP);
+                int version = derivationPaths.optInt(PreGenerateAddressHelper.VERSION);
+                if (masterFingerPrint.equalsIgnoreCase(preMasterFingerPrint) && version == PreGenerateAddressHelper.CURRENT_VERSION_BTC) {
+                    JSONObject accountPaths = (JSONObject) derivationPaths.get(Utilities.BTC_DERIVATION_PATHS);
                     JSONArray jsonArray = (JSONArray) accountPaths.get(btcAccount.getCode());
                     for (int i = 0; i < jsonArray.length(); i++) {
                         result.add(Pair.create("" + i, (String) jsonArray.get(i)));
@@ -190,9 +194,13 @@ public class ChangePathViewModel extends AndroidViewModel {
             for (int i = 0; i < 3; i++) {
                 result.add(i, Pair.create("" + i, BitcoinNestedSegwitAddressGenerator.getAddress(i)));
             }
-        } else {
+        } else if (btcAccount.getCode().equals(BTCAccount.NATIVE_SEGWIT.getCode())){
             for (int i = 0; i < 3; i++) {
                 result.add(i, Pair.create("" + i, BitcoinNativeSegwitAddressGenerator.getAddress(i)));
+            }
+        } else {
+            for (int i = 0; i < 3; i++) {
+                result.add(i, Pair.create("" + i, BitcoinCoreNativeSegwitAddressGenerator.getAddress(i)));
             }
         }
         return result;
@@ -205,9 +213,10 @@ public class ChangePathViewModel extends AndroidViewModel {
             String masterFingerPrint = new GetMasterFingerprintCallable().call();
             try {
                 JSONObject derivationPaths = new JSONObject(solDerivationPath);
-                String preMasterFingerPrint = derivationPaths.optString("master_fingerprint");
-                if (masterFingerPrint.equalsIgnoreCase(preMasterFingerPrint)) {
-                    JSONObject accountPaths = (JSONObject) derivationPaths.get("sol_derivation_paths");
+                String preMasterFingerPrint = derivationPaths.optString(PreGenerateAddressHelper.MFP);
+                int version = derivationPaths.optInt(PreGenerateAddressHelper.VERSION);
+                if (masterFingerPrint.equalsIgnoreCase(preMasterFingerPrint) && version == PreGenerateAddressHelper.CURRENT_VERSION_SOL) {
+                    JSONObject accountPaths = (JSONObject) derivationPaths.get(Utilities.SOL_DERIVATION_PATHS);
                     JSONArray jsonArray = (JSONArray) accountPaths.get(solAccount.getCode());
                     for (int i = 0; i < jsonArray.length(); i++) {
                         result.add(Pair.create("" + i, (String) jsonArray.get(i)));
@@ -243,9 +252,10 @@ public class ChangePathViewModel extends AndroidViewModel {
             String masterFingerPrint = new GetMasterFingerprintCallable().call();
             try {
                 JSONObject derivationPaths = new JSONObject(nearDerivationPath);
-                String preMasterFingerPrint = derivationPaths.optString("master_fingerprint");
-                if (masterFingerPrint.equalsIgnoreCase(preMasterFingerPrint)) {
-                    JSONObject accountPaths = (JSONObject) derivationPaths.get("near_derivation_paths");
+                String preMasterFingerPrint = derivationPaths.optString(PreGenerateAddressHelper.MFP);
+                int version = derivationPaths.optInt(PreGenerateAddressHelper.VERSION);
+                if (masterFingerPrint.equalsIgnoreCase(preMasterFingerPrint) && version == PreGenerateAddressHelper.CURRENT_VERSION_NEAR) {
+                    JSONObject accountPaths = (JSONObject) derivationPaths.get(Utilities.NEAR_DERIVATION_PATHS);
                     JSONArray jsonArray = (JSONArray) accountPaths.get(nearAccount.getCode());
                     for (int i = 0; i < jsonArray.length(); i++) {
                         result.add(Pair.create("" + i, (String) jsonArray.get(i)));
