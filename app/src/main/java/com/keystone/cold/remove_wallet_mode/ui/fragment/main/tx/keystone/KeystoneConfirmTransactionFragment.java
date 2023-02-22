@@ -59,6 +59,7 @@ public class KeystoneConfirmTransactionFragment extends ConfirmTransactionFragme
                 feeAttackChecking = new FeeAttackChecking(this);
             }
         });
+        mBinding.sign.setOnClickListener((v) -> handleSign());
     }
 
     @Override

@@ -122,6 +122,8 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         switch (wallet) {
             case KEYSTONE:
                 KeystoneViewModel keystoneViewModel = ViewModelProviders.of(this).get(KeystoneViewModel.class);
+                Bundle data = requireArguments();
+                keystoneViewModel.setOpenedCoins((List<String>) data.getSerializable(BundleKeys.KEYSTONE_OPENED_COINS_KEY));
                 urMutableLiveData = keystoneViewModel.generateSyncKeystone();
                 break;
             case FEWCHA:

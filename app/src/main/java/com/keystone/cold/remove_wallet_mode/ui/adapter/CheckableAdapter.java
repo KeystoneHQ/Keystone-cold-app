@@ -46,6 +46,9 @@ public class CheckableAdapter extends BaseBindingAdapter<CheckableItem, ItemChec
     protected void onBindItem(ItemCheckableBinding binding, CheckableItem item) {
         binding.setCallback(callback);
         binding.setCheckableItem(item);
+        if (item.isChecked() && !checkedList.contains(item)) {
+            checkedList.add(item);
+        }
     }
 
     public interface CheckableCallback {

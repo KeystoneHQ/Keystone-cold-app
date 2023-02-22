@@ -404,8 +404,8 @@ public class URProcessor implements Processor {
             }
             try {
                 Bundle bundle = new Bundle();
-                bundle.putString(KEY_TX_DATA, object.getJSONObject("signTx").toString());
-                return new Destination(R.id.action_to_txConfirmFragment, bundle);
+                bundle.putString(BundleKeys.SIGN_DATA_KEY, object.getJSONObject("signTx").toString());
+                return new Destination(R.id.action_to_keystoneConfirmTransactionFragment, bundle);
             } catch (JSONException e) {
                 e.printStackTrace();
                 return null;
