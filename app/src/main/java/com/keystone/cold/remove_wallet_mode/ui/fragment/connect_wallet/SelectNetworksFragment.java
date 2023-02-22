@@ -16,6 +16,7 @@ import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.KeystoneVie
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.BaseFragment;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,10 +38,9 @@ public class SelectNetworksFragment extends BaseFragment<FragmentSelectNetworksB
         mBinding.networks.setAdapter(checkableAdapter);
         mBinding.ivConfirm.setOnClickListener((v) -> {
             List<CheckableItem> items = checkableAdapter.getCheckedList();
-            KeystoneViewModel viewModel = ViewModelProviders.of(this).get(KeystoneViewModel.class);
-            viewModel.setOpenedCoins(items.stream().map(CheckableItem::getId).collect(Collectors.toList()));
             Bundle bundle = new Bundle();
             bundle.putString(BundleKeys.WALLET_ID_KEY, walletId);
+            bundle.putSerializable(BundleKeys.KEYSTONE_OPENED_COINS_KEY, (Serializable) items.stream().map(CheckableItem::getId).collect(Collectors.toList()));
             navigate(R.id.action_selectNetworksFragment_to_syncFragment, bundle);
         });
         getNetworkList(walletId).observe(this, checkableAdapter::setItems);

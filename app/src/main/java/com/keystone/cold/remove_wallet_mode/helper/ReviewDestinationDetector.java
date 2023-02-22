@@ -7,15 +7,19 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.model.Tx;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
+import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.viewmodel.tx.GenericETHTxEntity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.regex.Pattern;
+
 public class ReviewDestinationDetector {
 
     private static final String TAG = "ReviewDetector";
 
+    private static Pattern uuidPattern = Pattern.compile("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
 
     public static Destination detect(Tx tx) {
 
@@ -23,6 +27,13 @@ public class ReviewDestinationDetector {
         String coinId = tx.getCoinId();
         Bundle bundle = new Bundle();
         bundle.putString(BundleKeys.TX_ID_KEY, txId);
+        // Keystone tx(GenericETHTx);
+        if (tx.getSignId() == null) {
+            return new Destination(R.id.action_to_keystoneReviewTransactionFragment, bundle);
+        } else if (uuidPattern.matcher(tx.getSignId()).find()) {
+            // Keystone tx(TxEntity);
+            return new Destination(R.id.action_to_keystoneReviewTransactionFragment, bundle);
+        }
         if (Coins.APTOS.coinId().equals(coinId)) {
             return new Destination(R.id.action_to_aptosReviewTransactionFragment, bundle);
         } else if (Coins.ETH.coinId().equals(coinId)) {
@@ -53,6 +64,7 @@ public class ReviewDestinationDetector {
             Bundle bundle = new Bundle();
             bundle.putString(BundleKeys.TX_ID_KEY, ethTxEntity.getTxId());
             try {
+                // maybe not needed anymore
                 new JSONObject(signedHex);
                 return new Destination(R.id.action_to_ethereumReviewTransactionFragment, bundle);
             } catch (JSONException e) {

@@ -17,11 +17,8 @@
 
 package com.keystone.cold.viewmodel.tx;
 
-import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
-
 import android.text.TextUtils;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
 import com.keystone.coinlib.coins.ETH.EthImpl;
@@ -31,7 +28,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.db.entity.Web3TxEntity;
 import com.keystone.cold.model.Tx;
-import com.keystone.cold.viewmodel.WatchWallet;
+import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -237,11 +234,12 @@ public class GenericETHTxEntity implements Tx {
     @Override
     public String getSignId() {
         try {
+            if (this.addition == null) return null;
             JSONObject jsonObject = new JSONObject(this.addition);
-            return jsonObject.optString("signId", WatchWallet.METAMASK_SIGN_ID);
+            return jsonObject.optString("signId", Wallet.UNKNOWN_WALLET_SIGN_ID);
         } catch (JSONException e) {
             e.printStackTrace();
-            return WatchWallet.METAMASK_SIGN_ID;
+            return Wallet.UNKNOWN_WALLET_SIGN_ID;
         }
     }
 
