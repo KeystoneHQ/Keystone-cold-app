@@ -26,7 +26,7 @@
             type="String" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -59,9 +59,27 @@
         </androidx.appcompat.widget.Toolbar>
 
 
-        <include layout="@layout/divider" />
+        <include
+            android:id="@+id/divider"
+            layout="@layout/divider"
+            android:layout_below="@id/toolbar"
+            android:layout_height="@dimen/dp_1"
+            android:layout_width="match_parent" />
+
+
+        <Button
+            android:layout_alignParentBottom="true"
+            android:id="@+id/complete"
+            style="@style/AcceptButton"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="@dimen/dp_26"
+            android:layout_marginBottom="16dp"
+            android:text="@string/complete" />
 
         <ScrollView
+            android:layout_below="@id/divider"
+            android:layout_above="@id/complete"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -172,18 +190,11 @@
                         android:textSize="12sp" />
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/complete"
-                    style="@style/AcceptButton"
-                    android:layout_width="match_parent"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="@dimen/dp_26"
-                    android:layout_marginBottom="16dp"
-                    android:text="@string/complete" />
+
 
             </LinearLayout>
         </ScrollView>
 
 
-    </LinearLayout>
+    </RelativeLayout>
 </layout>

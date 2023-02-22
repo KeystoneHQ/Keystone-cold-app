@@ -37,7 +37,7 @@ public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDer
         coinId = data.getString(BundleKeys.COIN_ID_KEY);
         walletId = data.getString(BundleKeys.WALLET_ID_KEY);
         if (coinId.equals(Coins.BTC.coinId())) {
-            mBinding.toolbar.setTitle(R.string.change_address_type);
+            mBinding.toolbarTitle.setText(R.string.change_address_type);
         }
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         mBinding.ivConfirm.setOnClickListener(v -> save());

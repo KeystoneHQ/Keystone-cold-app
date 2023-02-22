@@ -77,6 +77,7 @@
         </com.keystone.cold.ui.views.qrcode.DynamicQrCodeView>
 
         <LinearLayout
+            android:id="@+id/llQrHint"
             android:paddingBottom="@dimen/dp_8"
             android:background="@drawable/bg_corner_4dp_white"
             android:layout_width="match_parent"
@@ -93,6 +94,7 @@
                 android:background="@drawable/ic_hint" />
 
             <TextView
+                android:id="@+id/tvQrHint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_10"

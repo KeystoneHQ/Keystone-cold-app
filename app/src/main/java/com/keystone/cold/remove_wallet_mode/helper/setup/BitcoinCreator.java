@@ -1,5 +1,6 @@
 package com.keystone.cold.remove_wallet_mode.helper.setup;
 
+import static com.keystone.cold.remove_wallet_mode.viewmodel.tx.BitcoinTxViewModel.BTCCoreNativeSegwitPath;
 import static com.keystone.cold.remove_wallet_mode.viewmodel.tx.BitcoinTxViewModel.BTCLegacyPath;
 import static com.keystone.cold.remove_wallet_mode.viewmodel.tx.BitcoinTxViewModel.BTCNativeSegwitPath;
 import static com.keystone.cold.remove_wallet_mode.viewmodel.tx.BitcoinTxViewModel.BTCNestedSegwitPath;
@@ -8,7 +9,7 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinCashAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinCoreNativeSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinLegacyAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNativeSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNestedSegwitAddressGenerator;
@@ -30,6 +31,8 @@ public class BitcoinCreator extends BaseCreator {
             new BitcoinLegacyAddressGenerator().generateAddress(1);
         else if (coin.equals(Coins.BTC_NATIVE_SEGWIT))
             new BitcoinNativeSegwitAddressGenerator().generateAddress(1);
+        else if (coin.equals(Coins.BTC_CORE_WALLET))
+            new BitcoinCoreNativeSegwitAddressGenerator().generateAddress(1);
     }
 
     @Override
@@ -45,6 +48,10 @@ public class BitcoinCreator extends BaseCreator {
             account.setExPub(xpub);
         } else if (coin.equals(Coins.BTC_NATIVE_SEGWIT)) {
             String xpub = new GetExtendedPublicKeyCallable(BTCNativeSegwitPath).call();
+            account.setHdPath(BTCNativeSegwitPath);
+            account.setExPub(xpub);
+        } else if (coin.equals(Coins.BTC_CORE_WALLET)) {
+            String xpub = new GetExtendedPublicKeyCallable(BTCCoreNativeSegwitPath).call();
             account.setHdPath(BTCNativeSegwitPath);
             account.setExPub(xpub);
         }
