@@ -6,7 +6,7 @@ public enum BTCAccount {
     LEGACY("M/44'/0'/0'",  "Legacy", "legacy", "m/44'/0'/0'/0/*", Coins.BTC_LEGACY.coinId()),
     NESTED_SEGWIT("M/49'/0'/0'", "Nested Segwit", "nested_legacy", "m/49'/0'/0'/0/*", Coins.BTC.coinId()),
     NATIVE_SEGWIT("M/84'/0'/0'", "Native Segwit", "native_segwit", "m/84'/0'/0'/0/*", Coins.BTC_NATIVE_SEGWIT.coinId()),
-    CORE_NATIVE_SEGWIT("M/84'/0'/0'", "Core Native Segwit", "core_native_segwit", "m/44'/60'/0'/0/*", Coins.BTC_CORE_WALLET.coinId());
+    CORE_NATIVE_SEGWIT("M/44'/60'/0'", "Core Native Segwit", "core_native_segwit", "m/44'/60'/0'/0/*", Coins.BTC_CORE_WALLET.coinId());
 
     private String path;
     private String name;

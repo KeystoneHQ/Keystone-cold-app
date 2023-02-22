@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class URRegistryHelper {
-    private static final String KEY_NAME = "Keystone";
+    public static final String KEY_NAME = "Keystone";
 
     public static CryptoHDKey generateCryptoHDKey(String path, int type) {
         return generateCryptoHDKeyWithChildren(path, type, null, null);

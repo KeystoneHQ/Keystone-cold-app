@@ -19,7 +19,7 @@ public enum Wallet {
     FEWCHA("fewcha", "Fewcha"),
     SENDER("sender", "Sender"),
     RABBY("rabby"),
-    CORE("core"),
+    CORE("core", "Core"),
     POLKADOTJS("polkadotjs", "Polkadot.{js}"),
     XRPTOOLKIT("xrp"),
     ZAPPER("zapper"),

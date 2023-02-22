@@ -712,11 +712,11 @@
     </string-array>
 
     <string-array name="tutorials_name_core_wallet">
-        <item>CoreWallet</item>
+        <item>Core (Extension)</item>
     </string-array>
 
     <string-array name="tutorials_link_core_wallet">
-        <item><u>https://keyst.one/coreWallet</u></item>
+        <item><u>https://keyst.one/t/core</u></item>
     </string-array>
 
     <string-array name="tutorials_name_keystone">
@@ -842,4 +842,7 @@
         <item>Finding P &amp; Q ...</item>
         <item>Generating address ...</item>
     </string-array>
+
+    <string name="core_wallet_hint">The BTC addresses you are importing to is only for Core wallet.</string>
+
 </resources>

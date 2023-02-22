@@ -27,6 +27,7 @@ import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.BlueWalletViewModel;
+import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.CoreWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.FewchaWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.KeplrWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.KeystoneViewModel;
@@ -77,15 +78,27 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
     }
 
     public void switchChainAccountsByNeeds(Wallet wallet) {
-        if (wallet.equals(Wallet.KEYSTONE)) {
-            Utilities.setCurrentBTCAccount(mActivity, BTCAccount.NATIVE_SEGWIT.getCode());
-            Utilities.setCurrentEthAccount(mActivity, ETHAccount.BIP44_STANDARD.getCode());
+        switch (wallet) {
+            case KEYSTONE:
+                Utilities.setCurrentBTCAccount(mActivity, BTCAccount.NATIVE_SEGWIT.getCode());
+                Utilities.setCurrentEthAccount(mActivity, ETHAccount.BIP44_STANDARD.getCode());
+                break;
+            case CORE:
+                Utilities.setCurrentEthAccount(mActivity, ETHAccount.BIP44_STANDARD.getCode());
+                Utilities.setCurrentBTCAccount(mActivity, BTCAccount.CORE_NATIVE_SEGWIT.getCode());
+                break;
         }
     }
 
     public void setupWalletUI(Wallet wallet){
-        if (wallet.equals(Wallet.KEYSTONE)) {
-            mBinding.hint.setText(R.string.scan_via_keystone);
+        switch (wallet) {
+            case KEYSTONE:
+                mBinding.hint.setText(R.string.scan_via_keystone);
+                break;
+            case CORE:
+                mBinding.dynamicQrcodeLayout.llQrHint.setVisibility(View.VISIBLE);
+                mBinding.dynamicQrcodeLayout.tvQrHint.setText(R.string.core_wallet_hint);
+                break;
         }
     }
 
@@ -174,6 +187,10 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
             case KEPLR:
                 KeplrWalletViewModel keplrWalletViewModel = ViewModelProviders.of(this).get(KeplrWalletViewModel.class);
                 urMutableLiveData = keplrWalletViewModel.generateSyncUR();
+                break;
+            case CORE:
+                CoreWalletViewModel coreWalletViewModel = ViewModelProviders.of(this).get(CoreWalletViewModel.class);
+                urMutableLiveData = coreWalletViewModel.generateSyncUR();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + wallet);

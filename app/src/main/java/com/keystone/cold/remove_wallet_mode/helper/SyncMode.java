@@ -18,13 +18,13 @@ public enum SyncMode {
             case METAMASK:
             case ARCONNECT:
             case KEPLR:
+            case CORE:
                 stepMode.postValue(DIRECT);
                 break;
             case POLKADOTJS:
             case SUBWALLET:
                 stepMode.postValue(SUBSTRATE);
                 break;
-            case CORE:
             case KEYSTONE:
                 stepMode.postValue(SELECT_COINS);
                 break;
