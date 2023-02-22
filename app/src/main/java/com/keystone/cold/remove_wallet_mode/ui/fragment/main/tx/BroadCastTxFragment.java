@@ -3,6 +3,7 @@ package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx;
 import android.os.Bundle;
 import android.view.View;
 
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentBroadcastTxBinding;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
@@ -21,6 +22,9 @@ public class BroadCastTxFragment extends BaseFragment<FragmentBroadcastTxBinding
         String signatureURString = data.getString(BundleKeys.SIGNATURE_UR_KEY);
         String coinCode = data.getString(BundleKeys.COIN_CODE_KEY);
         mBinding.qrcodeLayout.qrcode.setData(signatureURString);
+        if (coinCode.startsWith("BTC")) {
+            coinCode = Coins.BTC.coinCode();
+        }
         mBinding.setCoinCode(coinCode);
         mBinding.toolbar.setNavigationOnClickListener(v -> popBackStack(R.id.myAssetsFragment, false));
         mBinding.complete.setOnClickListener(v -> popBackStack(R.id.myAssetsFragment, false));

@@ -54,7 +54,7 @@
         <item>sushiswap</item>
     </string-array>
     <string-array name="watch_wallet_summury_remove_wallet_mode">
-        <item>8 main chains including BTC, ETH, etc</item>
+        <item>9 main chains including BTC, ETH, etc</item>
         <item>ETH, AVAX, BSC, and all EVM tokens</item>
         <item>Cosmos Eco</item>
         <item>ETH, AVAX, BSC, and all EVM tokens</item>
@@ -80,6 +80,8 @@
     <string name="connect_who">Connect %s</string>>
 
     <string name="connect_info">Connection QR Code</string>>
+
+    <string name="scan_via_keystone">Scan the QR code via Keystone Companion App</string>
 
     <string name="select_accounts">Select Accounts</string>
     <string name="select_another_account">Select Another Account</string>

@@ -15,8 +15,11 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.keystone.coinlib.accounts.BTCAccount;
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.DialogAssetBottomBinding;
 import com.keystone.cold.databinding.FragmentSyncBinding;
 import com.keystone.cold.integration.chains.ArweaveViewModel;
@@ -69,6 +72,21 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
             }
             mActivity.finish();
         });
+        setupWalletUI(wallet);
+        switchChainAccountsByNeeds(wallet);
+    }
+
+    public void switchChainAccountsByNeeds(Wallet wallet) {
+        if (wallet.equals(Wallet.KEYSTONE)) {
+            Utilities.setCurrentBTCAccount(mActivity, BTCAccount.NATIVE_SEGWIT.getCode());
+            Utilities.setCurrentEthAccount(mActivity, ETHAccount.BIP44_STANDARD.getCode());
+        }
+    }
+
+    public void setupWalletUI(Wallet wallet){
+        if (wallet.equals(Wallet.KEYSTONE)) {
+            mBinding.hint.setText(R.string.scan_via_keystone);
+        }
     }
 
     @Override
