@@ -83,6 +83,9 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialBinding> {
                 break;
             case ARCONNECT:
                 id = R.array.tutorials_name_arconnect;
+                break;
+            case KEYSTONE:
+                id = R.array.tutorials_name_keystone;
         }
         return id;
     }
@@ -122,6 +125,9 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialBinding> {
                 break;
             case ARCONNECT:
                 id = R.array.tutorials_link_arconnect;
+                break;
+            case KEYSTONE:
+                id = R.array.tutorials_link_keystone;
         }
         return id;
     }

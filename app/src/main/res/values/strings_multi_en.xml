@@ -719,6 +719,14 @@
         <item><u>https://keyst.one/coreWallet</u></item>
     </string-array>
 
+    <string-array name="tutorials_name_keystone">
+        <item>Keystone Companion App</item>
+    </string-array>
+
+    <string-array name="tutorials_link_keystone">
+        <item><u>https://keyst.one/t/keystone</u></item>
+    </string-array>
+
     <string-array name="tutorials_name_bit_keep">
         <item>BitKeep</item>
     </string-array>
