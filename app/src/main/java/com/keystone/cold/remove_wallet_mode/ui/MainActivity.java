@@ -41,6 +41,7 @@ import com.keystone.cold.databinding.CommonModalBinding;
 import com.keystone.cold.fingerprint.FingerprintKit;
 import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
 import com.keystone.cold.remove_wallet_mode.helper.PreGenerateAddressHelper;
+import com.keystone.cold.remove_wallet_mode.helper.SetupManager;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.DrawerAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.MyAssetsFragment;
 import com.keystone.cold.remove_wallet_mode.utils.SharePreferencesUtil;
@@ -100,9 +101,10 @@ public class MainActivity extends FullScreenActivity {
                 });
             }
         }
-        AppExecutors.getInstance().diskIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             String mfp = new GetMasterFingerprintCallable().call();
             runOnUiThread(() -> mBinding.mfp.setText(String.format("Master Key Fingerprint：%s", mfp)));
+            SetupManager.setup(null);
         });
 
         checkUpgrade();
