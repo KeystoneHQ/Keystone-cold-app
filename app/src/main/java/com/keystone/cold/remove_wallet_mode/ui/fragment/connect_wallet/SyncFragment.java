@@ -35,6 +35,7 @@ import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.MetamaskVie
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SenderWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SolFlareViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SubstrateWalletViewModel;
+import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.XRPToolkitViewModel;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.sparrowwallet.hummingbird.UR;
@@ -192,6 +193,11 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                 CoreWalletViewModel coreWalletViewModel = ViewModelProviders.of(this).get(CoreWalletViewModel.class);
                 urMutableLiveData = coreWalletViewModel.generateSyncUR();
                 break;
+            case XRPTOOLKIT:
+                XRPToolkitViewModel xrpToolkitViewModel = ViewModelProviders.of(this).get(XRPToolkitViewModel.class);
+                xrpToolkitViewModel.setAddressIds(addressIds);
+                urMutableLiveData = xrpToolkitViewModel.generateSyncUR();
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + wallet);
         }
@@ -262,6 +268,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         SENDER(Wallet.SENDER.getWalletId(), new String[]{Coins.NEAR.coinId()}, true, false, true),
         POLKADOT(Wallet.POLKADOTJS.getWalletId(), new String[]{Coins.DOT.coinId(), Coins.KSM.coinId()}, false, true, true),
         SUBWALLET(Wallet.SUBWALLET.getWalletId(), new String[]{Coins.DOT.coinId(), Coins.KSM.coinId()}, false, true, true),
+        XRPToolkit(Wallet.XRPTOOLKIT.getWalletId(), new String[]{Coins.XRP.coinId()}, false, true, true),
         DEFAULT("default", new String[]{}, false, false, true),
         ;
 

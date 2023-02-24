@@ -27,5 +27,5 @@ public class FeatureFlags extends BaseFeatureFlags {
     public static final boolean ENABLE_SERIAL_UPDATE = true;
     public static final boolean ENABLE_XTN = false;
 
-    public static final boolean ENABLE_REMOVE_WALLET_MODE = false;
+    public static final boolean ENABLE_REMOVE_WALLET_MODE = true;
 }
