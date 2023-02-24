@@ -53,6 +53,8 @@ public class ReviewDestinationDetector {
                 return detectEth(tx);
             }
             return new Destination(R.id.action_to_cosmosReviewTransactionFragment, bundle);
+        } else if (Coins.XRP.coinId().equals(coinId)) {
+            return new Destination(R.id.action_to_rippleReviewTransactionFragment, bundle);
         }
         return null;
     }
