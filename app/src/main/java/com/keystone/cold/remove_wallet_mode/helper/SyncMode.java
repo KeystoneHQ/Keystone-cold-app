@@ -27,6 +27,7 @@ public enum SyncMode {
                 stepMode.postValue(SUBSTRATE);
                 break;
             case KEYSTONE:
+            case BITKEEP:
                 stepMode.postValue(SELECT_COINS);
                 break;
             default:

@@ -16,7 +16,7 @@ public class CheckableAdapter extends BaseBindingAdapter<CheckableItem, ItemChec
     private final List<CheckableItem> checkedList = new ArrayList<>();
 
     @SuppressLint("NotifyDataSetChanged")
-    public CheckableAdapter(Context context, CheckableCallback onChecked) {
+    public CheckableAdapter(Context context, DataStatusCallback dataStatusCallback) {
         super(context);
         this.callback = item -> {
             if (checkedList.contains(item)) {
@@ -25,8 +25,12 @@ public class CheckableAdapter extends BaseBindingAdapter<CheckableItem, ItemChec
             } else {
                 item.setChecked(true);
                 checkedList.add(item);
-                if (onChecked != null) {
-                    onChecked.onClick(item);
+            }
+            if (dataStatusCallback != null) {
+                if (checkedList.isEmpty()) {
+                    dataStatusCallback.onEmpty();
+                } else {
+                    dataStatusCallback.onHasValue();
                 }
             }
             notifyDataSetChanged();
@@ -53,5 +57,10 @@ public class CheckableAdapter extends BaseBindingAdapter<CheckableItem, ItemChec
 
     public interface CheckableCallback {
         void onClick(CheckableItem item);
+    }
+
+    public interface DataStatusCallback {
+        void onHasValue();
+        void onEmpty();
     }
 }

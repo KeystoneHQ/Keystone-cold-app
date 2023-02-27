@@ -26,6 +26,7 @@ import com.keystone.cold.integration.chains.ArweaveViewModel;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
+import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.BitKeepWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.BlueWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.CoreWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.FewchaWalletViewModel;
@@ -40,6 +41,7 @@ import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.sparrowwallet.hummingbird.UR;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -100,6 +102,11 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                 mBinding.dynamicQrcodeLayout.llQrHint.setVisibility(View.VISIBLE);
                 mBinding.dynamicQrcodeLayout.tvQrHint.setText(R.string.core_wallet_hint);
                 break;
+            case BITKEEP:
+                Bundle bundle = requireArguments();
+                List<String> openCoins = (List<String>) bundle.getSerializable(BundleKeys.OPENED_COINS_KEY);
+                WalletConfig.setOpenCoins(openCoins);
+                break;
         }
     }
 
@@ -155,7 +162,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
             case KEYSTONE:
                 KeystoneViewModel keystoneViewModel = ViewModelProviders.of(this).get(KeystoneViewModel.class);
                 Bundle data = requireArguments();
-                keystoneViewModel.setOpenedCoins((List<String>) data.getSerializable(BundleKeys.KEYSTONE_OPENED_COINS_KEY));
+                keystoneViewModel.setOpenedCoins((List<String>) data.getSerializable(BundleKeys.OPENED_COINS_KEY));
                 urMutableLiveData = keystoneViewModel.generateSyncKeystone();
                 break;
             case FEWCHA:
@@ -197,6 +204,12 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                 XRPToolkitViewModel xrpToolkitViewModel = ViewModelProviders.of(this).get(XRPToolkitViewModel.class);
                 xrpToolkitViewModel.setAddressIds(addressIds);
                 urMutableLiveData = xrpToolkitViewModel.generateSyncUR();
+                break;
+            case BITKEEP:
+                BitKeepWalletViewModel bitKeepWalletViewModel = ViewModelProviders.of(this).get(BitKeepWalletViewModel.class);
+                Bundle bundle = requireArguments();
+                bitKeepWalletViewModel.setOpenedCoins((List<String>) bundle.getSerializable(BundleKeys.OPENED_COINS_KEY));
+                urMutableLiveData = bitKeepWalletViewModel.generateSyncUR();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + wallet);
@@ -273,8 +286,17 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         POLKADOT(Wallet.POLKADOTJS.getWalletId(), new String[]{Coins.DOT.coinId(), Coins.KSM.coinId()}, false, true, true),
         SUBWALLET(Wallet.SUBWALLET.getWalletId(), new String[]{Coins.DOT.coinId(), Coins.KSM.coinId()}, false, true, true),
         XRPToolkit(Wallet.XRPTOOLKIT.getWalletId(), new String[]{Coins.XRP.coinId()}, false, true, true),
+        BITKEEP(Wallet.BITKEEP.getWalletId(), new String[]{Coins.BTC.coinId(), Coins.ETH.coinId()}, true, false, true),
+        BITKEEP_ONLY_BTC(Wallet.BITKEEP.getWalletId(), new String[]{Coins.BTC.coinId()}, false, false, true),
         DEFAULT("default", new String[]{}, false, false, true),
         ;
+
+        private static final List<String> OPEN_COINS = new ArrayList<>();
+
+        public static void setOpenCoins(List<String> openCoins) {
+            OPEN_COINS.clear();
+            OPEN_COINS.addAll(openCoins);
+        }
 
         private String walletId;
 
@@ -297,7 +319,15 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
 
         public static WalletConfig getConfigByWalletId(String walletId) {
             Optional<WalletConfig> config = Arrays.stream(WalletConfig.values()).filter(assetConfig -> assetConfig.walletId.equals(walletId)).findFirst();
-            return config.orElse(DEFAULT);
+            if (config.isPresent()) {
+                if (config.get() == WalletConfig.BITKEEP) {
+                    if (!OPEN_COINS.contains(Coins.ETH.coinId())) {
+                        return BITKEEP_ONLY_BTC;
+                    }
+                }
+                return config.get();
+            }
+            return DEFAULT;
         }
 
 
@@ -319,6 +349,9 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
 
         public String getCoinId() {
             // should determine which coinId to use when it is a multi_chain wallet;
+            if (this == WalletConfig.BITKEEP) {
+                return coinIds[1];
+            }
             return coinIds[0];
         }
     }
