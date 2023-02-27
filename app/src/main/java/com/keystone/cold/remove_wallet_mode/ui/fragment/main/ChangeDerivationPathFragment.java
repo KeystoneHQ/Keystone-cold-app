@@ -15,6 +15,7 @@ import com.keystone.cold.remove_wallet_mode.helper.SyncMode;
 import com.keystone.cold.remove_wallet_mode.ui.model.PathPatternItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.ChangePathViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.WalletViewModel;
+import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.BaseFragment;
 
 import java.util.List;
@@ -71,18 +72,28 @@ public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDer
         WalletViewModel walletViewModel = ViewModelProviders.of(this).get(WalletViewModel.class);
         LiveData<SyncMode> stepMode = walletViewModel.determineSyncMode(walletId);
         stepMode.observe(this, mode -> {
-            popBackStack(R.id.walletListFragment, false);
             Bundle bundle = new Bundle();
             bundle.putString(BundleKeys.WALLET_ID_KEY, walletId);
             switch (mode) {
                 case DIRECT:
+                    popBackStack(R.id.walletListFragment, false);
                     navigate(R.id.action_to_syncFragment, bundle);
                     break;
                 case SELECT_ADDRESS:
+                    popBackStack(R.id.walletListFragment, false);
                     navigate(R.id.action_to_selectAddressFragment, bundle);
                     break;
                 case SELECT_ONE_ADDRESS:
+                    popBackStack(R.id.walletListFragment, false);
                     navigate(R.id.action_to_selectOneAddressFragment, bundle);
+                    break;
+                case SELECT_COINS:
+                    if (walletId.equals(Wallet.BITKEEP.getWalletId())) {
+                        navigateUp();
+                    } else {
+                        popBackStack(R.id.walletListFragment, false);
+                        navigate(R.id.action_walletListFragment_to_selectNetworksFragment, bundle);
+                    }
                     break;
             }
             stepMode.removeObservers(this);

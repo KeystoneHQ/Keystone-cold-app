@@ -53,7 +53,7 @@
                 android:layout_height="@dimen/dp_24"
                 android:layout_gravity="end|center"
                 android:layout_marginEnd="@dimen/dp_16"
-                android:background="@drawable/ic_confirm" />
+                android:background="@drawable/bg_select_confirm" />
         </androidx.appcompat.widget.Toolbar>
 
         <include
