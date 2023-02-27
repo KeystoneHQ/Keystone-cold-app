@@ -21,7 +21,7 @@ public enum Wallet {
     RABBY("rabby"),
     CORE("core", "Core"),
     POLKADOTJS("polkadotjs", "Polkadot.{js}"),
-    XRPTOOLKIT("xrp"),
+    XRPTOOLKIT("xrp", "XRP Toolkit"),
     ZAPPER("zapper"),
     YEARN("yearn"),
     SUSHISWAP("sushiswap"),

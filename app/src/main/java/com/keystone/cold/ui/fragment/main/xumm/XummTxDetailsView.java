@@ -84,6 +84,7 @@ public class XummTxDetailsView extends LinearLayout {
         try {
             while (keys.hasNext()) {
                 String key = keys.next();
+                if (key.equals("txHex")) continue;
                 Object value = jsonObj.get(key);
                 map.put(key, value.toString());
             }

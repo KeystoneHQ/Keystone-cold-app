@@ -35,6 +35,7 @@ import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.MetamaskVie
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SenderWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SolFlareViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SubstrateWalletViewModel;
+import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.XRPToolkitViewModel;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.sparrowwallet.hummingbird.UR;
@@ -90,7 +91,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         }
     }
 
-    public void setupWalletUI(Wallet wallet){
+    public void setupWalletUI(Wallet wallet) {
         switch (wallet) {
             case KEYSTONE:
                 mBinding.hint.setText(R.string.scan_via_keystone);
@@ -192,6 +193,11 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                 CoreWalletViewModel coreWalletViewModel = ViewModelProviders.of(this).get(CoreWalletViewModel.class);
                 urMutableLiveData = coreWalletViewModel.generateSyncUR();
                 break;
+            case XRPTOOLKIT:
+                XRPToolkitViewModel xrpToolkitViewModel = ViewModelProviders.of(this).get(XRPToolkitViewModel.class);
+                xrpToolkitViewModel.setAddressIds(addressIds);
+                urMutableLiveData = xrpToolkitViewModel.generateSyncUR();
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + wallet);
         }
@@ -211,7 +217,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         DialogAssetBottomBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.dialog_asset_bottom, null, false);
         WalletConfig config = WalletConfig.getConfigByWalletId(wallet.getWalletId());
         if (config.isShowSelectAddress()) {
-            if (wallet.equals(Wallet.POLKADOTJS) || wallet.equals(Wallet.SUBWALLET)) {
+            if (wallet.equals(Wallet.POLKADOTJS) || wallet.equals(Wallet.SUBWALLET) || wallet.equals(Wallet.XRPTOOLKIT)) {
                 binding.selectAccountText.setText(R.string.select_another_account);
             }
             binding.rlSelectAddress.setVisibility(View.VISIBLE);
@@ -224,11 +230,15 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         }
 
         binding.rlSelectAddress.setOnClickListener(v -> {
-            if (wallet.equals(Wallet.POLKADOTJS) || wallet.equals(Wallet.SUBWALLET)) {
+            if (wallet.equals(Wallet.POLKADOTJS) || wallet.equals(Wallet.SUBWALLET) || wallet.equals(Wallet.XRPTOOLKIT)) {
                 navigateUp();
                 Bundle bundle = new Bundle();
                 bundle.putString(BundleKeys.WALLET_ID_KEY, wallet.getWalletId());
-                bundle.putString(BundleKeys.COIN_ID_KEY, requireArguments().getString(BundleKeys.COIN_ID_KEY));
+                if (wallet.equals(Wallet.XRPTOOLKIT)) {
+                    bundle.putString(BundleKeys.COIN_ID_KEY, requireArguments().getString(BundleKeys.COIN_ID_KEY, Coins.XRP.coinId()));
+                } else {
+                    bundle.putString(BundleKeys.COIN_ID_KEY, requireArguments().getString(BundleKeys.COIN_ID_KEY));
+                }
                 navigate(R.id.action_to_selectOneAddressFragment, bundle);
             } else {
                 navigateUp();
@@ -262,6 +272,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         SENDER(Wallet.SENDER.getWalletId(), new String[]{Coins.NEAR.coinId()}, true, false, true),
         POLKADOT(Wallet.POLKADOTJS.getWalletId(), new String[]{Coins.DOT.coinId(), Coins.KSM.coinId()}, false, true, true),
         SUBWALLET(Wallet.SUBWALLET.getWalletId(), new String[]{Coins.DOT.coinId(), Coins.KSM.coinId()}, false, true, true),
+        XRPToolkit(Wallet.XRPTOOLKIT.getWalletId(), new String[]{Coins.XRP.coinId()}, false, true, true),
         DEFAULT("default", new String[]{}, false, false, true),
         ;
 

@@ -374,6 +374,11 @@ public class URProcessor implements Processor {
         private Destination decodeAndProcess(JSONObject object) throws BaseException {
             Destination destination = checkWebAuth(object);
             if (destination != null) return destination;
+            if (object.has("TransactionType")) {
+                Bundle bundle = new Bundle();
+                bundle.putString(BundleKeys.SIGN_DATA_KEY, object.toString());
+                return new Destination(R.id.action_to_rippleConfirmTransactionFragment, bundle);
+            }
             if (object.optString("type").equals("TYPE_SIGN_TX")) {
                 return handleSign(object);
             }

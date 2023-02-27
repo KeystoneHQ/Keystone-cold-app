@@ -6,6 +6,7 @@ import com.keystone.cold.remove_wallet_mode.helper.sync_jump.FewchaWalletSyncMod
 import com.keystone.cold.remove_wallet_mode.helper.sync_jump.SenderWalletSyncModeDetector;
 import com.keystone.cold.remove_wallet_mode.helper.sync_jump.SolflareWalletSyncModeDetector;
 import com.keystone.cold.remove_wallet_mode.helper.sync_jump.SyncModeDetector;
+import com.keystone.cold.remove_wallet_mode.helper.sync_jump.XRPToolKitSyncModeDetector;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 
 public enum SyncMode {
@@ -71,6 +72,8 @@ public enum SyncMode {
                 return new SolflareWalletSyncModeDetector();
             case SENDER:
                 return new SenderWalletSyncModeDetector();
+            case XRPTOOLKIT:
+                return new XRPToolKitSyncModeDetector();
             default:
                 return null;
         }
