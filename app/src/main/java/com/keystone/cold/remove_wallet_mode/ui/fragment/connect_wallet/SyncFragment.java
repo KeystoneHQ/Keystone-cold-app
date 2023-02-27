@@ -91,7 +91,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         }
     }
 
-    public void setupWalletUI(Wallet wallet){
+    public void setupWalletUI(Wallet wallet) {
         switch (wallet) {
             case KEYSTONE:
                 mBinding.hint.setText(R.string.scan_via_keystone);
@@ -217,7 +217,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         DialogAssetBottomBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.dialog_asset_bottom, null, false);
         WalletConfig config = WalletConfig.getConfigByWalletId(wallet.getWalletId());
         if (config.isShowSelectAddress()) {
-            if (wallet.equals(Wallet.POLKADOTJS) || wallet.equals(Wallet.SUBWALLET)) {
+            if (wallet.equals(Wallet.POLKADOTJS) || wallet.equals(Wallet.SUBWALLET) || wallet.equals(Wallet.XRPTOOLKIT)) {
                 binding.selectAccountText.setText(R.string.select_another_account);
             }
             binding.rlSelectAddress.setVisibility(View.VISIBLE);
@@ -230,11 +230,15 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         }
 
         binding.rlSelectAddress.setOnClickListener(v -> {
-            if (wallet.equals(Wallet.POLKADOTJS) || wallet.equals(Wallet.SUBWALLET)) {
+            if (wallet.equals(Wallet.POLKADOTJS) || wallet.equals(Wallet.SUBWALLET) || wallet.equals(Wallet.XRPTOOLKIT)) {
                 navigateUp();
                 Bundle bundle = new Bundle();
                 bundle.putString(BundleKeys.WALLET_ID_KEY, wallet.getWalletId());
-                bundle.putString(BundleKeys.COIN_ID_KEY, requireArguments().getString(BundleKeys.COIN_ID_KEY));
+                if (wallet.equals(Wallet.XRPTOOLKIT)) {
+                    bundle.putString(BundleKeys.COIN_ID_KEY, requireArguments().getString(BundleKeys.COIN_ID_KEY, Coins.XRP.coinId()));
+                } else {
+                    bundle.putString(BundleKeys.COIN_ID_KEY, requireArguments().getString(BundleKeys.COIN_ID_KEY));
+                }
                 navigate(R.id.action_to_selectOneAddressFragment, bundle);
             } else {
                 navigateUp();

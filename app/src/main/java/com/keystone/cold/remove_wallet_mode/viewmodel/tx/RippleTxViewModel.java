@@ -109,7 +109,9 @@ public class RippleTxViewModel extends BaseTxViewModel<JSONObject>{
                 rawFormatTx.postValue(txEntity.getSignedHex());
                 xummTxObj = new JSONObject(txEntity.getSignedHex());
                 XrpTransaction xrpTransaction = SupportTransactions.get(xummTxObj.getString("TransactionType"));
-                observableTransaction.postValue(xrpTransaction.flatTransactionDetail(xummTxObj));
+                JSONObject displayTx = xrpTransaction.flatTransactionDetail(xummTxObj);
+                displayTx.put("txHex", xummTxObj.getString("txHex"));
+                observableTransaction.postValue(displayTx);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -150,11 +152,13 @@ public class RippleTxViewModel extends BaseTxViewModel<JSONObject>{
 
     @Override
     public void handleSign() {
-        SignCallback callback = initSignTxCallback();
-        callback.startSign();
-        Signer signer = new ChipSigner(signingKeyPath, getAuthToken(), signingPubKey);
-        XrpImpl xrp = new XrpImpl();
-        xrp.generateJsonTransaction(xummTxObj, callback, signer);
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            SignCallback callback = initSignTxCallback();
+            callback.startSign();
+            Signer signer = new ChipSigner(signingKeyPath, getAuthToken(), signingPubKey);
+            XrpImpl xrp = new XrpImpl();
+            xrp.generateJsonTransaction(xummTxObj, callback, signer);
+        });
     }
 
     protected TxEntity onSignSuccess(String txId, String rawTx) {

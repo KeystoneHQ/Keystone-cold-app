@@ -213,7 +213,7 @@
 
     <fragment
         android:id="@+id/rippleReviewTransactionFragment"
-        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ripple.RippleConfirmTransactionFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ripple.RippleReviewTransactionFragment"
         android:label="RippleReviewTransactionFragment"
         tools:layout="@layout/fragment_confirm_transaction" />
 
