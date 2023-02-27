@@ -181,12 +181,12 @@ public class MainApplication extends Application {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(@NonNull Activity activity, Bundle savedInstanceState) {
-                if ((activity instanceof MainActivity || activity instanceof SetupVaultActivity) && savedInstanceState == null && shouldLock) {
+                if ((activity instanceof MainActivity || activity instanceof SetupVaultActivity || activity instanceof com.keystone.cold.remove_wallet_mode.ui.MainActivity || activity instanceof com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity) && savedInstanceState == null && shouldLock) {
                     Intent intent = new Intent(activity, UnlockActivity.class);
                     activity.startActivity(intent);
                     shouldLock = false;
                 }
-                if (activity instanceof MainActivity && savedInstanceState != null) {
+                if ((activity instanceof MainActivity || activity instanceof com.keystone.cold.remove_wallet_mode.ui.MainActivity) && savedInstanceState != null) {
                     showFormatSdcard = false;
                 }
             }
@@ -198,7 +198,7 @@ public class MainApplication extends Application {
             @Override
             public void onActivityResumed(@NonNull Activity activity) {
                 topActivity = new SoftReference<>((AppCompatActivity) activity);
-                if ((activity instanceof MainActivity || activity instanceof SetupVaultActivity) && showFormatSdcard) {
+                if ((activity instanceof MainActivity || activity instanceof SetupVaultActivity || activity instanceof com.keystone.cold.remove_wallet_mode.ui.MainActivity || activity instanceof com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity) && showFormatSdcard) {
                     sdcardFormatHelper.showFormatModal(topActivity.get());
                 }
             }
