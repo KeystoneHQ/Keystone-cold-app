@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:navigationIcon="@drawable/arrow_left"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/fingerprint_settings"
+                android:textColor="@android:color/white"
+                android:textSize="15sp" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <include layout="@layout/divider" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold"
+            android:text="@string/enroll_fingerprint_hint1"
+            android:lineSpacingExtra="8dp"
+            android:textSize="15sp"
+            android:layout_marginHorizontal="16dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/fingerprint_guide"
+            android:layout_gravity="center_horizontal"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="50dp"
+            android:text="@string/fingerprint_use_hint"
+            android:textColor="@color/white40"
+            android:gravity="center"
+            android:layout_marginTop="28dp" />
+
+        <Button
+            android:id="@+id/start_enroll"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="16dp"
+            android:text="@string/fingerprint_start_enroll"
+            style="@style/AcceptButton"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp" />
+
+
+    </LinearLayout>
+</layout>
