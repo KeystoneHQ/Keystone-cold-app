@@ -17,4 +17,5 @@ public interface BundleKeys {
     String ADDRESS_IDS_KEY = "address_ids_key";
     String SALT_LEN_KEY = "salt_len_key";
     String CUSTOM_CHAIN_IDENTIFIER_KEY = "custom_chain_identifier_key";
+    String WEB_AUTH_DATA_KEY = "web_auth_data_key";
 }

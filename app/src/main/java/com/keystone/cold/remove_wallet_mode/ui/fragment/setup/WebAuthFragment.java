@@ -70,7 +70,6 @@ public class WebAuthFragment extends SetupVaultBaseFragment<WebAuthBinding> {
         AndPermission.with(this)
                 .permission(Permission.CAMERA, Permission.READ_EXTERNAL_STORAGE)
                 .onGranted(permissions -> {
-                    initScanResult();
                     navigate(R.id.action_to_scanner);
                 })
                 .onDenied(permissions -> {
@@ -89,36 +88,4 @@ public class WebAuthFragment extends SetupVaultBaseFragment<WebAuthBinding> {
         navigate(R.id.action_webAuthFragment_to_setPasswordFragment, bundle);
     }
 
-
-    private void initScanResult() {
-        ViewModelProviders.of(mActivity).get(ScannerViewModel.class)
-                .setState(new ScannerState(Collections.singletonList(ScanResultTypes.UR_BYTES)) {
-                    @Override
-                    public void handleScanResult(ScanResult result) throws Exception {
-                        if (handleWebAuth(result)) return;
-                        throw new UnknowQrCodeException("Unknow qrcode");
-                    }
-
-                    @Override
-                    public boolean handleException(Exception e) {
-                        e.printStackTrace();
-                        mFragment.alert(getString(R.string.invalid_data), getString(R.string.unsupported_qrcode));
-                        return true;
-                    }
-
-                    private boolean handleWebAuth(ScanResult result) throws JSONException {
-                        JSONObject object = new JSONObject(new String((byte[]) result.resolve(), StandardCharsets.UTF_8));
-                        JSONObject webAuth = object.optJSONObject("data");
-                        if (TextUtils.equals(Objects.requireNonNull(webAuth).optString("type"), "webAuth")) {
-                            String webAuthData = webAuth.getString("data");
-                            Bundle bundle = new Bundle();
-                            bundle.putString(WEB_AUTH_DATA, webAuthData);
-                            bundle.putBoolean(IS_SETUP_VAULT, true);
-                            mFragment.navigate(R.id.action_to_webAuthResultFragment, bundle);
-                            return true;
-                        }
-                        return false;
-                    }
-                });
-    }
 }

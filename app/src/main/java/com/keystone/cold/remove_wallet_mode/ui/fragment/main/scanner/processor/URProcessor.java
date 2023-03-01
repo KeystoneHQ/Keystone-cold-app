@@ -1,9 +1,5 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.scanner.processor;
 
-import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
-import static com.keystone.cold.ui.fragment.main.keystone.TxConfirmFragment.KEY_TX_DATA;
-import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
-
 import android.os.Bundle;
 
 import com.keystone.coinlib.accounts.ETHAccount;
@@ -389,11 +385,10 @@ public class URProcessor implements Processor {
             try {
                 JSONObject webAuth = object.optJSONObject("data");
                 if (webAuth != null && webAuth.optString("type").equals("webAuth")) {
-                    String data = object.getString("data");
+                    String data = webAuth.getString("data");
                     Bundle bundle = new Bundle();
-                    bundle.putString(WEB_AUTH_DATA, data);
-                    bundle.putBoolean(IS_SETUP_VAULT, false);
-                    return new Destination(R.id.action_QRCodeScan_to_result, bundle);
+                    bundle.putString(BundleKeys.WEB_AUTH_DATA_KEY, data);
+                    return new Destination(R.id.action_to_webAuthResultFragment, bundle);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

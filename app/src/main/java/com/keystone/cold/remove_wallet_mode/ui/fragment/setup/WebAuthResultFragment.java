@@ -31,10 +31,13 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.internal.app.LocalePicker;
+import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.ResetCallable;
 import com.keystone.cold.databinding.DestructionModalBinding;
 import com.keystone.cold.databinding.WebAuthResultBinding;
+import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.viewmodel.SetupVaultViewModel;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
@@ -45,8 +48,6 @@ import java.util.Objects;
 import java.util.concurrent.Executors;
 
 public class WebAuthResultFragment extends SetupVaultBaseFragment<WebAuthResultBinding> {
-
-    public static final String WEB_AUTH_DATA = "web_auth_data";
 
 	private boolean inSetupProcess;
 
@@ -59,8 +60,8 @@ public class WebAuthResultFragment extends SetupVaultBaseFragment<WebAuthResultB
 	protected void init(View view) {
 		super.init(view);
 		Bundle bundle = requireArguments();
-		inSetupProcess = bundle.getBoolean(IS_SETUP_VAULT);
-		viewModel.calcAuthCode(bundle.getString(WEB_AUTH_DATA));
+		inSetupProcess = Utilities.getVaultCreateStep(MainApplication.getApplication()) != SetupVaultViewModel.VAULT_CREATE_STEP_DONE;
+		viewModel.calcAuthCode(bundle.getString(BundleKeys.WEB_AUTH_DATA_KEY));
 		mBinding.success.setOnClickListener(this::handleSuccess);
 		mBinding.fail.setOnClickListener(this::handleFail);
 
