@@ -67,13 +67,13 @@
 
             <TextView
                 android:id="@+id/text"
-                android:textAlignment="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/fl"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="20dp"
                 android:text="@string/web_auth_code"
+                android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="17sp"
                 android:textStyle="bold" />

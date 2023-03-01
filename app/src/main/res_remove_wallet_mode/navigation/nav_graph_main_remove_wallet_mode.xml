@@ -388,6 +388,19 @@
     </fragment>
 
     <fragment
+        android:id="@id/webAuthResultFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.setup.WebAuthResultFragment"
+        android:label="WebAuthResultFragment"
+        tools:layout="@layout/web_auth_result">
+        <action
+            android:id="@+id/action_auth_to_home"
+            app:destination="@id/myAssetsFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/myAssetsFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
         android:id="@+id/aboutFragment"
         android:name="com.keystone.cold.ui.fragment.AboutFragment"
         android:label="AboutFragment"
@@ -788,6 +801,14 @@
     <action
         android:id="@+id/action_to_broadCastTxFragment"
         app:destination="@id/broadCastTxFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_webAuthResultFragment"
+        app:destination="@id/webAuthResultFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"

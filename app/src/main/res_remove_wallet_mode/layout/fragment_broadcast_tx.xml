@@ -26,7 +26,7 @@
             type="String" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -50,11 +50,18 @@
                 tools:text="@string/broadcast_tx" />
         </androidx.appcompat.widget.Toolbar>
 
-        <include layout="@layout/divider" />
+        <include
+            android:id="@+id/divider"
+            layout="@layout/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:layout_below="@id/toolbar" />
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_below="@id/divider"
+            android:layout_above="@id/complete">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -64,9 +71,9 @@
 
                 <ImageView
                     android:id="@+id/icon"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_marginTop="18dp"
                     app:coin_icon="@{coinCode}"
                     tools:ignore="ContentDescription"
                     tools:src="@drawable/coin_btc" />
@@ -74,7 +81,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/dp_11"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingHorizontal="16dp">
@@ -108,14 +115,16 @@
                     android:id="@+id/qrcode_layout"
                     layout="@layout/dynamic_qrcode" />
 
-                <Button
-                    android:id="@+id/complete"
-                    style="@style/AcceptButton"
-                    android:layout_width="match_parent"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginVertical="20dp"
-                    android:text="@string/complete" />
             </LinearLayout>
         </ScrollView>
-    </LinearLayout>
+
+        <Button
+            android:id="@+id/complete"
+            style="@style/AcceptButton"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="20dp"
+            android:text="@string/complete" />
+    </RelativeLayout>
 </layout>

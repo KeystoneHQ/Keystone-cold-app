@@ -35,20 +35,26 @@
         tools:layout="@layout/web_auth">
         <action
             android:id="@+id/action_to_scanner"
-            app:destination="@id/ScannerFragment" />
+            app:destination="@id/scannerFragment" />
         <action
             android:id="@+id/action_webAuthFragment_to_setPasswordFragment"
             app:destination="@id/setPasswordFragment" />
     </fragment>
     <fragment
-        android:id="@+id/ScannerFragment"
-        android:name="com.keystone.cold.ui.fragment.main.scan.scanner.ScannerFragment"
-        android:label="ScannerFragment"
-        tools:layout="@layout/scanner_fragment">
-        <action
-            android:id="@+id/action_to_webAuthResultFragment"
-            app:destination="@id/webAuthResultFragment" />
+        android:id="@+id/scannerFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.scanner.ScannerFragment"
+        android:label="scannerFragment"
+        tools:layout="@layout/fragment_scanner">
     </fragment>
+
+    <action
+        android:id="@+id/action_to_webAuthResultFragment"
+        app:destination="@id/webAuthResultFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
     <fragment
         android:id="@+id/setupVaultFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.setup.SetupVaultFragment"
