@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -21,10 +22,12 @@ public class LegacyTypedDataEncoder {
         List<Object> _data = data.stream().map(StructuredData.LegacyTypedData::getValue).collect(Collectors.toList());
         List<String> _types = data.stream().map(StructuredData.LegacyTypedData::getType).collect(Collectors.toList());
         List<Object> _schemas = data.stream().map(d -> d.getType() + " " + d.getName()).collect(Collectors.toList());
-        return soliditySha3(Arrays.asList("bytes32", "bytes32"), Arrays.asList(
-                soliditySha3(Arrays.asList("string", "string"), _schemas),
-                soliditySha3(_types, _data)
-        ));
+        List<String> _schemasTypes = new ArrayList<>();
+        for (StructuredData.LegacyTypedData _: data) {
+            _schemasTypes.add("string");
+        }
+        return soliditySha3(Arrays.asList("bytes32", "bytes32"),
+                Arrays.asList(soliditySha3(_schemasTypes, _schemas), soliditySha3(_types, _data)));
     }
 
     private static byte[] soliditySha3(List<String> types, List<Object> values) throws IOException {
@@ -73,6 +76,13 @@ public class LegacyTypedDataEncoder {
             });
             return baos.toByteArray();
         } else if (type.equals("bytes")) {
+            if (value instanceof String) {
+                String valueStr = (String) value;
+                if (valueStr.startsWith("0x")) {
+                    valueStr = valueStr.substring(2);
+                }
+                value = Hex.decode(valueStr);
+            }
             return (byte[]) value;
         } else if (type.equals("string")) {
             return ((String) value).getBytes(StandardCharsets.UTF_8);
@@ -85,11 +95,25 @@ public class LegacyTypedDataEncoder {
             if (bitSize != null) {
                 byteSize = bitSize / 8;
             }
+            if (value instanceof String) {
+                String valueStr = (String) value;
+                if (valueStr.startsWith("0x")) {
+                    valueStr = valueStr.substring(2);
+                }
+                value = Hex.decode(valueStr);
+            }
             return Utils.setLengthLeft((byte[]) value, byteSize);
         } else if (type.startsWith("bytes")) {
             size = parseTypeN(type);
             if (size < 1 || size > 32) {
                 throw new IllegalArgumentException("Invalid bytes<N> width: " + size);
+            }
+            if (value instanceof String) {
+                String valueStr = (String) value;
+                if (valueStr.startsWith("0x")) {
+                    valueStr = valueStr.substring(2);
+                }
+                value = Hex.decode(valueStr);
             }
             return Utils.setLengthRight((byte[]) value, size);
         } else if (type.startsWith("uint")) {
