@@ -97,7 +97,7 @@ public abstract class ListPreferenceFragment
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            SettingItemSelectableBinding binding = DataBindingUtil.getBinding(holder.itemView);
+            ViewSettingItemSelectableBinding binding = DataBindingUtil.getBinding(holder.itemView);
             binding.title.setText(entries[position]);
             if (subTitles == null) {
                 binding.subTitle.setVisibility(View.GONE);
