@@ -9,13 +9,17 @@ import com.keystone.coinlib.v8.ScriptLoader;
 
 public class Eip712HashDataUtil {
 
-    public static String eip712Hash(String message) {
+    public static String typedDataHash(String message) {
         V8 v8 = ScriptLoader.sInstance.loadByCoinCode("ETH");
         V8Object coin = v8.executeObjectScript("new ETH()");
         v8.registerResource(coin);
-        V8Function hashFunction = (V8Function) coin.get("eip712Hash");
+        V8Function hashFunction = (V8Function) coin.get("typedDataHash");
         V8Array params = new V8Array(v8);
         params.push(message);
-        return (String) hashFunction.call(coin, params);
+        String hashResult = (String) hashFunction.call(coin, params);
+        if (hashResult.startsWith("0x")) {
+            hashResult = hashResult.substring(2);
+        }
+        return hashResult;
     }
 }

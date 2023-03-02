@@ -330,12 +330,8 @@ public class EthImpl implements Coin {
         return signPersonalMessage(message, signer);
     }
 
-    private String getEip712TypeDataHash(@NonNull String message) throws IOException {
-        if (message.startsWith("[")){
-            byte[] messageHash = new StructuredDataEncoder(message).hashStructuredData();
-            return Hex.toHexString(messageHash);
-        }
-        return Eip712HashDataUtil.eip712Hash(message);
+    private String getEip712TypeDataHash(@NonNull String message) {
+        return Eip712HashDataUtil.typedDataHash(message);
     }
 
     public String signEIP712TypedData(@NonNull String message, Signer signer) {
