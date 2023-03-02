@@ -27,7 +27,7 @@ import android.view.View;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentSelectMnemonicCountBinding;
 
-public class SelectMnomenicCountFragment extends SetupVaultBaseFragment<FragmentSelectMnemonicCountBinding> {
+public class SelectMnemonicCountFragment extends SetupVaultBaseFragment<FragmentSelectMnemonicCountBinding> {
 
     private boolean checkMnemonic;
     private boolean isSharding;

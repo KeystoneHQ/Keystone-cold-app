@@ -15,7 +15,7 @@
  * in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.keystone.cold.remove_wallet_mode.ui.unlock;
+package com.keystone.cold.remove_wallet_mode.ui.fragment.unlock;
 
 import static com.keystone.cold.ui.fragment.Constants.KEY_TITLE;
 import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;

@@ -90,7 +90,7 @@
 
     <fragment
         android:id="@+id/selectMnomenicCountFragment"
-        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.setup.SelectMnomenicCountFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.setup.SelectMnemonicCountFragment"
         android:label="SelectMnomenicCountFragment"
         tools:layout="@layout/fragment_select_mnemonic_count">
         <action
