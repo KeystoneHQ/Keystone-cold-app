@@ -76,14 +76,7 @@ public class LegacyTypedDataEncoder {
             });
             return baos.toByteArray();
         } else if (type.equals("bytes")) {
-            if (value instanceof String) {
-                String valueStr = (String) value;
-                if (valueStr.startsWith("0x")) {
-                    valueStr = valueStr.substring(2);
-                }
-                value = Hex.decode(valueStr);
-            }
-            return (byte[]) value;
+            return toBuffer(value);
         } else if (type.equals("string")) {
             return ((String) value).getBytes(StandardCharsets.UTF_8);
         } else if (type.equals("bool")) {
@@ -95,27 +88,13 @@ public class LegacyTypedDataEncoder {
             if (bitSize != null) {
                 byteSize = bitSize / 8;
             }
-            if (value instanceof String) {
-                String valueStr = (String) value;
-                if (valueStr.startsWith("0x")) {
-                    valueStr = valueStr.substring(2);
-                }
-                value = Hex.decode(valueStr);
-            }
-            return Utils.setLengthLeft((byte[]) value, byteSize);
+            return Utils.setLengthLeft(toBuffer(value), byteSize);
         } else if (type.startsWith("bytes")) {
             size = parseTypeN(type);
             if (size < 1 || size > 32) {
                 throw new IllegalArgumentException("Invalid bytes<N> width: " + size);
             }
-            if (value instanceof String) {
-                String valueStr = (String) value;
-                if (valueStr.startsWith("0x")) {
-                    valueStr = valueStr.substring(2);
-                }
-                value = Hex.decode(valueStr);
-            }
-            return Utils.setLengthRight((byte[]) value, size);
+            return Utils.setLengthRight(toBuffer(value), size);
         } else if (type.startsWith("uint")) {
             size = parseTypeN(type);
             if ((size % 8) != 0 || (size < 8) || (size > 256)) {
@@ -173,6 +152,17 @@ public class LegacyTypedDataEncoder {
 
     private static boolean isArray(String type) {
         return type.endsWith("]");
+    }
+
+    private static byte[] toBuffer(Object value) {
+        if (value instanceof String) {
+            String valueStr = (String) value;
+            if (valueStr.startsWith("0x")) {
+                valueStr = valueStr.substring(2);
+            }
+            return Hex.decode(valueStr);
+        }
+        return (byte[]) value;
     }
 
     private static String parseTypeArray(String type) {
