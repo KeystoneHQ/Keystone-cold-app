@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <attr name="collapsedLines" format="integer" />
+    <attr name="isExpanded" format="boolean" />
+
     <declare-styleable name="ExpandableTextView">
-        <attr name="collapsedLines" format="integer" />
-        <attr name="isExpanded" format="boolean" />
+        <attr name="collapsedLines"/>
+        <attr name="isExpanded"/>
         <attr name="text" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="ExpandableTextViewWithTittle">
+        <attr name="collapsedLines"/>
+        <attr name="isExpanded"/>
+        <attr name="tittle" format="string" />
+        <attr name="content" format="string" />
     </declare-styleable>
 </resources>

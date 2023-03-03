@@ -115,7 +115,7 @@ public class MyAssetsFragment extends BaseFragment<FragmentMyAssetsBinding> {
         });
         binding.rlFAQ.setVisibility(View.VISIBLE);
         binding.rlFAQ.setOnClickListener(v -> {
-            //todo FAQ
+            navigate(R.id.action_to_faqFragment);
             dialog.dismiss();
         });
         dialog.setContentView(binding.getRoot());

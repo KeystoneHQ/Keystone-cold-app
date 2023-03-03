@@ -212,7 +212,7 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
             dialog.dismiss();
         });
         binding.rlFAQ.setOnClickListener(v -> {
-            //todo FAQ
+            navigate(R.id.action_to_faqFragment);
             dialog.dismiss();
         });
         binding.rlResetDB.setOnClickListener(v -> {
