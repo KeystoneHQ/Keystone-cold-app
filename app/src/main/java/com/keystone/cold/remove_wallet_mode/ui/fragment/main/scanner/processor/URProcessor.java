@@ -147,6 +147,7 @@ public class URProcessor implements Processor {
                         return new Destination(R.id.action_to_aptosConfirmTransactionFragment, bundle);
                     }
                 case MULTI:
+                    throw new InvalidTransactionException("test", "Transaction type Multi not supported yet");
             }
             throw UnimplementedException.newInstance();
         }
@@ -323,7 +324,7 @@ public class URProcessor implements Processor {
                 bundle.putLong(BundleKeys.CUSTOM_CHAIN_IDENTIFIER_KEY, evmSignRequest.getCustomChainIdentifier());
                 return new Destination(R.id.action_to_cosmosConfirmTransactionFragment, bundle);
             } else {
-                throw UnimplementedException.newInstance();
+                throw new InvalidTransactionException("test", "Transaction type ARBITRARY_TRANSACTION not supported yet");
             }
         }
     }
