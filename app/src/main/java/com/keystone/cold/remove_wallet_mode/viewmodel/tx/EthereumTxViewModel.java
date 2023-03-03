@@ -33,7 +33,6 @@ import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.Web3TxEntity;
 import com.keystone.cold.encryption.RustSigner;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
-import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidETHAccountException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumTransaction;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
@@ -371,14 +370,14 @@ public class EthereumTxViewModel extends BaseTxViewModel<EthereumTransaction> {
         try {
             ensureAddressExist(path);
             return mRepository.loadAddressByPathAndCoinId(path, Coins.ETH.coinId()).getAddressString();
-        } catch (InvalidTransactionException | InvalidETHAccountException e) {
+        } catch (InvalidTransactionException e) {
             observableException.postValue(e);
             e.printStackTrace();
         }
         return "";
     }
 
-    private void ensureAddressExist(String path) throws InvalidETHAccountException, InvalidTransactionException {
+    private void ensureAddressExist(String path) throws InvalidTransactionException {
         path = path.toUpperCase();
         AddressEntity addressEntity = new AddressEntity();
         addressEntity.setPath(path);
@@ -388,7 +387,7 @@ public class EthereumTxViewModel extends BaseTxViewModel<EthereumTransaction> {
         }
         AddressEntity address = mRepository.loadAddressByPathAndCoinId(path, Coins.ETH.coinId());
         if (address == null) {
-            updateAccountDb(getAddressIndex(target, path));
+            updateAccountDb(getAddressIndex(target, path), target);
         }
     }
 
@@ -418,8 +417,8 @@ public class EthereumTxViewModel extends BaseTxViewModel<EthereumTransaction> {
         return index;
     }
 
-    protected void updateAccountDb(int addressIndex) throws InvalidTransactionException {
-        AccountEntity accountEntity = mRepository.loadTargetETHAccount(ETHAccount.ofCode(Utilities.getCurrentEthAccount(context)));
+    protected void updateAccountDb(int addressIndex, ETHAccount account) throws InvalidTransactionException {
+        AccountEntity accountEntity = mRepository.loadTargetETHAccount(account);
         if (accountEntity == null) {
             throw new InvalidTransactionException(context.getString(R.string.incorrect_tx_data), "not have match account");
         }
