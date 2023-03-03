@@ -18,7 +18,7 @@
         <item>BlueWallet</item>
         <item>Solflare Wallet</item>
         <item>SubWallet</item>
-        <item>Eternl</item>
+<!--        <item>Eternl</item>-->
         <item>ArConnect</item>
         <item>Petra Aptos Wallet</item>
         <item>Fewcha Move Wallet</item>
@@ -40,7 +40,7 @@
         <item>bluewallet</item>
         <item>solflare</item>
         <item>subwallet</item>
-        <item>eternl</item>
+<!--        <item>eternl</item>-->
         <item>arconnect</item>
         <item>petra</item>
         <item>fewcha</item>
@@ -62,7 +62,7 @@
         <item>BTC</item>
         <item>SOL and SPL tokens</item>
         <item>DOT, KSM</item>
-        <item>ADA</item>
+<!--        <item>ADA</item>-->
         <item>AR</item>
         <item>APT and related token</item>
         <item>APT and related token</item>

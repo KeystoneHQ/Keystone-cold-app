@@ -170,6 +170,11 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                 fewchaWalletViewModel.setAddressIds(addressIds);
                 urMutableLiveData = fewchaWalletViewModel.generateSyncUR();
                 break;
+            case RABBY:
+            case SAFE:
+            case ZAPPER:
+            case YEARN:
+            case SUSHISWAP:
             case METAMASK:
                 MetamaskViewModel metamaskViewModel = ViewModelProviders.of(this).get(MetamaskViewModel.class);
                 urMutableLiveData = metamaskViewModel.generateSyncUR();
