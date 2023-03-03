@@ -24,6 +24,8 @@ import com.keystone.cold.remove_wallet_mode.ui.model.WalletItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.WalletViewModel;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.ui.modal.ModalDialog;
+import com.keystone.cold.ui.views.AuthenticateModal;
 
 import java.util.List;
 
@@ -123,17 +125,19 @@ public class WalletListFragment extends BaseFragment<FragmentWalletListBinding> 
         LiveData<Boolean> hasAR = arweaveViewModel.hasArweaveAddress();
         hasAR.observe(this, (v) -> {
             if (!v) {
-                navigate(R.id.action_to_ArweaveAuthFragment);
-                FragmentManager fragmentManager = this.getParentFragmentManager();
-                fragmentManager.setFragmentResultListener(AR_AUTH_RESULT_KEY, this, (s, bundle) -> {
-                    String result = bundle.getString(AR_SETUP_STATUS_KEY);
-                    switch (result) {
-                        case AR_SETUP_SUCCESS:
-                            handleNormalProcess(walletItem);
-                        case AR_SETUP_REJECTED:
-                            fragmentManager.clearFragmentResultListener(AR_AUTH_RESULT_KEY);
-                            break;
-                    }
+                ModalDialog.showRemindModal(mActivity, getString(R.string.arweave_authenticate_hint), getString(R.string.add), () -> {
+                    navigate(R.id.action_to_ArweaveAuthFragment);
+                    FragmentManager fragmentManager = this.getParentFragmentManager();
+                    fragmentManager.setFragmentResultListener(AR_AUTH_RESULT_KEY, this, (s, bundle) -> {
+                        String result = bundle.getString(AR_SETUP_STATUS_KEY);
+                        switch (result) {
+                            case AR_SETUP_SUCCESS:
+                                handleNormalProcess(walletItem);
+                            case AR_SETUP_REJECTED:
+                                fragmentManager.clearFragmentResultListener(AR_AUTH_RESULT_KEY);
+                                break;
+                        }
+                    });
                 });
             } else {
                 handleNormalProcess(walletItem);

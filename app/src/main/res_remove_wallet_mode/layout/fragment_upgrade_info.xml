@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Upgrade Information"
+                android:text="@string/firmware_information"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_16"
                 android:textStyle="bold" />
@@ -90,7 +90,7 @@
                 android:layout_marginHorizontal="@dimen/dp_16"
                 android:layout_marginTop="@dimen/dp_8"
                 android:gravity="center"
-                android:text="This version has a significant update with user interface and use experience. We remove [My Keystone] page and user can now mange own assets now."
+                android:text="@string/firmware_information_summary"
                 android:textColor="#D4D4D4"
                 android:textSize="@dimen/sp_10" />
 
@@ -117,7 +117,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dp_6"
-                    android:text="Can use scan button to sign all the transactions."
+                    android:text="@string/firmware_information_text_1"
                     android:textColor="#D4D4D4"
                     android:textSize="@dimen/sp_10" />
 
@@ -145,7 +145,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dp_6"
-                    android:text="Optimise the connect software wallet flow."
+                    android:text="@string/firmware_information_text_2"
                     android:textColor="#D4D4D4"
                     android:textSize="@dimen/sp_10" />
 
@@ -174,12 +174,56 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dp_6"
                     android:layout_marginEnd="@dimen/dp_32"
-                    android:text="Can display your NFT with your own style on the device."
+                    android:text="@string/firmware_information_text_3"
                     android:textColor="#D4D4D4"
                     android:textSize="@dimen/sp_10" />
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_8"
+                android:background="#121212"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingVertical="@dimen/dp_7">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:text="4."
+                    android:textColor="#00CDC3"
+                    android:textSize="@dimen/sp_12" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_6"
+                    android:layout_marginEnd="@dimen/dp_32"
+                    android:text="@string/firmware_information_text_4"
+                    android:textColor="#D4D4D4"
+                    android:textSize="@dimen/sp_10" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/bt_learn_more"
+                android:layout_marginTop="@dimen/dp_12"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/learn_more_title">
+
+                </TextView>
+            </LinearLayout>
         </LinearLayout>
 
         <Button

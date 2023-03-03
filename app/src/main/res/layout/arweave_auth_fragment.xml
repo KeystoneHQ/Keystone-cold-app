@@ -53,19 +53,37 @@
             android:orientation="vertical"
             android:paddingHorizontal="24dp">
 
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="36dp"
-                android:src="@drawable/security_safe" />
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginRight="@dimen/dp_24"
+                    android:src="@drawable/ic_coin_ar" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginRight="@dimen/dp_24"
+                    android:src="@drawable/ic_cooperate" />
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_wallet_keystone" />
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/arweave_authenticate"
                 android:layout_marginBottom="40dp"
-                android:textSize="18sp"
-                android:textColor="@color/white" />
+                android:text="@string/arweave_authenticate"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -88,8 +106,8 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="20dp"
                 android:layout_weight="1"
-                android:text="@string/cancel"
                 android:background="#3A3A3A"
+                android:text="@string/cancel"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
@@ -101,7 +119,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="20dp"
                 android:layout_weight="1"
-                android:text="@string/approval"
+                android:text="@string/approve"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>

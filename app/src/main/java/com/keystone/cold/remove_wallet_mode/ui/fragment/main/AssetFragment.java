@@ -57,7 +57,7 @@ import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AddressViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
-import com.keystone.cold.ui.fragment.main.AddressNumberPicker;
+import com.keystone.cold.remove_wallet_mode.ui.views.AddressNumberPicker;
 import com.keystone.cold.ui.fragment.main.NumberPickerCallback;
 
 import com.keystone.cold.ui.modal.ModalDialog;

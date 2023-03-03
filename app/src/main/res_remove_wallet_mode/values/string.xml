@@ -55,10 +55,10 @@
     </string-array>
     <string-array name="watch_wallet_summury_remove_wallet_mode">
         <item>9 main chains including BTC, ETH, etc</item>
-        <item>ETH, AVAX, BSC, and all EVM tokens</item>
+        <item>ETH, AVAX, BNB, and other EVM tokens</item>
         <item>Cosmos Eco</item>
-        <item>ETH, AVAX, BSC, and all EVM tokens</item>
-        <item>BTC, ETH and all EVM tokens</item>
+        <item>ETH, AVAX, BNB, and other EVM tokens</item>
+        <item>ETH, AVAX, BNB, and other EVM tokens</item>
         <item>BTC</item>
         <item>SOL and SPL tokens</item>
         <item>DOT, KSM</item>
@@ -67,7 +67,7 @@
         <item>APT and related token</item>
         <item>APT and related token</item>
         <item>NEAR and related token</item>
-        <item>ETH, AVAX, BSC, and all EVM tokens</item>
+        <item>ETH, AVAX, BNB, and other EVM tokens</item>
         <item>AVAX, ETH, BTC </item>
         <item>DOT, KSM</item>
         <item>XRP Toolkit</item>
