@@ -262,6 +262,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
             } else {
                 navigateUp();
                 Bundle bundle = new Bundle();
+                bundle.putString(BundleKeys.COIN_ID_KEY, config.getCoinId());
                 bundle.putString(BundleKeys.WALLET_ID_KEY, wallet.getWalletId());
                 navigate(R.id.action_to_selectAddressFragment, bundle);
             }
