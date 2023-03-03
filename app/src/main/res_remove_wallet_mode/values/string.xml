@@ -97,4 +97,30 @@
 
 
     <string name="xfp_not_match">Master fingerprint not match</string>
+
+    <string name="for_more">Click here for more information</string>
+
+
+    <string-array name="faq_list_tittle">
+        <item>1. Why does the wallet not show any token balance?</item>
+        <item>2. What steps should I take if I misplace my Keystone?</item>
+        <item>3. What is the maximum number of wallets that can be managed simultaneously?</item>
+        <item>4. What is a passphrase?</item>
+        <item>5. What is Shamir Backup？</item>
+        <item>6. What are the different types of account for Bitcoin?</item>
+        <item>7. How do derivation paths work?</item>
+    </string-array>
+
+    <string-array name="faq_list_content">
+        <item>Keystone is a fully offline device thus it is not able to draw data off the blockchain to display your token balance. You\'ll have to sync it with a software wallet in order to view your token balance.</item>
+        <item>You have the ability to retrieve all of your funds by entering your seed phrase into any wallet that supports BIP39. We recommend that you immediately import your seed phrase into a new wallet and transfer your funds to a new address as soon as possible. Additionally, you can also seek assistance from the police. \n\nKeystone Pro users do not need to panic as the device has a built-in self-destruct mechanism that will activate once anyone attempts to physically hack the device. This feature is valid only for 2 years after the date of purchase.</item>
+        <item>Keystone has the capability of handling only a single wallet at any given time. Once you log out, the secure element will erase all data on the device, including your seed phrase.</item>
+        <item>A passphrase for a crypto wallet is a feature that is not mandatory but can be utilized along with your seed phrase to limit entry to your crypto wallet. Passphrases provide an added layer of security in case your seed phrase is compromised or if another individual gains entry to your hardware wallet.</item>
+        <item>The Shamir backup is a secure method to safeguard your recovery seed phrase. It divides the phrase into sections and establishes a minimum number of parts necessary to retrieve it. You have the ability to determine the number of parts required to recover the complete phrase.</item>
+        <item>Bitcoin uses various address formats such as Legacy, SegWit, and Native Segwit addresses for sending and receiving Bitcoin. Each format has its own advantages, such as reduced transaction costs or enhanced privacy.</item>
+        <item>A derivation path refers to a series of steps applied to create multiple crypto addresses from a single private key or seed phrase, enabling the establishment of multiple accounts or addresses within a single wallet.</item>
+    </string-array>
+
+    <string name="faq_link">https://keyst.one/t/faq</string>
+
 </resources>

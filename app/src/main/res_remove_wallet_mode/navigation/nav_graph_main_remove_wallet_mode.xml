@@ -665,6 +665,13 @@
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.TutorialsFragment"
         android:label="TutorialsFragment"
         tools:layout="@layout/fragment_tutorial" />
+
+    <fragment
+        android:id="@+id/faqFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.FAQFragment"
+        android:label="FAQFragment"
+        tools:layout="@layout/fragment_faq" />
+
     <fragment
         android:id="@+id/selectAddressFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.SelectAddressFragment"
@@ -1256,6 +1263,14 @@
     <action
         android:id="@+id/action_to_preImportFragment"
         app:destination="@id/preImportFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_faqFragment"
+        app:destination="@id/faqFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"

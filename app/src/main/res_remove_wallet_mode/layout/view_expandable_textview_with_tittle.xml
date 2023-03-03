@@ -1,0 +1,45 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:lineSpacingExtra="@dimen/dp_1"
+            android:id="@+id/tvTittle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:text="1.Why the wallet doesn’t show the balance? " />
+
+        <ImageView
+            android:id="@+id/imSwitch"
+            android:layout_width="@dimen/dp_16"
+            android:layout_height="@dimen/dp_16"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/dp_14"
+            android:src="@drawable/icon_unfold" />
+    </LinearLayout>
+
+    <TextView
+        android:lineSpacingExtra="@dimen/dp_2"
+        android:id="@+id/tvContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:textColor="@color/white40"
+        android:textSize="@dimen/sp_9"
+        tools:text="Keystone is an offline device that doesn’t support this function. Please sync it with a software wallet, also a watch-only wallet, and you will be able to check the balance." />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_1"
+        android:layout_marginHorizontal="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_16"
+        android:background="@color/color_12ffffff" />
+
+</merge>
