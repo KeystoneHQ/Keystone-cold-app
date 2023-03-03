@@ -24,7 +24,7 @@ public enum Wallet {
     XRPTOOLKIT("xrp", "XRP Toolkit"),
     ZAPPER("zapper", "Zapper"),
     YEARN("yearn",  "Yearn Finance"),
-    SUSHISWAP("sushiswap"),
+    SUSHISWAP("sushiswap", "SushiSwap"),
     UNKNOWNWALLET("unknownwallet");
 
     public static final String XRP_TOOLKIT_SIGN_ID = "xrp_toolkit_sign_id";

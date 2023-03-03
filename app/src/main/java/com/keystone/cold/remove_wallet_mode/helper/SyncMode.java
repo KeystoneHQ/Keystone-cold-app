@@ -16,6 +16,11 @@ public enum SyncMode {
         Wallet wallet = Wallet.getWalletById(walletId);
         switch (wallet) {
             case BLUEWALLET:
+            case RABBY:
+            case SAFE:
+            case ZAPPER:
+            case YEARN:
+            case SUSHISWAP:
             case METAMASK:
             case ARCONNECT:
             case KEPLR:
@@ -68,6 +73,7 @@ public enum SyncMode {
         //todo  Need to add other types
         switch (wallet) {
             case FEWCHA:
+            case PETRA:
                 return new FewchaWalletSyncModeDetector();
             case SOLFLARE:
                 return new SolflareWalletSyncModeDetector();

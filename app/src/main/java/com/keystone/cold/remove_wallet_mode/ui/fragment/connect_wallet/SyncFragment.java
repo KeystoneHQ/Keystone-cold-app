@@ -166,6 +166,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                 urMutableLiveData = keystoneViewModel.generateSyncKeystone();
                 break;
             case FEWCHA:
+            case PETRA:
                 FewchaWalletViewModel fewchaWalletViewModel = ViewModelProviders.of(this).get(FewchaWalletViewModel.class);
                 fewchaWalletViewModel.setAddressIds(addressIds);
                 urMutableLiveData = fewchaWalletViewModel.generateSyncUR();
@@ -285,7 +286,13 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
 
     private enum WalletConfig {
         METAMASK(Wallet.METAMASK.getWalletId(), new String[]{Coins.ETH.coinId()}, true, false, true),
+        RABBY(Wallet.RABBY.getWalletId(), new String[]{Coins.ETH.coinId()}, true, false, true),
+        SAFE(Wallet.SAFE.getWalletId(), new String[]{Coins.ETH.coinId()}, true, false, true),
+        ZAPPER(Wallet.ZAPPER.getWalletId(), new String[]{Coins.ETH.coinId()}, true, false, true),
+        YEARN(Wallet.YEARN.getWalletId(), new String[]{Coins.ETH.coinId()}, true, false, true),
+        SUSHISWAP(Wallet.SUSHISWAP.getWalletId(), new String[]{Coins.ETH.coinId()}, true, false, true),
         FEWCHA(Wallet.FEWCHA.getWalletId(), new String[]{Coins.APTOS.coinId()}, false, true, true),
+        PETRA(Wallet.PETRA.getWalletId(), new String[]{Coins.APTOS.coinId()}, false, true, true),
         SOLFLARE(Wallet.SOLFLARE.getWalletId(), new String[]{Coins.SOL.coinId()}, true, true, true),
         SENDER(Wallet.SENDER.getWalletId(), new String[]{Coins.NEAR.coinId()}, true, false, true),
         POLKADOT(Wallet.POLKADOTJS.getWalletId(), new String[]{Coins.DOT.coinId(), Coins.KSM.coinId()}, false, true, true),
