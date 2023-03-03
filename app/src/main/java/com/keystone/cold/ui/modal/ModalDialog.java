@@ -33,6 +33,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.CommonModalBinding;
+import com.keystone.cold.databinding.DialogIconModalBinding;
 import com.keystone.cold.databinding.TwoButtonModalBinding;
 
 
@@ -98,13 +99,47 @@ public class ModalDialog extends DialogFragment {
         return dialog;
     }
 
+    public static ModalDialog showIconModal(AppCompatActivity activity, int iconResId, String message, String button1, String button2, Runnable button1Runnable,
+                                            Runnable button2Runnable) {
+        ModalDialog dialog = new ModalDialog();
+        DialogIconModalBinding binding = DataBindingUtil.inflate(LayoutInflater.from(activity),
+                R.layout.dialog_icon_modal, null, false);
+        binding.title.setImageResource(iconResId);
+        binding.content.setText(message);
+        if (button1 != null) {
+            binding.bt1.setText(button1);
+        }
+        if (button2 != null) {
+            binding.bt2.setText(button2);
+        }
+        binding.bt1.setOnClickListener(v -> {
+            if (button1Runnable != null) {
+                button1Runnable.run();
+            }
+            dialog.dismiss();
+        });
+        binding.bt2.setOnClickListener(v -> {
+            if (button2Runnable != null) {
+                button2Runnable.run();
+            }
+            dialog.dismiss();
+        });
+        dialog.setBinding(binding);
+        dialog.show(activity.getSupportFragmentManager(), "");
+        return dialog;
+    }
+
+    public static ModalDialog showRemindModal(AppCompatActivity activity, String message, String confirmText, Runnable confirmRunnable) {
+        return showIconModal(activity, R.drawable.ic_remind, message, null, confirmText, null, confirmRunnable);
+    }
+
     public static ModalDialog showTwoButtonCommonModal(AppCompatActivity activity,
-                                                  String title,
-                                                  String content,
-                                                  String button1Text,
-                                                  String button2Text,
-                                                  Runnable button1Runnable,
-                                                  Runnable button2Runnable) {
+                                                       String title,
+                                                       String content,
+                                                       String button1Text,
+                                                       String button2Text,
+                                                       Runnable button1Runnable,
+                                                       Runnable button2Runnable) {
         ModalDialog dialog = new ModalDialog();
         TwoButtonModalBinding binding = DataBindingUtil.inflate(LayoutInflater.from(activity),
                 R.layout.two_button_modal, null, false);

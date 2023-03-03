@@ -18,10 +18,16 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main;
 
 
+import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.ArweaveAuthFragment.AR_AUTH_RESULT_KEY;
+import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.ArweaveAuthFragment.AR_SETUP_REJECTED;
+import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.ArweaveAuthFragment.AR_SETUP_STATUS_KEY;
+import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.ArweaveAuthFragment.AR_SETUP_SUCCESS;
+
 import android.os.Bundle;
 
 import android.view.View;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -33,6 +39,7 @@ import com.keystone.cold.remove_wallet_mode.ui.adapter.CoinAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.model.AssetItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AssetViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.ui.modal.ModalDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +50,7 @@ public class ManageCoinFragment extends BaseFragment<FragmentManageCoinBinding> 
     public static final String TAG = "ManageCoinFragment";
     private CoinAdapter mCoinAdapter;
     private AssetViewModel mViewModel;
-    private final List<AssetItem> assetItems = new ArrayList<>();
+    private final List<AssetItem> revertList = new ArrayList<>();
 
 
     @Override
@@ -56,8 +63,9 @@ public class ManageCoinFragment extends BaseFragment<FragmentManageCoinBinding> 
         mActivity.setSupportActionBar(mBinding.toolbar);
         mBinding.toolbar.setNavigationOnClickListener(v -> {
             navigateUp();
-            if (!assetItems.isEmpty()) {
-                mViewModel.toggleAssetItem(assetItems);
+            // restore origin state;
+            if (!revertList.isEmpty()) {
+                mViewModel.toggleAssetItem(revertList);
             }
         });
         Objects.requireNonNull(mActivity.getSupportActionBar()).setDisplayShowTitleEnabled(false);
@@ -77,27 +85,57 @@ public class ManageCoinFragment extends BaseFragment<FragmentManageCoinBinding> 
         assets.observe(this, assetItems -> {
             if (assetItems != null) {
                 mCoinAdapter.setItems(assetItems);
-                if (this.assetItems.stream().anyMatch(a -> a.getCoinId().equals(Coins.AR.coinId()))) {
-                    ArweaveViewModel viewModel = ViewModelProviders.of(this).get(ArweaveViewModel.class);
-                    LiveData<Boolean> hasAR = viewModel.hasArweaveAddress();
-                    hasAR.observe(this, (v) -> {
-                        if (!v) {
-                            navigate(R.id.action_from_manageCoinFragment_to_ArweaveAuthFragment);
-                        }
-                        hasAR.removeObservers(this);
-                    });
-                }
             }
         });
     }
 
+    private void handleARChecked(AssetItem assetItem) {
+        ArweaveViewModel viewModel = ViewModelProviders.of(this).get(ArweaveViewModel.class);
+        LiveData<Boolean> hasAR = viewModel.hasArweaveAddress();
+        hasAR.observe(this, (v) -> {
+            if (!v) {
+                ModalDialog.showRemindModal(mActivity, getString(R.string.arweave_authenticate_hint), getString(R.string.add), () -> {
+                    navigate(R.id.action_from_manageCoinFragment_to_ArweaveAuthFragment);
+                    FragmentManager fragmentManager = this.getParentFragmentManager();
+                    fragmentManager.setFragmentResultListener(AR_AUTH_RESULT_KEY, this, (s, bundle) -> {
+                        String result = bundle.getString(AR_SETUP_STATUS_KEY);
+                        switch (result) {
+                            case AR_SETUP_SUCCESS:
+                                if (revertList.contains(assetItem)) {
+                                    revertList.remove(assetItem);
+                                } else {
+                                    revertList.add(assetItem);
+                                }
+                                mViewModel.toggleAssetItem(assetItem);
+                            case AR_SETUP_REJECTED:
+                                fragmentManager.clearFragmentResultListener(AR_AUTH_RESULT_KEY);
+                                break;
+                        }
+                    });
+                });
+            } else {
+                if (revertList.contains(assetItem)) {
+                    revertList.remove(assetItem);
+                } else {
+                    revertList.add(assetItem);
+                }
+                mViewModel.toggleAssetItem(assetItem);
+            }
+            hasAR.removeObservers(this);
+        });
+    }
+
     private final CoinAdapter.CoinClickCallback mCoinClickCallback = assetItem -> {
-        if (assetItems.contains(assetItem)) {
-            assetItems.remove(assetItem);
+        if (assetItem.getCoinId().equals(Coins.AR.coinId())) {
+            handleARChecked(assetItem);
         } else {
-            assetItems.add(assetItem);
+            if (revertList.contains(assetItem)) {
+                revertList.remove(assetItem);
+            } else {
+                revertList.add(assetItem);
+            }
+            mViewModel.toggleAssetItem(assetItem);
         }
-        mViewModel.toggleAssetItem(assetItem);
     };
 
     @Override

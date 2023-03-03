@@ -28,7 +28,7 @@
     <string name="title_about">About Keystone</string>
     <string name="title_setting">Settings</string>
     <string name="title_sync">Sync Keystone Mobile</string>
-    <string name="add_remove_coin">Add / Hide Assets</string>
+    <string name="add_remove_coin">Manage Assets</string>
     <string name="scan">Scan QR Code</string>
     <string name="scan_hint">Align QR Code within frame to scan</string>
     <string name="pattern_lock">Pattern Unlock</string>
@@ -57,7 +57,7 @@
     <string name="scan_progress">Please continue scanning: %s</string>
     <string name="eos_hint">Here is your %s public key （safe to share）</string>
     <string name="eos_pubkey">Public Key：\n%s</string>
-    <string name="receive_warning">Please send only %s to this address! Sending any other coins and tokens on other chains will result in the loss of your deposit.</string>
+    <string name="receive_warning">Please send only %s to this address! Sending any other coins and tokens from other chains will result in the loss of your deposit.</string>
     <string name="receive_coin">Receive %s</string>
     <string name="version_update_hint"><![CDATA[Please visit: <font color="#00cdc3">https://keyst.one/fw<font/> to check for firmware updates. If you are not using the latest firmware, download it from the official Keystone website and save it on a microSD card (FAT32 format). Transfer the file to your device as shown in the image below. (MicroSD card not included with purchase.)]]></string>
     <string name="version">Version </string>
@@ -70,6 +70,7 @@
     <string name="import_nft_mint_address">Mint Address</string>
     <string name="import_nft_hint">*Please check your lock screen after confirm the import</string>
     <string name="import_nft_error">Invalid NFT data</string>
+    <string name="scan_to_learn">Scan To Learn</string>
 
     <string name="warning">Warning</string>
 
@@ -133,7 +134,8 @@
     <string name="import_vault_hint"><![CDATA[2. Touch <font color="#00cdc3">\"Import Wallet\"<font/> to import an existing HD wallet]]></string>
     <string name="import_vault_danger_warning">The existing wallet will be wiped when importing or creating a wallet!</string>
     <string name="arweave_authenticate">Authentication Required</string>
-    <string name="arweave_authenticate_content">An authorization is required from you to generate an address that will be derived from your current recovery phrase as Arweave uses RSA algorithm.</string>
+    <string name="arweave_authenticate_hint">You have not added AR as an asset yet. Please proceed to add AR as an asset.</string>
+    <string name="arweave_authenticate_content">You will need to authorize the addition of AR to generate an address that will be derived from your current recovery phrase, as Arweave utilizes the RSA algorithm.</string>
     <string name="arweave_add_address"><![CDATA[1. Touch <font color="#00cdc3">\"here\"<font/> to generate a address]]></string>
     <string name="license">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
@@ -210,7 +212,7 @@
     <string name="setup_wallet_hint1">Thanks for choosing Keystone!</string>
     <string name="change_password">Change Password</string>
     <string name="self_checking">Security verification in progress…</string>
-    <string name="text_create_address_main_text">Select number of Addresses</string>
+    <string name="text_create_address_main_text">Select number of accounts to display</string>
     <string name="address_name_hint">Addresses may not be deleted once created. Please choose a name you will be able to recognize.</string>
     <string name="add_white_list">Add White List</string>
     <string name="search">Search</string>
@@ -466,8 +468,8 @@
     <string name="abnormal_state_hint">It is recommended that you wipe the device and then reset it.Repeated retries failed, you can contact us：support@keyst.one\n  Status Code:%s</string>
     <string name="abnormal_state_title">Abnormal State</string>
     <string name="decline">Decline</string>
-    <string name="reset_polkadot_db">Reset Database</string>
-    <string name="reset_polkadot_db_hint">This action will reset database for Polkadot.{js} / SubWallet, you have to import metadata again after this. </string>
+    <string name="reset_polkadot_db">Reset Data</string>
+    <string name="reset_polkadot_db_hint">Performing this action will reset all the data for your Polkadot.{js} and Subwallet. You will need to re-import all your metadata again.</string>
     <string name="export_xpub_text">Export XPUB</string>
     <string name="export_xpub_hint">Scan the QR code with your mobile/computer device</string>
     <string name="approve">Approve</string>
@@ -647,9 +649,10 @@
     <string name="calc_mnemonic_warning_checkbox">I fully understand entropy, BIP39, private key generation and other related material to generate my recovery phrase.</string>
     <string name="note">DANGER!</string>
     <string name="tip">Note</string>
+    <string name="learn_more_title">Learn More</string>
     <string name="learn_more"><Data><![CDATA[Keystone supports the decoding of transactions. Please visit<font color="#00CDC3"><b> https://keyst.one/abi </b></font>for more details.]]></Data></string>
     <string name="learn_more_doc"><Data><![CDATA[Keystone supports the decoding of transactions. Please visit<br /><font color="#00CDC3"><b> https://keyst.one/addabi </b></font><br />for more details.]]></Data></string>
-    <string name="check_info">Please check transaction details before signing</string>
+    <string name="check_info">Double check all transaction details before signing</string>
     <string name="check_info_dot">Please check transaction key information before signing. Sending DOT or KSM to other parachains is not recommended as it could lead to the loss of your assets.</string>
     <string name="undecoded_tip">Attention! This is undecoded data.</string>
     <string name="from_tfcard">(Derived from your MicroSD Card)</string>
@@ -683,7 +686,7 @@
     <string name="decode_as_utf8_failed_hint">Data can‘t be decoded as utf-8 string.</string>
     <string name="change_path_hint">Please select the derivation path you want to use. The first 3 accounts (addresses) are displayed for each path.</string>
     <string name="decode_failed_hint">Data can‘t be decoded</string>
-    <string name="tutorials_hint">Please use your laptop or mobile phone to open the links below for detailed tutorials of how to use Keystone with specific companion software wallets.</string>
+    <string name="tutorials_hint">Please use your laptop or mobile phone to open the links below for detailed tutorials on how to use Keystone with certain chain specific companion software wallets.</string>
 
     <string name="raw_data">Raw Data</string>
     <string name="overview">Overview</string>
@@ -752,7 +755,7 @@
     </string-array>
 
     <string-array name="tutorials_name_sender">
-        <item>Sender Extension</item>
+        <item>Sender (Extension)</item>
     </string-array>
 
     <string-array name="tutorials_link_sender">
@@ -784,7 +787,7 @@
     </string-array>
 
     <string-array name="tutorials_name_polkadot">
-        <item>SubWallet</item>
+        <item>SubWallet (Extension)</item>
         <item>Polkadot{.js}</item>
 <!--        <item>Nova Wallet</item>-->
     </string-array>
@@ -844,5 +847,13 @@
     </string-array>
 
     <string name="core_wallet_hint">The BTC addresses you are importing to is only for Core wallet.</string>
-
+    <string name="firmware_information">Firmware Information</string>
+    <string name="firmware_information_summary">The latest version comes with a noteworthy upgrade in terms of user interface and experience. We\'ve overhauled the [My Keystone] page. Users can now independently manage their assets.</string>
+    <string name="firmware_information_text_1">Utilize the scan button to sign all of your transactions.</string>
+    <string name="firmware_information_text_2">Improved the flow of connecting to a software wallet.</string>
+    <string name="firmware_information_text_3">Showcase your NFT on the device in your own unique style.</string>
+    <string name="firmware_information_text_4">Overhauled the [My Keystone] page to allow users to better manage their digital assets.</string>
+    <string name="firmware_information_reason">Why the UI enhancement?</string>
+    <string translatable="false" name="firmware_information_link">https://keyst.one/rwm</string>
+    <string name="add">Add</string>
 </resources>

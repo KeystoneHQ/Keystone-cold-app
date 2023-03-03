@@ -16,11 +16,14 @@ public class ArweaveCreator extends Creator {
     //we generate address on the ARAuthFragment;
     @Override
     public void setUp() {
-        CoinEntity coinEntity = mapToCoinEntity();
-        long id = repository.insertCoin(coinEntity);
-        AccountEntity accountEntity = coinEntity.getAccounts().get(0);
-        accountEntity.setCoinId(id);
-        repository.insertAccount(accountEntity);
+        CoinEntity coinEntity = repository.loadCoinSync(Coins.AR.coinId());
+        if (coinEntity == null) {
+            coinEntity = mapToCoinEntity();
+            long id = repository.insertCoin(coinEntity);
+            AccountEntity accountEntity = coinEntity.getAccounts().get(0);
+            accountEntity.setCoinId(id);
+            repository.insertAccount(accountEntity);
+        }
     }
 
     private CoinEntity mapToCoinEntity() {

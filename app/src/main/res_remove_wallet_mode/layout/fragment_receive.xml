@@ -168,7 +168,7 @@
                 android:text="@{@string/receive_warning(hintInfo)}"
                 android:textColor="#D5D5D5"
                 android:textSize="@dimen/sp_12"
-                tools:text="Please send only ETH or ERC - 20 tokens to this address! Sending any other coins on other chains will result in the loss of your deposit." />
+                tools:text="Please send only ETH or ERC - 20 tokens to this address! Sending any other coins from other chains will result in the loss of your deposit." />
         </LinearLayout>
 
         <Space
