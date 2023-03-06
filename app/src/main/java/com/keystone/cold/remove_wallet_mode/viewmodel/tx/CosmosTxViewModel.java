@@ -16,11 +16,13 @@ import com.keystone.coinlib.coins.cosmos.CosmosImpl;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
+import com.keystone.cold.R;
 import com.keystone.cold.cryptocore.CosmosParser;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.RustSigner;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cosmos.model.CosmosTx;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cosmos.model.msg.Msg;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cosmos.model.msg.MsgSignData;
@@ -72,6 +74,7 @@ public class CosmosTxViewModel extends BaseTxViewModel<CosmosTx> {
             return signMode;
         }
     }
+
     private SignMode signMode = SignMode.COSMOS;
 
     public CosmosTxViewModel(@NonNull Application application) {
@@ -101,10 +104,11 @@ public class CosmosTxViewModel extends BaseTxViewModel<CosmosTx> {
                     parseDirectTx();
                     signMode = SignMode.EVM;
                 }
+                xPub = getXpubByPath(hdPath);
             } catch (Exception e) {
                 e.printStackTrace();
+                observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
             }
-            xPub = getXpubByPath(hdPath);
         });
     }
 
@@ -120,15 +124,13 @@ public class CosmosTxViewModel extends BaseTxViewModel<CosmosTx> {
                 String data = null;
                 String aminoMessage = new String(Hex.decode(messageData));
                 CosmosTx cosmosTx = CosmosTx.from(aminoMessage);
-                if (cosmosTx != null) {
-                    chainId = cosmosTx.getChainId();
-                    if (cosmosTx.getMsgs() != null && cosmosTx.getMsgs().size() != 0) {
-                        for (Msg msg : cosmosTx.getMsgs()) {
-                            if (msg instanceof MsgSignData) {
-                                signer = ((MsgSignData) msg).getSigner();
-                                data = ((MsgSignData) msg).getData();
-                                break;
-                            }
+                chainId = cosmosTx.getChainId();
+                if (cosmosTx.getMsgs() != null && cosmosTx.getMsgs().size() != 0) {
+                    for (Msg msg : cosmosTx.getMsgs()) {
+                        if (msg instanceof MsgSignData) {
+                            signer = ((MsgSignData) msg).getSigner();
+                            data = ((MsgSignData) msg).getData();
+                            break;
                         }
                     }
                 }
@@ -139,11 +141,12 @@ public class CosmosTxViewModel extends BaseTxViewModel<CosmosTx> {
                 object.put("chainId", chainId);
                 object.put("fromAddress", signer);
                 observableObject.postValue(object);
+                xPub = getXpubByPath(hdPath);
             } catch (JSONException e) {
                 e.printStackTrace();
                 observableObject.postValue(null);
+                observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
             }
-            xPub = getXpubByPath(hdPath);
         });
         return observableObject;
     }
@@ -212,13 +215,12 @@ public class CosmosTxViewModel extends BaseTxViewModel<CosmosTx> {
                 String parseMessage = additions.getJSONObject("addition").getString("parse_message");
                 rawFormatTx.postValue(new JSONObject(parseMessage).toString(2));
                 CosmosTx cosmosTx = CosmosTx.from(parseMessage);
-                if (cosmosTx != null) {
-                    cosmosTx.setUr(txEntity.getSignedHex());
-                }
+                cosmosTx.setUr(txEntity.getSignedHex());
                 observableTransaction.postValue(cosmosTx);
             }
         } catch (JSONException exception) {
             exception.printStackTrace();
+            observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
         }
     }
 
@@ -226,35 +228,25 @@ public class CosmosTxViewModel extends BaseTxViewModel<CosmosTx> {
         return Coins.getCosmosCoinCode(chainId);
     }
 
-    private void parseDirectTx() {
+    private void parseDirectTx() throws JSONException {
         String parseResult = CosmosParser.parse(txHex);
         if (parseResult != null) {
             parseJson = CosmosTx.transformDirectToAmino(parseResult);
             CosmosTx cosmosTx = CosmosTx.from(parseJson);
             observableTransaction.postValue(cosmosTx);
-            if (cosmosTx != null) {
-                chainId = cosmosTx.getChainId();
-            }
-            try {
-                rawFormatTx.postValue(new JSONObject(parseJson).toString(2));
-            } catch (JSONException exception) {
-                exception.printStackTrace();
-            }
+            chainId = cosmosTx.getChainId();
+            rawFormatTx.postValue(new JSONObject(parseJson).toString(2));
+        } else {
+            observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
         }
     }
 
-    private void parseAminoTx() {
+    private void parseAminoTx() throws JSONException {
         parseJson = new String(Hex.decode(txHex));
         CosmosTx cosmosTx = CosmosTx.from(parseJson);
         observableTransaction.postValue(cosmosTx);
-        if (cosmosTx != null) {
-            chainId = cosmosTx.getChainId();
-        }
-        try {
-            rawFormatTx.postValue(new JSONObject(parseJson).toString(2));
-        } catch (JSONException exception) {
-            exception.printStackTrace();
-        }
+        chainId = cosmosTx.getChainId();
+        rawFormatTx.postValue(new JSONObject(parseJson).toString(2));
     }
 
     private String getXpubByPath(String path) {

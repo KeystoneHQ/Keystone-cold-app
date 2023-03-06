@@ -16,11 +16,12 @@ import com.keystone.coinlib.coins.SignTxResult;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
-import com.keystone.cold.Utilities;
+import com.keystone.cold.R;
 import com.keystone.cold.cryptocore.NearParser;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.near.model.NearTx;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.sparrowwallet.hummingbird.registry.near.NearSignature;
@@ -69,45 +70,44 @@ public class NearTxViewModel extends BaseTxViewModel<NearTx> {
             txHexList = (List<String>) bundle.getSerializable(BundleKeys.SIGN_DATA_KEY);
             if (txHexList == null) {
                 rawFormatTx.postValue(null);
+                observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
                 return;
             }
             transactionNum = txHexList.size();
-            JSONArray jsonArray = new JSONArray();
-            for (int i = 0; i < transactionNum; i++) {
+            try {
+                JSONArray jsonArray = new JSONArray();
+                for (int i = 0; i < transactionNum; i++) {
+                    String parseResult = NearParser.parse(txHexList.get(i));
+                    if (parseResult != null) {
+                        String json = getFormattedJson(parseResult);
+                        if (json == null) {
+                            Log.e(TAG, "have no formatted data");
+                            rawFormatTx.postValue(null);
+                            observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
+                            return;
+                        }
+                        Log.e(TAG, String.format("onSuccess is %s", json));
+                        NearTx nearTx = NearTx.from(json);
+                        observableTransaction.postValue(nearTx);
 
-                String parseResult = NearParser.parse(txHexList.get(i));
-                if (parseResult != null) {
-                    String json = getFormattedJson(parseResult);
-                    if (json == null) {
-                        Log.e(TAG, "have no formatted data");
-                        rawFormatTx.postValue(null);
-                        return;
-                    }
-                    Log.e(TAG, String.format("onSuccess is %s", json));
-                    NearTx nearTx = NearTx.from(json);
-                    observableTransaction.postValue(nearTx);
-
-                    JSONObject jsonObject = null;
-                    try {
-                        jsonObject = new JSONObject(json);
+                        JSONObject jsonObject = new JSONObject(json);
                         txHashList.add(jsonObject.getString("hash"));
                         jsonObject.remove("hash");
                         jsonArray.put(jsonObject);
                         formattedJsonList.add(jsonObject.toString());
-                    } catch (JSONException exception) {
-                        exception.printStackTrace();
-                    }
-                    if (transactionNum - 1 == i) {
-                        try {
+                        if (transactionNum - 1 == i) {
                             rawFormatTx.postValue(jsonArray.toString(2));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
+                    } else {
+                        Log.e(TAG, "parse error");
+                        rawFormatTx.postValue(null);
+                        observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
                     }
-                } else {
-                    Log.e(TAG, "parse error");
-                    rawFormatTx.postValue(null);
                 }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                rawFormatTx.postValue(null);
+                observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
             }
 
         });
@@ -168,6 +168,8 @@ public class NearTxViewModel extends BaseTxViewModel<NearTx> {
         String addition = txEntity.getAddition();
         if (TextUtils.isEmpty(addition)) {
             observableTransaction.postValue(null);
+            observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
+            return;
         }
         try {
             JSONObject root = new JSONObject(addition);
@@ -180,22 +182,17 @@ public class NearTxViewModel extends BaseTxViewModel<NearTx> {
                 nearTx.setUr(txEntity.getSignedHex());
                 observableTransaction.postValue(nearTx);
                 rawFormatTx.postValue(new JSONObject(parsedMessage).toString(2));
-                return;
             }
         } catch (JSONException exception) {
             exception.printStackTrace();
+            observableTransaction.postValue(null);
+            observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
         }
-        observableTransaction.postValue(null);
     }
 
-    private String getFormattedJson(String nearStr) {
-        try {
-            JSONObject jsonObject = new JSONObject(nearStr);
-            return jsonObject.getJSONObject("formatted_json").toString();
-        } catch (JSONException exception) {
-            exception.printStackTrace();
-        }
-        return null;
+    private String getFormattedJson(String nearStr) throws JSONException {
+        JSONObject jsonObject = new JSONObject(nearStr);
+        return jsonObject.getJSONObject("formatted_json").toString();
     }
 
 
