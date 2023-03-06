@@ -33,6 +33,10 @@
             type="boolean" />
 
         <variable
+            name="description"
+            type="String" />
+
+        <variable
             name="isSelected"
             type="androidx.databinding.ObservableField&lt;Boolean>" />
     </data>
@@ -98,7 +102,7 @@
             android:paddingVertical="@dimen/dp_10"
             app:collapsedLines="1"
             app:isExpanded="false"
-            app:text="@string/eth_standard_path" />
+            app:text="@{description}" />
     </LinearLayout>
 
 

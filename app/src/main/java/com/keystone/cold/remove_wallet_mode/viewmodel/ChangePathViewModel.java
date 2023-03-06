@@ -17,6 +17,7 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
+import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.db.entity.AccountEntity;
@@ -84,6 +85,13 @@ public class ChangePathViewModel extends AndroidViewModel {
                 boolean isSelected = ethAccount == account;
                 boolean isRecommend = ethAccount.getName().equals(ETHAccount.BIP44_STANDARD.getName());
                 PathPatternItem pathPatternItem = new PathPatternItem(ethAccount.getCode(), ethAccount.getDisplayPath(), ethAccount.getName(), isRecommend, getEthAccountAddresses(ethAccount), isSelected);
+                if (ethAccount.equals(ETHAccount.BIP44_STANDARD)) {
+                    pathPatternItem.setDescription(getApplication().getString(R.string.derivation_path_eth_standard));
+                } else if (ethAccount.equals(ETHAccount.LEDGER_LEGACY)) {
+                    pathPatternItem.setDescription(getApplication().getString(R.string.derivation_path_eth_ledger_legacy));
+                } else {
+                    pathPatternItem.setDescription(getApplication().getString(R.string.derivation_path_eth_ledger_live));
+                }
                 pathPatternItems.add(pathPatternItem);
             }
             return pathPatternItems;
@@ -94,6 +102,14 @@ public class ChangePathViewModel extends AndroidViewModel {
                 boolean isSelected = solAccount == account;
                 boolean isRecommend = solAccount.getName().equals(SOLAccount.SOLFLARE_BIP44.getName());
                 PathPatternItem pathPatternItem = new PathPatternItem(solAccount.getCode(), solAccount.getDisplayPath(), solAccount.getName(), isRecommend, getSolAccountAddresses(solAccount), isSelected);
+                if (solAccount.equals(SOLAccount.SOLFLARE_BIP44)) {
+                    pathPatternItem.setDescription(getApplication().getString(R.string.derivation_path_sol_standard));
+                } else if (solAccount.equals(SOLAccount.SOLFLARE_BIP44_ROOT)) {
+                    pathPatternItem.setDescription(getApplication().getString(R.string.derivation_path_sol_root));
+                } else {
+                    pathPatternItem.setDescription(getApplication().getString(R.string.derivation_path_sol_change));
+                }
+                pathPatternItems.add(pathPatternItem);
                 pathPatternItems.add(pathPatternItem);
             }
             return pathPatternItems;
@@ -104,6 +120,11 @@ public class ChangePathViewModel extends AndroidViewModel {
                 boolean isSelected = nearAccount == account;
                 boolean isRecommend = nearAccount.getName().equals(NEARAccount.MNEMONIC.getName());
                 PathPatternItem pathPatternItem = new PathPatternItem(nearAccount.getCode(), nearAccount.getDisplayPath(), nearAccount.getName(), isRecommend, getNearAccountAddresses(nearAccount), isSelected);
+                if (nearAccount.equals(NEARAccount.MNEMONIC)) {
+                    pathPatternItem.setDescription(getApplication().getString(R.string.derivation_path_near_mnemonic));
+                } else {
+                    pathPatternItem.setDescription(getApplication().getString(R.string.derivation_path_near_ledger_live));
+                }
                 pathPatternItems.add(pathPatternItem);
             }
             return pathPatternItems;
@@ -114,6 +135,15 @@ public class ChangePathViewModel extends AndroidViewModel {
                 boolean isSelected = btcAccount.equals(account);
                 boolean isRecommend = btcAccount.equals(BTCAccount.NATIVE_SEGWIT);
                 PathPatternItem pathPatternItem = new PathPatternItem(btcAccount.getCode(), btcAccount.getDisplayPath(), btcAccount.getName(), isRecommend, getBTCAccountAddresses(btcAccount), isSelected);
+                if (btcAccount.equals(BTCAccount.NATIVE_SEGWIT)) {
+                    pathPatternItem.setDescription(getApplication().getString(R.string.derivation_path_btc_native_segwit));
+                } else if (btcAccount.equals(BTCAccount.NESTED_SEGWIT)) {
+                    pathPatternItem.setDescription(getApplication().getString(R.string.derivation_path_btc_nested_segwit));
+                } else if (btcAccount.equals(BTCAccount.LEGACY)) {
+                    pathPatternItem.setDescription(getApplication().getString(R.string.derivation_path_btc_legacy));
+                } else {
+                    pathPatternItem.setDescription(getApplication().getString(R.string.derivation_path_btc_core_wallet));
+                }
                 pathPatternItems.add(pathPatternItem);
             }
             return pathPatternItems;
@@ -194,7 +224,7 @@ public class ChangePathViewModel extends AndroidViewModel {
             for (int i = 0; i < 3; i++) {
                 result.add(i, Pair.create("" + i, BitcoinNestedSegwitAddressGenerator.getAddress(i)));
             }
-        } else if (btcAccount.getCode().equals(BTCAccount.NATIVE_SEGWIT.getCode())){
+        } else if (btcAccount.getCode().equals(BTCAccount.NATIVE_SEGWIT.getCode())) {
             for (int i = 0; i < 3; i++) {
                 result.add(i, Pair.create("" + i, BitcoinNativeSegwitAddressGenerator.getAddress(i)));
             }

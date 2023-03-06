@@ -50,6 +50,7 @@ public class PathPatternItemView extends LinearLayout {
         binding.setPatternName(pathPatternItemModel.getPatternName());
         binding.setIsRecommend(pathPatternItemModel.isRecommend());
         binding.setIsSelected(pathPatternItemModel.getIsSelect());
+        binding.setDescription(pathPatternItemModel.getDescription());
         AccountAdapter accountAdapter = new AccountAdapter(getContext());
         accountAdapter.setItems(pathPatternItemModel.getPairs());
         binding.addressList.setAdapter(accountAdapter);

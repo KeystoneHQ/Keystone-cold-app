@@ -50,6 +50,10 @@ public class ExpandableTextView extends LinearLayout {
         this(context, attrs, defStyleAttr, 0);
     }
 
+    public TextView getTextView() {
+        return textView;
+    }
+
     public ExpandableTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         LayoutInflater.from(context).inflate(R.layout.view_expandable_textview, this);
