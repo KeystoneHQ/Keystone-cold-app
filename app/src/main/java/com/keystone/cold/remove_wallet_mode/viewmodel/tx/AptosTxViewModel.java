@@ -26,6 +26,7 @@ import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidAccountException;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.AptosAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.main.aptos.model.AptosTx;
@@ -85,16 +86,16 @@ public class AptosTxViewModel extends BaseTxViewModel<AptosTx> {
                     exception.printStackTrace();
                     jsonObject = new JSONObject();
                 }
+                parseJson = jsonObject.toString();
+                try {
+                    rawFormatTx.postValue(jsonObject.toString(2));
+                } catch (JSONException exception) {
+                    exception.printStackTrace();
+                }
+                xPub = getXpubByPath(hdPath);
             } else {
-                jsonObject = new JSONObject();
+                observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
             }
-            parseJson = jsonObject.toString();
-            try {
-                rawFormatTx.postValue(jsonObject.toString(2));
-            } catch (JSONException exception) {
-                exception.printStackTrace();
-            }
-            xPub = getXpubByPath(hdPath);
         });
     }
 
@@ -113,11 +114,12 @@ public class AptosTxViewModel extends BaseTxViewModel<AptosTx> {
                 object.put("data", messageData);
                 object.put("fromAddress", fromAddress);
                 observableObject.postValue(object);
+                xPub = getXpubByPath(hdPath);
             } catch (JSONException e) {
                 e.printStackTrace();
                 observableObject.postValue(null);
+                observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
             }
-            xPub = getXpubByPath(hdPath);
         });
         return observableObject;
     }
@@ -149,6 +151,7 @@ public class AptosTxViewModel extends BaseTxViewModel<AptosTx> {
             }
         } catch (JSONException exception) {
             exception.printStackTrace();
+            observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
         }
     }
 
@@ -159,6 +162,7 @@ public class AptosTxViewModel extends BaseTxViewModel<AptosTx> {
             return repository.loadAddressBypath(path).getAddressString();
         } catch (InvalidAccountException e) {
             e.printStackTrace();
+            observableException.postValue(e);
         }
         return "";
     }

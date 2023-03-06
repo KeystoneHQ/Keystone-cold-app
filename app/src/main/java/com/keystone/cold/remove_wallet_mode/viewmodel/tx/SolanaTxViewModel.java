@@ -11,16 +11,18 @@ import androidx.lifecycle.MutableLiveData;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.coins.SOL.SolImpl;
 import com.keystone.coinlib.coins.SignTxResult;
-import com.keystone.coinlib.exception.InvalidTransactionException;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
+import com.keystone.cold.R;
 import com.keystone.cold.cryptocore.SolanaParser;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidAccountException;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.SolanaAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignature;
@@ -68,13 +70,17 @@ public class SolanaTxViewModel extends BaseTxViewModel<JSONObject> {
                     JSONObject jsonObject = new JSONObject(parsedMessage);
                     observableTransaction.postValue(jsonObject);
                     rawFormatTx.postValue(jsonObject.toString(2));
-                } catch (JSONException | InvalidTransactionException e) {
+                } catch (JSONException | InvalidAccountException e) {
                     e.printStackTrace();
+                    rawFormatTx.postValue("");
+                    observableTransaction.postValue(null);
+                    observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
                 }
             } else {
                 Log.e(TAG, "parse solana transaction failed");
-                observableTransaction.postValue(null);
                 rawFormatTx.postValue("");
+                observableTransaction.postValue(null);
+                observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
             }
         });
     }
@@ -92,23 +98,20 @@ public class SolanaTxViewModel extends BaseTxViewModel<JSONObject> {
                 object.put("data", messageData);
                 object.put("fromAddress", fromAddress);
                 observableObject.postValue(object);
-            } catch (JSONException e) {
+            } catch (JSONException | InvalidAccountException e) {
                 e.printStackTrace();
                 observableObject.postValue(null);
+                observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
             }
         });
         return observableObject;
     }
 
-    private String getFromAddress(String path) {
-        try {
-            ensureAddressExist(path);
-            AddressEntity addressEntity = repository.loadAddressBypath(path);
-            if (addressEntity != null) {
-                return addressEntity.getAddressString();
-            }
-        } catch (InvalidTransactionException e) {
-            e.printStackTrace();
+    private String getFromAddress(String path) throws InvalidAccountException {
+        ensureAddressExist(path);
+        AddressEntity addressEntity = repository.loadAddressBypath(path);
+        if (addressEntity != null) {
+            return addressEntity.getAddressString();
         }
         return "";
     }
@@ -186,6 +189,9 @@ public class SolanaTxViewModel extends BaseTxViewModel<JSONObject> {
     private void parseSolanaTxEntity(TxEntity txEntity) {
         String addition = txEntity.getAddition();
         if (TextUtils.isEmpty(addition)) {
+            rawFormatTx.postValue("");
+            observableTransaction.postValue(null);
+            observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
             return;
         }
         try {
@@ -202,14 +208,17 @@ public class SolanaTxViewModel extends BaseTxViewModel<JSONObject> {
             }
         } catch (JSONException exception) {
             exception.printStackTrace();
+            rawFormatTx.postValue("");
+            observableTransaction.postValue(null);
+            observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
         }
     }
 
-    private void ensureAddressExist(String path) throws InvalidTransactionException {
+    private void ensureAddressExist(String path) throws InvalidAccountException {
         path = path.toUpperCase();
         SOLAccount target = SOLAccount.getAccountByPath(path);
         if (target == null) {
-            throw new InvalidTransactionException("unknown hd path");
+            throw new InvalidAccountException(getApplication().getString(R.string.incorrect_tx_data), "not have match account");
         }
         AddressEntity address = repository.loadAddressBypath(path);
         if (address == null) {
@@ -217,7 +226,7 @@ public class SolanaTxViewModel extends BaseTxViewModel<JSONObject> {
             if (addressIndex != -1) {
                 AccountEntity accountEntity = repository.loadTargetSOLAccount(target);
                 if (accountEntity == null) {
-                    throw new InvalidTransactionException("not having matched accounts.");
+                    throw new InvalidAccountException(getApplication().getString(R.string.incorrect_tx_data), "not have match account");
                 }
                 int addressNum = addressIndex - accountEntity.getAddressLength() + 1;
                 if (addressNum > 0) {
