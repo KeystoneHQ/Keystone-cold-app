@@ -31,6 +31,7 @@ import com.keystone.coinlib.coins.CFX.Cfx;
 import com.keystone.coinlib.coins.LTC.Ltc;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.db.entity.AddressEntity;
+import com.keystone.cold.remove_wallet_mode.ui.views.ExpandableTextView;
 import com.keystone.cold.ui.views.qrcode.QrCodeView;
 
 import java.text.SimpleDateFormat;
@@ -56,6 +57,14 @@ public class BindingAdapters {
         int resId = context.getResources().getIdentifier("coin_" + name.toLowerCase(),
                 "drawable", context.getPackageName());
         view.setImageResource(resId);
+    }
+
+    @BindingAdapter("text")
+    public static void setText(ExpandableTextView view, String text) {
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
+        view.getTextView().setText(text);
     }
 
     public static void setIcon(ImageView view, @NonNull String coinCode, String name) {

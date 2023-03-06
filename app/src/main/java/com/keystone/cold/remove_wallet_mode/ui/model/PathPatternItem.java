@@ -11,6 +11,7 @@ public class PathPatternItem {
     private final String pathPattern;
     private final String patternName;
     private final boolean isRecommend;
+    private String description;
     private final List<Pair<String, String>> pairs;
     private final ObservableField<Boolean> isSelect = new ObservableField<>();
 
@@ -45,5 +46,13 @@ public class PathPatternItem {
 
     public ObservableField<Boolean> getIsSelect() {
         return isSelect;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
