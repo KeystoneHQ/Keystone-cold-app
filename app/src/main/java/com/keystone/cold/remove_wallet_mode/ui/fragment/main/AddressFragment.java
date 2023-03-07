@@ -109,8 +109,6 @@ public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
                 }
                 addressItems = viewModel.getAddress();
                 subscribeUi(addressItems);
-            } else {
-                ModalDialog.showCommonModal(mActivity, "Invalid State", "Cannot find coin " + coinId, "Back", this::navigateUp);
             }
         });
     }
