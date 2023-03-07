@@ -34,7 +34,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.ModalBinding;
 import com.keystone.cold.databinding.SetPatternUnlockBinding;
-import com.keystone.cold.ui.UnlockActivity;
+import com.keystone.cold.remove_wallet_mode.ui.UnlockActivity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.util.HashUtil;

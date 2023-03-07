@@ -151,6 +151,19 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".remove_wallet_mode.ui.UnlockActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
 
         <service android:name=".service.AttackCheckingService" />
     </application>

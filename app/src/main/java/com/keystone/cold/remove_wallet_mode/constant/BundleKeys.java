@@ -18,4 +18,13 @@ public interface BundleKeys {
     String SALT_LEN_KEY = "salt_len_key";
     String CUSTOM_CHAIN_IDENTIFIER_KEY = "custom_chain_identifier_key";
     String WEB_AUTH_DATA_KEY = "web_auth_data_key";
+    String NFT_TYPE_KEY = "ntf_type_key";
+    String CHAIN_ID_KEY = "chain_id_key";
+    String CONTRACT_ADDRESS_KEY = "contract_address_key";
+    String CONTRACT_NAME_KEY = "contract_name_key";
+    String NAME_KEY = "name_key";
+    String MEDIA_DATA_KEY = "media_data_key";
+    String MINT_ADDRESS_KEY = "mint_address_key";
+    String COLLECTION_NAME_KEY = "collection_name_key";
+
 }

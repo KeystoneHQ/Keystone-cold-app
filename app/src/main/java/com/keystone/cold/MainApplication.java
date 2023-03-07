@@ -32,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.keystone.coinlib.Coinlib;
 import com.keystone.cold.callables.RestartSeCallable;
+import com.keystone.cold.config.FeatureFlags;
 import com.keystone.cold.db.AppDatabase;
 import com.keystone.cold.encryption.EncryptionCoreProvider;
 import com.keystone.cold.logging.FileLogger;
@@ -182,7 +183,12 @@ public class MainApplication extends Application {
             @Override
             public void onActivityCreated(@NonNull Activity activity, Bundle savedInstanceState) {
                 if ((activity instanceof MainActivity || activity instanceof SetupVaultActivity || activity instanceof com.keystone.cold.remove_wallet_mode.ui.MainActivity || activity instanceof com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity) && savedInstanceState == null && shouldLock) {
-                    Intent intent = new Intent(activity, UnlockActivity.class);
+                    Intent intent;
+                    if (FeatureFlags.ENABLE_REMOVE_WALLET_MODE) {
+                        intent = new Intent(activity, com.keystone.cold.remove_wallet_mode.ui.UnlockActivity.class);
+                    } else {
+                        intent = new Intent(activity, UnlockActivity.class);
+                    }
                     activity.startActivity(intent);
                     shouldLock = false;
                 }
@@ -235,14 +241,26 @@ public class MainApplication extends Application {
                 if (activity == null) {
                     return;
                 }
-                if (!(activity instanceof UnlockActivity)
-                        && Utilities.hasPasswordSet(activity)
-                        && !Utilities.isAttackDetected(activity)) {
-                    startActivity(new Intent(activity, UnlockActivity.class));
+                if (FeatureFlags.ENABLE_REMOVE_WALLET_MODE) {
+                    if (!(activity instanceof com.keystone.cold.remove_wallet_mode.ui.UnlockActivity)
+                            && Utilities.hasPasswordSet(activity)
+                            && !Utilities.isAttackDetected(activity)) {
+                        startActivity(new Intent(activity, com.keystone.cold.remove_wallet_mode.ui.UnlockActivity.class));
+                    }
+                    else if((activity instanceof com.keystone.cold.remove_wallet_mode.ui.UnlockActivity) && !Utilities.hasPasswordSet(activity)) {
+                        activity.finish();
+                    }
+                } else {
+                    if (!(activity instanceof UnlockActivity)
+                            && Utilities.hasPasswordSet(activity)
+                            && !Utilities.isAttackDetected(activity)) {
+                        startActivity(new Intent(activity, UnlockActivity.class));
+                    }
+                    else if((activity instanceof UnlockActivity) && !Utilities.hasPasswordSet(activity)) {
+                        activity.finish();
+                    }
                 }
-                else if((activity instanceof UnlockActivity) && !Utilities.hasPasswordSet(activity)) {
-                    activity.finish();
-                }
+
             }
         }
     };
