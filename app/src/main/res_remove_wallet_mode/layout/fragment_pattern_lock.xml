@@ -16,8 +16,7 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -36,50 +35,51 @@
             android:gravity="center_horizontal"
             android:orientation="vertical" />
 
-        <TextView
-            android:id="@+id/hint"
+        <com.andrognito.patternlockview.PatternLockView
+            android:id="@+id/lock_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/toolbar_container"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="45dp"
-            android:text="@string/verify_fingerprint_hint"
-            android:textColor="@android:color/white"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:layout_width="@dimen/dp_48"
-            android:layout_height="@dimen/dp_48"
-            android:layout_above="@+id/switch_to_password"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/dp_66"
-            android:src="@drawable/fingerprint"
-            tools:ignore="ContentDescription" />
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="35dp"
+            app:aspectRatio="square"
+            app:aspectRatioEnabled="true"
+            app:correctStateColor="@color/colorAccent"
+            app:dotAnimationDuration="150"
+            app:dotCount="3"
+            app:dotNormalSize="14dp"
+            app:dotSelectedSize="20dp"
+            app:normalStateColor="@color/white"
+            app:pathWidth="2dp"
+            app:wrongStateColor="#ff0000" />
 
         <TextView
-            android:id="@+id/verify_hint"
+            android:layout_marginBottom="@dimen/dp_28"
+            android:id="@+id/hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/hint"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="4.5dp"
-            android:textColor="#F0264E" />
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/pattern_lock_hint"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/switch_to_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/lock_view"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/dp_8"
+            android:layout_marginBottom="40dp"
             android:background="?attr/selectableItemBackground"
-            android:padding="20dp"
+            android:gravity="center"
+            android:paddingHorizontal="20dp"
             android:text="@string/switch_to_password"
             android:textColor="@color/colorAccent"
             android:textSize="14sp" />
-
 
     </RelativeLayout>
 </layout>

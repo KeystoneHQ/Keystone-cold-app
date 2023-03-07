@@ -55,6 +55,19 @@
     </fragment>
 
     <fragment
+        android:id="@+id/nftConfirmFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.NFTConfirmFragment"
+        android:label="NFTConfirmFragment"
+        tools:layout="@layout/fragment_nft_confirm">
+        <action
+            android:id="@+id/action_to_home"
+            app:destination="@id/myAssetsFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/myAssetsFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
         android:id="@+id/ethereumConfirmTransactionFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumConfirmTransactionFragment"
         android:label="ethereumConfirmTransactionFragment"
@@ -412,9 +425,15 @@
     </fragment>
     <fragment
         android:id="@+id/setPatternUnlockFragment"
-        android:name="com.keystone.cold.ui.fragment.setup.SetPatternUnlockFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.setup.SetPatternUnlockFragment"
         android:label="SetPatternUnlockFragment"
         tools:layout="@layout/set_pattern_unlock" />
+
+    <fragment
+        android:id="@+id/fingerprintManageFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.setting.FingerprintManageFragment"
+        android:label="FingerprintManageFragment"
+        tools:layout="@layout/fragment_fingerprint_manage" />
 
     <fragment
         android:id="@+id/fingerprintGuideFragment"
@@ -1275,4 +1294,13 @@
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
         app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_nftConfirmFragment"
+        app:destination="@id/nftConfirmFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
 </navigation>

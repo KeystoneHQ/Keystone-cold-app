@@ -1,5 +1,8 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.scanner.processor;
 
+import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.NFTConfirmFragment.ETH_NFT;
+import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.NFTConfirmFragment.SOL_NFT;
+
 import android.os.Bundle;
 
 import com.keystone.coinlib.accounts.ETHAccount;
@@ -22,12 +25,14 @@ import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
 import com.keystone.cold.util.AptosTransactionHelper;
 import com.keystone.cold.util.SolMessageValidateUtil;
 import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
+import com.sparrowwallet.hummingbird.registry.EthNFTItem;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
 import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignRequest;
 import com.sparrowwallet.hummingbird.registry.evm.EvmSignRequest;
 import com.sparrowwallet.hummingbird.registry.arweave.ArweaveSignRequest;
 import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
+import com.sparrowwallet.hummingbird.registry.solana.SolNFTItem;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
 
 import org.json.JSONException;
@@ -62,6 +67,10 @@ public class URProcessor implements Processor {
             return new EvmSignRequestProcessor().run(r.resolve());
         } else if (r.getType().equals(ScanResultTypes.UR_BYTES)) {
             return new BytesProcessor().run(r.resolve());
+        } else if (r.getType().equals(ScanResultTypes.UR_ETH_NFT_ITEM)) {
+            return new EthNFTItemProcessor().run(r.resolve());
+        } else if (r.getType().equals(ScanResultTypes.UR_SOL_NFT_ITEM)) {
+            return new SolNFTItemProcessor().run(r.resolve());
         } else {
             throw UnimplementedException.newInstance();
         }
@@ -329,6 +338,46 @@ public class URProcessor implements Processor {
         }
     }
 
+    private static class EthNFTItemProcessor implements URResolver {
+
+        @Override
+        public Destination run(Object object) throws BaseException {
+            EthNFTItem ethNFTItem = (EthNFTItem) object;
+            String name = ethNFTItem.getName();
+            int chainId = ethNFTItem.getChainId();
+            String contractAddress = ethNFTItem.getContractAddress();
+            String contractName = ethNFTItem.getContractName();
+            String mediaData = ethNFTItem.getMediaData();
+            Bundle bundle = new Bundle();
+            bundle.putString(BundleKeys.NFT_TYPE_KEY, ETH_NFT);
+            bundle.putLong(BundleKeys.CHAIN_ID_KEY, chainId);
+            bundle.putString(BundleKeys.CONTRACT_ADDRESS_KEY, contractAddress);
+            bundle.putString(BundleKeys.CONTRACT_NAME_KEY, contractName);
+            bundle.putString(BundleKeys.NAME_KEY, name);
+            bundle.putString(BundleKeys.MEDIA_DATA_KEY, mediaData);
+            return new Destination(R.id.action_to_nftConfirmFragment, bundle);
+        }
+    }
+
+    private static class SolNFTItemProcessor implements URResolver {
+
+        @Override
+        public Destination run(Object object) throws BaseException {
+            SolNFTItem solNFTItem = (SolNFTItem) object;
+            String mintAddress = solNFTItem.getMintAddress();
+            String collectionName = solNFTItem.getCollectionName();
+            String name = solNFTItem.getName();
+            String mediaData = solNFTItem.getMediaData();
+
+            Bundle bundle = new Bundle();
+            bundle.putString(BundleKeys.NFT_TYPE_KEY, SOL_NFT);
+            bundle.putString(BundleKeys.MINT_ADDRESS_KEY, mintAddress);
+            bundle.putString(BundleKeys.COLLECTION_NAME_KEY, collectionName);
+            bundle.putString(BundleKeys.NAME_KEY, name);
+            bundle.putString(BundleKeys.MEDIA_DATA_KEY, mediaData);
+            return new Destination(R.id.action_to_nftConfirmFragment, bundle);
+        }
+    }
     private static class BytesProcessor implements URResolver {
 
         @Override
