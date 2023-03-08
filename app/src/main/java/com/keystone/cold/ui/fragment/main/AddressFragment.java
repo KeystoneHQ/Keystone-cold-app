@@ -203,7 +203,11 @@ public class AddressFragment extends BaseFragment<AddressFragmentBinding> {
 
                 addressEntities = addressEntities.stream().peek(addressEntity -> {
                     if (watchWallet == WatchWallet.APTOS) {
-                        addressEntity.setDisplayName(StringUtils.capitalizes(addressEntity.getName().toLowerCase()));
+                        if (addressEntity.getName().startsWith("APTOS-")) {
+                            addressEntity.setDisplayName(StringUtils.capitalizes(addressEntity.getName().toLowerCase()));
+                        } else {
+                            addressEntity.setDisplayName(addressEntity.getName());
+                        }
                     } else {
                         addressEntity.setDisplayName(addressEntity.getName());
                     }
