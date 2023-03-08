@@ -95,7 +95,7 @@ public class SubstrateConfirmTransactionFragment extends ConfirmTransactionFragm
         // for substrate, it is not an UR;
         String signedHex = viewModel.getSignedHex();
         Bundle data = new Bundle();
-        data.putString(BundleKeys.SIGNATURE_UR_KEY, signedHex);
+        data.putString(BundleKeys.SIGNATURE_HEX_KEY, signedHex);
         data.putString(BundleKeys.COIN_CODE_KEY, viewModel.getCoinCode());
         navigate(R.id.action_to_broadCastTxFragment, data);
         viewModel.getSignState().setValue("");

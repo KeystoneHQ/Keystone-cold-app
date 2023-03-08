@@ -4,6 +4,7 @@ public interface BundleKeys {
     String COIN_ID_KEY = "coin_id_key";
     String COIN_CODE_KEY = "coin_code_key";
     String SIGNATURE_UR_KEY = "signature_ur_key";
+    String SIGNATURE_HEX_KEY = "signature_hex_key";
     String SIGN_DATA_KEY = "sign_data_key";
     String REQUEST_ID_KEY = "request_id_key";
     String HD_PATH_KEY = "hd_path_key";

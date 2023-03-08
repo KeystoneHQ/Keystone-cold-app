@@ -79,6 +79,7 @@ public class SubstrateTransactionDetailFragment extends BaseFragment<FragmentSub
             }
             if (transaction.getSignedHex() != null) {
                 mBinding.qrcodeContainer.setVisibility(View.VISIBLE);
+                mBinding.qrcode.qrcode.disableMultipart();
                 mBinding.qrcode.qrcode.setData(transaction.getSignedHex());
             }
         } catch (JSONException e) {

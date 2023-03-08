@@ -267,6 +267,7 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         NEAR(Coins.NEAR.coinId(), false, true, true),
         NEAR_LEDGER(Coins.NEAR.coinId() + "_" + NEARAccount.LEDGER.getCode(), true, true, true),
         DOT(Coins.DOT.coinId(), true, false, true, false, true),
+        KSM(Coins.KSM.coinId(), true, false, true, false, true),
         AR(Coins.AR.coinId(), false, false, true),
         LTC(Coins.LTC.coinId(), true, false, true, true, false),
         DASH(Coins.DASH.coinId(), true, false, true, true, false),

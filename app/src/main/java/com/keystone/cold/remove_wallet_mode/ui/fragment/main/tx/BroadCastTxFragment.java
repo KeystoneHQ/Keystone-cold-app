@@ -20,8 +20,15 @@ public class BroadCastTxFragment extends BaseFragment<FragmentBroadcastTxBinding
     protected void init(View view) {
         Bundle data = requireArguments();
         String signatureURString = data.getString(BundleKeys.SIGNATURE_UR_KEY);
+        String signatureHexString = data.getString(BundleKeys.SIGNATURE_HEX_KEY, "");
         String coinCode = data.getString(BundleKeys.COIN_CODE_KEY);
-        mBinding.qrcodeLayout.qrcode.setData(signatureURString);
+        if (!signatureHexString.isEmpty()) {
+            mBinding.qrcodeLayout.qrcode.disableMultipart();
+            mBinding.qrcodeLayout.qrcode.setData(signatureHexString);
+        }
+        else {
+            mBinding.qrcodeLayout.qrcode.setData(signatureURString);
+        }
         if (coinCode.startsWith("BTC")) {
             coinCode = Coins.BTC.coinCode();
         }
