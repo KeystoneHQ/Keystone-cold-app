@@ -43,12 +43,15 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
 
+import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.ConfirmModalBinding;
 import com.keystone.cold.databinding.CreateVaultModalBinding;
 import com.keystone.cold.databinding.PassphraseBinding;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
+import com.keystone.cold.remove_wallet_mode.helper.CoinConfigHelper;
+import com.keystone.cold.remove_wallet_mode.helper.SetupManager;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.setup.SetupVaultBaseFragment;
 import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
@@ -183,12 +186,17 @@ public class PassphraseFragment extends SetupVaultBaseFragment<PassphraseBinding
                         TextUtils.isEmpty(passphrase1.get()) ? "main" : "hidden");
                 stateLiveData.setValue(VAULT_STATE_NOT_CREATE);
                 viewModel.getVaultCreateState().removeObservers(this);
-                if (dialog != null && dialog.getDialog() != null
-                        && dialog.getDialog().isShowing()) {
-                    dialog.dismiss();
-                }
-                startActivity(new Intent(mActivity, MainActivity.class));
-                mActivity.finish();
+                AppExecutors.getInstance().diskIO().execute(() -> {
+                    SetupManager.setup(() -> {
+                        CoinConfigHelper.initCoinConfig();
+                        if (dialog != null && dialog.getDialog() != null
+                                && dialog.getDialog().isShowing()) {
+                            dialog.dismiss();
+                        }
+                        startActivity(new Intent(mActivity, MainActivity.class));
+                        mActivity.finish();
+                    });
+                });
             } else if (state == VAULT_STATE_CREATING_FAILED) {
                 stateLiveData.setValue(VAULT_STATE_NOT_CREATE);
                 viewModel.getVaultCreateState().removeObservers(this);

@@ -42,6 +42,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.db.PresetData;
 import com.keystone.cold.db.entity.CoinEntity;
+import com.keystone.cold.remove_wallet_mode.helper.CoinConfigHelper;
 import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.viewmodel.SetupVaultViewModel;
@@ -111,7 +112,7 @@ public class ConfirmMnemonicFragment extends MnemonicInputFragment {
                     if (dialog != null && dialog.getDialog() != null && dialog.getDialog().isShowing()) {
                         dialog.dismiss();
                     }
-
+                    CoinConfigHelper.initCoinConfig();
                     Bundle data = new Bundle();
                     boolean isSetupProcess = ((SetupVaultActivity) mActivity).inSetupProcess;
                     data.putBoolean(IS_SETUP_VAULT, isSetupProcess);

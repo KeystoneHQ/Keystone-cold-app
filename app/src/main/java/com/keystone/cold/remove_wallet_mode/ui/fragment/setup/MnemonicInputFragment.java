@@ -293,7 +293,6 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
                     if (dialog != null && dialog.getDialog() != null && dialog.getDialog().isShowing()) {
                         dialog.dismiss();
                     }
-
                     Bundle data = new Bundle();
                     boolean isSetupProcess = ((SetupVaultActivity) mActivity).inSetupProcess;
                     data.putBoolean(IS_SETUP_VAULT, isSetupProcess);
