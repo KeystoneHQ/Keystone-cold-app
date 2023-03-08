@@ -479,7 +479,7 @@
     </fragment>
     <fragment
         android:id="@+id/passphraseFragment"
-        android:name="com.keystone.cold.ui.fragment.PassphraseFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.setting.PassphraseFragment"
         android:label="passphraseFragment"
         tools:layout="@layout/passphrase">
         <action
