@@ -42,7 +42,7 @@ public class ChooseNetworkFragment extends BaseFragment<FragmentChooseNetworkBin
     private List<ClickableItem> getNetworkList(String walletId) {
         Wallet wallet = Wallet.getWalletById(walletId);
         List<ClickableItem> list;
-        if (wallet == Wallet.POLKADOTJS) {
+        if (wallet == Wallet.POLKADOTJS || wallet == Wallet.SUBWALLET) {
             list = Arrays.asList(
                     new ClickableItem(Coins.DOT.coinId(), Coins.DOT.coinName(), R.drawable.coin_dot),
                     new ClickableItem(Coins.KSM.coinId(), Coins.KSM.coinName(), R.drawable.coin_ksm)

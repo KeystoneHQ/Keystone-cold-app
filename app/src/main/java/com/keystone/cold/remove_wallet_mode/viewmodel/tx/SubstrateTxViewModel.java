@@ -22,7 +22,7 @@ import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidAccountException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.substrate.SubstrateTransaction;
-import com.keystone.cold.viewmodel.WatchWallet;
+import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,10 +61,10 @@ public class SubstrateTxViewModel extends BaseTxViewModel<SubstrateTransaction> 
                 String data = bundle.getString(BundleKeys.SIGN_DATA_KEY);
                 String parsedTransaction = bundle.getString(BundleKeys.PARSED_TRANSACTION_KEY);
                 JSONObject pt = new JSONObject(parsedTransaction);
-                generateAndPostSubstrateTxV2(pt, data);
                 SubstrateTransaction substrateTransaction = SubstrateTransaction.factory(parsedTransaction, data);
                 rawFormatTx.postValue(substrateTransaction.getType().equals("Stub")? "Transaction too large": data);
                 coinCode = substrateTransaction.getCoinCode();
+                generateAndPostSubstrateTxV2(pt, data);
                 observableTransaction.postValue(substrateTransaction);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -113,7 +113,7 @@ public class SubstrateTxViewModel extends BaseTxViewModel<SubstrateTransaction> 
             }
 
             TxEntity tx = new TxEntity();
-            tx.setSignId(WatchWallet.POLKADOT_JS_SIGN_ID);
+            tx.setSignId(Wallet.UNKNOWN_WALLET_SIGN_ID);
             tx.setTimeStamp(getUniversalSignIndex(getApplication()));
             tx.setCoinCode(coinCode);
             tx.setCoinId(Coins.coinIdFromCoinCode(coinCode));
