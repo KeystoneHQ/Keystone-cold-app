@@ -13,7 +13,6 @@ import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentSelectOneAddressBinding;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
-import com.keystone.cold.remove_wallet_mode.helper.WalletMapToCoinHelper;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.ClickAddressAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.model.AddressItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AddressViewModel;
@@ -50,10 +49,6 @@ public class SelectOneAddressFragment extends BaseFragment<FragmentSelectOneAddr
         });
         Bundle data = requireArguments();
         String coinId = data.getString(BundleKeys.COIN_ID_KEY);
-        String walletId = data.getString(BundleKeys.WALLET_ID_KEY);
-        if (TextUtils.isEmpty(coinId) && !TextUtils.isEmpty(walletId)) {
-            coinId = WalletMapToCoinHelper.mapToCoinId(walletId);
-        }
         if (!TextUtils.isEmpty(coinId)) {
             AddressViewModel.Factory factory = new AddressViewModel.Factory(mActivity.getApplication(), coinId);
             viewModel = ViewModelProviders.of(this, factory)
