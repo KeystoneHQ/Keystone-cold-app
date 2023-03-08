@@ -8,7 +8,7 @@ public enum Wallet {
     KEYSTONE("keystone", "Keystone App"),
     METAMASK("metamask", "MetaMask"),
     KEPLR("keplr", "Keplr"),
-    SAFE("safe"),
+    SAFE("safe", "Safe"),
     BITKEEP("bitkeep"),
     BLUEWALLET("bluewallet", "BlueWallet"),
     SOLFLARE("solflare", "Solflare"),
@@ -18,13 +18,13 @@ public enum Wallet {
     PETRA("petra", "Petra"),
     FEWCHA("fewcha", "Fewcha"),
     SENDER("sender", "Sender"),
-    RABBY("rabby"),
+    RABBY("rabby", "Rabby"),
     CORE("core", "Core"),
     POLKADOTJS("polkadotjs", "Polkadot.{js}"),
     XRPTOOLKIT("xrp", "XRP Toolkit"),
-    ZAPPER("zapper"),
-    YEARN("yearn"),
-    SUSHISWAP("sushiswap"),
+    ZAPPER("zapper", "Zapper"),
+    YEARN("yearn",  "Yearn Finance"),
+    SUSHISWAP("sushiswap", "SushiSwap"),
     UNKNOWNWALLET("unknownwallet");
 
     public static final String XRP_TOOLKIT_SIGN_ID = "xrp_toolkit_sign_id";

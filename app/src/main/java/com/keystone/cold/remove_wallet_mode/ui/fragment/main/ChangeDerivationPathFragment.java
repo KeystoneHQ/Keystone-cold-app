@@ -12,6 +12,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentChangeDerivationPathBinding;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.helper.SyncMode;
+import com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.config.WalletConfig;
 import com.keystone.cold.remove_wallet_mode.ui.model.PathPatternItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.ChangePathViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.WalletViewModel;
@@ -74,6 +75,8 @@ public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDer
         stepMode.observe(this, mode -> {
             Bundle bundle = new Bundle();
             bundle.putString(BundleKeys.WALLET_ID_KEY, walletId);
+            WalletConfig config = WalletConfig.getConfigByWalletId(walletId);
+            bundle.putString(BundleKeys.COIN_ID_KEY, config.getCoinId());
             switch (mode) {
                 case DIRECT:
                     popBackStack(R.id.walletListFragment, false);

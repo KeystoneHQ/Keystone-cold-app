@@ -15,7 +15,6 @@ import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.SelectedAddressAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.model.AddressItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AddressViewModel;
-import com.keystone.cold.remove_wallet_mode.viewmodel.SelectAddressViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.remove_wallet_mode.ui.views.AddressNumberPicker;
 import com.keystone.cold.ui.fragment.main.NumberPickerCallback;
@@ -50,7 +49,7 @@ public class SelectAddressFragment extends BaseFragment<FragmentSelectAddressBin
         }
         mBinding.addrList.setAdapter(selectedAddressAdapter);
         mBinding.llAddAccounts.setOnClickListener(v -> handleAddAccounts());
-        mBinding.ivConfirm.setOnClickListener((View.OnClickListener) v -> {
+        mBinding.ivConfirm.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             bundle.putString(BundleKeys.WALLET_ID_KEY, requireArguments().getString(BundleKeys.WALLET_ID_KEY));
             bundle.putSerializable(BundleKeys.ADDRESS_IDS_KEY, (Serializable) selectedAddressAdapter.getAddressIds());
@@ -69,13 +68,8 @@ public class SelectAddressFragment extends BaseFragment<FragmentSelectAddressBin
     @Override
     protected void initData(Bundle savedInstanceState) {
         Bundle data = requireArguments();
-        String walletId = data.getString(BundleKeys.WALLET_ID_KEY);
-        SelectAddressViewModel selectAddressViewModel = ViewModelProviders.of(this).get(SelectAddressViewModel.class);
-        LiveData<String> coinIdLiveData = selectAddressViewModel.getCoinId(walletId);
-        coinIdLiveData.observe(this, coinId -> {
-            showAddressList(coinId);
-            coinIdLiveData.removeObservers(this);
-        });
+        String coinId = data.getString(BundleKeys.COIN_ID_KEY);
+        showAddressList(coinId);
     }
 
     private void showAddressList(String coinId) {

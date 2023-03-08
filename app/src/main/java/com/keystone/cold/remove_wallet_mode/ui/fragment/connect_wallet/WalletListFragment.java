@@ -20,6 +20,7 @@ import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.helper.SyncMode;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.WalletListAdapter;
+import com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.config.WalletConfig;
 import com.keystone.cold.remove_wallet_mode.ui.model.WalletItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.WalletViewModel;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
@@ -93,6 +94,8 @@ public class WalletListFragment extends BaseFragment<FragmentWalletListBinding> 
         stepMode.observe(WalletListFragment.this, mode -> {
             Bundle bundle = new Bundle();
             bundle.putString(BundleKeys.WALLET_ID_KEY, walletItem.getWalletId());
+            WalletConfig config = WalletConfig.getConfigByWalletId(walletItem.getWalletId());
+            bundle.putString(BundleKeys.COIN_ID_KEY, config.getCoinId());
             switch (mode) {
                 case INVALID: //no address，give error message
                     break;

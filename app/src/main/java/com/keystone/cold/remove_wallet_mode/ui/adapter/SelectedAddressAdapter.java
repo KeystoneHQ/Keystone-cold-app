@@ -12,6 +12,8 @@ import com.keystone.cold.remove_wallet_mode.ui.model.AddressItem;
 import com.keystone.cold.ui.common.BaseBindingAdapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class SelectedAddressAdapter extends BaseBindingAdapter<AddressItem, ItemAddressSeletedListBinding> {
@@ -50,22 +52,15 @@ public class SelectedAddressAdapter extends BaseBindingAdapter<AddressItem, Item
     public void setItems(List<AddressItem> data) {
 
         if (checkedList == null) {
-            checkedList = new ArrayList<>();
-            for (AddressItem ignored : data) {
-                checkedList.add(false);
-            }
+            checkedList = new ArrayList<>(Arrays.asList(new Boolean[data.size()]));
+            Collections.fill(checkedList, false);
+            checkedList.set(0, true);
         } else if (data.size() > checkedList.size()) {
             int del = data.size() - checkedList.size();
-            for (int i = 0; i < del; i++) {
-                checkedList.add(false);
-            }
+            List<Boolean> delList = new ArrayList<>(Arrays.asList(new Boolean[del]));
+            Collections.fill(delList, false);
+            checkedList.addAll(delList);
         }
-//        if (checkedList == null || data.size() != checkedList.size()) {
-//            checkedList = new ArrayList<>();
-//            for (AddressItem ignored : data) {
-//                checkedList.add(false);
-//            }
-//        }
         super.setItems(data);
     }
 
