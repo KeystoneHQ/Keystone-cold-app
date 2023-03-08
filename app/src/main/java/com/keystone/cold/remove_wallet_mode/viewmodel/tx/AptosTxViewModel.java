@@ -82,9 +82,10 @@ public class AptosTxViewModel extends BaseTxViewModel<AptosTx> {
                     AptosTx aptosTx = AptosTxParser.parse(aptosExploreFormat);
                     observableTransaction.postValue(aptosTx);
                     Log.i(TAG, "aptosTx is " + aptosTx);
-                } catch (JSONException exception) {
+                } catch (Exception exception) {
                     exception.printStackTrace();
                     jsonObject = new JSONObject();
+                    observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
                 }
                 parseJson = jsonObject.toString();
                 try {
@@ -149,7 +150,7 @@ public class AptosTxViewModel extends BaseTxViewModel<AptosTx> {
                     rawFormatTx.postValue(new JSONObject(parseMessage).toString(2));
                 }
             }
-        } catch (JSONException exception) {
+        } catch (Exception exception) {
             exception.printStackTrace();
             observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
         }

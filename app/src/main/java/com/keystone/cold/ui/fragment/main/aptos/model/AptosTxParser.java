@@ -177,8 +177,13 @@ public class AptosTxParser {
         }
         int num = typeArguments.length();
         for (int i = 0; i < num; i++) {
-            String typeArgument = convertTypeArgument(typeArguments.getJSONObject(i));
-            jsonArray.put(typeArgument);
+            Object object = typeArguments.get(i);
+            if (object instanceof JSONObject) {
+                String typeArgument = convertTypeArgument(typeArguments.getJSONObject(i));
+                jsonArray.put(typeArgument);
+            } else {
+                jsonArray.put(object.toString());
+            }
         }
         return jsonArray;
     }
