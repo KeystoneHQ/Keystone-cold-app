@@ -101,7 +101,7 @@ public class ChangePathViewModel extends AndroidViewModel {
             for (SOLAccount solAccount : SOLAccount.values()) {
                 boolean isSelected = solAccount == account;
                 boolean isRecommend = solAccount.getName().equals(SOLAccount.SOLFLARE_BIP44.getName());
-                PathPatternItem pathPatternItem = new PathPatternItem(solAccount.getCode(), solAccount.getDisplayPath(), solAccount.getName(), isRecommend, getSolAccountAddresses(solAccount), isSelected);
+                PathPatternItem pathPatternItem = new PathPatternItem(solAccount.getCode(), solAccount.getDisplayPath(), null, isRecommend, getSolAccountAddresses(solAccount), isSelected);
                 if (solAccount.equals(SOLAccount.SOLFLARE_BIP44)) {
                     pathPatternItem.setDescription(getApplication().getString(R.string.derivation_path_sol_standard));
                 } else if (solAccount.equals(SOLAccount.SOLFLARE_BIP44_ROOT)) {
