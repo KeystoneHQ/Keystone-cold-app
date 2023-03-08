@@ -293,17 +293,13 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
                     if (dialog != null && dialog.getDialog() != null && dialog.getDialog().isShowing()) {
                         dialog.dismiss();
                     }
-
                     Bundle data = new Bundle();
                     boolean isSetupProcess = ((SetupVaultActivity) mActivity).inSetupProcess;
                     data.putBoolean(IS_SETUP_VAULT, isSetupProcess);
                     if (isSetupProcess) {
                         viewModel.setVaultCreateStep(VAULT_CREATE_STEP_DONE);
-                        navigate(R.id.action_to_setupSelectWalletFragment, data);
-                    } else {
-                        startActivity(new Intent(mActivity, MainActivity.class));
-                        mActivity.finish();
                     }
+                    navigate(R.id.action_to_setupSelectWalletFragment, data);
                 };
 
                 //List<CoinEntity> coins = PresetData.generateCoins(mActivity);

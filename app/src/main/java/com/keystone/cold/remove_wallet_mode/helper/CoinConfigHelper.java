@@ -34,9 +34,7 @@ public class CoinConfigHelper {
 
             int version = coinConfig.getInt("version");
             if (version > SharePreferencesUtil.getCoinConfigVersion(MainApplication.getApplication())) {
-                SharePreferencesUtil.setCoinConfig(MainApplication.getApplication(),
-                        mapToLocalConfig(coinConfig.getJSONArray("extraCoins")));
-                SharePreferencesUtil.setCoinConfigVersion(MainApplication.getApplication(), version);
+                initCoinConfig();
             }
 
         } catch (JSONException exception) {
@@ -49,6 +47,18 @@ public class CoinConfigHelper {
         ORDER_LIST = ORDER_LIST_TEMP;
         EVM_ECOLOGY = EVM_ECOLOGY_TEMP;
         COSMOS_ECOLOGY = COSMOS_ECOLOGY_TEMP;
+    }
+
+    public static void initCoinConfig() {
+        try {
+            JSONObject coinConfig = new JSONObject(ScriptLoader.readAsset("coin/config.json"));
+            int version = coinConfig.getInt("version");
+            SharePreferencesUtil.setCoinConfig(MainApplication.getApplication(),
+                    mapToLocalConfig(coinConfig.getJSONArray("extraCoins")));
+            SharePreferencesUtil.setCoinConfigVersion(MainApplication.getApplication(), version);
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
     }
 
     private static List<String> getDataFromJsonArray(JSONArray jsonArray) {
