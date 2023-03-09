@@ -27,5 +27,5 @@ public interface BundleKeys {
     String MEDIA_DATA_KEY = "media_data_key";
     String MINT_ADDRESS_KEY = "mint_address_key";
     String COLLECTION_NAME_KEY = "collection_name_key";
-
+    String PAGE_TITLE_KEY = "page_title_key";
 }

@@ -625,14 +625,6 @@
             app:popExitAnim="@android:anim/slide_out_right" />
 
         <action
-            android:id="@+id/action_to_syncFragment"
-            app:destination="@id/syncFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
-
-        <action
             android:id="@+id/action_to_chooseNetworkFragment"
             app:destination="@id/chooseNetworkFragment"
             app:enterAnim="@anim/slide_in_right"
@@ -696,14 +688,6 @@
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.SelectAddressFragment"
         android:label="SelectAddressFragment"
         tools:layout="@layout/fragment_select_address">
-
-        <action
-            android:id="@+id/action_to_syncFragment"
-            app:destination="@id/syncFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/selectNetworksFragment"
@@ -1298,6 +1282,14 @@
     <action
         android:id="@+id/action_to_nftConfirmFragment"
         app:destination="@id/nftConfirmFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_syncFragment"
+        app:destination="@id/syncFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"

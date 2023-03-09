@@ -190,6 +190,9 @@ public class MainActivity extends FullScreenActivity {
         mBinding.llConnectSoftWareWallet.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, ConnectWalletActivity.class);
             startActivity(intent);
+            mHandler.postDelayed(() -> {
+                mBinding.drawer.closeDrawer(GravityCompat.START);
+            }, 100);
         });
     }
 
