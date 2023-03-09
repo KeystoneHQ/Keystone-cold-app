@@ -3,9 +3,9 @@ package com.keystone.coinlib.accounts;
 import java.util.regex.Pattern;
 
 public enum ETHAccount {
+    BIP44_STANDARD("M/44'/60'/0'", 0x3c, "BIP44 Standard", "standard", "m/44'/60'/0'/0/*"),
     LEDGER_LIVE("M/44'/60'", 0x3c, "Ledger Live", "ledger_live", "m/44'/60'/*'/0/0"),
-    LEDGER_LEGACY("M/44'/60'/0'", 0x3c, "Ledger Legacy", "ledger_legacy", "m/44'/60'/0'/*"),
-    BIP44_STANDARD("M/44'/60'/0'", 0x3c, "BIP44 Standard", "standard", "m/44'/60'/0'/0/*");
+    LEDGER_LEGACY("M/44'/60'/0'", 0x3c, "Ledger Legacy", "ledger_legacy", "m/44'/60'/0'/*");
 
     private String path;
     private int type;

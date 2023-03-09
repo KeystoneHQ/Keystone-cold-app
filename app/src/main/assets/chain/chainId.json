@@ -25,6 +25,7 @@
   },
   "10": {
     "symbol": "OETH",
+    "coinCode": "OP",
     "name": "Optimistic Ethereum"
   },
   "11": {
@@ -69,10 +70,12 @@
   },
   "361": {
     "symbol": "TFUEL",
+    "coinCode": "THETA",
     "name": "Theta Mainnet"
   },
   "363": {
     "symbol": "TFUEL",
+    "coinCode": "THETA",
     "name": "Theta Sapphire Testnet"
   },
   "2559": {
@@ -85,6 +88,7 @@
   },
   "1": {
     "symbol": "ETH",
+    "coinCode": "ETH",
     "name": "Ethereum Mainnet"
   },
   "122": {
@@ -145,6 +149,7 @@
   },
   "128": {
     "symbol": "HT",
+    "coinCode": "HT",
     "name": "Huobi ECO Chain Mainnet"
   },
   "8": {
@@ -213,6 +218,7 @@
   },
   "42220": {
     "symbol": "CELO",
+    "coinCode": "CELO",
     "name": "Celo Mainnet"
   },
   "110000": {
@@ -229,6 +235,7 @@
   },
   "250": {
     "symbol": "FTM",
+    "coinCode": "FTM",
     "name": "Fantom Opera"
   },
   "110008": {
@@ -341,6 +348,7 @@
   },
   "1001": {
     "symbol": "KLAY",
+    "coinCode": "KLAY",
     "name": "Klaytn Testnet Baobab"
   },
   "24484": {
@@ -433,6 +441,7 @@
   },
   "56": {
     "symbol": "BNB",
+    "coinCode": "BNB",
     "name": "Binance Smart Chain Mainnet"
   },
   "5197": {
@@ -509,7 +518,8 @@
   },
   "66": {
     "symbol": "OKT",
-    "name": "OKExChain Mainnet"
+    "coinCode": "OKB",
+    "name": "OKXChain Mainnet"
   },
   "246529": {
     "symbol": "ATS",
@@ -661,6 +671,7 @@
   },
   "4690": {
     "symbol": "IOTX",
+    "coinCode": "IOTX",
     "name": "IoTeX Network Testnet"
   },
   "421611": {
@@ -673,6 +684,7 @@
   },
   "80001": {
     "symbol": "MATIC",
+    "coinCode": "MATIC",
     "name": "Polygon Testnet Mumbai"
   },
   "999": {
@@ -745,6 +757,7 @@
   },
   "9001": {
     "symbol": "EVMOS",
+    "coinCode": "EVMOS",
     "name": "Evmos"
   },
   "11297108099": {
@@ -761,14 +774,17 @@
   },
   "1666700003": {
     "symbol": "ONE",
+    "coinCode": "ONE",
     "name": "Harmony Testnet Shard 3"
   },
   "1666700002": {
     "symbol": "ONE",
+    "coinCode": "ONE",
     "name": "Harmony Testnet Shard 2"
   },
   "4002": {
     "symbol": "FTM",
+    "coinCode": "FTM",
     "name": "Fantom Testnet"
   },
   "333888": {
@@ -861,10 +877,12 @@
   },
   "43113": {
     "symbol": "AVAX",
+    "coinCode": "AVAX",
     "name": "Avalanche Fuji Testnet"
   },
   "43114": {
     "symbol": "AVAX",
+    "coinCode": "AVAX",
     "name": "Avalanche Mainnet"
   },
   "43110": {

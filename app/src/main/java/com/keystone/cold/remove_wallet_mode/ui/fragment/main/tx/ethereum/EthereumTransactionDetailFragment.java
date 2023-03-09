@@ -24,12 +24,14 @@ import com.keystone.cold.databinding.AbiItemBinding;
 import com.keystone.cold.databinding.AbiItemMethodBinding;
 import com.keystone.cold.databinding.EnsItemBinding;
 import com.keystone.cold.databinding.FragmentEthereumTxBinding;
+import com.keystone.cold.remove_wallet_mode.ui.model.AssetItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.EthereumTxViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -89,8 +91,14 @@ public class EthereumTransactionDetailFragment extends BaseFragment<FragmentEthe
     @SuppressLint("UseCompatLoadingForDrawables")
     private void updateUI(EthereumTransaction transaction) {
         if (transaction == null) return;
-        mBinding.setCheckInfoTitle(EthereumTxViewModel.getNetwork(transaction.getChainId()));
-        mBinding.checkInfoLayout.icon.setImageDrawable(mActivity.getDrawable(transaction.getIcon()));
+        AssetItem assetItem = transaction.getAssetItem();
+        if (assetItem != null) {
+            mBinding.setCheckInfoTitle(assetItem.getNetwork());
+            mBinding.setCoinCode(assetItem.getCoinCode());
+        } else {
+            mBinding.setCheckInfoTitle(EthereumTxViewModel.getNetwork(transaction.getChainId()));
+            mBinding.checkInfoLayout.icon.setImageResource(R.drawable.coin_eth_token);
+        }
 
         if (transaction.getTxType() == EthereumTransaction.TransactionType.LEGACY.getType()) {
             mBinding.legacyFeeInfo.setVisibility(View.VISIBLE);
@@ -157,7 +165,7 @@ public class EthereumTransactionDetailFragment extends BaseFragment<FragmentEthe
         AppExecutors.getInstance().diskIO().execute(() -> {
             String to = transaction.getTo();
             String ens = EthereumTxViewModel.loadEnsAddress(to);
-            String addressSymbol = EthereumTxViewModel.recognizeAddress(transaction,to);
+            String addressSymbol = EthereumTxViewModel.recognizeAddress(transaction, to);
             if (!TextUtils.isEmpty(addressSymbol)) {
                 to = to + String.format(" (%s)", addressSymbol);
             } else if (GnosisHandler.gnosisContractAddresses.contains(to.toLowerCase())) {

@@ -19,9 +19,13 @@ package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum;
 
 import static com.keystone.cold.remove_wallet_mode.viewmodel.tx.EthereumTxViewModel.getSymbol;
 
+import androidx.annotation.Nullable;
+
 import com.keystone.coinlib.coins.ETH.EthImpl;
 import com.keystone.coinlib.utils.Coins;
-import com.keystone.cold.R;
+import com.keystone.cold.db.entity.CoinEntity;
+import com.keystone.cold.remove_wallet_mode.helper.CoinConfigHelper;
+import com.keystone.cold.remove_wallet_mode.ui.model.AssetItem;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -148,7 +152,6 @@ public class EthereumTransaction {
     }
 
     private static void setupCommonValue(EthereumTransaction transaction, JSONObject ethTx, String symbol) throws JSONException {
-        transaction.chainId = ethTx.getLong("chainId");
         transaction.to = ethTx.getString("to");
         if (ethTx.has("to") && ethTx.has("contract")) {
             transaction.toContractName = ethTx.getString("contract");
@@ -250,11 +253,23 @@ public class EthereumTransaction {
         return chainId;
     }
 
-    public int getIcon() {
-        if (this.chainId == 1) return R.drawable.coin_eth;
-        if (this.chainId == 43114) return R.drawable.coin_avax;
-        if (this.chainId == 9000 || this.chainId == 9001) return R.drawable.coin_evmos;
-        return R.drawable.coin_eth_token;
+    @Nullable
+    public AssetItem getAssetItem() {
+        if (this.chainId == 1) {
+            CoinEntity eth = new CoinEntity();
+            eth.setCoinCode(Coins.ETH.coinCode());
+            eth.setCoinId(Coins.ETH.coinId());
+            eth.setName(Coins.ETH.coinName());
+            return new AssetItem(eth);
+        }
+        if (this.chainId == 9000 || this.chainId == 9001) {
+            CoinEntity evmos = new CoinEntity();
+            evmos.setCoinCode(Coins.EVMOS.coinCode());
+            evmos.setCoinId(Coins.EVMOS.coinId());
+            evmos.setName(Coins.EVMOS.coinName());
+            return new AssetItem(evmos);
+        }
+        return CoinConfigHelper.getEVMChainByChainID(chainId);
     }
 
     public int getTxType() {

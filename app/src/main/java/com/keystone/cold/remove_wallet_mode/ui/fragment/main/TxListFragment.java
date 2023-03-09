@@ -36,8 +36,10 @@ import com.keystone.cold.databinding.FragmentTxListBinding;
 import com.keystone.cold.databinding.ItemTxListBinding;
 import com.keystone.cold.model.Tx;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
+import com.keystone.cold.remove_wallet_mode.helper.CoinConfigHelper;
 import com.keystone.cold.remove_wallet_mode.helper.Destination;
 import com.keystone.cold.remove_wallet_mode.helper.ReviewDestinationDetector;
+import com.keystone.cold.remove_wallet_mode.ui.model.AssetItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.record.TxRecordViewModel;
 import com.keystone.cold.ui.common.FilterableBaseBindingAdapter;
 import com.keystone.cold.ui.fragment.BaseFragment;
@@ -45,6 +47,7 @@ import com.keystone.cold.ui.fragment.main.TxCallback;
 
 
 import java.util.List;
+import java.util.Optional;
 
 
 public class TxListFragment extends BaseFragment<FragmentTxListBinding> {
