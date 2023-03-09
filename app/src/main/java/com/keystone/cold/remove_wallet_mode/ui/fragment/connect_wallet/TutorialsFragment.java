@@ -86,6 +86,21 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialBinding> {
                 break;
             case KEYSTONE:
                 id = R.array.tutorials_name_keystone;
+                break;
+            case PETRA:
+                id = R.array.tutorials_name_petra;
+                break;
+            case ZAPPER:
+            case YEARN:
+            case SUSHISWAP:
+                id = R.array.tutorials_name_defi;
+                break;
+            case SUBWALLET:
+                id = R.array.tutorials_name_sub_wallet;
+                break;
+            case SAFE:
+                id = R.array.tutorials_name_safe;
+                break;
         }
         return id;
     }
@@ -128,6 +143,21 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialBinding> {
                 break;
             case KEYSTONE:
                 id = R.array.tutorials_link_keystone;
+                break;
+            case PETRA:
+                id = R.array.tutorials_link_petra;
+                break;
+            case ZAPPER:
+            case YEARN:
+            case SUSHISWAP:
+                id = R.array.tutorials_link_defi;
+                break;
+            case SUBWALLET:
+                id = R.array.tutorials_link_sub_wallet;
+                break;
+            case SAFE:
+                id = R.array.tutorials_link_safe;
+                break;
         }
         return id;
     }

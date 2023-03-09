@@ -708,6 +708,13 @@
 <!--        <item>Petra Wallet (Extension)</item>-->
     </string-array>
 
+    <string-array name="tutorials_name_petra">
+        <item>Petra Wallet (Extension)</item>
+    </string-array>
+
+    <string-array name="tutorials_link_petra">
+        <item><u>https://keyst.one/t/petra</u></item>
+    </string-array>
     <string-array name="tutorials_link_aptos">
 <!--        <item><u>https://keyst.one/martian</u></item>-->
         <item><u>https://keyst.one/fewcha</u></item>
@@ -786,16 +793,33 @@
         <item><u>https://keyst.one/defi</u></item>
     </string-array>
 
+
+    <string-array name="tutorials_name_defi">
+        <item>Dapp (DeFi)</item>
+    </string-array>
+
+    <string-array name="tutorials_link_defi">
+        <item><u>https://keyst.one/defi</u></item>
+    </string-array>
+
     <string-array name="tutorials_name_polkadot">
-        <item>SubWallet (Extension)</item>
         <item>Polkadot{.js}</item>
 <!--        <item>Nova Wallet</item>-->
     </string-array>
 
     <string-array name="tutorials_link_polkadot">
-        <item><u>https://keyst.one/subwallet</u></item>
         <item><u>https://keyst.one/polkadot</u></item>
 <!--        <item><u>https://keyst.one/nova</u></item>-->
+    </string-array>
+
+    <string-array name="tutorials_name_sub_wallet">
+        <item>SubWallet (Extension)</item>
+        <!--        <item>Nova Wallet</item>-->
+    </string-array>
+
+    <string-array name="tutorials_link_sub_wallet">
+        <item><u>https://keyst.one/subwallet</u></item>
+        <!--        <item><u>https://keyst.one/nova</u></item>-->
     </string-array>
 
     <string-array name="tutorials_name_xrp">
@@ -804,6 +828,16 @@
 
     <string-array name="tutorials_link_xrp">
         <item><u>https://keyst.one/xrp</u></item>
+    </string-array>
+
+    <string-array name="tutorials_name_safe">
+        <item>Safe</item>
+        <item>Safe Mobile</item>
+    </string-array>
+
+    <string-array name="tutorials_link_safe">
+        <item><u>https://keyst.one/t/safe</u></item>
+        <item><u>https://keyst.one/t/safem</u></item>
     </string-array>
 
     <string name="tittle_eth_selector">4-byte Function Signature</string>
