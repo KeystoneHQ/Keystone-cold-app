@@ -34,10 +34,10 @@ import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.VerifyPasswordCallable;
 import com.keystone.cold.databinding.FragmentPasswordUnlockBinding;
 import com.keystone.cold.fingerprint.FingerprintKit;
+import com.keystone.cold.remove_wallet_mode.ui.fragment.setting.MainPreferenceFragment;
+import com.keystone.cold.remove_wallet_mode.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.setting.VibratorHelper;
 import com.keystone.cold.ui.fragment.BaseFragment;
-import com.keystone.cold.ui.fragment.setting.MainPreferenceFragment;
-import com.keystone.cold.ui.fragment.setup.PreImportFragment;
 import com.keystone.cold.util.HashUtil;
 import com.keystone.cold.util.Keyboard;
 
