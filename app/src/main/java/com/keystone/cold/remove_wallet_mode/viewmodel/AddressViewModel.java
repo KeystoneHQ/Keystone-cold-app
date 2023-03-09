@@ -18,6 +18,7 @@ import com.keystone.cold.remove_wallet_mode.helper.AddressFilterManager;
 import com.keystone.cold.remove_wallet_mode.helper.AddressManager;
 import com.keystone.cold.remove_wallet_mode.helper.AddressNameConvertHelper;
 import com.keystone.cold.remove_wallet_mode.ui.model.AddressItem;
+import com.keystone.cold.remove_wallet_mode.ui.model.AssetItem;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,6 +40,16 @@ public class AddressViewModel extends AndroidViewModel {
             this.coinId = coinId;
             addressEntity = repository.loadAddress(coinId);
         }
+    }
+
+    public LiveData<List<AddressItem>> getAddress(AssetItem assetItem) {
+        return Transformations.map(addressEntity,
+                input -> input.stream()
+                        .filter(AddressFilterManager::filterAddress)
+                        .map(AddressItem::new)
+                        .peek(addressItem -> addressItem.setName(AddressNameConvertHelper.convertName(addressItem.getCoinId(), addressItem.getName())))
+                        .peek(addressItem -> addressItem.setName(AddressNameConvertHelper.convertNameWithAsset(addressItem.getCoinId(), addressItem.getName(), assetItem)))
+                        .collect(Collectors.toList()));
     }
 
     public LiveData<List<AddressItem>> getAddress() {

@@ -29,6 +29,7 @@ import com.keystone.cold.ui.modal.ModalDialog;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
 
@@ -107,7 +108,7 @@ public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
                     addressItems.removeObservers(this);
                     addressItems = null;
                 }
-                addressItems = viewModel.getAddress();
+                addressItems = viewModel.getAddress(assetItem.get());
                 subscribeUi(addressItems);
             }
         });

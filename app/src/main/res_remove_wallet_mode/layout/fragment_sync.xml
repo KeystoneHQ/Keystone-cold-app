@@ -68,10 +68,10 @@
 
 
         <Button
-            android:layout_alignParentBottom="true"
             android:id="@+id/complete"
             style="@style/AcceptButton"
             android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="@dimen/dp_26"
             android:layout_marginBottom="16dp"

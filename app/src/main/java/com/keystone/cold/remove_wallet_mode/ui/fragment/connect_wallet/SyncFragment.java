@@ -42,11 +42,8 @@ import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.sparrowwallet.hummingbird.UR;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
     private Wallet wallet;
@@ -70,6 +67,9 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         }
         wallet = Wallet.getWalletById(walletId);
         mBinding.setWallet(wallet.getWalletName());
+        mBinding.info.setOnClickListener((v) -> {
+            toTutorial(null);
+        });
 
         mBinding.complete.setOnClickListener(v -> {
             if (mActivity != null && mActivity instanceof SetupVaultActivity) {
@@ -238,7 +238,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         WalletConfig config = WalletConfig.getConfigByWalletId(wallet.getWalletId());
         if (config.isShowSelectAddress()) {
             if (wallet.equals(Wallet.POLKADOTJS) || wallet.equals(Wallet.SUBWALLET) || wallet.equals(Wallet.XRPTOOLKIT)) {
-                binding.selectAccountText.setText(R.string.select_another_account);
+                binding.selectAccountText.setText(R.string.import_another_account);
             }
             binding.rlSelectAddress.setVisibility(View.VISIBLE);
         }
@@ -254,6 +254,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                 navigateUp();
                 Bundle bundle = new Bundle();
                 bundle.putString(BundleKeys.WALLET_ID_KEY, wallet.getWalletId());
+                bundle.putString(BundleKeys.PAGE_TITLE_KEY, getString(R.string.import_another_account));
                 if (wallet.equals(Wallet.XRPTOOLKIT)) {
                     bundle.putString(BundleKeys.COIN_ID_KEY, requireArguments().getString(BundleKeys.COIN_ID_KEY, Coins.XRP.coinId()));
                 } else {
@@ -270,10 +271,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
             dialog.dismiss();
         });
         binding.rlTutorial.setOnClickListener(v -> {
-            Bundle bundle = new Bundle();
-            bundle.putString(BundleKeys.WALLET_ID_KEY, wallet.getWalletId());
-            navigate(R.id.action_to_tutorialsFragment, bundle);
-            dialog.dismiss();
+            toTutorial(dialog::dismiss);
         });
         binding.rlChangePath.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
@@ -284,5 +282,12 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         });
         dialog.setContentView(binding.getRoot());
         dialog.show();
+    }
+
+    private void toTutorial(Runnable callback) {
+        Bundle bundle = new Bundle();
+        bundle.putString(BundleKeys.WALLET_ID_KEY, wallet.getWalletId());
+        navigate(R.id.action_to_tutorialsFragment, bundle);
+        if (callback != null) callback.run();
     }
 }

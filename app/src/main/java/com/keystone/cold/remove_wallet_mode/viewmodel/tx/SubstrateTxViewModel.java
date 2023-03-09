@@ -212,9 +212,9 @@ public class SubstrateTxViewModel extends BaseTxViewModel<SubstrateTransaction> 
         };
     }
 
-    protected TxEntity onSignSuccess(String txId, String rawTx) {
+    protected TxEntity onSignSuccess(String txId, String signature) {
         Objects.requireNonNull(txEntity).setTxId(txId);
-        txEntity.setSignedHex(rawTx);
+        txEntity.setSignedHex("01"+signature);
         mRepository.insertTx(txEntity);
         return txEntity;
     }

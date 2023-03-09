@@ -23,9 +23,8 @@ public class BitcoinReviewTransactionFragment extends ReviewTransactionFragment<
 
     @Override
     protected TabLayoutConfig[] getTabLayouts() {
-        TabLayoutConfig[] configs = new TabLayoutConfig[2];
+        TabLayoutConfig[] configs = new TabLayoutConfig[1];
         configs[0] = new TabLayoutConfig(getString(R.string.overview), BitcoinTransactionDetailsFragment.newInstance(requireArguments(), viewModel.getObservableTransaction()));
-        configs[1] = new TabLayoutConfig(getString(R.string.raw_data), RawTxFragment.newInstance(requireArguments(), viewModel.getRawFormatTx()));
         return configs;
     }
 

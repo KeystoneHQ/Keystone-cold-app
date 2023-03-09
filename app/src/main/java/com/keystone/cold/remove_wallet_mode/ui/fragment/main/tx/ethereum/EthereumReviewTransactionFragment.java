@@ -24,9 +24,8 @@ public class EthereumReviewTransactionFragment extends ReviewTransactionFragment
 
     @Override
     protected TabLayoutConfig[] getTabLayouts() {
-        TabLayoutConfig[] layoutConfigs = new TabLayoutConfig[2];
+        TabLayoutConfig[] layoutConfigs = new TabLayoutConfig[1];
         layoutConfigs[0] = new TabLayoutConfig(getString(R.string.overview), EthereumTransactionDetailFragment.newInstance(requireArguments(), viewModel.getObservableTransaction()));
-        layoutConfigs[1] = new TabLayoutConfig(getString(R.string.raw_data), RawTxFragment.newInstance(requireArguments(), viewModel.getRawFormatTx()));
         return layoutConfigs;
     }
 

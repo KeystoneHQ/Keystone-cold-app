@@ -75,7 +75,7 @@ public class SelectNetworksFragment extends BaseFragment<FragmentSelectNetworksB
                         new CheckableItem(Coins.DOT.coinId(), Coins.DOT.coinName(), R.drawable.ic_coin_dot, "DOT"),
                         new CheckableItem(Coins.LTC.coinId(), Coins.LTC.coinName(), R.drawable.ic_coin_ltc, "LTC"),
                         new CheckableItem(Coins.TRON.coinId(), Coins.TRON.coinName(), R.drawable.ic_coin_trx, "TRX and TRC-20 tokens"),
-                        new CheckableItem(Coins.XRP.coinId(), Coins.XRP.coinName(), R.drawable.ic_coin_xrp, "XRP")
+                        new CheckableItem(Coins.XRP.coinId(), "XRP", R.drawable.ic_coin_xrp, "XRP")
                 );
                 break;
             case BITKEEP:

@@ -40,15 +40,21 @@ public class SelectOneAddressFragment extends BaseFragment<FragmentSelectOneAddr
     @Override
     protected void init(View view) {
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
+
         clickAddressAdapter = new ClickAddressAdapter(mActivity, addr -> {
+            navigateUp();
             Bundle bundle = new Bundle();
             bundle.putString(BundleKeys.WALLET_ID_KEY, requireArguments().getString(BundleKeys.WALLET_ID_KEY));
             bundle.putSerializable(BundleKeys.ADDRESS_IDS_KEY, (Serializable) Collections.singletonList(addr.getId()));
             bundle.putString(BundleKeys.COIN_ID_KEY, addr.getCoinId());
-            navigate(R.id.action_selectOneAddressFragment_to_syncFragment, bundle);
+            navigate(R.id.action_to_syncFragment, bundle);
         });
         Bundle data = requireArguments();
         String coinId = data.getString(BundleKeys.COIN_ID_KEY);
+        String pageTitle = data.getString(BundleKeys.PAGE_TITLE_KEY, "");
+        if (!pageTitle.isEmpty()) {
+            mBinding.toolbarTitle.setText(pageTitle);
+        }
         if (!TextUtils.isEmpty(coinId)) {
             AddressViewModel.Factory factory = new AddressViewModel.Factory(mActivity.getApplication(), coinId);
             viewModel = ViewModelProviders.of(this, factory)
