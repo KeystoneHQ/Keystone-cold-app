@@ -2,6 +2,7 @@ package com.keystone.cold.remove_wallet_mode.ui.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -48,6 +49,7 @@ public class PathPatternItemView extends LinearLayout {
     public void setData(PathPatternItem pathPatternItemModel) {
         binding.setPathPattern(pathPatternItemModel.getPathPattern());
         binding.setPatternName(pathPatternItemModel.getPatternName());
+        binding.setIsShowName(TextUtils.isEmpty(pathPatternItemModel.getPatternName()));
         binding.setIsRecommend(pathPatternItemModel.isRecommend());
         binding.setIsSelected(pathPatternItemModel.getIsSelect());
         binding.setDescription(pathPatternItemModel.getDescription());

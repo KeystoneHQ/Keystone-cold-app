@@ -123,9 +123,11 @@ public class AssetsLiveData extends MediatorLiveData<List<AssetItem>> {
 
     private void convert(CoinEntity coinEntity) {
         if (coinEntity.getCoinCode().equals("BTC")) {
-            coinEntity.setName("BTC");
+            coinEntity.setName("Bitcoin");
         } else if (coinEntity.getCoinCode().equals("TRON")) {
             coinEntity.setCoinCode("TRX");
+        } else if (coinEntity.getCoinCode().equals("XRP")) {
+            coinEntity.setName("XRP");
         }
     }
 }

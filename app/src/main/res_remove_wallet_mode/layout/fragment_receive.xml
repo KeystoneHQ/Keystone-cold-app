@@ -156,9 +156,9 @@
             android:padding="@dimen/dp_8">
 
             <ImageView
-                android:layout_width="@dimen/dp_16"
-                android:layout_height="@dimen/dp_16"
-                android:background="@drawable/ic_hint" />
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:background="@drawable/ic_remind" />
 
             <TextView
                 android:layout_width="match_parent"

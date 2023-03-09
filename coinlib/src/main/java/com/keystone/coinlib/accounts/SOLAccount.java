@@ -14,9 +14,8 @@ public enum SOLAccount {
 
     // 规范的派生路径
     // m / purpose' / coin_type' / account' / change / address_index
-
-    SOLFLARE_BIP44_ROOT("M/44'/501'", "Solflare Bip44 Root", "solfare_bip44_root", "m/44'/501'"), //只对应一个地址
     SOLFLARE_BIP44("M/44'/501'/0'", "Solflare Bip44", "solflare_bip44", "m/44'/501'/*'"),//account 变化
+    SOLFLARE_BIP44_ROOT("M/44'/501'", "Solflare Bip44 Root", "solfare_bip44_root", "m/44'/501'"), //只对应一个地址
     SOLFLARE_BIP44_CHANGE("M/44'/501'/0'/0'", "SolFlare Bip44 Change", "solflare_bip44_change", "m/44'/501'/*'/0'"); //account 变化
 
 //    SOLFLARE_BIP44_LEDGER_ROOT("M/44'/501'", "Solflare Bip44 Ledger Root", "solflare_bip44_ledger_root", "m/44'/501'/*'"),//先root 然后derived一级  M/44'/501'/0' account 变化

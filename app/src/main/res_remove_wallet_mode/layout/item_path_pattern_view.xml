@@ -33,6 +33,10 @@
             type="boolean" />
 
         <variable
+            name="isShowName"
+            type="boolean" />
+
+        <variable
             name="description"
             type="String" />
 
@@ -67,6 +71,7 @@
                     android:textColor="@color/white" />
 
                 <TextView
+                    visibleGone="@{!isShowName}"
                     android:id="@+id/derivation_pattern_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

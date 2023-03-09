@@ -88,7 +88,12 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
     protected void init(View view) {
         mActivity.setSupportActionBar(mBinding.toolbar);
         Objects.requireNonNull(mActivity.getSupportActionBar()).setDisplayShowTitleEnabled(false);
-        mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
+        mBinding.toolbar.setNavigationOnClickListener(v -> {
+            if (fragments[0] instanceof AddressFragment) {
+                ((AddressFragment) fragments[0]).exitEditAddressName();
+            }
+            navigateUp();
+        });
 
         Bundle data = requireArguments();
         coinId = data.getString(KEY_COIN_ID);

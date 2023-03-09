@@ -67,6 +67,7 @@
                 android:paddingHorizontal="@dimen/dp_16">
 
                 <TextView
+                    android:id="@+id/tvTittleHint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:lineSpacingExtra="@dimen/sp_1"

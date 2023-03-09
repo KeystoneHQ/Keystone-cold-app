@@ -60,8 +60,8 @@
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
-                android:layout_width="@dimen/dp_14"
-                android:layout_height="@dimen/dp_12"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
                 android:layout_marginStart="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_1"
                 android:background="@drawable/ic_reminder"
@@ -74,7 +74,7 @@
                 android:layout_marginStart="@dimen/dp_10"
                 android:text="@string/check_info"
                 android:textColor="@color/check_info_color"
-                android:textSize="@dimen/sp_10" />
+                android:textSize="@dimen/sp_12" />
         </LinearLayout>
 
         <include layout="@layout/divider" />
