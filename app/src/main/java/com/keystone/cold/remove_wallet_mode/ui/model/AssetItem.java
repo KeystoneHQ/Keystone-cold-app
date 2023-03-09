@@ -65,7 +65,7 @@ public class AssetItem implements FilterableItem {
     }
 
     public String getCanonicalCoinIdByEcology() {
-        if (this.ecology != null && this.ecology.contains(TEXT_ECOLOGY_EVM))
+        if (this.ecology != null && this.ecology.contains(TEXT_ECOLOGY_EVM) && !Coins.EVMOS.coinId().equals(this.coinId))
             return Coins.ETH.coinId();
         return this.coinId;
     }
