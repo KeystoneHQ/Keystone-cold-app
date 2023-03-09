@@ -110,7 +110,6 @@ public class ChangePathViewModel extends AndroidViewModel {
                     pathPatternItem.setDescription(getApplication().getString(R.string.derivation_path_sol_change));
                 }
                 pathPatternItems.add(pathPatternItem);
-                pathPatternItems.add(pathPatternItem);
             }
             return pathPatternItems;
         } else if (Coins.NEAR.coinId().equals(coinId)) {
