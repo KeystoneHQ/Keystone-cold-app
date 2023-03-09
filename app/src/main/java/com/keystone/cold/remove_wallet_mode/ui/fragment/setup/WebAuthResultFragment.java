@@ -101,7 +101,7 @@ public class WebAuthResultFragment extends SetupVaultBaseFragment<WebAuthResultB
 			if (inSetupProcess) {
 				navigate(R.id.action_webAuth_retry);
 			} else {
-				navigateUp();
+				navigate(R.id.action_to_scanner);
 			}
 		});
 
