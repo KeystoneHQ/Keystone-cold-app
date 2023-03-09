@@ -58,11 +58,11 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
+                        android:layout_width="@dimen/dp_32"
+                        android:layout_height="@dimen/dp_32"
                         app:coin_icon="@{coinCode}"
                         tools:ignore="ContentDescription"
-                        tools:src="@drawable/coin_apt" />
+                        tools:src="@drawable/ic_coin_apt" />
 
                     <TextView
                         android:id="@+id/toolbar_title"
