@@ -44,7 +44,7 @@ public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDer
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         mBinding.ivConfirm.setOnClickListener(v -> save());
         mBinding.pathPatternView.setOnItemClick(code -> selectCode = code);
-        String hintText = getString(R.string.changePathText, Coins.coinCodeFromCoinId(coinId));
+        String hintText = getString(R.string.changePathText, Coins.coinNameOfCoinId(coinId));
         mBinding.tvTittleHint.setText(hintText);
     }
 
