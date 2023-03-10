@@ -71,8 +71,8 @@
                     android:textColor="@color/white" />
 
                 <TextView
-                    visibleGone="@{!isShowName}"
                     android:id="@+id/derivation_pattern_tag"
+                    visibleGone="@{!isShowName}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{patternName}"
@@ -90,13 +90,21 @@
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/address_list"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:nestedScrollingEnabled="false"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            android:descendantFocusability="blocksDescendants">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/address_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        </RelativeLayout>
+
 
         <include layout="@layout/divider" />
 

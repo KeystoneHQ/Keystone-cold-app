@@ -46,7 +46,7 @@
             <ImageView
                 android:id="@+id/ivConfirm"
                 android:layout_width="@dimen/dp_32"
-                android:layout_height="@dimen/dp_24"
+                android:layout_height="@dimen/dp_28"
                 android:layout_gravity="end|center"
                 android:layout_marginEnd="@dimen/dp_16"
                 android:background="@drawable/ic_confirm" />

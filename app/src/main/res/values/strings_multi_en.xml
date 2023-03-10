@@ -802,6 +802,15 @@
         <item><u>https://keyst.one/defi</u></item>
     </string-array>
 
+
+    <string-array name="tutorials_name_blockwallet">
+        <item>BlockWallet</item>
+    </string-array>
+
+    <string-array name="tutorials_link_blockwallet">
+        <item><u>https://keyst.one/t/block</u></item>
+    </string-array>
+
     <string-array name="tutorials_name_polkadot">
         <item>Polkadot{.js}</item>
 <!--        <item>Nova Wallet</item>-->

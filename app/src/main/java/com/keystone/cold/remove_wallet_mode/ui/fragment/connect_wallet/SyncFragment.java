@@ -177,6 +177,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
             case ZAPPER:
             case YEARN:
             case SUSHISWAP:
+            case BLOCKWALLET:
             case METAMASK:
                 MetamaskViewModel metamaskViewModel = ViewModelProviders.of(this).get(MetamaskViewModel.class);
                 urMutableLiveData = metamaskViewModel.generateSyncUR();

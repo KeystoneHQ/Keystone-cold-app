@@ -47,8 +47,8 @@
             android:paddingHorizontal="@dimen/dp_16">
 
             <ImageView
-                android:layout_width="@dimen/dp_26"
-                android:layout_height="@dimen/dp_26"
+                android:layout_width="@dimen/dp_32"
+                android:layout_height="@dimen/dp_32"
                 android:src="@{checkableItem.iconResId}"
                 android:visibility="@{checkableItem.iconVisibility()}"
                 tools:src="@drawable/coin_dot" />
@@ -71,7 +71,7 @@
                     android:singleLine="true"
                     android:text="@{checkableItem.name}"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_16"
                     android:textStyle="bold"
                     tools:ignore="LabelFor"
                     tools:text="Polkadot" />
@@ -81,7 +81,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/hint"
-                    android:textSize="@dimen/sp_9"
+                    android:textSize="@dimen/sp_10"
                     android:text="@{checkableItem.description}"
                     tools:text="description" />
             </LinearLayout>

@@ -90,7 +90,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginTop="@dimen/dp_12"
             android:text="@{addressName}"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_14"
@@ -98,7 +98,7 @@
             tools:text="Aptos-0" />
 
         <TextView
-            android:layout_width="@dimen/dp_166"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_8"
             android:ellipsize="end"
@@ -107,7 +107,7 @@
             android:maxLines="2"
             android:text="@{address}"
             android:textColor="@color/white40"
-            android:textSize="@dimen/sp_9"
+            android:textSize="@dimen/sp_10"
             tools:text="19zhQ 2rKq Xm5r y1pj Co83 JbBK 5zUr bdKgc" />
 
         <TextView

@@ -44,7 +44,7 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="45dp"
-            android:text="@string/verify_fingerprint_hint"
+            android:text="@string/fingerprint_unlock"
             android:textColor="@android:color/white"
             android:textSize="17sp"
             android:textStyle="bold" />
