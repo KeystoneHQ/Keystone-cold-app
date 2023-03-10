@@ -25,7 +25,6 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
-import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
@@ -212,6 +211,7 @@ public class EthereumTxViewModel extends BaseTxViewModel<EthereumTransaction> {
                 observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
                 return;
             }
+            chainId = transaction.getChainId();
             isParsing.postValue(false);
             observableTransaction.postValue(transaction);
         });
@@ -243,7 +243,7 @@ public class EthereumTxViewModel extends BaseTxViewModel<EthereumTransaction> {
                 observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
                 return;
             }
-
+            chainId = transaction.getChainId();
             //override values
             transaction.setTxId(txId);
             try {

@@ -1,5 +1,6 @@
 package com.keystone.cold.remove_wallet_mode.helper;
 
+import static com.keystone.coinlib.v8.ScriptLoader.readAsset;
 import static com.keystone.cold.remove_wallet_mode.ui.model.AssetItem.TEXT_ECOLOGY_COSMOS;
 import static com.keystone.cold.remove_wallet_mode.ui.model.AssetItem.TEXT_ECOLOGY_EVM;
 
@@ -14,6 +15,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class CoinConfigHelper {
 
@@ -152,6 +155,27 @@ public class CoinConfigHelper {
             exception.printStackTrace();
         }
         return assetItems;
+    }
+
+    public static List<AssetItem> getEVMChains() {
+        List<AssetItem> extraCoins = getExtraCoins();
+        return extraCoins.stream().filter(v -> v.getEcology().contains(TEXT_ECOLOGY_EVM)).collect(Collectors.toList());
+    }
+
+    public static AssetItem getEVMChainByChainID(long chainId) {
+        try {
+            JSONObject chainIdJSONObject = new JSONObject(readAsset("chain/chainId.json"));
+            JSONObject chain = chainIdJSONObject.optJSONObject(String.valueOf(chainId));
+            if (chain == null) return null;
+            String coinCode = chain.optString("coinCode", "");
+            if (coinCode.isEmpty()) return null;
+            List<AssetItem> assetItems = getEVMChains();
+            Optional<AssetItem> result = assetItems.stream().filter(v -> v.getCoinCode().equals(coinCode)).findFirst();
+            return result.orElse(null);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static List<String> getCoinEco(String coinCode) {

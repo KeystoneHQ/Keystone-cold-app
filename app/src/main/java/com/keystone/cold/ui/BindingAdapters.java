@@ -54,8 +54,12 @@ public class BindingAdapters {
             return;
         }
         Context context = view.getContext();
-        int resId = context.getResources().getIdentifier("coin_" + name.toLowerCase(),
+        int resId = context.getResources().getIdentifier("ic_coin_" + name.toLowerCase(),
                 "drawable", context.getPackageName());
+        if (resId == 0) {
+            resId = context.getResources().getIdentifier("coin_" + name.toLowerCase(),
+                    "drawable", context.getPackageName());
+        }
         view.setImageResource(resId);
     }
 
