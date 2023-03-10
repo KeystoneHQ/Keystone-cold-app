@@ -105,17 +105,17 @@
                         android:breakStrategy="simple"
                         android:gravity="center"
                         android:maxWidth="240dp"
-                        android:text="@string/connect_info"
+                        android:text="@string/scan_via_software"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_16"
                         android:textStyle="bold" />
 
                     <ImageView
                         android:id="@+id/info"
-                        android:layout_width="@dimen/dp_20"
-                        android:layout_height="@dimen/dp_20"
+                        android:layout_width="@dimen/dp_24"
+                        android:layout_height="@dimen/dp_24"
                         android:layout_marginStart="@dimen/dp_10"
-                        android:src="@drawable/info" />
+                        android:src="@drawable/ic_tutorial_hint" />
                 </LinearLayout>
 
                 <TextView

@@ -49,7 +49,7 @@ public class FingerprintLockFragment extends BaseFragment<FragmentFingerprintLoc
 
     @Override
     protected void init(View view) {
-        nftAwareToolbarFragment = new NFTAwareToolbarFragment(false, getString(R.string.fingerprint_unlock), R.dimen.dp_188, R.dimen.dp_64);
+        nftAwareToolbarFragment = new NFTAwareToolbarFragment(false, null, R.dimen.dp_188, R.dimen.dp_64);
         getChildFragmentManager().beginTransaction().replace(R.id.toolbar_container, nftAwareToolbarFragment).commit();
         mBinding.switchToPassword.setOnClickListener(gotoPasswordUnlock);
         attemptTimes = Utilities.getPatternRetryTimes(mActivity);

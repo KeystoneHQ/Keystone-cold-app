@@ -61,7 +61,7 @@ public class PasswordLockFragment extends BaseFragment<FragmentPasswordUnlockBin
     protected void init(View view) {
         Bundle data = requireArguments();
         boolean isForce = data.getBoolean(IS_FORCE);
-        NFTAwareToolbarFragment nftAwareToolbarFragment = new NFTAwareToolbarFragment(!isForce, getString(R.string.password_unlock), R.dimen.dp_106, R.dimen.dp_6);
+        NFTAwareToolbarFragment nftAwareToolbarFragment = new NFTAwareToolbarFragment(!isForce, getString(R.string.password_unlock), R.dimen.dp_106, R.dimen.dp_3);
         getChildFragmentManager().beginTransaction().replace(R.id.toolbar_container, nftAwareToolbarFragment).commit();
 
         boolean hasVault = Utilities.hasVaultCreated(mActivity);
