@@ -52,7 +52,6 @@ import com.keystone.cold.remove_wallet_mode.helper.SetupManager;
 import com.keystone.cold.util.HashUtil;
 import com.keystone.cold.viewmodel.OneTimePasswordManager;
 
-
 import org.spongycastle.util.encoders.Base64;
 import org.spongycastle.util.encoders.Hex;
 

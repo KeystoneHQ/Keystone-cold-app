@@ -4,8 +4,6 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.remove_wallet_mode.helper.address_generators.LitecoinAddressGenerator;
-import com.keystone.cold.remove_wallet_mode.helper.address_generators.RippleAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.TronAddressGenerator;
 
 public class TronCreator extends BaseCreator{

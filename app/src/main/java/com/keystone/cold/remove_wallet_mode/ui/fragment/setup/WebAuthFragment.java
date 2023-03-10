@@ -18,35 +18,19 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.setup;
 
 import static com.keystone.cold.Utilities.IS_SETUP_VAULT;
-import static com.keystone.cold.ui.fragment.setup.WebAuthResultFragment.WEB_AUTH_DATA;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
-
-import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.WebAuthBinding;
 import com.keystone.cold.remove_wallet_mode.viewmodel.SetupVaultViewModel;
-import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
-import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
-import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerState;
-import com.keystone.cold.ui.fragment.main.scan.scanner.ScannerViewModel;
-import com.keystone.cold.viewmodel.exceptions.UnknowQrCodeException;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.Objects;
 
 public class WebAuthFragment extends SetupVaultBaseFragment<WebAuthBinding> {
     @Override

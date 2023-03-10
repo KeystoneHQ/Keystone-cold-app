@@ -8,8 +8,6 @@ import androidx.lifecycle.LiveData;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentRawTxRemoveWalletModeBinding;
-import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
-import com.keystone.cold.remove_wallet_mode.viewmodel.tx.BaseTxViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
 
 public class RawTxFragment extends BaseFragment<FragmentRawTxRemoveWalletModeBinding> {

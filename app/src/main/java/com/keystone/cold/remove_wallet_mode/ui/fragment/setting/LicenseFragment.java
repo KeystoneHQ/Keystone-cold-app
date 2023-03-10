@@ -29,7 +29,6 @@ import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.FragmentPrivacyPolicyBinding;
-import com.keystone.cold.databinding.PrivacyPolicyBinding;
 import com.keystone.cold.ui.fragment.BaseFragment;
 
 import java.io.BufferedReader;

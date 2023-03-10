@@ -9,7 +9,6 @@ import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

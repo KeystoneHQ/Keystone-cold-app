@@ -5,7 +5,6 @@ import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.DashAddressGenerator;
-import com.keystone.cold.remove_wallet_mode.helper.address_generators.LitecoinAddressGenerator;
 
 public class DashCreator extends BaseCreator {
     public DashCreator() {

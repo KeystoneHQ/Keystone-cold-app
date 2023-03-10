@@ -8,7 +8,6 @@ import com.keystone.coinlib.accounts.ExtendedPublicKeyVersion;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
-import com.keystone.cold.databinding.ExportXpubFragmentBinding;
 import com.keystone.cold.databinding.FragmentExportXpubBinding;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.ui.fragment.BaseFragment;

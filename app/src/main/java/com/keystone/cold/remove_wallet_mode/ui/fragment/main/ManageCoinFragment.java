@@ -24,7 +24,6 @@ import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.ArweaveAuthF
 import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.ArweaveAuthFragment.AR_SETUP_SUCCESS;
 
 import android.os.Bundle;
-
 import android.view.View;
 
 import androidx.fragment.app.FragmentManager;

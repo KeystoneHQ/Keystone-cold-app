@@ -24,7 +24,6 @@ import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.near.model.actio
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.near.model.actions.Transfer;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.near.model.actions.accesskey.FunctionCallPermission;
 
-
 import java.math.BigDecimal;
 import java.util.List;
 

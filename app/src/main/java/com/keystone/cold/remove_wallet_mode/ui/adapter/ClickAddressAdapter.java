@@ -2,18 +2,10 @@ package com.keystone.cold.remove_wallet_mode.ui.adapter;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.ItemAddressClickableBinding;
-import com.keystone.cold.databinding.ItemAddressSeletedListBinding;
 import com.keystone.cold.remove_wallet_mode.ui.model.AddressItem;
 import com.keystone.cold.ui.common.BaseBindingAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ClickAddressAdapter extends BaseBindingAdapter<AddressItem, ItemAddressClickableBinding> {
     private final AddressCallback addressCallback;

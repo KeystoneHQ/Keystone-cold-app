@@ -4,7 +4,6 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.remove_wallet_mode.helper.address_generators.LitecoinAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.RippleAddressGenerator;
 
 public class RippleCreator extends BaseCreator {

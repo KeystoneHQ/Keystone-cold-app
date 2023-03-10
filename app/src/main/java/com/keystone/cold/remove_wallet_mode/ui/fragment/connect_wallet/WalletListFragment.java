@@ -7,7 +7,6 @@ import static com.keystone.cold.remove_wallet_mode.ui.fragment.main.ArweaveAuthF
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
@@ -17,8 +16,8 @@ import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentWalletListBinding;
 import com.keystone.cold.integration.chains.ArweaveViewModel;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
-import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.helper.SyncMode;
+import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.WalletListAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.config.WalletConfig;
 import com.keystone.cold.remove_wallet_mode.ui.model.WalletItem;
@@ -26,7 +25,6 @@ import com.keystone.cold.remove_wallet_mode.viewmodel.WalletViewModel;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
-import com.keystone.cold.ui.views.AuthenticateModal;
 
 import java.util.List;
 

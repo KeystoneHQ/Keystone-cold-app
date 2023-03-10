@@ -19,6 +19,11 @@
 
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum;
 
+import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
+import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
+import static com.keystone.cold.ui.fragment.main.web3.EthTxConfirmFragment.highLight;
+import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -32,7 +37,6 @@ import com.keystone.coinlib.coins.ETH.GnosisHandler;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
-import com.keystone.cold.databinding.EthSignTypedDataBinding;
 import com.keystone.cold.databinding.FragmentEthereumSignTypedDataBinding;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.EthereumTxViewModel;
@@ -42,7 +46,6 @@ import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
 import com.keystone.cold.viewmodel.tx.KeystoneTxViewModel;
-import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,12 +55,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.keystone.cold.callables.FingerprintPolicyCallable.READ;
-import static com.keystone.cold.callables.FingerprintPolicyCallable.TYPE_SIGN_TX;
-import static com.keystone.cold.ui.fragment.main.web3.EthBroadcastTxFragment.KEY_SIGNATURE_JSON;
-import static com.keystone.cold.ui.fragment.main.web3.EthTxConfirmFragment.highLight;
-import static com.keystone.cold.ui.fragment.setup.PreImportFragment.ACTION;
 
 public class EthereumSignTypedDataFragment extends BaseFragment<FragmentEthereumSignTypedDataBinding> {
 

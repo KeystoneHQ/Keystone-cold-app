@@ -4,18 +4,13 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModelProviders;
 
-import com.keystone.coinlib.exception.InvalidAccountException;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentSubstrateTxBinding;
-import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.PolkadotErrorDialog;
-import com.keystone.cold.viewmodel.PolkadotViewModel;
-import com.keystone.cold.viewmodel.tx.PolkadotJsTxConfirmViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
