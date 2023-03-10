@@ -19,6 +19,7 @@
 <resources>
     <color name="color_12ffffff">#12ffffff</color>
     <color name="color_1A1A1A">#1A1A1A</color>
+    <color name="color_2F3032">#2F3032</color>
     <color name="primary">#00CDC3</color>
     <color name="primary_20a">#3300CDC3</color>
     <color name="hint">#666666</color>

@@ -31,8 +31,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_10"
-        android:textColor="@color/white40"
-        android:textSize="@dimen/sp_9"
+        android:textColor="@color/white_secondary"
+        android:textSize="@dimen/sp_12"
         tools:text="Keystone is an offline device that doesn’t support this function. Please sync it with a software wallet, also a watch-only wallet, and you will be able to check the balance." />
 
     <View

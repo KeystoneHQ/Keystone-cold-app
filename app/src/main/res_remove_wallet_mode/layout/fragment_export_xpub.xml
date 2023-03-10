@@ -47,7 +47,8 @@
                 android:layout_gravity="center"
                 android:text="@string/export_xpub_text"
                 android:textColor="@android:color/white"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:textStyle="bold" />
         </androidx.appcompat.widget.Toolbar>
 
         <include layout="@layout/divider" />
@@ -64,12 +65,12 @@
                 android:paddingHorizontal="16dp">
 
                 <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="@dimen/dp_32"
+                    android:layout_height="@dimen/dp_32"
                     android:layout_marginTop="24dp"
                     android:contentDescription="coinIcon"
-                    app:icon="@{coinCode}"
-                    tools:src="@drawable/coin_btc" />
+                    app:coin_icon="@{coinCode}"
+                    tools:src="@drawable/ic_coin_btc" />
 
                 <TextView
                     android:layout_width="wrap_content"

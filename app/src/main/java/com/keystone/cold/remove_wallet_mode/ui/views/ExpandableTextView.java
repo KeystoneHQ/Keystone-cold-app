@@ -82,6 +82,11 @@ public class ExpandableTextView extends LinearLayout {
         Boolean origin = isExpanded.getValue();
         if (origin != null) {
             isExpanded.postValue(!origin);
+            if (!origin) {
+                imageView.setImageResource(R.drawable.icon_fold);
+            }else {
+                imageView.setImageResource(R.drawable.icon_unfold);
+            }
         }
     }
 

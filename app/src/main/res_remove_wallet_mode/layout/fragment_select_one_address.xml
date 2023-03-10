@@ -44,7 +44,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/select_account_tittle"
-                android:textColor="@android:color/white"
+                android:textColor="@color/white"
+                android:textStyle="bold"
                 android:textSize="15sp" />
 
         </androidx.appcompat.widget.Toolbar>

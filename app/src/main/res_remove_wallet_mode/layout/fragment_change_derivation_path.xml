@@ -73,6 +73,7 @@
                     android:lineSpacingExtra="@dimen/sp_1"
                     android:text="@string/changePathText"
                     android:textColor="@color/white"
+                    android:textStyle="bold"
                     android:textSize="@dimen/sp_14" />
 
                 <TextView
@@ -80,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_8"
                     android:text="@string/change_path_sub_text"
-                    android:textColor="@color/white"
+                    android:textColor="#E4E4E4"
                     android:textSize="@dimen/sp_10" />
 
                 <com.keystone.cold.remove_wallet_mode.ui.views.PathPatternView

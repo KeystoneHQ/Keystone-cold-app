@@ -42,6 +42,7 @@
             android:focusable="true"
             android:onClick="@{()->callback.onClick(clickableItem)}"
             android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:padding="@dimen/dp_16">
 
             <ImageView
@@ -76,8 +77,8 @@
 
             <ImageView
                 android:id="@+id/arrow"
-                android:layout_width="@dimen/dp_22"
-                android:layout_height="@dimen/dp_22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/arrow_right" />
 
 

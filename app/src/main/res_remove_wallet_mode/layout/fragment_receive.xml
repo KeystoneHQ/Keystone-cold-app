@@ -119,7 +119,6 @@
             android:text="@{'('+path+')'}"
             android:textColor="@color/white40"
             android:textSize="12sp"
-            android:visibility="gone"
             tools:text="m/49'/0'/0'" />
 
         <com.keystone.cold.ui.views.qrcode.QrCodeView

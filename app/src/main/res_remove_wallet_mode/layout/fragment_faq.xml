@@ -70,6 +70,7 @@
                         android:text="@string/for_more"
                         android:textColor="#e4e4e4"
                         android:textSize="@dimen/sp_12"
+                        android:textStyle="bold"
                         tools:text="Click here for more information" />
 
                     <ImageView
@@ -77,8 +78,8 @@
                         android:layout_height="@dimen/dp_24"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/dp_13"
-                        android:background="@drawable/ic_qr_default" />
+                        android:layout_marginEnd="@dimen/dp_12"
+                        android:background="@drawable/ic_qr_primary" />
                 </RelativeLayout>
 
 

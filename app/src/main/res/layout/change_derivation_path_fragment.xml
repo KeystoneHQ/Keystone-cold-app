@@ -113,7 +113,7 @@
                         android:layout_height="wrap_content"
                         android:text="m/44'/501'/*'"
                         android:textColor="@color/white"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/sp_15"
                         android:textStyle="bold" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -140,7 +140,7 @@
                         android:layout_height="wrap_content"
                         android:text="m/44'/501'/*'"
                         android:textColor="@color/white"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/sp_15"
                         android:textStyle="bold" />
 
                     <androidx.recyclerview.widget.RecyclerView
