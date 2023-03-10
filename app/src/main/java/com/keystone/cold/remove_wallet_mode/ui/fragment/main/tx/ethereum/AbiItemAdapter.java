@@ -22,9 +22,7 @@ package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum;
 import android.text.TextUtils;
 
 import com.keystone.coinlib.coins.ETH.Eth;
-import com.keystone.coinlib.ens.EnsLoadManager;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.EthereumTxViewModel;
-import com.keystone.cold.viewmodel.tx.Web3TxViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;

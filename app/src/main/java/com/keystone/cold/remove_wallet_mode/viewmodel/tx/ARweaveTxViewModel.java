@@ -22,7 +22,6 @@ import com.keystone.cold.encryption.RustSigner;
 import com.keystone.cold.integration.chains.ArweaveViewModel;
 import com.keystone.cold.model.ArweaveTransaction;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
-import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.remove_wallet_mode.exceptions.InvalidStateException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.viewmodel.WatchWallet;

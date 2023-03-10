@@ -16,8 +16,6 @@ import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.modal.ModalDialog;
 
-import java.util.Objects;
-
 public class FeeAttackChecking {
 
     public static final String KEY_DUPLICATE_TX = "key_duplicate_tx";

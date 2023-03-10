@@ -1,13 +1,11 @@
 package com.keystone.cold.remove_wallet_mode.helper;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.model.Tx;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
-import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.viewmodel.tx.GenericETHTxEntity;
 
 import org.json.JSONException;

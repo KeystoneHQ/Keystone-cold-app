@@ -29,7 +29,6 @@ import androidx.fragment.app.DialogFragment;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.DialogPickerBinding;
-import com.keystone.cold.databinding.PickerDialogBinding;
 import com.keystone.cold.ui.fragment.main.NumberPickerCallback;
 
 import java.util.Objects;

@@ -1,7 +1,6 @@
 package com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;

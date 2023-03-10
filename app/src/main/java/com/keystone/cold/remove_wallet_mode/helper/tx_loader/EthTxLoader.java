@@ -1,6 +1,6 @@
 package com.keystone.cold.remove_wallet_mode.helper.tx_loader;
 
-import static com.keystone.cold.viewmodel.ElectrumViewModel.ELECTRUM_SIGN_ID;;
+import static com.keystone.cold.viewmodel.ElectrumViewModel.ELECTRUM_SIGN_ID;
 
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.DataRepository;
@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+;
 
 public class EthTxLoader implements TxLoader {
 

@@ -22,7 +22,6 @@ import android.view.View;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentSystemSettingBinding;
-import com.keystone.cold.databinding.SystemSettingBinding;
 import com.keystone.cold.ui.fragment.BaseFragment;
 
 public class SystemSettingFragment extends BaseFragment<FragmentSystemSettingBinding> {

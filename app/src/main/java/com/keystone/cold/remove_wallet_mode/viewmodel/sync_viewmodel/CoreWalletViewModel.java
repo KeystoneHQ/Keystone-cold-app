@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.cold.AppExecutors;
-import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.util.URRegistryHelper;
 import com.sparrowwallet.hummingbird.UR;

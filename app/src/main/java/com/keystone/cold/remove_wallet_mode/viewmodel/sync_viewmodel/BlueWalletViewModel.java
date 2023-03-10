@@ -6,14 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.utils.B58;
 import com.keystone.cold.AppExecutors;
-import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.BitcoinTxViewModel;
-import com.keystone.cold.util.URRegistryHelper;
 import com.sparrowwallet.hummingbird.UR;
 import com.sparrowwallet.hummingbird.registry.CryptoAccount;
 import com.sparrowwallet.hummingbird.registry.CryptoCoinInfo;

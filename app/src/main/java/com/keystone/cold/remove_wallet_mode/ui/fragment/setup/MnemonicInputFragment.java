@@ -27,7 +27,6 @@ import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATI
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATING_FAILED;
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_NOT_CREATE;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -53,7 +52,6 @@ import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.CreateVaultModalBinding;
 import com.keystone.cold.databinding.MnemonicInputFragmentBinding;
 import com.keystone.cold.databinding.ModalWithTwoButtonBinding;
-import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.unlock.VerifyMnemonicFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.SetupVaultViewModel;

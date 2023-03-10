@@ -23,7 +23,6 @@ import android.view.View;
 import com.keystone.cold.R;
 import com.keystone.cold.config.FeatureFlags;
 import com.keystone.cold.databinding.FragmentSettingEntryBinding;
-import com.keystone.cold.databinding.SettingFragmentBinding;
 import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.ui.fragment.BaseFragment;
 

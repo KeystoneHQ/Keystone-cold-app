@@ -5,7 +5,6 @@ import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinCashAddressGenerator;
-import com.keystone.cold.remove_wallet_mode.helper.address_generators.DashAddressGenerator;
 
 public class BitcoinCashCreator extends BaseCreator{
     public BitcoinCashCreator() {

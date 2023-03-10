@@ -25,11 +25,9 @@ import com.keystone.cold.remove_wallet_mode.ui.model.AssetItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AddressViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AssetViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
-import com.keystone.cold.ui.modal.ModalDialog;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
 

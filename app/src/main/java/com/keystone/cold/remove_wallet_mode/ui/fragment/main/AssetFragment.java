@@ -41,30 +41,25 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.allenliu.badgeview.BadgeFactory;
 import com.allenliu.badgeview.BadgeView;
-
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
-
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.DialogAssetBottomBinding;
 import com.keystone.cold.databinding.FragmentAssetBinding;
-
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
+import com.keystone.cold.remove_wallet_mode.ui.views.AddressNumberPicker;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AddressViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
-import com.keystone.cold.remove_wallet_mode.ui.views.AddressNumberPicker;
 import com.keystone.cold.ui.fragment.main.NumberPickerCallback;
-
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.ui.modal.ProgressModalDialog;
 import com.keystone.cold.util.ViewUtils;
 import com.keystone.cold.viewmodel.PolkadotViewModel;
-
 
 import java.util.Arrays;
 import java.util.Objects;

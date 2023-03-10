@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.keystone.cold.remove_wallet_mode.helper.SyncMode;
 import com.keystone.cold.remove_wallet_mode.ui.model.WalletItem;
-import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 
 import java.util.ArrayList;
 import java.util.List;

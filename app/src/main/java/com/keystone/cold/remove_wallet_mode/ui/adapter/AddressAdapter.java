@@ -22,7 +22,6 @@ import android.text.InputFilter;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
-
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.ItemAddressListBinding;
 import com.keystone.cold.remove_wallet_mode.ui.model.AddressItem;

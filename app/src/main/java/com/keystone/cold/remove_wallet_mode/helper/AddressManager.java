@@ -19,8 +19,8 @@ import com.keystone.cold.remove_wallet_mode.helper.address_generators.EthereumAd
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.LitecoinAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.NearAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.RippleAddressGenerator;
-import com.keystone.cold.remove_wallet_mode.helper.address_generators.SubstrateAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.SolanaAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.SubstrateAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.TronAddressGenerator;
 
 

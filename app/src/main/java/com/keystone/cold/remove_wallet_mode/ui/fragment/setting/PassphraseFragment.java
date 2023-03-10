@@ -41,7 +41,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
-import androidx.navigation.Navigation;
 
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
@@ -49,12 +48,11 @@ import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.ConfirmModalBinding;
 import com.keystone.cold.databinding.CreateVaultModalBinding;
 import com.keystone.cold.databinding.PassphraseBinding;
-import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.helper.CoinConfigHelper;
 import com.keystone.cold.remove_wallet_mode.helper.SetupManager;
+import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.setup.SetupVaultBaseFragment;
-import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.ui.modal.ModalDialog;
 import com.keystone.cold.util.Keyboard;
 

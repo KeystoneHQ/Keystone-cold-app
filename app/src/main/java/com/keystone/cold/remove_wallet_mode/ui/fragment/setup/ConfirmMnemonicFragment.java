@@ -32,7 +32,6 @@ import android.view.View;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.Navigation;
 
 import com.keystone.coinlib.accounts.BTCAccount;
 import com.keystone.coinlib.accounts.ETHAccount;
@@ -40,16 +39,12 @@ import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
-import com.keystone.cold.db.PresetData;
-import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.remove_wallet_mode.helper.CoinConfigHelper;
 import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.viewmodel.SetupVaultViewModel;
 import com.keystone.cold.selfcheck.RuntimeStatusCode;
 import com.keystone.cold.util.Keyboard;
-
-import java.util.List;
 
 public class ConfirmMnemonicFragment extends MnemonicInputFragment {
 

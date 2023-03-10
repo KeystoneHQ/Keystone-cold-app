@@ -26,11 +26,8 @@ import androidx.annotation.Nullable;
 
 import com.allenliu.badgeview.BadgeFactory;
 import com.allenliu.badgeview.BadgeView;
-import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
-import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.ItemAssetListBinding;
-import com.keystone.cold.db.viewmodel.CoinModel;
 import com.keystone.cold.remove_wallet_mode.ui.model.AssetItem;
 import com.keystone.cold.ui.common.FilterableBaseBindingAdapter;
 

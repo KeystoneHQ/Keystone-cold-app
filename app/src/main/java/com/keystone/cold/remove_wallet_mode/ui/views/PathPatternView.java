@@ -7,10 +7,10 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
-import java.util.List;
-
 import com.keystone.cold.R;
 import com.keystone.cold.remove_wallet_mode.ui.model.PathPatternItem;
+
+import java.util.List;
 
 
 public class PathPatternView extends LinearLayout {

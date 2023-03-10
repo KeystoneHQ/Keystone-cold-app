@@ -6,13 +6,8 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
-import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
-import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ReviewTransactionFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.BitcoinTxViewModel;
-import com.keystone.cold.ui.modal.ProgressModalDialog;
-
-import java.util.Objects;
 
 public class BitcoinReviewTransactionFragment extends ReviewTransactionFragment<PSBT, BitcoinTxViewModel> {
     @Override

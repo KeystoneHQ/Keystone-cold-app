@@ -2,7 +2,6 @@ package com.keystone.cold.remove_wallet_mode.ui.adapter;
 
 import android.content.Context;
 
-
 import androidx.annotation.Nullable;
 
 import com.keystone.cold.R;

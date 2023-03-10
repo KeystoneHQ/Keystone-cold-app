@@ -23,7 +23,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.keystone.cold.R;
-import com.keystone.cold.databinding.FingerprintSettingBinding;
 import com.keystone.cold.databinding.FragmentFingerprintSettingBinding;
 import com.keystone.cold.databinding.SettingItemWithArrowBinding;
 import com.keystone.cold.fingerprint.FingerprintKit;

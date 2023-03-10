@@ -31,7 +31,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.FragmentListPreferenceBinding;
-import com.keystone.cold.databinding.SettingItemSelectableBinding;
 import com.keystone.cold.databinding.ViewSettingItemSelectableBinding;
 import com.keystone.cold.ui.common.BaseBindingAdapter;
 import com.keystone.cold.ui.fragment.BaseFragment;

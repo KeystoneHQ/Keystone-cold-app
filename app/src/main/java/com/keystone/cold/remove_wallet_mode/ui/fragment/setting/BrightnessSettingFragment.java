@@ -22,7 +22,6 @@ import android.view.View;
 import android.widget.SeekBar;
 
 import com.keystone.cold.R;
-import com.keystone.cold.databinding.BrightnessSettingBinding;
 import com.keystone.cold.databinding.FragmentBrightnessSettingBinding;
 import com.keystone.cold.setting.BrightnessHelper;
 import com.keystone.cold.ui.fragment.BaseFragment;

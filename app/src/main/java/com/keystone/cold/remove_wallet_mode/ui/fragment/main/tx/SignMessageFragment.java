@@ -10,7 +10,6 @@ import android.view.View;
 
 import androidx.lifecycle.LiveData;
 
-import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.databinding.FragmentSignMessageBinding;
@@ -24,7 +23,6 @@ import com.keystone.cold.ui.modal.SigningDialog;
 import com.keystone.cold.ui.views.AuthenticateModal;
 import com.keystone.cold.util.CharSetUtil;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
