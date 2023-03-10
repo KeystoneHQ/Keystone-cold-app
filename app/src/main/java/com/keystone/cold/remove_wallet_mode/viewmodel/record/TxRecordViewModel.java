@@ -63,7 +63,7 @@ public class TxRecordViewModel extends AndroidViewModel {
 
     private LiveData<List<Tx>> loadEVMTxs(String coinId) {
         MutableLiveData<List<Tx>> txs = new MutableLiveData<>();
-        TxRecordManager.loadTx(coinId, txs);
+        TxRecordManager.loadTx(Coins.ETH.coinId(), txs);
         return Transformations.map(txs, (v) -> v.stream().filter(tx -> {
             GenericETHTxEntity ethTxEntity = (GenericETHTxEntity) tx;
             String signData = ethTxEntity.getSignedHex();

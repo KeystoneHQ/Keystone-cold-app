@@ -12,7 +12,6 @@ import com.keystone.cold.callables.FingerprintPolicyCallable;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ConfirmTransactionFragment;
-import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.SubstrateTxViewModel;
 import com.keystone.cold.ui.views.AuthenticateModal;
 import com.keystone.cold.viewmodel.PolkadotViewModel;
@@ -29,9 +28,8 @@ public class SubstrateConfirmTransactionFragment extends ConfirmTransactionFragm
 
     @Override
     protected TabLayoutConfig[] getTabLayouts() {
-        TabLayoutConfig[] configs = new TabLayoutConfig[2];
+        TabLayoutConfig[] configs = new TabLayoutConfig[1];
         configs[0] = new TabLayoutConfig(getString(R.string.overview), SubstrateTransactionDetailFragment.newInstance(requireArguments(), viewModel.getObservableTransaction()));
-        configs[1] = new TabLayoutConfig(getString(R.string.raw_data), RawTxFragment.newInstance(requireArguments(), viewModel.getRawFormatTx()));
         return configs;
     }
 

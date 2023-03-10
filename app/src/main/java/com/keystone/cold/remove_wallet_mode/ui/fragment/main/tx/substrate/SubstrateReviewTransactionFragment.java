@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
-import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ReviewTransactionFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.SubstrateTxViewModel;
 
@@ -22,9 +21,8 @@ public class SubstrateReviewTransactionFragment extends ReviewTransactionFragmen
 
     @Override
     protected TabLayoutConfig[] getTabLayouts() {
-        TabLayoutConfig[] configs = new TabLayoutConfig[2];
+        TabLayoutConfig[] configs = new TabLayoutConfig[1];
         configs[0] = new TabLayoutConfig(getString(R.string.overview), SubstrateTransactionDetailFragment.newInstance(requireArguments(), viewModel.getObservableTransaction()));
-        configs[1] = new TabLayoutConfig(getString(R.string.raw_data), RawTxFragment.newInstance(requireArguments(), viewModel.getRawFormatTx()));
         return configs;
     }
 

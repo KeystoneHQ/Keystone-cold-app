@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProviders;
 import com.keystone.cold.R;
 import com.keystone.cold.model.ArweaveTransaction;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
-import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ReviewTransactionFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.ARweaveTxViewModel;
 
@@ -20,9 +19,8 @@ public class ARweaveReviewTransactionFragment extends ReviewTransactionFragment<
 
     @Override
     protected TabLayoutConfig[] getTabLayouts() {
-        TabLayoutConfig[] layoutConfigs = new TabLayoutConfig[2];
+        TabLayoutConfig[] layoutConfigs = new TabLayoutConfig[1];
         layoutConfigs[0] = new TabLayoutConfig(getString(R.string.overview), ARweaveTransactionDetailFragment.newInstance(requireArguments(), viewModel.getObservableTransaction()));
-        layoutConfigs[1] = new TabLayoutConfig(getString(R.string.raw_data), RawTxFragment.newInstance(requireArguments(), viewModel.getRawFormatTx()));
         return layoutConfigs;
     }
 
