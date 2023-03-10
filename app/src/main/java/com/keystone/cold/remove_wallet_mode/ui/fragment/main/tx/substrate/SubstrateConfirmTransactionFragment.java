@@ -29,9 +29,8 @@ public class SubstrateConfirmTransactionFragment extends ConfirmTransactionFragm
 
     @Override
     protected TabLayoutConfig[] getTabLayouts() {
-        TabLayoutConfig[] configs = new TabLayoutConfig[2];
+        TabLayoutConfig[] configs = new TabLayoutConfig[1];
         configs[0] = new TabLayoutConfig(getString(R.string.overview), SubstrateTransactionDetailFragment.newInstance(requireArguments(), viewModel.getObservableTransaction()));
-        configs[1] = new TabLayoutConfig(getString(R.string.raw_data), RawTxFragment.newInstance(requireArguments(), viewModel.getRawFormatTx()));
         return configs;
     }
 
