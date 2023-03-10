@@ -45,6 +45,7 @@
                 android:layout_gravity="center"
                 android:text="@string/select_network"
                 android:textColor="@android:color/white"
+                android:textStyle="bold"
                 android:textSize="15sp" />
 
             <ImageView

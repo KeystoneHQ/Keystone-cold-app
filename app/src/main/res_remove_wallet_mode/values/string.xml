@@ -3,7 +3,7 @@
     <string name="faq">FAQ</string>
     <string name="changePath">Change Derivation Path</string>
     <string name="change_address_type">Change Address Type</string>
-    <string name="changePathText">Please select the derivation path that you would like to use for %s.</string>
+    <string name="changePathText">Please select the derivation path for %s you want to use.</string>
 
     <string name="change_path_sub_text">The first 3 accounts (addresses) are displayed for each path.</string>
     <string name="eth_standard_path">This path is the most common one that many software wallets use to generate addresses. Some examples include MetaMask, Rabby, BitKeep &amp; Core Wallet.</string>
@@ -26,8 +26,8 @@
         <item>Sender Wallet</item>
         <item>BlockWallet</item>
         <item>Rabby</item>
-<!--        <item>Core</item>-->
-        <item>Polkadot.js</item>
+        <!--        <item>Core</item>-->
+        <item>Polkadot{.js}</item>
         <item>XRP Toolkit</item>
         <item>Zapper</item>
         <item>Yearn Finance</item>
@@ -102,7 +102,7 @@
 
     <string name="xfp_not_match">Master fingerprint not match</string>
 
-    <string name="for_more">Click here for more information</string>
+    <string name="for_more">Tap here for more information</string>
 
 
     <string-array name="faq_list_tittle">

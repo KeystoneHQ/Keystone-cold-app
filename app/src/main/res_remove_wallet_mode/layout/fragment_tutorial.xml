@@ -43,6 +43,7 @@
                 android:layout_gravity="center"
                 android:text="@string/tutorials"
                 android:textColor="@android:color/white"
+                android:textStyle="bold"
                 android:textSize="@dimen/sp_16" />
         </androidx.appcompat.widget.Toolbar>
 
@@ -83,7 +84,7 @@
                         android:lineSpacingExtra="0dp"
                         android:text="@string/tutorials_hint"
                         android:textColor="#E4E4E4"
-                        android:textSize="11sp" />
+                        android:textSize="@dimen/sp_12" />
                 </LinearLayout>
 
                 <com.keystone.cold.remove_wallet_mode.ui.views.TutorialsView

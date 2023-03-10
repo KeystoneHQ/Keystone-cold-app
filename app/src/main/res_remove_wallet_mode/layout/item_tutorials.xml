@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:textColor="@color/white"
-                android:textSize="@dimen/sp_9"
+                android:textSize="@dimen/sp_12"
                 tools:text="https://keyst.one/t/solflare" />
         </LinearLayout>
 

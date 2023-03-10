@@ -107,8 +107,8 @@
                 android:gravity="center"
                 android:lineSpacingExtra="7dp"
                 android:text="https://keyst.one/t/passphrase"
-                android:textColor="#4B4B4B"
-                android:textSize="@dimen/sp_9" />
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/sp_12" />
 
         </LinearLayout>
     </FrameLayout>

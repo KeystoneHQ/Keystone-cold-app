@@ -22,8 +22,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:textSize="@dimen/sp_9"
         android:ellipsize="end"
-        android:textColor="@color/white40" />
+        android:textColor="@color/white_secondary" />
 
     <ImageView
         android:layout_marginStart="@dimen/dp_8"
