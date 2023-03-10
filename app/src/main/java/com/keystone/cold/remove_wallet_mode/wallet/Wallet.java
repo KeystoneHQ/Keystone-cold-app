@@ -18,6 +18,7 @@ public enum Wallet {
     PETRA("petra", "Petra"),
     FEWCHA("fewcha", "Fewcha"),
     SENDER("sender", "Sender"),
+    BLOCKWALLET("blockwallet", "BlockWallet"),
     RABBY("rabby", "Rabby"),
     CORE("core", "Core"),
     POLKADOTJS("polkadotjs", "Polkadot.{js}"),

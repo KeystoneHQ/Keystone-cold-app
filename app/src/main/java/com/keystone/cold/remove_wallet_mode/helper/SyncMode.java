@@ -21,6 +21,7 @@ public enum SyncMode {
             case ZAPPER:
             case YEARN:
             case SUSHISWAP:
+            case BLOCKWALLET:
             case METAMASK:
             case ARCONNECT:
             case KEPLR:
