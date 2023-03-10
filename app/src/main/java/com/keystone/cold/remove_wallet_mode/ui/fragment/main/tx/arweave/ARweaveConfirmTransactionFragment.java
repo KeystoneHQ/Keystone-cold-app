@@ -9,7 +9,6 @@ import com.keystone.cold.R;
 import com.keystone.cold.model.ArweaveTransaction;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ConfirmTransactionFragment;
-import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.RawTxFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.ARweaveTxViewModel;
 
 public class ARweaveConfirmTransactionFragment extends ConfirmTransactionFragment<ArweaveTransaction, ARweaveTxViewModel> {
