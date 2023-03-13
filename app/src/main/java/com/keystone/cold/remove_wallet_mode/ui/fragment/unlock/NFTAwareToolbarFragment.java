@@ -64,6 +64,10 @@ public class NFTAwareToolbarFragment extends BaseFragment<FragmentNftAwareToolba
             mBinding.divider.setVisibility(View.GONE);
         } else {
             mBinding.toolbarTitle.setText(nonNFTTitle);
+            if (nonNFTTitle == null) {
+                mBinding.toolbar.setVisibility(View.GONE);
+                mBinding.divider.setVisibility(View.GONE);
+            }
         }
         if (canGoBack) {
             mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());

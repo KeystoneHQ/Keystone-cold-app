@@ -46,7 +46,7 @@
 
     <dimen name="nft_toolbar_height">100dp</dimen>
 
-    <dimen name="tutorial_item_margin">16dp</dimen>
+    <dimen name="tutorial_item_margin">0dp</dimen>
     <dimen name="address_show_width">160dp</dimen>
 
     <dimen name="faq_item_margin">28dp</dimen>

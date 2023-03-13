@@ -35,7 +35,7 @@ public class RippleTransactionDetailFragment extends BaseFragment<FragmentRipple
         tx.observe(this, (v) -> {
             if (v == null) return;
             mBinding.checkInfo.setCoinCode(Coins.XRP.coinCode());
-            mBinding.checkInfo.setTitle(Coins.XRP.coinName());
+            mBinding.checkInfo.setTitle(Coins.XRP.coinCode());
             mBinding.container.setData(v);
             if (!v.optString("txHex").isEmpty()) {
                 mBinding.qr.setVisibility(View.VISIBLE);

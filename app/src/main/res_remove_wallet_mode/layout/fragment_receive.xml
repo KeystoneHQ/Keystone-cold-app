@@ -111,13 +111,13 @@
                 android:maxLines="2"
                 android:text="@{address}"
                 android:textColor="@color/white40"
-                android:textSize="@dimen/sp_10"
+                android:textSize="@dimen/sp_12"
                 tools:text="19zhQ 2rKq Xm5r y1pj Co83 JbBK 5zUr bdKgc" />
 
             <TextView
                 android:layout_width="148dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="2dp"
                 android:gravity="center_horizontal"
                 android:lineSpacingExtra="5dp"
                 android:text="@{'('+path+')'}"

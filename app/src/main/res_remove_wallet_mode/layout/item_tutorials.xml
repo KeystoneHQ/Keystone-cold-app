@@ -46,6 +46,6 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/dp_13"
-            android:background="@drawable/ic_qr_default" />
+            android:background="@drawable/ic_qr_primary" />
     </RelativeLayout>
 </layout>

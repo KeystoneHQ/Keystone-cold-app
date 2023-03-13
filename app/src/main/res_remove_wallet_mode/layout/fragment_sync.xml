@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_alignParentBottom="true"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="@dimen/dp_26"
+            android:layout_marginTop="@dimen/dp_16"
             android:layout_marginBottom="16dp"
             android:text="@string/complete" />
 
@@ -115,7 +115,6 @@
                         android:id="@+id/info"
                         android:layout_width="@dimen/dp_24"
                         android:layout_height="@dimen/dp_24"
-                        android:layout_marginStart="@dimen/dp_10"
                         android:src="@drawable/ic_tutorial_hint" />
                 </LinearLayout>
 
