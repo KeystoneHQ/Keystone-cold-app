@@ -1,6 +1,7 @@
 {
   "44787": {
     "symbol": "CELO",
+    "coinCode": "CELO",
     "name": "Celo Alfajores Testnet"
   },
   "49797": {
@@ -252,6 +253,7 @@
   },
   "137": {
     "symbol": "MATIC",
+    "coinCode": "MATIC",
     "name": "Polygon Mainnet"
   },
   "245022934": {
@@ -296,6 +298,7 @@
   },
   "62320": {
     "symbol": "CELO",
+    "coinCode": "CELO",
     "name": "Celo Baklava Testnet"
   },
   "5851": {
@@ -490,6 +493,7 @@
   },
   "8217": {
     "symbol": "KLAY",
+    "coinCode": "KLAY",
     "name": "Klaytn Mainnet Cypress"
   },
   "61": {
@@ -697,6 +701,7 @@
   },
   "4689": {
     "symbol": "IOTX",
+    "coinCode": "IOTX",
     "name": "IoTeX Network Mainnet"
   },
   "95": {
