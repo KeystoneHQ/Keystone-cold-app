@@ -63,16 +63,17 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dp_16"
+                    android:layout_marginHorizontal="@dimen/dp_16"
+                    android:layout_marginVertical="@dimen/dp_12"
                     android:background="@drawable/bg_receive_coin_hint"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="@dimen/dp_16"
-                        android:layout_height="@dimen/dp_16"
+                        android:layout_width="@dimen/dp_20"
+                        android:layout_height="@dimen/dp_20"
                         android:layout_marginStart="@dimen/dp_8"
                         android:layout_marginTop="@dimen/dp_8"
-                        android:background="@drawable/ic_hint" />
+                        android:background="@drawable/ic_remind" />
 
                     <TextView
                         android:layout_width="match_parent"

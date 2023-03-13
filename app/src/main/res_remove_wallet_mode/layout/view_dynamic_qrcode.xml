@@ -80,18 +80,18 @@
             android:id="@+id/llQrHint"
             android:paddingBottom="@dimen/dp_8"
             android:background="@drawable/bg_corner_4dp_white"
-            android:layout_width="match_parent"
+            android:layout_width="288dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_24"
+            android:layout_marginTop="@dimen/dp_12"
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="@dimen/dp_12"
-                android:layout_height="@dimen/dp_12"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
                 android:layout_marginStart="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_10"
-                android:background="@drawable/ic_hint" />
+                android:background="@drawable/ic_remind" />
 
             <TextView
                 android:id="@+id/tvQrHint"

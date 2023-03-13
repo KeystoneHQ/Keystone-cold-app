@@ -54,7 +54,6 @@
             android:visibility="gone"
             app:cardCornerRadius="40dp">
             <ImageView
-                android:background="#f00"
                 android:id="@+id/nft_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
