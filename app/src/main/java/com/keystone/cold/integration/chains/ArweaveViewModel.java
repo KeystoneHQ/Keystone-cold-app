@@ -116,6 +116,9 @@ public class ArweaveViewModel extends AndroidViewModel {
                 return null;
             }
             AccountEntity accountEntity = accounts.get(0);
+            if (accountEntity.getAddition() == null) {
+                return null;
+            }
             JSONObject addition = new JSONObject(accountEntity.getAddition());
             return addition.getString("public_key");
         } catch (JSONException e) {
