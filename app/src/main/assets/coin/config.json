@@ -14,9 +14,9 @@
       "show": false
     },
     {
-      "coinId": "okb",
-      "coinCode": "OKB",
-      "network": "OKB",
+      "coinId": "okt",
+      "coinCode": "OKT",
+      "network": "OKC",
       "show": false
     },
     {
@@ -78,7 +78,7 @@
     "evm": [
       "BNB",
       "MATIC",
-      "OKB",
+      "OKT",
       "AVAX",
       "HT",
       "FTM",
