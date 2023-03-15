@@ -56,6 +56,7 @@ public class CoinConfigHelper {
         try {
             JSONObject coinConfig = new JSONObject(ScriptLoader.readAsset("coin/config.json"));
             int version = coinConfig.getInt("version");
+            //TODO load local config when version upgrade
             SharePreferencesUtil.setCoinConfig(MainApplication.getApplication(),
                     mapToLocalConfig(coinConfig.getJSONArray("extraCoins")));
             SharePreferencesUtil.setCoinConfigVersion(MainApplication.getApplication(), version);

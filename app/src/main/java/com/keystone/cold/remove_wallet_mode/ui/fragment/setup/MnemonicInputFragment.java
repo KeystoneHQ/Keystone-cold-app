@@ -27,6 +27,7 @@ import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATI
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_CREATING_FAILED;
 import static com.keystone.cold.viewmodel.SetupVaultViewModel.VAULT_STATE_NOT_CREATE;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -52,6 +53,7 @@ import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.CreateVaultModalBinding;
 import com.keystone.cold.databinding.MnemonicInputFragmentBinding;
 import com.keystone.cold.databinding.ModalWithTwoButtonBinding;
+import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.unlock.VerifyMnemonicFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.SetupVaultViewModel;
@@ -291,13 +293,17 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
                     if (dialog != null && dialog.getDialog() != null && dialog.getDialog().isShowing()) {
                         dialog.dismiss();
                     }
-                    Bundle data = new Bundle();
+
                     boolean isSetupProcess = ((SetupVaultActivity) mActivity).inSetupProcess;
-                    data.putBoolean(IS_SETUP_VAULT, isSetupProcess);
-                    if (isSetupProcess) {
+                    if (!isSetupProcess) {
+                        startActivity(new Intent(mActivity, MainActivity.class));
+                        mActivity.finish();
+                    } else {
+                        Bundle data = new Bundle();
+                        data.putBoolean(IS_SETUP_VAULT, true);
                         viewModel.setVaultCreateStep(VAULT_CREATE_STEP_DONE);
+                        navigate(R.id.action_to_setupSelectWalletFragment, data);
                     }
-                    navigate(R.id.action_to_setupSelectWalletFragment, data);
                 };
 
                 //List<CoinEntity> coins = PresetData.generateCoins(mActivity);
