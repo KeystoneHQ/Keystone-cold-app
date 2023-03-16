@@ -53,6 +53,7 @@ import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.CreateVaultModalBinding;
 import com.keystone.cold.databinding.MnemonicInputFragmentBinding;
 import com.keystone.cold.databinding.ModalWithTwoButtonBinding;
+import com.keystone.cold.remove_wallet_mode.helper.CoinConfigHelper;
 import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.unlock.VerifyMnemonicFragment;
@@ -296,6 +297,7 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
 
                     boolean isSetupProcess = ((SetupVaultActivity) mActivity).inSetupProcess;
                     if (!isSetupProcess) {
+                        CoinConfigHelper.initCoinConfig();
                         startActivity(new Intent(mActivity, MainActivity.class));
                         mActivity.finish();
                     } else {
