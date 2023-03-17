@@ -56,4 +56,7 @@ public interface TxDao {
 
     @Query("DELETE FROM txs WHERE belongTo = 'hidden'")
     int deleteHidden();
+
+    @Query("SELECT * FROM txs where coinId = :coinId ORDER BY timeStamp DESC LIMIT :limit OFFSET :offset")
+    List<TxEntity> loadTxs(String coinId, int limit, int offset);
 }

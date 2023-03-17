@@ -40,4 +40,7 @@ public interface ETHTxDao {
 
     @Query("DELETE FROM ethtxs WHERE belongTo = 'hidden'")
     int deleteHidden();
+
+    @Query("SELECT * FROM ethtxs ORDER BY timeStamp DESC LIMIT :limit OFFSET :offset")
+    List<Web3TxEntity> loadETHTxsSync(int limit, int offset);
 }

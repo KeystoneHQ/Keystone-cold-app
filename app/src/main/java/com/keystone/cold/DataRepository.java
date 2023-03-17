@@ -360,4 +360,12 @@ public class DataRepository {
     public List<Web3TxEntity> loadETHTxsSync() {
         return mDb.ethTxDao().loadETHTxsSync();
     }
+
+    public List<Web3TxEntity> loadETHTxs(int limit, int offset) {
+        return mDb.ethTxDao().loadETHTxsSync(limit, offset);
+    }
+
+    public List<TxEntity> loadTxs(String coinId, int limit, int offset) {
+        return mDb.txDao().loadTxs(coinId, limit, offset);
+    }
 }
