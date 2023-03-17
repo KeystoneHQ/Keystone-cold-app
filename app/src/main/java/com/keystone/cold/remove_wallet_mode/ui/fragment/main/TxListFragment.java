@@ -90,8 +90,10 @@ public class TxListFragment extends BaseFragment<FragmentTxListBinding> {
             BTCAccount btcAccount = BTCAccount.ofCode(Utilities.getCurrentBTCAccount(mActivity));
             canonicalCoinId = btcAccount.getCoinId();
         }
-        txLiveData = viewModel.loadTxs(canonicalCoinId);
-        subscribeUI(txLiveData);
+        if (txLiveData == null) {
+            txLiveData = viewModel.loadTxs(canonicalCoinId);
+            subscribeUI(txLiveData);
+        }
     }
 
     private void subscribeUI(LiveData<List<Tx>> txLiveData) {
