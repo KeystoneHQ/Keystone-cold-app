@@ -133,6 +133,10 @@ public class ModalDialog extends DialogFragment {
         return showIconModal(activity, R.drawable.ic_remind, message, null, confirmText, null, confirmRunnable);
     }
 
+    public static ModalDialog showRemindModal(AppCompatActivity activity, String message, String confirmText, Runnable confirmRunnable, Runnable cancelRunnable) {
+        return showIconModal(activity, R.drawable.ic_remind, message, null, confirmText, cancelRunnable, confirmRunnable);
+    }
+
     public static ModalDialog showTwoButtonCommonModal(AppCompatActivity activity,
                                                        String title,
                                                        String content,

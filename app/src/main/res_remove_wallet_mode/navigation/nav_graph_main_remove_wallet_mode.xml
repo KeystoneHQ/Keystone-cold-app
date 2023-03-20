@@ -631,15 +631,6 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
-
-        <action
-            android:id="@+id/action_to_ArweaveAuthFragment"
-            app:destination="@id/ArweaveAuthFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
-
     </fragment>
     <fragment
         android:id="@+id/syncFragment"
@@ -1298,6 +1289,14 @@
     <action
         android:id="@+id/action_to_chooseNetworkFragment"
         app:destination="@id/chooseNetworkFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_ArweaveAuthFragment"
+        app:destination="@id/ArweaveAuthFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"
