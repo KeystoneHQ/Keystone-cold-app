@@ -8,6 +8,10 @@ public class InvalidTransactionException extends BaseException {
         super(localeMessage, message);
     }
 
+    public static InvalidTransactionException newInstance(String debugMessage) {
+        return new InvalidTransactionException(CONTEXT.getString(R.string.incorrect_tx_data), debugMessage);
+    }
+
     @Override
     public String getTitle() {
         return CONTEXT.getString(R.string.invalid_data);

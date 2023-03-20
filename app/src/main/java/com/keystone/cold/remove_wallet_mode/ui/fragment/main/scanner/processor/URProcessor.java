@@ -17,7 +17,8 @@ import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.remove_wallet_mode.exceptions.UnimplementedException;
 import com.keystone.cold.remove_wallet_mode.exceptions.scanner.UnknownQrCodeException;
 import com.keystone.cold.remove_wallet_mode.exceptions.scanner.XfpNotMatchException;
-import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidPathException;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.UnsupportedTransactionException;
 import com.keystone.cold.remove_wallet_mode.helper.Destination;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumTransaction;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
@@ -96,12 +97,11 @@ public class URProcessor implements Processor {
 
             ETHAccount target = ETHAccount.getAccountByPath(hdPath);
             if (target == null) {
-                throw new InvalidTransactionException("test", "unknown hd path");
+                throw InvalidPathException.newInstance("unknown hd path");
             }
-
             String MFP = new GetMasterFingerprintCallable().call();
             if (!requestMFP.equalsIgnoreCase(MFP)) {
-                throw new XfpNotMatchException("", "Master fingerprint not match");
+                throw XfpNotMatchException.newInstance();
             }
             if (ethSignRequest.getDataType().equals(EthSignRequest.DataType.TRANSACTION.getType())) {
                 bundle.putInt(BundleKeys.ETH_TX_TYPE_KEY, EthereumTransaction.TransactionType.LEGACY.getType());
@@ -118,7 +118,7 @@ public class URProcessor implements Processor {
                         bundle.putInt(BundleKeys.ETH_TX_TYPE_KEY, EthereumTransaction.TransactionType.FEE_MARKET.getType());
                         return new Destination(R.id.action_to_ethereumConfirmTransactionFragment, bundle);
                     default:
-                        throw new UnknownQrCodeException("test", "unknown transaction!");
+                        throw UnsupportedTransactionException.newInstance("unknown ethereum transaction type :" + type);
                 }
             }
             return null;
@@ -156,7 +156,7 @@ public class URProcessor implements Processor {
                         return new Destination(R.id.action_to_aptosConfirmTransactionFragment, bundle);
                     }
                 case MULTI:
-                    throw new InvalidTransactionException("test", "Transaction type Multi not supported yet");
+                    throw UnsupportedTransactionException.newInstance("Aptos Transaction type Multi not supported yet");
             }
             throw UnimplementedException.newInstance();
         }
@@ -174,7 +174,7 @@ public class URProcessor implements Processor {
             String hdPath = solSignRequest.getDerivationPath();
             SOLAccount target = SOLAccount.getAccountByPath(hdPath);
             if (target == null) {
-                throw new InvalidTransactionException("test", "unknown hd path");
+                throw InvalidPathException.newInstance("unknown sol hd path");
             }
             String requestMFP = Hex.toHexString(solSignRequest.getMasterFingerprint());
             String MFP = new GetMasterFingerprintCallable().call();
@@ -193,7 +193,7 @@ public class URProcessor implements Processor {
                 case MESSAGE:
                     return new Destination(R.id.action_to_solanaSignMessageFragment, bundle);
                 case INVALIDATE:
-                    throw new InvalidTransactionException("test", "unknown sign type");
+                    throw UnsupportedTransactionException.newInstance("unknown solana sign type");
             }
             throw UnimplementedException.newInstance();
         }
@@ -210,7 +210,7 @@ public class URProcessor implements Processor {
             String hdPath = nearSignRequest.getDerivationPath();
             NEARAccount target = NEARAccount.getAccountByPath(hdPath);
             if (target == null) {
-                throw new InvalidTransactionException("test", "unknown hd path");
+                throw InvalidPathException.newInstance("unknown hd path");
             }
             String requestMFP = Hex.toHexString(nearSignRequest.getMasterFingerprint());
             String MFP = new GetMasterFingerprintCallable().call();
@@ -255,7 +255,7 @@ public class URProcessor implements Processor {
             String requestMFP = Hex.toHexString(arweaveSignRequest.getMasterFingerprint());
             String MFP = new GetMasterFingerprintCallable().call();
             if (!requestMFP.equalsIgnoreCase(MFP)) {
-                throw new XfpNotMatchException("test", "Master fingerprint not match");
+                throw XfpNotMatchException.newInstance();
             }
             bundle.putString(BundleKeys.REQUEST_ID_KEY, uuid.toString());
             bundle.putInt(BundleKeys.SALT_LEN_KEY, arweaveSignRequest.getSaltLen().getLength());
@@ -267,7 +267,7 @@ public class URProcessor implements Processor {
                 case TRANSACTION:
                     return new Destination(R.id.action_to_arweaveConfirmTransactionFragment, bundle);
                 case DATAITEM:
-                    throw new InvalidTransactionException("test", "Transaction type DataItem not supported yet");
+                    throw UnsupportedTransactionException.newInstance("Transaction type DataItem not supported yet");
                 default:
                     return new Destination(R.id.action_to_arweaveSignMessageFragment, bundle);
             }
@@ -333,7 +333,7 @@ public class URProcessor implements Processor {
                 bundle.putLong(BundleKeys.CUSTOM_CHAIN_IDENTIFIER_KEY, evmSignRequest.getCustomChainIdentifier());
                 return new Destination(R.id.action_to_cosmosConfirmTransactionFragment, bundle);
             } else {
-                throw new InvalidTransactionException("test", "Transaction type ARBITRARY_TRANSACTION not supported yet");
+                throw UnsupportedTransactionException.newInstance("Transaction type ARBITRARY_TRANSACTION not supported yet");
             }
         }
     }
@@ -378,6 +378,7 @@ public class URProcessor implements Processor {
             return new Destination(R.id.action_to_nftConfirmFragment, bundle);
         }
     }
+
     private static class BytesProcessor implements URResolver {
 
         @Override
@@ -394,11 +395,11 @@ public class URProcessor implements Processor {
             if (json != null) {
                 Destination destination = decodeAndProcess(json);
                 if (destination == null) {
-                    throw new UnknownQrCodeException("test", "unknown UR qr code");
+                    throw UnknownQrCodeException.newInstance();
                 }
                 return destination;
             } else {
-                throw new UnknownQrCodeException("test", "unknown UR qr code");
+                throw UnknownQrCodeException.newInstance();
             }
         }
 
@@ -428,7 +429,7 @@ public class URProcessor implements Processor {
             if (object.optString("type").equals("TYPE_SIGN_TX")) {
                 return handleSign(object);
             }
-            throw new UnknownQrCodeException("test", "unknown qr code type");
+            throw UnknownQrCodeException.newInstance();
         }
 
         private Destination checkWebAuth(JSONObject object) {
@@ -450,7 +451,7 @@ public class URProcessor implements Processor {
                 throws BaseException {
             String xfp = new GetMasterFingerprintCallable().call();
             if (!object.optString("xfp").equals(xfp)) {
-                throw new XfpNotMatchException("test", "xft not match");
+                throw XfpNotMatchException.newInstance();
             }
             try {
                 Bundle bundle = new Bundle();

@@ -1,6 +1,8 @@
 package com.keystone.cold.ui.fragment.main.scan.scanner;
 
 import com.keystone.coinlib.coins.polkadot.UOS.SubstratePayload;
+import com.keystone.cold.MainApplication;
+import com.keystone.cold.R;
 import com.keystone.cold.remove_wallet_mode.exceptions.scanner.UnsupportedURException;
 import com.sparrowwallet.hummingbird.UR;
 import com.sparrowwallet.hummingbird.registry.CryptoPSBT;
@@ -154,7 +156,7 @@ public enum ScanResultTypes {
             case "evm-sign-request":
                 return UR_EVM_SIGN_REQUEST;
             default:
-                throw new UnsupportedURException("%{displayMessage}%", "unsupported ur type: " + ur.getType());
+                throw new UnsupportedURException(MainApplication.getApplication().getString(R.string.invalid_qr_code_hint), "unsupported ur type: " + ur.getType());
         }
     }
 }

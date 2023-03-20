@@ -22,7 +22,7 @@ import com.keystone.cold.encryption.RustSigner;
 import com.keystone.cold.integration.chains.ArweaveViewModel;
 import com.keystone.cold.model.ArweaveTransaction;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
-import com.keystone.cold.remove_wallet_mode.exceptions.InvalidStateException;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.ARPubkeyNotFoundException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.viewmodel.WatchWallet;
 import com.sparrowwallet.hummingbird.registry.arweave.ArweaveSignature;
@@ -77,7 +77,7 @@ public class ARweaveTxViewModel extends BaseTxViewModel<ArweaveTransaction> {
                 String owner = object.optString("owner");
                 String pubkey = ArweaveViewModel.getARPublicKey();
                 if (pubkey == null) {
-                    observableException.postValue(new InvalidStateException(mApplication.getString(R.string.incorrect_tx_data), "invalid state, pubkey cannot find"));
+                    observableException.postValue(ARPubkeyNotFoundException.newInstance());
                     return;
                 }
                 String myOwner = ArweaveViewModel.formatHex(Hex.decode(pubkey));
@@ -85,7 +85,7 @@ public class ARweaveTxViewModel extends BaseTxViewModel<ArweaveTransaction> {
                     object.put("owner", myOwner);
                 } else {
                     if (!owner.equalsIgnoreCase(myOwner)) {
-                        observableException.postValue(new InvalidTransactionException(mApplication.getString(R.string.incorrect_tx_data), "invalid transaction, owner not match"));
+                        observableException.postValue(new InvalidTransactionException(mApplication.getString(R.string.ar_pubkey_not_match), "invalid transaction, owner not match"));
                         return;
                     }
                 }

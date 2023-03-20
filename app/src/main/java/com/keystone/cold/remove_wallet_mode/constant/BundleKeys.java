@@ -28,4 +28,5 @@ public interface BundleKeys {
     String MINT_ADDRESS_KEY = "mint_address_key";
     String COLLECTION_NAME_KEY = "collection_name_key";
     String PAGE_TITLE_KEY = "page_title_key";
+    String AR_AUTH_FROM_SIGN_KEY = "ar_auth_from_sign_key";
 }

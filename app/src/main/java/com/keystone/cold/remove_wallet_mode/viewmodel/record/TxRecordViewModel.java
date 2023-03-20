@@ -28,7 +28,6 @@ import androidx.lifecycle.MutableLiveData;
 import com.keystone.cold.model.Tx;
 import com.keystone.cold.remove_wallet_mode.helper.TxRecordManager;
 
-
 import java.util.List;
 
 

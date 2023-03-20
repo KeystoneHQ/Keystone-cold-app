@@ -16,6 +16,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.databinding.ArweaveAuthFragmentBinding;
 import com.keystone.cold.databinding.ProgressModalBinding;
 import com.keystone.cold.integration.chains.ArweaveViewModel;
+import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.ui.ConnectWalletActivity;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.ui.fragment.BaseFragment;
@@ -76,6 +77,14 @@ public class ArweaveAuthFragment extends BaseFragment<ArweaveAuthFragmentBinding
             destination = R.id.walletListFragment;
         } else if (mActivity instanceof SetupVaultActivity) {
             destination = R.id.setupSelectWalletFragment;
+        } else {
+            Bundle data = getArguments();
+            if (data != null) {
+                boolean isFromSign = data.getBoolean(BundleKeys.AR_AUTH_FROM_SIGN_KEY, false);
+                if (isFromSign) {
+                    destination = R.id.arweaveConfirmTransactionFragment;
+                }
+            }
         }
         Bundle fragmentResult = new Bundle();
         fragmentResult.putString(AR_SETUP_STATUS_KEY, status);
