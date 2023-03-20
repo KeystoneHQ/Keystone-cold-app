@@ -20,8 +20,8 @@ import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
-import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidAccountException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidXRPAccountException;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 
 import org.json.JSONException;
@@ -55,17 +55,17 @@ public class RippleTxViewModel extends BaseTxViewModel<JSONObject>{
                 XrpTransaction xrpTransaction = SupportTransactions.get(object.getString("TransactionType"));
 
                 if (xrpTransaction == null || !xrpTransaction.isValid(object)) {
-                    observableException.postValue(new InvalidTransactionException("test", "invalid xrp exception"));
+                    observableException.postValue(InvalidTransactionException.newInstance("invalid xrp exception"));
                     return;
                 }
                 account = xummTxObj.optString("Account");
                 signingPubKey = xummTxObj.optString("SigningPubKey");
                 if (!isValidAccount()) {
-                    observableException.postValue(new InvalidTransactionException("test", "invalid xrp account"));
+                    observableException.postValue(InvalidXRPAccountException.newInstance("cannot derive provided xrp account by provided signing key"));
                     return;
                 }
                 if (!checkAccount()) {
-                    observableException.postValue(new InvalidAccountException("test", "account not match"));
+                    observableException.postValue(InvalidXRPAccountException.newInstance("provided xrp account does not any xrp account in this wallet"));
                     return;
                 }
                 observableTransaction.postValue(xrpTransaction.flatTransactionDetail(object));

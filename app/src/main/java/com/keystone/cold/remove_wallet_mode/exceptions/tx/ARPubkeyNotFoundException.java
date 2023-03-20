@@ -7,6 +7,10 @@ public class ARPubkeyNotFoundException extends BaseException {
         super(localeMessage, message);
     }
 
+    public static ARPubkeyNotFoundException newInstance() {
+        return new ARPubkeyNotFoundException("", "cannot get ar public key");
+    }
+
     @Override
     public String getTitle() {
         return null;

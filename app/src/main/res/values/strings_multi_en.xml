@@ -180,7 +180,7 @@
     <string name="password_error_hint">Incorrect password, you have %d chances left.</string>
     <string name="verify_mnemonic_hint">Please enter your %d-word recovery phrase in the table below.</string>
     <string name="delete_white_list_hint">Confirm to delete White List Address:%s？</string>
-    <string name="invalid_qrcode">Invalid QR code!</string>
+    <string name="invalid_qrcode">Invalid QR code</string>
     <string name="title_activity_test" translatable="false">TestActivity</string>
     <string name="attack_warning">To protect your assets, all information has been erased from your Keystone. Please stop using this device and contact Customer Service immediately.\n  Status Code:%s</string>
     <string name="verify_mnemonic">Verify Recovery Phrase</string>
@@ -915,4 +915,17 @@
     <string translatable="false" name="firmware_information_link">https://keyst.one/rwm</string>
     <string name="add">Add</string>
     <string name="import_another_account">Import Another Account</string>
+
+    <!--  Error Messages  -->
+    <string name="mfp_not_match">The transaction does not belong to the current wallet. Please use the correct wallet to sign the transaction.</string>
+    <string name="unknown_path">Keystone does not support transaction signing for the address path. Please try signing with a different address path. </string>
+    <string name="unknown_path_title">Unknown Path</string>
+    <string name="unsupported_transaction_title">Invalid Transaction Data Type</string>
+    <string name="unsupported_transaction">This type of transaction is not supported by the Keystone hardware wallet. Please contact our customer support team for assistance."</string>
+    <string name="invalid_qr_code_hint">Invalid QR code. Please try again.</string>
+    <string name="ar_pubkey_not_match">The compatible address for Arweave can not be founded. Please try again.</string>
+    <string name="invalid_change_address">The change address does not belong to the current wallet. Please try again.</string>
+    <string name="invalid_change_address_title">Invalid Change Address</string>
+    <string name="invalid_xrp_account">The account for XRP is invalid. Please try again.</string>
+    <string name="invalid_xrp_account_title">Invalid XRP Account</string>
 </resources>

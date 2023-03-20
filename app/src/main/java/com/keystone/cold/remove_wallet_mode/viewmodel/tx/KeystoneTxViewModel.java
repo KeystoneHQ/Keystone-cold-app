@@ -51,6 +51,8 @@ import com.keystone.coinlib.path.CoinPath;
 import com.keystone.coinlib.utils.B58;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
+import com.keystone.cold.MainApplication;
+import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.callables.GetMessageCallable;
@@ -62,6 +64,7 @@ import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.ChipSigner;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidChangeAddressException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.ui.views.AuthenticateModal;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
@@ -118,20 +121,20 @@ public class KeystoneTxViewModel extends BaseTxViewModel<TxEntity> {
                 Log.i(TAG, "object = " + object.toString(4));
                 transaction = AbsTx.newInstance(object);
                 if (transaction == null) {
-                    observableException.postValue(new InvalidTransactionException("test", "invalid transaction"));
+                    observableException.postValue(new InvalidTransactionException(MainApplication.getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
                     return;
                 }
                 TxEntity tx = generateTxEntity(object);
                 if (Coins.isBTCFamily(transaction.getCoinCode())) {
                     feeAttackChecking(tx);
                     if (!checkBTCChangeAddress((UtxoTx) transaction)) {
-                        observableException.postValue(new InvalidTransactionException("test", "invalid change address"));
+                        observableException.postValue(InvalidChangeAddressException.newInstance());
                         return;
                     }
                 } else {
                     if (transaction instanceof UtxoTx) {
                         if (!checkChangeAddress(transaction)) {
-                            observableException.postValue(new InvalidTransactionException("test", "invalid change address"));
+                            observableException.postValue(InvalidChangeAddressException.newInstance());
                             return;
                         }
                     }

@@ -8,8 +8,12 @@ public class InvalidPathException extends BaseException {
         super(localeMessage, message);
     }
 
+    public static InvalidPathException newInstance(String debugMessage) {
+        return new InvalidPathException(CONTEXT.getString(R.string.unknown_path), debugMessage);
+    }
+
     @Override
     public String getTitle() {
-        return CONTEXT.getString(R.string.invalid_data);
+        return CONTEXT.getString(R.string.unknown_path_title);
     }
 }
