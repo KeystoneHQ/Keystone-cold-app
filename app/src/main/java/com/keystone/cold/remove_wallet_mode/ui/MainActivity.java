@@ -221,7 +221,10 @@ public class MainActivity extends FullScreenActivity {
             }
             switch (position) {
                 case R.id.drawer_wallet:
-                    mNavController.popBackStack(R.id.myAssetsFragment, false);
+                    boolean isPopped = mNavController.popBackStack(R.id.myAssetsFragment, false);
+                    if (!isPopped) {
+                        mNavController.navigate(R.id.myAssetsFragment);
+                    }
                     break;
                 case R.id.drawer_settings:
                     //mNavController.navigateUp();
