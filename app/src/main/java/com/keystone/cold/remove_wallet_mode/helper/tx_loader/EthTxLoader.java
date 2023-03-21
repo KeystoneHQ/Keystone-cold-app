@@ -4,6 +4,7 @@ import static com.keystone.cold.viewmodel.ElectrumViewModel.ELECTRUM_SIGN_ID;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
@@ -13,6 +14,9 @@ import com.keystone.cold.model.Tx;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumTransaction;
 import com.keystone.cold.remove_wallet_mode.ui.model.AssetItem;
 import com.keystone.cold.viewmodel.tx.GenericETHTxEntity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -56,6 +60,14 @@ public class EthTxLoader implements TxLoader {
             if (!web3TxEntities.isEmpty()) {
                 txList.addAll(web3TxEntities.stream()
                         .map(this::mapToGenericETHTxEntity)
+                        .filter((v) -> {
+                            try {
+                                JSONObject addition = new JSONObject(v.getAddition());
+                                return filterTxsByETHAccount(addition);
+                            } catch (JSONException e) {
+                                return true;
+                            }
+                        })
                         .filter(this::filterSomeTxs)
                         .collect(Collectors.toList()));
                 web3TxEntities = getWeb3TxList();
@@ -63,6 +75,14 @@ public class EthTxLoader implements TxLoader {
             if (!txEntities.isEmpty()) {
                 txList.addAll(txEntities.stream()
                         .map(this::mapToGenericETHTxEntity)
+                        .filter((v) -> {
+                            try {
+                                JSONObject addition = new JSONObject(v.getAddition());
+                                return filterTxsByETHAccount(addition);
+                            } catch (JSONException e) {
+                                return true;
+                            }
+                        })
                         .filter(this::filterSomeTxs)
                         .collect(Collectors.toList()));
                 txEntities = getTxList();
@@ -140,6 +160,12 @@ public class EthTxLoader implements TxLoader {
             ethTxEntityList.add(genericETHTxEntity);
         }
         return ethTxEntityList;
+    }
+
+    protected boolean filterTxsByETHAccount(JSONObject addition) {
+        ETHAccount currentAccount = ETHAccount.ofCode(accountCode);
+        ETHAccount targetAccount = ETHAccount.ofCode(addition.optString("signBy", ETHAccount.BIP44_STANDARD.getCode()));
+        return currentAccount.equals(targetAccount);
     }
 
     protected boolean filterSomeTxs(GenericETHTxEntity ethTxEntity) {
