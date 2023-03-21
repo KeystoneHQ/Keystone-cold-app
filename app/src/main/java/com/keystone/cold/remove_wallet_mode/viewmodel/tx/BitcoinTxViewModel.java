@@ -8,6 +8,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.keystone.coinlib.accounts.BTCAccount;
 import com.keystone.coinlib.coins.BTC.Btc;
 import com.keystone.coinlib.coins.BTC.BtcImpl;
 import com.keystone.coinlib.interfaces.SignCallback;
@@ -17,6 +18,7 @@ import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.db.entity.TxEntity;
@@ -217,9 +219,21 @@ public class BitcoinTxViewModel extends BaseTxViewModel<PSBT> {
         // TODO add LTC support;
         String canonicalPath = psbt.getMySigningInputs().get(0).getCanonicalHDPath();
         if (canonicalPath.startsWith(BTCLegacyPath)) {
-            return Coins.BTC_LEGACY.coinCode();
+            BTCAccount btcAccount = BTCAccount.ofCode(Utilities.getCurrentBTCAccount(MainApplication.getApplication()));
+            switch (btcAccount) {
+                case BITKEEP_NATIVE_SEGWIT:
+                    return Coins.BTC_BITKEEP_NATIVE_SEGWIT.coinCode();
+                case BITKEEP_LEGACY:
+                    return Coins.BTC_BITKEEP_LEGACY.coinCode();
+                case BITKEEP_NESTED_SEGWIT:
+                    return Coins.BTC_BITKEEP_NESTED_SEGWIT.coinCode();
+                default:
+                    return Coins.BTC_LEGACY.coinCode();
+            }
         } else if (canonicalPath.startsWith(BTCNestedSegwitPath)) {
             return Coins.BTC.coinCode();
+        } else if (canonicalPath.startsWith(BTCCoreNativeSegwitPath)) {
+            return Coins.BTC_CORE_WALLET.coinCode();
         } else {
             return Coins.BTC_NATIVE_SEGWIT.coinCode();
         }

@@ -21,6 +21,9 @@
 
     <data>
 
+        <variable
+            name="isBitKeepSelected"
+            type="Boolean" />
     </data>
 
     <LinearLayout
@@ -73,8 +76,8 @@
                     android:lineSpacingExtra="@dimen/sp_1"
                     android:text="@string/changePathText"
                     android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/sp_14" />
+                    android:textSize="@dimen/sp_14"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -89,6 +92,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
+
+                <LinearLayout
+                    android:id="@+id/bitkeep_path"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_12"
+                    android:visibility="gone"
+                    android:background="@{isBitKeepSelected? @drawable/bg_derivation_path_selected :@drawable/bg_derivation_path_unselected}">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bitkeep_path"
+                        android:textColor="@color/white" />
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

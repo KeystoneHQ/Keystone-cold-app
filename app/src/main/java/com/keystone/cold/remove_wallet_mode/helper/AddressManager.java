@@ -9,6 +9,9 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.AddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.AptosAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinBitKeepLegacyAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinBitKeepNativeSegwitAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinBitKeepNestedSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinCashAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinLegacyAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNativeSegwitAddressGenerator;
@@ -52,6 +55,15 @@ public class AddressManager {
         }
         if (Coins.BTC.coinId().equals(coinId)) {
             return new BitcoinNestedSegwitAddressGenerator();
+        }
+        if (Coins.BTC_BITKEEP_NATIVE_SEGWIT.coinId().equals(coinId)) {
+            return new BitcoinBitKeepNativeSegwitAddressGenerator();
+        }
+        if (Coins.BTC_BITKEEP_LEGACY.coinId().equals(coinId)) {
+            return new BitcoinBitKeepLegacyAddressGenerator();
+        }
+        if (Coins.BTC_BITKEEP_NESTED_SEGWIT.coinId().equals(coinId)) {
+            return new BitcoinBitKeepNestedSegwitAddressGenerator();
         }
         if (Coins.BTC_NATIVE_SEGWIT.coinId().equals(coinId)) {
             return new BitcoinNativeSegwitAddressGenerator();

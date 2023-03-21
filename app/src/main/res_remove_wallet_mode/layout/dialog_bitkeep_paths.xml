@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="pathItem1"
+            type="com.keystone.cold.remove_wallet_mode.ui.model.BitKeepPathItem" />
+
+        <variable
+            name="pathItem2"
+            type="com.keystone.cold.remove_wallet_mode.ui.model.BitKeepPathItem" />
+
+        <variable
+            name="pathItem3"
+            type="com.keystone.cold.remove_wallet_mode.ui.model.BitKeepPathItem" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_corner_8dp_white">
+
+        <LinearLayout
+            android:layout_width="288dp"
+            android:layout_height="432dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/ivClose"
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
+                android:layout_gravity="end"
+                android:layout_marginTop="@dimen/dp_12"
+                android:layout_marginEnd="@dimen/dp_12"
+                android:background="@drawable/ic_dialog_close"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/tvTittle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:text="@string/select_address"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/dp_16"
+                android:paddingVertical="@dimen/dp_12">
+
+                <LinearLayout
+                    android:id="@+id/item1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@{pathItem1.isSelect? @drawable/bg_bitkeep_derivation_path_selected: @drawable/bg_bitkeep_derivation_path_unselected}"
+                    android:orientation="vertical"
+                    tools:background="@drawable/bg_bitkeep_derivation_path_selected">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{pathItem1.patternName}"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold"
+                            tools:text="Native Segwit" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:layout_width="@dimen/dp_22"
+                            android:layout_height="@dimen/dp_22"
+                            android:button="@drawable/checkbox"
+                            android:checked="@{pathItem1.isSelect}"
+                            android:clickable="false"
+                            tools:checked="true" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_4"
+                        android:text="@{pathItem1.address}"
+                        tools:text="bc1x65cD3377E558e86BD0EAD4aee1517e3c9cE6Eb">
+
+                    </TextView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/item2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_12"
+                    android:background="@{pathItem2.isSelect? @drawable/bg_bitkeep_derivation_path_selected: @drawable/bg_bitkeep_derivation_path_unselected}"
+                    android:orientation="vertical"
+                    tools:background="@drawable/bg_bitkeep_derivation_path_unselected">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{pathItem2.patternName}"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold"
+                            tools:text="Nested Segwit" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:layout_width="@dimen/dp_22"
+                            android:layout_height="@dimen/dp_22"
+                            android:button="@drawable/checkbox"
+                            android:checked="@{pathItem2.isSelect}"
+                            android:clickable="false"
+                            tools:checked="false" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_4"
+                        android:text="@{pathItem2.address}"
+                        tools:text="bc1x65cD3377E558e86BD0EAD4aee1517e3c9cE6Eb">
+
+                    </TextView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/item3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_12"
+                    android:background="@{pathItem3.isSelect? @drawable/bg_bitkeep_derivation_path_selected: @drawable/bg_bitkeep_derivation_path_unselected}"
+                    android:orientation="vertical"
+                    tools:background="@drawable/bg_bitkeep_derivation_path_unselected">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{pathItem3.patternName}"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold"
+                            tools:text="Legacy" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:layout_width="@dimen/dp_22"
+                            android:layout_height="@dimen/dp_22"
+                            android:button="@drawable/checkbox"
+                            android:checked="@{pathItem3.isSelect}"
+                            android:clickable="false"
+                            tools:checked="false" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_4"
+                        android:text="@{pathItem3.address}"
+                        tools:text="bc1x65cD3377E558e86BD0EAD4aee1517e3c9cE6Eb">
+
+                    </TextView>
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/complete"
+                style="@style/AcceptButton"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="20dp"
+                android:text="@string/confirm" />
+
+        </LinearLayout>
+    </FrameLayout>
+
+
+</layout>
+

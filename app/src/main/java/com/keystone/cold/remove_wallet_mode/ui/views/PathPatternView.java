@@ -31,8 +31,11 @@ public class PathPatternView extends LinearLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    private List<PathPatternItem> pathPatternItems;
+
     public void setData(final List<PathPatternItem> pathPatternItems) {
         removeAllViews();
+        this.pathPatternItems = pathPatternItems;
         for (int i = 0; i < pathPatternItems.size(); i++) {
             PathPatternItemView pathPatternItemView = new PathPatternItemView(getContext());
             PathPatternItem pathPatternItem = pathPatternItems.get(i);
@@ -40,7 +43,7 @@ public class PathPatternView extends LinearLayout {
             int index = i;
             pathPatternItemView.setOnClickListener(v -> onClick(index, pathPatternItems));
             LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.topMargin = (int) getResources().getDimension(R.dimen.tutorial_item_margin);
+            layoutParams.bottomMargin = (int) getResources().getDimension(R.dimen.tutorial_item_margin);
             addView(pathPatternItemView, layoutParams);
         }
     }
@@ -52,10 +55,19 @@ public class PathPatternView extends LinearLayout {
         if (onItemClick != null) onItemClick.onItemClick(pathPatternItems.get(index).getCode());
     }
 
+    public void uncheckAll() {
+        if (pathPatternItems != null) {
+            for (int i = 0; i < pathPatternItems.size(); i++) {
+                pathPatternItems.get(i).getIsSelect().set(false);
+            }
+        }
+    }
+
 
     public interface OnItemClick {
         void onItemClick(String code);
     }
+
     private OnItemClick onItemClick;
 
     public void setOnItemClick(OnItemClick onItemClick) {

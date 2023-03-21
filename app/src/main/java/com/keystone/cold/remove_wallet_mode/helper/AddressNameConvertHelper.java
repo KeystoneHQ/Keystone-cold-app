@@ -14,9 +14,17 @@ public class AddressNameConvertHelper {
 
         if (Coins.APTOS.coinId().equals(coinId)) {
             if (originalName.toUpperCase().startsWith("APTOS-")) {
-                result =  StringUtils.capitalizes(originalName.toLowerCase());
+                result = StringUtils.capitalizes(originalName.toLowerCase());
             } else if (originalName.startsWith("APT-")) {
                 result = originalName.replace("APT", "Aptos");
+            }
+        }
+        if (Coins.BTC_BITKEEP_LEGACY.coinId().equals(coinId)
+                || Coins.BTC_BITKEEP_NESTED_SEGWIT.coinId().equals(coinId)
+                || Coins.BTC_BITKEEP_NATIVE_SEGWIT.coinId().equals(coinId)) {
+            Coins.Coin coin = Coins.coinOfCoinId(coinId);
+            if (originalName.toUpperCase().startsWith(coin.coinCode())) {
+                result = originalName.replace(coin.coinCode(), "BitKeep");
             }
         }
         return result;

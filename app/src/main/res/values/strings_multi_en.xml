@@ -79,9 +79,9 @@
         <item>Español</item>
         <item>한국어</item>
         <item>中文繁体</item>
-<!--        <item>Deutsch</item>-->
+        <!--        <item>Deutsch</item>-->
         <item>Русский</item>
-<!--        <item>日本語</item>-->
+        <!--        <item>日本語</item>-->
     </string-array>
 
     <string-array name="language_values" translatable="false">
@@ -89,9 +89,9 @@
         <item>es_rES</item>
         <item>ko_rKR</item>
         <item>zh_rCN</item>
-<!--        <item>de_rDE</item>-->
+        <!--        <item>de_rDE</item>-->
         <item>ru_rRU</item>
-<!--        <item>ja_rJP</item>-->
+        <!--        <item>ja_rJP</item>-->
     </string-array>
 
     <string-array name="screen_off_entries">
@@ -484,8 +484,8 @@
         <item>Sender</item>
         <item>Fewcha</item>
         <item>ArConnect</item>
-<!--        <item>Core Wallet</item>-->
-<!--        <item>BitKeep</item>-->
+        <!--        <item>Core Wallet</item>-->
+        <!--        <item>BitKeep</item>-->
         <item>Keplr</item>
         <item>SubWallet / Polkadot{.js}</item>
         <item>XRP Toolkit</item>
@@ -497,21 +497,21 @@
         <item>near</item>
         <item>aptos</item>
         <item>arweave</item>
-<!--        <item>coreWallet</item>-->
-<!--        <item>bitKeep</item>-->
+        <!--        <item>coreWallet</item>-->
+        <!--        <item>bitKeep</item>-->
         <item>keplrWallet</item>
         <item>polkadotJs</item>
         <item>xrpToolkit</item>
     </string-array>
-    <string-array name="watch_wallet_summury" >
+    <string-array name="watch_wallet_summury">
         <item>8 main chains including BTC, ETH, etc</item>
         <item>ETH, AVAX, BSC and all EVM Chains</item>
         <item>Solana</item>
         <item>Near</item>
         <item>Aptos</item>
         <item>Arweave</item>
-<!--        <item>AVAX, BTC, ETH, etc</item>-->
-<!--        <item>BTC, ETH</item>-->
+        <!--        <item>AVAX, BTC, ETH, etc</item>-->
+        <!--        <item>BTC, ETH</item>-->
         <item>Cosmos</item>
         <item>DOT、KSM</item>
         <item>XRP</item>
@@ -526,7 +526,6 @@
     <string name="sync_polkadotjs_wallet_guide_title">How to create a %s watch-only wallet in SubWallet / Polkadot{.js}：</string>
     <string name="sync_metamask_guide_title">Connect MetaMask Tutorials:</string>
     <string name="sync_solana_guide_title">Connect solana Tutorials:</string>
-
 
 
     <string name="sync_keystone_wallet_guide_text"><![CDATA[
@@ -703,9 +702,9 @@
     </string-array>
 
     <string-array name="tutorials_name_aptos">
-<!--        <item>Martian Wallet (Extension)</item>-->
+        <!--        <item>Martian Wallet (Extension)</item>-->
         <item>Fewcha Wallet (Extension)</item>
-<!--        <item>Petra Wallet (Extension)</item>-->
+        <!--        <item>Petra Wallet (Extension)</item>-->
     </string-array>
 
     <string-array name="tutorials_name_petra">
@@ -716,9 +715,9 @@
         <item><u>https://keyst.one/t/petra</u></item>
     </string-array>
     <string-array name="tutorials_link_aptos">
-<!--        <item><u>https://keyst.one/martian</u></item>-->
+        <!--        <item><u>https://keyst.one/martian</u></item>-->
         <item><u>https://keyst.one/fewcha</u></item>
-<!--        <item><u>https://keyst.one/t/petra</u></item>-->
+        <!--        <item><u>https://keyst.one/t/petra</u></item>-->
     </string-array>
 
     <string-array name="tutorials_name_core_wallet">
@@ -813,12 +812,12 @@
 
     <string-array name="tutorials_name_polkadot">
         <item>Polkadot{.js}</item>
-<!--        <item>Nova Wallet</item>-->
+        <!--        <item>Nova Wallet</item>-->
     </string-array>
 
     <string-array name="tutorials_link_polkadot">
         <item><u>https://keyst.one/polkadot</u></item>
-<!--        <item><u>https://keyst.one/nova</u></item>-->
+        <!--        <item><u>https://keyst.one/nova</u></item>-->
     </string-array>
 
     <string-array name="tutorials_name_sub_wallet">
@@ -912,9 +911,11 @@
     <string name="firmware_information_text_3">Showcase your NFT on the device in your own unique style.</string>
     <string name="firmware_information_text_4">Overhauled the [My Keystone] page to allow users to better manage their digital assets.</string>
     <string name="firmware_information_reason">Why the UI enhancement?</string>
-    <string translatable="false" name="firmware_information_link">https://keyst.one/rwm</string>
+    <string name="firmware_information_link" translatable="false">https://keyst.one/rwm</string>
     <string name="add">Add</string>
     <string name="import_another_account">Import Another Account</string>
+    <string name="bitkeep_path">BitKeep Path</string>
+    <string name="select_address">Select Address</string>
 
     <!--  Error Messages  -->
     <string name="mfp_not_match">The transaction does not belong to the current wallet. Please use the correct wallet to sign the transaction.</string>
