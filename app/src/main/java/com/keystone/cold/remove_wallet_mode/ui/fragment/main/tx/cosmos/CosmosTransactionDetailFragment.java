@@ -52,6 +52,9 @@ public class CosmosTransactionDetailFragment extends BaseFragment<FragmentCosmos
                 String denom = cosmosTx.getFee().getAmountDenom() == null ? "" : cosmosTx.getFee().getAmountDenom().toUpperCase();
                 mBinding.tvFee.setText(cosmosTx.getFee().getAmountValue() + " " + denom);
                 mBinding.tvGasLimit.setText(cosmosTx.getFee().getGas());
+            } else {
+                mBinding.llFee.setVisibility(View.GONE);
+                mBinding.llGas.setVisibility(View.GONE);
             }
             mBinding.cmMessages.setData(cosmosTx.getMsgs());
             if (!TextUtils.isEmpty(cosmosTx.getUr())) {

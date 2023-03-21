@@ -17,7 +17,10 @@ public class CosmosTx {
         JSONObject jsonObject = new JSONObject(aminoJson);
         String accountNumber = jsonObject.getString("account_number");
         String chainId = jsonObject.getString("chain_id");
-        Fee fee = Fee.from(jsonObject.getJSONObject("fee"));
+        Fee fee = null;
+        if (jsonObject.get("fee") instanceof JSONObject) {
+             fee = Fee.from(jsonObject.getJSONObject("fee"));
+        }
         String memo = jsonObject.getString("memo");
         JSONArray msgArray = jsonObject.getJSONArray("msgs");
         List<Msg> msgs = Msg.getMsgs(msgArray);
