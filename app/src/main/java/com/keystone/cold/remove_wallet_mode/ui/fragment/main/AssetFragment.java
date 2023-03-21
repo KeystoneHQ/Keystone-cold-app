@@ -85,7 +85,7 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         mActivity.setSupportActionBar(mBinding.toolbar);
         Objects.requireNonNull(mActivity.getSupportActionBar()).setDisplayShowTitleEnabled(false);
         mBinding.toolbar.setNavigationOnClickListener(v -> {
-            if (fragments[0] instanceof AddressFragment) {
+            if (fragments != null && fragments[0] instanceof AddressFragment) {
                 ((AddressFragment) fragments[0]).exitEditAddressName();
             }
             navigateUp();
@@ -95,8 +95,8 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         coinId = data.getString(KEY_COIN_ID);
         coinCode = data.getString(KEY_COIN_CODE);
         mBinding.setCoinCode(coinCode);
-
-        AppExecutors.getInstance().diskIO().execute(this::initViewPager);
+        Handler handler = new Handler();
+        AppExecutors.getInstance().diskIO().execute(() -> handler.post(this::initViewPager));
     }
 
     @Override
@@ -229,6 +229,7 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
 
     /**
      * handleAddAddress goes here
+     *
      * @param value how many accounts will be added;
      */
     @Override
