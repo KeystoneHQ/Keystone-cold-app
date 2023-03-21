@@ -11,6 +11,7 @@ import com.keystone.cold.MainApplication;
 import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.db.entity.Web3TxEntity;
 import com.keystone.cold.model.Tx;
+import com.keystone.cold.remove_wallet_mode.helper.PageStatusHelper;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumTransaction;
 import com.keystone.cold.remove_wallet_mode.ui.model.AssetItem;
 import com.keystone.cold.viewmodel.tx.GenericETHTxEntity;
@@ -56,7 +57,7 @@ public class EthTxLoader implements TxLoader {
         txEntityLoadCount = 0;
         List<Web3TxEntity> web3TxEntities = getWeb3TxList();
         List<TxEntity> txEntities = getTxList();
-        while (!web3TxEntities.isEmpty() || !txEntities.isEmpty()) {
+        while ((!web3TxEntities.isEmpty() || !txEntities.isEmpty()) && PageStatusHelper.getInstance().getStatus()) {
             if (!web3TxEntities.isEmpty()) {
                 txList.addAll(web3TxEntities.stream()
                         .map(this::mapToGenericETHTxEntity)

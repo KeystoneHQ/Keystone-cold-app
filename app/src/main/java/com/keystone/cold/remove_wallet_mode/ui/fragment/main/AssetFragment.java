@@ -52,6 +52,7 @@ import com.keystone.cold.databinding.DialogAssetBottomBinding;
 import com.keystone.cold.databinding.FragmentAssetBinding;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
+import com.keystone.cold.remove_wallet_mode.helper.PageStatusHelper;
 import com.keystone.cold.remove_wallet_mode.ui.views.AddressNumberPicker;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AddressViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
@@ -81,6 +82,7 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
 
     @Override
     protected void init(View view) {
+        PageStatusHelper.getInstance().front();
         mActivity.setSupportActionBar(mBinding.toolbar);
         Objects.requireNonNull(mActivity.getSupportActionBar()).setDisplayShowTitleEnabled(false);
         mBinding.toolbar.setNavigationOnClickListener(v -> {
@@ -149,6 +151,13 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
 
     @Override
     protected void initData(Bundle savedInstanceState) {
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        PageStatusHelper.getInstance().back();
+        super.onDestroyView();
     }
 
     private void showBadge(MenuItem menuItem) {
