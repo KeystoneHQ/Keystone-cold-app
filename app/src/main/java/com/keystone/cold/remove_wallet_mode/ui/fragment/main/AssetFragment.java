@@ -45,6 +45,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.utils.Coins;
+import com.keystone.cold.AppExecutors;
 import com.keystone.cold.MainApplication;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
@@ -95,7 +96,7 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         coinCode = data.getString(KEY_COIN_CODE);
         mBinding.setCoinCode(coinCode);
 
-        initViewPager();
+        AppExecutors.getInstance().diskIO().execute(this::initViewPager);
     }
 
     @Override
