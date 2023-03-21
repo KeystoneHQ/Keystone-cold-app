@@ -73,7 +73,7 @@ public class ChangePathViewModel extends AndroidViewModel {
 
     public LiveData<List<PathPatternItem>> getPathPattern(String coinId) {
         MutableLiveData<List<PathPatternItem>> patternItemMutableLiveData = new MutableLiveData<>();
-        AppExecutors.getInstance().diskIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             patternItemMutableLiveData.postValue(getPathPatternData(coinId));
         });
 
@@ -82,7 +82,7 @@ public class ChangePathViewModel extends AndroidViewModel {
 
     public LiveData<List<BitKeepPathItem>> getBitKeepData() {
         MutableLiveData<List<BitKeepPathItem>> listMutableLiveData = new MutableLiveData<>();
-        AppExecutors.getInstance().diskIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             String code = Utilities.getCurrentBTCAccount(getApplication());
             BTCAccount account = BTCAccount.ofCode(code);
             List<BitKeepPathItem> bitKeepPathItems = new ArrayList<>();
