@@ -109,6 +109,9 @@ public class AssetsLiveData extends MediatorLiveData<List<AssetItem>> {
             case "BTC_TESTNET_LEGACY":
             case "BTC_TESTNET_NATIVE_SEGWIT":
             case "BTC_CORE_WALLET":
+            case "BTC_BITKEEP_LEGACY":
+            case "BTC_BITKEEP_NESTED_SEGWIT":
+            case "BTC_BITKEEP_NATIVE_SEGWIT":
             case "CFX":
             case "DCR":
             case "FIRO":
