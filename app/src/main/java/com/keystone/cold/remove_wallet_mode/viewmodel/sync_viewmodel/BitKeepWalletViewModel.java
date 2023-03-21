@@ -26,7 +26,7 @@ public class BitKeepWalletViewModel extends AndroidViewModel {
     public static final String BTCNestedSegwitPath = "M/49'/0'/0'";
     public static final String BTCNativeSegwitPath = "M/84'/0'/0'";
 
-    private final String[] btcPaths = {BTCLegacyPath, BTCNestedSegwitPath, BTCNativeSegwitPath};
+    private final String[] btcPaths = {BTCLegacyPath};
 
     private List<String> openedCoins = new ArrayList<>();
 

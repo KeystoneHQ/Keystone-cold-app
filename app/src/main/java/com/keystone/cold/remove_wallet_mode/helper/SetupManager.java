@@ -58,6 +58,12 @@ public class SetupManager {
             return new BitcoinCreator(Coins.BTC_NATIVE_SEGWIT);
         } else if (coinId.equals(Coins.BTC_CORE_WALLET.coinId())) {
             return new BitcoinCreator(Coins.BTC_CORE_WALLET);
+        } else if (coinId.equals(Coins.BTC_BITKEEP_LEGACY.coinId())) {
+            return new BitcoinCreator(Coins.BTC_BITKEEP_LEGACY);
+        } else if (coinId.equals(Coins.BTC_BITKEEP_NESTED_SEGWIT.coinId())) {
+            return new BitcoinCreator(Coins.BTC_BITKEEP_NESTED_SEGWIT);
+        } else if (coinId.equals(Coins.BTC_BITKEEP_NATIVE_SEGWIT.coinId())) {
+            return new BitcoinCreator(Coins.BTC_BITKEEP_NATIVE_SEGWIT);
         } else if (coinId.equals(Coins.NEAR.coinId())) {
             return new NearCreator();
         } else if (Coins.isCosmosFamilyByCoinId(coinId)) {

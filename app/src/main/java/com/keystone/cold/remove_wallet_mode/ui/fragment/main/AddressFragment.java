@@ -113,7 +113,9 @@ public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
     }
 
     private void subscribeUi(LiveData<List<AddressItem>> address) {
-        address.observe(this, addressItems -> addressAdapter.setItems(addressItems));
+        address.observe(this, addressItems -> {
+            addressAdapter.setItems(addressItems);
+        });
     }
 
     public void exitEditAddressName() {

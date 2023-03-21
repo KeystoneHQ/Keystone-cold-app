@@ -1,7 +1,5 @@
 package com.keystone.cold.viewmodel.tx.psbt;
 
-import android.util.Log;
-
 import com.keystone.coinlib.accounts.ExtendedPublicKey;
 import com.keystone.coinlib.coins.AbsDeriver;
 import com.keystone.coinlib.coins.BTC.Btc;
