@@ -40,6 +40,7 @@ public class ABIReader {
     static List<FallbackHandler> fallbackHandlers = new ArrayList<>();
 
     static {
+        Thread.currentThread().setContextClassLoader(ABIReader.class.getClassLoader());
         fallbackHandlers.add(new Erc20Handler());
         fallbackHandlers.add(new GnosisHandler());
     }
