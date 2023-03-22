@@ -10,6 +10,7 @@ import com.keystone.cold.R;
 import com.keystone.cold.databinding.FragmentSelectNetworksBinding;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.CheckableAdapter;
+import com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.config.WalletConfig;
 import com.keystone.cold.remove_wallet_mode.ui.model.CheckableItem;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.BaseFragment;
@@ -33,6 +34,7 @@ public class SelectNetworksFragment extends BaseFragment<FragmentSelectNetworksB
     protected void init(View view) {
         Bundle data = requireArguments();
         String walletId = data.getString(BundleKeys.WALLET_ID_KEY);
+        WalletConfig config = WalletConfig.getConfigByWalletId(walletId);
 
         if (checkableAdapter == null) {
             checkableAdapter = new CheckableAdapter(mActivity, new CheckableAdapter.DataStatusCallback() {
@@ -45,7 +47,7 @@ public class SelectNetworksFragment extends BaseFragment<FragmentSelectNetworksB
                 public void onEmpty() {
                     mBinding.ivConfirm.setEnabled(false);
                 }
-            });
+            }, config.isNetworkCheckable());
             getNetworkList(walletId).observe(this, checkableAdapter::setItems);
         }
 

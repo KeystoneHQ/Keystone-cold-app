@@ -9,7 +9,7 @@ public enum Wallet {
     METAMASK("metamask", "MetaMask"),
     KEPLR("keplr", "Keplr"),
     SAFE("safe", "Safe"),
-    BITKEEP("bitkeep"),
+    BITKEEP("bitkeep", "BitKeep"),
     BLUEWALLET("bluewallet", "BlueWallet"),
     SOLFLARE("solflare", "Solflare"),
     SUBWALLET("subwallet", "SubWallet"),
