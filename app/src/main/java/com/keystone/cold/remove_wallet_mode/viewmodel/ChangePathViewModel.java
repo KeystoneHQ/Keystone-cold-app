@@ -22,9 +22,6 @@ import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.remove_wallet_mode.helper.PreGenerateAddressHelper;
-import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinBitKeepLegacyAddressGenerator;
-import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinBitKeepNativeSegwitAddressGenerator;
-import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinBitKeepNestedSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinCoreNativeSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinLegacyAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNativeSegwitAddressGenerator;
@@ -32,7 +29,6 @@ import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNes
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.EthereumAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.NearAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.SolanaAddressGenerator;
-import com.keystone.cold.remove_wallet_mode.ui.model.BitKeepPathItem;
 import com.keystone.cold.remove_wallet_mode.ui.model.PathPatternItem;
 
 import org.json.JSONArray;
@@ -78,60 +74,6 @@ public class ChangePathViewModel extends AndroidViewModel {
         });
 
         return patternItemMutableLiveData;
-    }
-
-    public LiveData<List<BitKeepPathItem>> getBitKeepData() {
-        MutableLiveData<List<BitKeepPathItem>> listMutableLiveData = new MutableLiveData<>();
-        AppExecutors.getInstance().networkIO().execute(() -> {
-            String code = Utilities.getCurrentBTCAccount(getApplication());
-            BTCAccount account = BTCAccount.ofCode(code);
-            List<BitKeepPathItem> bitKeepPathItems = new ArrayList<>();
-            for (BTCAccount btcAccount : BTCAccount.values()) {
-                if (btcAccount.equals(BTCAccount.CORE_NATIVE_SEGWIT)
-                        || btcAccount.equals(BTCAccount.NATIVE_SEGWIT)
-                        || btcAccount.equals(BTCAccount.LEGACY)
-                        || btcAccount.equals(BTCAccount.NESTED_SEGWIT)
-                ) {
-                    continue;
-                }
-                boolean isSelected = btcAccount.equals(account);
-                BitKeepPathItem pathPatternItem = new BitKeepPathItem(btcAccount.getCode(), btcAccount.getName(), getBitKeepAddress(btcAccount), isSelected);
-                bitKeepPathItems.add(pathPatternItem);
-            }
-            listMutableLiveData.postValue(bitKeepPathItems);
-        });
-        return listMutableLiveData;
-    }
-
-    private String getBitKeepAddress(BTCAccount btcAccount) {
-        String result = "";
-        String btcDerivationPaths = Utilities.getBTCDerivationPaths(getApplication());
-        if (!TextUtils.isEmpty(btcDerivationPaths)) {
-            String masterFingerPrint = new GetMasterFingerprintCallable().call();
-            try {
-                JSONObject derivationPaths = new JSONObject(btcDerivationPaths);
-                String preMasterFingerPrint = derivationPaths.optString(PreGenerateAddressHelper.MFP);
-                int version = derivationPaths.optInt(PreGenerateAddressHelper.VERSION);
-                if (masterFingerPrint.equalsIgnoreCase(preMasterFingerPrint) && version == PreGenerateAddressHelper.CURRENT_VERSION_BTC) {
-                    JSONObject accountPaths = (JSONObject) derivationPaths.get(Utilities.BTC_DERIVATION_PATHS);
-                    JSONArray jsonArray = (JSONArray) accountPaths.get(btcAccount.getCode());
-                    result = jsonArray.optString(0);
-                }
-            } catch (JSONException exception) {
-                exception.printStackTrace();
-            }
-        }
-        if (result.isEmpty()) {
-            if (btcAccount.equals(BTCAccount.BITKEEP_LEGACY)) {
-                result = BitcoinBitKeepLegacyAddressGenerator.getAddress(0);
-            } else if (btcAccount.equals(BTCAccount.BITKEEP_NESTED_SEGWIT)) {
-                result = BitcoinBitKeepNestedSegwitAddressGenerator.getAddress(0);
-            } else {
-                result = BitcoinBitKeepNativeSegwitAddressGenerator.getAddress(0);
-            }
-
-        }
-        return result;
     }
 
     private List<PathPatternItem> getPathPatternData(String coinId) {
@@ -189,11 +131,7 @@ public class ChangePathViewModel extends AndroidViewModel {
             String code = Utilities.getCurrentBTCAccount(getApplication());
             BTCAccount account = BTCAccount.ofCode(code);
             for (BTCAccount btcAccount : BTCAccount.values()) {
-                if (btcAccount.equals(BTCAccount.CORE_NATIVE_SEGWIT)
-                        || btcAccount.equals(BTCAccount.BITKEEP_NATIVE_SEGWIT)
-                        || btcAccount.equals(BTCAccount.BITKEEP_LEGACY)
-                        || btcAccount.equals(BTCAccount.BITKEEP_NESTED_SEGWIT)
-                ) {
+                if (btcAccount.equals(BTCAccount.CORE_NATIVE_SEGWIT)) {
                     continue;
                 }
                 boolean isSelected = btcAccount.equals(account);

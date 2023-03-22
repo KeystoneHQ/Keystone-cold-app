@@ -35,9 +35,6 @@ public class Coins {
     public static final Coin BTC_CORE_WALLET = new Coin("bitcoin_core_wallet", "BTC_CORE_WALLET", "Bitcoin (Core Wallet)", 60);
     public static final Coin BTC_LEGACY = new Coin("bitcoin_legacy", "BTC_LEGACY", "Bitcoin (Legacy)", 0);
     public static final Coin BTC_NATIVE_SEGWIT = new Coin("bitcoin_native_segwit", "BTC_NATIVE_SEGWIT", "Bitcoin (Native Segwit)", 0);
-    public static final Coin BTC_BITKEEP_LEGACY = new Coin("bitcoin_bitkeep_legacy", "BTC_BITKEEP_LEGACY", "Bitcoin (BitKeep Legacy)", 0);
-    public static final Coin BTC_BITKEEP_NESTED_SEGWIT = new Coin("bitcoin_bitkeep_nested_segwit", "BTC_BITKEEP_NESTED_SEGWIT", "Bitcoin (BitKeep Nested Segwit)", 0);
-    public static final Coin BTC_BITKEEP_NATIVE_SEGWIT = new Coin("bitcoin_bitkeep_native_segwit", "BTC_BITKEEP_NATIVE_SEGWIT", "Bitcoin (BitKeep Native Segwit)", 0);
     public static final Coin BTC_TESTNET_SEGWIT = new Coin("bitcoin_testnet", "BTC_TESTNET_SEGWIT", "Bitcoin (Nested Segwit)", 1); // AKA P2SH
     public static final Coin BTC_TESTNET_LEGACY = new Coin("bitcoin_testnet_legacy", "BTC_TESTNET_LEGACY", "Bitcoin (Legacy)", 1);
     public static final Coin BTC_TESTNET_NATIVE_SEGWIT = new Coin("bitcoin_testnet_native_segwit", "BTC_TESTNET_NATIVE_SEGWIT", "Bitcoin (Native Segwit)", 1);
@@ -108,9 +105,6 @@ public class Coins {
             BTC,
             BTC_CORE_WALLET,
             BTC_LEGACY,
-            BTC_BITKEEP_LEGACY,
-            BTC_BITKEEP_NATIVE_SEGWIT,
-            BTC_BITKEEP_NESTED_SEGWIT,
             BTC_NATIVE_SEGWIT,
             BTC_TESTNET_SEGWIT,
             BTC_TESTNET_LEGACY,

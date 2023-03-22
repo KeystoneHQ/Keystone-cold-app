@@ -7,16 +7,12 @@ import android.view.View;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.keystone.coinlib.accounts.BTCAccount;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
-import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.FragmentChangeDerivationPathBinding;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.helper.SyncMode;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.config.WalletConfig;
-import com.keystone.cold.remove_wallet_mode.ui.modal.BitKeepPathsDialog;
-import com.keystone.cold.remove_wallet_mode.ui.model.BitKeepPathItem;
 import com.keystone.cold.remove_wallet_mode.ui.model.PathPatternItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.ChangePathViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.WalletViewModel;
@@ -31,7 +27,6 @@ public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDer
     private String walletId;
     private String selectCode;
     private ChangePathViewModel viewModel;
-    private BitKeepPathsDialog bitKeepPathsDialog;
 
     @Override
     protected int setView() {
@@ -47,30 +42,18 @@ public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDer
             mBinding.toolbarTitle.setText(R.string.change_address_type);
             String hintText = getString(R.string.changePathText, "Bitcoin");
             mBinding.tvTittleHint.setText(hintText);
-            mBinding.bitkeepPath.setVisibility(View.VISIBLE);
-            BTCAccount btcAccount = BTCAccount.ofCode(Utilities.getCurrentBTCAccount(mActivity));
-            mBinding.setIsBitKeepSelected(btcAccount.getCode().startsWith("bitkeep"));
         } else {
             String hintText = getString(R.string.changePathText, Coins.coinNameOfCoinId(coinId));
             mBinding.tvTittleHint.setText(hintText);
         }
         mBinding.toolbar.setNavigationOnClickListener(v -> navigateUp());
         mBinding.ivConfirm.setOnClickListener(v -> save());
-        mBinding.pathPatternView.setOnItemClick(code -> {
-            selectCode = code;
-            mBinding.setIsBitKeepSelected(false);
-            if (bitKeepPathsDialog != null) {
-                bitKeepPathsDialog.uncheckAll();
-            }
-        });
+        mBinding.pathPatternView.setOnItemClick(code -> selectCode = code);
     }
 
     @Override
     protected void initData(Bundle savedInstanceState) {
         viewModel = ViewModelProviders.of(this).get(ChangePathViewModel.class);
-        mBinding.bitkeepPath.setOnClickListener((v) -> {
-            subscribeBitKeepUI(viewModel.getBitKeepData());
-        });
         subscribeUI(viewModel.getPathPattern(coinId));
     }
 
@@ -78,17 +61,6 @@ public class ChangeDerivationPathFragment extends BaseFragment<FragmentChangeDer
         pathPatternItemsLiveData.observe(this, pathPatternItems -> {
             mBinding.pathPatternView.setData(pathPatternItems);
             pathPatternItemsLiveData.removeObservers(this);
-        });
-    }
-
-    private void subscribeBitKeepUI(LiveData<List<BitKeepPathItem>> listLiveData) {
-        listLiveData.observe(this, bitKeepPathItems -> {
-            bitKeepPathsDialog = new BitKeepPathsDialog(bitKeepPathItems, code -> {
-                selectCode = code;
-                save();
-            }, Utilities.getCurrentBTCAccount(mActivity));
-            bitKeepPathsDialog.show(mActivity.getSupportFragmentManager(), "");
-            listLiveData.removeObservers(this);
         });
     }
 

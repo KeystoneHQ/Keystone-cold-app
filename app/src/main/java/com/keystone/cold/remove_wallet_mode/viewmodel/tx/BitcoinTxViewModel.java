@@ -219,17 +219,7 @@ public class BitcoinTxViewModel extends BaseTxViewModel<PSBT> {
         // TODO add LTC support;
         String canonicalPath = psbt.getMySigningInputs().get(0).getCanonicalHDPath();
         if (canonicalPath.startsWith(BTCLegacyPath)) {
-            BTCAccount btcAccount = BTCAccount.ofCode(Utilities.getCurrentBTCAccount(MainApplication.getApplication()));
-            switch (btcAccount) {
-                case BITKEEP_NATIVE_SEGWIT:
-                    return Coins.BTC_BITKEEP_NATIVE_SEGWIT.coinCode();
-                case BITKEEP_LEGACY:
-                    return Coins.BTC_BITKEEP_LEGACY.coinCode();
-                case BITKEEP_NESTED_SEGWIT:
-                    return Coins.BTC_BITKEEP_NESTED_SEGWIT.coinCode();
-                default:
-                    return Coins.BTC_LEGACY.coinCode();
-            }
+            return Coins.BTC_LEGACY.coinCode();
         } else if (canonicalPath.startsWith(BTCNestedSegwitPath)) {
             return Coins.BTC.coinCode();
         } else if (canonicalPath.startsWith(BTCCoreNativeSegwitPath)) {

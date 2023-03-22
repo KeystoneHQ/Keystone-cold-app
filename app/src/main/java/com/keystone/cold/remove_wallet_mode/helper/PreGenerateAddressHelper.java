@@ -12,9 +12,6 @@ import com.keystone.cold.MainApplication;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.db.entity.AccountEntity;
-import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinBitKeepLegacyAddressGenerator;
-import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinBitKeepNativeSegwitAddressGenerator;
-import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinBitKeepNestedSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinCoreNativeSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinLegacyAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNativeSegwitAddressGenerator;
@@ -37,7 +34,7 @@ public class PreGenerateAddressHelper {
     public static final String MFP = "master_fingerprint";
     public static final String VERSION = "version";
 
-    public static final int CURRENT_VERSION_BTC = 3;
+    public static final int CURRENT_VERSION_BTC = 2;
     public static final int CURRENT_VERSION_ETH = 1;
     public static final int CURRENT_VERSION_SOL = 1;
     public static final int CURRENT_VERSION_NEAR = 1;
@@ -93,21 +90,8 @@ public class PreGenerateAddressHelper {
                             address = BitcoinNestedSegwitAddressGenerator.getAddress(index);
                         } else if (btcAccount.equals(BTCAccount.NATIVE_SEGWIT)) {
                             address = BitcoinNativeSegwitAddressGenerator.getAddress(index);
-                        } else if (btcAccount.equals(BTCAccount.CORE_NATIVE_SEGWIT)) {
-                            address = BitcoinCoreNativeSegwitAddressGenerator.getAddress(index);
-                        } else if (btcAccount.equals(BTCAccount.BITKEEP_LEGACY)) {
-                            address = BitcoinBitKeepLegacyAddressGenerator.getAddress(index);
-                            addresses.put(address);
-                            //bitkeep only need one address
-                            break;
-                        } else if (btcAccount.equals(BTCAccount.BITKEEP_NESTED_SEGWIT)) {
-                            address = BitcoinBitKeepNestedSegwitAddressGenerator.getAddress(index);
-                            addresses.put(address);
-                            break;
                         } else {
-                            address = BitcoinBitKeepNativeSegwitAddressGenerator.getAddress(index);
-                            addresses.put(address);
-                            break;
+                            address = BitcoinCoreNativeSegwitAddressGenerator.getAddress(index);
                         }
                         addresses.put(address);
                     }

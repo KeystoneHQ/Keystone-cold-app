@@ -26,7 +26,7 @@ public class BitKeepWalletViewModel extends AndroidViewModel {
     public static final String BTCNestedSegwitPath = "M/49'/0'/0'";
     public static final String BTCNativeSegwitPath = "M/84'/0'/0'";
 
-    private final String[] btcPaths = {BTCLegacyPath};
+    private final String[] btcPaths = {BTCLegacyPath, BTCNestedSegwitPath, BTCNativeSegwitPath};
 
     private List<String> openedCoins = new ArrayList<>();
 
@@ -50,11 +50,11 @@ public class BitKeepWalletViewModel extends AndroidViewModel {
     private CryptoMultiAccounts generateCryptoMultiAccounts() {
         byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
         List<CryptoHDKey> cryptoHDKeyList = new ArrayList<>();
-        if (openedCoins.contains(Coins.BTC.coinId())) {
-            cryptoHDKeyList.addAll(generateCryptoHDKeysForBitcoin());
-        }
         if (openedCoins.contains(Coins.ETH.coinId())) {
             cryptoHDKeyList.addAll(generateCryptoHDKeysForEthereum());
+        }
+        if (openedCoins.contains(Coins.BTC.coinId())) {
+            cryptoHDKeyList.addAll(generateCryptoHDKeysForBitcoin());
         }
         return new CryptoMultiAccounts(masterFingerprint, cryptoHDKeyList, URRegistryHelper.KEY_NAME);
     }
