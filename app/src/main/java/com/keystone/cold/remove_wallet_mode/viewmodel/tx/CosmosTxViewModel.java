@@ -105,7 +105,7 @@ public class CosmosTxViewModel extends BaseTxViewModel<CosmosTx> {
                 xPub = getXpubByPath(hdPath);
             } catch (Exception e) {
                 e.printStackTrace();
-                observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
+                //observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
             }
         });
     }
@@ -143,7 +143,7 @@ public class CosmosTxViewModel extends BaseTxViewModel<CosmosTx> {
             } catch (JSONException e) {
                 e.printStackTrace();
                 observableObject.postValue(null);
-                observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
+                //observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
             }
         });
         return observableObject;
@@ -218,7 +218,7 @@ public class CosmosTxViewModel extends BaseTxViewModel<CosmosTx> {
             }
         } catch (JSONException exception) {
             exception.printStackTrace();
-            observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
+            //observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
         }
     }
 
@@ -230,21 +230,21 @@ public class CosmosTxViewModel extends BaseTxViewModel<CosmosTx> {
         String parseResult = CosmosParser.parse(txHex);
         if (parseResult != null) {
             parseJson = CosmosTx.transformDirectToAmino(parseResult);
+            rawFormatTx.postValue(new JSONObject(parseJson).toString(2));
             CosmosTx cosmosTx = CosmosTx.from(parseJson);
             observableTransaction.postValue(cosmosTx);
             chainId = cosmosTx.getChainId();
-            rawFormatTx.postValue(new JSONObject(parseJson).toString(2));
         } else {
-            observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
+            //observableException.postValue(new InvalidTransactionException(getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
         }
     }
 
     private void parseAminoTx() throws JSONException {
         parseJson = new String(Hex.decode(txHex));
+        rawFormatTx.postValue(new JSONObject(parseJson).toString(2));
         CosmosTx cosmosTx = CosmosTx.from(parseJson);
         observableTransaction.postValue(cosmosTx);
         chainId = cosmosTx.getChainId();
-        rawFormatTx.postValue(new JSONObject(parseJson).toString(2));
     }
 
     private String getXpubByPath(String path) {
