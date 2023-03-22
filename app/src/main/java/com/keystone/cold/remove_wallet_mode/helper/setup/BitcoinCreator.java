@@ -9,9 +9,6 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
-import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinBitKeepLegacyAddressGenerator;
-import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinBitKeepNativeSegwitAddressGenerator;
-import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinBitKeepNestedSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinCoreNativeSegwitAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinLegacyAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.BitcoinNativeSegwitAddressGenerator;
@@ -36,12 +33,6 @@ public class BitcoinCreator extends BaseCreator {
             new BitcoinNativeSegwitAddressGenerator().generateAddress(1);
         else if (coin.equals(Coins.BTC_CORE_WALLET))
             new BitcoinCoreNativeSegwitAddressGenerator().generateAddress(1);
-        else if (coin.equals(Coins.BTC_BITKEEP_LEGACY))
-            new BitcoinBitKeepLegacyAddressGenerator().generateAddress(1);
-        else if (coin.equals(Coins.BTC_BITKEEP_NESTED_SEGWIT))
-            new BitcoinBitKeepNestedSegwitAddressGenerator().generateAddress(1);
-        else if (coin.equals(Coins.BTC_BITKEEP_NATIVE_SEGWIT))
-            new BitcoinBitKeepNativeSegwitAddressGenerator().generateAddress(1);
     }
 
     @Override
@@ -51,10 +42,7 @@ public class BitcoinCreator extends BaseCreator {
             String xpub = new GetExtendedPublicKeyCallable(BTCNestedSegwitPath).call();
             account.setHdPath(BTCNestedSegwitPath);
             account.setExPub(xpub);
-        } else if (coin.equals(Coins.BTC_LEGACY)
-                || coin.equals(Coins.BTC_BITKEEP_LEGACY)
-                || coin.equals(Coins.BTC_BITKEEP_NESTED_SEGWIT)
-                || coin.equals(Coins.BTC_BITKEEP_NATIVE_SEGWIT)) {
+        } else if (coin.equals(Coins.BTC_LEGACY)) {
             String xpub = new GetExtendedPublicKeyCallable(BTCLegacyPath).call();
             account.setHdPath(BTCLegacyPath);
             account.setExPub(xpub);

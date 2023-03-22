@@ -19,14 +19,6 @@ public class AddressNameConvertHelper {
                 result = originalName.replace("APT", "Aptos");
             }
         }
-        if (Coins.BTC_BITKEEP_LEGACY.coinId().equals(coinId)
-                || Coins.BTC_BITKEEP_NESTED_SEGWIT.coinId().equals(coinId)
-                || Coins.BTC_BITKEEP_NATIVE_SEGWIT.coinId().equals(coinId)) {
-            Coins.Coin coin = Coins.coinOfCoinId(coinId);
-            if (originalName.toUpperCase().startsWith(coin.coinCode())) {
-                result = originalName.replace(coin.coinCode(), "BitKeep");
-            }
-        }
         return result;
     }
 
