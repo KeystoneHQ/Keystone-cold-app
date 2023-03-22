@@ -15,7 +15,7 @@
         <item>MetaMask</item>
         <item>Keplr</item>
         <item>Safe</item>
-<!--        <item>BitKeep</item>-->
+        <item>BitKeep</item>
         <item>BlueWallet</item>
         <item>Solflare Wallet</item>
         <item>SubWallet</item>
@@ -38,7 +38,7 @@
         <item>metamask</item>
         <item>keplr</item>
         <item>safe</item>
-<!--        <item>bitkeep</item>-->
+        <item>bitkeep</item>
         <item>bluewallet</item>
         <item>solflare</item>
         <item>subwallet</item>
@@ -61,7 +61,7 @@
         <item>ETH, AVAX, BNB, and other EVM tokens</item>
         <item>Cosmos Eco</item>
         <item>ETH, AVAX, BNB, and other EVM tokens</item>
-<!--        <item>ETH, AVAX, BNB, and other EVM tokens</item>-->
+        <item>ETH, AVAX, BNB, and other EVM tokens</item>
         <item>BTC</item>
         <item>SOL and SPL tokens</item>
         <item>DOT, KSM</item>
