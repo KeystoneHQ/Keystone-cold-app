@@ -77,12 +77,8 @@ public class EthTxLoader implements TxLoader {
                 txList.addAll(txEntities.stream()
                         .map(this::mapToGenericETHTxEntity)
                         .filter((v) -> {
-                            try {
-                                JSONObject addition = new JSONObject(v.getAddition());
-                                return filterTxsByETHAccount(addition);
-                            } catch (JSONException e) {
-                                return true;
-                            }
+                            //Keystone Txs
+                            return accountCode.equals(ETHAccount.BIP44_STANDARD.getCode());
                         })
                         .filter(this::filterSomeTxs)
                         .collect(Collectors.toList()));
