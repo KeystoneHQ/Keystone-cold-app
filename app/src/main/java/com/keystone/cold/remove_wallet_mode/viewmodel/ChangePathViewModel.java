@@ -131,9 +131,9 @@ public class ChangePathViewModel extends AndroidViewModel {
             String code = Utilities.getCurrentBTCAccount(getApplication());
             BTCAccount account = BTCAccount.ofCode(code);
             for (BTCAccount btcAccount : BTCAccount.values()) {
-                if (btcAccount.equals(BTCAccount.CORE_NATIVE_SEGWIT)) {
-                    continue;
-                }
+//                if (btcAccount.equals(BTCAccount.CORE_NATIVE_SEGWIT)) {
+//                    continue;
+//                }
                 boolean isSelected = btcAccount.equals(account);
                 boolean isRecommend = btcAccount.equals(BTCAccount.NATIVE_SEGWIT);
                 PathPatternItem pathPatternItem = new PathPatternItem(btcAccount.getCode(), btcAccount.getDisplayPath(), btcAccount.getName(), isRecommend, getBTCAccountAddresses(btcAccount), isSelected);
