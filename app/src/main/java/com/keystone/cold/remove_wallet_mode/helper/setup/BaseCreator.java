@@ -72,7 +72,7 @@ public abstract class BaseCreator extends Creator {
             return NextStep.CREATE;
         }
         List<AccountEntity> accountEntities = repository.loadAccountsForCoin(coinEntity);
-        if (accountEntities.size() != coinEntity.getAccounts().size()) {
+        if (accountEntities.size() < coin.getAccounts().length) {
             return NextStep.UPDATE;
         }
         return NextStep.DO_NOTHING;
