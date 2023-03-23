@@ -291,7 +291,9 @@ public class CosmosTxViewModel extends BaseTxViewModel<CosmosTx> {
         switch (signMode) {
             case COSMOS:
                 SignTxResult result = new CosmosImpl().signHex(txHex, signer);
-                signature = result.signaturHex;
+                if (result != null) {
+                    signature = result.signaturHex;
+                }
                 break;
             case EVM:
                 signature = new EthImpl(evmChainId).directSign(txHex, signer);
