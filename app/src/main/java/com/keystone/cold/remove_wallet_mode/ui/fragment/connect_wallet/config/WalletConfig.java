@@ -25,7 +25,8 @@ public enum WalletConfig {
     CORE(Wallet.CORE.getWalletId(), new String[]{Coins.BTC.coinId(), Coins.ETH.coinId()}, false, false, true, false),
     BITKEEP(Wallet.BITKEEP.getWalletId(), new String[]{Coins.BTC.coinId(), Coins.ETH.coinId()}, true, false, true, false),
     BITKEEP_ONLY_BTC(Wallet.BITKEEP.getWalletId(), new String[]{Coins.BTC.coinId()}, false, false, true, false),
-    DEFAULT("default", new String[]{""}, false, false, true, false),
+    KEYSTONE(Wallet.KEYSTONE.getWalletId(), new String[]{Coins.BTC.coinId(), Coins.ETH.coinId()}, false, false, true, true),
+    DEFAULT("default", new String[]{""}, false, false, true, true),
     ;
 
     private static final List<String> OPEN_COINS = new ArrayList<>();
