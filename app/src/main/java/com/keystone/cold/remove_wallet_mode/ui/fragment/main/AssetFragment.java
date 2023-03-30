@@ -42,6 +42,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.allenliu.badgeview.BadgeFactory;
 import com.allenliu.badgeview.BadgeView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.keystone.coinlib.accounts.BTCAccount;
 import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
 import com.keystone.coinlib.utils.Coins;
@@ -187,7 +188,14 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         DialogAssetBottomBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.dialog_asset_bottom, null, false);
         AssetConfig config = AssetConfig.getConfigByCoinId(coinId);
         if (config.isShowAddAddress()) {
-            binding.rlAddAddress.setVisibility(View.VISIBLE);
+            int visible = View.VISIBLE;
+            if (coinId.equals(Coins.BTC.coinId())) {
+                BTCAccount btcAccount = BTCAccount.ofCode(Utilities.getCurrentBTCAccount(mActivity));
+                if (btcAccount.equals(BTCAccount.CORE_NATIVE_SEGWIT)) {
+                    visible = View.GONE;
+                }
+            }
+            binding.rlAddAddress.setVisibility(visible);
         }
         if (config.isShowChangePath()) {
             if (coinId.equals(Coins.BTC.coinId())) {
@@ -237,6 +245,7 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
 
     /**
      * handleAddAddress goes here
+     *
      * @param value how many accounts will be added;
      */
     @Override
