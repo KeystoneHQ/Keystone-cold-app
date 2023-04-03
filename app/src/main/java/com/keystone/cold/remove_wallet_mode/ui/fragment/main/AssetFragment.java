@@ -188,14 +188,7 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         DialogAssetBottomBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.dialog_asset_bottom, null, false);
         AssetConfig config = AssetConfig.getConfigByCoinId(coinId);
         if (config.isShowAddAddress()) {
-            int visible = View.VISIBLE;
-            if (coinId.equals(Coins.BTC.coinId())) {
-                BTCAccount btcAccount = BTCAccount.ofCode(Utilities.getCurrentBTCAccount(mActivity));
-                if (btcAccount.equals(BTCAccount.CORE_NATIVE_SEGWIT)) {
-                    visible = View.GONE;
-                }
-            }
-            binding.rlAddAddress.setVisibility(visible);
+            binding.rlAddAddress.setVisibility(View.VISIBLE);
         }
         if (config.isShowChangePath()) {
             if (coinId.equals(Coins.BTC.coinId())) {
