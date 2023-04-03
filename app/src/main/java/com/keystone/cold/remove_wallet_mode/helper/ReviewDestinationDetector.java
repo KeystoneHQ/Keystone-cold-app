@@ -38,7 +38,7 @@ public class ReviewDestinationDetector {
             return detectEth(tx);
         } else if (Coins.SOL.coinId().equals(coinId)) {
             return new Destination(R.id.action_to_solanaReviewTransactionFragment, bundle);
-        } else if (Coins.BTC.coinId().equals(coinId) || Coins.BTC_NATIVE_SEGWIT.coinId().equals(coinId) || Coins.BTC_LEGACY.coinId().equals(coinId)) {
+        } else if (Coins.BTC.coinId().equals(coinId) || Coins.BTC_NATIVE_SEGWIT.coinId().equals(coinId) || Coins.BTC_LEGACY.coinId().equals(coinId) || Coins.BTC_CORE_WALLET.coinId().equals(coinId)) {
             return new Destination(R.id.action_to_bitcoinReviewTransactionFragment, bundle);
         } else if (Coins.DOT.coinId().equals(coinId) || Coins.KSM.coinId().equals(coinId)) {
             return new Destination(R.id.action_to_substrateReviewTransactionFragment, bundle);

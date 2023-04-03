@@ -217,7 +217,7 @@ public class BitcoinTxViewModel extends BaseTxViewModel<PSBT> {
 
     public static String getCoinCodeFromPSBT(PSBT psbt) {
         // TODO add LTC support;
-        String canonicalPath = psbt.getMySigningInputs().get(0).getCanonicalHDPath();
+        String canonicalPath = psbt.getMySigningInputs().get(0).getCanonicalHDPath().toUpperCase();
         if (canonicalPath.startsWith(BTCLegacyPath)) {
             return Coins.BTC_LEGACY.coinCode();
         } else if (canonicalPath.startsWith(BTCNestedSegwitPath)) {
