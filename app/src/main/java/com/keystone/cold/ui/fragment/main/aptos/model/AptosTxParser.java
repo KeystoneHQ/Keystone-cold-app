@@ -62,8 +62,15 @@ public class AptosTxParser {
         if (payLoad instanceof EntryFunction) {
             EntryFunction entryFunction = (EntryFunction) payLoad;
             String function = entryFunction.getFunction();
-            String[] splitFunction = function.split(JOINER);
-            return splitFunction.length == 3 && "0x1".equals(splitFunction[0]) && "transfer".equals(splitFunction[2]);
+            if (entryFunction.getTypeArguments() != null && entryFunction.getTypeArguments().size() > 0) {
+                String typeArgument = entryFunction.getTypeArguments().get(0);
+                if ("0x1::aptos_coin::AptosCoin".equals(typeArgument)) {
+                    String[] splitFunction = function.split(JOINER);
+                    return splitFunction.length == 3 && "0x1".equals(splitFunction[0]) && "transfer".equals(splitFunction[2]);
+                }
+            } else {
+                return "0x1::aptos_account::transfer".equals(function);
+            }
         }
         return false;
     }
