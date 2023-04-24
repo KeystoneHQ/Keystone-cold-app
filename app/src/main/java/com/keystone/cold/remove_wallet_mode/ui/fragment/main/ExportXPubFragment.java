@@ -3,10 +3,12 @@ package com.keystone.cold.remove_wallet_mode.ui.fragment.main;
 import android.os.Bundle;
 import android.view.View;
 
+import com.keystone.coinlib.accounts.BTCAccount;
 import com.keystone.coinlib.accounts.ExtendedPublicKey;
 import com.keystone.coinlib.accounts.ExtendedPublicKeyVersion;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.databinding.FragmentExportXpubBinding;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
@@ -22,6 +24,10 @@ public class ExportXPubFragment extends BaseFragment<FragmentExportXpubBinding> 
     protected void init(View view) {
         Bundle data = requireArguments();
         String coinCode = data.getString(BundleKeys.COIN_CODE_KEY);
+        if (coinCode.equals("BTC")) {
+            BTCAccount account = BTCAccount.ofCode(Utilities.getCurrentBTCAccount(mActivity));
+            coinCode = Coins.coinCodeFromCoinId(account.getCoinId());
+        }
         String xpub = getXPubByCoin(coinCode);
         mBinding.toolbar.setNavigationOnClickListener((v) -> navigateUp());
         mBinding.setCoinCode(coinCode);
@@ -41,6 +47,9 @@ public class ExportXPubFragment extends BaseFragment<FragmentExportXpubBinding> 
                 break;
             case "BCH":
                 coinIndex = 145;
+                break;
+            case "BTC_CORE_WALLET":
+                coinIndex = 60;
                 break;
             default:
                 coinIndex = 0;

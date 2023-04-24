@@ -97,7 +97,12 @@ public class EthereumTransactionDetailFragment extends BaseFragment<FragmentEthe
             mBinding.setCoinCode(assetItem.getCoinCode());
         } else {
             mBinding.setCheckInfoTitle(EthereumTxViewModel.getNetwork(transaction.getChainId()));
-            mBinding.checkInfoLayout.icon.setImageResource(R.drawable.coin_eth_token);
+            String coinCode = EthereumTxViewModel.getIconCode(transaction.getChainId());
+            if (coinCode != null) {
+                mBinding.setCoinCode(coinCode);
+            } else {
+                mBinding.checkInfoLayout.icon.setImageResource(R.drawable.coin_eth_token);
+            }
         }
 
         if (transaction.getTxType() == EthereumTransaction.TransactionType.LEGACY.getType()) {
