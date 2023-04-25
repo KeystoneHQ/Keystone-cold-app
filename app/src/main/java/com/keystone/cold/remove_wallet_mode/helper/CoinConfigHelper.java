@@ -179,6 +179,20 @@ public class CoinConfigHelper {
         }
     }
 
+    public static String getNonEVMChainIconCode(long chainId) {
+        try {
+            JSONObject chainIdJSONObject = new JSONObject(readAsset("chain/chainId.json"));
+            JSONObject chain = chainIdJSONObject.optJSONObject(String.valueOf(chainId));
+            if (chain == null) return null;
+            String coinCode = chain.optString("coinCode", "");
+            if (coinCode.isEmpty()) return null;
+            return coinCode;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static List<String> getCoinEco(String coinCode) {
         List<String> ecology = new ArrayList<>();
         if (EVM_ECOLOGY != null && EVM_ECOLOGY.contains(coinCode)) {

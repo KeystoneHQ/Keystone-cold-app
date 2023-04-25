@@ -33,6 +33,7 @@ import com.keystone.cold.db.entity.Web3TxEntity;
 import com.keystone.cold.encryption.RustSigner;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
+import com.keystone.cold.remove_wallet_mode.helper.CoinConfigHelper;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumTransaction;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.viewmodel.AddAddressViewModel;
@@ -178,6 +179,17 @@ public class EthereumTxViewModel extends BaseTxViewModel<EthereumTransaction> {
         } else {
             return networkName;
         }
+    }
+
+    // used for get icon when we don't treat this chain as a coin in my assets page.
+    public static String getIconCode(long chainId) {
+        if (chainId == 1) {
+            return Coins.ETH.coinCode();
+        }
+        if (chainId == 9000 || chainId == 9001) {
+            return Coins.EVMOS.coinCode();
+        }
+        return CoinConfigHelper.getNonEVMChainIconCode(chainId);
     }
 
     public void reset() {

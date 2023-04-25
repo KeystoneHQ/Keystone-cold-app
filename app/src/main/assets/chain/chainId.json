@@ -842,6 +842,7 @@
   },
   "42161": {
     "symbol": "AETH",
+    "coinCode": "ARB",
     "name": "Arbitrum One"
   },
   "8724": {
@@ -928,7 +929,8 @@
   },
   "100": {
     "symbol": "xDAI",
-    "name": "xDAI Chain"
+    "name": "Gnosis Chain",
+    "coinCode": "GNOSIS"
   },
   "101": {
     "symbol": "ETI",
