@@ -39,8 +39,8 @@ public interface TxDao {
     @Query("SELECT * FROM txs where coinId = :coinId and signId = 'electrum_sign_id' ORDER BY timeStamp DESC")
     List<TxEntity> loadElectrumTxsSync(String coinId);
 
-    @Query("SELECT * FROM txs where coinId = :coinId")
-    List<TxEntity> loadTxsSync(String coinId);
+    @Query("SELECT * FROM txs where coinId = :coinId AND belongTo = :belongTo")
+    List<TxEntity> loadTxsSync(String coinId, String belongTo);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(TxEntity tx);
@@ -57,6 +57,6 @@ public interface TxDao {
     @Query("DELETE FROM txs WHERE belongTo = 'hidden'")
     int deleteHidden();
 
-    @Query("SELECT * FROM txs where coinId = :coinId ORDER BY timeStamp DESC LIMIT :limit OFFSET :offset")
-    List<TxEntity> loadTxs(String coinId, int limit, int offset);
+    @Query("SELECT * FROM txs where coinId = :coinId AND belongTo = :belongTo ORDER BY timeStamp DESC LIMIT :limit OFFSET :offset")
+    List<TxEntity> loadTxs(String coinId, String belongTo, int limit, int offset);
 }

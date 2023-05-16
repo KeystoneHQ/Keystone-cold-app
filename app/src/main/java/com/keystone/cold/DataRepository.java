@@ -170,7 +170,7 @@ public class DataRepository {
     }
 
     public List<TxEntity> loadAllTxSync(String coinId) {
-        return mDb.txDao().loadTxsSync(coinId);
+        return mDb.txDao().loadTxsSync(coinId, getBelongTo());
     }
 
     public LiveData<TxEntity> loadTx(String txId) {
@@ -358,14 +358,14 @@ public class DataRepository {
     }
 
     public List<Web3TxEntity> loadETHTxsSync() {
-        return mDb.ethTxDao().loadETHTxsSync();
+        return mDb.ethTxDao().loadETHTxsSync(getBelongTo());
     }
 
     public List<Web3TxEntity> loadETHTxs(int limit, int offset) {
-        return mDb.ethTxDao().loadETHTxsSync(limit, offset);
+        return mDb.ethTxDao().loadETHTxsSync(getBelongTo(), limit, offset);
     }
 
     public List<TxEntity> loadTxs(String coinId, int limit, int offset) {
-        return mDb.txDao().loadTxs(coinId, limit, offset);
+        return mDb.txDao().loadTxs(coinId, getBelongTo(), limit, offset);
     }
 }
