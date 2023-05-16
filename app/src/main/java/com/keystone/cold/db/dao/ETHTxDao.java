@@ -29,8 +29,8 @@ import java.util.List;
 
 @Dao
 public interface ETHTxDao {
-    @Query("SELECT * FROM ethtxs ORDER BY timeStamp DESC")
-    List<Web3TxEntity> loadETHTxsSync();
+    @Query("SELECT * FROM ethtxs where belongTo = :belongTo ORDER BY timeStamp DESC")
+    List<Web3TxEntity> loadETHTxsSync(String belongTo);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Web3TxEntity tx);
@@ -41,6 +41,6 @@ public interface ETHTxDao {
     @Query("DELETE FROM ethtxs WHERE belongTo = 'hidden'")
     int deleteHidden();
 
-    @Query("SELECT * FROM ethtxs ORDER BY timeStamp DESC LIMIT :limit OFFSET :offset")
-    List<Web3TxEntity> loadETHTxsSync(int limit, int offset);
+    @Query("SELECT * FROM ethtxs where belongTo = :belongTo ORDER BY timeStamp DESC LIMIT :limit OFFSET :offset")
+    List<Web3TxEntity> loadETHTxsSync(String belongTo, int limit, int offset);
 }
