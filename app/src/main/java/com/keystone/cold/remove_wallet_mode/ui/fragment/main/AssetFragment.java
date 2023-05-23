@@ -273,6 +273,7 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         BTC(Coins.BTC.coinId(), true, true, true, true, false),
         ETH(Coins.ETH.coinId(), true, true, true),
         APT(Coins.APTOS.coinId(), true, false, true),
+        SUI(Coins.SUI.coinId(), true, false, true),
         SOL(Coins.SOL.coinId(), true, true, true),
         SOL_BIP44_ROOT(Coins.SOL.coinId() + "_" + SOLAccount.SOLFLARE_BIP44_ROOT.getCode(), false, true, true),
         NEAR(Coins.NEAR.coinId(), false, true, true),

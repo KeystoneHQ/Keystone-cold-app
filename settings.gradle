@@ -16,5 +16,4 @@
  */
 
 include ':app', ':encryption-core', ':coinlib'
-include ':crypto-core'
 include ':cryptoCore'
