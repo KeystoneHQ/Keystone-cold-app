@@ -15,6 +15,7 @@ import com.keystone.cold.remove_wallet_mode.helper.setup.NearCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.RippleCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.SolanaCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.SubstrateCreator;
+import com.keystone.cold.remove_wallet_mode.helper.setup.SuiCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.TronCreator;
 import com.keystone.cold.util.ExtendedPublicKeyCacheHelper;
 
@@ -41,7 +42,9 @@ public class SetupManager {
     //todo:  Need to add other coin
     private static Creator getCreator(Coins.Coin coin) {
         String coinId = coin.coinId();
-        if (coinId.equals(Coins.APTOS.coinId())) {
+        if (coinId.equals(Coins.SUI.coinId())) {
+            return new SuiCreator();
+        } else if (coinId.equals(Coins.APTOS.coinId())) {
             return new AptosCreator();
         } else if (coinId.equals(Coins.ETH.coinId())) {
             return new EthereumCreator();

@@ -69,6 +69,7 @@ public class Coins {
             NEARAccount.LEDGER.getCode()});
 
     public static final Coin APTOS = new Coin("aptos", "APT", "Aptos", 637, CURVE.ED25519, new String[]{});
+    public static final Coin SUI = new Coin("sui", "SUI", "Sui", 784, CURVE.ED25519, new String[]{});
 
     public static final Coin AR = new Coin("arweave", "AR", "Arweave", 472, CURVE.RSA, new String[]{"M/44'/472'"});
 
@@ -153,9 +154,9 @@ public class Coins {
             SOL,
             NEAR,
             APTOS,
+            SUI,
             AR,
 //            ADA,
-
             ATOM,
             OSMO,
             SCRT,
@@ -385,7 +386,10 @@ public class Coins {
 
     public static boolean isAptosCoin(String coinCode) {
         return coinCode.equals(APTOS.coinCode);
+    }
 
+    public static boolean isSuiCoin(String coinCode) {
+        return coinCode.equals(SUI.coinCode);
     }
 
     public static boolean isSolanaCoin(String coinCode) {

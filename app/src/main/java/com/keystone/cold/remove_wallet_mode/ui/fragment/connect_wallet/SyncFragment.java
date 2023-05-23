@@ -260,7 +260,9 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                 break;
             case FEWCHA:
             case PETRA:
+            case SUIET:
                 FewchaWalletViewModel fewchaWalletViewModel = ViewModelProviders.of(this).get(FewchaWalletViewModel.class);
+                fewchaWalletViewModel.setCoinId(requireArguments().getString(BundleKeys.COIN_ID_KEY));
                 fewchaWalletViewModel.setAddressIds(addressIds);
                 urMutableLiveData = fewchaWalletViewModel.generateSyncUR();
                 break;

@@ -69,6 +69,9 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialBinding> {
             case FEWCHA:
                 id = R.array.tutorials_name_aptos;
                 break;
+            case SUIET:
+                id = R.array.tutorials_name_suiet;
+                break;
             case CORE:
                 id = R.array.tutorials_name_core_wallet;
                 break;
@@ -131,6 +134,9 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialBinding> {
                 break;
             case FEWCHA:
                 id = R.array.tutorials_link_aptos;
+                break;
+            case SUIET:
+                id = R.array.tutorials_link_suiet;
                 break;
             case CORE:
                 id = R.array.tutorials_link_core_wallet;

@@ -18,6 +18,7 @@ public enum Wallet {
     ARCONNECT("arconnect", "ArConnect"),
     PETRA("petra", "Petra"),
     FEWCHA("fewcha", "Fewcha"),
+    SUIET("suiet", "Suiet"),
     SENDER("sender", "Sender"),
     BLOCKWALLET("blockwallet", "BlockWallet"),
     RABBY("rabby", "Rabby"),
@@ -134,7 +135,6 @@ public enum Wallet {
         //todo  Need to add other types
         switch (wallet) {
             case METAMASK:
-            case FEWCHA:
             case SOLFLARE:
             case BLUEWALLET:
             case SUBWALLET:
@@ -142,6 +142,7 @@ public enum Wallet {
             case ARCONNECT:
             case SENDER:
             case ETERNL:
+            case SUIET:
                 return true;
             case KEPLR:
             case CORE:
@@ -177,13 +178,12 @@ public enum Wallet {
             case BITKEEP:
                 return new Coins.Coin[]{Coins.BTC_NATIVE_SEGWIT, Coins.ETH};
             case FEWCHA:
-                return new Coins.Coin[]{Coins.APTOS};
+                return new Coins.Coin[]{Coins.APTOS, Coins.SUI};
+            case SUIET:
+                return new Coins.Coin[]{Coins.SUI};
             case KEPLR:
                 return new Coins.Coin[]{Coins.ATOM, Coins.OSMO, Coins.SCRT, Coins.AKT, Coins.CRO, Coins.IOV, Coins.ROWAN, Coins.CTK, Coins.IRIS, Coins.REGEN, Coins.XPRT, Coins.DVPN, Coins.IXO, Coins.NGM, Coins.BLD, Coins.BOOT, Coins.JUNO, Coins.STARS, Coins.AXL, Coins.SOMM, Coins.UMEE, Coins.GRAV, Coins.TGD, Coins.STRD, Coins.KAVA, Coins.EVMOS};
         }
         return new Coins.Coin[]{};
     }
-
-
 }
-

@@ -8,6 +8,8 @@ import android.os.Bundle;
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.accounts.NEARAccount;
 import com.keystone.coinlib.accounts.SOLAccount;
+import com.keystone.coinlib.coins.SUI.Sui;
+import com.keystone.coinlib.coins.SUI.Sui.IntentScope;
 import com.keystone.cold.R;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.protocol.ZipUtil;
@@ -19,7 +21,6 @@ import com.keystone.cold.remove_wallet_mode.exceptions.UnimplementedException;
 import com.keystone.cold.remove_wallet_mode.exceptions.scanner.UnknownQrCodeException;
 import com.keystone.cold.remove_wallet_mode.exceptions.scanner.XfpNotMatchException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidPathException;
-import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.UnsupportedTransactionException;
 import com.keystone.cold.remove_wallet_mode.helper.Destination;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.KeyRequestApproveFragment;
@@ -46,6 +47,7 @@ import com.sparrowwallet.hummingbird.registry.extend.QRHardwareCall;
 import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolNFTItem;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
+import com.sparrowwallet.hummingbird.registry.sui.SuiSignRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,6 +66,8 @@ public class URProcessor implements Processor {
     public Destination run(ScanResult r) throws BaseException {
         if (r.getType().equals(ScanResultTypes.UR_ETH_SIGN_REQUEST)) {
             return new ETHSignRequestProcessor().run(r.resolve());
+        } else if (r.getType().equals(ScanResultTypes.UR_SUI_SIGN_REQUEST)) {
+            return new SuiSignRequestProcessor().run(r.resolve());
         } else if (r.getType().equals(ScanResultTypes.UR_APTOS_SIGN_REQUEST)) {
             return new AptosSignRequestProcessor().run(r.resolve());
         } else if (r.getType().equals(ScanResultTypes.UR_SOL_SIGN_REQUEST)) {
@@ -221,6 +225,36 @@ public class URProcessor implements Processor {
                     }
                 case MULTI:
                     throw UnsupportedTransactionException.newInstance("Aptos Transaction type Multi not supported yet");
+            }
+            throw UnimplementedException.newInstance();
+        }
+    }
+
+    private static class SuiSignRequestProcessor implements URResolver {
+        @Override
+        public Destination run(Object object) throws BaseException {
+            SuiSignRequest suiSignRequest = (SuiSignRequest) object;
+            String requestMFP = Hex.toHexString(suiSignRequest.getMasterFingerprint());
+            String MFP = new GetMasterFingerprintCallable().call();
+            if (!requestMFP.equalsIgnoreCase(MFP)) {
+                throw XfpNotMatchException.newInstance();
+            }
+            ByteBuffer uuidBuffer = ByteBuffer.wrap(suiSignRequest.getRequestId());
+            UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+            String hdPath = suiSignRequest.getDerivationPaths()[0];
+            byte[] intentMessage = suiSignRequest.getIntentMessage();
+            IntentScope scope = IntentScope.fromValue((int) intentMessage[0]);
+            String signData = Hex.toHexString(intentMessage);
+            Bundle bundle = new Bundle();
+            bundle.putString(BundleKeys.REQUEST_ID_KEY, uuid.toString());
+            bundle.putString(BundleKeys.SIGN_DATA_KEY, signData);
+            bundle.putString(BundleKeys.HD_PATH_KEY, "M/" + hdPath);
+            bundle.putString(BundleKeys.SIGN_ORIGIN_KEY, suiSignRequest.getOrigin());
+            switch (scope) {
+                case PersonalMessage:
+                    return new Destination(R.id.action_to_suiSignMessageFragment, bundle);
+                case TransactionData:
+                    return new Destination(R.id.action_to_suiConfirmTransactionFragment, bundle);
             }
             throw UnimplementedException.newInstance();
         }

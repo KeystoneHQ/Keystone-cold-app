@@ -56,8 +56,8 @@ public class SyncInfo implements Serializable {
         if (publicKey != null) {
             return publicKey;
         }
-        if (Coins.APTOS.coinId().equalsIgnoreCase(coinId)) {
-            publicKey = getAptosPublicKey();
+        if (Coins.SUI.coinId().equalsIgnoreCase(coinId) || Coins.APTOS.coinId().equalsIgnoreCase(coinId)) {
+            publicKey = getOriginalPublicKey();
         } else if (Coins.NEAR.coinId().equalsIgnoreCase(coinId)) {
             publicKey = getNearPublicKeyByAddress();
         } else if (Coins.SOL.coinId().equalsIgnoreCase(coinId)) {
@@ -100,7 +100,7 @@ public class SyncInfo implements Serializable {
         return getPublicKeyByAddition();
     }
 
-    private byte[] getAptosPublicKey() {
+    private byte[] getOriginalPublicKey() {
         byte[] key = getPublicKeyByAddition();
         if (key != null && key.length == 33) {
             byte[] pubKey = new byte[32];

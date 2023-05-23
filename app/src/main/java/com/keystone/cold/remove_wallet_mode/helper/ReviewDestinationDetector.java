@@ -32,7 +32,9 @@ public class ReviewDestinationDetector {
             // Keystone tx(TxEntity);
             return new Destination(R.id.action_to_keystoneReviewTransactionFragment, bundle);
         }
-        if (Coins.APTOS.coinId().equals(coinId)) {
+        if (Coins.SUI.coinId().equals(coinId)) {
+            return new Destination(R.id.action_to_suiReviewTransactionFragment, bundle);
+        } else if (Coins.APTOS.coinId().equals(coinId)) {
             return new Destination(R.id.action_to_aptosReviewTransactionFragment, bundle);
         } else if (Coins.ETH.coinId().equals(coinId)) {
             return detectEth(tx);

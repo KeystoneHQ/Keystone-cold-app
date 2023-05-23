@@ -17,6 +17,7 @@ import com.sparrowwallet.hummingbird.registry.extend.QRHardwareCall;
 import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolNFTItem;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
+import com.sparrowwallet.hummingbird.registry.sui.SuiSignRequest;
 
 import org.spongycastle.util.encoders.Hex;
 
@@ -40,6 +41,7 @@ public enum ScanResultTypes {
     UR_NEAR_SIGN_REQUEST,
     UR_CRYPTO_PSBT,
     UR_APTOS_SIGN_REQUEST,
+    UR_SUI_SIGN_REQUEST,
     UR_ARWEAVE_SIGN_REQUEST,
     UR_COSMOS_SIGN_REQUEST,
     UR_QR_HARDWARE_CALL,
@@ -72,6 +74,8 @@ public enum ScanResultTypes {
                     return decodeResult instanceof NearSignRequest;
                 case UR_APTOS_SIGN_REQUEST:
                     return decodeResult instanceof AptosSignRequest;
+                case UR_SUI_SIGN_REQUEST:
+                    return decodeResult instanceof SuiSignRequest;
                 case UR_CRYPTO_PSBT:
                     return decodeResult instanceof CryptoPSBT;
                 case UR_COSMOS_SIGN_REQUEST:
@@ -112,6 +116,8 @@ public enum ScanResultTypes {
                     return CosmosSignRequest.fromCbor(dataItem);
                 case UR_APTOS_SIGN_REQUEST:
                     return AptosSignRequest.fromCbor(dataItem);
+                case UR_SUI_SIGN_REQUEST:
+                    return SuiSignRequest.fromCbor(dataItem);
                 case UR_NEAR_SIGN_REQUEST:
                     return NearSignRequest.fromCbor(dataItem);
                 case UR_SOL_NFT_ITEM:
@@ -161,6 +167,8 @@ public enum ScanResultTypes {
                 return UR_CRYPTO_PSBT;
             case "aptos-sign-request":
                 return UR_APTOS_SIGN_REQUEST;
+            case "sui-sign-request":
+                return UR_SUI_SIGN_REQUEST;
             case "arweave-sign-request":
                 return UR_ARWEAVE_SIGN_REQUEST;
             case "cosmos-sign-request":

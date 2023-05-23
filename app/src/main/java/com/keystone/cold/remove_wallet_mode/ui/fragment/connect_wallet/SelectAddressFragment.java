@@ -53,6 +53,7 @@ public class SelectAddressFragment extends BaseFragment<FragmentSelectAddressBin
             Bundle bundle = new Bundle();
             bundle.putString(BundleKeys.WALLET_ID_KEY, requireArguments().getString(BundleKeys.WALLET_ID_KEY));
             bundle.putSerializable(BundleKeys.ADDRESS_IDS_KEY, (Serializable) selectedAddressAdapter.getAddressIds());
+            bundle.putString(BundleKeys.COIN_ID_KEY, requireArguments().getString(BundleKeys.COIN_ID_KEY));
             navigate(R.id.action_to_syncFragment, bundle);
         });
     }

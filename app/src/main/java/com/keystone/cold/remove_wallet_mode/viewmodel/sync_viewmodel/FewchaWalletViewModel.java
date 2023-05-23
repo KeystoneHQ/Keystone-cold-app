@@ -10,6 +10,9 @@ public class FewchaWalletViewModel extends BaseCryptoMultiAccountsSyncViewModel 
 
     public FewchaWalletViewModel(@NonNull Application application) {
         super(application);
-        coinId = Coins.APTOS.coinId();
+    }
+
+    public void setCoinId(String coinId) {
+        this.coinId = coinId;
     }
 }
