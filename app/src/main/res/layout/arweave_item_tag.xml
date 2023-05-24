@@ -75,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
-                android:text="@{tag.name}"
+                android:text="@{tag.value}"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 tools:text="value" />

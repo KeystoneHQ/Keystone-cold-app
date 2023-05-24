@@ -297,7 +297,7 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<FragmentSetPassw
                         if (!hasSetupFinished) {
                             Utilities.markPasswordSet(mActivity);
                         }
-                        Utilities.setPatternRetryTimes(mActivity, 0);
+                        Utilities.setPasswordRetryTimes(mActivity, 0);
                         mActivity.finish();
                     };
                 } else if (!inSetupProcess) {

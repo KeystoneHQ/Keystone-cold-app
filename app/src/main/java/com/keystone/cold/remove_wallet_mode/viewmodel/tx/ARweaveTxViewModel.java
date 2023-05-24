@@ -154,9 +154,15 @@ public class ARweaveTxViewModel extends BaseTxViewModel<ArweaveTransaction> {
             RustSigner signer = initSigner();
             if (signer == null) {
                 signState.postValue(STATE_SIGN_FAIL);
+                new ClearTokenCallable().call();
                 return;
             }
             signature = signer.signRSA(arweaveTransaction.getSignatureData(), saltLen);
+            if (signature == null) {
+                signState.postValue(STATE_SIGN_FAIL);
+                new ClearTokenCallable().call();
+                return;
+            }
             try {
                 String txId = ArweaveViewModel.formatHex(Util.sha256(Hex.decode(signature)));
                 insertDB(signature, txId, arweaveTransaction);
