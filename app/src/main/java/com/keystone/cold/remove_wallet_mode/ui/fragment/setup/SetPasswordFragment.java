@@ -306,11 +306,13 @@ public class SetPasswordFragment extends SetupVaultBaseFragment<FragmentSetPassw
                         action = this::navigateUp;
                     } else {
                         new ResetPasswordCallable(passwordHash, mnemonic, slip39MasterSeed, slip39Id).call();
+                        Utilities.setPasswordRetryTimes(mActivity, 0);
                         action = () -> popBackStack(R.id.preImportFragment, true);
                     }
                 } else {
                     if (new ResetPasswordCallable(passwordHash, mnemonic, slip39MasterSeed, slip39Id).call()) {
                         Utilities.markPasswordSet(mActivity);
+                        Utilities.setPasswordRetryTimes(mActivity, 0);
                         action = () -> {
                             if (shouldPopBack) {
                                 navigateUp();
