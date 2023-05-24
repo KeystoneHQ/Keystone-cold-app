@@ -100,7 +100,13 @@ public class ArweaveViewModel extends AndroidViewModel {
             boolean isMainWallet = Utilities.getCurrentBelongTo(MainApplication.getApplication()).equals("main");
             String portName = EncryptionCoreProvider.getInstance().getPortName();
             String result = RCCService.getRSAPublicKey(new RCCService.Passport(token.password, isMainWallet, portName));
-            addArweaveAddressToDB(result);
+            if (result == null) {
+                //temporary fix for not getting RSA pubkey
+                generatingAddress.postValue(false);
+            }
+            else {
+                addArweaveAddressToDB(result);
+            }
         });
     }
 
