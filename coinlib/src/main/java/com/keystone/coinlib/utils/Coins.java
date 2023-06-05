@@ -100,6 +100,33 @@ public class Coins {
     public static final Coin KAVA = new Coin("kava", "KAVA", "Kava", 459);
     public static final Coin EVMOS = new Coin("evmos", "EVMOS", "Evmos", 60);
 
+    public static final Coin ADA = new Coin("cardano", "ADA", "Cardano", 1815, CURVE.BIP32_ED25519, new String[]{
+            "m/1852'/1815'/0'",
+            "m/1852'/1815'/1'",
+            "m/1852'/1815'/2'",
+            "m/1852'/1815'/3'",
+            "m/1852'/1815'/4'",
+            "m/1852'/1815'/5'",
+            "m/1852'/1815'/6'",
+            "m/1852'/1815'/7'",
+            "m/1852'/1815'/8'",
+            "m/1852'/1815'/9'",
+            "m/1852'/1815'/10'",
+            "m/1852'/1815'/11'",
+            "m/1852'/1815'/12'",
+            "m/1852'/1815'/13'",
+            "m/1852'/1815'/14'",
+            "m/1852'/1815'/15'",
+            "m/1852'/1815'/16'",
+            "m/1852'/1815'/17'",
+            "m/1852'/1815'/18'",
+            "m/1852'/1815'/19'",
+            "m/1852'/1815'/20'",
+            "m/1852'/1815'/21'",
+            "m/1852'/1815'/22'",
+            "m/1852'/1815'/23'",
+    });
+
 
     public static final List<Coin> SUPPORTED_COINS = Arrays.asList(
             BTC,
@@ -127,6 +154,7 @@ public class Coins {
             NEAR,
             APTOS,
             AR,
+            ADA,
 
             ATOM,
             OSMO,
@@ -319,6 +347,7 @@ public class Coins {
 
     public enum CURVE {
         ED25519,
+        BIP32_ED25519,
         SECP256K1,
         SECP256R1,
         SR25519,

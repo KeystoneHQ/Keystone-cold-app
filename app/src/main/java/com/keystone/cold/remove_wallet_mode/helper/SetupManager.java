@@ -5,6 +5,7 @@ import com.keystone.cold.remove_wallet_mode.helper.setup.AptosCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.ArweaveCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.BitcoinCashCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.BitcoinCreator;
+import com.keystone.cold.remove_wallet_mode.helper.setup.CardanoCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.CosmosCreator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.Creator;
 import com.keystone.cold.remove_wallet_mode.helper.setup.DashCreator;
@@ -74,6 +75,8 @@ public class SetupManager {
             return new TronCreator();
         } else if (coinId.equals(Coins.XRP.coinId())) {
             return new RippleCreator();
+        } else if (coinId.equals(Coins.ADA.coinId())) {
+            return new CardanoCreator();
         }
         return null;
     }

@@ -485,7 +485,7 @@
         <item>Fewcha</item>
         <item>ArConnect</item>
         <!--        <item>Core Wallet</item>-->
-                <item>BitKeep</item>
+        <item>BitKeep</item>
         <item>Keplr</item>
         <item>SubWallet / Polkadot{.js}</item>
         <item>XRP Toolkit</item>
@@ -925,6 +925,9 @@
     <string name="import_another_account">Import Another Account</string>
     <string name="bitkeep_path">BitKeep Path</string>
     <string name="select_address">Select Address</string>
+    <string name="setup_cardano_hint">You have not added ADA as an asset yet. Please proceed to add ADA as an asset.</string>
+    <string name="setup_cardano_failed">Add ADA failed</string>
+    <string name="setup_cardano_failed_description">Please try again. (Secret Sharding wallet does not support Cardano currently.) </string>
 
     <!--  Error Messages  -->
     <string name="mfp_not_match">The transaction does not belong to the current wallet. Please use the correct wallet to sign the transaction.</string>
