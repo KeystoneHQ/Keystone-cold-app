@@ -26,6 +26,7 @@ public enum SyncMode {
             case ARCONNECT:
             case KEPLR:
             case CORE:
+            case OKX:
                 stepMode.postValue(DIRECT);
                 break;
             case POLKADOTJS:

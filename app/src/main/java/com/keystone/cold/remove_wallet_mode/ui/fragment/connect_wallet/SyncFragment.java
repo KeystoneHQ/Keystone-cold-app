@@ -34,6 +34,7 @@ import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.FewchaWalle
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.KeplrWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.KeystoneViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.MetamaskViewModel;
+import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.OKXWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SenderWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SolFlareViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SubstrateWalletViewModel;
@@ -165,6 +166,11 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                 Bundle data = requireArguments();
                 keystoneViewModel.setOpenedCoins((List<String>) data.getSerializable(BundleKeys.OPENED_COINS_KEY));
                 urMutableLiveData = keystoneViewModel.generateSyncKeystone();
+                break;
+            case OKX:
+                OKXWalletViewModel okxWalletViewModel = ViewModelProviders.of(this).get(OKXWalletViewModel.class);
+                okxWalletViewModel.setOpenedCoins((List<String>) requireArguments().getSerializable(BundleKeys.OPENED_COINS_KEY));
+                urMutableLiveData = okxWalletViewModel.generateSyncUR();
                 break;
             case FEWCHA:
             case PETRA:
