@@ -104,6 +104,9 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialBinding> {
             case BLOCKWALLET:
                 id = R.array.tutorials_name_blockwallet;
                 break;
+            case OKX:
+                id = R.array.tutorials_name_okx;
+                break;
         }
         return id;
     }
@@ -163,6 +166,9 @@ public class TutorialsFragment extends BaseFragment<FragmentTutorialBinding> {
                 break;
             case BLOCKWALLET:
                 id = R.array.tutorials_link_blockwallet;
+                break;
+            case OKX:
+                id = R.array.tutorials_link_okx;
                 break;
         }
         return id;
