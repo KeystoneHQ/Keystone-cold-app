@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
+import com.keystone.cold.util.DeviceInfoUtil;
 import com.keystone.cold.util.URRegistryHelper;
 import com.sparrowwallet.hummingbird.UR;
 import com.sparrowwallet.hummingbird.registry.CryptoHDKey;
@@ -62,7 +63,7 @@ public class OKXWalletViewModel extends AndroidViewModel {
         if (openedCoins.contains(Coins.BTC.coinId())) {
             cryptoHDKeyList.addAll(generateCryptoHDKeysForBitcoin());
         }
-        return new CryptoMultiAccounts(masterFingerprint, cryptoHDKeyList, URRegistryHelper.KEY_NAME);
+        return new CryptoMultiAccounts(masterFingerprint, cryptoHDKeyList, DeviceInfoUtil.getDeviceType(), DeviceInfoUtil.getDeviceId());
     }
 
 
