@@ -78,13 +78,13 @@
 
         <LinearLayout
             android:id="@+id/llQrHint"
-            android:paddingBottom="@dimen/dp_8"
-            android:background="@drawable/bg_corner_4dp_white"
             android:layout_width="288dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_12"
-            android:orientation="horizontal">
+            android:background="@drawable/bg_corner_4dp_white"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/dp_8">
 
             <ImageView
                 android:layout_width="@dimen/dp_20"
@@ -102,6 +102,37 @@
                 android:text="@string/enlarge_qrcode"
                 android:textColor="#D4D4D4"
                 android:textSize="@dimen/sp_12" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llSupportCoins"
+            android:layout_width="288dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_12"
+            android:background="@drawable/bg_corner_4dp_white"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/dp_8"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_6"
+                android:text="@string/support_network"
+                android:textColor="#d4d4d4" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSupportCoinList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_10"
+                android:clipToPadding="false"
+                android:paddingStart="@dimen/dp_11_neg"
+                tools:ignore="RtlSymmetry"
+                tools:listitem="@layout/item_support_network" />
         </LinearLayout>
     </LinearLayout>
 

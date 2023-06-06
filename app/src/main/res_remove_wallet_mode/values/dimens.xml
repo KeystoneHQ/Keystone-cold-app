@@ -34,6 +34,7 @@
 
     <dimen name="sp_18">18sp</dimen>
 
+    <dimen name="dp_11_neg">-11dp</dimen>
 
     <dimen name="dp_1">1dp</dimen>
     <dimen name="dp_2">2dp</dimen>

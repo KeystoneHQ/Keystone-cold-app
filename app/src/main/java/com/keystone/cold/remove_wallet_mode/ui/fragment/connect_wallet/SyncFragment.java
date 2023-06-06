@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.accounts.BTCAccount;
@@ -26,6 +27,7 @@ import com.keystone.cold.integration.chains.ArweaveViewModel;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
+import com.keystone.cold.remove_wallet_mode.ui.adapter.SupportNetworkAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.config.WalletConfig;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.BitKeepWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.BlueWalletViewModel;
@@ -43,6 +45,7 @@ import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.sparrowwallet.hummingbird.UR;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -108,6 +111,25 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                 Bundle bundle = requireArguments();
                 List<String> openCoins = (List<String>) bundle.getSerializable(BundleKeys.OPENED_COINS_KEY);
                 WalletConfig.setOpenCoins(openCoins);
+                break;
+            case OKX:
+                mBinding.dynamicQrcodeLayout.llQrHint.setVisibility(View.GONE);
+                mBinding.dynamicQrcodeLayout.llSupportCoins.setVisibility(View.VISIBLE);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+                layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                mBinding.dynamicQrcodeLayout.rvSupportCoinList.setLayoutManager(layoutManager);
+                SupportNetworkAdapter supportNetworkAdapter = new SupportNetworkAdapter(getContext());
+                supportNetworkAdapter.setItems(Arrays.asList(
+                        R.drawable.ic_coin_btc,
+                        R.drawable.ic_coin_eth
+//                        R.drawable.ic_coin_okb,
+//                        R.drawable.ic_coin_bnb,
+//                        R.drawable.ic_coin_arb,
+//                        R.drawable.ic_coin_avax,
+//                        R.drawable.ic_coin_matic,
+//                        R.drawable.ic_more_drak
+                ));
+                mBinding.dynamicQrcodeLayout.rvSupportCoinList.setAdapter(supportNetworkAdapter);
                 break;
         }
     }
