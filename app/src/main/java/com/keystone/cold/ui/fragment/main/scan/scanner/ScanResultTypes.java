@@ -12,6 +12,7 @@ import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
 import com.sparrowwallet.hummingbird.registry.arweave.ArweaveSignRequest;
 import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignRequest;
 import com.sparrowwallet.hummingbird.registry.evm.EvmSignRequest;
+import com.sparrowwallet.hummingbird.registry.extend.QRHardwareCall;
 import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolNFTItem;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
@@ -40,6 +41,7 @@ public enum ScanResultTypes {
     UR_APTOS_SIGN_REQUEST,
     UR_ARWEAVE_SIGN_REQUEST,
     UR_COSMOS_SIGN_REQUEST,
+    UR_QR_HARDWARE_CALL,
     UR_EVM_SIGN_REQUEST;
 
 
@@ -76,6 +78,8 @@ public enum ScanResultTypes {
                     return decodeResult instanceof ArweaveSignRequest;
                 case UR_EVM_SIGN_REQUEST:
                     return decodeResult instanceof EvmSignRequest;
+                case UR_QR_HARDWARE_CALL:
+                    return decodeResult instanceof QRHardwareCall;
                 default:
                     return false;
             }
@@ -120,6 +124,8 @@ public enum ScanResultTypes {
                     return ArweaveSignRequest.fromCbor(dataItem);
                 case UR_BYTES:
                     return ((ByteString) dataItem).getBytes();
+                case UR_QR_HARDWARE_CALL:
+                    return QRHardwareCall.fromCbor(dataItem);
                 default:
                     return null;
             }

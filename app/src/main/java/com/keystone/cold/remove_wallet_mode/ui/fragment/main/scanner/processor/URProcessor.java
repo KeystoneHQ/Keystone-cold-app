@@ -32,6 +32,7 @@ import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
 import com.sparrowwallet.hummingbird.registry.arweave.ArweaveSignRequest;
 import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignRequest;
 import com.sparrowwallet.hummingbird.registry.evm.EvmSignRequest;
+import com.sparrowwallet.hummingbird.registry.extend.QRHardwareCall;
 import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolNFTItem;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
@@ -121,6 +122,15 @@ public class URProcessor implements Processor {
                         throw UnsupportedTransactionException.newInstance("unknown ethereum transaction type :" + type);
                 }
             }
+            return null;
+        }
+    }
+
+    private static class QRHardwareCallProcessor implements URResolver {
+        @Override
+        public Destination run(Object object) throws BaseException {
+            QRHardwareCall call = (QRHardwareCall) object;
+            
             return null;
         }
     }

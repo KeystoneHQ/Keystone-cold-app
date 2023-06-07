@@ -618,6 +618,7 @@
     <string name="sync">Connect</string>
     <string name="change_software_wallet_path">Change Derivation Path</string>
     <string name="tutorials">Tutorials</string>
+    <string name="tutorial">Tutorial</string>
 
     <string name="qrcode_capacity">QR Code Density：%s </string>
     <string name="qr_capacity_high">High</string>
@@ -928,6 +929,20 @@
     <string name="setup_cardano_hint">You have not added ADA as an asset yet. Please proceed to add ADA as an asset.</string>
     <string name="setup_cardano_failed">Add ADA failed</string>
     <string name="setup_cardano_failed_description">Please try again. (Secret Sharding wallet does not support Cardano currently.) </string>
+    <string name="understand">I Understand</string>
+
+    <!-- eternl -->
+    <string name="eternl_setup_steps">Please follow the instructions below: </string>
+    <string name="eternl_setup_steps1">1. Select account you want to import on Eternl</string>
+    <string name="eternl_setup_steps2">2. Scan the QR code via your device</string>
+    <string name="eternl_setup_steps3">3. Approve the request to generate QR code</string>
+    <string name="eternl_setup_steps4">4. Scan the QR code via Eternl Wallet</string>
+
+    <string name="approve_request">Approve Request</string>
+    <string name="request_public_key">Request your public key</string>
+    <string name="eternl_request">Eternl Wallet device wants to get your public key on your Keystone.</string>
+    <string name="reject">Reject</string>
+    <string name="key_request_hint">Only approve the external wallets you trust.</string>
 
     <!--  Error Messages  -->
     <string name="mfp_not_match">The transaction does not belong to the current wallet. Please use the correct wallet to sign the transaction.</string>

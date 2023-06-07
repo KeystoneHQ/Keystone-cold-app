@@ -26,6 +26,8 @@
     <color name="preview_mask">#7f000000</color>
     <color name="white">#ffffff</color>
     <color name="ens">#67A2F8</color>
+    <color name="shadow">#121212</color>
+    <color name="hint_red">#FE3664</color>
     <color name="menu_select">@color/white</color>
     <color name="menu_unselect">#ff858593</color>
     <color name="icon_select">#ff00cdc3</color>
