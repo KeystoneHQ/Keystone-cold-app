@@ -60,7 +60,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
-    public enum SyncActionMode implements Serializable {
+    public enum SyncActionMode {
         Normal,
         KeyRequest;
 

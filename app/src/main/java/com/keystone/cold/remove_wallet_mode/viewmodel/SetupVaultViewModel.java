@@ -272,10 +272,11 @@ public class SetupVaultViewModel extends AndroidViewModel {
         AppExecutors.getInstance().diskIO().execute(() -> {
             vaultCreateState.postValue(VAULT_STATE_CREATING);
             boolean success;
+            String password = OneTimePasswordManager.getInstance().useAndDrop();
             if (TextUtils.isEmpty(passphrase)) {
                 success = new RestartSeCallable().call();
             } else {
-                success = new UpdatePassphraseCallable(passphrase, OneTimePasswordManager.getInstance().useAndDrop(), signature).call();
+                success = new UpdatePassphraseCallable(passphrase, password, signature).call();
             }
 
             try {
@@ -286,6 +287,10 @@ public class SetupVaultViewModel extends AndroidViewModel {
             if (success) {
                 vaultId = new GetVaultIdCallable().call();
                 deleteHiddenVaultData();
+                ADASetupManager adaSetupManager = ADASetupManager.getInstance();
+                if (adaSetupManager.setupADARootKey(passphrase, password)) {
+                    adaSetupManager.preSetupADAKeys(password);
+                }
                 signature = null;
                 vaultCreateState.postValue(VAULT_STATE_CREATED);
             } else {
