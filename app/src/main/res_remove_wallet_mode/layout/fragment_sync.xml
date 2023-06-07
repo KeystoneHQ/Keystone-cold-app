@@ -46,8 +46,8 @@
                 android:layout_gravity="center"
                 android:text="@{@string/connect_who(wallet)}"
                 android:textColor="@android:color/white"
-                android:textStyle="bold"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/action_more"
