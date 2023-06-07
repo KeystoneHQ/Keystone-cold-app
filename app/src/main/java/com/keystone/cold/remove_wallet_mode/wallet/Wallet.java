@@ -7,6 +7,7 @@ public enum Wallet {
 
     KEYSTONE("keystone", "Keystone App"),
     METAMASK("metamask", "MetaMask"),
+    OKX("okx", "OKX Wallet"),
     KEPLR("keplr", "Keplr"),
     SAFE("safe", "Safe"),
     BITKEEP("bitkeep", "BitKeep"),
@@ -39,6 +40,7 @@ public enum Wallet {
     public static final String ARWEAVE_SIGN_ID = "arweave_sign_id";
     public static final String KEPLR_WALLET_SIGN_ID = "keplr_wallet_sign_id";
     public static final String PETRA_WALLET_SIGN_ID = "petra_wallet_sign_id";
+    public static final String OKX_WALLET_SIGN_ID = "okx_wallet_sign_id";
 
     public static final String UNKNOWN_WALLET_SIGN_ID = "unknown_wallet_sign_id";
 

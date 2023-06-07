@@ -26,6 +26,10 @@
     <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission
+        android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
+        tools:ignore="ProtectedPermissions" />
+
+    <uses-permission
         android:name="android.permission.RECOVERY"
         tools:ignore="ProtectedPermissions" />
     <uses-permission

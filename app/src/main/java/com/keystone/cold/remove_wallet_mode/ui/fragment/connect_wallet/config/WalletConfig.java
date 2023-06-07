@@ -26,6 +26,7 @@ public enum WalletConfig {
     BITKEEP(Wallet.BITKEEP.getWalletId(), new String[]{Coins.BTC.coinId(), Coins.ETH.coinId()}, true, false, true, false),
     BITKEEP_ONLY_BTC(Wallet.BITKEEP.getWalletId(), new String[]{Coins.BTC.coinId()}, false, false, true, false),
     KEYSTONE(Wallet.KEYSTONE.getWalletId(), new String[]{Coins.BTC.coinId(), Coins.ETH.coinId()}, false, false, true, true),
+    OKX(Wallet.OKX.getWalletId(), new String[]{Coins.BTC.coinId(), Coins.ETH.coinId()}, false, false, true, true),
     DEFAULT("default", new String[]{""}, false, false, true, true),
     ;
 

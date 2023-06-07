@@ -13,6 +13,7 @@
     <string-array name="watch_wallet_list_remove_wallet_mode">
         <item>Keystone Companion App</item>
         <item>MetaMask</item>
+        <item>OKX Wallet</item>
         <item>Keplr</item>
         <item>Safe</item>
         <item>BitKeep</item>
@@ -36,6 +37,7 @@
     <string-array name="watch_wallet_ids" translatable="false">
         <item>keystone</item>
         <item>metamask</item>
+        <item>okx</item>
         <item>keplr</item>
         <item>safe</item>
         <item>bitkeep</item>
@@ -58,6 +60,7 @@
     </string-array>
     <string-array name="watch_wallet_summury_remove_wallet_mode">
         <item>9 main chains including BTC, ETH, etc</item>
+        <item>ETH, AVAX, BNB, and other EVM tokens</item>
         <item>ETH, AVAX, BNB, and other EVM tokens</item>
         <item>Cosmos Eco</item>
         <item>ETH, AVAX, BNB, and other EVM tokens</item>

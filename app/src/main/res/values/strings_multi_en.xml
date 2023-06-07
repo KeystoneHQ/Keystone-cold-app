@@ -675,6 +675,7 @@
     <string name="companion_hint"><![CDATA[If your recovery phrase was imported from a ledger device (ledger live/legacy), all of your assets might not be identified with the QR code above. Please <font color="#00cdc3"><u>click here</u><font/>to switch to the wallet QR code.]]></string>
     <string name="select_wallet">Select Wallet</string>
     <string name="select_network">Select Network</string>
+    <string name="support_network">Supported Network</string>
     <string name="ledger_live"><![CDATA[<font color="#00cdc3">Ledger Live<font/> to connect to Ledger]]></string>
     <string name="my_crypto_mew"><![CDATA[<font color="#00cdc3">Legacy<font/> (My Crypto, MEW)]]></string>
     <string name="metamusk_ledger"><![CDATA[<font color="#00cdc3">Standard<font/> (MetaMask, Ledger, etc.)]]></string>
@@ -846,6 +847,14 @@
     <string-array name="tutorials_link_safe">
         <item><u>https://keyst.one/t/safe</u></item>
         <item><u>https://keyst.one/t/safem</u></item>
+    </string-array>
+
+    <string-array name="tutorials_name_okx">
+        <item>OKX Wallet</item>
+    </string-array>
+
+    <string-array name="tutorials_link_okx">
+        <item><u>https://keyst.one/t/okx</u></item>
     </string-array>
 
     <string name="tittle_eth_selector">4-byte Function Signature</string>
