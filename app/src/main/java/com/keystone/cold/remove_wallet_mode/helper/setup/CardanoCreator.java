@@ -22,7 +22,6 @@ public class CardanoCreator extends BaseCreator {
     // create cardano coin and accounts first.
     @Override
     public void setUp() {
-        Log.d("sora", "setUp: cardano");
         CoinEntity coinEntity = repository.loadCoinSync(Coins.ADA.coinId());
         if (coinEntity == null) {
             coinEntity = mapToCoinEntity();
@@ -31,7 +30,6 @@ public class CardanoCreator extends BaseCreator {
                 account.setCoinId(id);
             }
             repository.insertAccounts(coinEntity.getAccounts());
-            Log.d("sora", "setUp: cardano done");
         } else {
             update();
         }
@@ -39,7 +37,6 @@ public class CardanoCreator extends BaseCreator {
 
     @Override
     protected void update() {
-        Log.d("sora", "update: cardano");
         CoinEntity coinEntity = repository.loadCoinSync(Coins.ADA.coinId());
         if (coinEntity != null) {
             List<AccountEntity> accountEntities = repository.loadAccountsForCoin(coinEntity);
@@ -56,9 +53,7 @@ public class CardanoCreator extends BaseCreator {
                     }
                 }
                 repository.updateCoin(coinEntity);
-                Log.d("sora", "update: needs add accounts");
             }
-            Log.d("sora", "update: " + accountEntities);
             for (AccountEntity accountEntity : accountEntities) {
                 String path = accountEntity.getHdPath();
                 String xpub = ADASetupManager.getInstance().getXPub(path);

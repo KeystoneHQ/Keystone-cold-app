@@ -62,14 +62,27 @@ public class AuthenticateModal {
         show(activity, title, subTitle, false, onVerify, onForget);
     }
 
+    public static void show(AppCompatActivity activity,
+                            String title, String subTitle,
+                            OnVerify onVerify,
+                            Runnable onCancel,
+                            Runnable onForget) {
+        show(activity, title, subTitle, false, onVerify, onCancel, onForget);
+    }
+
     public static void show(AppCompatActivity activity, String title, String subTitle,
                             boolean useFingerprint, OnVerify onVerify, Runnable onForget) {
+        show(activity, title, subTitle, useFingerprint, onVerify, null, onForget);
+    }
+
+    public static void show(AppCompatActivity activity, String title, String subTitle,
+                            boolean useFingerprint, OnVerify onVerify, Runnable onCancel, Runnable onForget) {
         PasswordInputModalBinding binding = DataBindingUtil.inflate(LayoutInflater.from(activity),
                 R.layout.password_input_modal, null, false);
         ModalDialog dialog = ModalDialog.newInstance();
         dialog.setBinding(binding);
 
-        initPassword(activity, title, subTitle, onVerify, onForget, binding, dialog);
+        initPassword(activity, title, subTitle, onVerify, onForget, onCancel, binding, dialog);
         if (useFingerprint) {
             initFingerprint(activity, onVerify, binding, dialog);
         }
@@ -124,7 +137,7 @@ public class AuthenticateModal {
         Signature signature;
         try {
             signature = Signature.getInstance("SHA256withECDSA");
-            PrivateKey key = (PrivateKey) KeyStoreUtil.prepareKeyStore().getKey(SECP256R1,null);
+            PrivateKey key = (PrivateKey) KeyStoreUtil.prepareKeyStore().getKey(SECP256R1, null);
             signature.initSign(key);
         } catch (NoSuchAlgorithmException | UnrecoverableKeyException | KeyStoreException | InvalidKeyException e) {
             e.printStackTrace();
@@ -139,6 +152,7 @@ public class AuthenticateModal {
                                      String title, String subTitle,
                                      OnVerify onVerify,
                                      Runnable onForget,
+                                     Runnable onCancel,
                                      PasswordInputModalBinding binding,
                                      ModalDialog dialog) {
         ObservableField<String> password = new ObservableField<>();
@@ -160,6 +174,9 @@ public class AuthenticateModal {
                 FingerprintKit fp = (FingerprintKit) binding.fingerprintLayout.getTag();
                 fp.cancelVerify();
             }
+            if (onCancel != null) {
+                onCancel.run();
+            }
             dialog.dismiss();
         };
         binding.closePassword.setOnClickListener(v -> close.run());
@@ -180,7 +197,7 @@ public class AuthenticateModal {
                         Utilities.setPatternRetryTimes(activity, 0);
                         dialog.dismiss();
                         Keyboard.hide(activity, binding.input);
-                        onVerify.onVerify(new OnVerify.VerifyToken(passwordHash,null));
+                        onVerify.onVerify(new OnVerify.VerifyToken(passwordHash, null));
                     });
                 } else {
                     handler.post(() -> {
@@ -241,6 +258,7 @@ public class AuthenticateModal {
                 token = null;
             }
         }
+
         void onVerify(VerifyToken token);
     }
 }

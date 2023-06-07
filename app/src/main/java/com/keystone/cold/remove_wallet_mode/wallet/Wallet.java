@@ -14,7 +14,7 @@ public enum Wallet {
     BLUEWALLET("bluewallet", "BlueWallet"),
     SOLFLARE("solflare", "Solflare"),
     SUBWALLET("subwallet", "SubWallet"),
-    ETERNL("eternl"),
+    ETERNL("eternl", "Eternl Wallet"),
     ARCONNECT("arconnect", "ArConnect"),
     PETRA("petra", "Petra"),
     FEWCHA("fewcha", "Fewcha"),
@@ -25,9 +25,9 @@ public enum Wallet {
     POLKADOTJS("polkadotjs", "Polkadot.{js}"),
     XRPTOOLKIT("xrp", "XRP Toolkit"),
     ZAPPER("zapper", "Zapper"),
-    YEARN("yearn",  "Yearn Finance"),
+    YEARN("yearn", "Yearn Finance"),
     SUSHISWAP("sushiswap", "SushiSwap"),
-    UNKNOWNWALLET("unknownwallet");
+    UNKNOWNWALLET("unknownwallet", "Unknown Wallet");
 
     public static final String XRP_TOOLKIT_SIGN_ID = "xrp_toolkit_sign_id";
     public static final String POLKADOT_JS_SIGN_ID = "polkadot_js_sign_id";
@@ -41,6 +41,7 @@ public enum Wallet {
     public static final String KEPLR_WALLET_SIGN_ID = "keplr_wallet_sign_id";
     public static final String PETRA_WALLET_SIGN_ID = "petra_wallet_sign_id";
     public static final String OKX_WALLET_SIGN_ID = "okx_wallet_sign_id";
+    public static final String ETERNL_WALLET_SIGN_ID = "eternl_wallet_sign_id";
 
     public static final String UNKNOWN_WALLET_SIGN_ID = "unknown_wallet_sign_id";
 
@@ -89,6 +90,8 @@ public enum Wallet {
                 return ARWEAVE_SIGN_ID;
             case KEPLR:
                 return KEPLR_WALLET_SIGN_ID;
+            case ETERNL:
+                return ETERNL_WALLET_SIGN_ID;
         }
         return UNKNOWN_WALLET_SIGN_ID;
     }
@@ -102,6 +105,17 @@ public enum Wallet {
             }
         }
         return selectWatchWallet;
+    }
+
+    public static Wallet getWalletByIdOrUnknown(String walletId) {
+        Wallet selectWatchWallet = UNKNOWNWALLET;
+        for (Wallet wallet : Wallet.values()) {
+            if (wallet.walletId.equals(walletId)) {
+                selectWatchWallet = wallet;
+                break;
+            }
+        }
+        return UNKNOWNWALLET;
     }
 
     public static boolean isSingleChainWallet(String walletId) {
@@ -127,6 +141,7 @@ public enum Wallet {
             case POLKADOTJS:
             case ARCONNECT:
             case SENDER:
+            case ETERNL:
                 return true;
             case KEPLR:
             case CORE:
@@ -156,6 +171,8 @@ public enum Wallet {
                 return new Coins.Coin[]{Coins.SOL};
             case SENDER:
                 return new Coins.Coin[]{Coins.NEAR};
+            case ETERNL:
+                return new Coins.Coin[]{Coins.ADA};
             case CORE:
             case BITKEEP:
                 return new Coins.Coin[]{Coins.BTC_NATIVE_SEGWIT, Coins.ETH};

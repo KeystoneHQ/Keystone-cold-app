@@ -940,9 +940,10 @@
 
     <string name="approve_request">Approve Request</string>
     <string name="request_public_key">Request your public key</string>
-    <string name="eternl_request">Eternl Wallet device wants to get your public key on your Keystone.</string>
+    <string name="wallet_key_request">%s wants to get your public key on your Keystone.</string>
     <string name="reject">Reject</string>
     <string name="key_request_hint">Only approve the external wallets you trust.</string>
+    <string name="key_request_with_password">You need to authorize to derive the public key requested by external wallet.</string>
 
     <!--  Error Messages  -->
     <string name="mfp_not_match">The transaction does not belong to the current wallet. Please use the correct wallet to sign the transaction.</string>
@@ -950,10 +951,13 @@
     <string name="unknown_path_title">Unknown Path</string>
     <string name="unsupported_transaction_title">Invalid Transaction Data Type</string>
     <string name="unsupported_transaction">This type of transaction is not supported by the Keystone hardware wallet. Please contact our customer support team for assistance."</string>
+    <string name="unsupported_operation_title">Unsupported Operation</string>
+    <string name="unsupported_operation">This type of operation is not supported by the Keystone hardware wallet. Please contact our customer support team for assistance."</string>
     <string name="invalid_qr_code_hint">Invalid QR code. Please try again.</string>
     <string name="ar_pubkey_not_match">The compatible address for Arweave can not be founded. Please try again.</string>
     <string name="invalid_change_address">The change address does not belong to the current wallet. Please try again.</string>
     <string name="invalid_change_address_title">Invalid Change Address</string>
     <string name="invalid_xrp_account">The account for XRP is invalid. Please try again.</string>
     <string name="invalid_xrp_account_title">Invalid XRP Account</string>
+    <string name="invalid_key_request">Invalid Key Derivation Request</string>
 </resources>

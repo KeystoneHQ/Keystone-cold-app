@@ -29,4 +29,6 @@ public interface BundleKeys {
     String COLLECTION_NAME_KEY = "collection_name_key";
     String PAGE_TITLE_KEY = "page_title_key";
     String AR_AUTH_FROM_SIGN_KEY = "ar_auth_from_sign_key";
+    String KEY_REQUEST_KEY = "key_request_key";
+    String SYNC_ACTION_MODE_KEY = "sync_action_mode";
 }

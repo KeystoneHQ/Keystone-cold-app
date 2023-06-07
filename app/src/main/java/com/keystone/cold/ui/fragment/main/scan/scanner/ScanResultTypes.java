@@ -161,6 +161,8 @@ public enum ScanResultTypes {
                 return UR_COSMOS_SIGN_REQUEST;
             case "evm-sign-request":
                 return UR_EVM_SIGN_REQUEST;
+            case "qr-hardware-call":
+                return UR_QR_HARDWARE_CALL;
             default:
                 throw new UnsupportedURException(MainApplication.getApplication().getString(R.string.invalid_qr_code_hint), "unsupported ur type: " + ur.getType());
         }

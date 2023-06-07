@@ -15,7 +15,6 @@ public class OneTimePasswordManager {
     private String passwordHash;
 
     public void setPasswordHash(String passwordHash) {
-        Log.d("sora", "setPasswordHash: " + passwordHash);
         this.passwordHash = passwordHash;
     }
 

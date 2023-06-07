@@ -113,6 +113,9 @@ public class WalletListFragment extends BaseFragment<FragmentWalletListBinding> 
                     // select one account to sync
                     navigate(R.id.action_to_selectOneAddressFragment, bundle);
                     break;
+                case KEY_REQUEST:
+                    navigate(R.id.action_walletListFragment_to_keyRequestFragment, bundle);
+                    break;
                 case SELECT_COINS:
                     navigate(R.id.action_walletListFragment_to_selectNetworksFragment, bundle);
                     break;
