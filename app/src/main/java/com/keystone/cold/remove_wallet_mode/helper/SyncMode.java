@@ -10,7 +10,7 @@ import com.keystone.cold.remove_wallet_mode.helper.sync_jump.XRPToolKitSyncModeD
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 
 public enum SyncMode {
-    INVALID, DIRECT, SELECT_ADDRESS, SELECT_COINS, SUBSTRATE, SELECT_ONE_ADDRESS;
+    INVALID, DIRECT, SELECT_ADDRESS, SELECT_COINS, SUBSTRATE, SELECT_ONE_ADDRESS, KEY_REQUEST;
 
     public static void detect(String walletId, MutableLiveData<SyncMode> stepMode) {
         Wallet wallet = Wallet.getWalletById(walletId);
@@ -36,6 +36,9 @@ public enum SyncMode {
             case KEYSTONE:
             case BITKEEP:
                 stepMode.postValue(SELECT_COINS);
+                break;
+            case ETERNL:
+                stepMode.postValue(KEY_REQUEST);
                 break;
             default:
                 complexDetect(wallet, stepMode);

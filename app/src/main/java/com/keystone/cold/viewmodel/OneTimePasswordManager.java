@@ -1,5 +1,7 @@
 package com.keystone.cold.viewmodel;
 
+import android.util.Log;
+
 public class OneTimePasswordManager {
     private static OneTimePasswordManager instance;
 

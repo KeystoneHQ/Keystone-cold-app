@@ -2,6 +2,7 @@ package com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,6 +11,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
@@ -19,21 +21,26 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.keystone.coinlib.accounts.BTCAccount;
 import com.keystone.coinlib.accounts.ETHAccount;
 import com.keystone.coinlib.utils.Coins;
+import com.keystone.cold.AppExecutors;
 import com.keystone.cold.R;
 import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.DialogAssetBottomBinding;
 import com.keystone.cold.databinding.FragmentSyncBinding;
+import com.keystone.cold.databinding.ProgressModalBinding;
 import com.keystone.cold.integration.chains.ArweaveViewModel;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
+import com.keystone.cold.remove_wallet_mode.ui.ConnectWalletActivity;
 import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.ui.adapter.SupportNetworkAdapter;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.config.WalletConfig;
+import com.keystone.cold.remove_wallet_mode.viewmodel.CardanoViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.BitKeepWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.BlueWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.CoreWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.FewchaWalletViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.KeplrWalletViewModel;
+import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.KeyRequestViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.KeystoneViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.MetamaskViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.OKXWalletViewModel;
@@ -43,15 +50,33 @@ import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.SubstrateWa
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.XRPToolkitViewModel;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.ui.modal.ModalDialog;
+import com.keystone.cold.ui.views.AuthenticateModal;
 import com.sparrowwallet.hummingbird.UR;
 
 import java.util.Arrays;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
 public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
+    public enum SyncActionMode {
+        Normal,
+        KeyRequest;
+
+        public static SyncActionMode fromOrdinary(int value) {
+            switch (value) {
+                case 1:
+                    return KeyRequest;
+                default:
+                    return Normal;
+            }
+        }
+    }
+
     private Wallet wallet;
     private List<Long> addressIds;
+    private SyncActionMode syncActionMode;
 
     @Override
     protected int setView() {
@@ -66,6 +91,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
 
         Bundle data = getArguments();
         String walletId = data.getString(BundleKeys.WALLET_ID_KEY);
+        syncActionMode = SyncActionMode.fromOrdinary(data.getInt(BundleKeys.SYNC_ACTION_MODE_KEY, 0));
         if (data.containsKey(BundleKeys.ADDRESS_IDS_KEY)) {
             addressIds = (List<Long>) data.getSerializable(BundleKeys.ADDRESS_IDS_KEY);
         }
@@ -79,7 +105,14 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
             if (mActivity != null && mActivity instanceof SetupVaultActivity) {
                 startActivity(new Intent(mActivity, MainActivity.class));
             }
-            mActivity.finish();
+            if (mActivity instanceof ConnectWalletActivity) {
+                mActivity.finish();
+            }
+            if (mActivity instanceof MainActivity) {
+                Intent intent = new Intent(mActivity, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
         });
         setupWalletUI(wallet);
         switchChainAccountsByNeeds(wallet);
@@ -153,13 +186,20 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-        switch (wallet) {
-            case POLKADOTJS:
-            case SUBWALLET:
-                generateSubstrateSyncData();
-                break;
-            default:
-                generateURSyncData();
+        switch (syncActionMode) {
+            case Normal: {
+                switch (wallet) {
+                    case POLKADOTJS:
+                    case SUBWALLET:
+                        generateSubstrateSyncData();
+                        break;
+                    default:
+                        generateURSyncData();
+                }
+            }
+            case KeyRequest: {
+                generateKeyRequestSyncData();
+            }
         }
     }
 
@@ -258,6 +298,57 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                 }
             });
         }
+    }
+
+    private void generateKeyRequestSyncData() {
+        KeyRequestViewModel keyRequestViewModel = ViewModelProviders.of(this).get(KeyRequestViewModel.class);
+        CardanoViewModel cardanoViewModel = ViewModelProviders.of(this).get(CardanoViewModel.class);
+        Bundle data = requireArguments();
+        KeyRequestApproveFragment.KeyDerivationRequest request = (KeyRequestApproveFragment.KeyDerivationRequest) data.getSerializable(BundleKeys.KEY_REQUEST_KEY);
+        LiveData<Boolean> needPassword = keyRequestViewModel.checkNeedPassword(request.getSchemas());
+        Fragment thisFragment = this;
+        Runnable setupUR = () -> {
+            LiveData<UR> urMutableLiveData = keyRequestViewModel.generateSyncUR(request.getSchemas());
+            urMutableLiveData.observe(thisFragment, ur -> {
+                if (ur != null) {
+                    mBinding.dynamicQrcodeLayout.qrcode.displayUR(ur);
+                    urMutableLiveData.removeObservers(thisFragment);
+                }
+            });
+        };
+
+        needPassword.observe(this, (v) -> {
+            if (v == null) return;
+            if (!v) {
+                setupUR.run();
+            }
+            if (v) {
+                AuthenticateModal.show(mActivity, getString(R.string.password_modal_title), getString(R.string.key_request_with_password), (password) -> {
+                    ProgressModalBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getActivity()),
+                            R.layout.progress_modal, null, false);
+                    ModalDialog dialog;
+                    dialog = ModalDialog.newInstance();
+                    dialog.setBinding(binding);
+                    LiveData<String> setupStatus = cardanoViewModel.getSetupStatus();
+                    setupStatus.observe(this, (step) -> {
+                        if (step.equals(CardanoViewModel.SETUP_INITIAL)) {
+                            return;
+                        } else if (step.equals(CardanoViewModel.SETUP_IN_PROCESS)) {
+                            dialog.show(mActivity.getSupportFragmentManager(), "");
+                        } else if (step.equals(CardanoViewModel.SETUP_SUCCESS)) {
+                            setupUR.run();
+                            dialog.dismiss();
+                        } else if (step.equals(CardanoViewModel.SETUP_FAILED)) {
+                            dialog.dismiss();
+                            alert(getString(R.string.setup_cardano_failed), getString(R.string.setup_cardano_failed_description));
+                        }
+                    });
+                    AppExecutors.getInstance().diskIO().execute(() -> {
+                        cardanoViewModel.setup(password.password, "");
+                    });
+                }, this::navigateUp, null);
+            }
+        });
     }
 
 

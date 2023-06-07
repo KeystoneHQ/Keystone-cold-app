@@ -2,7 +2,6 @@ package com.keystone.cold.cryptocore.protocol;
 
 import com.keystone.cold.cryptocore.GetRsaPublicKeyRequestProtoc;
 import com.keystone.cold.cryptocore.RCCABIProtoc;
-import com.keystone.cold.cryptocore.SignRequestProtoc;
 import com.keystone.cold.encryptioncore.utils.ByteFormatter;
 
 public class GetRSAPublicKeyRequestBuilder {

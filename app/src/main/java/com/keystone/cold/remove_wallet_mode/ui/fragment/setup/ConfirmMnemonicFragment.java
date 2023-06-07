@@ -161,7 +161,7 @@ public class ConfirmMnemonicFragment extends MnemonicInputFragment {
             }
         } else {
             if (mnemonic.equals(viewModel.getMnemonic().getValue())) {
-                viewModel.writeMnemonic(mnemonic);
+                viewModel.setupMnemonicWallet(mnemonic);
                 mBinding.table.getWordsList().clear();
             } else {
                 Utilities.alert(mActivity, getString(R.string.hint), getString(R.string.invalid_mnemonic),

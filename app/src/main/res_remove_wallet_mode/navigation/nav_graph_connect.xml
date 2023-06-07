@@ -35,6 +35,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_walletListFragment_to_keyRequestFragment"
+            app:destination="@id/KeyRequestFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -43,6 +50,25 @@
         android:label="ArweaveAuthFragment"
         tools:layout="@layout/arweave_auth_fragment" />
 
+    <fragment
+        android:id="@+id/KeyRequestFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.KeyRequestFragment"
+        android:label="KeyRequestFragment"
+        tools:layout="@layout/fragment_key_request" />
+
+    <fragment
+        android:id="@+id/KeyRequestApproveFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.KeyRequestApproveFragment"
+        android:label="KeyRequestApproveFragment"
+        tools:layout="@layout/fragment_key_request_approve">
+        <action
+            android:id="@+id/action_keyRequestApproveFragment_to_syncFragment"
+            app:destination="@id/syncFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/selectAddressFragment"
@@ -149,6 +175,14 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/scannerFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.scanner.ScannerFragment"
+        android:label="scannerFragment"
+        tools:layout="@layout/fragment_scanner">
+
+    </fragment>
+
     <action
         android:id="@+id/action_to_selectOneAddressFragment"
         app:destination="@id/selectOneAddressFragment"
@@ -168,6 +202,22 @@
     <action
         android:id="@+id/action_to_chooseNetworkFragment"
         app:destination="@id/chooseNetworkFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_scanner"
+        app:destination="@id/scannerFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_keyRequestApproveFragment"
+        app:destination="@id/KeyRequestApproveFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"

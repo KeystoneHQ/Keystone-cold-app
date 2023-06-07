@@ -14,13 +14,17 @@ import com.keystone.cold.protocol.ZipUtil;
 import com.keystone.cold.protocol.parser.ProtoParser;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
+import com.keystone.cold.remove_wallet_mode.exceptions.InvalidRequestException;
 import com.keystone.cold.remove_wallet_mode.exceptions.UnimplementedException;
 import com.keystone.cold.remove_wallet_mode.exceptions.scanner.UnknownQrCodeException;
 import com.keystone.cold.remove_wallet_mode.exceptions.scanner.XfpNotMatchException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidPathException;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.UnsupportedTransactionException;
 import com.keystone.cold.remove_wallet_mode.helper.Destination;
+import com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.KeyRequestApproveFragment;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumTransaction;
+import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.KeyRequestViewModel;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResultTypes;
 import com.keystone.cold.util.AptosTransactionHelper;
@@ -32,6 +36,10 @@ import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
 import com.sparrowwallet.hummingbird.registry.arweave.ArweaveSignRequest;
 import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignRequest;
 import com.sparrowwallet.hummingbird.registry.evm.EvmSignRequest;
+import com.sparrowwallet.hummingbird.registry.extend.CallParams;
+import com.sparrowwallet.hummingbird.registry.extend.KeyDerivationCall;
+import com.sparrowwallet.hummingbird.registry.extend.KeyDerivationSchema;
+import com.sparrowwallet.hummingbird.registry.extend.QRHardwareCall;
 import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolNFTItem;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
@@ -72,6 +80,8 @@ public class URProcessor implements Processor {
             return new EthNFTItemProcessor().run(r.resolve());
         } else if (r.getType().equals(ScanResultTypes.UR_SOL_NFT_ITEM)) {
             return new SolNFTItemProcessor().run(r.resolve());
+        } else if (r.getType().equals(ScanResultTypes.UR_QR_HARDWARE_CALL)) {
+            return new QRHardwareCallProcessor().run(r.resolve());
         } else {
             throw UnimplementedException.newInstance();
         }
@@ -122,6 +132,33 @@ public class URProcessor implements Processor {
                 }
             }
             return null;
+        }
+    }
+
+    private static class QRHardwareCallProcessor implements URResolver {
+        @Override
+        public Destination run(Object object) throws BaseException {
+            QRHardwareCall call = (QRHardwareCall) object;
+            if (call.getCallType() == CallParams.CallType.KeyDerivation) {
+                KeyRequestApproveFragment.KeyDerivationRequest request = new KeyRequestApproveFragment.KeyDerivationRequest(call.getOrigin());
+                KeyDerivationCall keyDerivationCall = (KeyDerivationCall) call.getCallParams();
+                for (KeyDerivationSchema schema : keyDerivationCall.getSchemas()) {
+                    String path = schema.getKeypath().getPath();
+                    if (!path.toUpperCase().startsWith("M/")) {
+                        path = "M/" + path;
+                    }
+                    int curve = schema.getCurve().ordinal();
+                    int algo = schema.getAlgo().ordinal();
+                    request.addSchema(new KeyRequestApproveFragment.Schema(path, curve, algo));
+                }
+                if (KeyRequestViewModel.validateRequest(request.getSchemas())) {
+                    Bundle data = new Bundle();
+                    data.putSerializable(BundleKeys.KEY_REQUEST_KEY, request);
+                    return new Destination(R.id.action_to_keyRequestApproveFragment, data);
+                }
+                throw InvalidRequestException.newInstance("Invalid Key Derivation Schema");
+            }
+            throw UnsupportedTransactionException.newInstance("unsupported call type :" + call.getCallType());
         }
     }
 

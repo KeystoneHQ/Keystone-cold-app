@@ -485,7 +485,7 @@
         <item>Fewcha</item>
         <item>ArConnect</item>
         <!--        <item>Core Wallet</item>-->
-                <item>BitKeep</item>
+        <item>BitKeep</item>
         <item>Keplr</item>
         <item>SubWallet / Polkadot{.js}</item>
         <item>XRP Toolkit</item>
@@ -618,6 +618,7 @@
     <string name="sync">Connect</string>
     <string name="change_software_wallet_path">Change Derivation Path</string>
     <string name="tutorials">Tutorials</string>
+    <string name="tutorial">Tutorial</string>
 
     <string name="qrcode_capacity">QR Code Density：%s </string>
     <string name="qr_capacity_high">High</string>
@@ -925,6 +926,24 @@
     <string name="import_another_account">Import Another Account</string>
     <string name="bitkeep_path">BitKeep Path</string>
     <string name="select_address">Select Address</string>
+    <string name="setup_cardano_hint">You have not added ADA as an asset yet. Please proceed to add ADA as an asset.</string>
+    <string name="setup_cardano_failed">Add ADA failed</string>
+    <string name="setup_cardano_failed_description">Please try again. (Secret Sharding wallet does not support Cardano currently.) </string>
+    <string name="understand">I Understand</string>
+
+    <!-- eternl -->
+    <string name="eternl_setup_steps">Please follow the instructions below: </string>
+    <string name="eternl_setup_steps1">1. Select account you want to import on Eternl</string>
+    <string name="eternl_setup_steps2">2. Scan the QR code via your device</string>
+    <string name="eternl_setup_steps3">3. Approve the request to generate QR code</string>
+    <string name="eternl_setup_steps4">4. Scan the QR code via Eternl Wallet</string>
+
+    <string name="approve_request">Approve Request</string>
+    <string name="request_public_key">Request your public key</string>
+    <string name="wallet_key_request">%s wants to get your public key on your Keystone.</string>
+    <string name="reject">Reject</string>
+    <string name="key_request_hint">Only approve the external wallets you trust.</string>
+    <string name="key_request_with_password">You need to authorize to derive the public key requested by external wallet.</string>
 
     <!--  Error Messages  -->
     <string name="mfp_not_match">The transaction does not belong to the current wallet. Please use the correct wallet to sign the transaction.</string>
@@ -932,10 +951,13 @@
     <string name="unknown_path_title">Unknown Path</string>
     <string name="unsupported_transaction_title">Invalid Transaction Data Type</string>
     <string name="unsupported_transaction">This type of transaction is not supported by the Keystone hardware wallet. Please contact our customer support team for assistance."</string>
+    <string name="unsupported_operation_title">Unsupported Operation</string>
+    <string name="unsupported_operation">This type of operation is not supported by the Keystone hardware wallet. Please contact our customer support team for assistance."</string>
     <string name="invalid_qr_code_hint">Invalid QR code. Please try again.</string>
     <string name="ar_pubkey_not_match">The compatible address for Arweave can not be founded. Please try again.</string>
     <string name="invalid_change_address">The change address does not belong to the current wallet. Please try again.</string>
     <string name="invalid_change_address_title">Invalid Change Address</string>
     <string name="invalid_xrp_account">The account for XRP is invalid. Please try again.</string>
     <string name="invalid_xrp_account_title">Invalid XRP Account</string>
+    <string name="invalid_key_request">Invalid Key Derivation Request</string>
 </resources>

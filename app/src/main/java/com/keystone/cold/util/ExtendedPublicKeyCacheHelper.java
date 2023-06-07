@@ -11,15 +11,16 @@ public class ExtendedPublicKeyCacheHelper {
         private static final ExtendedPublicKeyCacheHelper INSTANCE = new ExtendedPublicKeyCacheHelper();
     }
 
-    private ExtendedPublicKeyCacheHelper(){}
+    private ExtendedPublicKeyCacheHelper() {
+    }
 
-    public static ExtendedPublicKeyCacheHelper getInstance(){
+    public static ExtendedPublicKeyCacheHelper getInstance() {
         return Inner.INSTANCE;
     }
 
     private static final Map<String, String> EXTENDED_PUBLIC_KEY_CACHE = new HashMap<>();
 
-    public void clearCache(){
+    public void clearCache() {
         EXTENDED_PUBLIC_KEY_CACHE.clear();
     }
 
@@ -31,5 +32,9 @@ public class ExtendedPublicKeyCacheHelper {
             EXTENDED_PUBLIC_KEY_CACHE.put(pubKeyPath, xPub);
             return xPub;
         }
+    }
+
+    public void setExtendedPublicKey(String path, String xpub) {
+        EXTENDED_PUBLIC_KEY_CACHE.put(path, xpub);
     }
 }

@@ -72,6 +72,7 @@ public class Utilities {
     public static final String SOL_CURRENT_ACCOUNT = "sol_current_account";
     public static final String NEAR_CURRENT_ACCOUNT = "near_current_account";
     public static final String BTC_CURRENT_ACCOUNT = "btc_current_account";
+    public static final String CARDANO_CURRENT_ACCOUNT = "cardano_current_account";
 
     public static final String WEB3_GUIDE_TIMES = "web3_guide_times";
 
@@ -355,7 +356,7 @@ public class Utilities {
 
     public static boolean isAttackDetected(Context context) {
         SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SECRET, MODE_PRIVATE);
-        return sp.getBoolean(ATTACK_DETECTED,false);
+        return sp.getBoolean(ATTACK_DETECTED, false);
     }
 
     public static int getVisitsTimes(Context context) {
@@ -433,7 +434,7 @@ public class Utilities {
         sp.edit().putString(ETH_DERIVATION_PATHS, paths).apply();
     }
 
-    public static String getEthDerivationPaths(Context context){
+    public static String getEthDerivationPaths(Context context) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
         return sp.getString(ETH_DERIVATION_PATHS, "");
     }
@@ -443,7 +444,7 @@ public class Utilities {
         sp.edit().putString(SOL_DERIVATION_PATHS, paths).apply();
     }
 
-    public static String getSolDerivationPaths(Context context){
+    public static String getSolDerivationPaths(Context context) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
         return sp.getString(SOL_DERIVATION_PATHS, "");
     }
@@ -453,7 +454,7 @@ public class Utilities {
         sp.edit().putString(BTC_DERIVATION_PATHS, paths).apply();
     }
 
-    public static String getBTCDerivationPaths(Context context){
+    public static String getBTCDerivationPaths(Context context) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
         return sp.getString(BTC_DERIVATION_PATHS, "");
     }
@@ -463,7 +464,7 @@ public class Utilities {
         sp.edit().putString(NEAR_DERIVATION_PATHS, paths).apply();
     }
 
-    public static String getNearDerivationPaths(Context context){
+    public static String getNearDerivationPaths(Context context) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
         return sp.getString(NEAR_DERIVATION_PATHS, "");
     }
@@ -481,10 +482,10 @@ public class Utilities {
     public static Bitmap getNFTAvatarBitmap(Context context) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
         String mediaData = sp.getString(NFT_AVATAR_RESOURCE, null);
-        if(mediaData != null) {
+        if (mediaData != null) {
             byte[] decodedImage = Base64.decode(mediaData, Base64.DEFAULT);
             return BitmapFactory.decodeByteArray(decodedImage, 0, decodedImage.length);
-        }else {
+        } else {
             return null;
         }
     }
@@ -497,5 +498,15 @@ public class Utilities {
     public static boolean getPolkadotDBInitialized(Context context) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
         return sp.getBoolean(POLKADOT_DB_INITIALIZED, false);
+    }
+
+    public static void setCurrentCardanoAccount(Context context, int account) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        sp.edit().putInt(CARDANO_CURRENT_ACCOUNT, account).apply();
+    }
+
+    public static int getCurrentCardanoAccount(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE);
+        return sp.getInt(CARDANO_CURRENT_ACCOUNT, 0);
     }
 }

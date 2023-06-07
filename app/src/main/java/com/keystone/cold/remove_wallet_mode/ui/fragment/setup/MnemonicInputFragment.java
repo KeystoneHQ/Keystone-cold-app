@@ -337,7 +337,7 @@ public class MnemonicInputFragment extends SetupVaultBaseFragment<MnemonicInputF
             } else if (viewModel.isCreateMnemonic()) {
                 navigateToCalculateMnemonic(mnemonic);
             } else {
-                viewModel.writeMnemonic(mnemonic);
+                viewModel.setupMnemonicWallet(mnemonic);
                 mBinding.table.clearWords();
             }
         } else {

@@ -33,6 +33,13 @@ public class GetExtendedPublicKeyCallable implements Callable<String> {
     private final Coins.CURVE curve;
     private final boolean isMainWallet;
 
+    public GetExtendedPublicKeyCallable(String pubKeyPath, Coins.CURVE curve) {
+        //use this for key-derivation
+        //sr25519 is not supported
+        this.curve = curve;
+        this.pubKeyPath = pubKeyPath.toUpperCase();
+        isMainWallet = Utilities.getCurrentBelongTo(MainApplication.getApplication()).equals("main");
+    }
 
     public GetExtendedPublicKeyCallable(String pubKeyPath) {
         this.curve = getCurveByPath(pubKeyPath);
@@ -45,7 +52,7 @@ public class GetExtendedPublicKeyCallable implements Callable<String> {
         final Callable<Packet> callable = new BlockingCallable(
                 new Packet.Builder(CONSTANTS.METHODS.GET_EXTENDED_PUBLICKEY)
                         .addBytePayload(CONSTANTS.TAGS.CURVE, getCurveTag())
-                        .addBytePayload(CONSTANTS.TAGS.WALLET_FLAG, isMainWallet? 0 : 0x50)
+                        .addBytePayload(CONSTANTS.TAGS.WALLET_FLAG, isMainWallet ? 0 : 0x50)
                         .addTextPayload(CONSTANTS.TAGS.PATH, pubKeyPath).build());
 
         final Packet result;
