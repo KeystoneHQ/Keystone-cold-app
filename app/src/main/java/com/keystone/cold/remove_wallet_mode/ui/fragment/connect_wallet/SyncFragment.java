@@ -121,13 +121,13 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                 SupportNetworkAdapter supportNetworkAdapter = new SupportNetworkAdapter(getContext());
                 supportNetworkAdapter.setItems(Arrays.asList(
                         R.drawable.ic_coin_btc,
-                        R.drawable.ic_coin_eth
-//                        R.drawable.ic_coin_okb,
-//                        R.drawable.ic_coin_bnb,
-//                        R.drawable.ic_coin_arb,
-//                        R.drawable.ic_coin_avax,
-//                        R.drawable.ic_coin_matic,
-//                        R.drawable.ic_more_drak
+                        R.drawable.ic_coin_eth,
+                        R.drawable.ic_coin_okb,
+                        R.drawable.ic_coin_bnb,
+                        R.drawable.ic_coin_arb,
+                        R.drawable.ic_coin_avax,
+                        R.drawable.ic_coin_matic,
+                        R.drawable.ic_more_drak
                 ));
                 mBinding.dynamicQrcodeLayout.rvSupportCoinList.setAdapter(supportNetworkAdapter);
                 break;
