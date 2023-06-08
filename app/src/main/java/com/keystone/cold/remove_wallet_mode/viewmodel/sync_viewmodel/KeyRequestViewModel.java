@@ -85,7 +85,7 @@ public class KeyRequestViewModel extends AndroidViewModel {
                 if (schema.getAlgo() == 1) {
                     if (!schema.getPath().toLowerCase().startsWith(ADASetupManager.ADARootPath)) {
                         result.postValue(true);
-                        break;
+                        return;
                     } else {
                         String path = schema.getPath();
                         String[] pieces = path.split("/");
@@ -93,12 +93,12 @@ public class KeyRequestViewModel extends AndroidViewModel {
                         int number = Integer.parseInt(account.replace("'", ""));
                         if (number > 23) {
                             result.postValue(true);
-                            break;
+                            return;
                         }
                         boolean active = CardanoViewModel.isAccountActive(number, mRepository);
                         if (!active) {
                             result.postValue(true);
-                            break;
+                            return;
                         }
                     }
                 }
