@@ -18,6 +18,7 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main;
 
 import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS;
+import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_INDEX;
 import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_NAME;
 import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_PATH;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
@@ -25,9 +26,16 @@ import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
+
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.R;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.databinding.FragmentReceiveBinding;
+import com.keystone.cold.remove_wallet_mode.viewmodel.CardanoViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
+import com.keystone.cold.ui.modal.ModalDialog;
 
 import java.util.Objects;
 
@@ -57,6 +65,28 @@ public class ReceiveCoinFragment extends BaseFragment<FragmentReceiveBinding> {
         mBinding.setAddressName(data.getString(KEY_ADDRESS_NAME));
         mBinding.setPath(data.getString(KEY_ADDRESS_PATH));
         mBinding.qrcode.setData(address);
+        if (coinCode.equals(Coins.ADA.coinCode())) {
+            setupCardano();
+        }
+    }
+
+    private void setupCardano() {
+        CardanoViewModel cardanoViewModel = ViewModelProviders.of(this).get(CardanoViewModel.class);
+        Bundle data = requireArguments();
+        mBinding.path.setVisibility(View.GONE);
+        mBinding.moreDetail.setVisibility(View.VISIBLE);
+        mBinding.moreDetail.setOnClickListener((v) -> {
+            String address = data.getString(KEY_ADDRESS);
+            String path = data.getString(KEY_ADDRESS_PATH);
+            int addressIndex = data.getInt(KEY_ADDRESS_INDEX);
+            LiveData<String> stakeAddress = cardanoViewModel.getStakeAddress(Utilities.getCurrentCardanoAccount(mActivity), addressIndex);
+            stakeAddress.observe(this, (stake) -> {
+                if (stake != null) {
+                    ModalDialog.showCardanoAddressDetailModal(mActivity, path, address, stake);
+                    stakeAddress.removeObservers(this);
+                }
+            });
+        });
     }
 
     private void setWarningInfo(String coinCode) {

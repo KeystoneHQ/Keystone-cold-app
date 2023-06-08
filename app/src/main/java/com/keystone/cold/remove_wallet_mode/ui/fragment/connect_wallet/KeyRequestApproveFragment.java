@@ -32,10 +32,13 @@ public class KeyRequestApproveFragment extends BaseFragment<FragmentKeyRequestAp
         Bundle data = requireArguments();
         KeyDerivationRequest request = (KeyDerivationRequest) data.getSerializable(BundleKeys.KEY_REQUEST_KEY);
         String walletId = data.getString(BundleKeys.WALLET_ID_KEY);
-        Wallet wallet = Wallet.getWalletById(request.getOrigin() == null ? walletId : request.getOrigin());
+        Wallet wallet = Wallet.getWalletByIdOrUnknown(request.getOrigin() == null ? walletId : request.getOrigin());
         if (wallet.equals(Wallet.UNKNOWNWALLET)) {
             mBinding.cooperateImageContainer.setVisibility(View.GONE);
         }
+        mBinding.toolbar.setNavigationOnClickListener(v -> {
+            navigateUp();
+        });
         mBinding.description.setText(getString(R.string.wallet_key_request, wallet.getWalletName()));
         KeyRequestAdapter adapter = new KeyRequestAdapter(mActivity);
         mBinding.keyRequestList.setAdapter(adapter);

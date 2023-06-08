@@ -223,10 +223,10 @@ public class SetupVaultViewModel extends AndroidViewModel {
             if (new WriteMnemonicCallable(mnemonic, password).call()) {
                 vaultId = new GetVaultIdCallable().call();
                 mRepository.clearDb();
-//                ADASetupManager adaSetupManager = ADASetupManager.getInstance();
-//                if (adaSetupManager.setupADARootKey("", password)) {
-//                    adaSetupManager.preSetupADAKeys(password);
-//                }
+                ADASetupManager adaSetupManager = ADASetupManager.getInstance();
+                if (adaSetupManager.setupADARootKey("", password)) {
+                    adaSetupManager.preSetupADAKeys(password);
+                }
                 vaultCreateState.postValue(VAULT_STATE_CREATED);
             } else {
                 vaultCreateState.postValue(VAULT_STATE_CREATING_FAILED);

@@ -96,8 +96,6 @@ public class KeyRequestViewModel extends AndroidViewModel {
                             break;
                         }
                         boolean active = CardanoViewModel.isAccountActive(number, mRepository);
-                        Log.d("sora", "checkNeedPassword: " + active);
-                        Log.d("sora", "checkNeedPassword: " + number);
                         if (!active) {
                             result.postValue(true);
                             break;

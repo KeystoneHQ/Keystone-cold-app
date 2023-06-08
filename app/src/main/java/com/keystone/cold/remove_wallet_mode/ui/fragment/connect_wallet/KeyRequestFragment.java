@@ -17,6 +17,10 @@ public class KeyRequestFragment extends BaseFragment<FragmentKeyRequestBinding> 
     protected void init(View view) {
         Bundle data = requireArguments();
 
+        mBinding.toolbar.setNavigationOnClickListener((v) -> {
+            navigateUp();
+        });
+
         mBinding.confirm.setOnClickListener((v) -> {
             navigate(R.id.action_to_scanner);
         });

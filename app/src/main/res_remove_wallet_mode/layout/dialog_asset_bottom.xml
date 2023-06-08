@@ -158,6 +158,39 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rlSwitchAccount"
+            style="@style/selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_48"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/switchAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingHorizontal="@dimen/dp_16"
+                android:text="@string/switch_account"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:src="@drawable/arrow_right" />
+
+            <include layout="@layout/component_divider_with_padding"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_alignParentBottom="true"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/rlFAQ"
             style="@style/selectableItemBackground"
             android:layout_width="match_parent"

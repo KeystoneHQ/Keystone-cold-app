@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
+import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.AddressEntity;
 import com.keystone.cold.remove_wallet_mode.helper.AddressFilterManager;
 import com.keystone.cold.remove_wallet_mode.helper.AddressManager;
