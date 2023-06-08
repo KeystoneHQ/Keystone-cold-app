@@ -80,6 +80,15 @@ public class KeyRequestApproveFragment extends BaseFragment<FragmentKeyRequestAp
         public int getAlgo() {
             return algo;
         }
+
+        @Override
+        public String toString() {
+            return "Schema{" +
+                    "path='" + path + '\'' +
+                    ", curve=" + curve +
+                    ", algo=" + algo +
+                    '}';
+        }
     }
 
     public static class KeyDerivationRequest implements Serializable {

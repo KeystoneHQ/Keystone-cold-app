@@ -75,7 +75,7 @@ public class ReceiveCoinFragment extends BaseFragment<FragmentReceiveBinding> {
         Bundle data = requireArguments();
         mBinding.path.setVisibility(View.GONE);
         mBinding.moreDetail.setVisibility(View.VISIBLE);
-        mBinding.moreDetail.setOnClickListener((v) -> {
+        mBinding.addressContainer.setOnClickListener((v) -> {
             String address = data.getString(KEY_ADDRESS);
             String path = data.getString(KEY_ADDRESS_PATH);
             int addressIndex = data.getInt(KEY_ADDRESS_INDEX);

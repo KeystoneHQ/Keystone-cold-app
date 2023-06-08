@@ -101,43 +101,53 @@
                 android:textStyle="bold"
                 tools:text="Aptos-0" />
 
-            <TextView
-                android:layout_width="240dp"
+            <LinearLayout
+                android:id="@+id/address_container"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_8"
-                android:ellipsize="end"
-                android:gravity="center_horizontal"
-                android:lineSpacingExtra="@dimen/sp_2"
-                android:maxLines="2"
-                android:text="@{address}"
-                android:textColor="@color/white40"
-                android:textSize="@dimen/sp_12"
-                tools:text="19zhQ 2rKq Xm5r y1pj Co83 JbBK 5zUr bdKgc" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/path"
-                android:layout_width="148dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:gravity="center_horizontal"
-                android:lineSpacingExtra="5dp"
-                android:text="@{'('+path+')'}"
-                android:textColor="@color/white40"
-                android:textSize="12sp"
-                tools:text="m/49'/0'/0'" />
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_width="240dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:ellipsize="end"
+                    android:gravity="center_horizontal"
+                    android:lineSpacingExtra="@dimen/sp_2"
+                    android:maxLines="2"
+                    android:text="@{address}"
+                    android:textColor="@color/white40"
+                    android:textSize="@dimen/sp_12"
+                    tools:text="19zhQ 2rKq Xm5r y1pj Co83 JbBK 5zUr bdKgc" />
 
-            <TextView
-                android:visibility="gone"
-                android:id="@+id/more_detail"
-                android:layout_width="148dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:gravity="center_horizontal"
-                android:lineSpacingExtra="5dp"
-                android:text="@string/more_details"
-                android:textColor="@color/colorAccent"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/path"
+                    android:layout_width="148dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="5dp"
+                    android:text="@{'('+path+')'}"
+                    android:textColor="@color/white40"
+                    android:textSize="12sp"
+                    tools:text="m/49'/0'/0'" />
+
+                <TextView
+                    android:id="@+id/more_detail"
+                    android:layout_width="148dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center_horizontal"
+                    android:lineSpacingExtra="5dp"
+                    android:text="@string/more_details"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </LinearLayout>
 
             <com.keystone.cold.ui.views.qrcode.QrCodeView
                 android:id="@+id/qrcode"
