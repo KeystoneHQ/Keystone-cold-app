@@ -196,9 +196,11 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                     default:
                         generateURSyncData();
                 }
+                break;
             }
             case KeyRequest: {
                 generateKeyRequestSyncData();
+                break;
             }
         }
     }
