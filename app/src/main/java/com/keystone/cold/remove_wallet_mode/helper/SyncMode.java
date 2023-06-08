@@ -27,6 +27,7 @@ public enum SyncMode {
             case KEPLR:
             case CORE:
             case OKX:
+            case BITKEEP:
                 stepMode.postValue(DIRECT);
                 break;
             case POLKADOTJS:
@@ -34,7 +35,6 @@ public enum SyncMode {
                 stepMode.postValue(SUBSTRATE);
                 break;
             case KEYSTONE:
-            case BITKEEP:
                 stepMode.postValue(SELECT_COINS);
                 break;
             case ETERNL:

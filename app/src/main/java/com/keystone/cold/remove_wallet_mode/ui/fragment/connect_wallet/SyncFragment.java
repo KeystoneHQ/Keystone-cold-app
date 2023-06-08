@@ -144,7 +144,28 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
             case BITKEEP:
                 Bundle bundle = requireArguments();
                 List<String> openCoins = (List<String>) bundle.getSerializable(BundleKeys.OPENED_COINS_KEY);
-                WalletConfig.setOpenCoins(openCoins);
+                if (openCoins != null) {
+                    WalletConfig.setOpenCoins(openCoins);
+                }
+                {
+                    mBinding.dynamicQrcodeLayout.llQrHint.setVisibility(View.GONE);
+                    mBinding.dynamicQrcodeLayout.llSupportCoins.setVisibility(View.VISIBLE);
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+                    layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                    mBinding.dynamicQrcodeLayout.rvSupportCoinList.setLayoutManager(layoutManager);
+                    SupportNetworkAdapter supportNetworkAdapter = new SupportNetworkAdapter(getContext());
+                    supportNetworkAdapter.setItems(Arrays.asList(
+                            R.drawable.ic_coin_btc,
+                            R.drawable.ic_coin_eth,
+                            R.drawable.ic_coin_bnb,
+                            R.drawable.ic_coin_arb,
+                            R.drawable.ic_coin_avax,
+                            R.drawable.ic_coin_matic,
+                            R.drawable.ic_coin_okb,
+                            R.drawable.ic_more_drak
+                    ));
+                    mBinding.dynamicQrcodeLayout.rvSupportCoinList.setAdapter(supportNetworkAdapter);
+                }
                 break;
             case OKX:
                 mBinding.dynamicQrcodeLayout.llQrHint.setVisibility(View.GONE);

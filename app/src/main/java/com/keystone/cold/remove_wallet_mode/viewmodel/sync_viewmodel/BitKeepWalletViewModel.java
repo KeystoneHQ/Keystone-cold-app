@@ -44,7 +44,14 @@ public class BitKeepWalletViewModel extends AndroidViewModel {
     }
 
     public void setOpenedCoins(List<String> openedCoins) {
-        this.openedCoins = openedCoins;
+        this.openedCoins.clear();
+        if (openedCoins != null) {
+            this.openedCoins.addAll(openedCoins);
+        }
+        if (this.openedCoins.isEmpty()) {
+            this.openedCoins.add(Coins.ETH.coinId());
+            this.openedCoins.add(Coins.BTC.coinId());
+        }
     }
 
     private CryptoMultiAccounts generateCryptoMultiAccounts() {

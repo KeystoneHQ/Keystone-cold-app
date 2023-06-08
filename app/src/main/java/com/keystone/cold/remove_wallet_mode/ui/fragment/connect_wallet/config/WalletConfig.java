@@ -31,7 +31,7 @@ public enum WalletConfig {
     DEFAULT("default", new String[]{""}, false, false, true, true),
     ;
 
-    private static final List<String> OPEN_COINS = new ArrayList<>();
+    private static final List<String> OPEN_COINS = Arrays.asList(Coins.BTC.coinId(), Coins.ETH.coinId());
 
     public static void setOpenCoins(List<String> openCoins) {
         OPEN_COINS.clear();
