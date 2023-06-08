@@ -136,14 +136,14 @@ public class CardanoViewModel extends AndroidViewModel {
         //type 0: base, 1: stake
         String address = CardanoService.deriveAddress(accountEntity.getExPub(), index, 0);
         AddressEntity addressEntity = new AddressEntity();
-        addressEntity.setName(Coins.ADA.coinCode() + "-" + index + 1);
+        addressEntity.setName(Coins.ADA.coinCode() + "-" + (index + 1));
         addressEntity.setIndex(index);
         addressEntity.setAddressString(address);
         addressEntity.setCoinId(Coins.ADA.coinId());
         addressEntity.setBelongTo(repository.getBelongTo());
         String path = accountEntity.getHdPath() + "/0/" + index;
         addressEntity.setPath(path);
-        addressEntity.setDisplayName(Coins.ADA.coinCode() + "-" + index + 1);
+        addressEntity.setDisplayName(Coins.ADA.coinCode() + "-" + (index + 1));
         repository.insertAddress(addressEntity);
         accountEntity.setAddressLength(index + 1);
         repository.updateAccount(accountEntity);
@@ -161,12 +161,14 @@ public class CardanoViewModel extends AndroidViewModel {
         return result;
     }
 
-    public LiveData<String> getStakeAddress(int accountIndex, int addressIndex) {
-        MutableLiveData<String> address = new MutableLiveData<>(null);
+    public LiveData<String[]> getStakeAddress(int accountIndex, int addressIndex) {
+        MutableLiveData<String[]> address = new MutableLiveData<>(null);
         AppExecutors.getInstance().diskIO().execute(() -> {
             AccountEntity accountEntity = getAccountByIndex(accountIndex);
             String stakeAddress = CardanoService.deriveAddress(accountEntity.getExPub(), addressIndex, 1);
-            address.postValue(stakeAddress);
+            String enterpriseAddress = CardanoService.deriveAddress(accountEntity.getExPub(), addressIndex, 2);
+            String[] result = new String[]{stakeAddress, enterpriseAddress};
+            address.postValue(result);
         });
         return address;
     }

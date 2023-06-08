@@ -27,12 +27,11 @@
         android:layout_gravity="center">
 
         <LinearLayout
-            android:layout_width="312dp"
+            android:layout_width="288dp"
             android:layout_height="wrap_content"
             android:background="@drawable/modal_bg"
             android:orientation="vertical"
-            android:paddingHorizontal="@dimen/dp_12"
-            android:paddingBottom="@dimen/dp_12">
+            android:padding="@dimen/dp_16">
 
             <ImageView
                 android:id="@+id/close"
@@ -49,7 +48,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="12dp"
                 android:text="Address Information"
                 android:textColor="@color/black"
                 android:textSize="15sp"
@@ -80,7 +78,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_8"
+                android:layout_marginTop="@dimen/dp_10"
                 android:orientation="vertical">
 
                 <TextView
@@ -95,14 +93,38 @@
                     android:id="@+id/base_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp_10"
+                    android:layout_marginTop="@dimen/dp_4"
+                    android:textSize="@dimen/sp_12"
                     tools:text="addr_test1qp2r7xrtcaerlf2g3szm9r3sls0mlm2dyq2k28qm3yadgu3gmyksjea6u5er3s70d94ml83sufln80xmy9z7xtgcdenqy0yq4e" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_8"
+                android:layout_marginTop="@dimen/dp_10"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dp_12"
+                    android:text="Address (Not Delegated):"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/enterprise_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_4"
+                    android:textSize="@dimen/sp_12"
+                    tools:text="addr_test1qp2r7xrtcaerlf2g3szm9r3sls0mlm2dyq2k28qm3yadgu3gmyksjea6u5er3s70d94ml83sufln80xmy9z7xtgcdenqy0yq4e" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
                 android:orientation="vertical">
 
                 <TextView
@@ -117,7 +139,8 @@
                     android:id="@+id/stake_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp_10"
+                    android:layout_marginTop="@dimen/dp_4"
+                    android:textSize="@dimen/sp_12"
                     tools:text="addr_test1qp2r7xrtcaerlf2g3szm9r3sls0mlm2dyq2k28qm3yadgu3gmyksjea6u5er3s70d94ml83sufln80xmy9z7xtgcdenqy0yq4e" />
             </LinearLayout>
 
