@@ -12,6 +12,7 @@ public class AddressItem implements FilterableItem {
     private final String address;
     private final String path;
     private final String displayPath;
+    private final int index;
 
 
     public AddressItem(AddressEntity addressEntity) {
@@ -21,6 +22,7 @@ public class AddressItem implements FilterableItem {
         this.address = addressEntity.getAddressString();
         this.displayPath = addressEntity.getDisplayPath();
         this.path = addressEntity.getPath();
+        this.index = addressEntity.getIndex();
     }
 
     public long getId() {
@@ -49,6 +51,10 @@ public class AddressItem implements FilterableItem {
 
     public String getPath() {
         return path;
+    }
+
+    public int getIndex() {
+        return index;
     }
 
     @Override

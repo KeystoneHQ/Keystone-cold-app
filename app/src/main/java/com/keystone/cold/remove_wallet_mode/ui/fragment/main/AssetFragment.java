@@ -36,6 +36,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -55,7 +56,9 @@ import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.constant.UIConstants;
 import com.keystone.cold.remove_wallet_mode.helper.PageStatusHelper;
 import com.keystone.cold.remove_wallet_mode.ui.views.AddressNumberPicker;
+import com.keystone.cold.remove_wallet_mode.ui.views.CardanoAccountPicker;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AddressViewModel;
+import com.keystone.cold.remove_wallet_mode.viewmodel.CardanoViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
 import com.keystone.cold.ui.fragment.main.NumberPickerCallback;
 import com.keystone.cold.ui.modal.ModalDialog;
@@ -75,6 +78,7 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
     private String coinId;
     private String coinCode;
     private AddressNumberPicker addressNumberPicker;
+    private CardanoAccountPicker cardanoAccountPicker;
 
     @Override
     protected int setView() {
@@ -205,6 +209,9 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         if (config.isShowResetDB()) {
             binding.rlResetDB.setVisibility(View.VISIBLE);
         }
+        if (config.isShowSwitchAccount()) {
+            binding.rlSwitchAccount.setVisibility(View.VISIBLE);
+        }
         binding.rlAddAddress.setOnClickListener(v -> {
             handleAddAddress();
             dialog.dismiss();
@@ -230,6 +237,10 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
                 PolkadotViewModel viewModel = ViewModelProviders.of(mActivity).get(PolkadotViewModel.class);
                 viewModel.resetDB();
             });
+            dialog.dismiss();
+        });
+        binding.rlSwitchAccount.setOnClickListener(v -> {
+            handleSwitchCardanoAccount();
             dialog.dismiss();
         });
         dialog.setContentView(binding.getRoot());
@@ -264,9 +275,34 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         }
         if (addressNumberPicker == null) {
             addressNumberPicker = new AddressNumberPicker();
-            addressNumberPicker.setCallback(this);
+            if (coinId.equals(Coins.ADA.coinId())) {
+                addressNumberPicker.setCallback((v) -> {
+                    CardanoViewModel viewModel = ViewModelProviders.of(this).get(CardanoViewModel.class);
+                    for (int i = 0; i < v; i++) {
+                        viewModel.addAddress(Utilities.getCurrentCardanoAccount(mActivity));
+                    }
+                });
+            } else {
+                addressNumberPicker.setCallback(this);
+            }
         }
         addressNumberPicker.show(mActivity.getSupportFragmentManager(), "");
+    }
+
+    private void handleSwitchCardanoAccount() {
+        if (fragments[0] instanceof AddressFragment) {
+            ((AddressFragment) fragments[0]).exitEditAddressName();
+        }
+        if (cardanoAccountPicker == null) {
+            cardanoAccountPicker = new CardanoAccountPicker();
+            cardanoAccountPicker.setCallback(value -> {
+                Utilities.setCurrentCardanoAccount(mActivity, value);
+                if (fragments != null && fragments[0] != null) {
+                    ((AddressFragment) fragments[0]).initAddresses();
+                }
+            });
+        }
+        cardanoAccountPicker.show(mActivity.getSupportFragmentManager(), "");
     }
 
     private enum AssetConfig {
@@ -285,6 +321,7 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         BCH(Coins.BCH.coinId(), true, false, true, true, false),
         TRON(Coins.TRON.coinId(), true, false, true),
         XRP(Coins.XRP.coinId(), true, false, true),
+        ADA(Coins.ADA.coinId(), true, false, true, false, false, true),
         //cosmos use default config
         DEFAULT("default", false, false, true, false, false);
 
@@ -295,6 +332,17 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
         private final boolean showFAQ;
         private final boolean showResetDB;
         private final boolean showExportXPub;
+        private final boolean showSwitchAccount;
+
+        AssetConfig(String coinId, boolean showAddAddress, boolean showChangePath, boolean showFAQ, boolean showExportXPub, boolean showResetDB, boolean showSwitchAccount) {
+            this.coinId = coinId;
+            this.showAddAddress = showAddAddress;
+            this.showChangePath = showChangePath;
+            this.showFAQ = showFAQ;
+            this.showExportXPub = showExportXPub;
+            this.showResetDB = showResetDB;
+            this.showSwitchAccount = showSwitchAccount;
+        }
 
         AssetConfig(String coinId, boolean showAddAddress, boolean showChangePath, boolean showFAQ, boolean showExportXPub, boolean showResetDB) {
             this.coinId = coinId;
@@ -303,6 +351,7 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
             this.showFAQ = showFAQ;
             this.showExportXPub = showExportXPub;
             this.showResetDB = showResetDB;
+            this.showSwitchAccount = false;
         }
 
         AssetConfig(String coinId, boolean showAddAddress, boolean showChangePath, boolean showFAQ) {
@@ -344,6 +393,10 @@ public class AssetFragment extends BaseFragment<FragmentAssetBinding> implements
 
         public boolean isShowExportXPub() {
             return showExportXPub;
+        }
+
+        public boolean isShowSwitchAccount() {
+            return showSwitchAccount;
         }
     }
 }

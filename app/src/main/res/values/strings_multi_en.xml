@@ -471,6 +471,7 @@
     <string name="reset_polkadot_db">Reset Data</string>
     <string name="reset_polkadot_db_hint">Performing this action will reset all the data for your Polkadot.{js} and Subwallet. You will need to re-import all your metadata again.</string>
     <string name="export_xpub_text">Export XPUB</string>
+    <string name="switch_account">Switch Account</string>
     <string name="export_xpub_hint">Scan the QR code with your mobile/computer device</string>
     <string name="approve">Approve</string>
     <string name="approval">Approval</string>
@@ -944,6 +945,7 @@
     <string name="reject">Reject</string>
     <string name="key_request_hint">Only approve the external wallets you trust.</string>
     <string name="key_request_with_password">You need to authorize to derive the public key requested by external wallet.</string>
+    <string name="more_details">More Details</string>
 
     <!--  Error Messages  -->
     <string name="mfp_not_match">The transaction does not belong to the current wallet. Please use the correct wallet to sign the transaction.</string>

@@ -1,6 +1,7 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main;
 
 import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS;
+import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_INDEX;
 import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_NAME;
 import static com.keystone.cold.ui.fragment.Constants.KEY_ADDRESS_PATH;
 import static com.keystone.cold.ui.fragment.Constants.KEY_COIN_CODE;
@@ -24,6 +25,7 @@ import com.keystone.cold.remove_wallet_mode.ui.model.AddressItem;
 import com.keystone.cold.remove_wallet_mode.ui.model.AssetItem;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AddressViewModel;
 import com.keystone.cold.remove_wallet_mode.viewmodel.AssetViewModel;
+import com.keystone.cold.remove_wallet_mode.viewmodel.CardanoViewModel;
 import com.keystone.cold.ui.fragment.BaseFragment;
 
 import java.util.List;
@@ -64,6 +66,7 @@ public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
                 data.putString(KEY_ADDRESS, addr.getAddress());
                 data.putString(KEY_ADDRESS_NAME, addr.getName());
                 data.putString(KEY_ADDRESS_PATH, addr.getPath());
+                data.putInt(KEY_ADDRESS_INDEX, addr.getIndex());
                 if (Coins.NEAR.coinCode().equals(bundle.getString(KEY_COIN_CODE))) {
                     navigate(R.id.action_to_nearAccountInformationFragment, data);
                 } else {
@@ -82,9 +85,29 @@ public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
 
     @Override
     protected void initData(Bundle savedInstanceState) {
+        initAddresses();
+    }
+
+    private void subscribeUi(LiveData<List<AddressItem>> address) {
+        address.observe(this, addressItems -> {
+            addressAdapter.setItems(addressItems);
+        });
+    }
+
+    public void exitEditAddressName() {
+        addressAdapter.exitEdit();
+    }
+
+    public void initAddresses() {
         Bundle data = requireArguments();
         String coinId = data.getString(KEY_COIN_ID);
         AssetViewModel assetViewModel = ViewModelProviders.of(this).get(AssetViewModel.class);
+
+        if (coinId.equals(Coins.ADA.coinId())) {
+            CardanoViewModel cardanoViewModel = ViewModelProviders.of(this).get(CardanoViewModel.class);
+            int accountIndex = Utilities.getCurrentCardanoAccount(mActivity);
+            cardanoViewModel.checkAddressOrAdd(accountIndex);
+        }
 
         assetViewModel.loadAssets().observe(this, assets -> {
             if (assets == null) return;
@@ -107,19 +130,12 @@ public class AddressFragment extends BaseFragment<FragmentAddressListBinding> {
                     addressItems = null;
                 }
                 addressItems = viewModel.getAddress(assetItem.get());
+                if (canonicalCoinId.equals(Coins.ADA.coinId())) {
+                    addressItems = CardanoViewModel.filterAddressByAccount(addressItems, Utilities.getCurrentCardanoAccount(mActivity));
+                }
                 subscribeUi(addressItems);
             }
         });
-    }
-
-    private void subscribeUi(LiveData<List<AddressItem>> address) {
-        address.observe(this, addressItems -> {
-            addressAdapter.setItems(addressItems);
-        });
-    }
-
-    public void exitEditAddressName() {
-        addressAdapter.exitEdit();
     }
 
     @Override

@@ -33,6 +33,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.keystone.cold.R;
 import com.keystone.cold.databinding.CommonModalBinding;
+import com.keystone.cold.databinding.DialogCardanoAccountPickerBinding;
+import com.keystone.cold.databinding.DialogCardanoAddressDetailBinding;
 import com.keystone.cold.databinding.DialogIconModalBinding;
 import com.keystone.cold.databinding.TwoButtonModalBinding;
 
@@ -169,6 +171,21 @@ public class ModalDialog extends DialogFragment {
             if (button2Runnable != null) {
                 button2Runnable.run();
             }
+            dialog.dismiss();
+        });
+        dialog.setBinding(binding);
+        dialog.show(activity.getSupportFragmentManager(), "");
+        return dialog;
+    }
+
+    public static ModalDialog showCardanoAddressDetailModal(AppCompatActivity activity, String path, String baseAddress, String stakeAddress) {
+        ModalDialog dialog = new ModalDialog();
+        DialogCardanoAddressDetailBinding binding = DataBindingUtil.inflate(LayoutInflater.from(activity),
+                R.layout.dialog_cardano_address_detail, null, false);
+        binding.path.setText(path);
+        binding.baseAddress.setText(baseAddress);
+        binding.stakeAddress.setText(stakeAddress);
+        binding.close.setOnClickListener((v) -> {
             dialog.dismiss();
         });
         dialog.setBinding(binding);
