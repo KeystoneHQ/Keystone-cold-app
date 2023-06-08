@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
@@ -83,6 +84,18 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         return R.layout.fragment_sync;
     }
 
+    private void finish() {
+        if (mActivity != null && mActivity instanceof SetupVaultActivity) {
+            startActivity(new Intent(mActivity, MainActivity.class));
+        }
+        if (mActivity instanceof ConnectWalletActivity) {
+            mActivity.finish();
+        }
+        if (mActivity instanceof MainActivity) {
+            ((MainActivity) mActivity).restart();
+        }
+    }
+
     @Override
     protected void init(View view) {
         mActivity.setSupportActionBar(mBinding.toolbar);
@@ -101,19 +114,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
             toTutorial(null);
         });
 
-        mBinding.complete.setOnClickListener(v -> {
-            if (mActivity != null && mActivity instanceof SetupVaultActivity) {
-                startActivity(new Intent(mActivity, MainActivity.class));
-            }
-            if (mActivity instanceof ConnectWalletActivity) {
-                mActivity.finish();
-            }
-            if (mActivity instanceof MainActivity) {
-                Intent intent = new Intent(mActivity, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            }
-        });
+        mBinding.complete.setOnClickListener(v -> finish());
         setupWalletUI(wallet);
         switchChainAccountsByNeeds(wallet);
     }
@@ -302,53 +303,34 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
         }
     }
 
+    private void setupKeyRequestUR(List<KeyRequestApproveFragment.Schema> schemas, @Nullable String password) {
+        KeyRequestViewModel keyRequestViewModel = ViewModelProviders.of(this).get(KeyRequestViewModel.class);
+        LiveData<UR> urMutableLiveData = keyRequestViewModel.generateSyncUR(schemas, password);
+        urMutableLiveData.observe(this, ur -> {
+            if (ur != null) {
+                mBinding.dynamicQrcodeLayout.qrcode.displayUR(ur);
+                urMutableLiveData.removeObservers(this);
+            }
+        });
+    }
+
     private void generateKeyRequestSyncData() {
         KeyRequestViewModel keyRequestViewModel = ViewModelProviders.of(this).get(KeyRequestViewModel.class);
-        CardanoViewModel cardanoViewModel = ViewModelProviders.of(this).get(CardanoViewModel.class);
         Bundle data = requireArguments();
         KeyRequestApproveFragment.KeyDerivationRequest request = (KeyRequestApproveFragment.KeyDerivationRequest) data.getSerializable(BundleKeys.KEY_REQUEST_KEY);
         LiveData<Boolean> needPassword = keyRequestViewModel.checkNeedPassword(request.getSchemas());
-        Fragment thisFragment = this;
-        Runnable setupUR = () -> {
-            LiveData<UR> urMutableLiveData = keyRequestViewModel.generateSyncUR(request.getSchemas());
-            urMutableLiveData.observe(thisFragment, ur -> {
-                if (ur != null) {
-                    mBinding.dynamicQrcodeLayout.qrcode.displayUR(ur);
-                    urMutableLiveData.removeObservers(thisFragment);
-                }
-            });
-        };
 
         needPassword.observe(this, (v) -> {
             if (v == null) return;
             if (!v) {
-                setupUR.run();
+                setupKeyRequestUR(request.getSchemas(), null);
+                needPassword.removeObservers(this);
             }
             if (v) {
                 AuthenticateModal.show(mActivity, getString(R.string.password_modal_title), getString(R.string.key_request_with_password), (password) -> {
-                    ProgressModalBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getActivity()),
-                            R.layout.progress_modal, null, false);
-                    ModalDialog dialog;
-                    dialog = ModalDialog.newInstance();
-                    dialog.setBinding(binding);
-                    LiveData<String> setupStatus = cardanoViewModel.getSetupStatus();
-                    setupStatus.observe(this, (step) -> {
-                        if (step.equals(CardanoViewModel.SETUP_INITIAL)) {
-                            return;
-                        } else if (step.equals(CardanoViewModel.SETUP_IN_PROCESS)) {
-                            dialog.show(mActivity.getSupportFragmentManager(), "");
-                        } else if (step.equals(CardanoViewModel.SETUP_SUCCESS)) {
-                            setupUR.run();
-                            dialog.dismiss();
-                        } else if (step.equals(CardanoViewModel.SETUP_FAILED)) {
-                            dialog.dismiss();
-                            alert(getString(R.string.setup_cardano_failed), getString(R.string.setup_cardano_failed_description));
-                        }
-                    });
-                    AppExecutors.getInstance().diskIO().execute(() -> {
-                        cardanoViewModel.setup(password.password, "");
-                    });
-                }, this::navigateUp, null);
+                    setupKeyRequestUR(request.getSchemas(), password.password);
+                }, this::finish, null);
+                needPassword.removeObservers(this);
             }
         });
     }

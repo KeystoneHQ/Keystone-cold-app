@@ -353,5 +353,11 @@ public class MainActivity extends FullScreenActivity {
         dialog.setBinding(binding);
         dialog.show(getSupportFragmentManager(), "");
     }
+
+    public void restart() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 }
 

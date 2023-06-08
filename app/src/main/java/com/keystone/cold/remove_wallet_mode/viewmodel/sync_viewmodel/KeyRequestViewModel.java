@@ -5,6 +5,7 @@ import static com.keystone.cold.util.URRegistryHelper.getPathComponents;
 
 import android.app.Application;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,10 +18,14 @@ import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
 import com.keystone.cold.DataRepository;
 import com.keystone.cold.MainApplication;
+import com.keystone.cold.Utilities;
 import com.keystone.cold.callables.GetExtendedPublicKeyCallable;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
+import com.keystone.cold.cryptocore.CardanoService;
+import com.keystone.cold.cryptocore.RCCService;
 import com.keystone.cold.db.entity.AccountEntity;
 import com.keystone.cold.db.entity.CoinEntity;
+import com.keystone.cold.encryption.EncryptionCoreProvider;
 import com.keystone.cold.protocol.EncodeConfig;
 import com.keystone.cold.protocol.builder.SyncBuilder;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.KeyRequestApproveFragment;
@@ -82,9 +87,21 @@ public class KeyRequestViewModel extends AndroidViewModel {
                         result.postValue(true);
                         break;
                     } else {
-                        // String path = schema.getPath();
-                        // String[] pieces = path.split("/");
-                        // TODO: check path
+                        String path = schema.getPath();
+                        String[] pieces = path.split("/");
+                        String account = pieces[3];
+                        int number = Integer.parseInt(account.replace("'", ""));
+                        if (number > 23) {
+                            result.postValue(true);
+                            break;
+                        }
+                        boolean active = CardanoViewModel.isAccountActive(number, mRepository);
+                        Log.d("sora", "checkNeedPassword: " + active);
+                        Log.d("sora", "checkNeedPassword: " + number);
+                        if (!active) {
+                            result.postValue(true);
+                            break;
+                        }
                     }
                 }
             }
@@ -93,7 +110,7 @@ public class KeyRequestViewModel extends AndroidViewModel {
         return result;
     }
 
-    public LiveData<UR> generateSyncUR(List<KeyRequestApproveFragment.Schema> schemas) {
+    public LiveData<UR> generateSyncUR(List<KeyRequestApproveFragment.Schema> schemas, @Nullable String password) {
         MutableLiveData<UR> sync = new MutableLiveData<>();
         AppExecutors.getInstance().diskIO().execute(() -> {
             List<CryptoHDKey> cryptoHDKeyList = new ArrayList<>();
@@ -118,19 +135,26 @@ public class KeyRequestViewModel extends AndroidViewModel {
                     cryptoHDKeyList.add(hdkey);
                 } else {
                     // ed25519 + bip32-ed25519
-                    CoinEntity ada = mRepository.loadCoinSync(Coins.ADA.coinId());
-                    List<AccountEntity> accounts = mRepository.loadAccountsForCoin(ada);
-                    Optional<AccountEntity> target = accounts.stream().filter(accountEntity -> accountEntity.getHdPath().equalsIgnoreCase(schema.getPath())).findAny();
-                    target.ifPresent(accountEntity -> {
-                        String xpub = accountEntity.getExPub();
-                        byte[] extended_key = Hex.decode(xpub);
+                    byte[] extended_key = new byte[]{};
+                    if (CardanoViewModel.isCardanoPath(schema.getPath())) {
+                        if (password != null && !password.isEmpty()) {
+                            CardanoViewModel.checkOrSetup(schema.getPath(), password, mRepository);
+                            extended_key = CardanoViewModel.getXPub(schema.getPath(), mRepository);
+                        }
+                    } else {
+                        boolean isMainWallet = Utilities.getCurrentBelongTo(MainApplication.getApplication()).equals("main");
+                        String portName = EncryptionCoreProvider.getInstance().getPortName();
+                        RCCService.Passport passport = new RCCService.Passport(password, isMainWallet, portName);
+                        String xpub = RCCService.getADAExtendedPublicKey(schema.getPath(), passport);
+                        extended_key = Hex.decode(xpub);
+                    }
+                    if (extended_key.length > 0) {
                         byte[] key = Arrays.copyOfRange(extended_key, 0, 32);
                         byte[] chainCode = Arrays.copyOfRange(extended_key, 32, 64);
                         CryptoKeypath origin = new CryptoKeypath(getPathComponents(schema.getPath()), masterFingerprint);
                         CryptoHDKey hdkey = new CryptoHDKey(false, key, chainCode, null, origin, null, null, null, null);
                         cryptoHDKeyList.add(hdkey);
-                    });
-                    // don't derive keys currently.
+                    }
                 }
             }
             CryptoMultiAccounts accounts = new CryptoMultiAccounts(masterFingerprint, cryptoHDKeyList, KEY_NAME);
