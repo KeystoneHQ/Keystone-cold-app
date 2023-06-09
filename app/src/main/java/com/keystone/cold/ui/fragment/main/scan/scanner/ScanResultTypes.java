@@ -10,6 +10,7 @@ import com.sparrowwallet.hummingbird.registry.EthNFTItem;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
 import com.sparrowwallet.hummingbird.registry.arweave.ArweaveSignRequest;
+import com.sparrowwallet.hummingbird.registry.cardano.CardanoSignRequest;
 import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignRequest;
 import com.sparrowwallet.hummingbird.registry.evm.EvmSignRequest;
 import com.sparrowwallet.hummingbird.registry.extend.QRHardwareCall;
@@ -42,6 +43,7 @@ public enum ScanResultTypes {
     UR_ARWEAVE_SIGN_REQUEST,
     UR_COSMOS_SIGN_REQUEST,
     UR_QR_HARDWARE_CALL,
+    UR_CARDANO_SIGN_REQUEST,
     UR_EVM_SIGN_REQUEST;
 
 
@@ -80,6 +82,8 @@ public enum ScanResultTypes {
                     return decodeResult instanceof EvmSignRequest;
                 case UR_QR_HARDWARE_CALL:
                     return decodeResult instanceof QRHardwareCall;
+                case UR_CARDANO_SIGN_REQUEST:
+                    return decodeResult instanceof CardanoSignRequest;
                 default:
                     return false;
             }
@@ -163,6 +167,8 @@ public enum ScanResultTypes {
                 return UR_EVM_SIGN_REQUEST;
             case "qr-hardware-call":
                 return UR_QR_HARDWARE_CALL;
+            case "cardano-sign-request":
+                return UR_CARDANO_SIGN_REQUEST;
             default:
                 throw new UnsupportedURException(MainApplication.getApplication().getString(R.string.invalid_qr_code_hint), "unsupported ur type: " + ur.getType());
         }

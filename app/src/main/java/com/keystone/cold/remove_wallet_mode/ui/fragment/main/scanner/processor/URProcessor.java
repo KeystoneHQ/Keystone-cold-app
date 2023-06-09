@@ -34,6 +34,7 @@ import com.sparrowwallet.hummingbird.registry.EthNFTItem;
 import com.sparrowwallet.hummingbird.registry.EthSignRequest;
 import com.sparrowwallet.hummingbird.registry.aptos.AptosSignRequest;
 import com.sparrowwallet.hummingbird.registry.arweave.ArweaveSignRequest;
+import com.sparrowwallet.hummingbird.registry.cardano.CardanoSignRequest;
 import com.sparrowwallet.hummingbird.registry.cosmos.CosmosSignRequest;
 import com.sparrowwallet.hummingbird.registry.evm.EvmSignRequest;
 import com.sparrowwallet.hummingbird.registry.extend.CallParams;
@@ -81,6 +82,8 @@ public class URProcessor implements Processor {
         } else if (r.getType().equals(ScanResultTypes.UR_SOL_NFT_ITEM)) {
             return new SolNFTItemProcessor().run(r.resolve());
         } else if (r.getType().equals(ScanResultTypes.UR_QR_HARDWARE_CALL)) {
+            return new QRHardwareCallProcessor().run(r.resolve());
+        } else if (r.getType().equals(ScanResultTypes.UR_CARDANO_SIGN_REQUEST)) {
             return new QRHardwareCallProcessor().run(r.resolve());
         } else {
             throw UnimplementedException.newInstance();
@@ -159,6 +162,14 @@ public class URProcessor implements Processor {
                 throw InvalidRequestException.newInstance("Invalid Key Derivation Schema");
             }
             throw UnsupportedTransactionException.newInstance("unsupported call type :" + call.getCallType());
+        }
+    }
+
+    private static class CardanoSignRequestProcessor implements URResolver {
+        @Override
+        public Destination run(Object object) throws BaseException {
+            CardanoSignRequest cardanoSignRequest = (CardanoSignRequest) object;
+            return null;
         }
     }
 
