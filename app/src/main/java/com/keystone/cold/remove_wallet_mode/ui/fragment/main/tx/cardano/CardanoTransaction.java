@@ -27,8 +27,8 @@ public class CardanoTransaction {
 
     public static class CardanoTransactionOverview {
         private final String fee;
-        private final List<CardanoFrom> from;
-        private final List<CardanoTo> to;
+        private final List<CardanoAddress> from;
+        private final List<CardanoAddress> to;
         private final String network;
         private final String method;
 
@@ -39,7 +39,7 @@ public class CardanoTransaction {
         private final String depositReclaim;
         private final String rewardAccount;
 
-        public CardanoTransactionOverview(String fee, List<CardanoFrom> from, List<CardanoTo> to, String network, String method, String totalOutputAmount, String stakeAmount, String deposit, String rewardAmount, String depositReclaim, String rewardAccount) {
+        public CardanoTransactionOverview(String fee, List<CardanoAddress> from, List<CardanoAddress> to, String network, String method, String totalOutputAmount, String stakeAmount, String deposit, String rewardAmount, String depositReclaim, String rewardAccount) {
             this.fee = fee;
             this.from = from;
             this.to = to;
@@ -57,12 +57,22 @@ public class CardanoTransaction {
             return fee;
         }
 
-        public List<CardanoFrom> getFrom() {
-            return from;
+        public String getFromText() {
+            StringBuilder builder = new StringBuilder();
+            for (CardanoAddress cardanoFrom : from) {
+                builder.append(cardanoFrom.address);
+                builder.append("\n");
+            }
+            return builder.toString();
         }
 
-        public List<CardanoTo> getTo() {
-            return to;
+        public String getToText() {
+            StringBuilder builder = new StringBuilder();
+            for (CardanoAddress cardanoTo : to) {
+                builder.append(cardanoTo.address);
+                builder.append("\n");
+            }
+            return builder.toString();
         }
 
         public String getNetwork() {
@@ -100,8 +110,8 @@ public class CardanoTransaction {
 
     public static class CardanoTransactionDetail {
         private final String fee;
-        private final List<CardanoFrom> from;
-        private final List<CardanoTo> to;
+        private final List<CardanoAddress> from;
+        private final List<CardanoAddress> to;
         private final String network;
         private final String method;
 
@@ -111,7 +121,7 @@ public class CardanoTransaction {
         private final String deposit;
         private final List<CardanoStakeAction> actions;
 
-        public CardanoTransactionDetail(String fee, List<CardanoFrom> from, List<CardanoTo> to, String network, String method, String totalInputAmount, String totalOutputAmount, String depositReclaim, String deposit, List<CardanoStakeAction> actions) {
+        public CardanoTransactionDetail(String fee, List<CardanoAddress> from, List<CardanoAddress> to, String network, String method, String totalInputAmount, String totalOutputAmount, String depositReclaim, String deposit, List<CardanoStakeAction> actions) {
             this.fee = fee;
             this.from = from;
             this.to = to;
@@ -126,14 +136,6 @@ public class CardanoTransaction {
 
         public String getFee() {
             return fee;
-        }
-
-        public List<CardanoFrom> getFrom() {
-            return from;
-        }
-
-        public List<CardanoTo> getTo() {
-            return to;
         }
 
         public String getNetwork() {
@@ -165,15 +167,17 @@ public class CardanoTransaction {
         }
     }
 
-    public static class CardanoFrom {
+    public static class CardanoAddress {
         private final String address;
         private final String amount;
         private final String path;
+        private final String assetText;
 
-        public CardanoFrom(String address, String amount, String path) {
+        public CardanoAddress(String address, String amount, String path, String assetText) {
             this.address = address;
             this.amount = amount;
             this.path = path;
+            this.assetText = assetText;
         }
 
         public String getAddress() {
@@ -186,26 +190,6 @@ public class CardanoTransaction {
 
         public String getPath() {
             return path;
-        }
-    }
-
-    public static class CardanoTo {
-        private final String address;
-        private final String amount;
-        private final String assetText;
-
-        public CardanoTo(String address, String amount, String assetText) {
-            this.address = address;
-            this.amount = amount;
-            this.assetText = assetText;
-        }
-
-        public String getAddress() {
-            return address;
-        }
-
-        public String getAmount() {
-            return amount;
         }
 
         public String getAssetText() {
