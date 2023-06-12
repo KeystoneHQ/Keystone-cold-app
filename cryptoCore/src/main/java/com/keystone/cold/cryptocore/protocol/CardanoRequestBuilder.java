@@ -5,6 +5,8 @@ import com.keystone.cold.cryptocore.CardanoProtoc;
 import com.keystone.cold.cryptocore.RCCABIProtoc;
 import com.keystone.cold.encryptioncore.utils.ByteFormatter;
 
+import java.util.List;
+
 public class CardanoRequestBuilder {
 
     private final RCCABIProtoc.CommandRequest.Builder commandRequest;
@@ -28,8 +30,16 @@ public class CardanoRequestBuilder {
         return ByteFormatter.bytes2hex(data);
     }
 
-    public CardanoRequestBuilder setTransactionData(String data) {
+    public CardanoRequestBuilder setTransactionData(String data, String xpub, String master_fingerprint, List<CardanoProtoc.CardanoUtxo> utxos, List<CardanoProtoc.CardanoCertKey> cardanoCertKeys) {
         parseTransaction.setData(data);
+        parseTransaction.setXpub(xpub);
+        parseTransaction.setMasterFingerprint(master_fingerprint);
+        for (int i = 0; i < utxos.size(); i++) {
+            parseTransaction.setUtxos(i, utxos.get(i));
+        }
+        for (int i = 0; i < cardanoCertKeys.size(); i++) {
+            parseTransaction.setCertKeys(i, cardanoCertKeys.get(i));
+        }
         cardano.setParseTransaction(parseTransaction);
         return this;
     }

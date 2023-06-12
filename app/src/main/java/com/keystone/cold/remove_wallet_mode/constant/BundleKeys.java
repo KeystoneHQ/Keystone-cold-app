@@ -31,4 +31,6 @@ public interface BundleKeys {
     String AR_AUTH_FROM_SIGN_KEY = "ar_auth_from_sign_key";
     String KEY_REQUEST_KEY = "key_request_key";
     String SYNC_ACTION_MODE_KEY = "sync_action_mode";
+    String CARDANO_UTXO_KEY = "cardano_utxo_key";
+    String CARDANO_CERTIFICATE_KEY = "cardano_certificate_key";
 }

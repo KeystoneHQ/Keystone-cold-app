@@ -102,6 +102,17 @@ public class CardanoViewModel extends AndroidViewModel {
         }
     }
 
+    public static String getXPubByPath(String path, DataRepository repository) {
+        CoinEntity ada = repository.loadCoinSync(Coins.ADA.coinId());
+        List<AccountEntity> accounts = repository.loadAccountsForCoin(ada);
+        Optional<AccountEntity> target = accounts.stream().filter(accountEntity -> path.toUpperCase().startsWith(accountEntity.getHdPath().toUpperCase())).findAny();
+        String result = null;
+        if (target.isPresent()) {
+            result = target.get().getExPub();
+        }
+        return result;
+    }
+
     public void checkAddressOrAdd(int accountIndex) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             CoinEntity ada = repository.loadCoinSync(Coins.ADA.coinId());

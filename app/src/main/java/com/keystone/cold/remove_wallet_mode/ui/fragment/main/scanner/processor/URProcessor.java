@@ -23,6 +23,8 @@ import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionExce
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.UnsupportedTransactionException;
 import com.keystone.cold.remove_wallet_mode.helper.Destination;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.KeyRequestApproveFragment;
+import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cardano.CardanoCertificate;
+import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cardano.CardanoUTXO;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ethereum.EthereumTransaction;
 import com.keystone.cold.remove_wallet_mode.viewmodel.sync_viewmodel.KeyRequestViewModel;
 import com.keystone.cold.ui.fragment.main.scan.scanner.ScanResult;
@@ -55,6 +57,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class URProcessor implements Processor {
     @Override
@@ -84,7 +87,7 @@ public class URProcessor implements Processor {
         } else if (r.getType().equals(ScanResultTypes.UR_QR_HARDWARE_CALL)) {
             return new QRHardwareCallProcessor().run(r.resolve());
         } else if (r.getType().equals(ScanResultTypes.UR_CARDANO_SIGN_REQUEST)) {
-            return new QRHardwareCallProcessor().run(r.resolve());
+            return new CardanoSignRequestProcessor().run(r.resolve());
         } else {
             throw UnimplementedException.newInstance();
         }
@@ -169,7 +172,18 @@ public class URProcessor implements Processor {
         @Override
         public Destination run(Object object) throws BaseException {
             CardanoSignRequest cardanoSignRequest = (CardanoSignRequest) object;
-            return null;
+            ByteBuffer uuidBuffer = ByteBuffer.wrap(cardanoSignRequest.getRequestId());
+            UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+            Bundle bundle = new Bundle();
+            String signData = Hex.toHexString(cardanoSignRequest.getSignData());
+            bundle.putString(BundleKeys.REQUEST_ID_KEY, uuid.toString());
+            bundle.putString(BundleKeys.SIGN_DATA_KEY, signData);
+            ArrayList<CardanoUTXO> utxos = cardanoSignRequest.getUtxos().stream().map(CardanoUTXO::fromUR).collect(Collectors.toCollection(ArrayList::new));
+            ArrayList<CardanoCertificate> certificates = cardanoSignRequest.getCardanoCertKeys().stream().map(CardanoCertificate::fromUR).collect(Collectors.toCollection(ArrayList::new));
+            bundle.putSerializable(BundleKeys.CARDANO_UTXO_KEY, utxos);
+            bundle.putSerializable(BundleKeys.CARDANO_CERTIFICATE_KEY, certificates);
+            bundle.putString(BundleKeys.SIGN_ORIGIN_KEY, cardanoSignRequest.getOrigin());
+            return new Destination(R.id.action_to_cardanoConfirmTransactionFragment, bundle);
         }
     }
 
