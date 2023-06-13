@@ -2,6 +2,7 @@ package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cardano;
 
 import androidx.lifecycle.ViewModelProviders;
 
+import com.keystone.cold.R;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ConfirmTransactionFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.CardanoTxViewModel;
 
@@ -13,7 +14,10 @@ public class CardanoConfirmTransactionFragment extends ConfirmTransactionFragmen
 
     @Override
     protected TabLayoutConfig[] getTabLayouts() {
-        return new TabLayoutConfig[0];
+        TabLayoutConfig[] configs = new TabLayoutConfig[2];
+        configs[0] = new TabLayoutConfig(getString(R.string.overview), CardanoTransactionOverviewFragment.newInstance(requireArguments(), viewModel.getObservableTransaction()));
+        configs[1] = new TabLayoutConfig(getString(R.string.details), CardanoTransactionDetailsFragment.newInstance(requireArguments(), viewModel.getObservableTransaction()));
+        return configs;
     }
 
     @Override

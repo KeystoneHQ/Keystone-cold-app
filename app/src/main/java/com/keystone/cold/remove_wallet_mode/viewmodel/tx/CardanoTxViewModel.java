@@ -18,6 +18,7 @@ import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cardano.CardanoU
 import com.keystone.cold.remove_wallet_mode.viewmodel.CardanoViewModel;
 import com.sparrowwallet.hummingbird.registry.CryptoKeypath;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
@@ -32,13 +33,16 @@ public class CardanoTxViewModel extends BaseTxViewModel<CardanoTransaction> {
         super(application);
     }
 
+    private String requestId;
+    private String origin;
+
     @Override
     public void parseTxData(Bundle bundle) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             isParsing.postValue(true);
             String transactionData = bundle.getString(BundleKeys.SIGN_DATA_KEY);
-            String requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
-            String origin = bundle.getString(BundleKeys.SIGN_ORIGIN_KEY);
+            requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
+            origin = bundle.getString(BundleKeys.SIGN_ORIGIN_KEY);
             ArrayList<CardanoUTXO> utxos = (ArrayList<CardanoUTXO>) bundle.getSerializable(BundleKeys.CARDANO_UTXO_KEY);
             ArrayList<CardanoCertificate> certificates = (ArrayList<CardanoCertificate>) bundle.getSerializable(bundle.getString(BundleKeys.CARDANO_CERTIFICATE_KEY));
             String masterFingerprint = new GetMasterFingerprintCallable().call();
@@ -77,7 +81,13 @@ public class CardanoTxViewModel extends BaseTxViewModel<CardanoTransaction> {
                 cardanoCertKeys.add(builder.build());
             });
             String parsed = CardanoService.parseTransaction(transactionData, xpub, masterFingerprint, cardanoUtxos, cardanoCertKeys);
-
+            try {
+                CardanoTransaction transaction = CardanoTransaction.fromJSON(parsed);
+                observableTransaction.postValue(transaction);
+            } catch (JSONException e) {
+                observableException.postValue(InvalidTransactionException.newInstance("transaction not related to this wallet"));
+                isParsing.postValue(false);
+            }
         });
     }
 

@@ -10,7 +10,9 @@ import java.util.List;
 public class CardanoTransaction {
     private final CardanoTransactionOverview overview;
     private final CardanoTransactionDetail detail;
+
     private final String signData;
+    private String signed;
 
     public CardanoTransaction(CardanoTransactionOverview overview, CardanoTransactionDetail detail, String signData) {
         this.overview = overview;
@@ -28,6 +30,14 @@ public class CardanoTransaction {
 
     public String getSignData() {
         return signData;
+    }
+
+    public String getSigned() {
+        return signed;
+    }
+
+    public void setSigned(String signed) {
+        this.signed = signed;
     }
 
     public static class CardanoTransactionOverview {
