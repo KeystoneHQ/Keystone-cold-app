@@ -27,6 +27,24 @@ public class CardanoService {
         return parseResponse(response);
     }
 
+    public static String derivePublicKey(String xpub, String subPath) {
+        RCC rcc = new RCC();
+        CardanoRequestBuilder cardanoRequestBuilder = new CardanoRequestBuilder();
+        cardanoRequestBuilder.setDerivePublicKey(xpub, subPath);
+        String command = cardanoRequestBuilder.build();
+        String response = rcc.processCommand(command);
+        return parseResponse(response);
+    }
+
+    public static String composeWitnessSet(List<CardanoProtoc.CardanoSignature> signatures) {
+        RCC rcc = new RCC();
+        CardanoRequestBuilder cardanoRequestBuilder = new CardanoRequestBuilder();
+        cardanoRequestBuilder.setComposeWitnessSet(signatures);
+        String command = cardanoRequestBuilder.build();
+        String response = rcc.processCommand(command);
+        return parseResponse(response);
+    }
+
     public static String parseResponse(String response) {
         ResponseParser parser = new ResponseParser(response);
         int status = parser.getStatus();

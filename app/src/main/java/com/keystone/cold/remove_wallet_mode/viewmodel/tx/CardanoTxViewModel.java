@@ -2,32 +2,47 @@ package com.keystone.cold.remove_wallet_mode.viewmodel.tx;
 
 import android.app.Application;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.keystone.coinlib.utils.Coins;
 import com.keystone.cold.AppExecutors;
+import com.keystone.cold.callables.ClearTokenCallable;
 import com.keystone.cold.callables.GetMasterFingerprintCallable;
 import com.keystone.cold.cryptocore.CardanoProtoc;
 import com.keystone.cold.cryptocore.CardanoService;
+import com.keystone.cold.db.entity.AccountEntity;
+import com.keystone.cold.db.entity.TxEntity;
+import com.keystone.cold.encryption.RustSigner;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
+import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
+import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.bitcoin.PSBT;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cardano.CardanoCertificate;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cardano.CardanoTransaction;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cardano.CardanoUTXO;
 import com.keystone.cold.remove_wallet_mode.viewmodel.CardanoViewModel;
+import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 import com.sparrowwallet.hummingbird.registry.CryptoKeypath;
+import com.sparrowwallet.hummingbird.registry.cardano.CardanoSignature;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class CardanoTxViewModel extends BaseTxViewModel<CardanoTransaction> {
-
+    private static final String TAG = "CardanoTxViewModel";
 
     public CardanoTxViewModel(@NonNull Application application) {
         super(application);
@@ -35,6 +50,17 @@ public class CardanoTxViewModel extends BaseTxViewModel<CardanoTransaction> {
 
     private String requestId;
     private String origin;
+    private String signData;
+    private List<String> myPaths;
+    private String signed;
+    private String parsedJson;
+
+    private String prefixPath(String path) {
+        if (!path.toLowerCase().startsWith("m/")) {
+            path = "m/" + path;
+        }
+        return path;
+    }
 
     @Override
     public void parseTxData(Bundle bundle) {
@@ -55,6 +81,7 @@ public class CardanoTxViewModel extends BaseTxViewModel<CardanoTransaction> {
                 isParsing.postValue(false);
                 return;
             }
+            this.myPaths = myPaths.stream().map(v -> prefixPath(v.getPath())).collect(Collectors.toList());
             CryptoKeypath first = myPaths.get(0);
             String keypath = first.getPath();
             if (!keypath.toUpperCase().startsWith("M/")) {
@@ -80,12 +107,33 @@ public class CardanoTxViewModel extends BaseTxViewModel<CardanoTransaction> {
                 builder.setKeyHash(Hex.toHexString(v.getKeyHash()));
                 cardanoCertKeys.add(builder.build());
             });
-            String parsed = CardanoService.parseTransaction(transactionData, xpub, masterFingerprint, cardanoUtxos, cardanoCertKeys);
+            parsedJson = CardanoService.parseTransaction(transactionData, xpub, masterFingerprint, cardanoUtxos, cardanoCertKeys);
             try {
-                CardanoTransaction transaction = CardanoTransaction.fromJSON(parsed);
+                CardanoTransaction transaction = CardanoTransaction.fromJSON(parsedJson);
+                signData = transaction.getSignData();
                 observableTransaction.postValue(transaction);
             } catch (JSONException e) {
-                observableException.postValue(InvalidTransactionException.newInstance("transaction not related to this wallet"));
+                observableException.postValue(InvalidTransactionException.newInstance("invliad transaction"));
+                isParsing.postValue(false);
+            }
+        });
+    }
+
+    public void parseExistingTransaction(String txId) {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            try {
+                isParsing.postValue(true);
+                TxEntity tx = repository.loadTxSync(txId);
+                signed = tx.getSignedHex();
+                JSONObject object = new JSONObject(tx.getAddition());
+                parsedJson = object.getString("rawTx");
+                CardanoTransaction transaction = CardanoTransaction.fromJSON(parsedJson);
+                transaction.setSigned(signed);
+                observableTransaction.postValue(transaction);
+            } catch (JSONException e) {
+                observableException.postValue(InvalidTransactionException.newInstance("invliad transaction"));
+                e.printStackTrace();
+            } finally {
                 isParsing.postValue(false);
             }
         });
@@ -98,7 +146,94 @@ public class CardanoTxViewModel extends BaseTxViewModel<CardanoTransaction> {
 
     @Override
     public void handleSign() {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            CardanoTransaction cardanoTransaction = observableTransaction.getValue();
+            if (cardanoTransaction == null) {
+                signState.postValue(STATE_SIGN_FAIL);
+                new ClearTokenCallable().call();
+                return;
+            }
+            signState.postValue(STATE_SIGNING);
+            List<RustSigner> signers = initSigners();
+            if (signers == null) {
+                signState.postValue(STATE_SIGN_FAIL);
+                new ClearTokenCallable().call();
+                return;
+            }
+            List<CardanoProtoc.CardanoSignature> signatures = new ArrayList<>();
+            for (RustSigner signer : signers) {
+                String signature = signer.signADA(signData);
+                if (signature != null) {
+                    CardanoProtoc.CardanoSignature.Builder builder = CardanoProtoc.CardanoSignature.newBuilder();
+                    builder.setPublicKey(signer.getPublicKey());
+                    builder.setSignature(signature);
+                    signatures.add(builder.build());
+                } else {
+                    signState.postValue(STATE_SIGN_FAIL);
+                    new ClearTokenCallable().call();
+                    return;
+                }
+            }
+            String witnessSet = CardanoService.composeWitnessSet(signatures);
+            UUID uuid = UUID.fromString(this.requestId);
+            ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
+            byteBuffer.putLong(uuid.getMostSignificantBits());
+            byteBuffer.putLong(uuid.getLeastSignificantBits());
+            byte[] requestId = byteBuffer.array();
+            CardanoSignature signature = new CardanoSignature(requestId, Hex.decode(witnessSet));
+            try {
+                insertDB(signed, signData);
+            } catch (JSONException e) {
+                signState.postValue(STATE_SIGN_FAIL);
+                new ClearTokenCallable().call();
+                return;
+            }
+            signed = signature.toUR().toString();
+            signState.postValue(STATE_SIGN_SUCCESS);
+            new ClearTokenCallable().call();
+        });
+    }
 
+    private List<RustSigner> initSigners() {
+        String authToken = getAuthToken();
+        if (TextUtils.isEmpty(authToken)) {
+            Log.w(TAG, "authToken null");
+            return null;
+        }
+        Set<String> set = new HashSet<>(myPaths);
+        List<String> uniqueList = new ArrayList<>(set);
+        List<RustSigner> signers = new ArrayList<>();
+        for (String myPath : uniqueList) {
+            AccountEntity accountEntity = CardanoViewModel.getAccountByPath(myPath, repository);
+            String subPath = myPath.toLowerCase().replace(accountEntity.getHdPath().toLowerCase(), "");
+            subPath = prefixPath(subPath);
+            String pubkey = CardanoService.derivePublicKey(accountEntity.getExPub(), subPath);
+            signers.add(new RustSigner(myPath.toLowerCase(), authToken, pubkey));
+        }
+        return signers;
+    }
+
+    private void insertDB(String signed, String txId) throws JSONException {
+        TxEntity txEntity = generateTxEntity();
+        txEntity.setTxId(txId);
+        txEntity.setSignedHex(signed);
+        txEntity.setAddition(
+                new JSONObject().put("rawTx", parsedJson)
+                        .put("requestId", requestId)
+                        .toString()
+        );
+        repository.insertTx(txEntity);
+    }
+
+    private TxEntity generateTxEntity() {
+        TxEntity txEntity = new TxEntity();
+        txEntity.setCoinId(Coins.ADA.coinId());
+        //update origin
+        txEntity.setSignId(Wallet.ETERNL_WALLET_SIGN_ID);
+        txEntity.setCoinCode(Coins.ADA.coinCode());
+        txEntity.setTimeStamp(getUniversalSignIndex(getApplication()));
+        txEntity.setBelongTo(repository.getBelongTo());
+        return txEntity;
     }
 
     @Override
@@ -108,6 +243,6 @@ public class CardanoTxViewModel extends BaseTxViewModel<CardanoTransaction> {
 
     @Override
     public String getSignatureUR() {
-        return null;
+        return signed;
     }
 }

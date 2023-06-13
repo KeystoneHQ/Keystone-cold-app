@@ -34,4 +34,8 @@ public class RustSigner extends Signer {
         return rccSigner.sign(data, RCCSigner.SignAlgo.RSA, saltLen);
     }
 
+    public String signADA(String data) {
+        return rccSigner.signADA(data);
+    }
+
 }
