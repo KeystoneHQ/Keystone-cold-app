@@ -1,5 +1,7 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cardano;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -77,6 +79,7 @@ public class CardanoTransaction {
             for (CardanoAddress cardanoFrom : from) {
                 builder.append(cardanoFrom.address);
                 builder.append("\n");
+                builder.append("\n");
             }
             return builder.toString();
         }
@@ -85,6 +88,7 @@ public class CardanoTransaction {
             StringBuilder builder = new StringBuilder();
             for (CardanoAddress cardanoTo : to) {
                 builder.append(cardanoTo.address);
+                builder.append("\n");
                 builder.append("\n");
             }
             return builder.toString();
@@ -130,12 +134,12 @@ public class CardanoTransaction {
             ArrayList<CardanoAddress> fromlist = new ArrayList<>();
             for (int i = 0; i < from.length(); i++) {
                 JSONObject address = from.getJSONObject(i);
-                fromlist.add(new CardanoAddress(address.getString(KEY_ADDRESS), address.getString(KEY_AMOUNT), address.optString(KEY_PATH), address.optString(KEY_ASSET_TEXT)));
+                fromlist.add(new CardanoAddress(address.getString(KEY_ADDRESS), address.getString(KEY_AMOUNT), address.isNull(KEY_PATH) ? "" : address.optString(KEY_PATH), address.isNull(KEY_ASSET_TEXT) ? "" : address.optString(KEY_ASSET_TEXT)));
             }
             ArrayList<CardanoAddress> tolist = new ArrayList<>();
             for (int i = 0; i < to.length(); i++) {
                 JSONObject address = to.getJSONObject(i);
-                tolist.add(new CardanoAddress(address.getString(KEY_ADDRESS), address.getString(KEY_AMOUNT), address.optString(KEY_PATH), address.optString(KEY_ASSET_TEXT)));
+                tolist.add(new CardanoAddress(address.getString(KEY_ADDRESS), address.getString(KEY_AMOUNT), address.isNull(KEY_PATH) ? "" : address.optString(KEY_PATH), address.isNull(KEY_ASSET_TEXT) ? "" : address.optString(KEY_ASSET_TEXT)));
             }
             String network = object.getString(KEY_NETWORK);
             String method = object.getString(KEY_METHOD);
@@ -145,20 +149,20 @@ public class CardanoTransaction {
             String rewardAmount = null;
             String depositReclaim = null;
             String rewardAccount = null;
-            JSONObject transfer = overview.optJSONObject(KEY_TRANSFER);
-            JSONObject stake = overview.optJSONObject(KEY_STAKE);
-            JSONObject withdrawal = overview.optJSONObject(KEY_WITHDRAWAL);
+            JSONObject transfer = overview.isNull(KEY_TRANSFER) ? null : overview.optJSONObject(KEY_TRANSFER);
+            JSONObject stake = overview.isNull(KEY_STAKE) ? null : overview.optJSONObject(KEY_STAKE);
+            JSONObject withdrawal = overview.isNull(KEY_WITHDRAWAL) ? null : overview.optJSONObject(KEY_WITHDRAWAL);
             if (transfer != null) {
                 totalOutputAmount = transfer.getString(KEY_TOTAL_OUTPUT_AMOUNT);
             }
             if (stake != null) {
                 stakeAmount = stake.getString(KEY_STAKE_AMOUNT);
-                deposit = stake.optString(KEY_DEPOSIT);
+                deposit = stake.isNull(KEY_DEPOSIT) ? "" : stake.optString(KEY_DEPOSIT);
             }
             if (withdrawal != null) {
-                rewardAccount = withdrawal.optString(KEY_REWARD_ACCOUNT);
+                rewardAccount = withdrawal.isNull(KEY_REWARD_ACCOUNT) ? "" : withdrawal.optString(KEY_REWARD_ACCOUNT);
                 rewardAmount = withdrawal.getString(KEY_REWARD_AMOUNT);
-                depositReclaim = withdrawal.optString(KEY_DEPOSIT_RECLAIM);
+                depositReclaim = withdrawal.isNull(KEY_DEPOSIT_RECLAIM) ? "" : withdrawal.optString(KEY_DEPOSIT_RECLAIM);
             }
             return new CardanoTransactionOverview(fee, fromlist, tolist, network, method, totalOutputAmount, stakeAmount, deposit, rewardAmount, depositReclaim, rewardAccount);
         }
@@ -202,6 +206,14 @@ public class CardanoTransaction {
             return method;
         }
 
+        public List<CardanoAddress> getFrom() {
+            return from;
+        }
+
+        public List<CardanoAddress> getTo() {
+            return to;
+        }
+
         public String getTotalInputAmount() {
             return totalInputAmount;
         }
@@ -229,30 +241,30 @@ public class CardanoTransaction {
             ArrayList<CardanoAddress> fromlist = new ArrayList<>();
             for (int i = 0; i < from.length(); i++) {
                 JSONObject address = from.getJSONObject(i);
-                fromlist.add(new CardanoAddress(address.getString(KEY_ADDRESS), address.getString(KEY_AMOUNT), address.optString(KEY_PATH), address.optString(KEY_ASSET_TEXT)));
+                fromlist.add(new CardanoAddress(address.getString(KEY_ADDRESS), address.getString(KEY_AMOUNT), address.isNull(KEY_PATH) ? "" : address.optString(KEY_PATH), address.isNull(KEY_ASSET_TEXT) ? "" : address.optString(KEY_ASSET_TEXT)));
             }
             ArrayList<CardanoAddress> tolist = new ArrayList<>();
             for (int i = 0; i < to.length(); i++) {
                 JSONObject address = to.getJSONObject(i);
-                tolist.add(new CardanoAddress(address.getString(KEY_ADDRESS), address.getString(KEY_AMOUNT), address.optString(KEY_PATH), address.optString(KEY_ASSET_TEXT)));
+                tolist.add(new CardanoAddress(address.getString(KEY_ADDRESS), address.getString(KEY_AMOUNT), address.isNull(KEY_PATH) ? "" : address.optString(KEY_PATH), address.isNull(KEY_ASSET_TEXT) ? "" : address.optString(KEY_ASSET_TEXT)));
             }
             String network = object.getString(KEY_NETWORK);
             String method = object.getString(KEY_METHOD);
 
             JSONObject detail = object.getJSONObject(KEY_DETAIL);
 
-            String totalInputAmount = detail.getString(KEY_TOTAL_INPUT_AMOUNT);
+            String totalInputAmount = detail.isNull(KEY_TOTAL_INPUT_AMOUNT) ? "" : detail.optString(KEY_TOTAL_INPUT_AMOUNT);
             String totalOutputAmount = detail.getString(KEY_TOTAL_OUTPUT_AMOUNT);
-            String depositReclaim = detail.optString(KEY_DEPOSIT_RECLAIM);
-            String deposit = detail.optString(KEY_DEPOSIT);
+            String depositReclaim = detail.isNull(KEY_DEPOSIT_RECLAIM) ? "" : detail.optString(KEY_DEPOSIT_RECLAIM);
+            String deposit = detail.isNull(KEY_DEPOSIT) ? "" : detail.optString(KEY_DEPOSIT);
             ArrayList<CardanoStakeAction> actions = new ArrayList<>();
-            JSONArray stakeContent = detail.optJSONArray(KEY_STAKE_CONTENT);
+            JSONArray stakeContent = detail.isNull(KEY_DEPOSIT) ? null : detail.optJSONArray(KEY_STAKE_CONTENT);
             if (stakeContent != null) {
                 for (int i = 0; i < stakeContent.length(); i++) {
                     JSONObject action = stakeContent.getJSONObject(i);
-                    JSONObject stake = action.optJSONObject(KEY_STAKE);
-                    JSONObject withdrawal = action.optJSONObject(KEY_WITHDRAWAL);
-                    JSONObject registration = action.optJSONObject(KEY_REGISTRATION);
+                    JSONObject stake = action.isNull(KEY_STAKE) ? null : action.optJSONObject(KEY_STAKE);
+                    JSONObject withdrawal = action.isNull(KEY_WITHDRAWAL) ? null : action.optJSONObject(KEY_WITHDRAWAL);
+                    JSONObject registration = action.isNull(KEY_REGISTRATION) ? null : action.optJSONObject(KEY_REGISTRATION);
                     String stakeKey = null;
                     String pool = null;
                     String registrationStakeKey = null;
@@ -264,9 +276,9 @@ public class CardanoTransaction {
                         stakeKey = stake.getString(KEY_STAKE_KEY);
                     }
                     if (withdrawal != null) {
-                        rewardAddress = withdrawal.optString(KEY_REWARD_ADDRESS);
-                        rewardAmount = withdrawal.optString(KEY_REWARD_AMOUNT);
-                        deregistrationStakeKey = withdrawal.optString(KEY_DEREGISTRATION_STAKE_KEY);
+                        rewardAddress = withdrawal.isNull(KEY_REWARD_ADDRESS) ? null : withdrawal.optString(KEY_REWARD_ADDRESS);
+                        rewardAmount = withdrawal.isNull(KEY_REWARD_ADDRESS) ? null : withdrawal.optString(KEY_REWARD_AMOUNT);
+                        deregistrationStakeKey = withdrawal.isNull(KEY_REWARD_ADDRESS) ? null : withdrawal.optString(KEY_DEREGISTRATION_STAKE_KEY);
                     }
                     if (registration != null) {
                         registrationStakeKey = registration.getString(KEY_REGISTRATION_STAKE_KEY);

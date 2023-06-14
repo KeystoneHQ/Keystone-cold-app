@@ -172,11 +172,13 @@ public class URProcessor implements Processor {
         @Override
         public Destination run(Object object) throws BaseException {
             CardanoSignRequest cardanoSignRequest = (CardanoSignRequest) object;
-            ByteBuffer uuidBuffer = ByteBuffer.wrap(cardanoSignRequest.getRequestId());
-            UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
             Bundle bundle = new Bundle();
+            if (cardanoSignRequest.getRequestId() != null) {
+                ByteBuffer uuidBuffer = ByteBuffer.wrap(cardanoSignRequest.getRequestId());
+                UUID uuid = new UUID(uuidBuffer.getLong(), uuidBuffer.getLong());
+                bundle.putString(BundleKeys.REQUEST_ID_KEY, uuid.toString());
+            }
             String signData = Hex.toHexString(cardanoSignRequest.getSignData());
-            bundle.putString(BundleKeys.REQUEST_ID_KEY, uuid.toString());
             bundle.putString(BundleKeys.SIGN_DATA_KEY, signData);
             ArrayList<CardanoUTXO> utxos = cardanoSignRequest.getUtxos().stream().map(CardanoUTXO::fromUR).collect(Collectors.toCollection(ArrayList::new));
             ArrayList<CardanoCertificate> certificates = cardanoSignRequest.getCardanoCertKeys().stream().map(CardanoCertificate::fromUR).collect(Collectors.toCollection(ArrayList::new));

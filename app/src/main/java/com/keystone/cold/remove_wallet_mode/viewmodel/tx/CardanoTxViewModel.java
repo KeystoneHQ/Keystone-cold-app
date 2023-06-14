@@ -56,8 +56,9 @@ public class CardanoTxViewModel extends BaseTxViewModel<CardanoTransaction> {
     private String parsedJson;
 
     private String prefixPath(String path) {
+        if (path.startsWith("/")) return "m" + path;
         if (!path.toLowerCase().startsWith("m/")) {
-            path = "m/" + path;
+            return "m/" + path;
         }
         return path;
     }
@@ -70,7 +71,7 @@ public class CardanoTxViewModel extends BaseTxViewModel<CardanoTransaction> {
             requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
             origin = bundle.getString(BundleKeys.SIGN_ORIGIN_KEY);
             ArrayList<CardanoUTXO> utxos = (ArrayList<CardanoUTXO>) bundle.getSerializable(BundleKeys.CARDANO_UTXO_KEY);
-            ArrayList<CardanoCertificate> certificates = (ArrayList<CardanoCertificate>) bundle.getSerializable(bundle.getString(BundleKeys.CARDANO_CERTIFICATE_KEY));
+            ArrayList<CardanoCertificate> certificates = (ArrayList<CardanoCertificate>) bundle.getSerializable(BundleKeys.CARDANO_CERTIFICATE_KEY);
             String masterFingerprint = new GetMasterFingerprintCallable().call();
             List<CryptoKeypath> cryptoKeypaths = new ArrayList<>();
             utxos.forEach(v -> cryptoKeypaths.add(v.getPath()));
@@ -92,7 +93,7 @@ public class CardanoTxViewModel extends BaseTxViewModel<CardanoTransaction> {
             utxos.forEach(v -> {
                 CardanoProtoc.CardanoUtxo.Builder builder = CardanoProtoc.CardanoUtxo.newBuilder();
                 builder.setIndex(v.getIndex());
-                builder.setPath(v.getPath().getPath());
+                builder.setPath(prefixPath(v.getPath().getPath()));
                 builder.setAddress(v.getAddress());
                 builder.setTransactionHash(Hex.toHexString(v.getTransactionHash()));
                 builder.setValue(v.getValue());
@@ -102,7 +103,7 @@ public class CardanoTxViewModel extends BaseTxViewModel<CardanoTransaction> {
             List<CardanoProtoc.CardanoCertKey> cardanoCertKeys = new ArrayList<>();
             certificates.forEach(v -> {
                 CardanoProtoc.CardanoCertKey.Builder builder = CardanoProtoc.CardanoCertKey.newBuilder();
-                builder.setPath(v.getKeypath().getPath());
+                builder.setPath(prefixPath(v.getKeypath().getPath()));
                 builder.setMasterFingerprint(Hex.toHexString(v.getKeypath().getSourceFingerprint()));
                 builder.setKeyHash(Hex.toHexString(v.getKeyHash()));
                 cardanoCertKeys.add(builder.build());
@@ -113,9 +114,10 @@ public class CardanoTxViewModel extends BaseTxViewModel<CardanoTransaction> {
                 signData = transaction.getSignData();
                 observableTransaction.postValue(transaction);
             } catch (JSONException e) {
-                observableException.postValue(InvalidTransactionException.newInstance("invliad transaction"));
-                isParsing.postValue(false);
+                observableException.postValue(InvalidTransactionException.newInstance("invalid transaction"));
+                e.printStackTrace();
             }
+            isParsing.postValue(false);
         });
     }
 
@@ -181,6 +183,7 @@ public class CardanoTxViewModel extends BaseTxViewModel<CardanoTransaction> {
             byteBuffer.putLong(uuid.getLeastSignificantBits());
             byte[] requestId = byteBuffer.array();
             CardanoSignature signature = new CardanoSignature(requestId, Hex.decode(witnessSet));
+            signed = signature.toUR().toString();
             try {
                 insertDB(signed, signData);
             } catch (JSONException e) {
@@ -188,7 +191,6 @@ public class CardanoTxViewModel extends BaseTxViewModel<CardanoTransaction> {
                 new ClearTokenCallable().call();
                 return;
             }
-            signed = signature.toUR().toString();
             signState.postValue(STATE_SIGN_SUCCESS);
             new ClearTokenCallable().call();
         });

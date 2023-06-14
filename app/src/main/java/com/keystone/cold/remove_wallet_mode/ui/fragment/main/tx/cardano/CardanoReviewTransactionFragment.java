@@ -1,8 +1,11 @@
 package com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cardano;
 
+import android.os.Bundle;
+
 import androidx.lifecycle.ViewModelProviders;
 
 import com.keystone.cold.R;
+import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ConfirmTransactionFragment;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.ReviewTransactionFragment;
 import com.keystone.cold.remove_wallet_mode.viewmodel.tx.CardanoTxViewModel;
@@ -10,7 +13,10 @@ import com.keystone.cold.remove_wallet_mode.viewmodel.tx.CardanoTxViewModel;
 public class CardanoReviewTransactionFragment extends ReviewTransactionFragment<CardanoTransaction, CardanoTxViewModel> {
     @Override
     protected void initViewModel() {
+        Bundle data = requireArguments();
         viewModel = ViewModelProviders.of(this).get(CardanoTxViewModel.class);
+        String txId = data.getString(BundleKeys.TX_ID_KEY);
+        viewModel.parseExistingTransaction(txId);
     }
 
     @Override
@@ -23,11 +29,6 @@ public class CardanoReviewTransactionFragment extends ReviewTransactionFragment<
 
     @Override
     protected void setupView() {
-
-    }
-
-    @Override
-    protected void onSignSuccess() {
 
     }
 }

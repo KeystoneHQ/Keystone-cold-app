@@ -130,6 +130,8 @@ public enum ScanResultTypes {
                     return ((ByteString) dataItem).getBytes();
                 case UR_QR_HARDWARE_CALL:
                     return QRHardwareCall.fromCbor(dataItem);
+                case UR_CARDANO_SIGN_REQUEST:
+                    return CardanoSignRequest.fromCbor(dataItem);
                 default:
                     return null;
             }
