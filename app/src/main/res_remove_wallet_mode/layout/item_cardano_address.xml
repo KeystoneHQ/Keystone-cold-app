@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="address"
+            type="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cardano.CardanoTransaction.CardanoAddress" />
+
+        <variable
+            name="index"
+            type="String" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{index}"
+                android:textColor="@color/hint"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold"
+                tools:text="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_12"
+                android:text="@{address.amount}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                tools:text="0.000125 ADA" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{address.address}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:text="04357793d81097a7d2c15ec6cd6067a58cdd2fb21aaf07e56c306ecf" />
+
+        <TextView
+            visibleGone="@{!TextUtils.isEmpty(address.path)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{address.path}"
+            android:textColor="@color/hint"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold"
+            tools:text="M/1852'/1815'/0'/0/0" />
+
+    </LinearLayout>
+</layout>

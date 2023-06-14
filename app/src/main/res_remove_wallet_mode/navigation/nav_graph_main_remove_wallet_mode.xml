@@ -305,6 +305,18 @@
         android:label="SubstrateReviewTransactionFragment"
         tools:layout="@layout/fragment_confirm_transaction" />
 
+    <fragment
+        android:id="@+id/cardanoConfirmTransactionFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cardano.CardanoConfirmTransactionFragment"
+        android:label="CardanoConfirmTransactionFragment"
+        tools:layout="@layout/fragment_confirm_transaction" />
+
+    <fragment
+        android:id="@+id/cardanoReviewTransactionFragment"
+        android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cardano.CardanoReviewTransactionFragment"
+        android:label="CardanoReviewTransactionFragment"
+        tools:layout="@layout/fragment_confirm_transaction" />
+
 
     <fragment
         android:id="@+id/exportXPUBFragment"
@@ -624,7 +636,7 @@
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
 
-         <action
+        <action
             android:id="@+id/action_walletListFragment_to_selectNetworksFragment"
             app:destination="@id/selectNetworksFragment"
             app:enterAnim="@anim/slide_in_right"
@@ -670,8 +682,7 @@
         android:id="@+id/selectAddressFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.SelectAddressFragment"
         android:label="SelectAddressFragment"
-        tools:layout="@layout/fragment_select_address">
-    </fragment>
+        tools:layout="@layout/fragment_select_address"></fragment>
     <fragment
         android:id="@+id/selectNetworksFragment"
         android:name="com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet.SelectNetworksFragment"
@@ -1239,6 +1250,22 @@
     <action
         android:id="@+id/action_to_substrateReviewTransactionFragment"
         app:destination="@id/substrateReviewTransactionFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_cardanoConfirmTransactionFragment"
+        app:destination="@id/cardanoConfirmTransactionFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@android:anim/slide_in_left"
+        app:popExitAnim="@android:anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_cardanoReviewTransactionFragment"
+        app:destination="@id/cardanoReviewTransactionFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@android:anim/slide_in_left"

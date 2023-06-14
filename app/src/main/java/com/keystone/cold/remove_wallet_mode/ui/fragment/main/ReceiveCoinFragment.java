@@ -72,21 +72,39 @@ public class ReceiveCoinFragment extends BaseFragment<FragmentReceiveBinding> {
 
     private void setupCardano() {
         CardanoViewModel cardanoViewModel = ViewModelProviders.of(this).get(CardanoViewModel.class);
+
         Bundle data = requireArguments();
+        String address = data.getString(KEY_ADDRESS);
+        String path = data.getString(KEY_ADDRESS_PATH);
+        int addressIndex = data.getInt(KEY_ADDRESS_INDEX);
+
+        mBinding.setAddress(shortenAddress(address));
         mBinding.path.setVisibility(View.GONE);
         mBinding.moreDetail.setVisibility(View.VISIBLE);
         mBinding.addressContainer.setOnClickListener((v) -> {
-            String address = data.getString(KEY_ADDRESS);
-            String path = data.getString(KEY_ADDRESS_PATH);
-            int addressIndex = data.getInt(KEY_ADDRESS_INDEX);
-            LiveData<String> stakeAddress = cardanoViewModel.getStakeAddress(Utilities.getCurrentCardanoAccount(mActivity), addressIndex);
-            stakeAddress.observe(this, (stake) -> {
-                if (stake != null) {
-                    ModalDialog.showCardanoAddressDetailModal(mActivity, path, address, stake);
-                    stakeAddress.removeObservers(this);
+            LiveData<String[]> addresses = cardanoViewModel.getStakeAddress(Utilities.getCurrentCardanoAccount(mActivity), addressIndex);
+            addresses.observe(this, (value) -> {
+                if (value != null) {
+                    String stakeAddress = value[0];
+                    String enterpriseAddress = value[1];
+                    ModalDialog.showCardanoAddressDetailModal(mActivity, path, address, enterpriseAddress, stakeAddress);
+                    addresses.removeObservers(this);
                 }
             });
         });
+    }
+
+    private String shortenAddress(String address) {
+        String result = "";
+        int length = address.length();
+        if (length > 36) {
+            result += address.substring(0, 16);
+            result += "....";
+            result += address.substring(length - 16, length);
+            return result;
+        } else {
+            return address;
+        }
     }
 
     private void setWarningInfo(String coinCode) {

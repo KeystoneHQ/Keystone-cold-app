@@ -47,6 +47,21 @@ public class RCCSigner {
         return parseResponse(response);
     }
 
+    public String signADA(String data) {
+        if (TextUtils.isEmpty(data)) {
+            return null;
+        }
+        RCC rcc = new RCC();
+        SignRequestBuilder rb = new SignRequestBuilder();
+        rb.setSignId(requestId);
+        int seedId = isMainWallet ? 0 : 0x50;
+        rb.setADASignRequest(seedId, authToken, privKeyPath, data, portName);
+        String command =  rb.build();
+        Log.e("Rust Signer:", command);
+        String response = rcc.processCommand(command);
+        return parseResponse(response);
+    }
+
     private String composeCommand(String data, SignAlgo algo) {
         SignRequestBuilder rb = new SignRequestBuilder();
         rb.setSignId(requestId);
@@ -72,6 +87,7 @@ public class RCCSigner {
 
     public enum SignAlgo {
         SECP256K1("secp256k1", 0),
+        ED25519("ed25519", 2),
         RSA("rsa", 3);
 
         private String name;

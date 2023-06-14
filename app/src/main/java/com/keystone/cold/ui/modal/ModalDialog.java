@@ -178,12 +178,13 @@ public class ModalDialog extends DialogFragment {
         return dialog;
     }
 
-    public static ModalDialog showCardanoAddressDetailModal(AppCompatActivity activity, String path, String baseAddress, String stakeAddress) {
+    public static ModalDialog showCardanoAddressDetailModal(AppCompatActivity activity, String path, String baseAddress, String enterpriseAddress, String stakeAddress) {
         ModalDialog dialog = new ModalDialog();
         DialogCardanoAddressDetailBinding binding = DataBindingUtil.inflate(LayoutInflater.from(activity),
                 R.layout.dialog_cardano_address_detail, null, false);
         binding.path.setText(path);
         binding.baseAddress.setText(baseAddress);
+        binding.enterpriseAddress.setText(enterpriseAddress);
         binding.stakeAddress.setText(stakeAddress);
         binding.close.setOnClickListener((v) -> {
             dialog.dismiss();

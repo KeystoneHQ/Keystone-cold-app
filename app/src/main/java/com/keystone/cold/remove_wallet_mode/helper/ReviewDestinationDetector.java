@@ -53,6 +53,8 @@ public class ReviewDestinationDetector {
             return new Destination(R.id.action_to_cosmosReviewTransactionFragment, bundle);
         } else if (Coins.XRP.coinId().equals(coinId)) {
             return new Destination(R.id.action_to_rippleReviewTransactionFragment, bundle);
+        } else if (Coins.ADA.coinId().equals(coinId)) {
+            return new Destination(R.id.action_to_cardanoReviewTransactionFragment, bundle);
         }
         return null;
     }

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021 Keystone
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ in the file COPYING.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="action"
+            type="com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cardano.CardanoTransaction.CardanoStakeAction" />
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            visibleGone="@{!TextUtils.isEmpty(action.pool)}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pool"
+                android:textColor="@color/hint"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{action.pool}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                tools:text="04357793d81097a7d2c15ec6cd6067a58cdd2fb21aaf07e56c306ecf" />
+        </LinearLayout>
+
+        <LinearLayout
+            visibleGone="@{!TextUtils.isEmpty(action.stakeKey)}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stake Key"
+                android:textColor="@color/hint"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{action.stakeKey}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                tools:text="04357793d81097a7d2c15ec6cd6067a58cdd2fb21aaf07e56c306ecf" />
+        </LinearLayout>
+
+        <LinearLayout
+            visibleGone="@{!TextUtils.isEmpty(action.registrationStakeKey)}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Registration Stake Key"
+                android:textColor="@color/hint"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{action.registrationStakeKey}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                tools:text="04357793d81097a7d2c15ec6cd6067a58cdd2fb21aaf07e56c306ecf" />
+        </LinearLayout>
+
+        <LinearLayout
+            visibleGone="@{!TextUtils.isEmpty(action.deregistrationStakeKey)}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Deregistrated Stake Key"
+                android:textColor="@color/hint"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{action.deregistrationStakeKey}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                tools:text="04357793d81097a7d2c15ec6cd6067a58cdd2fb21aaf07e56c306ecf" />
+        </LinearLayout>
+
+        <LinearLayout
+            visibleGone="@{!TextUtils.isEmpty(action.rewardAddress)}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reward Account"
+                android:textColor="@color/hint"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{action.rewardAddress}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                tools:text="04357793d81097a7d2c15ec6cd6067a58cdd2fb21aaf07e56c306ecf" />
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>
