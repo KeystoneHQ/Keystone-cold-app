@@ -145,6 +145,7 @@ public class PSBT {
 
         private static String deriveAddress(String path, String pubkey) {
             // do not support multisig yet;
+            path = path.toUpperCase();
             if (path.startsWith(BitcoinTxViewModel.BTCNestedSegwitPath)) {
                 return new Btc.Deriver().deriveByPubkey(pubkey);
             } else if (path.startsWith(BitcoinTxViewModel.BTCLegacyPath)) {
