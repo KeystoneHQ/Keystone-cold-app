@@ -12,9 +12,9 @@ public class DeviceInfoUtil {
     public static String getDeviceType() {
         String boardType = SystemProperties.get("boardtype");
         if ("B".equals(boardType)) {
-            return "keystone Essential";
+            return "Keystone Essential";
         } else {
-            return "keystone Pro";
+            return "Keystone Pro";
         }
     }
 
