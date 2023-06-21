@@ -263,7 +263,7 @@ public class Btc extends AbsCoin {
         public String deriveByPubkey(String pubkey) {
             byte[] pubkeyHash = Utils.sha256hash160(Hex.decode(pubkey));
             return LegacyAddress.fromScriptHash(MAINNET,
-                    segWitOutputScript(Hex.decode(pubkeyHash)).getPubKeyHash()).toBase58();
+                    segWitOutputScript(pubkeyHash).getPubKeyHash()).toBase58();
         }
 
         protected Script segWitOutputScript(byte[] pubKeyHash) {
