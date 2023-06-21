@@ -154,7 +154,7 @@ public class Coins {
             NEAR,
             APTOS,
             AR,
-            ADA,
+//            ADA,
 
             ATOM,
             OSMO,
