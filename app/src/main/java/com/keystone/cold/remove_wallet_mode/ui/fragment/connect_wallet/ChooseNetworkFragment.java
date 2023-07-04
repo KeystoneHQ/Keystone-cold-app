@@ -58,8 +58,8 @@ public class ChooseNetworkFragment extends BaseFragment<FragmentChooseNetworkBin
         AppExecutors.getInstance().diskIO().execute(() -> {
             Bundle data = requireArguments();
             String walletId = data.getString(BundleKeys.WALLET_ID_KEY);
-            Boolean isSelectMultiAddress = item.getId().equals(Coins.SUI.coinId()) || item.getId().equals(Coins.APTOS.coinId());
-            if (item.getId().equals(Coins.DOT.coinId()) || item.getId().equals(Coins.KSM.coinId()) || isSelectMultiAddress) {
+            Boolean canSelectMultiAddress = item.getId().equals(Coins.SUI.coinId()) || item.getId().equals(Coins.APTOS.coinId());
+            if (item.getId().equals(Coins.DOT.coinId()) || item.getId().equals(Coins.KSM.coinId()) || canSelectMultiAddress) {
                 List<AddressEntity> addressEntities = MainApplication.getApplication().getRepository().loadAddressSync(item.getId());
                 if (addressEntities.size() == 1) {
                     AddressEntity entity = addressEntities.get(0);
@@ -68,7 +68,7 @@ public class ChooseNetworkFragment extends BaseFragment<FragmentChooseNetworkBin
                     bundle.putSerializable(BundleKeys.ADDRESS_IDS_KEY, (Serializable) Collections.singletonList(entity.getId()));
                     bundle.putString(BundleKeys.COIN_ID_KEY, entity.getCoinId());
                     destinationMutableLiveData.postValue(new Destination(R.id.action_to_syncFragment, bundle));
-                } else if (isSelectMultiAddress) {
+                } else if (canSelectMultiAddress) {
                     Bundle bundle = new Bundle();
                     bundle.putString(BundleKeys.WALLET_ID_KEY, walletId);
                     bundle.putString(BundleKeys.COIN_ID_KEY, item.getId());
