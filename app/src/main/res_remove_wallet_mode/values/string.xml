@@ -24,7 +24,7 @@
         <item>ArConnect</item>
         <item>Petra Aptos Wallet</item>
         <item>Fewcha Move Wallet</item>
-        <item>Suiet</item>
+<!--        <item>Suiet</item>-->
         <item>Sender Wallet</item>
         <item>BlockWallet</item>
         <item>Rabby</item>
@@ -49,7 +49,7 @@
         <item>arconnect</item>
         <item>petra</item>
         <item>fewcha</item>
-        <item>suiet</item>
+<!--        <item>suiet</item>-->
         <item>sender</item>
         <item>blockwallet</item>
         <item>rabby</item>
@@ -74,7 +74,7 @@
         <item>AR</item>
         <item>APT and related token</item>
         <item>APT, SUI and related tokens</item>
-        <item>SUI and related tokens</item>
+<!--        <item>SUI and related tokens</item>-->
         <item>NEAR and related token</item>
         <item>ETH, AVAX, BNB, and other EVM tokens</item>
         <item>ETH, AVAX, BNB, and other EVM tokens</item>
