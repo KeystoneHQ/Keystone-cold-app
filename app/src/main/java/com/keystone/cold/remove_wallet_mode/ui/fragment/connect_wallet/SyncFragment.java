@@ -2,6 +2,7 @@ package com.keystone.cold.remove_wallet_mode.ui.fragment.connect_wallet;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -78,6 +79,7 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
     private Wallet wallet;
     private List<Long> addressIds;
     private SyncActionMode syncActionMode;
+    private String coinId;
 
     @Override
     protected int setView() {
@@ -260,7 +262,10 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
                 break;
             case FEWCHA:
             case PETRA:
+            case SUIET:
                 FewchaWalletViewModel fewchaWalletViewModel = ViewModelProviders.of(this).get(FewchaWalletViewModel.class);
+                coinId = requireArguments().getString(BundleKeys.COIN_ID_KEY);
+                fewchaWalletViewModel.setCoinId(coinId);
                 fewchaWalletViewModel.setAddressIds(addressIds);
                 urMutableLiveData = fewchaWalletViewModel.generateSyncUR();
                 break;
@@ -389,7 +394,11 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
             } else {
                 navigateUp();
                 Bundle bundle = new Bundle();
-                bundle.putString(BundleKeys.COIN_ID_KEY, config.getCoinId());
+                if (!TextUtils.isEmpty(coinId)) {
+                    bundle.putString(BundleKeys.COIN_ID_KEY, coinId);
+                } else {
+                    bundle.putString(BundleKeys.COIN_ID_KEY, config.getCoinId());
+                }
                 bundle.putString(BundleKeys.WALLET_ID_KEY, wallet.getWalletId());
                 navigate(R.id.action_to_selectAddressFragment, bundle);
             }

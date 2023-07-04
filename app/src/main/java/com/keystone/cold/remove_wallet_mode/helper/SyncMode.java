@@ -2,9 +2,10 @@ package com.keystone.cold.remove_wallet_mode.helper;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.keystone.cold.remove_wallet_mode.helper.sync_jump.FewchaWalletSyncModeDetector;
+import com.keystone.cold.remove_wallet_mode.helper.sync_jump.PetraWalletSyncModeDetector;
 import com.keystone.cold.remove_wallet_mode.helper.sync_jump.SenderWalletSyncModeDetector;
 import com.keystone.cold.remove_wallet_mode.helper.sync_jump.SolflareWalletSyncModeDetector;
+import com.keystone.cold.remove_wallet_mode.helper.sync_jump.SuietWalletSyncModeDetector;
 import com.keystone.cold.remove_wallet_mode.helper.sync_jump.SyncModeDetector;
 import com.keystone.cold.remove_wallet_mode.helper.sync_jump.XRPToolKitSyncModeDetector;
 import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
@@ -31,6 +32,7 @@ public enum SyncMode {
                 stepMode.postValue(DIRECT);
                 break;
             case POLKADOTJS:
+            case FEWCHA:
             case SUBWALLET:
                 stepMode.postValue(SUBSTRATE);
                 break;
@@ -77,9 +79,10 @@ public enum SyncMode {
     private static SyncModeDetector getSyncModeDetector(Wallet wallet) {
         //todo  Need to add other types
         switch (wallet) {
-            case FEWCHA:
+            case SUIET:
+                return new SuietWalletSyncModeDetector();
             case PETRA:
-                return new FewchaWalletSyncModeDetector();
+                return new PetraWalletSyncModeDetector();
             case SOLFLARE:
                 return new SolflareWalletSyncModeDetector();
             case SENDER:

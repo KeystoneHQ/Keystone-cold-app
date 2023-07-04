@@ -58,7 +58,8 @@ public class ChooseNetworkFragment extends BaseFragment<FragmentChooseNetworkBin
         AppExecutors.getInstance().diskIO().execute(() -> {
             Bundle data = requireArguments();
             String walletId = data.getString(BundleKeys.WALLET_ID_KEY);
-            if (item.getId().equals(Coins.DOT.coinId()) || item.getId().equals(Coins.KSM.coinId())) {
+            Boolean canSelectMultiAddress = item.getId().equals(Coins.SUI.coinId()) || item.getId().equals(Coins.APTOS.coinId());
+            if (item.getId().equals(Coins.DOT.coinId()) || item.getId().equals(Coins.KSM.coinId()) || canSelectMultiAddress) {
                 List<AddressEntity> addressEntities = MainApplication.getApplication().getRepository().loadAddressSync(item.getId());
                 if (addressEntities.size() == 1) {
                     AddressEntity entity = addressEntities.get(0);
@@ -67,6 +68,11 @@ public class ChooseNetworkFragment extends BaseFragment<FragmentChooseNetworkBin
                     bundle.putSerializable(BundleKeys.ADDRESS_IDS_KEY, (Serializable) Collections.singletonList(entity.getId()));
                     bundle.putString(BundleKeys.COIN_ID_KEY, entity.getCoinId());
                     destinationMutableLiveData.postValue(new Destination(R.id.action_to_syncFragment, bundle));
+                } else if (canSelectMultiAddress) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(BundleKeys.WALLET_ID_KEY, walletId);
+                    bundle.putString(BundleKeys.COIN_ID_KEY, item.getId());
+                    destinationMutableLiveData.postValue(new Destination(R.id.action_to_selectAddressFragment, bundle));
                 } else {
                     Bundle bundle = new Bundle();
                     bundle.putString(BundleKeys.WALLET_ID_KEY, walletId);
@@ -90,6 +96,11 @@ public class ChooseNetworkFragment extends BaseFragment<FragmentChooseNetworkBin
             list = Arrays.asList(
                     new ClickableItem(Coins.DOT.coinId(), Coins.DOT.coinName(), R.drawable.coin_dot),
                     new ClickableItem(Coins.KSM.coinId(), Coins.KSM.coinName(), R.drawable.coin_ksm)
+            );
+        } else if (wallet == Wallet.FEWCHA) {
+            list = Arrays.asList(
+                    new ClickableItem(Coins.SUI.coinId(), Coins.SUI.coinName(), R.drawable.coin_sui),
+                    new ClickableItem(Coins.APTOS.coinId(), Coins.APTOS.coinName(), R.drawable.coin_apt)
             );
         } else {
             list = new ArrayList<>();

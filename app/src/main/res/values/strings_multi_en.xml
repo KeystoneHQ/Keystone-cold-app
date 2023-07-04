@@ -705,9 +705,11 @@
     </string-array>
 
     <string-array name="tutorials_name_aptos">
-        <!--        <item>Martian Wallet (Extension)</item>-->
         <item>Fewcha Wallet (Extension)</item>
-        <!--        <item>Petra Wallet (Extension)</item>-->
+    </string-array>
+
+    <string-array name="tutorials_link_aptos">
+        <item><u>https://keyst.one/fewcha</u></item>
     </string-array>
 
     <string-array name="tutorials_name_petra">
@@ -717,10 +719,13 @@
     <string-array name="tutorials_link_petra">
         <item><u>https://keyst.one/t/petra</u></item>
     </string-array>
-    <string-array name="tutorials_link_aptos">
-        <!--        <item><u>https://keyst.one/martian</u></item>-->
-        <item><u>https://keyst.one/fewcha</u></item>
-        <!--        <item><u>https://keyst.one/t/petra</u></item>-->
+
+    <string-array name="tutorials_name_suiet">
+        <item>Suiet (Extension)</item>
+    </string-array>
+
+    <string-array name="tutorials_link_suiet">
+        <item><u>https://keyst.one/t/suiet</u></item>
     </string-array>
 
     <string-array name="tutorials_name_core_wallet">

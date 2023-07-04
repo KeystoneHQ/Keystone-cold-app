@@ -36,6 +36,7 @@ import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.DLSequence;
 import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.digests.Blake2bDigest;
 import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.crypto.digests.SHA3Digest;
 import org.bouncycastle.jcajce.provider.digest.Keccak;
@@ -244,5 +245,13 @@ public class Util {
             data[data.length - i - 1] = temp;
         }
         return org.spongycastle.util.encoders.Hex.toHexString(data);
+    }
+
+    public static byte[] blake2b256(byte[] input) {
+        Digest digest = new Blake2bDigest(256);
+        digest.update(input, 0, input.length);
+        byte[] rsData = new byte[digest.getDigestSize()];
+        digest.doFinal(rsData, 0);
+        return rsData;
     }
 }

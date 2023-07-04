@@ -22,6 +22,7 @@ import com.keystone.cold.remove_wallet_mode.helper.address_generators.NearAddres
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.RippleAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.SolanaAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.SubstrateAddressGenerator;
+import com.keystone.cold.remove_wallet_mode.helper.address_generators.SuiAddressGenerator;
 import com.keystone.cold.remove_wallet_mode.helper.address_generators.TronAddressGenerator;
 
 
@@ -66,6 +67,9 @@ public class AddressManager {
         }
         if (Coins.APTOS.coinId().equals(coinId)) {
             return new AptosAddressGenerator();
+        }
+        if (Coins.SUI.coinId().equals(coinId)) {
+            return new SuiAddressGenerator();
         }
         if (Coins.SOL.coinId().equals(coinId)) {
             String code = Utilities.getCurrentSolAccount(getApplication());
