@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.keystone.coinlib.coins.polkadot.AddressCodec;
 import com.keystone.coinlib.interfaces.SignCallback;
 import com.keystone.coinlib.interfaces.Signer;
 import com.keystone.coinlib.utils.Coins;
@@ -26,6 +27,7 @@ import com.keystone.cold.remove_wallet_mode.wallet.Wallet;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.spongycastle.util.encoders.Hex;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -170,7 +172,14 @@ public class SubstrateTxViewModel extends BaseTxViewModel<SubstrateTransaction> 
                 callback.onFail();
             }
             Signer signer = new ChipSigner(addressEntity.getPath(), authToken);
-            String signedHex = signer.sign(signContent);
+
+            byte[] content = Hex.decode(signContent);
+            String dataToSign = signContent;
+            if (content.length > 256) {
+                byte[] hash = AddressCodec.blake2b(content, 256);
+                dataToSign = Hex.toHexString(hash);
+            }
+            String signedHex = signer.sign(dataToSign);
             String txId = signedHex.substring(0, 32);
             if (!TextUtils.isEmpty(signedHex)) {
                 callback.onSuccess(txId, signedHex);
