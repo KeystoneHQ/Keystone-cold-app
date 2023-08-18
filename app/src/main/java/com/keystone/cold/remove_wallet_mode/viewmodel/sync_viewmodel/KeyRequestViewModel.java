@@ -137,8 +137,8 @@ public class KeyRequestViewModel extends AndroidViewModel {
                     if (CardanoViewModel.isCardanoPath(schema.getPath())) {
                         if (password != null && !password.isEmpty()) {
                             CardanoViewModel.checkOrSetup(schema.getPath(), password, mRepository);
-                            extended_key = CardanoViewModel.getXPub(schema.getPath(), mRepository);
                         }
+                        extended_key = CardanoViewModel.getXPub(schema.getPath(), mRepository);
                     } else {
                         boolean isMainWallet = Utilities.getCurrentBelongTo(MainApplication.getApplication()).equals("main");
                         String portName = EncryptionCoreProvider.getInstance().getPortName();
