@@ -42,7 +42,7 @@
     <color name="black">#000000</color>
     <color name="id_color">#FF874B</color>
     <color name="red">#ff0000</color>
-    <color name="undecoded_tip_color">#FF0B0B</color>
+    <color name="undecoded_tip_color">#FBC31B</color>
     <color name="check_info_color">#FBC31B</color>
     <color name="hint_text_bg">#1A1A1A</color>
 </resources>

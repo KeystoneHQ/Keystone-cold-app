@@ -80,7 +80,7 @@ public class BtcImpl extends CoinImpl {
         return null;
     }
 
-    public JSONObject parsePsbt(@NonNull String psbtBase64) {
+    public JSONObject parsePsbt(@NonNull String psbtBase64) throws JSONException {
         if (this.parsePsbt == null) {
             this.parsePsbt = (V8Function) coin.get("parsePsbt");
         }
@@ -99,12 +99,11 @@ public class BtcImpl extends CoinImpl {
             v8.registerResource(parameters);
             String jsonResult = json.executeStringFunction("stringify", parameters);
             return new JSONObject(jsonResult);
-
         } catch (V8ScriptExecutionException | JSONException e) {
             e.printStackTrace();
+            throw new JSONException(e.getMessage());
         } finally {
             v8.release(false);
         }
-        return null;
     }
 }
