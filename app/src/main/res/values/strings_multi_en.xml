@@ -857,11 +857,13 @@
     </string-array>
 
     <string-array name="tutorials_name_okx">
-        <item>OKX Wallet</item>
+        <item>OKX Wallet (Extension)</item>
+        <item>OKX Wallet (Mobile)</item>
     </string-array>
 
     <string-array name="tutorials_link_okx">
         <item><u>https://keyst.one/t/okx</u></item>
+        <item><u>https://keyst.one/t/okxm</u></item>
     </string-array>
 
     <string name="tittle_eth_selector">4-byte Function Signature</string>
