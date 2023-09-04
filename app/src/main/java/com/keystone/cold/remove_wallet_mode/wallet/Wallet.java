@@ -111,9 +111,9 @@ public enum Wallet {
     public static Wallet getWalletByIdOrUnknown(String walletId) {
         Wallet selectWatchWallet = UNKNOWNWALLET;
         for (Wallet wallet : Wallet.values()) {
-            if (wallet.walletId.equals(walletId)) {
+            if (wallet.walletId.equalsIgnoreCase(walletId)) {
                 selectWatchWallet = wallet;
-                break;
+                return selectWatchWallet;
             }
         }
         return UNKNOWNWALLET;
