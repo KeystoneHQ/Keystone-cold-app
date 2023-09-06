@@ -156,7 +156,7 @@ public class Coins {
             APTOS,
             SUI,
             AR,
-            ADA,
+//            ADA,
             ATOM,
             OSMO,
             SCRT,
