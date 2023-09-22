@@ -185,7 +185,7 @@ public class URProcessor implements Processor {
             String signData = Hex.toHexString(cardanoSignRequest.getSignData());
             bundle.putString(BundleKeys.SIGN_DATA_KEY, signData);
             ArrayList<CardanoUTXO> utxos = cardanoSignRequest.getUtxos().stream().map(CardanoUTXO::fromUR).collect(Collectors.toCollection(ArrayList::new));
-            ArrayList<CardanoCertificate> certificates = cardanoSignRequest.getCardanoCertKeys().stream().map(CardanoCertificate::fromUR).collect(Collectors.toCollection(ArrayList::new));
+            ArrayList<CardanoCertificate> certificates = cardanoSignRequest.getExtraSigners().stream().map(CardanoCertificate::fromUR).collect(Collectors.toCollection(ArrayList::new));
             bundle.putSerializable(BundleKeys.CARDANO_UTXO_KEY, utxos);
             bundle.putSerializable(BundleKeys.CARDANO_CERTIFICATE_KEY, certificates);
             bundle.putString(BundleKeys.SIGN_ORIGIN_KEY, cardanoSignRequest.getOrigin());

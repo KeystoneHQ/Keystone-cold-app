@@ -96,7 +96,7 @@ public class CardanoTxViewModel extends BaseTxViewModel<CardanoTransaction> {
                 builder.setPath(prefixPath(v.getPath().getPath()));
                 builder.setAddress(v.getAddress());
                 builder.setTransactionHash(Hex.toHexString(v.getTransactionHash()));
-                builder.setValue(v.getValue());
+                builder.setValue(Long.parseLong(v.getValue()));
                 builder.setMasterFingerprint(Hex.toHexString(v.getPath().getSourceFingerprint()));
                 cardanoUtxos.add(builder.build());
             });

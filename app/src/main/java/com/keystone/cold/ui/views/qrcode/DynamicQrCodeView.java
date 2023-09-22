@@ -61,7 +61,7 @@ public class DynamicQrCodeView extends LinearLayout implements QrCodeHolder {
     public enum QrCapacity {
         HIGH(800),
         MID(500),
-        LOW(200);
+        LOW(100);
 
         public int capacity;
 
