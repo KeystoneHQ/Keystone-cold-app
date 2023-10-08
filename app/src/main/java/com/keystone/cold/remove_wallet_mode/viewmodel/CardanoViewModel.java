@@ -41,6 +41,11 @@ public class CardanoViewModel extends AndroidViewModel {
         return setupStatus;
     }
 
+    public void resetStatus()
+    {
+        this.setupStatus.postValue(SETUP_INITIAL);
+    }
+
     private final MutableLiveData<String> setupStatus = new MutableLiveData<>(SETUP_INITIAL);
 
     private final DataRepository repository;

@@ -166,9 +166,14 @@ public class ManageCoinFragment extends BaseFragment<FragmentManageCoinBinding> 
                             }
                             mViewModel.toggleAssetItem(assetItem);
                             dialog.dismiss();
+                            setupStatus.removeObservers(this);
+                            viewModel.resetStatus();
                         } else if (step.equals(CardanoViewModel.SETUP_FAILED)) {
                             dialog.dismiss();
-                            alert(getString(R.string.setup_cardano_failed), getString(R.string.setup_cardano_failed_description));
+                            alert(getString(R.string.setup_cardano_failed), getString(R.string.setup_cardano_failed_description), () -> {
+                                setupStatus.removeObservers(this);
+                                viewModel.resetStatus();
+                            });
                         }
                     });
                     AppExecutors.getInstance().diskIO().execute(() -> {
