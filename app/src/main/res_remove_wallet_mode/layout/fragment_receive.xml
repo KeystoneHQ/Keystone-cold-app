@@ -137,10 +137,10 @@
                 <TextView
                     android:id="@+id/more_detail"
                     android:layout_width="148dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="28dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="2dp"
-                    android:gravity="center_horizontal"
+                    android:gravity="center"
                     android:lineSpacingExtra="5dp"
                     android:text="@string/more_details"
                     android:textColor="@color/colorAccent"

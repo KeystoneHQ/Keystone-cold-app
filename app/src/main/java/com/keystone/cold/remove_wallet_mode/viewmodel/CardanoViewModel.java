@@ -193,7 +193,7 @@ public class CardanoViewModel extends AndroidViewModel {
         MutableLiveData<String[]> address = new MutableLiveData<>(null);
         AppExecutors.getInstance().diskIO().execute(() -> {
             AccountEntity accountEntity = getAccountByIndex(accountIndex);
-            String stakeAddress = CardanoService.deriveAddress(accountEntity.getExPub(), addressIndex, 1);
+            String stakeAddress = CardanoService.deriveAddress(accountEntity.getExPub(), 0, 1);
             String enterpriseAddress = CardanoService.deriveAddress(accountEntity.getExPub(), addressIndex, 2);
             String[] result = new String[]{stakeAddress, enterpriseAddress};
             address.postValue(result);
