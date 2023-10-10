@@ -99,6 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="36dp"
                 android:gravity="center"
                 android:text="@string/wallet_key_request"
                 android:textColor="@color/white"
