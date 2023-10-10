@@ -41,8 +41,7 @@ public class CardanoViewModel extends AndroidViewModel {
         return setupStatus;
     }
 
-    public void resetStatus()
-    {
+    public void resetStatus() {
         this.setupStatus.postValue(SETUP_INITIAL);
     }
 
@@ -68,12 +67,17 @@ public class CardanoViewModel extends AndroidViewModel {
         setupStatus.postValue(SETUP_FAILED);
     }
 
-    public static void pureSetup(String password, String passphrase) {
+    public static boolean pureSetup(String password, String passphrase) {
         ADASetupManager adaSetupManager = ADASetupManager.getInstance();
         if (adaSetupManager.setupADARootKey(passphrase == null ? "" : passphrase, password)) {
             if (adaSetupManager.preSetupADAKeys(password)) {
                 new CardanoCreator().setUp();
+                return true;
+            } else {
+                return false;
             }
+        } else {
+            return false;
         }
     }
 
@@ -98,13 +102,14 @@ public class CardanoViewModel extends AndroidViewModel {
         return Arrays.stream(Coins.ADA.getAccounts()).anyMatch(v -> v.equalsIgnoreCase(path));
     }
 
-    public static void checkOrSetup(String path, String password, DataRepository repository) {
+    public static boolean checkOrSetup(String path, String password, DataRepository repository) {
         String[] pieces = path.split("/");
         int account = Integer.parseInt(pieces[3].replace("'", ""));
         if (!isAccountActive(account, repository)) {
             // user won't call this method with a passphrase
-            pureSetup(password, "");
+            return pureSetup(password, "");
         }
+        return false;
     }
 
     public static String getXPubByPath(String path, DataRepository repository) {

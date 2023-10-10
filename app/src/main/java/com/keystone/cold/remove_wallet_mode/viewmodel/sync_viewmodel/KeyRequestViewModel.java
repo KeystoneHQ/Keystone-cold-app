@@ -108,8 +108,24 @@ public class KeyRequestViewModel extends AndroidViewModel {
         return result;
     }
 
+    private final MutableLiveData<String> generateSyncURStatus = new MutableLiveData<>();
+
+    public static String SYNC_UR_STATUS_INITIAL = "SYNC_UR_STATUS_INITIAL";
+    public static String SYNC_UR_STATUS_SUCCESS = "SYNC_UR_STATUS_SUCCESS";
+    public static String SYNC_UR_STATUS_FAILED = "SYNC_UR_STATUS_FAILED";
+
+    private void setGenerateSyncURStatus(String status) {
+        generateSyncURStatus.postValue(status);
+    }
+
+    public LiveData<String> getGenerateSyncURStatus()
+    {
+        return generateSyncURStatus;
+    }
+
     public LiveData<UR> generateSyncUR(List<KeyRequestApproveFragment.Schema> schemas, @Nullable String password) {
         MutableLiveData<UR> sync = new MutableLiveData<>();
+        setGenerateSyncURStatus(SYNC_UR_STATUS_INITIAL);
         AppExecutors.getInstance().diskIO().execute(() -> {
             List<CryptoHDKey> cryptoHDKeyList = new ArrayList<>();
             byte[] masterFingerprint = Hex.decode(new GetMasterFingerprintCallable().call());
@@ -136,9 +152,12 @@ public class KeyRequestViewModel extends AndroidViewModel {
                     byte[] extended_key = new byte[]{};
                     if (CardanoViewModel.isCardanoPath(schema.getPath())) {
                         if (password != null && !password.isEmpty()) {
-                            CardanoViewModel.checkOrSetup(schema.getPath(), password, mRepository);
-                            extended_key = CardanoViewModel.getXPub(schema.getPath(), mRepository);
+                            if (!CardanoViewModel.checkOrSetup(schema.getPath(), password, mRepository)) {
+                                setGenerateSyncURStatus(SYNC_UR_STATUS_FAILED);
+                                return;
+                            }
                         }
+                        extended_key = CardanoViewModel.getXPub(schema.getPath(), mRepository);
                     } else {
                         boolean isMainWallet = Utilities.getCurrentBelongTo(MainApplication.getApplication()).equals("main");
                         String portName = EncryptionCoreProvider.getInstance().getPortName();
@@ -157,6 +176,7 @@ public class KeyRequestViewModel extends AndroidViewModel {
             }
             CryptoMultiAccounts accounts = new CryptoMultiAccounts(masterFingerprint, cryptoHDKeyList, KEY_NAME);
             sync.postValue(accounts.toUR());
+            setGenerateSyncURStatus(SYNC_UR_STATUS_SUCCESS);
         });
         return sync;
     }
