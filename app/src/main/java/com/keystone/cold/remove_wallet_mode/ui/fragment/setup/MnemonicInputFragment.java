@@ -57,6 +57,7 @@ import com.keystone.cold.remove_wallet_mode.helper.CoinConfigHelper;
 import com.keystone.cold.remove_wallet_mode.ui.MainActivity;
 import com.keystone.cold.remove_wallet_mode.ui.SetupVaultActivity;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.unlock.VerifyMnemonicFragment;
+import com.keystone.cold.remove_wallet_mode.viewmodel.ADASetupManager;
 import com.keystone.cold.remove_wallet_mode.viewmodel.SetupVaultViewModel;
 import com.keystone.cold.selfcheck.RuntimeStatusCode;
 import com.keystone.cold.ui.modal.ModalDialog;

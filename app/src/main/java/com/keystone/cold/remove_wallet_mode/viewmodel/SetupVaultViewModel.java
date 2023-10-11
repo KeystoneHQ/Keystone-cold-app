@@ -243,6 +243,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
                         firstShare.id, firstShare.iteration_exponent, OneTimePasswordManager.getInstance().useAndDrop()).call()) {
                     vaultId = new GetVaultIdCallable().call();
                     mRepository.clearDb();
+                    ADASetupManager.getInstance().clearCache();
                     vaultCreateState.postValue(VAULT_STATE_CREATED);
                 } else {
                     vaultCreateState.postValue(VAULT_STATE_CREATING_FAILED);
