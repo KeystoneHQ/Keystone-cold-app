@@ -331,26 +331,32 @@ public class SyncFragment extends BaseFragment<FragmentSyncBinding> {
 
     private void setupKeyRequestUR(List<KeyRequestApproveFragment.Schema> schemas, @Nullable String password) {
         KeyRequestViewModel keyRequestViewModel = ViewModelProviders.of(this).get(KeyRequestViewModel.class);
-        LiveData<UR> urMutableLiveData = keyRequestViewModel.generateSyncUR(schemas, password);
-        LiveData<String> urStatus = keyRequestViewModel.getGenerateSyncURStatus();
+        boolean isMainWallet = Utilities.getCurrentBelongTo(mActivity).equals("main");
+        if (!isMainWallet) {
+            alert(getString(R.string.setup_cardano_failed), getString(R.string.setup_cardano_failed_description), this::navigateUp);
+        }
+        else {
+            LiveData<UR> urMutableLiveData = keyRequestViewModel.generateSyncUR(schemas, password);
+            LiveData<String> urStatus = keyRequestViewModel.getGenerateSyncURStatus();
 
-        urStatus.observe(this, status -> {
-            if (status.equals(KeyRequestViewModel.SYNC_UR_STATUS_SUCCESS)) {
-                urMutableLiveData.observe(this, ur -> {
-                    if (ur != null) {
-                        mBinding.dynamicQrcodeLayout.qrcode.displayUR(ur);
-                        urMutableLiveData.removeObservers(this);
-                    }
-                });
-                urStatus.removeObservers(this);
-            }
-            if (status.equals(KeyRequestViewModel.SYNC_UR_STATUS_FAILED)) {
-                alert(getString(R.string.setup_cardano_failed), getString(R.string.setup_cardano_failed_description), () -> {
-                    this.navigateUp();
+            urStatus.observe(this, status -> {
+                if (status.equals(KeyRequestViewModel.SYNC_UR_STATUS_SUCCESS)) {
+                    urMutableLiveData.observe(this, ur -> {
+                        if (ur != null) {
+                            mBinding.dynamicQrcodeLayout.qrcode.displayUR(ur);
+                            urMutableLiveData.removeObservers(this);
+                        }
+                    });
                     urStatus.removeObservers(this);
-                });
-            }
-        });
+                }
+                if (status.equals(KeyRequestViewModel.SYNC_UR_STATUS_FAILED)) {
+                    alert(getString(R.string.setup_cardano_failed), getString(R.string.setup_cardano_failed_description), () -> {
+                        this.navigateUp();
+                        urStatus.removeObservers(this);
+                    });
+                }
+            });
+        }
     }
 
     private void generateKeyRequestSyncData() {

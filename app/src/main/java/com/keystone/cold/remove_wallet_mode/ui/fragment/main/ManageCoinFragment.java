@@ -51,6 +51,7 @@ import com.keystone.cold.ui.views.AuthenticateModal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ManageCoinFragment extends BaseFragment<FragmentManageCoinBinding> {
 
@@ -89,9 +90,16 @@ public class ManageCoinFragment extends BaseFragment<FragmentManageCoinBinding> 
     }
 
     private void subscribeUi(LiveData<List<AssetItem>> assets) {
+        boolean isMainWallet = Utilities.getCurrentBelongTo(mActivity).equals("main");
         assets.observe(this, assetItems -> {
             if (assetItems != null) {
-                mCoinAdapter.setItems(assetItems);
+                mCoinAdapter.setItems(assetItems.stream().filter(v -> {
+                    if (isMainWallet) return true;
+                    else {
+                        // DONT support ADA in passphrase wallet
+                        return !v.getCoinCode().equals(Coins.ADA.coinCode());
+                    }
+                }).collect(Collectors.toList()));
             }
         });
     }
