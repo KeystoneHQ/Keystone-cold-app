@@ -52,6 +52,7 @@ import com.keystone.cold.cryptocore.RCCService;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.encryption.EncryptionCoreProvider;
 import com.keystone.cold.remove_wallet_mode.helper.SetupManager;
+import com.keystone.cold.remove_wallet_mode.viewmodel.ADASetupManager;
 import com.keystone.cold.util.HashUtil;
 import com.keystone.cold.viewmodel.OneTimePasswordManager;
 
@@ -274,10 +275,13 @@ public class SetupVaultViewModel extends AndroidViewModel {
             vaultCreateState.postValue(VAULT_STATE_CREATING);
             boolean success;
             String password = OneTimePasswordManager.getInstance().useAndDrop();
+            boolean isMainWallet;
             if (TextUtils.isEmpty(passphrase)) {
                 success = new RestartSeCallable().call();
+                isMainWallet = true;
             } else {
                 success = new UpdatePassphraseCallable(passphrase, password, signature).call();
+                isMainWallet = false;
             }
 
             try {
@@ -288,6 +292,10 @@ public class SetupVaultViewModel extends AndroidViewModel {
             if (success) {
                 vaultId = new GetVaultIdCallable().call();
                 deleteHiddenVaultData();
+                ADASetupManager adaSetupManager = ADASetupManager.getInstance();
+                if(isMainWallet){
+                    adaSetupManager.setupADARootKey("", password)
+                }
                 signature = null;
                 vaultCreateState.postValue(VAULT_STATE_CREATED);
             } else {
