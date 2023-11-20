@@ -294,7 +294,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
                 deleteHiddenVaultData();
                 ADASetupManager adaSetupManager = ADASetupManager.getInstance();
                 if(isMainWallet){
-                    adaSetupManager.setupADARootKey("", password)
+                    adaSetupManager.setupADARootKey("", password);
                 }
                 signature = null;
                 vaultCreateState.postValue(VAULT_STATE_CREATED);
