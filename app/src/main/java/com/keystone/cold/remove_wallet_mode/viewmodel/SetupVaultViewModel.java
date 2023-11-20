@@ -279,9 +279,11 @@ public class SetupVaultViewModel extends AndroidViewModel {
             if (TextUtils.isEmpty(passphrase)) {
                 success = new RestartSeCallable().call();
                 isMainWallet = true;
+                Utilities.setCurrentBelongTo(getApplication(), "main");
             } else {
                 success = new UpdatePassphraseCallable(passphrase, password, signature).call();
                 isMainWallet = false;
+                Utilities.setCurrentBelongTo(getApplication(), "hidden");
             }
 
             try {
@@ -293,8 +295,11 @@ public class SetupVaultViewModel extends AndroidViewModel {
                 vaultId = new GetVaultIdCallable().call();
                 deleteHiddenVaultData();
                 ADASetupManager adaSetupManager = ADASetupManager.getInstance();
-                if(isMainWallet){
-                    adaSetupManager.setupADARootKey("", password);
+                if (isMainWallet) {
+                    if (!adaSetupManager.setupADARootKey("", password)) {
+                        //retry one
+                        adaSetupManager.setupADARootKey("", password);
+                    }
                 }
                 signature = null;
                 vaultCreateState.postValue(VAULT_STATE_CREATED);
