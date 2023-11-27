@@ -19,6 +19,7 @@ import com.keystone.cold.db.entity.TxEntity;
 import com.keystone.cold.encryption.RustSigner;
 import com.keystone.cold.remove_wallet_mode.constant.BundleKeys;
 import com.keystone.cold.remove_wallet_mode.exceptions.BaseException;
+import com.keystone.cold.remove_wallet_mode.exceptions.tx.ADAInvalidStateException;
 import com.keystone.cold.remove_wallet_mode.exceptions.tx.InvalidTransactionException;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.bitcoin.PSBT;
 import com.keystone.cold.remove_wallet_mode.ui.fragment.main.tx.cardano.CardanoCertificate;
@@ -89,6 +90,12 @@ public class CardanoTxViewModel extends BaseTxViewModel<CardanoTransaction> {
                 keypath = "M/" + keypath;
             }
             String xpub = CardanoViewModel.getXPubByPath(keypath, repository);
+            if(xpub == null)
+            {
+                observableException.postValue(ADAInvalidStateException.newInstance("ada wallet not setup"));
+                isParsing.postValue(false);
+                return;
+            }
             List<CardanoProtoc.CardanoUtxo> cardanoUtxos = new ArrayList<>();
             utxos.forEach(v -> {
                 CardanoProtoc.CardanoUtxo.Builder builder = CardanoProtoc.CardanoUtxo.newBuilder();
@@ -96,7 +103,7 @@ public class CardanoTxViewModel extends BaseTxViewModel<CardanoTransaction> {
                 builder.setPath(prefixPath(v.getPath().getPath()));
                 builder.setAddress(v.getAddress());
                 builder.setTransactionHash(Hex.toHexString(v.getTransactionHash()));
-                builder.setValue(v.getValue());
+                builder.setValue(Long.parseLong(v.getValue()));
                 builder.setMasterFingerprint(Hex.toHexString(v.getPath().getSourceFingerprint()));
                 cardanoUtxos.add(builder.build());
             });

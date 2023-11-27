@@ -936,7 +936,7 @@
     <string name="select_address">Select Address</string>
     <string name="setup_cardano_hint">You have not added ADA as an asset yet. Please proceed to add ADA as an asset.</string>
     <string name="setup_cardano_failed">Add ADA failed</string>
-    <string name="setup_cardano_failed_description">Please try again. (Secret Sharding wallet does not support Cardano currently.) </string>
+    <string name="setup_cardano_failed_description">Please try again. (Secret Sharding wallet and Passphrase wallet do not support Cardano currently.) </string>
     <string name="understand">I Understand</string>
 
     <!-- eternl -->
@@ -969,4 +969,5 @@
     <string name="invalid_xrp_account">The account for XRP is invalid. Please try again.</string>
     <string name="invalid_xrp_account_title">Invalid XRP Account</string>
     <string name="invalid_key_request">Invalid Key Derivation Request</string>
+    <string name="invalid_ada_state">Invalid account. Please setup your Cardano firstly. (Secret Sharding wallet and Passphrase wallet do not support Cardano currently.)</string>
 </resources>

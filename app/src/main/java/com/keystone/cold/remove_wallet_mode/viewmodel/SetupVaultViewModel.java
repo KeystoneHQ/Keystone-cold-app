@@ -52,6 +52,7 @@ import com.keystone.cold.cryptocore.RCCService;
 import com.keystone.cold.db.entity.CoinEntity;
 import com.keystone.cold.encryption.EncryptionCoreProvider;
 import com.keystone.cold.remove_wallet_mode.helper.SetupManager;
+import com.keystone.cold.remove_wallet_mode.viewmodel.ADASetupManager;
 import com.keystone.cold.util.HashUtil;
 import com.keystone.cold.viewmodel.OneTimePasswordManager;
 
@@ -223,10 +224,10 @@ public class SetupVaultViewModel extends AndroidViewModel {
             if (new WriteMnemonicCallable(mnemonic, password).call()) {
                 vaultId = new GetVaultIdCallable().call();
                 mRepository.clearDb();
-//                ADASetupManager adaSetupManager = ADASetupManager.getInstance();
-//                if (adaSetupManager.setupADARootKey("", password)) {
-//                    adaSetupManager.preSetupADAKeys(password);
-//                }
+                ADASetupManager adaSetupManager = ADASetupManager.getInstance();
+                if (adaSetupManager.setupADARootKey("", password)) {
+                    adaSetupManager.preSetupADAKeys(password);
+                }
                 vaultCreateState.postValue(VAULT_STATE_CREATED);
             } else {
                 vaultCreateState.postValue(VAULT_STATE_CREATING_FAILED);
@@ -243,6 +244,7 @@ public class SetupVaultViewModel extends AndroidViewModel {
                         firstShare.id, firstShare.iteration_exponent, OneTimePasswordManager.getInstance().useAndDrop()).call()) {
                     vaultId = new GetVaultIdCallable().call();
                     mRepository.clearDb();
+                    ADASetupManager.getInstance().clearCache();
                     vaultCreateState.postValue(VAULT_STATE_CREATED);
                 } else {
                     vaultCreateState.postValue(VAULT_STATE_CREATING_FAILED);
@@ -273,10 +275,15 @@ public class SetupVaultViewModel extends AndroidViewModel {
             vaultCreateState.postValue(VAULT_STATE_CREATING);
             boolean success;
             String password = OneTimePasswordManager.getInstance().useAndDrop();
+            boolean isMainWallet;
             if (TextUtils.isEmpty(passphrase)) {
                 success = new RestartSeCallable().call();
+                isMainWallet = true;
+                Utilities.setCurrentBelongTo(getApplication(), "main");
             } else {
                 success = new UpdatePassphraseCallable(passphrase, password, signature).call();
+                isMainWallet = false;
+                Utilities.setCurrentBelongTo(getApplication(), "hidden");
             }
 
             try {
@@ -287,10 +294,13 @@ public class SetupVaultViewModel extends AndroidViewModel {
             if (success) {
                 vaultId = new GetVaultIdCallable().call();
                 deleteHiddenVaultData();
-//                ADASetupManager adaSetupManager = ADASetupManager.getInstance();
-//                if (adaSetupManager.setupADARootKey(passphrase, password)) {
-//                    adaSetupManager.preSetupADAKeys(password);
-//                }
+                ADASetupManager adaSetupManager = ADASetupManager.getInstance();
+                if (isMainWallet) {
+                    if (!adaSetupManager.setupADARootKey("", password)) {
+                        //retry one
+                        adaSetupManager.setupADARootKey("", password);
+                    }
+                }
                 signature = null;
                 vaultCreateState.postValue(VAULT_STATE_CREATED);
             } else {

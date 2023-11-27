@@ -41,6 +41,10 @@ public class CardanoViewModel extends AndroidViewModel {
         return setupStatus;
     }
 
+    public void resetStatus() {
+        this.setupStatus.postValue(SETUP_INITIAL);
+    }
+
     private final MutableLiveData<String> setupStatus = new MutableLiveData<>(SETUP_INITIAL);
 
     private final DataRepository repository;
@@ -63,12 +67,17 @@ public class CardanoViewModel extends AndroidViewModel {
         setupStatus.postValue(SETUP_FAILED);
     }
 
-    public static void pureSetup(String password, String passphrase) {
+    public static boolean pureSetup(String password, String passphrase) {
         ADASetupManager adaSetupManager = ADASetupManager.getInstance();
         if (adaSetupManager.setupADARootKey(passphrase == null ? "" : passphrase, password)) {
             if (adaSetupManager.preSetupADAKeys(password)) {
                 new CardanoCreator().setUp();
+                return true;
+            } else {
+                return false;
             }
+        } else {
+            return false;
         }
     }
 
@@ -93,13 +102,14 @@ public class CardanoViewModel extends AndroidViewModel {
         return Arrays.stream(Coins.ADA.getAccounts()).anyMatch(v -> v.equalsIgnoreCase(path));
     }
 
-    public static void checkOrSetup(String path, String password, DataRepository repository) {
+    public static boolean checkOrSetup(String path, String password, DataRepository repository) {
         String[] pieces = path.split("/");
         int account = Integer.parseInt(pieces[3].replace("'", ""));
         if (!isAccountActive(account, repository)) {
             // user won't call this method with a passphrase
-            pureSetup(password, "");
+            return pureSetup(password, "");
         }
+        return false;
     }
 
     public static String getXPubByPath(String path, DataRepository repository) {
@@ -183,7 +193,7 @@ public class CardanoViewModel extends AndroidViewModel {
         MutableLiveData<String[]> address = new MutableLiveData<>(null);
         AppExecutors.getInstance().diskIO().execute(() -> {
             AccountEntity accountEntity = getAccountByIndex(accountIndex);
-            String stakeAddress = CardanoService.deriveAddress(accountEntity.getExPub(), addressIndex, 1);
+            String stakeAddress = CardanoService.deriveAddress(accountEntity.getExPub(), 0, 1);
             String enterpriseAddress = CardanoService.deriveAddress(accountEntity.getExPub(), addressIndex, 2);
             String[] result = new String[]{stakeAddress, enterpriseAddress};
             address.postValue(result);

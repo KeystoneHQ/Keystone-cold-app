@@ -22,6 +22,10 @@ public class ADASetupManager {
 
     private final Map<String, String> EXTENDED_PUBLIC_KEY_CACHE = new HashMap<>();
 
+    public void clearCache() {
+        EXTENDED_PUBLIC_KEY_CACHE.clear();
+    }
+
     public static String toPath(int index) {
         return ADARootPath + "/" + index + "'";
     }
@@ -29,6 +33,7 @@ public class ADASetupManager {
     public static final String ADARootPath = "m/1852'/1815'";
 
     public boolean setupADARootKey(String passphrase, String password) {
+        ADASetupManager.getInstance().clearCache();
         boolean isMainWallet = Utilities.getCurrentBelongTo(MainApplication.getApplication()).equals("main");
         String portName = EncryptionCoreProvider.getInstance().getPortName();
         RCCService.Passport passport = new RCCService.Passport(password, isMainWallet, portName);
