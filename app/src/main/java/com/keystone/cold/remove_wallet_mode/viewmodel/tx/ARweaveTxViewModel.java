@@ -129,8 +129,8 @@ public class ARweaveTxViewModel extends BaseTxViewModel<ArweaveTransaction> {
         AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 messageData = bundle.getString(BundleKeys.SIGN_DATA_KEY);
-                requestId = bundle.getString(REQUEST_ID);
-                saltLen = bundle.getInt(KEY_SALT_LEN);
+                requestId = bundle.getString(BundleKeys.REQUEST_ID_KEY);
+                saltLen = bundle.getInt(BundleKeys.REQUEST_ID_KEY);
                 String fromAddress = ArweaveViewModel.getARAddress();
                 JSONObject object = new JSONObject();
                 object.put("hdPath", hdPath);
@@ -157,7 +157,7 @@ public class ARweaveTxViewModel extends BaseTxViewModel<ArweaveTransaction> {
                 new ClearTokenCallable().call();
                 return;
             }
-            signature = signer.signRSA(arweaveTransaction.getSignatureData(), saltLen);
+            signature = signer.signRSA(arweaveTransaction.getSignatureData(), saltLen, "common");
             if (signature == null) {
                 signState.postValue(STATE_SIGN_FAIL);
                 new ClearTokenCallable().call();
@@ -222,7 +222,7 @@ public class ARweaveTxViewModel extends BaseTxViewModel<ArweaveTransaction> {
                 new ClearTokenCallable().call();
                 return;
             }
-            signature = signer.signRSA(messageData, saltLen);
+            signature = signer.signRSA(messageData, saltLen, "ar_message");
             signState.postValue(STATE_SIGN_SUCCESS);
             new ClearTokenCallable().call();
         });

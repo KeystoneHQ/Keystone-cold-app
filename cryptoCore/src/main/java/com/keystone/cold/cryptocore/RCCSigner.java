@@ -39,7 +39,20 @@ public class RCCSigner {
             return null;
         }
         RCC rcc = new RCC();
-        String command = composeCommand(data, algo);
+        String command = composeCommand(data, algo, saltLen, null);
+
+        Log.e("Rust Signer:", command);
+
+        String response = rcc.processCommand(command);
+        return parseResponse(response);
+    }
+
+    public String signRSA(String data, int saltLen, String sign_type) {
+        if (TextUtils.isEmpty(data)) {
+            return null;
+        }
+        RCC rcc = new RCC();
+        String command = composeCommand(data, SignAlgo.RSA, saltLen, sign_type);
 
         Log.e("Rust Signer:", command);
 
@@ -62,11 +75,11 @@ public class RCCSigner {
         return parseResponse(response);
     }
 
-    private String composeCommand(String data, SignAlgo algo) {
+    private String composeCommand(String data, SignAlgo algo, int salt_len, String rsa_sign_type) {
         SignRequestBuilder rb = new SignRequestBuilder();
         rb.setSignId(requestId);
         int seedId = isMainWallet ? 0 : 0x50;
-        rb.setSignRequest(seedId, algo.getValue(), authToken, privKeyPath, data, portName);
+        rb.setSignRequest(seedId, algo.getValue(), authToken, privKeyPath, data, portName, salt_len, rsa_sign_type);
         return rb.build();
     }
 

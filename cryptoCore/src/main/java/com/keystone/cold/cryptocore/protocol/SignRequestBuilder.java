@@ -35,6 +35,18 @@ public class SignRequestBuilder {
         return this;
     }
 
+    public SignRequestBuilder setSignRequest(int seedId, int algoValue, String password, String path, String data, String portName, int salt_len, String rsa_sign_type) {
+        signRequest.setSeedId(seedId);
+        signRequest.setAlgoValue(algoValue);
+        signRequest.setPassword(password);
+        signRequest.setDerivationPath(path);
+        signRequest.setData(data);
+        signRequest.setPortName(portName);
+        signRequest.putSigningOption("salt_len", String.valueOf(salt_len));
+        signRequest.putSigningOption("sign_type", rsa_sign_type);
+        return this;
+    }
+
     public SignRequestBuilder setADASignRequest(int seedId, String password, String path, String data, String portName) {
         signRequest.setSeedId(seedId);
         signRequest.setAlgoValue(2);
