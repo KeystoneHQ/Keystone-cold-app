@@ -39,7 +39,7 @@ public class RCCSigner {
             return null;
         }
         RCC rcc = new RCC();
-        String command = composeCommand(data, algo, saltLen, null);
+        String command = composeCommand(data, algo, saltLen, "");
 
         Log.e("Rust Signer:", command);
 
