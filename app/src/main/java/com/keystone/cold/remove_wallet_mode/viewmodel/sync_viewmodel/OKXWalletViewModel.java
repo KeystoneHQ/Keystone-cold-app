@@ -30,7 +30,7 @@ public class OKXWalletViewModel extends AndroidViewModel {
     public static final String DashPath = "M/44'/5'/0'";
     public static final String BtcCashPath = "M/44'/145'/0'";
     public static final String TronPath = "M/44'/195'/0'";
-    public static final String LitcoinPath = "M/44'/2'/0'";
+    public static final String LitcoinPath = "M/49'/2'/0'";
 
     private final String[] btcPaths = {BTCLegacyPath, BTCNestedSegwitPath, BTCNativeSegwitPath};
 

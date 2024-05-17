@@ -52,6 +52,10 @@ allprojects {
 
 }
 
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
@@ -66,3 +70,4 @@ ext {
     junit = '4.12'
     mockito = '1.10.19'
 }
+

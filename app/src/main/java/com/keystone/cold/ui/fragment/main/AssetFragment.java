@@ -506,10 +506,12 @@ public class AssetFragment extends BaseFragment<AssetFragmentBinding>
                     handleArweaveSignRequest(result);
                 } else if (result.getType().equals(ScanResultTypes.UR_EVM_SIGN_REQUEST)) {
                     handleEvmSignRequest(result);
+                
                 } else {
                     throw new UnknowQrCodeException("unknown transaction!");
                 }
             }
+
 
             private void handleURBytes(ScanResult result) throws JSONException, UnExpectedQRException {
                 JSONObject object = new JSONObject(new String((byte[]) result.resolve(), StandardCharsets.UTF_8));
