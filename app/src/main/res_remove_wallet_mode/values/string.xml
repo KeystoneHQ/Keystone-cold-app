@@ -63,7 +63,7 @@
     <string-array name="watch_wallet_summury_remove_wallet_mode">
         <!-- <item>9 main chains including BTC, ETH, etc</item> -->
         <item>ETH, AVAX, BNB, and other EVM tokens</item>
-        <item>ETH, AVAX, BNB, and other EVM tokens</item>
+        <item>BTC, ETH, TRX, BCH, LTC, DASH and EVM</item>
         <item>Cosmos Eco</item>
         <item>ETH, AVAX, BNB, and other EVM tokens</item>
         <item>ETH, AVAX, BNB, and other EVM tokens</item>
