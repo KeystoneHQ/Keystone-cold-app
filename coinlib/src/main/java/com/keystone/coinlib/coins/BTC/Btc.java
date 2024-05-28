@@ -159,22 +159,40 @@ public class Btc extends AbsCoin {
                 JSONObject output = outputs.getJSONObject(i);
                 String address = output.getString("address");
                 String newAddress = convertAddress(address);
-                outputAmount += output.getLong("value");
-                if (output.optBoolean("isChange") && output.has("changeAddressPath")) {
-                    changeAmount += output.getLong("value");
-                    changeAddressInfoList.add(new ChangeAddressInfo(
-                            newAddress,
-                            output.getString("changeAddressPath"),
-                            output.getLong("value")));
-                    outputsClone.remove(i);
-                    continue;
+                try {
+                    outputAmount += output.getLong("value");
+                    if (output.optBoolean("isChange") && output.has("changeAddressPath")) {
+                        changeAmount += output.getLong("value");
+                        changeAddressInfoList.add(new ChangeAddressInfo(
+                                newAddress,
+                                output.getString("changeAddressPath"),
+                                output.getLong("value")));
+                        outputsClone.remove(i);
+                        continue;
+                    }
+    
+                    NumberFormat nf = NumberFormat.getInstance();
+                    nf.setMaximumFractionDigits(20);
+                    String amount = nf.format(satoshiToBtc(output.getLong("value")));
+                    outputsClone.getJSONObject(i).put("value", amount + " " + coinCode);
+                    destinations.append(address).append(SEPARATOR);
+                } catch (Exception e) {
+                    if (output.optBoolean("isChange") && output.has("changeAddressPath")) {
+                        changeAmount += 0;
+                        changeAddressInfoList.add(new ChangeAddressInfo(
+                                newAddress,
+                                output.getString("changeAddressPath"),
+                               0));
+                        outputsClone.remove(i);
+                        continue;
+                    }
+    
+                    NumberFormat nf = NumberFormat.getInstance();
+                    nf.setMaximumFractionDigits(20);
+                    String amount = nf.format(satoshiToBtc(0));
+                    outputsClone.getJSONObject(i).put("value", amount + " " + coinCode);
+                    destinations.append(address).append(SEPARATOR);
                 }
-
-                NumberFormat nf = NumberFormat.getInstance();
-                nf.setMaximumFractionDigits(20);
-                String amount = nf.format(satoshiToBtc(output.getLong("value")));
-                outputsClone.getJSONObject(i).put("value", amount + " " + coinCode);
-                destinations.append(address).append(SEPARATOR);
             }
             if (outputsClone.length() == 1) {
                 to = destinations.deleteCharAt(destinations.length() - 1).toString();

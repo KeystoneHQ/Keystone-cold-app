@@ -88,9 +88,8 @@ cargo {
     targets = ["arm"]  // See bellow for a longer list of options
     profile = 'release'
     targetIncludes = ['librcc_android.so']
-    rustupChannel="nightly"
+    rustupChannel="nightly-2023-10-16-aarch64-apple-darwin"
 }
-
 tasks.whenTaskAdded { task ->
     if ((task.name == 'javaPreCompileDebug' || task.name == 'javaPreCompileRelease')) {
         task.dependsOn 'cargoBuild'

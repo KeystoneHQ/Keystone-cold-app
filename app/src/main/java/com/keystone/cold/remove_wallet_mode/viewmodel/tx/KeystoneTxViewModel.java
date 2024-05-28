@@ -85,7 +85,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Stream;
-
+import com.sparrowwallet.hummingbird.registry.KeystoneSignature;
+import java.nio.ByteBuffer;
+import java.util.UUID;
 public class KeystoneTxViewModel extends BaseTxViewModel<TxEntity> {
     private static final String TAG = "KeystoneTxViewModel";
     private static final String BTC_SEGWIT_PATH = "M/49'/0'/0'/";
@@ -118,7 +120,6 @@ public class KeystoneTxViewModel extends BaseTxViewModel<TxEntity> {
             try {
                 String json = bundle.getString(BundleKeys.SIGN_DATA_KEY);
                 JSONObject object = new JSONObject(json);
-                Log.i(TAG, "object = " + object.toString(4));
                 transaction = AbsTx.newInstance(object);
                 if (transaction == null) {
                     observableException.postValue(new InvalidTransactionException(MainApplication.getApplication().getString(R.string.incorrect_tx_data), "invalid transaction"));
@@ -437,9 +438,37 @@ public class KeystoneTxViewModel extends BaseTxViewModel<TxEntity> {
 
     }
 
+
+
+    private static byte[] hexToBytes(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i+1), 16));
+        }
+        return data;
+    }
+
     @Override
     public String getSignatureUR() {
-        return observableTransaction.getValue().getSignResult();
+        KeystoneSignature keystoneSignature;
+        String signatureStr = observableTransaction.getValue().getSignResult();
+        String requestIdStr = observableTransaction.getValue().getSignId();
+        byte[] signature = hexToBytes(signatureStr);
+        if (signatureStr == null) {
+            keystoneSignature = new KeystoneSignature(signature);
+        } else {
+            UUID uuid = UUID.fromString(requestIdStr);
+            ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
+            byteBuffer.putLong(uuid.getMostSignificantBits());
+            byteBuffer.putLong(uuid.getLeastSignificantBits());
+            byte[] requestId = byteBuffer.array();
+            keystoneSignature = new KeystoneSignature(signature);
+        }
+        String urString = keystoneSignature.toUR().toString();
+
+        return urString;
     }
 
     void signTransaction(Signer... signer) {

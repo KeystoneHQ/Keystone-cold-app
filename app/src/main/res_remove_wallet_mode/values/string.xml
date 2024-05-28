@@ -11,7 +11,7 @@
     <string name="connect_wallets">Connect SoftWare Wallets</string>
 
     <string-array name="watch_wallet_list_remove_wallet_mode">
-        <item>Keystone Companion App</item>
+        <!-- <item>Keystone Companion App</item> -->
         <item>MetaMask</item>
         <item>OKX Wallet</item>
         <item>Keplr</item>
@@ -36,7 +36,7 @@
         <item>SushiSwap</item>
     </string-array>
     <string-array name="watch_wallet_ids" translatable="false">
-        <item>keystone</item>
+        <!-- <item>keystone</item> -->
         <item>metamask</item>
         <item>okx</item>
         <item>keplr</item>
@@ -61,9 +61,9 @@
         <item>sushiswap</item>
     </string-array>
     <string-array name="watch_wallet_summury_remove_wallet_mode">
-        <item>9 main chains including BTC, ETH, etc</item>
+        <!-- <item>9 main chains including BTC, ETH, etc</item> -->
         <item>ETH, AVAX, BNB, and other EVM tokens</item>
-        <item>ETH, AVAX, BNB, and other EVM tokens</item>
+        <item>BTC, ETH, TRX, BCH, LTC, DASH and EVM</item>
         <item>Cosmos Eco</item>
         <item>ETH, AVAX, BNB, and other EVM tokens</item>
         <item>ETH, AVAX, BNB, and other EVM tokens</item>

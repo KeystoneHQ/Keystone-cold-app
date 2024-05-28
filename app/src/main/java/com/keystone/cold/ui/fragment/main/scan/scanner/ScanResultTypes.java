@@ -18,7 +18,7 @@ import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolNFTItem;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
 import com.sparrowwallet.hummingbird.registry.sui.SuiSignRequest;
-
+import com.sparrowwallet.hummingbird.registry.KeystoneSignRequest;
 import org.spongycastle.util.encoders.Hex;
 
 import java.util.List;
@@ -46,7 +46,9 @@ public enum ScanResultTypes {
     UR_COSMOS_SIGN_REQUEST,
     UR_QR_HARDWARE_CALL,
     UR_CARDANO_SIGN_REQUEST,
-    UR_EVM_SIGN_REQUEST;
+    UR_EVM_SIGN_REQUEST,
+
+    UR_KEYSTONE_SIGN_REQUEST;
 
 
     public boolean isType(String text) {
@@ -88,6 +90,8 @@ public enum ScanResultTypes {
                     return decodeResult instanceof QRHardwareCall;
                 case UR_CARDANO_SIGN_REQUEST:
                     return decodeResult instanceof CardanoSignRequest;
+                case UR_KEYSTONE_SIGN_REQUEST:
+                    return decodeResult instanceof KeystoneSignRequest;
                 default:
                     return false;
             }
@@ -138,6 +142,8 @@ public enum ScanResultTypes {
                     return QRHardwareCall.fromCbor(dataItem);
                 case UR_CARDANO_SIGN_REQUEST:
                     return CardanoSignRequest.fromCbor(dataItem);
+                case UR_KEYSTONE_SIGN_REQUEST:
+                    return KeystoneSignRequest.fromCbor(dataItem);
                 default:
                     return null;
             }
@@ -179,6 +185,8 @@ public enum ScanResultTypes {
                 return UR_QR_HARDWARE_CALL;
             case "cardano-sign-request":
                 return UR_CARDANO_SIGN_REQUEST;
+            case "keystone-sign-request":
+                return UR_KEYSTONE_SIGN_REQUEST;
             default:
                 throw new UnsupportedURException(MainApplication.getApplication().getString(R.string.invalid_qr_code_hint), "unsupported ur type: " + ur.getType());
         }

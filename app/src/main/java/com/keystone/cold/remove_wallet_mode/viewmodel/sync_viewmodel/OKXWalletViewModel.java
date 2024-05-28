@@ -26,6 +26,12 @@ public class OKXWalletViewModel extends AndroidViewModel {
     public static final String BTCNestedSegwitPath = "M/49'/0'/0'";
     public static final String BTCNativeSegwitPath = "M/84'/0'/0'";
 
+
+    public static final String DashPath = "M/44'/5'/0'";
+    public static final String BtcCashPath = "M/44'/145'/0'";
+    public static final String TronPath = "M/44'/195'/0'";
+    public static final String LitcoinPath = "M/49'/2'/0'";
+
     private final String[] btcPaths = {BTCLegacyPath, BTCNestedSegwitPath, BTCNativeSegwitPath};
 
     private List<String> openedCoins = new ArrayList<>();
@@ -52,6 +58,10 @@ public class OKXWalletViewModel extends AndroidViewModel {
             this.openedCoins.add(Coins.ETH.coinId());
             this.openedCoins.add(Coins.BTC.coinId());
         }
+        this.openedCoins.add(Coins.DASH.coinId());
+        this.openedCoins.add(Coins.BCH.coinId());
+        this.openedCoins.add(Coins.TRON.coinId());
+        this.openedCoins.add(Coins.LTC.coinId());
     }
 
     private CryptoMultiAccounts generateCryptoMultiAccounts() {
@@ -62,6 +72,26 @@ public class OKXWalletViewModel extends AndroidViewModel {
         }
         if (openedCoins.contains(Coins.BTC.coinId())) {
             cryptoHDKeyList.addAll(generateCryptoHDKeysForBitcoin());
+        }
+
+        if (openedCoins.contains(Coins.DASH.coinId())) {
+            CryptoHDKey dash = generateCryptoHDKeyForOtherCoin(DashPath, 5);
+            cryptoHDKeyList.add(dash);
+        }
+
+        if (openedCoins.contains(Coins.BCH.coinId())) {
+            CryptoHDKey bch = generateCryptoHDKeyForOtherCoin(BtcCashPath, 145);
+            cryptoHDKeyList.add(bch);
+        }
+
+        if (openedCoins.contains(Coins.TRON.coinId())) {
+            CryptoHDKey tron = generateCryptoHDKeyForOtherCoin(TronPath,195);
+            cryptoHDKeyList.add(tron);
+        }
+
+        if (openedCoins.contains(Coins.LTC.coinId())) {
+            CryptoHDKey litcoin = generateCryptoHDKeyForOtherCoin(LitcoinPath,2);
+            cryptoHDKeyList.add(litcoin);
         }
         return new CryptoMultiAccounts(masterFingerprint, cryptoHDKeyList, DeviceInfoUtil.getDeviceType(), DeviceInfoUtil.getDeviceId());
     }
@@ -97,5 +127,9 @@ public class OKXWalletViewModel extends AndroidViewModel {
 
     private CryptoHDKey generateCryptoHDKeyForBitcoin(String path) {
         return URRegistryHelper.generateCryptoHDKey(path, 0);
+    }
+
+    private CryptoHDKey generateCryptoHDKeyForOtherCoin(String path, int type) {
+        return URRegistryHelper.generateCryptoHDKey(path, type);
     }
 }

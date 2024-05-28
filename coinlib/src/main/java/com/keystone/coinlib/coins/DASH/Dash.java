@@ -28,7 +28,7 @@ import org.bitcoinj.crypto.DeterministicKey;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import java.text.NumberFormat;
 public class Dash extends Btc {
     public Dash(Coin impl) {
         super(impl);
@@ -62,7 +62,10 @@ public class Dash extends Btc {
             }
             hdPath = paths.deleteCharAt(paths.length() - 1).toString();
         }
-    }
+
+
+
+}
 
     public static class Deriver extends AbsDeriver {
 

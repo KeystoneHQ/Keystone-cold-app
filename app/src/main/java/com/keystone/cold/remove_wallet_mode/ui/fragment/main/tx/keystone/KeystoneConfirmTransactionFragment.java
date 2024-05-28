@@ -64,7 +64,7 @@ public class KeystoneConfirmTransactionFragment extends ConfirmTransactionFragme
 
     @Override
     protected void onSignSuccess() {
-        String signatureURString = viewModel.getSignatureUR();
+        String signatureURString = viewModel.getSignatureUR(); 
         Bundle data = new Bundle();
         data.putString(BundleKeys.SIGNATURE_UR_KEY, signatureURString);
         data.putString(BundleKeys.COIN_CODE_KEY, viewModel.getCoinCode());

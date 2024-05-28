@@ -48,6 +48,8 @@ import com.sparrowwallet.hummingbird.registry.near.NearSignRequest;
 import com.sparrowwallet.hummingbird.registry.solana.SolNFTItem;
 import com.sparrowwallet.hummingbird.registry.solana.SolSignRequest;
 import com.sparrowwallet.hummingbird.registry.sui.SuiSignRequest;
+import com.sparrowwallet.hummingbird.registry.KeystoneSignRequest;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -92,7 +94,9 @@ public class URProcessor implements Processor {
             return new QRHardwareCallProcessor().run(r.resolve());
         } else if (r.getType().equals(ScanResultTypes.UR_CARDANO_SIGN_REQUEST)) {
             return new CardanoSignRequestProcessor().run(r.resolve());
-        } else {
+        } else if (r.getType().equals(ScanResultTypes.UR_KEYSTONE_SIGN_REQUEST)){ 
+            return new KeystoneSignRequestProcessor().run(r.resolve());
+        }else {
             throw UnimplementedException.newInstance();
         }
     }
@@ -101,8 +105,94 @@ public class URProcessor implements Processor {
         Destination run(Object object) throws BaseException;
     }
 
-    private static class ETHSignRequestProcessor implements URResolver {
+    private static class KeystoneSignRequestProcessor implements URResolver {
 
+
+        @Override
+        public Destination run(Object object) throws BaseException {
+            KeystoneSignRequest keystoneSignRequest = (KeystoneSignRequest) object;
+            String origin = keystoneSignRequest.getOrigin();
+            String hexString = Hex.toHexString(keystoneSignRequest.getSignData());
+            JSONObject json = tryDecodeAsJson(hexString);
+
+            if (json == null) {
+                json = tryDecodeAsProtobuf(hexString);
+            }
+            if (json != null) {
+                Destination destination = decodeAndProcess(json);
+                if (destination == null) {
+                    throw UnknownQrCodeException.newInstance();
+                }
+                return destination;
+            } else {
+                throw UnknownQrCodeException.newInstance();
+            }
+        }
+      
+
+        private JSONObject tryDecodeAsJson(String hex) {
+            try {
+                return new JSONObject(new String(Hex.decode(hex)));
+            } catch (Exception ignored) {
+            }
+            return null;
+        }
+
+        private JSONObject tryDecodeAsProtobuf(String hex) {
+            JSONObject object;
+            hex = ZipUtil.unzip(hex);
+            object = new ProtoParser(Hex.decode(hex)).parseToJson();
+            return object;
+        }
+
+        private Destination decodeAndProcess(JSONObject object) throws BaseException {
+            Destination destination = checkWebAuth(object);
+            if (destination != null) return destination;
+            if (object.has("TransactionType")) {
+                Bundle bundle = new Bundle();
+                bundle.putString(BundleKeys.SIGN_DATA_KEY, object.toString());
+                return new Destination(R.id.action_to_rippleConfirmTransactionFragment, bundle);
+            }
+            if (object.optString("type").equals("TYPE_SIGN_TX")) {
+                return handleSign(object);
+            }
+            throw UnknownQrCodeException.newInstance();
+        }
+
+        private Destination checkWebAuth(JSONObject object) {
+            try {
+                JSONObject webAuth = object.optJSONObject("data");
+                if (webAuth != null && webAuth.optString("type").equals("webAuth")) {
+                    String data = webAuth.getString("data");
+                    Bundle bundle = new Bundle();
+                    bundle.putString(BundleKeys.WEB_AUTH_DATA_KEY, data);
+                    return new Destination(R.id.action_to_webAuthResultFragment, bundle);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        private Destination handleSign(JSONObject object)
+                throws BaseException {
+            String xfp = new GetMasterFingerprintCallable().call();
+            if (!object.optString("xfp").toUpperCase().equals(xfp.toUpperCase())){
+                throw XfpNotMatchException.newInstance();
+            }
+            try {
+                Bundle bundle = new Bundle();
+                bundle.putString(BundleKeys.SIGN_DATA_KEY, object.getJSONObject("signTx").toString());
+                return new Destination(R.id.action_to_keystoneConfirmTransactionFragment, bundle);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+
+    private static class ETHSignRequestProcessor implements URResolver {
         @Override
         public Destination run(Object object) throws BaseException {
             EthSignRequest ethSignRequest = (EthSignRequest) object;
@@ -548,7 +638,7 @@ public class URProcessor implements Processor {
         private Destination handleSign(JSONObject object)
                 throws BaseException {
             String xfp = new GetMasterFingerprintCallable().call();
-            if (!object.optString("xfp").equals(xfp)) {
+            if (!object.optString("xfp").toUpperCase().equals(xfp.toUpperCase())) {
                 throw XfpNotMatchException.newInstance();
             }
             try {
